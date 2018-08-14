@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.CompanyUserSetMapper">
+    <resultMap id="IndexUserReportVO" type="cn.thinkfree.database.vo.IndexUserReportVO">
+
+
+        <result column="company_id" jdbcType="INTEGER" property="companyId" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="is_job" jdbcType="INTEGER" property="isJob" />
+        <result column="is_bind" jdbcType="INTEGER" property="isBind" />
+        <result column="phone" jdbcType="INTEGER" property="phone" />
+
+    </resultMap>
+
+    <select id="countCompanyUser" parameterType="java.lang.String" resultMap="IndexUserReportVO">
+
+
+        select
+        *
+        from company_user_set
+        where company_id = #{companyID}
+
+
+    </select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <classPathEntry
+            location="src/main/resources/edb-jdbc16.jar" />
+    <context id="context1"  >
+        <!-- 该死的注释 -->
+        <commentGenerator  >
+            <property name="addRemarkComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.edb.Driver"
+                        connectionURL="jdbc:edb://rm-2zea5t7it298uz8786o.ppas.rds.aliyuncs.com:3432/easy_home"
+                        userId="think"
+                        password="Rexrobin@519" />
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+
+        <!-- Model-->
+        <javaModelGenerator targetPackage="cn.thinkfree.database.model"
+                            targetProject="src/main/java/" >
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+            <property name="useActualColumnNames" value="false"/>
+            <property name="rootClass" value="cn.thinkfree.core.model.BaseModel"/>
+
+        </javaModelGenerator>
+        <!-- XML-->
+        <sqlMapGenerator targetPackage="cn.thinkfree.database.mapper"
+                         targetProject="src/main/resources" >
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!-- 客户端-->
+        <javaClientGenerator
+                targetPackage="cn.thinkfree.database.mapper"
+                targetProject="src/main/java/"
+                type="XMLMAPPER" >
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+        <!-- 表-->
+        <table tableName="province" domainObjectName="Province" />
+        <table tableName="city" domainObjectName="City"/>
+        <table tableName="area" domainObjectName="Area" />
+        <table tableName="company_info" domainObjectName="CompanyInfo"/>
+        <table tableName="company_user_set" domainObjectName="CompanyUserSet" />
+        <table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>
+        <table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />
+        <table tableName="pre_project_construction_info" domainObjectName="PreProjectConstructionInfo"/>
+        <table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />
+        <table tableName="pre_project_house_type" domainObjectName="PreProjectHouseType"/>
+        <table tableName="pre_project_info" domainObjectName="PreProjectInfo" />
+        <table tableName="pre_project_material" domainObjectName="PreProjectMaterial"/>
+        <table tableName="pre_project_status" domainObjectName="PreProjectStatus" />
+        <table tableName="pre_project_user_role" domainObjectName="PreProjectUserRole"/>
+        <table tableName="user_info" domainObjectName="UserInfo" />
+        <table tableName="user_register" domainObjectName="UserRegister"/>
+        <table tableName="user_login_log" domainObjectName="UserLoginLog" />
+        <table tableName="user_role" domainObjectName="UserRole"/>
+        <table tableName="user_role_set" domainObjectName="UserRoleSet"/>
+
+
+    </context>
+</generatorConfiguration>
