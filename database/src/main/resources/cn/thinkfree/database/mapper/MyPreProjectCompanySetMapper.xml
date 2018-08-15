@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PreProjectCompanySetMapper">
+    <resultMap id="IndexProjectReportVO" type="cn.thinkfree.database.vo.IndexProjectReportVO">
+
+        <result column="notOnLine" jdbcType="INTEGER" property="notOnLine" />
+        <result column="waitStart" jdbcType="INTEGER" property="waitStart" />
+        <result column="working" jdbcType="INTEGER" property="working" />
+        <result column="stopTheWork" jdbcType="INTEGER" property="stopTheWork" />
+        <result column="complete" jdbcType="INTEGER" property="complete" />
+    </resultMap>
+
+
+    <select id="countCompanyProject" parameterType="java.lang.String" resultMap="IndexProjectReportVO">
+
+
+      SELECT
+         sum(CASE WHEN pre_project_status.status = '0' THEN 1 ELSE 0 END) as notOnLine,
+         sum(CASE WHEN pre_project_status.status = '1' THEN 1 ELSE 0 END) as waitStart,
+         sum(CASE WHEN pre_project_status.status = '2' THEN 1 ELSE 0 END) as working,
+         sum(CASE WHEN pre_project_status.status = '4' THEN 1 ELSE 0 END) as stopTheWork,
+         sum(CASE WHEN pre_project_status.status = '3' THEN 1 ELSE 0 END) as complete
+      from pre_project_company_set pre_project_company_set
+      join pre_project_status pre_project_status
+      where
+        pre_project_company_set.company_id = #{companyID}
+        and is_delete = 1
+
+
+    </select>
+</mapper>

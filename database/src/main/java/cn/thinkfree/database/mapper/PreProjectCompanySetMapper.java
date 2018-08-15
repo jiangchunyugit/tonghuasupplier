@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PreProjectCompanySet;
 import cn.thinkfree.database.model.PreProjectCompanySetExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.IndexProjectReportVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PreProjectCompanySetMapper {
@@ -93,4 +95,11 @@ public interface PreProjectCompanySetMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PreProjectCompanySet record);
+
+    /**
+     * 汇总公司项目情况
+     * @param companyID
+     * @return
+     */
+    IndexProjectReportVO countCompanyProject(String companyID);
 }

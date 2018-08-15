@@ -4,21 +4,25 @@
     <resultMap id="IndexUserReportVO" type="cn.thinkfree.database.vo.IndexUserReportVO">
 
 
-        <result column="company_id" jdbcType="INTEGER" property="companyId" />
-        <result column="user_id" jdbcType="INTEGER" property="userId" />
-        <result column="is_job" jdbcType="INTEGER" property="isJob" />
-        <result column="is_bind" jdbcType="INTEGER" property="isBind" />
-        <result column="phone" jdbcType="INTEGER" property="phone" />
+        <result column="steward" jdbcType="INTEGER" property="steward" />
+        <result column="projectManager" jdbcType="INTEGER" property="projectManager" />
+        <result column="foreman" jdbcType="INTEGER" property="foreman" />
+        <result column="qualityInspector" jdbcType="INTEGER" property="qualityInspector" />
+
 
     </resultMap>
 
     <select id="countCompanyUser" parameterType="java.lang.String" resultMap="IndexUserReportVO">
 
 
-        select
-        *
-        from company_user_set
-        where company_id = #{companyID}
+      SELECT
+         sum(CASE WHEN role_id = 'CS' THEN 1 ELSE 0 END) as steward,
+         sum(CASE WHEN role_id = 'CP' THEN 1 ELSE 0 END) as projectManager,
+         sum(CASE WHEN role_id = 'CQ' THEN 1 ELSE 0 END) as qualityInspector,
+         sum(CASE WHEN role_id = 'CM' THEN 1 ELSE 0 END) as foreman
+
+      from company_user_set
+      where company_id = #{companyID} and is_job = 1
 
 
     </select>

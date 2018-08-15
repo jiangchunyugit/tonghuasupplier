@@ -29,9 +29,6 @@ public class SysLogAop {
 
 
 
-    public void exception(Throwable e){
-
-    }
 
     @AfterThrowing(pointcut = "sysLogPoint()",throwing = "e")
     public void saveLogByAfterThrowing(JoinPoint joinPoint, Throwable e) throws Throwable {

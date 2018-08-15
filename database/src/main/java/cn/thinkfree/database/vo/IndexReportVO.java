@@ -7,6 +7,16 @@ public class IndexReportVO {
 
     private IndexUserReportVO indexUserReportVO;
 
+
+    public IndexReportVO(){
+
+    }
+
+    public IndexReportVO(IndexProjectReportVO indexProjectReportVO, IndexUserReportVO indexUserReportVO) {
+        this.indexProjectReportVO = indexProjectReportVO;
+        this.indexUserReportVO = indexUserReportVO;
+    }
+
     public IndexProjectReportVO getIndexProjectReportVO() {
         return indexProjectReportVO;
     }

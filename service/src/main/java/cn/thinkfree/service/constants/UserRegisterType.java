@@ -15,7 +15,7 @@ public enum  UserRegisterType {
         this.mes = mes;
     }
 
-    public short shortVal(){
+    public Short shortVal(){
         return this.code.shortValue();
     }
 }
