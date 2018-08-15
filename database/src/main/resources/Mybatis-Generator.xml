@@ -43,26 +43,30 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 表-->
-        <table tableName="province" domainObjectName="Province" />
-        <table tableName="city" domainObjectName="City"/>
-        <table tableName="area" domainObjectName="Area" />
-        <table tableName="company_info" domainObjectName="CompanyInfo"/>
-        <table tableName="company_user_set" domainObjectName="CompanyUserSet" />
-        <table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>
-        <table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />
-        <table tableName="pre_project_construction_info" domainObjectName="PreProjectConstructionInfo"/>
-        <table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />
-        <table tableName="pre_project_house_type" domainObjectName="PreProjectHouseType"/>
-        <table tableName="pre_project_info" domainObjectName="PreProjectInfo" />
-        <table tableName="pre_project_material" domainObjectName="PreProjectMaterial"/>
-        <table tableName="pre_project_status" domainObjectName="PreProjectStatus" />
-        <table tableName="pre_project_user_role" domainObjectName="PreProjectUserRole"/>
-        <table tableName="user_info" domainObjectName="UserInfo" />
-        <table tableName="user_register" domainObjectName="UserRegister"/>
-        <table tableName="user_login_log" domainObjectName="UserLoginLog" />
-        <table tableName="user_role" domainObjectName="UserRole"/>
-        <table tableName="user_role_set" domainObjectName="UserRoleSet"/>
-
+        <!--<table tableName="province" domainObjectName="Province" />-->
+        <!--<table tableName="city" domainObjectName="City"/>-->
+        <!--<table tableName="area" domainObjectName="Area" />-->
+        <!--<table tableName="company_info" domainObjectName="CompanyInfo"/>-->
+        <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
+        <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
+        <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->
+        <!--<table tableName="pre_project_construction_info" domainObjectName="PreProjectConstructionInfo"/>-->
+        <!--<table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />-->
+        <!--<table tableName="pre_project_house_type" domainObjectName="PreProjectHouseType"/>-->
+        <!--<table tableName="pre_project_info" domainObjectName="PreProjectInfo" />-->
+        <!--<table tableName="pre_project_material" domainObjectName="PreProjectMaterial"/>-->
+        <!--<table tableName="pre_project_status" domainObjectName="PreProjectStatus" />-->
+        <!--<table tableName="pre_project_user_role" domainObjectName="PreProjectUserRole"/>-->
+        <!--<table tableName="user_info" domainObjectName="UserInfo" />-->
+        <!--<table tableName="user_register" domainObjectName="UserRegister"/>-->
+        <!--<table tableName="user_login_log" domainObjectName="UserLoginLog" />-->
+        <!--<table tableName="user_role" domainObjectName="UserRole"/>-->
+        <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
+        <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
+        <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
+        <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
+        <table tableName="pc_user_info" domainObjectName="PcUserInfo"/>
+        <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
 
     </context>
 </generatorConfiguration>

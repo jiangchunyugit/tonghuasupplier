@@ -2,34 +2,36 @@ package cn.thinkfree.core.security.config;
 
 
 import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.core.security.dao.SecurityResourceDao;
+import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.exception.MySecurityException;
-import cn.thinkfree.core.security.filter.SercuityFailAuthHandler;
-import cn.thinkfree.core.security.filter.SercuitySuccessAuthHandler;
+import cn.thinkfree.core.security.filter.*;
+import cn.thinkfree.core.security.filter.util.SecurityConstants;
+
+import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
-import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.event.LoggerListener;
-import org.springframework.security.access.vote.AffirmativeBased;
-import org.springframework.security.access.vote.AuthenticatedVoter;
-import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
-import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import java.util.ArrayList;
-import java.util.List;
+
+import javax.servlet.Filter;
 
 /**
  * JAVA CONFIG SECURITY
@@ -39,78 +41,90 @@ import java.util.List;
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     private static final MyLogger logger = LogUtil.getLogger(SecurityConfig.class);
 
-
-
-
-    /**
-     * 全局配置
-     * @param auth 配置授权上下文
-     * @throws Exception
-     */
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+    SecurityUserDao userService;
+    @Autowired
+    SecurityResourceDao securityResourceDao;
 
-//        auth.inMemoryAuthentication()
-//            .withUser("user").password("password").roles("USER");
 
-    }
-    //    @Bean
-//    public DaoAuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
-//        authenticationProvider.setUserDetailsService(userService);
-////        authenticationProvider.setPasswordEncoder(passwordEncoder());
-//        return authenticationProvider;
-//    }
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web){
         // 设置不拦截规则
         web.ignoring()
-                .anyRequest()
-                .antMatchers("/static/**")
-                .antMatchers("/**/*.jsp")
-//                .antMatchers("/login")
-                .antMatchers("/login");
+                .antMatchers("/static/**/*", SecurityConstants.LOGIN_PAGE,"/**/*.jsp");
+
     }
-
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         // 设置拦截规则
         // 自定义accessDecisionManager访问控制器,并开启表达式语言
         http.authorizeRequests()
+//                .antMatchers("/role/**").hasRole("USER")
+                .anyRequest().permitAll()
 //                .accessDecisionManager(accessDecisionManager())
 //                .expressionHandler(webSecurityExpressionHandler())
-                .antMatchers("/role/**").hasRole("USER")
+//                .antMatchers("/**").access("hasRole('ROLE_USER')")
 //                .antMatchers("/system/**").hasRole("ADMIN")
                 .and()
                 .exceptionHandling()
-//                .accessDeniedPage("/login")
                 .authenticationEntryPoint(new MySecurityException());
 
         // 该死的Frame
         http.headers().frameOptions().disable();
 
+        // 细粒度 更精细的配置~
+
+//        http.addFilterAt(mySecurityPcFilter(), FilterSecurityInterceptor.class);
+
         // 自定义登录页面
         http.csrf().disable()
-                .formLogin().loginPage("/login")
+                .formLogin()
+                .loginPage(SecurityConstants.LOGIN_PAGE)
                 .successHandler(successHandler())
                 .failureHandler(failHandler())
-
-                .loginProcessingUrl("/j_spring_security_check")
-                .usernameParameter("j_username")
-                .passwordParameter("j_password").permitAll();
+                .loginProcessingUrl(SecurityConstants.LOGIN_URL)
+                .usernameParameter(SecurityConstants.LOGIN_USERNAME)
+                .passwordParameter(SecurityConstants.LOGIN_PASSWORD)
+                .permitAll();
 
         // 自定义注销
-        http.logout().logoutUrl("/logout").logoutSuccessUrl("/login")
+        http.logout()
+                .logoutUrl(SecurityConstants.LOGIN_OUT)
+                .logoutSuccessUrl(SecurityConstants.LOGIN_PAGE)
                 .invalidateHttpSession(true);
 
         // session管理
-        http.sessionManagement().sessionFixation().changeSessionId()
-                .maximumSessions(1).expiredUrl("/login");
+//        http.sessionManagement().sessionFixation().changeSessionId()
+//                .maximumSessions(1).expiredUrl("/login");
         // RemeberMe
-//        http.rememberMe().key("webmvc#FD637E6D9C0F1A5A67082AF56CE32485");
+        http.rememberMe().key(SecurityConstants.REMEMBERME_KEY);
+    }
 
+    /**
+     * 自定义安全链过滤器
+     * @return
+     */
+    @Bean
+    public Filter mySecurityPcFilter() {
+        SecurityPcFilter securityPcFilter = new SecurityPcFilter();
+        securityPcFilter.setAccessDecisionManager(accessDecisionManager());
+        securityPcFilter.setSecurityMetadataSource(resourceHandler());
+        return securityPcFilter;
+    }
+
+
+    /**
+     * 自定义资源加载器
+     * @return
+     */
+    @Bean
+    public FilterInvocationSecurityMetadataSource resourceHandler() {
+        SecurityInvocationSecurityMetadataSource resourceHandler = new SecurityInvocationSecurityMetadataSource(securityResourceDao);
+        resourceHandler.setRejectPublicInvocations(true);
+        resourceHandler.setHotDeployment(true);
+        return resourceHandler;
     }
 
     /**
@@ -118,8 +132,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
      * @return
      */
     protected AuthenticationFailureHandler failHandler() {
-        SercuityFailAuthHandler sercuityFailAuthHandler=new SercuityFailAuthHandler();
-        return sercuityFailAuthHandler;
+        SecurityFailAuthHandler  securityFailAuthHandler = new SecurityFailAuthHandler();
+        return securityFailAuthHandler;
     }
 
     /**
@@ -127,9 +141,9 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
      * @return
      */
     protected AuthenticationSuccessHandler successHandler(){
-        SercuitySuccessAuthHandler sercuitySuccessAuthHandler=new SercuitySuccessAuthHandler();
-        sercuitySuccessAuthHandler.setDefaultTargetUrl("/index");
-        return sercuitySuccessAuthHandler;
+        SecuritySuccessAuthHandler securitySuccessAuthHandler = new SecuritySuccessAuthHandler();
+        securitySuccessAuthHandler.setDefaultTargetUrl(SecurityConstants.LOGIN_SUCCESS_PAGE);
+        return securitySuccessAuthHandler;
     }
 
 
@@ -137,71 +151,45 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
         // 自定义UserDetailsService
-        auth.userDetailsService(userDetailsService())
-                .passwordEncoder(new BCryptPasswordEncoder() );
+//        ReflectionSaltSource rss = new ReflectionSaltSource();
+//        rss.setUserPropertyToUse(SecurityConstants.SALT);
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+////        provider.setMessageSource(MessageSource);
+//        provider.setSaltSource(rss);
+//        provider.setUserDetailsService(userService);
+//        provider.setPasswordEncoder(new Md5PasswordEncoder());
+//        auth.authenticationProvider(provider);
 
+//        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
+        auth.userDetailsService(userService).passwordEncoder(new MultipleMd5());
     }
 
-//    @Bean(name="userService")
-//    public UserDetailsService userDetailsService() {
-//        logger.info("配置用户登录器");
-////        return new UserServiceImpl();
-//        return  null;
-//    }
 
     @Bean
     public LoggerListener loggerListener() {
         logger.info("配置默认时间监听器");
         LoggerListener loggerListener = new LoggerListener();
-
         return loggerListener;
     }
 
     @Bean
-    public org.springframework.security.access.event.LoggerListener eventLoggerListener() {
+    public LoggerListener eventLoggerListener() {
         logger.info("配置全局时间监听器");
-        org.springframework.security.access.event.LoggerListener eventLoggerListener =
-                new  org.springframework.security.access.event.LoggerListener();
-
+        LoggerListener eventLoggerListener = new  LoggerListener();
         return eventLoggerListener;
     }
 
-//    /*
-//     *
-//     * 这里可以增加自定义的投票器
-//     */
-//    @Bean(name = "accessDecisionManager")
-//    public AccessDecisionManager accessDecisionManager() {
-//        logger.info("配置鉴权器");
-//        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<>();
-//        decisionVoters.add(new RoleVoter());
-//        decisionVoters.add(new AuthenticatedVoter());
-//        decisionVoters.add(webExpressionVoter());// 启用表达式投票器
-//        AffirmativeBased accessDecisionManager = new AffirmativeBased(decisionVoters);
-////        new SercuityAccessDecisionManager()
-//        return accessDecisionManager;
-//    }
 
+    /**
+     *
+     * 这里可以增加自定义的投票器
+     */
+    @Bean(name = "accessDecisionManager")
+    public AccessDecisionManager accessDecisionManager() {
+        logger.info("配置鉴权器");
+        return new SecurityAccessDecisionManager();
 
-//    /*
-//     * 表达式控制器
-//     */
-//    @Bean(name = "expressionHandler")
-//    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
-//        logger.info("配置表达式处理器");
-//        DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-//        return webSecurityExpressionHandler;
-//    }
-//
-//    /*
-//     * 表达式投票器
-//     */
-//    @Bean(name = "expressionVoter")
-//    public WebExpressionVoter webExpressionVoter() {
-//        logger.info("配置投票器");
-//        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
-//        webExpressionVoter.setExpressionHandler(webSecurityExpressionHandler());
-//        return webExpressionVoter;
-//    }
+    }
+
 
 }

@@ -20,6 +20,9 @@ public class ServletContextHolder {
 
     private static void setServletContext(){
         WebApplicationContext webApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+        if(webApplicationContext == null){
+            webApplicationContext= (WebApplicationContext) SpringContextHolder.getApplicationContext();
+        }
         ServletContext nowServletContext = webApplicationContext.getServletContext();
         servletContext = nowServletContext;
     }

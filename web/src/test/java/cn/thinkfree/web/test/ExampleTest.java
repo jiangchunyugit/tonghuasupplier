@@ -1,6 +1,5 @@
 package cn.thinkfree.web.test;
 
-import cn.thinkfree.database.model.User;
 import cn.thinkfree.service.user.UserService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -13,24 +12,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @SpringBootTest
 public class ExampleTest {
 
-    @Autowired
-    UserService userService;
+
 
     @Test
     public void saveTest(){
-        User user = new User();
-        user.setUsername("Test");
-        user.setPassword("pwd");
-        userService.save(user);
+
 
     }
 
     @Test
     public void findTest(){
-        System.out.println(userService);
-        User user = userService.findById("1");
-        System.out.println(user.getPassword());
-        Assert.assertNotNull(user);
+
     }
 
 }

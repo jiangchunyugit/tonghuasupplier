@@ -40,6 +40,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 		return loginId;
 	}
 
+//	/**
+//	 * 获取登录用户主键
+//	 * @return
+//	 */
+//	public static Integer getLoginUserID(){
+//		User userDetails = (User) getUserDetails();
+//		return userDetails == null ? null:userDetails.getId();
+//	}
+
 	/**
 	 * 判断用户是否登陆
 	 *

@@ -18,13 +18,7 @@ public class MySecurityException extends AbsBaseController implements Authentica
 	public void commence(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException authException)
 			throws IOException, ServletException {
-		String isApp=request.getHeader("isApp");
-		if(StringUtils.isNotBlank(isApp)){
-//			wrapDatas(response, true, null, "鉴权失败",null);
-		}else{
-			response.sendRedirect(request.getContextPath()+"/login?error=2");
- 		}
-//   		logger.error("鉴权失败:{}",authException);
+		  authException.printStackTrace();
  	}
  
 }

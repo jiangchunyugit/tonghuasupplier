@@ -7,10 +7,10 @@ import java.util.List;
  * 安全用户白名单持有者类
  * 
  */
- public class SecurityUserTrustListHolder {
-private static final List<String> userTrustList = new ArrayList<String>();
+public class SecurityUserTrustListHolder {
+	private static final List<String> userTrustList = new ArrayList<String>();
 	
-	public void setTrustList(ArrayList<String> trustList) {
+	public static void setTrustList(ArrayList<String> trustList) {
 		userTrustList.clear();
 		for (String s : trustList) {
 			userTrustList.add(s);

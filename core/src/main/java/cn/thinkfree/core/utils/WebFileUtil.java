@@ -2,6 +2,9 @@ package cn.thinkfree.core.utils;
 
 import cn.thinkfree.core.base.MyLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
@@ -23,9 +26,17 @@ import java.util.zip.ZipInputStream;
 /**
  * Created by lenovo on 2016/12/22.
  */
+@Component
 public class WebFileUtil {
 
-     static MyLogger logger = LogUtil.getLogger(WebFileUtil.class);
+    private static String uploadDir;
+
+    @Value("${server.uploadDir}")
+    public  void setUploadDir(String up) {
+        uploadDir = up;
+    }
+
+    static MyLogger logger = LogUtil.getLogger(WebFileUtil.class);
 
     public static String fileCopy(String target, MultipartFile source){
         String timestamp=new SimpleDateFormat("_yyyyMMddhhmmss").format(new Date());
@@ -127,13 +138,14 @@ public class WebFileUtil {
      * @return
      */
     private static String makePath(boolean isShow,String tmpDir, String ... name) {
+        System.out.println(uploadDir);
         String tmpPath =
                 isShow ?
-                        "/static/upload/"
+                        uploadDir
                                 +new SimpleDateFormat("yyyyMMdd").format(new Date())
                                 +File.separator+tmpDir
                         :
-                        ServletContextHolder.getUpload("/static/upload/")
+                        ServletContextHolder.getUpload(uploadDir)
                                 +new SimpleDateFormat("yyyyMMdd").format(new Date())
                                 +File.separator+tmpDir;
 

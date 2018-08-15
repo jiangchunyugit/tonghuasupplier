@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
  * HttpServletRequest工具类
  * 
  */
- public class SecutiryRequestUtil {
+ public class SecurityRequestUtil {
 	/**
 	 * 取得用户的ip地址
 	 * 
@@ -39,5 +39,13 @@ import java.util.StringTokenizer;
 		return ip;
 
 	}
-
+	/**
+	 * 是否AJAX请求
+	 * @param request
+	 * @return
+	 */
+	public static Boolean isAjax(HttpServletRequest request){
+		String isAjax = request.getHeader("X-Requested-With");
+		return "XMLHttpRequest".equals(isAjax) ? true : false;
+	}
 }

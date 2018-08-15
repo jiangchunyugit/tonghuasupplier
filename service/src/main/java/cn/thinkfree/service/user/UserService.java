@@ -1,12 +1,10 @@
 package cn.thinkfree.service.user;
 
-import cn.thinkfree.database.model.User;
 import cn.thinkfree.database.vo.IndexUserReportVO;
 
 
 public interface UserService {
-    User findById(String id);
-    void save(User user);
+ 
 
     /**
      * 汇总公司用户

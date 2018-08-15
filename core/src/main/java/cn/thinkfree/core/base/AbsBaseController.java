@@ -11,6 +11,7 @@ import cn.thinkfree.core.logger.AbsLogPrinter;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -93,6 +94,7 @@ public abstract class AbsBaseController extends AbsLogPrinter {
         myRespBundle.setCode(code);
         myRespBundle.setMessage(message);
         myRespBundle.setData(message);
+        myRespBundle.setTimestamp(Instant.now().toEpochMilli());
         return myRespBundle;
     }
 
@@ -108,6 +110,7 @@ public abstract class AbsBaseController extends AbsLogPrinter {
         result.setData(datas);
         result.setCode(code);
         result.setMessage(message);
+        result.setTimestamp(Instant.now().toEpochMilli());
         return result;
     }
 

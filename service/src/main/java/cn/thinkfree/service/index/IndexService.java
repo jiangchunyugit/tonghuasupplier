@@ -1,4 +1,4 @@
 package cn.thinkfree.service.index;
 
-public interface IndexService {
+public interface IndexService  {
 }
