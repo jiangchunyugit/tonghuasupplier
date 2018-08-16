@@ -1,26 +1,22 @@
 package cn.thinkfree.service.project;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.PreProjectCompanySetMapper;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
-import cn.thinkfree.database.model.PreProjectCompanySet;
-import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectUserRoleExample;
 import cn.thinkfree.database.vo.IndexProjectReportVO;
 import cn.thinkfree.database.vo.ProjectSEO;
 import cn.thinkfree.database.vo.ProjectVO;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.UserJobs;
-import cn.thinkfree.service.constants.UserRegisterType;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,12 +34,12 @@ public class ProjectServiceImpl implements ProjectService {
     /**
      * 汇总公司项目情况
      *
-     * @param companyID
+     * @param companyRelationMap
      * @return
      */
     @Override
-    public IndexProjectReportVO countProjectReportVO(String companyID) {
-        return preProjectCompanySetMapper.countCompanyProject(companyID);
+    public IndexProjectReportVO countProjectReportVO(List<String> companyRelationMap) {
+        return preProjectCompanySetMapper.countCompanyProject(companyRelationMap);
     }
 
     /**
@@ -84,8 +80,10 @@ public class ProjectServiceImpl implements ProjectService {
             return new PageInfo();
         }
 
-//        PageHelper.startPage()
-        List<ProjectVO> projectVOS=preProjectGuideMapper.selectProjectVOBySEO(projectSEO);
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        projectSEO.setCompanyRelationMap(userVO.getRelationMap());
+        PageHelper.startPage(projectSEO.getPage(),projectSEO.getRows());
+        List<ProjectVO> projectVOS = preProjectGuideMapper.selectProjectVOBySEO(projectSEO);
 
 
         return new PageInfo<>(projectVOS);

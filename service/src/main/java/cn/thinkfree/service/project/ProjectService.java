@@ -5,14 +5,16 @@ import cn.thinkfree.database.vo.ProjectSEO;
 import cn.thinkfree.database.vo.ProjectVO;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 public interface ProjectService {
 
     /**
      * 汇总公司项目情况
-     * @param companyID
+     * @param companyRelationMap
      * @return
      */
-    IndexProjectReportVO countProjectReportVO(String companyID);
+    IndexProjectReportVO countProjectReportVO(List<String> companyRelationMap);
 
     /**
      * 分页查询项目信息

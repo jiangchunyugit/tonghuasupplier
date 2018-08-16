@@ -98,8 +98,8 @@ public interface PreProjectCompanySetMapper {
 
     /**
      * 汇总公司项目情况
-     * @param companyID
+     * @param companyRelationMap
      * @return
      */
-    IndexProjectReportVO countCompanyProject(String companyID);
+    IndexProjectReportVO countCompanyProject(List<String> companyRelationMap);
 }

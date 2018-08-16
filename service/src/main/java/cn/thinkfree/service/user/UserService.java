@@ -2,16 +2,18 @@ package cn.thinkfree.service.user;
 
 import cn.thinkfree.database.vo.IndexUserReportVO;
 
+import java.util.List;
+
 
 public interface UserService {
  
 
     /**
      * 汇总公司用户
-     * @param companyID 公司ID
+     * @param companyRelationMap 公司关系图
      * @return
      */
-    IndexUserReportVO countCompanyUser(String companyID);
+    IndexUserReportVO countCompanyUser(List<String> companyRelationMap);
 
 
 

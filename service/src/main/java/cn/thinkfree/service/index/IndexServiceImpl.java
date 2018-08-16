@@ -41,8 +41,8 @@ public class IndexServiceImpl implements IndexService  {
     @Override
     public IndexReportVO summary() {
         UserVO userVO= (UserVO) SessionUserDetailsUtil.getUserDetails();
-        IndexUserReportVO indexUserReportVO = userService.countCompanyUser(userVO.getCompanyID());
-        IndexProjectReportVO indexProjectReportVO = projectService.countProjectReportVO(userVO.getCompanyID());
+        IndexUserReportVO indexUserReportVO = userService.countCompanyUser(userVO.getRelationMap());
+        IndexProjectReportVO indexProjectReportVO = projectService.countProjectReportVO(userVO.getRelationMap());
         return new IndexReportVO(indexProjectReportVO,indexUserReportVO);
     }
 

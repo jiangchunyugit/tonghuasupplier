@@ -99,7 +99,7 @@ public interface CompanyUserSetMapper {
 
     /**
      * 汇总公司员工信息
-     * @param companyID
+     * @param companyRelationMap
      */
-    IndexUserReportVO countCompanyUser(String companyID);
+    IndexUserReportVO countCompanyUser(List<String> companyRelationMap);
 }

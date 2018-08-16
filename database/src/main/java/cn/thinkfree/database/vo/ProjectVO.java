@@ -12,6 +12,31 @@ public class ProjectVO extends PreProjectGuide {
     private PreProjectStatus preProjectStatus;
     private PreProjectUserRole preProjectUserRole;
 
+    /**
+     * 管家姓名
+     */
+    private String stewardName;
+
+    /**
+     * 项目经理名称
+     */
+    private String projectManagerName;
+
+    public String getStewardName() {
+        return stewardName;
+    }
+
+    public void setStewardName(String stewardName) {
+        this.stewardName = stewardName;
+    }
+
+    public String getProjectManagerName() {
+        return projectManagerName;
+    }
+
+    public void setProjectManagerName(String projectManagerName) {
+        this.projectManagerName = projectManagerName;
+    }
 
     public PreProjectCompanySet getPreProjectCompanySet() {
         return preProjectCompanySet;

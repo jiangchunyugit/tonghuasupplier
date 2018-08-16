@@ -6,6 +6,7 @@ import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.UserRegister;
+import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
@@ -34,8 +35,21 @@ public class UserVO extends SecurityUser {
      */
     private List<String> relationMap;
 
+    /**
+     * 是否根公司
+     */
+    private Boolean isRoot = Boolean.FALSE;
+
+    public Boolean isRoot() {
+        return isRoot;
+    }
+
+    public void setIsRoot(Boolean root) {
+        isRoot = root;
+    }
+
     public List<String> getRelationMap() {
-        return relationMap;
+        return isRoot ? relationMap : Lists.newArrayList(getCompanyID());
     }
 
     public void setRelationMap(List<String> relationMap) {

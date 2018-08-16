@@ -11,7 +11,7 @@
     </resultMap>
 
 
-    <select id="countCompanyProject" parameterType="java.lang.String" resultMap="IndexProjectReportVO">
+    <select id="countCompanyProject" parameterType="java.util.List" resultMap="IndexProjectReportVO">
 
 
       SELECT
@@ -24,8 +24,11 @@
       join pre_project_guide  pre_project_guide
       on pre_project_company_set.project_no = pre_project_guide.project_no
       where
-        pre_project_company_set.company_id = #{companyID}
         and is_delete = 1
+        and  pre_project_company_set.company_id in
+        <foreach collection="list"  separator="," open="(" item="listItem" close=")">
+            #{listItem}
+        </foreach>
 
 
     </select>

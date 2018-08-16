@@ -46,12 +46,22 @@ public class ProjectSEO extends AbsPageSearchCriteria {
     @JsonIgnore
     private String companyID;
 
+    @JsonIgnore
+    private List<String> companyRelationMap;
+
     /**
      * 后台查询使用
      */
     @JsonIgnore
     private List<String> filterProjectNos;
 
+    public List<String> getCompanyRelationMap() {
+        return companyRelationMap;
+    }
+
+    public void setCompanyRelationMap(List<String> companyRelationMap) {
+        this.companyRelationMap = companyRelationMap;
+    }
 
     public String getCompanyID() {
         return companyID;

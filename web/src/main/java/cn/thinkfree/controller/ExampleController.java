@@ -44,10 +44,6 @@ public class ExampleController extends AbsBaseController {
     RestTemplate restTemplate;
 
 
-    @GetMapping("/test")
-    public void test(String code){
-        userService.countCompanyUser(code);
-    }
 
 
 

@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.PreProjectGuideMapper">
-    <resultMap id="ProjectVO" type="cn.thinkfree.database.vo.ProjectVO">
+    <resultMap id="ProjectVO" type="cn.thinkfree.database.vo.ProjectVO" extends="BaseResultMap">
+        <result column="stewardName" property="stewardName"/>
+        <result column="projectManagerName" property="projectManagerName"/>
 
+        <association property="preProjectInfo" javaType="cn.thinkfree.database.model.PreProjectInfo">
+            <result column="house_area" property="houseArea"/>
+            <result column="house_type" property="houseType"/>
+            <result column="store" property="store"/>
+        </association>
 
     </resultMap>
 
@@ -19,15 +26,18 @@
             ppi.house_type,
             ppi.store,
             ppg.status,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家'),
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理')
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
         FROM
           pre_project_guide ppg
         JOIN pre_project_company_set ppcs ON ppg.project_no = ppcs.project_no
         JOIN pre_project_info ppi ON ppi.project_no = ppg.project_no
         WHERE
         <where>
-           and ppcs.company_id = #{companyID}
+           and ppcs.company_id in
+            <foreach close=")" collection="companyRelationMap" item="listItem" open="(" separator=",">
+                #{listItem}
+            </foreach>
           <if test="provice != null and provice != ''">
               and ppg.province = #{provice}
           </if>

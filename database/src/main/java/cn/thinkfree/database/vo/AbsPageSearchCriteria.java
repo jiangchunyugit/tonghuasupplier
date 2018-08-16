@@ -5,11 +5,11 @@ public abstract class AbsPageSearchCriteria {
     /**
      * 每页记录数
      */
-    protected Integer rows;
+    protected Integer rows = 15;
     /**
      * 页号
      */
-    protected Integer page;
+    protected Integer page = 0;
 
 
     public Integer getRows() {

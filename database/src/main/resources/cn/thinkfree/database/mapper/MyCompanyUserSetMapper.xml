@@ -12,7 +12,7 @@
 
     </resultMap>
 
-    <select id="countCompanyUser" parameterType="java.lang.String" resultMap="IndexUserReportVO">
+    <select id="countCompanyUser" parameterType="java.util.List" resultMap="IndexUserReportVO">
 
 
       SELECT
@@ -22,7 +22,13 @@
          sum(CASE WHEN role_id = 'CM' THEN 1 ELSE 0 END) as foreman
 
       from company_user_set
-      where company_id = #{companyID} and is_job = 1
+      where
+       is_job = 1
+      and company_id in
+      <foreach collection="list"  separator="," open="(" item="listItem" close=")">
+        #{listItem}
+      </foreach>
+
 
 
     </select>

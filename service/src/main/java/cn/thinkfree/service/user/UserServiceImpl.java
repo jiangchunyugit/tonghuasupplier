@@ -7,6 +7,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.IndexUserReportVO;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.UserRegisterType;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -42,13 +43,13 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
 
     /**
      * 汇总
-     * @param companyID 公司ID
+     * @param companyRelationMap 公司ID
      * @return
      */
     @Override
-    public IndexUserReportVO countCompanyUser(String companyID) {
+    public IndexUserReportVO countCompanyUser(List<String> companyRelationMap) {
 
-        return companyUserSetMapper.countCompanyUser(companyID);
+        return companyUserSetMapper.countCompanyUser(companyRelationMap);
     }
 
 
@@ -74,9 +75,46 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
             throw  new UsernameNotFoundException("用户账号信息错误");
         }
         UserRegister user = users.get(0);
+        userVO.setUserRegister(user);
 
+        completionDetailInfo(userVO,user);
+        completionUserRole(userVO,user);
+
+        return userVO;
+    }
+
+    /**
+     * 补全用户角色
+     * @param userVO
+     * @param user
+     */
+    private void completionUserRole(UserVO userVO, UserRegister user) {
+        printDebugMes("拼接用户权限");
+        PcUserResourceExample pcUserResourceExample = new PcUserResourceExample();
+        pcUserResourceExample.createCriteria().andUserIdEqualTo(user.getUserId());
+        List<PcUserResource> pus = pcUserResourceMapper.selectByExample(pcUserResourceExample);
+        if(pus.isEmpty()){
+            printErrorMes("用户无权限");
+            userVO.setResources(Collections.emptyList());
+
+        }else{
+            SystemResourceExample systemResourceExample = new SystemResourceExample();
+            systemResourceExample.createCriteria().andIdIn(
+                    pus.stream()
+                            .map(PcUserResource::getResourceId).collect(Collectors.toList())
+            );
+            userVO.setResources(systemResourceMapper.selectByExample(systemResourceExample));
+        }
+    }
+
+    /**
+     * 补全详细信息
+     * @param userVO
+     * @param user
+     */
+    private void completionDetailInfo(UserVO userVO, UserRegister user) {
+        // 企业用户
         if(UserRegisterType.Enterprise.shortVal().equals(user.getType())){
-
             CompanyInfoExample companyInfoExample = new CompanyInfoExample();
             companyInfoExample.createCriteria().andCompanyIdEqualTo(user.getUserId());
             List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
@@ -87,44 +125,31 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
             userVO.setCompanyInfo(companyInfo);
 
             if(!companyInfo.getCompanyId().equals(companyInfo.getRootCompanyId())){
-                 userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(companyInfo.getRootCompanyId()));
+                userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(companyInfo.getRootCompanyId()));
+                userVO.setIsRoot(Boolean.TRUE);
+            }else{
+                userVO.setRelationMap(Lists.newArrayList(companyInfo.getCompanyId()));
             }
 
         }else if(UserRegisterType.Staff.shortVal().equals(user.getType())){
-            userVO.setUserRegister(user);
+            // 企业子公司用户
+
             printDebugMes("获取到用户账号信息:{},准备获取用户详情信息",user);
             PcUserInfoExample pcUserInfoExample = new PcUserInfoExample();
             pcUserInfoExample.createCriteria().andIdEqualTo(user.getUserId());
             List<PcUserInfo> pcUserInfos = pcUserInfoMapper.selectByExample(pcUserInfoExample);
             if(pcUserInfos.isEmpty() || pcUserInfos.size() > 1){
-                printErrorMes("用户详情信息错误",phone);
+
                 throw  new UsernameNotFoundException("用户详情信息错误");
             }
             PcUserInfo pcUserInfo = pcUserInfos.get(0);
             userVO.setPcUserInfo(pcUserInfo);
             if(!pcUserInfo.getCompanyId().equals(pcUserInfo.getRootCompanyId())){
                 userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(pcUserInfo.getRootCompanyId()));
+                userVO.setIsRoot(Boolean.TRUE);
+            }else{
+                userVO.setRelationMap(Lists.newArrayList(pcUserInfo.getCompanyId()));
             }
         }
-        printDebugMes("拼接用户权限");
-        PcUserResourceExample pcUserResourceExample = new PcUserResourceExample();
-        pcUserResourceExample.createCriteria().andUserIdEqualTo(user.getUserId());
-        List<PcUserResource> pus = pcUserResourceMapper.selectByExample(pcUserResourceExample);
-
-        if(pus.isEmpty()){
-            printErrorMes("用户无权限");
-            userVO.setResources(Collections.emptyList());
-
-        }else{
-            SystemResourceExample systemResourceExample = new SystemResourceExample();
-            systemResourceExample.createCriteria().andIdIn(
-                    pus.stream()
-                            .map(PcUserResource::getResourceId).collect(Collectors.toList())
-                    );
-            userVO.setResources(systemResourceMapper.selectByExample(systemResourceExample));
-
-        }
-
-        return userVO;
     }
 }
