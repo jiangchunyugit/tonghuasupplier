@@ -29,7 +29,18 @@ public class UserVO extends SecurityUser {
     private PcUserInfo pcUserInfo;
 
     private List<SystemResource> resources;
+    /**
+     * 公司关系图
+     */
+    private List<String> relationMap;
 
+    public List<String> getRelationMap() {
+        return relationMap;
+    }
+
+    public void setRelationMap(List<String> relationMap) {
+        this.relationMap = relationMap;
+    }
 
     public UserRegister getUserRegister() {
         return userRegister;

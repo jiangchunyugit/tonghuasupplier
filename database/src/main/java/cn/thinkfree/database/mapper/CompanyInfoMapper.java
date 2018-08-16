@@ -61,4 +61,11 @@ public interface CompanyInfoMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") CompanyInfo record, @Param("example") CompanyInfoExample example);
+
+    /**
+     * 根据根公司查询公司关系图
+     * @param rootCompanyId
+     * @return
+     */
+    List<String> selectRelationMapByRootCompany(String rootCompanyId);
 }

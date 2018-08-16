@@ -93,4 +93,11 @@ public interface PreProjectUserRoleMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PreProjectUserRole record);
+
+    /**
+     *  查询 项目编号
+     * @param preProjectUserRoleExample
+     * @return
+     */
+    List<String> selectProjectNoByExample(PreProjectUserRoleExample preProjectUserRoleExample);
 }

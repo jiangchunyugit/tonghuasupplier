@@ -15,17 +15,20 @@
 
 
       SELECT
-         sum(CASE WHEN pre_project_status.status = '0' THEN 1 ELSE 0 END) as notOnLine,
-         sum(CASE WHEN pre_project_status.status = '1' THEN 1 ELSE 0 END) as waitStart,
-         sum(CASE WHEN pre_project_status.status = '2' THEN 1 ELSE 0 END) as working,
-         sum(CASE WHEN pre_project_status.status = '4' THEN 1 ELSE 0 END) as stopTheWork,
-         sum(CASE WHEN pre_project_status.status = '3' THEN 1 ELSE 0 END) as complete
+         sum(CASE WHEN pre_project_guide.status = '0' THEN 1 ELSE 0 END) as notOnLine,
+         sum(CASE WHEN pre_project_guide.status = '1' THEN 1 ELSE 0 END) as waitStart,
+         sum(CASE WHEN pre_project_guide.status = '2' THEN 1 ELSE 0 END) as working,
+         sum(CASE WHEN pre_project_guide.status = '4' THEN 1 ELSE 0 END) as stopTheWork,
+         sum(CASE WHEN pre_project_guide.status = '3' THEN 1 ELSE 0 END) as complete
       from pre_project_company_set pre_project_company_set
-      join pre_project_status pre_project_status
+      join pre_project_guide  pre_project_guide
+      on pre_project_company_set.project_no = pre_project_guide.project_no
       where
         pre_project_company_set.company_id = #{companyID}
         and is_delete = 1
 
 
     </select>
+
+
 </mapper>

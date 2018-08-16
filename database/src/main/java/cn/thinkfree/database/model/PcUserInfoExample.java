@@ -794,6 +794,76 @@ public class PcUserInfoExample {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
+
+        public Criteria andRootCompanyIdIsNull() {
+            addCriterion("root_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdIsNotNull() {
+            addCriterion("root_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdEqualTo(String value) {
+            addCriterion("root_company_id =", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdNotEqualTo(String value) {
+            addCriterion("root_company_id <>", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdGreaterThan(String value) {
+            addCriterion("root_company_id >", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("root_company_id >=", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdLessThan(String value) {
+            addCriterion("root_company_id <", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("root_company_id <=", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdLike(String value) {
+            addCriterion("root_company_id like", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdNotLike(String value) {
+            addCriterion("root_company_id not like", value, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdIn(List<String> values) {
+            addCriterion("root_company_id in", values, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdNotIn(List<String> values) {
+            addCriterion("root_company_id not in", values, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdBetween(String value1, String value2) {
+            addCriterion("root_company_id between", value1, value2, "rootCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRootCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("root_company_id not between", value1, value2, "rootCompanyId");
+            return (Criteria) this;
+        }
     }
 
     /**

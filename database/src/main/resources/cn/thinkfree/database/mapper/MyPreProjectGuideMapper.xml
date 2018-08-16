@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PreProjectGuideMapper">
+    <resultMap id="ProjectVO" type="cn.thinkfree.database.vo.ProjectVO">
+
+
+    </resultMap>
+
+  <select id="selectProjectVOBySEO" parameterType="cn.thinkfree.database.vo.ProjectSEO" resultMap="ProjectVO">
+        SELECT
+            ppg.project_no,
+            ppg.project_name,
+            ppg.province,
+            ppg.city,
+            ppg.area,
+            ppg.customer_name,
+            ppg.customer_phone,
+            ppi.house_area,
+            ppi.house_type,
+            ppi.store,
+            ppg.status,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家'),
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理')
+        FROM
+          pre_project_guide ppg
+        JOIN pre_project_company_set ppcs ON ppg.project_no = ppcs.project_no
+        JOIN pre_project_info ppi ON ppi.project_no = ppg.project_no
+        WHERE
+        <where>
+           and ppcs.company_id = #{companyID}
+          <if test="provice != null and provice != ''">
+              and ppg.province = #{provice}
+          </if>
+          <if test="city != null and city != ''">
+            and ppg.city = #{city}
+          </if>
+          <if test="area != null and area != ''">
+            and ppg.area = #{area}
+          </if>
+          <if test="staus != null and staus != ''">
+            and ppg.staus = #{staus}
+          </if>
+          <if test="hall != null and hall != ''">
+            and ppg.hall = #{hall}
+          </if>
+          <if test="customName != null and customName != ''">
+            and ppg.customName = #{customName}
+          </if>
+          <if test="filterProjectNos != null and filterProjectNos.size > 0">
+            and ppg.project_no in
+              <foreach close=")" collection="filterProjectNos" item="listItem" open="(" separator=",">
+                  #{listItem}
+              </foreach>
+          </if>
+
+        </where>
+
+
+    </select>
+</mapper>

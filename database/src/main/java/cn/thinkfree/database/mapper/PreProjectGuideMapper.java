@@ -3,6 +3,9 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectGuideExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.ProjectSEO;
+import cn.thinkfree.database.vo.ProjectVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PreProjectGuideMapper {
@@ -93,4 +96,11 @@ public interface PreProjectGuideMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PreProjectGuide record);
+
+    /**
+     * 根据查询条件进行查询
+     * @param projectSEO
+     * @return
+     */
+    List<ProjectVO> selectProjectVOBySEO(ProjectSEO projectSEO);
 }

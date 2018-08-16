@@ -75,8 +75,6 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         }
         UserRegister user = users.get(0);
 
-
-
         if(UserRegisterType.Enterprise.shortVal().equals(user.getType())){
 
             CompanyInfoExample companyInfoExample = new CompanyInfoExample();
@@ -85,7 +83,12 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
             if(companyInfos.isEmpty() || companyInfos.size() >1){
                 throw  new UsernameNotFoundException("用户企业信息异常");
             }
-            userVO.setCompanyInfo(companyInfos.get(0));
+            CompanyInfo companyInfo = companyInfos.get(0);
+            userVO.setCompanyInfo(companyInfo);
+
+            if(!companyInfo.getCompanyId().equals(companyInfo.getRootCompanyId())){
+                 userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(companyInfo.getRootCompanyId()));
+            }
 
         }else if(UserRegisterType.Staff.shortVal().equals(user.getType())){
             userVO.setUserRegister(user);
@@ -97,7 +100,11 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
                 printErrorMes("用户详情信息错误",phone);
                 throw  new UsernameNotFoundException("用户详情信息错误");
             }
-            userVO.setPcUserInfo(pcUserInfos.get(0));
+            PcUserInfo pcUserInfo = pcUserInfos.get(0);
+            userVO.setPcUserInfo(pcUserInfo);
+            if(!pcUserInfo.getCompanyId().equals(pcUserInfo.getRootCompanyId())){
+                userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(pcUserInfo.getRootCompanyId()));
+            }
         }
         printDebugMes("拼接用户权限");
         PcUserResourceExample pcUserResourceExample = new PcUserResourceExample();
