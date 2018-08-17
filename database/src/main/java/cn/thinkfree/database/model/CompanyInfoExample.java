@@ -1724,6 +1724,136 @@ public class CompanyInfoExample {
             addCriterion("root_company_id not between", value1, value2, "rootCompanyId");
             return (Criteria) this;
         }
+
+        public Criteria andParentCompanyIdIsNull() {
+            addCriterion("parent_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdIsNotNull() {
+            addCriterion("parent_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdEqualTo(String value) {
+            addCriterion("parent_company_id =", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdNotEqualTo(String value) {
+            addCriterion("parent_company_id <>", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdGreaterThan(String value) {
+            addCriterion("parent_company_id >", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("parent_company_id >=", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdLessThan(String value) {
+            addCriterion("parent_company_id <", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("parent_company_id <=", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdLike(String value) {
+            addCriterion("parent_company_id like", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdNotLike(String value) {
+            addCriterion("parent_company_id not like", value, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdIn(List<String> values) {
+            addCriterion("parent_company_id in", values, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdNotIn(List<String> values) {
+            addCriterion("parent_company_id not in", values, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdBetween(String value1, String value2) {
+            addCriterion("parent_company_id between", value1, value2, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andParentCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("parent_company_id not between", value1, value2, "parentCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterIsNull() {
+            addCriterion("is_center is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterIsNotNull() {
+            addCriterion("is_center is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterEqualTo(Short value) {
+            addCriterion("is_center =", value, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterNotEqualTo(Short value) {
+            addCriterion("is_center <>", value, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterGreaterThan(Short value) {
+            addCriterion("is_center >", value, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterGreaterThanOrEqualTo(Short value) {
+            addCriterion("is_center >=", value, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterLessThan(Short value) {
+            addCriterion("is_center <", value, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterLessThanOrEqualTo(Short value) {
+            addCriterion("is_center <=", value, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterIn(List<Short> values) {
+            addCriterion("is_center in", values, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterNotIn(List<Short> values) {
+            addCriterion("is_center not in", values, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterBetween(Short value1, Short value2) {
+            addCriterion("is_center between", value1, value2, "isCenter");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsCenterNotBetween(Short value1, Short value2) {
+            addCriterion("is_center not between", value1, value2, "isCenter");
+            return (Criteria) this;
+        }
     }
 
     /**

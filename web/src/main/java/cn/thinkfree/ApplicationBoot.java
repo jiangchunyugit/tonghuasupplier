@@ -7,14 +7,18 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
  * Created by lenovo on 2017/5/3.
  */
+@SpringBootConfiguration
 @Configuration
 @EnableTransactionManagement
 @EnableAutoConfiguration
-@SpringBootConfiguration
+@EnableWebMvc
+@EnableSwagger2
 @ComponentScan( basePackages = {"cn.thinkfree"} )
 @MapperScan(basePackages = "cn.thinkfree.database.mapper")
 public class ApplicationBoot{

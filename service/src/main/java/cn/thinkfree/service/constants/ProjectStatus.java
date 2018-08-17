@@ -33,5 +33,8 @@ public enum ProjectStatus {
         this.code = code;
         this.mes = mes;
     }
+    public Short shortVal(){
+        return code.shortValue();
+    }
 
 }

@@ -36,17 +36,17 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <javaClientGenerator
-                targetPackage="cn.thinkfree.database.mapper"
-                targetProject="src/main/java/"
-                type="XMLMAPPER" >
-            <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>
+        <!--<javaClientGenerator-->
+                <!--targetPackage="cn.thinkfree.database.mapper"-->
+                <!--targetProject="src/main/java/"-->
+                <!--type="XMLMAPPER" >-->
+            <!--<property name="enableSubPackages" value="false"/>-->
+        <!--</javaClientGenerator>-->
         <!-- 表-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
-        <!--<table tableName="company_info" domainObjectName="CompanyInfo"/>-->
+        <table tableName="company_info" domainObjectName="CompanyInfo"/>
         <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
         <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
         <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->

@@ -1655,6 +1655,306 @@ public class PreProjectGuideExample {
             addCriterion("total_price not between", value1, value2, "totalPrice");
             return (Criteria) this;
         }
+
+        public Criteria andOverdueDaysIsNull() {
+            addCriterion("overdue_days is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysIsNotNull() {
+            addCriterion("overdue_days is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysEqualTo(Short value) {
+            addCriterion("overdue_days =", value, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysNotEqualTo(Short value) {
+            addCriterion("overdue_days <>", value, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysGreaterThan(Short value) {
+            addCriterion("overdue_days >", value, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysGreaterThanOrEqualTo(Short value) {
+            addCriterion("overdue_days >=", value, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysLessThan(Short value) {
+            addCriterion("overdue_days <", value, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysLessThanOrEqualTo(Short value) {
+            addCriterion("overdue_days <=", value, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysIn(List<Short> values) {
+            addCriterion("overdue_days in", values, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysNotIn(List<Short> values) {
+            addCriterion("overdue_days not in", values, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysBetween(Short value1, Short value2) {
+            addCriterion("overdue_days between", value1, value2, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andOverdueDaysNotBetween(Short value1, Short value2) {
+            addCriterion("overdue_days not between", value1, value2, "overdueDays");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageIsNull() {
+            addCriterion("progress_stage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageIsNotNull() {
+            addCriterion("progress_stage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageEqualTo(Short value) {
+            addCriterion("progress_stage =", value, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageNotEqualTo(Short value) {
+            addCriterion("progress_stage <>", value, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageGreaterThan(Short value) {
+            addCriterion("progress_stage >", value, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageGreaterThanOrEqualTo(Short value) {
+            addCriterion("progress_stage >=", value, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageLessThan(Short value) {
+            addCriterion("progress_stage <", value, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageLessThanOrEqualTo(Short value) {
+            addCriterion("progress_stage <=", value, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageIn(List<Short> values) {
+            addCriterion("progress_stage in", values, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageNotIn(List<Short> values) {
+            addCriterion("progress_stage not in", values, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageBetween(Short value1, Short value2) {
+            addCriterion("progress_stage between", value1, value2, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andProgressStageNotBetween(Short value1, Short value2) {
+            addCriterion("progress_stage not between", value1, value2, "progressStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageIsNull() {
+            addCriterion("acceptance_stage is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageIsNotNull() {
+            addCriterion("acceptance_stage is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageEqualTo(Short value) {
+            addCriterion("acceptance_stage =", value, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageNotEqualTo(Short value) {
+            addCriterion("acceptance_stage <>", value, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageGreaterThan(Short value) {
+            addCriterion("acceptance_stage >", value, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageGreaterThanOrEqualTo(Short value) {
+            addCriterion("acceptance_stage >=", value, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageLessThan(Short value) {
+            addCriterion("acceptance_stage <", value, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageLessThanOrEqualTo(Short value) {
+            addCriterion("acceptance_stage <=", value, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageIn(List<Short> values) {
+            addCriterion("acceptance_stage in", values, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageNotIn(List<Short> values) {
+            addCriterion("acceptance_stage not in", values, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageBetween(Short value1, Short value2) {
+            addCriterion("acceptance_stage between", value1, value2, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andAcceptanceStageNotBetween(Short value1, Short value2) {
+            addCriterion("acceptance_stage not between", value1, value2, "acceptanceStage");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceIsNull() {
+            addCriterion("is_acceptance is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceIsNotNull() {
+            addCriterion("is_acceptance is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceEqualTo(Short value) {
+            addCriterion("is_acceptance =", value, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceNotEqualTo(Short value) {
+            addCriterion("is_acceptance <>", value, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceGreaterThan(Short value) {
+            addCriterion("is_acceptance >", value, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceGreaterThanOrEqualTo(Short value) {
+            addCriterion("is_acceptance >=", value, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceLessThan(Short value) {
+            addCriterion("is_acceptance <", value, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceLessThanOrEqualTo(Short value) {
+            addCriterion("is_acceptance <=", value, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceIn(List<Short> values) {
+            addCriterion("is_acceptance in", values, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceNotIn(List<Short> values) {
+            addCriterion("is_acceptance not in", values, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceBetween(Short value1, Short value2) {
+            addCriterion("is_acceptance between", value1, value2, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsAcceptanceNotBetween(Short value1, Short value2) {
+            addCriterion("is_acceptance not between", value1, value2, "isAcceptance");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Short value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Short value) {
+            addCriterion("status <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Short value) {
+            addCriterion("status >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Short value) {
+            addCriterion("status >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Short value) {
+            addCriterion("status <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Short value) {
+            addCriterion("status <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Short> values) {
+            addCriterion("status in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Short> values) {
+            addCriterion("status not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Short value1, Short value2) {
+            addCriterion("status between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Short value1, Short value2) {
+            addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
     }
 
     /**

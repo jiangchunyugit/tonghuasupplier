@@ -1,9 +1,12 @@
 package cn.thinkfree.database.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-
+@ApiModel
 public class ProjectSEO extends AbsPageSearchCriteria {
 
     /**
@@ -44,15 +47,18 @@ public class ProjectSEO extends AbsPageSearchCriteria {
      * 后台查询使用
      */
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private String companyID;
 
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private List<String> companyRelationMap;
 
     /**
      * 后台查询使用
      */
     @JsonIgnore
+    @ApiModelProperty(hidden = true)
     private List<String> filterProjectNos;
 
     public List<String> getCompanyRelationMap() {

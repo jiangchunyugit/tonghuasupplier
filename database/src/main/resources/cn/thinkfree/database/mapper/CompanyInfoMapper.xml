@@ -29,6 +29,8 @@
     <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
     <result column="area_code" jdbcType="INTEGER" property="areaCode" />
     <result column="root_company_id" jdbcType="VARCHAR" property="rootCompanyId" />
+    <result column="parent_company_id" jdbcType="VARCHAR" property="parentCompanyId" />
+    <result column="is_center" jdbcType="SMALLINT" property="isCenter" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -104,7 +106,7 @@
     id, company_id, company_name, role_id, province_code, address, legal_name, legal_phone, 
     legal_id_card, business_code, organization_code, tax_code, is_check, create_time, 
     phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code, 
-    area_code, root_company_id
+    area_code, root_company_id, parent_company_id, is_center
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.CompanyInfoExample" resultMap="BaseResultMap">
     <!--
@@ -146,7 +148,8 @@
       is_check, create_time, phone, 
       business_photo_url, work_photo_url, deposit_money, 
       lbs, is_delete, city_code, 
-      area_code, root_company_id)
+      area_code, root_company_id, parent_company_id, 
+      is_center)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -154,7 +157,8 @@
       #{isCheck,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, #{phone,jdbcType=VARCHAR}, 
       #{businessPhotoUrl,jdbcType=VARCHAR}, #{workPhotoUrl,jdbcType=VARCHAR}, #{depositMoney,jdbcType=INTEGER}, 
       #{lbs,jdbcType=VARCHAR}, #{isDelete,jdbcType=SMALLINT}, #{cityCode,jdbcType=SMALLINT}, 
-      #{areaCode,jdbcType=INTEGER}, #{rootCompanyId,jdbcType=VARCHAR})
+      #{areaCode,jdbcType=INTEGER}, #{rootCompanyId,jdbcType=VARCHAR}, #{parentCompanyId,jdbcType=VARCHAR}, 
+      #{isCenter,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CompanyInfo">
     <!--
@@ -232,6 +236,12 @@
       <if test="rootCompanyId != null">
         root_company_id,
       </if>
+      <if test="parentCompanyId != null">
+        parent_company_id,
+      </if>
+      <if test="isCenter != null">
+        is_center,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -302,6 +312,12 @@
       </if>
       <if test="rootCompanyId != null">
         #{rootCompanyId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCompanyId != null">
+        #{parentCompanyId,jdbcType=VARCHAR},
+      </if>
+      <if test="isCenter != null">
+        #{isCenter,jdbcType=SMALLINT},
       </if>
     </trim>
   </insert>
@@ -391,6 +407,12 @@
       <if test="record.rootCompanyId != null">
         root_company_id = #{record.rootCompanyId,jdbcType=VARCHAR},
       </if>
+      <if test="record.parentCompanyId != null">
+        parent_company_id = #{record.parentCompanyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isCenter != null">
+        is_center = #{record.isCenter,jdbcType=SMALLINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -424,7 +446,9 @@
       is_delete = #{record.isDelete,jdbcType=SMALLINT},
       city_code = #{record.cityCode,jdbcType=SMALLINT},
       area_code = #{record.areaCode,jdbcType=INTEGER},
-      root_company_id = #{record.rootCompanyId,jdbcType=VARCHAR}
+      root_company_id = #{record.rootCompanyId,jdbcType=VARCHAR},
+      parent_company_id = #{record.parentCompanyId,jdbcType=VARCHAR},
+      is_center = #{record.isCenter,jdbcType=SMALLINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

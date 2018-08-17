@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PreProjectInfoMapper">
+
+    <select id="selectProjectInfoByProjectNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+      select
+      <include refid="Base_Column_List" />
+      from pre_project_info
+      where project_no = #{projectNo}
+
+
+    </select>
+
+</mapper>

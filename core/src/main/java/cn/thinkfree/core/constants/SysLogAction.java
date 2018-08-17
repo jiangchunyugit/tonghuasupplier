@@ -9,7 +9,10 @@ public enum  SysLogAction {
 
     LOGIN(1,"登录"),
     SAVE(2,"保存"),
-    QUERY(3,"查询");
+    QUERY(3,"查询"),
+    DEL(4,"删除"),
+    CHANGE_STATE(5,"改变状态"),
+    EDIT(6,"编辑");
 
     public String mes;
     public Integer code;

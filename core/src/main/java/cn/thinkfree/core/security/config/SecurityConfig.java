@@ -51,7 +51,9 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web){
         // 设置不拦截规则
         web.ignoring()
-                .antMatchers("/static/**/*", SecurityConstants.LOGIN_PAGE,"/**/*.jsp");
+                .antMatchers("/error")
+                .antMatchers("/static/**/*", SecurityConstants.LOGIN_PAGE,"/**/*.jsp")
+                .antMatchers("/api-docs", "/swagger-resources/**", "/swagger-ui.html","/webjars/**");
 
     }
 
@@ -61,8 +63,9 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         // 设置拦截规则
         // 自定义accessDecisionManager访问控制器,并开启表达式语言
         http.authorizeRequests()
-//                .antMatchers("/role/**").hasRole("USER")
-                .anyRequest().permitAll()
+                .antMatchers("/role/**").hasRole("USER")
+//                .anyRequest()
+//                .permitAll()
 //                .accessDecisionManager(accessDecisionManager())
 //                .expressionHandler(webSecurityExpressionHandler())
 //                .antMatchers("/**").access("hasRole('ROLE_USER')")
@@ -150,17 +153,6 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-        // 自定义UserDetailsService
-//        ReflectionSaltSource rss = new ReflectionSaltSource();
-//        rss.setUserPropertyToUse(SecurityConstants.SALT);
-//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-////        provider.setMessageSource(MessageSource);
-//        provider.setSaltSource(rss);
-//        provider.setUserDetailsService(userService);
-//        provider.setPasswordEncoder(new Md5PasswordEncoder());
-//        auth.authenticationProvider(provider);
-
-//        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());
         auth.userDetailsService(userService).passwordEncoder(new MultipleMd5());
     }
 

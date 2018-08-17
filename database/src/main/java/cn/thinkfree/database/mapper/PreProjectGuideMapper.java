@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectGuideExample;
 import java.util.List;
 
+import cn.thinkfree.database.vo.ProjectDetailsVO;
 import cn.thinkfree.database.vo.ProjectSEO;
 import cn.thinkfree.database.vo.ProjectVO;
 import org.apache.ibatis.annotations.Param;
@@ -103,4 +104,11 @@ public interface PreProjectGuideMapper {
      * @return
      */
     List<ProjectVO> selectProjectVOBySEO(ProjectSEO projectSEO);
+
+    /**
+     * 根据项目编号查询项目详情
+     * @param projectNo
+     * @return
+     */
+    ProjectDetailsVO selectProjectDetailsByProjectNo(String projectNo);
 }

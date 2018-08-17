@@ -7,7 +7,8 @@ package cn.thinkfree.core.constants;
  */
 public enum  SysLogModule {
 
-    PC_USER(1,"用户模块");
+    PC_USER(1,"用户模块"),
+    PC_PROJECT(2,"项目模块");
 
     public String mes;
     public Integer code;

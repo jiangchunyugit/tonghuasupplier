@@ -93,4 +93,11 @@ public interface PreProjectInfoMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PreProjectInfo record);
+
+    /**
+     * 根据项目编号查询项目信息
+     * @param projectNo
+     * @return
+     */
+    PreProjectInfo selectProjectInfoByProjectNo(String projectNo);
 }

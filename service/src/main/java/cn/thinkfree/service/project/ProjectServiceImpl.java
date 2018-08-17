@@ -1,26 +1,26 @@
 package cn.thinkfree.service.project;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
-import cn.thinkfree.database.mapper.PreProjectCompanySetMapper;
-import cn.thinkfree.database.mapper.PreProjectGuideMapper;
-import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
-import cn.thinkfree.database.model.PreProjectUserRoleExample;
-import cn.thinkfree.database.vo.IndexProjectReportVO;
-import cn.thinkfree.database.vo.ProjectSEO;
-import cn.thinkfree.database.vo.ProjectVO;
-import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class ProjectServiceImpl implements ProjectService {
+public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService {
+
 
     @Autowired
     PreProjectCompanySetMapper preProjectCompanySetMapper;
@@ -31,6 +31,17 @@ public class ProjectServiceImpl implements ProjectService {
     @Autowired
     PreProjectGuideMapper preProjectGuideMapper;
 
+    @Autowired
+    PreProjectInfoMapper preProjectInfoMapper;
+
+    @Autowired
+    PreProjectMaterialMapper preProjectMaterialMapper;
+
+    @Autowired
+    PreProjectConstructionMapper preProjectConstructionMapper;
+
+    @Autowired
+    PreProjectConstructionInfoMapper preProjectConstructionInfoMapper;
     /**
      * 汇总公司项目情况
      *
@@ -88,4 +99,127 @@ public class ProjectServiceImpl implements ProjectService {
 
         return new PageInfo<>(projectVOS);
     }
+
+    /**
+     * 删除项目根据项目主键
+     *
+     * @param projectNo
+     * @return
+     */
+    @Transactional
+    @Override
+    public String deleteProjectByProjectNo(String projectNo) {
+
+        PreProjectGuideExample preProjectGuideExample = new PreProjectGuideExample();
+        preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        List<PreProjectGuide> preProjectGuides = preProjectGuideMapper.selectByExample(preProjectGuideExample);
+        printInfoMes("删除项目编号{},查询到项目引导信息:{}",projectNo,preProjectGuides);
+        if(preProjectGuides.isEmpty() || preProjectGuides.size() > 1){
+            printErrorMes("删除项目编号{},查询到项目引导信息不唯一",projectNo);
+            return "数据异常,无法删除";
+        }
+        PreProjectGuide preProjectGuide = preProjectGuides.get(0);
+        if(!ProjectStatus.NotOnLine.shortVal().equals(preProjectGuide.getStatus())){
+            return "数据状态不可删除";
+        }
+
+        PreProjectGuide deleteObj = new PreProjectGuide();
+        deleteObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        preProjectGuideMapper.updateByExampleSelective(preProjectGuide,preProjectGuideExample);
+
+        delProjectInfo(projectNo);
+        delProjectProjectConstructionAndInfo(projectNo);
+        delProjectMaterial(projectNo);
+        return "操作成功";
+    }
+
+    /**
+     * 停工
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public String updateProjectStateForStop(String projectNo) {
+        printInfoMes("停工项目:{}",projectNo);
+        PreProjectGuideExample preProjectGuideExample = new PreProjectGuideExample();
+        preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(ProjectStatus.Working.shortVal());
+        List<PreProjectGuide> preProjectGuides = preProjectGuideMapper.selectByExample(preProjectGuideExample);
+
+        if(preProjectGuides.isEmpty()){
+            return "数据状态不可停工!";
+        }
+
+        PreProjectGuide preProjectGuide = new PreProjectGuide();
+        preProjectGuide.setStatus(ProjectStatus.StopTheWork.shortVal());
+        preProjectGuideMapper.updateByExampleSelective(preProjectGuide,preProjectGuideExample);
+
+        return "操作成功";
+    }
+
+    /**
+     * 查询项目详情 根据项目编号
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public ProjectDetailsVO selectProjectDetailsVOByProjectNo(String projectNo) {
+
+        ProjectDetailsVO projectDetailsVO = preProjectGuideMapper.selectProjectDetailsByProjectNo(projectNo);
+
+        PreProjectUserRoleExample roleExample = new PreProjectUserRoleExample();
+        roleExample.createCriteria().andProjectNoEqualTo(projectNo).andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        List<PreProjectUserRole> preProjectUserRoles = preProjectUserRoleMapper.selectByExample(roleExample);
+        projectDetailsVO.setStaffs(preProjectUserRoles);
+        return projectDetailsVO;
+    }
+
+    /**
+     * 删除主材信息
+     * @param projectNo
+     */
+    private void delProjectMaterial(String projectNo) {
+        PreProjectMaterial delObj = new PreProjectMaterial();
+        delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        PreProjectMaterialExample preProjectMaterialExample = new PreProjectMaterialExample();
+        preProjectMaterialExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        preProjectMaterialMapper.updateByExampleSelective(delObj,preProjectMaterialExample);
+
+    }
+
+    /**
+     * 删除报价单及详情
+     * @param projectNo
+     */
+    private void delProjectProjectConstructionAndInfo(String projectNo) {
+
+        PreProjectConstruction delObj = new PreProjectConstruction();
+        delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        PreProjectConstructionExample preProjectConstructionExample = new PreProjectConstructionExample();
+        preProjectConstructionExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal()).andProjectNoEqualTo(projectNo);
+        preProjectConstructionMapper.updateByExampleSelective(delObj,preProjectConstructionExample);
+
+        PreProjectConstructionInfo delInfo = new PreProjectConstructionInfo();
+        delInfo.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        PreProjectConstructionInfoExample preProjectConstructionInfoExample = new PreProjectConstructionInfoExample();
+        preProjectConstructionInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        preProjectConstructionInfoMapper.updateByExampleSelective(delInfo,preProjectConstructionInfoExample);
+
+
+    }
+
+    /**
+     * 删除项目信息
+     * @param projectNo
+     */
+    private void delProjectInfo(String projectNo) {
+        // 标记项目基本信息
+        PreProjectInfo delObj = new PreProjectInfo();
+        delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
+        preProjectInfoExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal()).andProjectNoEqualTo(projectNo);
+        preProjectInfoMapper.updateByExampleSelective(delObj,preProjectInfoExample);
+    }
+
 }

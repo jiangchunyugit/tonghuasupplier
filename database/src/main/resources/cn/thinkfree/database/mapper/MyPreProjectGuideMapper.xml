@@ -13,6 +13,13 @@
 
     </resultMap>
 
+    <resultMap id="ProjectDetailsVO" type="cn.thinkfree.database.vo.ProjectDetailsVO" extends="BaseResultMap">
+
+        <association property="info" column="project_no"   javaType="cn.thinkfree.database.model.PreProjectInfo"
+                     select="cn.thinkfree.database.mapper.PreProjectInfoMapper.selectProjectInfoByProjectNo"/>
+
+    </resultMap>
+
   <select id="selectProjectVOBySEO" parameterType="cn.thinkfree.database.vo.ProjectSEO" resultMap="ProjectVO">
         SELECT
             ppg.project_no,
@@ -32,8 +39,9 @@
           pre_project_guide ppg
         JOIN pre_project_company_set ppcs ON ppg.project_no = ppcs.project_no
         JOIN pre_project_info ppi ON ppi.project_no = ppg.project_no
-        WHERE
+
         <where>
+           and ppg.is_delete = 0
            and ppcs.company_id in
             <foreach close=")" collection="companyRelationMap" item="listItem" open="(" separator=",">
                 #{listItem}
@@ -67,4 +75,16 @@
 
 
     </select>
+
+
+    <select id="selectProjectDetailsByProjectNo" parameterType="java.lang.String" resultMap="ProjectDetailsVO">
+      select
+        <include refid="Base_Column_List" />
+      from
+      pre_project_guide
+      where   project_no = #{projectNo}
+
+    </select>
+
+
 </mapper>
