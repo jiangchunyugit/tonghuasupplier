@@ -93,4 +93,6 @@ public interface UserInfoMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(UserInfo record);
+
+    List<UserInfo> selectByParam(List<String> companyId);
 }
