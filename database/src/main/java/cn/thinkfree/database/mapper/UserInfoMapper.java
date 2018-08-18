@@ -94,5 +94,4 @@ public interface UserInfoMapper {
      */
     int updateByPrimaryKey(UserInfo record);
 
-    List<UserInfo> selectByParam(List<String> companyId);
 }

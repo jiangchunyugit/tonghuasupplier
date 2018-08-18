@@ -19,7 +19,6 @@ import java.util.function.ToDoubleBiFunction;
 @Service
 public class SystemMessageServiceImpl implements SystemMessageService {
 
-    MyLogger logger = LogUtil.getLogger(SystemMessageService.class);
 
     @Autowired
     SystemMessageMapper sysMsgMapper;
@@ -38,24 +37,13 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public List<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime) {
         Map<String, Object> param = new HashMap<>();
-        try{
-            if(null == sendUserId) sendUserId = "";
-            if(null == sendTime) sendTime = "";
-            param.put("sendTime", sendTime);
-            param.put("sendUserId", sendUserId);
-            if(!userVO.isRoot()){
-                //主公司
-                param.put("companyId", userVO.getRelationMap());
-            }else{
-                List<String> list = new ArrayList<>();
-                list.add(userVO.getCompanyID());
-                param.put("companyId", list);
-            }
 
-        }catch (Exception e){
-            logger.error("error:",e);
-            e.printStackTrace();
-        }
+        if(null == sendUserId) sendUserId = "";
+        if(null == sendTime) sendTime = "";
+        param.put("sendTime", sendTime);
+        param.put("sendUserId", sendUserId);
+        param.put("companyId", userVO.getRelationMap());
+
         PageHelper.startPage(no,pageSize);
         return sysMsgMapper.selectByParam(param);
     }
