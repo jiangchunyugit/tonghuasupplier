@@ -1,32 +1,26 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
-import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.constants.SysLogAction;
-import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageInfo;
-import com.sun.xml.internal.bind.v2.TODO;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.SwaggerDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/sysMsg")
+
 public class SystemMessageController extends AbsBaseController {
 
     @Autowired
@@ -40,7 +34,7 @@ public class SystemMessageController extends AbsBaseController {
      * @param sendTime
      * @return
      */
-    @RequestMapping(value = "/findByParam", method = RequestMethod.GET)
+    @RequestMapping(value = "/findByParam", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="查询公告信息", notes="根据操作人和日期查询公告信息")
     @ApiImplicitParams({
@@ -70,7 +64,7 @@ public class SystemMessageController extends AbsBaseController {
      * @return
      */
 //    @MySysLog(desc = "/sysMsg/delSysMsg",action = SysLogAction.QUERY,module = SysLogModule.PC_NEWS)
-    @RequestMapping(value = "/delSysMsg", method = RequestMethod.GET)
+    @RequestMapping(value = "/delSysMsg", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="公告删除", notes="根据公告id删除公告")
     @ApiImplicitParams({
@@ -92,7 +86,7 @@ public class SystemMessageController extends AbsBaseController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/findById", method = RequestMethod.GET)
+    @RequestMapping(value = "/findById", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="公告列表查看", notes="根据公告id查看信息")
     @ApiImplicitParams({
@@ -115,7 +109,7 @@ public class SystemMessageController extends AbsBaseController {
      * @return
      */
 //    @MySysLog(desc = "/sysMsg/saveSysMsg",action = SysLogAction.QUERY,module = SysLogModule.PC_NEWS)
-    @RequestMapping(value = "/saveSysMsg", method = RequestMethod.GET)
+    @RequestMapping(value = "/saveSysMsg", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="新增公告", notes="")
     @ApiImplicitParams({

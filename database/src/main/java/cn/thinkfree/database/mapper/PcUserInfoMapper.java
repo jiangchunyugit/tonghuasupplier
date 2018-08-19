@@ -111,4 +111,11 @@ public interface PcUserInfoMapper {
      * @return
      */
     List<PcUserInfoVo> findByParam(Map<String, Object> param);
+
+    /**
+     * 根据userid查询单条数据信息
+     * @param userId
+     * @return
+     */
+    PcUserInfoVo findByUserId(String userId);
 }

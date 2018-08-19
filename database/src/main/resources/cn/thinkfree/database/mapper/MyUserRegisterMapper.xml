@@ -31,4 +31,11 @@
     delete from user_register
     where user_id = #{userId,jdbcType=VARCHAR}
   </delete>
+  <select id="selectByUserId" parameterType="java.lang.String" resultMap="ResultMap">
+    select
+    <include refid="Column_List" />
+    from user_register
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+
 </mapper>

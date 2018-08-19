@@ -100,4 +100,11 @@ public interface UserRegisterMapper {
      * @return
      */
     int deleteByUserId(String userId);
+
+    /**
+     * 根据userid查询注册信息
+     * @param userId
+     * @return
+     */
+    UserRegister selectByUserId(String userId);
 }
