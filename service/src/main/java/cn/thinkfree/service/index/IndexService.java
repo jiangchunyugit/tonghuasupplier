@@ -1,7 +1,7 @@
 package cn.thinkfree.service.index;
 
-import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.vo.IndexMenuVO;
+import cn.thinkfree.database.vo.IndexProjectChartItemVO;
 import cn.thinkfree.database.vo.IndexReportVO;
 
 import java.util.List;
@@ -19,4 +19,10 @@ public interface IndexService  {
      */
     List<IndexMenuVO> listIndexMenu();
 
+    /**
+     *  项目周期总览
+     * @param unit
+     * @return
+     */
+    List<IndexProjectChartItemVO> summaryProjectChart(Integer unit);
 }

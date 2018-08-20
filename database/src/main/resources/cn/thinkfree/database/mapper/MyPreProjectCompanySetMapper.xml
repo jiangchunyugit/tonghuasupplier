@@ -24,7 +24,7 @@
       join pre_project_guide  pre_project_guide
       on pre_project_company_set.project_no = pre_project_guide.project_no
       where
-        and is_delete = 1
+        pre_project_guide.is_delete = 0
         and  pre_project_company_set.company_id in
         <foreach collection="list"  separator="," open="(" item="listItem" close=")">
             #{listItem}
@@ -32,6 +32,23 @@
 
 
     </select>
+    <select id="countProjectForPerson" parameterType="java.lang.String" resultMap="IndexProjectReportVO">
+        SELECT
+            sum(CASE WHEN pre_project_guide.status = '0' THEN 1 ELSE 0 END) as notOnLine,
+            sum(CASE WHEN pre_project_guide.status = '1' THEN 1 ELSE 0 END) as waitStart,
+            sum(CASE WHEN pre_project_guide.status = '2' THEN 1 ELSE 0 END) as working,
+            sum(CASE WHEN pre_project_guide.status = '4' THEN 1 ELSE 0 END) as stopTheWork,
+            sum(CASE WHEN pre_project_guide.status = '3' THEN 1 ELSE 0 END) as complete
+        from pre_project_user_role pre_project_user_role
+        join pre_project_guide  pre_project_guide
+        on pre_project_user_role.project_no = pre_project_guide.project_no
+        where
+         pre_project_guide.is_delete = 0
+        and pre_project_user_role.user_id = #{userID}
+        and pre_project_user_role.is_transfer =0
+        and pre_project_user_role.is_job = 1
 
+
+    </select>
 
 </mapper>

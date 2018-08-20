@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PreProjectInfo;
 import cn.thinkfree.database.model.PreProjectInfoExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.ProjectQuotationVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PreProjectInfoMapper {
@@ -100,4 +102,11 @@ public interface PreProjectInfoMapper {
      * @return
      */
     PreProjectInfo selectProjectInfoByProjectNo(String projectNo);
+
+    /**
+     * 根据项目编号查询报价单
+     * @param projectNo
+     * @return
+     */
+    ProjectQuotationVO selectProjectQuotationVOByProjectNo(String projectNo);
 }

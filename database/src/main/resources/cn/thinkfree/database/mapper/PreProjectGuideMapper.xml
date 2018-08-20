@@ -33,6 +33,7 @@
     <result column="acceptance_stage" jdbcType="SMALLINT" property="acceptanceStage" />
     <result column="is_acceptance" jdbcType="SMALLINT" property="isAcceptance" />
     <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="project_pic" jdbcType="VARCHAR" property="projectPic" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -108,7 +109,8 @@
     id, project_no, project_name, customer_name, customer_phone, customer_no, contract_no, 
     contract_starttime, contract_endtime, project_starttime, province, city, area, address, 
     longitude, latitude, update_time, is_delete, create_time, designer_no, designer_name, 
-    total_price, overdue_days, progress_stage, acceptance_stage, is_acceptance, status
+    total_price, overdue_days, progress_stage, acceptance_stage, is_acceptance, status, 
+    project_pic
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PreProjectGuideExample" resultMap="BaseResultMap">
     <!--
@@ -169,8 +171,8 @@
       latitude, update_time, is_delete, 
       create_time, designer_no, designer_name, 
       total_price, overdue_days, progress_stage, 
-      acceptance_stage, is_acceptance, status
-      )
+      acceptance_stage, is_acceptance, status, 
+      project_pic)
     values (#{id,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{customerName,jdbcType=VARCHAR}, #{customerPhone,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
       #{contractNo,jdbcType=VARCHAR}, #{contractStarttime,jdbcType=TIMESTAMP}, #{contractEndtime,jdbcType=TIMESTAMP}, 
@@ -179,8 +181,8 @@
       #{latitude,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=SMALLINT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{designerNo,jdbcType=VARCHAR}, #{designerName,jdbcType=VARCHAR}, 
       #{totalPrice,jdbcType=NUMERIC}, #{overdueDays,jdbcType=SMALLINT}, #{progressStage,jdbcType=SMALLINT}, 
-      #{acceptanceStage,jdbcType=SMALLINT}, #{isAcceptance,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT}
-      )
+      #{acceptanceStage,jdbcType=SMALLINT}, #{isAcceptance,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT}, 
+      #{projectPic,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PreProjectGuide">
     <!--
@@ -270,6 +272,9 @@
       <if test="status != null">
         status,
       </if>
+      <if test="projectPic != null">
+        project_pic,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -352,6 +357,9 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="projectPic != null">
+        #{projectPic,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -453,6 +461,9 @@
       <if test="record.status != null">
         status = #{record.status,jdbcType=SMALLINT},
       </if>
+      <if test="record.projectPic != null">
+        project_pic = #{record.projectPic,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -490,7 +501,8 @@
       progress_stage = #{record.progressStage,jdbcType=SMALLINT},
       acceptance_stage = #{record.acceptanceStage,jdbcType=SMALLINT},
       is_acceptance = #{record.isAcceptance,jdbcType=SMALLINT},
-      status = #{record.status,jdbcType=SMALLINT}
+      status = #{record.status,jdbcType=SMALLINT},
+      project_pic = #{record.projectPic,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -580,6 +592,9 @@
       <if test="status != null">
         status = #{status,jdbcType=SMALLINT},
       </if>
+      <if test="projectPic != null">
+        project_pic = #{projectPic,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -614,7 +629,8 @@
       progress_stage = #{progressStage,jdbcType=SMALLINT},
       acceptance_stage = #{acceptanceStage,jdbcType=SMALLINT},
       is_acceptance = #{isAcceptance,jdbcType=SMALLINT},
-      status = #{status,jdbcType=SMALLINT}
+      status = #{status,jdbcType=SMALLINT},
+      project_pic = #{projectPic,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

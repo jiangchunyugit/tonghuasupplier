@@ -2,8 +2,11 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectGuideExample;
+
+import java.time.LocalDate;
 import java.util.List;
 
+import cn.thinkfree.database.vo.IndexProjectChartItemVO;
 import cn.thinkfree.database.vo.ProjectDetailsVO;
 import cn.thinkfree.database.vo.ProjectSEO;
 import cn.thinkfree.database.vo.ProjectVO;
@@ -111,4 +114,22 @@ public interface PreProjectGuideMapper {
      * @return
      */
     ProjectDetailsVO selectProjectDetailsByProjectNo(String projectNo);
+
+    /**
+     * 查询首页折线图
+     * @param firstDate 开始日期
+     * @param lastDate  结束日期
+     * @param relationMap  公司关系图
+     * @return
+     */
+    List<IndexProjectChartItemVO> selectProjectLineChat(@Param("firstDate") String firstDate,
+                                                        @Param("lastDate") String lastDate,
+                                                        @Param("relationMap") List<String> relationMap);
+
+    /**
+     * 查询一个员工所有参与的项目
+     * @param userID
+     * @return
+     */
+    List<ProjectVO> selectProjectVOForPerson(@Param("userID") String userID,@Param("status") Integer status);
 }

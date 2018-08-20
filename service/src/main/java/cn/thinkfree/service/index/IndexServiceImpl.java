@@ -2,6 +2,8 @@ package cn.thinkfree.service.index;
 
 import cn.thinkfree.core.security.dao.SecurityResourceDao;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.utils.DateUtils;
+import cn.thinkfree.database.constants.IndexChartUnit;
 import cn.thinkfree.database.constants.MenuType;
 import cn.thinkfree.database.mapper.MenuMapper;
 import cn.thinkfree.database.model.Menu;
@@ -14,6 +16,7 @@ import cn.thinkfree.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -68,6 +71,23 @@ public class IndexServiceImpl implements IndexService  {
         List<Menu> menus = menuMapper.selectByExample(menuExample);
 
         return convertMenus(menus);
+    }
+
+    /**
+     * 项目周期总览
+     *
+     * @param unit
+     * @return
+     */
+    @Override
+    public List<IndexProjectChartItemVO> summaryProjectChart(Integer unit) {
+        if(IndexChartUnit.Week.code.equals(unit)){
+
+            return projectService.summaryProjectChart(DateUtils.firstDayOfWeek(),DateUtils.lastDayOfWeek());
+        }else if(IndexChartUnit.Month.code.equals(unit)){
+            return projectService.summaryProjectChart(DateUtils.firstDayOfMonth(),DateUtils.lastDayOfMonth());
+        }
+        return Collections.EMPTY_LIST;
     }
 
     /**

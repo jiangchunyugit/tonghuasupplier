@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.CompanyUserSetExample;
 import java.util.List;
 
 import cn.thinkfree.database.vo.IndexUserReportVO;
+import cn.thinkfree.database.vo.StaffsVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface CompanyUserSetMapper {
@@ -102,4 +103,11 @@ public interface CompanyUserSetMapper {
      * @param companyRelationMap
      */
     IndexUserReportVO countCompanyUser(List<String> companyRelationMap);
+
+    /**
+     * 查询公司所有员工
+     * @param companyUserSetExample
+     * @return
+     */
+    List<StaffsVO> selectStaffsVOByExample(CompanyUserSetExample companyUserSetExample);
 }

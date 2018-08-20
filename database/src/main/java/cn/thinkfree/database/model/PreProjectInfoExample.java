@@ -1535,6 +1535,76 @@ public class PreProjectInfoExample {
             addCriterion("manager_expense not between", value1, value2, "managerExpense");
             return (Criteria) this;
         }
+
+        public Criteria andProjectCodeIsNull() {
+            addCriterion("project_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeIsNotNull() {
+            addCriterion("project_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeEqualTo(String value) {
+            addCriterion("project_code =", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeNotEqualTo(String value) {
+            addCriterion("project_code <>", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeGreaterThan(String value) {
+            addCriterion("project_code >", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("project_code >=", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeLessThan(String value) {
+            addCriterion("project_code <", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeLessThanOrEqualTo(String value) {
+            addCriterion("project_code <=", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeLike(String value) {
+            addCriterion("project_code like", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeNotLike(String value) {
+            addCriterion("project_code not like", value, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeIn(List<String> values) {
+            addCriterion("project_code in", values, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeNotIn(List<String> values) {
+            addCriterion("project_code not in", values, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeBetween(String value1, String value2) {
+            addCriterion("project_code between", value1, value2, "projectCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectCodeNotBetween(String value1, String value2) {
+            addCriterion("project_code not between", value1, value2, "projectCode");
+            return (Criteria) this;
+        }
     }
 
     /**

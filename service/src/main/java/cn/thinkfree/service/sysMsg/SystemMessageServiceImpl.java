@@ -43,14 +43,8 @@ public class SystemMessageServiceImpl implements SystemMessageService {
             if(null == sendTime) sendTime = "";
             param.put("sendTime", sendTime);
             param.put("sendUserId", sendUserId);
-            if(!userVO.isRoot()){
-                //主公司
-                param.put("companyId", userVO.getRelationMap());
-            }else{
-                List<String> list = new ArrayList<>();
-                list.add(userVO.getCompanyID());
-                param.put("companyId", list);
-            }
+            param.put("companyId", userVO.getRelationMap());
+
 
         }catch (Exception e){
             logger.error("error:",e);

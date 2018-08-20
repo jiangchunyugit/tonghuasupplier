@@ -46,14 +46,14 @@
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
-        <table tableName="company_info" domainObjectName="CompanyInfo"/>
+        <!--<table tableName="company_info" domainObjectName="CompanyInfo"/>-->
         <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
         <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
         <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->
         <!--<table tableName="pre_project_construction_info" domainObjectName="PreProjectConstructionInfo"/>-->
-        <!--<table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />-->
+        <table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />
         <!--<table tableName="pre_project_house_type" domainObjectName="PreProjectHouseType"/>-->
-        <!--<table tableName="pre_project_info" domainObjectName="PreProjectInfo" />-->
+        <table tableName="pre_project_info" domainObjectName="PreProjectInfo" />
         <!--<table tableName="pre_project_material" domainObjectName="PreProjectMaterial"/>-->
         <!--<table tableName="pre_project_status" domainObjectName="PreProjectStatus" />-->
         <!--<table tableName="pre_project_user_role" domainObjectName="PreProjectUserRole"/>-->
@@ -65,8 +65,9 @@
         <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
         <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
         <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
-        <table tableName="pc_user_info" domainObjectName="PcUserInfo"/>
+        <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
-
+        <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
+        <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
     </context>
 </generatorConfiguration>

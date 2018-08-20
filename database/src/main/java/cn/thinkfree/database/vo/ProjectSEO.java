@@ -12,7 +12,7 @@ public class ProjectSEO extends AbsPageSearchCriteria {
     /**
      * 省
      */
-    private String provice;
+    private String province;
     /**
      * 市
      */
@@ -24,7 +24,7 @@ public class ProjectSEO extends AbsPageSearchCriteria {
     /**
      * 状态
      */
-    private String staus;
+    private String status;
     /**
      * 客户姓名
      */
@@ -85,13 +85,7 @@ public class ProjectSEO extends AbsPageSearchCriteria {
         this.filterProjectNos = filterProjectNos;
     }
 
-    public String getProvice() {
-        return provice;
-    }
 
-    public void setProvice(String provice) {
-        this.provice = provice;
-    }
 
     public String getCity() {
         return city;
@@ -109,12 +103,20 @@ public class ProjectSEO extends AbsPageSearchCriteria {
         this.area = area;
     }
 
-    public String getStaus() {
-        return staus;
+    public String getProvince() {
+        return province;
     }
 
-    public void setStaus(String staus) {
-        this.staus = staus;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getCustomName() {

@@ -64,8 +64,18 @@ public interface CompanyInfoMapper {
 
     /**
      * 根据根公司查询公司关系图
-     * @param rootCompanyId
+     * @param companyInfo
      * @return
      */
-    List<String> selectRelationMapByRootCompany(String rootCompanyId);
+    List<String> selectRelationMap(CompanyInfo companyInfo);
+
+    /**
+     * 查询公司信息 根据项目编码
+     * @param projectNo
+     * @return
+     */
+    CompanyInfo selectCompanyInfoByProjectNo(String projectNo);
+
+
+
 }

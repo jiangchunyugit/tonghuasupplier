@@ -1,9 +1,8 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.PreProjectGuide;
-import cn.thinkfree.database.model.PreProjectInfo;
-import cn.thinkfree.database.model.PreProjectUserRole;
+import cn.thinkfree.database.model.*;
 import io.swagger.annotations.ApiModel;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 @ApiModel
@@ -15,9 +14,63 @@ public class ProjectDetailsVO extends PreProjectGuide {
     private PreProjectInfo info;
 
     /**
+     * 公司信息
+     */
+    private CompanyInfo companyInfo;
+
+
+    /**
      * 项目员工信息
      */
     private List<PreProjectUserRole> staffs;
+
+    /**
+     * 报价单
+     */
+    private ProjectQuotationVO projectQuotationVO;
+
+    /**
+     * 二维码文件
+     */
+    private MultipartFile QRCodeFile;
+
+    /**
+     * 项目缩略图
+     */
+    private MultipartFile thumbnail;
+
+
+    public MultipartFile getQRCodeFile() {
+        return QRCodeFile;
+    }
+
+    public void setQRCodeFile(MultipartFile QRCodeFile) {
+        this.QRCodeFile = QRCodeFile;
+    }
+
+    public MultipartFile getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(MultipartFile thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public ProjectQuotationVO getProjectQuotationVO() {
+        return projectQuotationVO;
+    }
+
+    public void setProjectQuotationVO(ProjectQuotationVO projectQuotationVO) {
+        this.projectQuotationVO = projectQuotationVO;
+    }
+
+    public CompanyInfo getCompanyInfo() {
+        return companyInfo;
+    }
+
+    public void setCompanyInfo(CompanyInfo companyInfo) {
+        this.companyInfo = companyInfo;
+    }
 
     public PreProjectInfo getInfo() {
         return info;

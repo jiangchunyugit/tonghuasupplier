@@ -1,8 +1,6 @@
 package cn.thinkfree.service.dictionary;
 
-import cn.thinkfree.database.model.Area;
-import cn.thinkfree.database.model.City;
-import cn.thinkfree.database.model.Province;
+import cn.thinkfree.database.model.*;
 
 import java.util.List;
 
@@ -27,5 +25,23 @@ public interface DictionaryService {
      * @return
      */
     List<Area> findAreaByCity(String city);
+
+    /**
+     * 获取所有房屋类型
+     * @return
+     */
+    List<PreProjectHouseType> findAllHouseType();
+
+    /**
+     * 获取房屋新旧程度
+     * @return
+     */
+    List<HousingStatus> findAlHouseStatus();
+
+    /**
+     * 获取项目套餐
+     * @return
+     */
+    List<ProjectType> findAllProjectType();
 
 }

@@ -3,11 +3,43 @@
 <mapper namespace="cn.thinkfree.database.mapper.CompanyInfoMapper">
 
 
-  <select id="selectRelationMapByRootCompany" parameterType="java.lang.String" resultType="java.lang.String">
+  <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
       select
         company_id
       from company_info
-      where root_company_id = #{rootCompanyID}
+      <where>
+          <if test="rootCompanyId != null and parentCompanyId ==1">
+            and root_company_id = #{rootCompanyId}
+          </if>
+          <if test="provinceCode != null and parentCompanyId == 2">
+              and province_code = #{provinceCode}
+          </if>
+          <if test="cityCode != null and parentCompanyId == 3">
+              and city_code = #{cityCode}
+          </if>
+          <if test="areaCode != null and parentCompanyId == 4">
+              and area_code = #{areaCode}
+          </if>
+      </where>
+
   </select>
+
+    <select id="selectCompanyInfoByProjectNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+
+        select
+          company_info.id,
+          company_info.company_id,
+          company_info.company_name,
+          company_info.phone
+        from company_info company_info
+        join  pre_project_company_set pre_project_company_set on company_info.company_id = pre_project_company_set.company_id
+        where pre_project_company_set.project_no = #{projectNo};
+
+    </select>
+
+
+
+
+
 
 </mapper>

@@ -22,6 +22,20 @@ public class ProjectVO extends PreProjectGuide {
      */
     private String projectManagerName;
 
+    /**
+     * 所属公司
+     * @return
+     */
+    public String companyName;
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
     public String getStewardName() {
         return stewardName;
     }

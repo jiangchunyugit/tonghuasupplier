@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PreProjectCompanySet;
 import cn.thinkfree.database.model.PreProjectCompanySetExample;
 import java.util.List;
@@ -102,4 +103,11 @@ public interface PreProjectCompanySetMapper {
      * @return
      */
     IndexProjectReportVO countCompanyProject(List<String> companyRelationMap);
+
+    /**
+     * 汇总个人所有项目
+     * @param userID
+     * @return
+     */
+    IndexProjectReportVO countProjectForPerson(String userID);
 }

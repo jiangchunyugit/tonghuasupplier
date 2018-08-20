@@ -29,9 +29,23 @@ import java.util.zip.ZipInputStream;
 @Component
 public class WebFileUtil {
 
+    /**
+     * 文件上传路径
+     */
     private static String uploadDir;
 
-    @Value("${server.uploadDir}")
+
+    /**
+     * 文件服务器路径
+     */
+    private static String serviceUrl;
+
+    @Value("${server.file.publicPath}")
+    public static void setServiceUrl(String serviceUrl) {
+        WebFileUtil.serviceUrl = serviceUrl;
+    }
+
+    @Value("${server.file.uploadDir}")
     public  void setUploadDir(String up) {
         uploadDir = up;
     }
@@ -141,11 +155,12 @@ public class WebFileUtil {
         System.out.println(uploadDir);
         String tmpPath =
                 isShow ?
-                        uploadDir
+                        serviceUrl
                                 +new SimpleDateFormat("yyyyMMdd").format(new Date())
                                 +File.separator+tmpDir
                         :
-                        ServletContextHolder.getUpload(uploadDir)
+//                        ServletContextHolder.getUpload(uploadDir)
+                               uploadDir
                                 +new SimpleDateFormat("yyyyMMdd").format(new Date())
                                 +File.separator+tmpDir;
 

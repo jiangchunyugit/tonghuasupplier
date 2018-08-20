@@ -2,13 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.CompanyUserSetMapper">
     <resultMap id="IndexUserReportVO" type="cn.thinkfree.database.vo.IndexUserReportVO">
-
-
         <result column="steward" jdbcType="INTEGER" property="steward" />
         <result column="projectManager" jdbcType="INTEGER" property="projectManager" />
         <result column="foreman" jdbcType="INTEGER" property="foreman" />
         <result column="qualityInspector" jdbcType="INTEGER" property="qualityInspector" />
+    </resultMap>
 
+    <resultMap id="StaffsVO" type="cn.thinkfree.database.vo.StaffsVO" extends="BaseResultMap">
 
     </resultMap>
 
@@ -23,13 +23,29 @@
 
       from company_user_set
       where
-       is_job = 1
+       is_job = 0
       and company_id in
       <foreach collection="list"  separator="," open="(" item="listItem" close=")">
         #{listItem}
       </foreach>
 
+    </select>
 
 
+
+    <select id="selectStaffsVOByExample" parameterType="cn.thinkfree.database.model.CompanyUserSetExample" resultMap="StaffsVO">
+
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List" />
+        from company_user_set
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
     </select>
 </mapper>

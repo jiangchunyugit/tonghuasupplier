@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PreProjectConstructionMapper">
+
+  <resultMap id="ProjectQuotationItemVO" type="cn.thinkfree.database.vo.ProjectQuotationItemVO" extends="BaseResultMap">
+
+
+    <association property="preProjectConstructionInfo" columnPrefix="info_" column="project_no" javaType="cn.thinkfree.database.model.PreProjectConstructionInfo">
+      <id column="id" jdbcType="INTEGER" property="id" />
+      <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
+      <result column="construcion_project_no" jdbcType="VARCHAR" property="construcionProjectNo" />
+      <result column="explain_info" jdbcType="VARCHAR" property="explainInfo" />
+      <result column="material_name" jdbcType="VARCHAR" property="materialName" />
+      <result column="acceptance_criteria" jdbcType="VARCHAR" property="acceptanceCriteria" />
+      <result column="standard_place" jdbcType="VARCHAR" property="standardPlace" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+      <result column="state" jdbcType="SMALLINT" property="state" />
+      <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
+    </association>
+
+
+  </resultMap>
+
+  <select id="selectProjectQuotationItemVoByProjectNo" parameterType="java.lang.String" resultMap="ProjectQuotationItemVO">
+
+    select
+       pre_project_construction.id,
+       pre_project_construction.project_no,
+       pre_project_construction.construction_project_no,
+       pre_project_construction.construction_project_name,
+       pre_project_construction.unit,
+       pre_project_construction.work_number,
+       pre_project_construction.unit_price,
+       pre_project_construction.creat_time,
+       pre_project_construction.state,
+       pre_project_construction.is_delete,
+       pre_project_construction.update_time,
+       pre_project_construction.add_time,
+       pre_project_construction.total_price,
+       pre_project_construction.construction_project_type,
+
+       pre_project_construction_info.id as info_id,
+       pre_project_construction_info.project_no as info_project_no,
+       pre_project_construction_info.construcion_project_no as info_construcion_project_no,
+       pre_project_construction_info.explain_info as info_explain_info,
+       pre_project_construction_info.material_name as info_material_name,
+       pre_project_construction_info.acceptance_criteria as info_acceptance_criteria,
+       pre_project_construction_info.standard_place as info_standard_place,
+       pre_project_construction_info.create_time as info_create_time,
+       pre_project_construction_info.update_time as info_update_time,
+       pre_project_construction_info.state as info_state,
+       pre_project_construction_info.is_delete as info_is_delete
+    from
+      pre_project_construction pre_project_construction
+    join  pre_project_construction_info pre_project_construction_info
+    on   pre_project_construction_info.project_no = pre_project_construction.project_no
+    and  pre_project_construction.construction_project_no = pre_project_construction_info.construcion_project_no
+    where pre_project_construction.project_no = #{projectNo} and pre_project_construction.is_delete = 0
+
+  </select>
+
+</mapper>

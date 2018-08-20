@@ -3,6 +3,9 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PreProjectConstruction;
 import cn.thinkfree.database.model.PreProjectConstructionExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.ProjectQuotationItemVO;
+import cn.thinkfree.database.vo.ProjectQuotationVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PreProjectConstructionMapper {
@@ -93,4 +96,12 @@ public interface PreProjectConstructionMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PreProjectConstruction record);
+
+
+    /**
+     * 查询项目报价单根据项目编号
+     * @param projectNo
+     * @return
+     */
+    List<ProjectQuotationItemVO> selectProjectQuotationItemVoByProjectNo(String projectNo);
 }

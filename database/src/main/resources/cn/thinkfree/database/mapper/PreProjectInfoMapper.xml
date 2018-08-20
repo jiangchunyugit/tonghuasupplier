@@ -27,6 +27,7 @@
     <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
     <result column="house_area" jdbcType="VARCHAR" property="houseArea" />
     <result column="manager_expense" jdbcType="NUMERIC" property="managerExpense" />
+    <result column="project_code" jdbcType="VARCHAR" property="projectCode" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -102,7 +103,7 @@
     id, project_no, file_package, house_condition, decoration_style, accessories_percentage, 
     house_type, project_type, store, store_telephone, project_address, direct_expense, 
     tax_expense, remote_price, total_price, add_project_time, add_price_time, update_time, 
-    is_delete, house_area, manager_expense
+    is_delete, house_area, manager_expense, project_code
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PreProjectInfoExample" resultMap="BaseResultMap">
     <!--
@@ -161,16 +162,16 @@
       store_telephone, project_address, direct_expense, 
       tax_expense, remote_price, total_price, 
       add_project_time, add_price_time, update_time, 
-      is_delete, house_area, manager_expense
-      )
+      is_delete, house_area, manager_expense, 
+      project_code)
     values (#{id,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{filePackage,jdbcType=VARCHAR}, 
       #{houseCondition,jdbcType=SMALLINT}, #{decorationStyle,jdbcType=VARCHAR}, #{accessoriesPercentage,jdbcType=REAL}, 
       #{houseType,jdbcType=SMALLINT}, #{projectType,jdbcType=VARCHAR}, #{store,jdbcType=VARCHAR}, 
       #{storeTelephone,jdbcType=VARCHAR}, #{projectAddress,jdbcType=VARCHAR}, #{directExpense,jdbcType=NUMERIC}, 
       #{taxExpense,jdbcType=NUMERIC}, #{remotePrice,jdbcType=NUMERIC}, #{totalPrice,jdbcType=NUMERIC}, 
       #{addProjectTime,jdbcType=TIMESTAMP}, #{addPriceTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{isDelete,jdbcType=SMALLINT}, #{houseArea,jdbcType=VARCHAR}, #{managerExpense,jdbcType=NUMERIC}
-      )
+      #{isDelete,jdbcType=SMALLINT}, #{houseArea,jdbcType=VARCHAR}, #{managerExpense,jdbcType=NUMERIC}, 
+      #{projectCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PreProjectInfo">
     <!--
@@ -242,6 +243,9 @@
       <if test="managerExpense != null">
         manager_expense,
       </if>
+      <if test="projectCode != null">
+        project_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -306,6 +310,9 @@
       </if>
       <if test="managerExpense != null">
         #{managerExpense,jdbcType=NUMERIC},
+      </if>
+      <if test="projectCode != null">
+        #{projectCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -389,6 +396,9 @@
       <if test="record.managerExpense != null">
         manager_expense = #{record.managerExpense,jdbcType=NUMERIC},
       </if>
+      <if test="record.projectCode != null">
+        project_code = #{record.projectCode,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -420,7 +430,8 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=SMALLINT},
       house_area = #{record.houseArea,jdbcType=VARCHAR},
-      manager_expense = #{record.managerExpense,jdbcType=NUMERIC}
+      manager_expense = #{record.managerExpense,jdbcType=NUMERIC},
+      project_code = #{record.projectCode,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -492,6 +503,9 @@
       <if test="managerExpense != null">
         manager_expense = #{managerExpense,jdbcType=NUMERIC},
       </if>
+      <if test="projectCode != null">
+        project_code = #{projectCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -520,7 +534,8 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=SMALLINT},
       house_area = #{houseArea,jdbcType=VARCHAR},
-      manager_expense = #{managerExpense,jdbcType=NUMERIC}
+      manager_expense = #{managerExpense,jdbcType=NUMERIC},
+      project_code = #{projectCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

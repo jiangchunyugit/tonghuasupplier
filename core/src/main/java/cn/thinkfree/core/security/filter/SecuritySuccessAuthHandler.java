@@ -1,10 +1,12 @@
 package cn.thinkfree.core.security.filter;
 
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.event.MyEventBus;
 import cn.thinkfree.core.event.model.UserLoginAfter;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
+import com.google.gson.Gson;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Map;
 
 
@@ -43,21 +46,22 @@ public class SecuritySuccessAuthHandler
             return;
         }
         MyEventBus.getInstance().publicEvent(new UserLoginAfter(((SecurityUser)authentication.getPrincipal()).getUsername()));
+        sendAjaxResult(request,response);
 //        Map<String, Object> result = new HashMap<String, Object>();
 //     result.put("user", ((SecurityUser)authentication.getPrincipal()).getName());
 //     result.put("pwd",((SecurityUser) authentication.getPrincipal()).getPassword());
 //     SecurityUser u = ((SecurityUser)authentication.getPrincipal());
 //     result.put("userModel",u);
 //     saveMessage(request, result);
-        if (SecurityRequestUtil.isAjax(request)) {
-            sendAjaxResult(request, response, targetUrl);
-        } else {
-            if (isUseForward(request)) {
-                request.getRequestDispatcher(targetUrl).forward(request, response);
-            } else {
-                this.redirectStrategy.sendRedirect(request, response, targetUrl);
-            }
-        }
+//        if (SecurityRequestUtil.isAjax(request)) {
+//            sendAjaxResult(request, response, targetUrl);
+//        } else {
+//            if (isUseForward(request)) {
+//                request.getRequestDispatcher(targetUrl).forward(request, response);
+//            } else {
+//                this.redirectStrategy.sendRedirect(request, response, targetUrl);
+//            }
+//        }
 
     }
 
@@ -67,12 +71,17 @@ public class SecuritySuccessAuthHandler
      *
      * @param request
      * @param response
-     * @param targetUrl
      * @throws IOException
      */
-    private void sendAjaxResult(HttpServletRequest request, HttpServletResponse response, String targetUrl) throws IOException {
+    private void sendAjaxResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
+        MyRespBundle<String> resp = new MyRespBundle<>();
+        resp.setTimestamp(Instant.now().toEpochMilli());
+        resp.setMessage("登录成功!");
+        resp.setCode(200);
+        resp.setData("登录成功!");
+        response.getWriter().write(new Gson().toJson(resp));
 //     LoginResult loginResult = new LoginResult();
 //     loginResult.setCode(0);
 //     loginResult.setMessage("登录成功");

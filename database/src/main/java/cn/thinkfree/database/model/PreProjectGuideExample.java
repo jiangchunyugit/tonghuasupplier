@@ -1955,6 +1955,76 @@ public class PreProjectGuideExample {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
+
+        public Criteria andProjectPicIsNull() {
+            addCriterion("project_pic is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicIsNotNull() {
+            addCriterion("project_pic is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicEqualTo(String value) {
+            addCriterion("project_pic =", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicNotEqualTo(String value) {
+            addCriterion("project_pic <>", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicGreaterThan(String value) {
+            addCriterion("project_pic >", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicGreaterThanOrEqualTo(String value) {
+            addCriterion("project_pic >=", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicLessThan(String value) {
+            addCriterion("project_pic <", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicLessThanOrEqualTo(String value) {
+            addCriterion("project_pic <=", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicLike(String value) {
+            addCriterion("project_pic like", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicNotLike(String value) {
+            addCriterion("project_pic not like", value, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicIn(List<String> values) {
+            addCriterion("project_pic in", values, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicNotIn(List<String> values) {
+            addCriterion("project_pic not in", values, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicBetween(String value1, String value2) {
+            addCriterion("project_pic between", value1, value2, "projectPic");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectPicNotBetween(String value1, String value2) {
+            addCriterion("project_pic not between", value1, value2, "projectPic");
+            return (Criteria) this;
+        }
     }
 
     /**

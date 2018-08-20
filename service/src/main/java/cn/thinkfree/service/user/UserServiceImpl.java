@@ -2,11 +2,14 @@ package cn.thinkfree.service.user;
 
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.IndexUserReportVO;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.service.user.builder.Context;
+import cn.thinkfree.service.user.builder.StrategyFactory;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -40,6 +43,8 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     @Autowired
     CompanyInfoMapper companyInfoMapper;
 
+    @Autowired
+    StrategyFactory strategyFactory;
 
     /**
      * 汇总
@@ -113,43 +118,27 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
      * @param user
      */
     private void completionDetailInfo(UserVO userVO, UserRegister user) {
-        // 企业用户
-        if(UserRegisterType.Enterprise.shortVal().equals(user.getType())){
-            CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-            companyInfoExample.createCriteria().andCompanyIdEqualTo(user.getUserId());
-            List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
-            if(companyInfos.isEmpty() || companyInfos.size() >1){
-                throw  new UsernameNotFoundException("用户企业信息异常");
-            }
-            CompanyInfo companyInfo = companyInfos.get(0);
-            userVO.setCompanyInfo(companyInfo);
 
-            if(!companyInfo.getCompanyId().equals(companyInfo.getRootCompanyId())){
-                userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(companyInfo.getRootCompanyId()));
-                userVO.setIsRoot(Boolean.TRUE);
-            }else{
-                userVO.setRelationMap(Lists.newArrayList(companyInfo.getCompanyId()));
-            }
-
-        }else if(UserRegisterType.Staff.shortVal().equals(user.getType())){
-            // 企业子公司用户
-
-            printDebugMes("获取到用户账号信息:{},准备获取用户详情信息",user);
-            PcUserInfoExample pcUserInfoExample = new PcUserInfoExample();
-            pcUserInfoExample.createCriteria().andIdEqualTo(user.getUserId());
-            List<PcUserInfo> pcUserInfos = pcUserInfoMapper.selectByExample(pcUserInfoExample);
-            if(pcUserInfos.isEmpty() || pcUserInfos.size() > 1){
-
-                throw  new UsernameNotFoundException("用户详情信息错误");
-            }
-            PcUserInfo pcUserInfo = pcUserInfos.get(0);
-            userVO.setPcUserInfo(pcUserInfo);
-            if(!pcUserInfo.getCompanyId().equals(pcUserInfo.getRootCompanyId())){
-                userVO.setRelationMap(companyInfoMapper.selectRelationMapByRootCompany(pcUserInfo.getRootCompanyId()));
-                userVO.setIsRoot(Boolean.TRUE);
-            }else{
-                userVO.setRelationMap(Lists.newArrayList(pcUserInfo.getCompanyId()));
-            }
+        printDebugMes("获取到用户账号信息:{},准备获取用户详情信息",user);
+        PcUserInfoExample pcUserInfoExample = new PcUserInfoExample();
+        pcUserInfoExample.createCriteria().andIdEqualTo(user.getUserId());
+        List<PcUserInfo> pcUserInfos = pcUserInfoMapper.selectByExample(pcUserInfoExample);
+        if(pcUserInfos.isEmpty() || pcUserInfos.size() > 1){
+            throw  new UsernameNotFoundException("用户详情信息错误");
         }
+        PcUserInfo pcUserInfo = pcUserInfos.get(0);
+        userVO.setPcUserInfo(pcUserInfo);
+        userVO.setRelationMap(strategyFactory.getStrategy(userVO.getPcUserInfo().getLevel()).builder(userVO));
+
+
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(userVO.getPcUserInfo().getCompanyId());
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        if(companyInfos.isEmpty() || companyInfos.size() >1){
+            throw  new UsernameNotFoundException("用户企业信息异常");
+        }
+        CompanyInfo companyInfo = companyInfos.get(0);
+        userVO.setCompanyInfo(companyInfo);
+
     }
 }

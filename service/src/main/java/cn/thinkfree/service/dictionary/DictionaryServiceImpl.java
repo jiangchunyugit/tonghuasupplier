@@ -1,8 +1,6 @@
 package cn.thinkfree.service.dictionary;
 
-import cn.thinkfree.database.mapper.AreaMapper;
-import cn.thinkfree.database.mapper.CityMapper;
-import cn.thinkfree.database.mapper.ProvinceMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +19,15 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Autowired
     AreaMapper areaMapper;
+
+    @Autowired
+    PreProjectHouseTypeMapper preProjectHouseTypeMapper;
+
+    @Autowired
+    HousingStatusMapper housingStatusMapper;
+
+    @Autowired
+    ProjectTypeMapper projectTypeMapper;
 
 
     /**
@@ -58,4 +65,40 @@ public class DictionaryServiceImpl implements DictionaryService {
         areaExample.createCriteria().andCityCodeEqualTo(city);
         return areaMapper.selectByExample(areaExample);
     }
+
+    /**
+     * 获取所有房屋类型
+     *
+     * @return
+     */
+    @Override
+    public List<PreProjectHouseType> findAllHouseType() {
+        return preProjectHouseTypeMapper.selectByExample(null);
+    }
+
+    /**
+     * 获取房屋新旧程度
+     *
+     * @return
+     */
+    @Override
+    public List<HousingStatus> findAlHouseStatus() {
+        HousingStatusExample housingStatusExample = new HousingStatusExample();
+        housingStatusExample.setOrderByClause(" sort_no");
+        return housingStatusMapper.selectByExample(housingStatusExample);
+    }
+
+    /**
+     * 获取项目套餐
+     *
+     * @return
+     */
+    @Override
+    public List<ProjectType> findAllProjectType() {
+        ProjectTypeExample projectTypeExample = new ProjectTypeExample();
+        projectTypeExample.setOrderByClause(" sort_no");
+        return projectTypeMapper.selectByExample(projectTypeExample);
+    }
+
+
 }

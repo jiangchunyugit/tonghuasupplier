@@ -9,12 +9,16 @@ public enum  UserLevel {
     Company_Admin(1,"公司根账号"),
     Company_Province(2,"公司省账号"),
     Company_City(3,"公司市账号"),
-    Company_City_Master(4,"公司市级兼省级");
+    Company_Area(4,"区级账号"),
+    Company_City_Master(5,"公司市级兼省级");
 
     public Integer code;
     public String desc;
     UserLevel(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
+    }
+    public Short shortVal(){
+        return code.shortValue();
     }
 }

@@ -4,7 +4,7 @@
     <resultMap id="ProjectVO" type="cn.thinkfree.database.vo.ProjectVO" extends="BaseResultMap">
         <result column="stewardName" property="stewardName"/>
         <result column="projectManagerName" property="projectManagerName"/>
-
+        <result column="company_name" property="companyName"/>
         <association property="preProjectInfo" javaType="cn.thinkfree.database.model.PreProjectInfo">
             <result column="house_area" property="houseArea"/>
             <result column="house_type" property="houseType"/>
@@ -17,6 +17,15 @@
 
         <association property="info" column="project_no"   javaType="cn.thinkfree.database.model.PreProjectInfo"
                      select="cn.thinkfree.database.mapper.PreProjectInfoMapper.selectProjectInfoByProjectNo"/>
+
+        <association property="companyInfo" column="project_no"   javaType="cn.thinkfree.database.model.CompanyInfo"
+                     select="cn.thinkfree.database.mapper.CompanyInfoMapper.selectCompanyInfoByProjectNo"/>
+    </resultMap>
+    <resultMap id="IndexProjectChartItemVo" type="cn.thinkfree.database.vo.IndexProjectChartItemVO" >
+
+        <result column="num" property="num"/>
+        <result column="dateLine" property="dateLine"/>
+
 
     </resultMap>
 
@@ -33,12 +42,14 @@
             ppi.house_type,
             ppi.store,
             ppg.status,
+            ci.company_name,
           (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
           (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
         FROM
           pre_project_guide ppg
         JOIN pre_project_company_set ppcs ON ppg.project_no = ppcs.project_no
         JOIN pre_project_info ppi ON ppi.project_no = ppg.project_no
+        join company_info ci on ci.company_id = ppcs.company_id
 
         <where>
            and ppg.is_delete = 0
@@ -46,8 +57,8 @@
             <foreach close=")" collection="companyRelationMap" item="listItem" open="(" separator=",">
                 #{listItem}
             </foreach>
-          <if test="provice != null and provice != ''">
-              and ppg.province = #{provice}
+          <if test="province != null and province != ''">
+              and ppg.province = #{province}
           </if>
           <if test="city != null and city != ''">
             and ppg.city = #{city}
@@ -55,8 +66,8 @@
           <if test="area != null and area != ''">
             and ppg.area = #{area}
           </if>
-          <if test="staus != null and staus != ''">
-            and ppg.staus = #{staus}
+          <if test="status != null and status != ''">
+            and ppg.status = #{status}
           </if>
           <if test="hall != null and hall != ''">
             and ppg.hall = #{hall}
@@ -86,5 +97,50 @@
 
     </select>
 
+    <select id="selectProjectLineChat"  resultMap="IndexProjectChartItemVo">
+        SELECT
+          to_char(p.create_time, 'YYYY/MM/DD') as dateLine,
+          count(1) as num
+        from pre_project_guide p
+        join  pre_project_company_set ppcs on p.project_no = ppcs.project_no
+        where
+          p.is_delete = 0
+        and
+          p.create_time BETWEEN #{firstDate} AND #{lastDate}
+        and ppcs.company_id in
+          <foreach collection="relationMap" item="companyItem" open="(" close=")" separator=",">
+            #{companyItem}
+          </foreach>
+        GROUP BY p.create_time
+        order by p.create_time
+    </select>
+
+
+    <select id="selectProjectVOForPerson" parameterType="java.lang.String" resultMap="ProjectVO">
+
+        select
+            ppg.project_no,
+            ppg.project_name,
+            ppg.province,
+            ppg.city,
+            ppg.area,
+            ppg.customer_name,
+            ppg.customer_phone,
+            ppg.status,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
+
+        from
+        pre_project_guide ppg
+        join  pre_project_user_role ppur on ppg.project_no = ppur.project_no
+        where
+         ppur.user_id = #{userID}
+        and ppg.is_delete = 0
+        and ppur.is_job = 1
+        and  ppur.is_transfer = 0
+        <if test="status != null">
+            and ppg.status = #{status}
+        </if>
+    </select>
 
 </mapper>
