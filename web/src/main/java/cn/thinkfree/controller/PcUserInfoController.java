@@ -79,8 +79,7 @@ public class PcUserInfoController extends AbsBaseController {
     public MyRespBundle<PageInfo<PcUserInfoVo>> list(MyPageHelper pageHelper){
         UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
-        List<PcUserInfoVo> pcUserInfoVos = pcUserInfoService.findByParam(uservo, pageHelper);
-        PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = new PageInfo<>(pcUserInfoVos);
+        PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = pcUserInfoService.findByParam(uservo, pageHelper);
 
         return sendJsonData(ResultMessage.SUCCESS, pcUserInfoVoPageInfo);
     }
