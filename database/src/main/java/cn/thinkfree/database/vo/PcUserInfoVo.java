@@ -8,6 +8,15 @@ public class PcUserInfoVo extends PcUserInfo {
     private Date lastLogin;
     private String password;
     private String companyName;
+    private String regPhone;
+
+    public String getRegPhone() {
+        return regPhone;
+    }
+
+    public void setRegPhone(String regPhone) {
+        this.regPhone = regPhone;
+    }
 
     public String getCompanyName() {
         return companyName;

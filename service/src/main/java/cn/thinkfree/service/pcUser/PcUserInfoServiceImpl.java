@@ -1,16 +1,19 @@
 package cn.thinkfree.service.pcUser;
 
 import cn.thinkfree.core.security.utils.MultipleMd5;
-import cn.thinkfree.database.constants.Contant;
+import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.PcUserInfoMapper;
 import cn.thinkfree.database.mapper.UserRegisterMapper;
-import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.UserRegister;
+import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.utils.UserNoUtils;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +42,13 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     /**
      * 权限管理  模糊查询
-     * @param param
+     * @param
      * @return
      */
     @Override
-    public List<PcUserInfoVo> findByParam(UserVO userVO, String param) {
+    public List<PcUserInfoVo> findByParam(UserVO userVO, MyPageHelper myPageHelper) {
         Map<String, Object> params = new HashMap<>();
+        Object param = myPageHelper.getData();
         if(null == param || "".equals(param)){
             param = "";
         }else{
@@ -52,6 +56,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         }
         params.put("param", param);
         params.put("companyId", userVO.getRelationMap());
+        PageHelper.startPage(myPageHelper.getPage(), myPageHelper.getRows());
         return pcUserInfoMapper.findByParam(params);
     }
 
@@ -75,40 +80,45 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     /**
      * 添加账户
      * @param userVO
-     * @param pcUserInfo
-     * @param userRegister
      * @return
      */
     @Override
     @Transactional
-    public boolean saveUserInfo(UserVO userVO, PcUserInfo pcUserInfo, UserRegister userRegister) {
+    public boolean saveUserInfo(UserVO userVO, PcUserInfoVo pcUserInfoVo) {
+        String userId = UserNoUtils.getUserNo("pc");
         Date date = new Date();
-        pcUserInfo.setCreateTime(date);
-        pcUserInfo.setId(UserNoUtils.getUserNo("pc"));
-        pcUserInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        short c = 0;
-        pcUserInfo.setEnabled(c);
-        if(userVO.getPcUserInfo().getLevel() == Contant.COMPANY_ADMIN){
-            pcUserInfo.setLevel(Contant.COMPANY_PROVINCE);
-        }else if (userVO.getPcUserInfo().getLevel() == Contant.COMPANY_PROVINCE){
-            pcUserInfo.setLevel(Contant.COMPANY_CITY);
+        pcUserInfoVo.setCreateTime(date);
+        pcUserInfoVo.setId(userId);
+        pcUserInfoVo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        pcUserInfoVo.setEnabled(UserEnabled.Enabled_false.shortVal());
+        //TODO 应该有问题  根据登陆用户级别插入level
+        if(userVO.getPcUserInfo().getLevel() == UserLevel.Company_Admin.shortVal()){
+            pcUserInfoVo.setLevel(UserLevel.Company_Province.shortVal());
+        }else if (userVO.getPcUserInfo().getLevel() == UserLevel.Company_Province.shortVal()){
+            pcUserInfoVo.setLevel(UserLevel.Company_City.shortVal());
         }else{
-            pcUserInfo.setLevel(Contant.COMPANY_CITY);
+            pcUserInfoVo.setLevel(UserLevel.Company_City.shortVal());
         }
-        pcUserInfo.setParentCompanyId(userVO.getCompanyID());
+        pcUserInfoVo.setParentCompanyId(userVO.getCompanyID());
         //TODO 省市区未存
 //        CompanyInfo companyInfo = companyInfoMapper.findByCompanyId(pcUserInfo.getCompanyId());
 //        pcUserInfo.setCity(companyInfo.getCityCode());
 
 
+        //注册表
+        UserRegister userRegister = new UserRegister();
         userRegister.setRegisterTime(date);
-        userRegister.setType(Contant.REGISTER_TYPE);
+        userRegister.setType(UserRegisterType.Staff.shortVal());
         userRegister.setUpdateTime(date);
         MultipleMd5 md5 = new MultipleMd5();
         //加密
-        userRegister.setPassword(md5.encode(userRegister.getPassword()));
-
-        int pcLine = pcUserInfoMapper.insertSelective(pcUserInfo);
+        /*if(null == pcUserInfoVo.getPassword() || "".equals(pcUserInfoVo.getPassword())){
+            pcUserInfoVo.setPassword("123456");
+        }*/
+        userRegister.setPassword(md5.encode(pcUserInfoVo.getPassword()));
+        userRegister.setPhone(pcUserInfoVo.getRegPhone());
+        userRegister.setUserId(userId);
+        int pcLine = pcUserInfoMapper.insertUserInfoVo(pcUserInfoVo);
         int regLine = userRegisterMapper.insertSelective(userRegister);
 
         boolean flag = false;
@@ -120,16 +130,26 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     /**
      * 更新用户信息
-     * @param pcUserInfo
-     * @param userRegister
+     * @param
      * @return
      */
     @Override
     @Transactional
-    public boolean updateUserInfo(PcUserInfo pcUserInfo, UserRegister userRegister) {
-        int pcLine = pcUserInfoMapper.insertSelective(pcUserInfo);
+    public boolean updateUserInfo(PcUserInfoVo pcUserInfoVo) {
+        /*PcUserInfo pcUserInfo = new PcUserInfo();
+        pcUserInfo.setId(pcUserInfoVo.getId());
+        pcUserInfo.setMemo(pcUserInfoVo.getMemo());
+        pcUserInfo.setPhone(pcUserInfoVo.getPhone());
+        pcUserInfo.setName(pcUserInfoVo.getName());*/
+
+        UserRegister userRegister = new UserRegister();
+        userRegister.setUserId(pcUserInfoVo.getId());
         userRegister.setUpdateTime(new Date());
-        int regLine = userRegisterMapper.insertSelective(userRegister);
+        MultipleMd5 md5 = new MultipleMd5();
+        userRegister.setPassword(md5.encode(pcUserInfoVo.getPassword()));
+
+        int pcLine = pcUserInfoMapper.updateById(pcUserInfoVo);
+        int regLine = userRegisterMapper.updateByUserId(userRegister);
 
         boolean flag = false;
         if(pcLine > 0 && regLine > 0){

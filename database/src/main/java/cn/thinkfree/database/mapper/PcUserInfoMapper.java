@@ -118,4 +118,8 @@ public interface PcUserInfoMapper {
      * @return
      */
     PcUserInfoVo findByUserId(String userId);
+
+    int updateById(PcUserInfoVo pcUserInfoVo);
+
+    int insertUserInfoVo(PcUserInfoVo pcUserInfoVo);
 }
