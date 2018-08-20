@@ -1,5 +1,7 @@
 package cn.thinkfree.core.annotation;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,5 +15,6 @@ import static java.lang.annotation.ElementType.METHOD;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(METHOD)
+@CrossOrigin(origins = "*")
 public @interface MyRespBody {
 }
