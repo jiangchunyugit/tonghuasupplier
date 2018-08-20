@@ -28,11 +28,11 @@
            and send_user = #{sendUser,jdbcType=VARCHAR}
         </if>
         <if test="sendUserId != null and sendUserId != ''">
-           and send_user_id = #{sendUserId,jdbcType=INTEGER}
+           and send_user_id = #{sendUserId,jdbcType=VARCHAR}
         </if>
-        <if test="companyId != null and companyId != ''">
-            and company_id in <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-                                    #{companyId}
+        <if test="companyId != null">
+            and company_id in <foreach item="item" index="index" collection="companyId" open="(" separator="," close=")">
+                                    #{item}
                               </foreach>
         </if>
     </select>

@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.CompanyInfoMapper">
+    <resultMap id="ResultMap" type="cn.thinkfree.database.model.CompanyInfo">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+        <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+        <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+        <result column="province_code" jdbcType="SMALLINT" property="provinceCode" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="legal_name" jdbcType="VARCHAR" property="legalName" />
+        <result column="legal_phone" jdbcType="VARCHAR" property="legalPhone" />
+        <result column="legal_id_card" jdbcType="VARCHAR" property="legalIdCard" />
+        <result column="business_code" jdbcType="VARCHAR" property="businessCode" />
+        <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
+        <result column="tax_code" jdbcType="VARCHAR" property="taxCode" />
+        <result column="is_check" jdbcType="SMALLINT" property="isCheck" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="business_photo_url" jdbcType="VARCHAR" property="businessPhotoUrl" />
+        <result column="work_photo_url" jdbcType="VARCHAR" property="workPhotoUrl" />
+        <result column="deposit_money" jdbcType="INTEGER" property="depositMoney" />
+        <result column="lbs" jdbcType="VARCHAR" property="lbs" />
+        <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
+        <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
+        <result column="area_code" jdbcType="INTEGER" property="areaCode" />
+        <result column="root_company_id" jdbcType="VARCHAR" property="rootCompanyId" />
+        <result column="parent_company_id" jdbcType="VARCHAR" property="parentCompanyId" />
+        <result column="is_center" jdbcType="SMALLINT" property="isCenter" />
+    </resultMap>
+    <sql id="Column_List">
+        id, company_id, company_name, role_id, province_code, address, legal_name, legal_phone,
+        legal_id_card, business_code, organization_code, tax_code, is_check, create_time,
+        phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code,
+        area_code, root_company_id, parent_company_id, is_center
+    </sql>
 
 
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
@@ -23,6 +56,28 @@
       </where>
 
   </select>
+
+    <select id="selectByCompany" parameterType="java.util.List" resultMap="ResultMap">
+        select
+        <include refid="Column_List" />
+        from company_info
+        where 1=1
+        <if test="companyId != null">
+            and company_id in <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{companyId}
+        </foreach>
+        </if>
+    </select>
+
+    <select id="findByCompanyId" parameterType="java.lang.String" resultMap="ResultMap">
+        select
+        <include refid="Column_List" />
+        from company_info
+        where 1=1
+        <if test="companyId != null and companyId != ''">
+            and company_id = #{companyId}
+        </if>
+    </select>
 
     <select id="selectCompanyInfoByProjectNo" parameterType="java.lang.String" resultMap="BaseResultMap">
 

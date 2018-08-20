@@ -1,25 +1,19 @@
 package cn.thinkfree.service.sysMsg;
 
-import cn.thinkfree.core.base.MyLogger;
-import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.mapper.SystemMessageMapper;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageHelper;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.ToDoubleBiFunction;
 
 @Service
 public class SystemMessageServiceImpl implements SystemMessageService {
 
-    MyLogger logger = LogUtil.getLogger(SystemMessageService.class);
 
     @Autowired
     SystemMessageMapper sysMsgMapper;
@@ -38,18 +32,13 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     @Override
     public List<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime) {
         Map<String, Object> param = new HashMap<>();
-        try{
-            if(null == sendUserId) sendUserId = "";
-            if(null == sendTime) sendTime = "";
-            param.put("sendTime", sendTime);
-            param.put("sendUserId", sendUserId);
-            param.put("companyId", userVO.getRelationMap());
 
+        if(null == sendUserId) sendUserId = "";
+        if(null == sendTime) sendTime = "";
+        param.put("sendTime", sendTime);
+        param.put("sendUserId", sendUserId);
+        param.put("companyId", userVO.getRelationMap());
 
-        }catch (Exception e){
-            logger.error("error:",e);
-            e.printStackTrace();
-        }
         PageHelper.startPage(no,pageSize);
         return sysMsgMapper.selectByParam(param);
     }
