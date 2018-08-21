@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.SystemMessageMapper">
-    <resultMap id="ResultMap" type="cn.thinkfree.database.model.SystemMessage">
-        <id column="id" jdbcType="VARCHAR" property="id" />
-        <result column="content" jdbcType="VARCHAR" property="content" />
-        <result column="skip_url" jdbcType="VARCHAR" property="skipUrl" />
-        <result column="send_time" jdbcType="TIMESTAMP" property="sendTime" />
-        <result column="title" jdbcType="VARCHAR" property="title" />
-        <result column="receive_role" jdbcType="VARCHAR" property="receiveRole" />
-        <result column="send_user" jdbcType="VARCHAR" property="sendUser" />
-        <result column="send_user_id" jdbcType="VARCHAR" property="sendUserId" />
-        <result column="company_id" jdbcType="VARCHAR" property="companyId" />
-    </resultMap>
-    <sql id="Column_List">
-        id, content, skip_url, send_time, title, receive_role, send_user, send_user_id, company_id
-    </sql>
 
-    <select id="selectByParam" parameterType="java.util.Map" resultMap="ResultMap">
+    <select id="selectByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
         select
-        <include refid="Column_List" />
+        <include refid="Base_Column_List" />
         from u_app_system_message
         where 1=1
         <if test="sendTime != null and sendTime != ''">

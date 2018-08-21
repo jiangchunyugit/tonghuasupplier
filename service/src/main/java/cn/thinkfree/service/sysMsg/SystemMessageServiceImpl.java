@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.UserVO;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +31,7 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     }
 
     @Override
-    public List<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime) {
+    public PageInfo<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime) {
         Map<String, Object> param = new HashMap<>();
 
         if(null == sendUserId) sendUserId = "";
@@ -40,7 +41,9 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         param.put("companyId", userVO.getRelationMap());
 
         PageHelper.startPage(no,pageSize);
-        return sysMsgMapper.selectByParam(param);
+        List<SystemMessage> systemMessage = sysMsgMapper.selectByParam(param);
+        PageInfo<SystemMessage> pageInfo = new PageInfo<>(systemMessage);
+        return pageInfo;
     }
 
     @Override

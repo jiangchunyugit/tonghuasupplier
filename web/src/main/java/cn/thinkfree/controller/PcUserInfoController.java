@@ -6,21 +6,22 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.PcUserInfo;
+import cn.thinkfree.database.vo.MyPageHelper;
+import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/userInfo", method = RequestMethod.GET)
+@RequestMapping(value = "/userInfo")
 public class PcUserInfoController extends AbsBaseController {
 
     @Autowired
@@ -36,5 +37,108 @@ public class PcUserInfoController extends AbsBaseController {
         List<PcUserInfo> pcUserInfos = pcUserInfoService.selectByParam(uservo);
         PageInfo<PcUserInfo> pageInfo = new PageInfo<>(pcUserInfos);
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
+    }
+
+    /**
+     * 新增账户
+     */
+    @RequestMapping(value = "/saveByUserInfo", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="新增", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "pcUserInfo", value = "账户信息是json字符串,其他不是参数，是json字段命名", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "companyId", value = "公司ID", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "name", value = "姓名", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "regPhone", value = "账号", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "memo", value = "备注", required = false, dataType = "String")
+    })
+    public MyRespBundle<String> saveByUserInfo(PcUserInfoVo pcUserInfoVo){
+
+        UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+        boolean flag = pcUserInfoService.saveUserInfo(uservo, pcUserInfoVo);
+        if(flag){
+            return sendJsonData(ResultMessage.SUCCESS, flag);
+        }
+        return sendJsonData(ResultMessage.FAIL, flag);
+    }
+
+    /**
+     * 账户查询更据条件查询
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+//    @MyRespBody
+    @ApiOperation(value="模糊查询", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "page", value = "当前页码", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType="query", name = "rows", value = "一页显示行数", required = true, dataType = "Integer"),
+            @ApiImplicitParam(paramType="query", name = "data", value = "模糊查询类型随便", required = false, dataType = "Object")
+    })
+    public MyRespBundle<PageInfo<PcUserInfoVo>> list(MyPageHelper pageHelper){
+        UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+        PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = pcUserInfoService.findByParam(uservo, pageHelper);
+
+        return sendJsonData(ResultMessage.SUCCESS, pcUserInfoVoPageInfo);
+    }
+
+
+    /**
+     * 单条账户查询
+     */
+    @RequestMapping(value = "/findByUserId", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="点击编辑查询的账户信息", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "userId", value = "用户id", required = true, dataType = "String")
+    })
+    public MyRespBundle<PcUserInfoVo> findByUserId(@RequestParam(value="userId")String userId){
+
+        PcUserInfoVo pcUserInfoVos = pcUserInfoService.findByUserId(userId);
+
+        return sendJsonData(ResultMessage.SUCCESS, pcUserInfoVos);
+    }
+
+    /**
+     *  删除账户
+     */
+    @RequestMapping(value = "/delByUserId", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="删除账户", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "userId", value = "用户id", required = true, dataType = "String")
+    })
+    public MyRespBundle<String> delByUserId(@RequestParam(value="userId")String userId){
+
+        boolean flag = pcUserInfoService.delPcUserInfo(userId);
+
+        if (flag){
+            return sendJsonData(ResultMessage.SUCCESS, flag);
+        }
+        return sendJsonData(ResultMessage.FAIL, flag);
+    }
+
+    /**
+     * 修改账户
+     */
+    @RequestMapping(value = "/updateByUserId", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="编辑账户", notes="")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "name", value = "姓名", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "memo", value = "备注", required = false, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "id", value = "账号id", required = true, dataType = "String")
+    })
+    public MyRespBundle<String> updateByUserId(PcUserInfoVo pcUserInfoVo){
+
+        boolean flag = pcUserInfoService.updateUserInfo(pcUserInfoVo);
+        if (flag){
+            return sendJsonData(ResultMessage.SUCCESS, flag);
+        }
+        return sendJsonData(ResultMessage.SUCCESS, flag);
     }
 }

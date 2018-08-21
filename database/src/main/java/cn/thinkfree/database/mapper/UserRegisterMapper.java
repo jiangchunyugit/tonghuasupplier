@@ -107,4 +107,10 @@ public interface UserRegisterMapper {
      * @return
      */
     UserRegister selectByUserId(String userId);
+
+    /**
+     * 根据userid修改账户
+     * @return
+     */
+    int updateByUserId(UserRegister userRegister);
 }

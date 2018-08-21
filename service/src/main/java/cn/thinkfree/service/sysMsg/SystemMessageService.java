@@ -3,6 +3,7 @@ package cn.thinkfree.service.sysMsg;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.UserVO;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public interface SystemMessageService {
      * @param sendTime
      * @return
      */
-    List<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime);
+    PageInfo<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime);
 
     int saveSysMsg(PcUserInfo userInfo, SystemMessage record);
 }

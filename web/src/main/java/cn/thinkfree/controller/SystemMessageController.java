@@ -53,8 +53,8 @@ public class SystemMessageController extends AbsBaseController {
         }
         UserVO uservo = (UserVO)SessionUserDetailsUtil.getUserDetails();
 
-        List<SystemMessage> sysMsg = sysMsgService.selectByParam(uservo, page, rows, sendUserId, sendTime);
-        PageInfo<SystemMessage> pageInfo = new PageInfo<>(sysMsg);
+        PageInfo<SystemMessage> pageInfo = sysMsgService.selectByParam(uservo, page, rows, sendUserId, sendTime);
+
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }
 
@@ -117,14 +117,10 @@ public class SystemMessageController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "title", value = "标题", required = true, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "receiveRole", value = "对象", required = true, dataType = "String")
     })
-    public MyRespBundle<String> saveSysMsg(@RequestParam(value = "content") String content, @RequestParam(value = "title") String title, @RequestParam(value = "receiveRole") String receiveRole){
+    public MyRespBundle<String> saveSysMsg(SystemMessage systemMessage){
         UserVO uservo = (UserVO)SessionUserDetailsUtil.getUserDetails();
 
-        SystemMessage sysMsg = new SystemMessage();
-        sysMsg.setReceiveRole(receiveRole);
-        sysMsg.setContent(content);
-        sysMsg.setTitle(title);
-        int line = sysMsgService.saveSysMsg(uservo.getPcUserInfo(),sysMsg);
+        int line = sysMsgService.saveSysMsg(uservo.getPcUserInfo(),systemMessage);
         if(line > 0){
             return sendJsonData(ResultMessage.FAIL, line);
         }
