@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,6 +48,9 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     @Autowired
     StrategyFactory strategyFactory;
 
+    @Autowired
+    UserLoginLogMapper userLoginLogMapper;
+
     /**
      * 汇总
      * @param companyRelationMap 公司ID
@@ -56,6 +60,13 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     public IndexUserReportVO countCompanyUser(List<String> companyRelationMap) {
 
         return companyUserSetMapper.countCompanyUser(companyRelationMap);
+    }
+
+    @Transactional
+    @Override
+    public String userLoginAfter(UserLoginLog userLoginLog) {
+        userLoginLogMapper.insertSelective(userLoginLog);
+        return "SUCCESS";
     }
 
 

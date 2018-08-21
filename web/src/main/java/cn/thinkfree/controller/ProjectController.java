@@ -1,5 +1,6 @@
 package cn.thinkfree.controller;
 
+import ch.qos.logback.classic.net.SyslogAppender;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
@@ -8,6 +9,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.PreProjectGuide;
+import cn.thinkfree.database.model.PreProjectMaterial;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.project.ProjectService;
@@ -149,11 +151,30 @@ public class ProjectController extends AbsBaseController {
         return sendSuccessMessage(mes);
     }
 
-    @PostMapping("/feign")
+
+    @GetMapping("/material")
     @MyRespBody
-    public void testFeign(){
-          cloudService.projectUpOnline("ITEM18081417200100002EH", ProjectStatus.WaitStart.shortVal());
-        cloudService.sendSms("18910471835","156321");
+    public MyRespBundle<List<PreProjectMaterial>> material(@RequestParam String projectNo){
+        List<PreProjectMaterial> materials=projectService.selectProjectMaterilsByProjectNo(projectNo);
+        return sendJsonData(ResultMessage.SUCCESS,materials);
     }
+
+    @GetMapping("/editMaterial")
+    @MyRespBody
+    public MyRespBundle<String> editMaterial(String projectNo,List<PreProjectMaterial> preProjectMaterials){
+       String mes=projectService.editMaterials(projectNo,preProjectMaterials);
+        return sendJsonData(ResultMessage.SUCCESS,mes);
+    }
+
+
+//
+//
+//    @PostMapping("/test")
+//    @MyRespBody
+//    @MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_PROJECT,desc = "测试")
+//    public void testFeign(){
+//          cloudService.projectUpOnline("ITEM18081417200100002EH", ProjectStatus.WaitStart.shortVal());
+////        cloudService.sendSms("18910471835","156321");
+//    }
 
 }

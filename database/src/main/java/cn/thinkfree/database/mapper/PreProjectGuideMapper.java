@@ -132,4 +132,13 @@ public interface PreProjectGuideMapper {
      * @return
      */
     List<ProjectVO> selectProjectVOForPerson(@Param("userID") String userID,@Param("status") Integer status);
+
+    /**
+     * 查询一个公司参与的项目
+     * 仅限当前公司
+     * @param userID
+     * @param status
+     * @return
+     */
+    List<ProjectVO> selectProjectVOForCompany(@Param("companyID") String userID,@Param("status") Integer status);
 }

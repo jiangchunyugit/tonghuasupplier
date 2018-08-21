@@ -5,6 +5,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.utils.VersionUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +28,13 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		responseHandler(response, HttpStatus.BAD_REQUEST);
 		return buildErrorInfo(HttpStatus.BAD_REQUEST, e, req);
     }
-	
+
+	@ExceptionHandler(value = MissingServletRequestParameterException.class)
+	@ResponseBody
+	public MyRespBundle<String> exceptionBadRequestHandler(HttpServletRequest req, HttpServletResponse response, MissingServletRequestParameterException e) throws Exception {
+		responseHandler(response, HttpStatus.BAD_REQUEST);
+		return buildErrorInfo(HttpStatus.BAD_REQUEST, e, req);
+	}
 
 	@ExceptionHandler(value = InternalServerException.class)
     @ResponseBody

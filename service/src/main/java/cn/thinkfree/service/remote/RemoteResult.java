@@ -6,6 +6,9 @@ import java.util.Date;
 
 public class RemoteResult<T> extends BaseModel {
 
+
+    private Boolean isComplete;
+
     private Integer code;
     private String msg;
     private Date timestamp;
@@ -41,5 +44,14 @@ public class RemoteResult<T> extends BaseModel {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+
+    public Boolean isComplete() {
+        return isComplete;
+    }
+
+    public void setIsComplete(Boolean complete) {
+        isComplete = complete;
     }
 }

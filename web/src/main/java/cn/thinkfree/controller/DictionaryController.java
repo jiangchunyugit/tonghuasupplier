@@ -100,6 +100,17 @@ public class DictionaryController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,projectTypes);
     }
 
+    /**
+     * 根据县区编码获取公司信息
+     * @param areaCode
+     * @return
+     */
+    @GetMapping("/companyByAreaCode")
+    @MyRespBody
+    public MyRespBundle<String> company(@RequestParam  Integer areaCode){
+        List<CompanyInfo> companyInfos=dictionaryService.findCompanyByAreaCode(areaCode);
+        return sendJsonData(ResultMessage.SUCCESS,companyInfos);
+    }
 
 
 

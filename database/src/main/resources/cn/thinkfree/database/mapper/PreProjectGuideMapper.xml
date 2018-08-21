@@ -25,8 +25,6 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="designer_no" jdbcType="VARCHAR" property="designerNo" />
-    <result column="designer_name" jdbcType="VARCHAR" property="designerName" />
     <result column="total_price" jdbcType="NUMERIC" property="totalPrice" />
     <result column="overdue_days" jdbcType="SMALLINT" property="overdueDays" />
     <result column="progress_stage" jdbcType="SMALLINT" property="progressStage" />
@@ -109,9 +107,8 @@
     -->
     id, project_no, project_name, customer_name, customer_phone, customer_no, contract_no, 
     contract_starttime, contract_endtime, project_starttime, province, city, area, address, 
-    longitude, latitude, update_time, is_delete, create_time, designer_no, designer_name, 
-    total_price, overdue_days, progress_stage, acceptance_stage, is_acceptance, status, 
-    project_pic, project_endtime
+    longitude, latitude, update_time, is_delete, create_time, total_price, overdue_days, 
+    progress_stage, acceptance_stage, is_acceptance, status, project_pic, project_endtime
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PreProjectGuideExample" resultMap="BaseResultMap">
     <!--
@@ -170,20 +167,20 @@
       project_starttime, province, city, 
       area, address, longitude, 
       latitude, update_time, is_delete, 
-      create_time, designer_no, designer_name, 
-      total_price, overdue_days, progress_stage, 
-      acceptance_stage, is_acceptance, status, 
-      project_pic, project_endtime)
+      create_time, total_price, overdue_days, 
+      progress_stage, acceptance_stage, is_acceptance, 
+      status, project_pic, project_endtime
+      )
     values (#{id,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{customerName,jdbcType=VARCHAR}, #{customerPhone,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
       #{contractNo,jdbcType=VARCHAR}, #{contractStarttime,jdbcType=TIMESTAMP}, #{contractEndtime,jdbcType=TIMESTAMP}, 
       #{projectStarttime,jdbcType=TIMESTAMP}, #{province,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
       #{area,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{longitude,jdbcType=VARCHAR}, 
       #{latitude,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isDelete,jdbcType=SMALLINT}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{designerNo,jdbcType=VARCHAR}, #{designerName,jdbcType=VARCHAR}, 
-      #{totalPrice,jdbcType=NUMERIC}, #{overdueDays,jdbcType=SMALLINT}, #{progressStage,jdbcType=SMALLINT}, 
-      #{acceptanceStage,jdbcType=SMALLINT}, #{isAcceptance,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT}, 
-      #{projectPic,jdbcType=VARCHAR}, #{projectEndtime,jdbcType=TIMESTAMP})
+      #{createTime,jdbcType=TIMESTAMP}, #{totalPrice,jdbcType=NUMERIC}, #{overdueDays,jdbcType=SMALLINT}, 
+      #{progressStage,jdbcType=SMALLINT}, #{acceptanceStage,jdbcType=SMALLINT}, #{isAcceptance,jdbcType=SMALLINT}, 
+      #{status,jdbcType=SMALLINT}, #{projectPic,jdbcType=VARCHAR}, #{projectEndtime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PreProjectGuide">
     <!--
@@ -248,12 +245,6 @@
       </if>
       <if test="createTime != null">
         create_time,
-      </if>
-      <if test="designerNo != null">
-        designer_no,
-      </if>
-      <if test="designerName != null">
-        designer_name,
       </if>
       <if test="totalPrice != null">
         total_price,
@@ -337,12 +328,6 @@
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="designerNo != null">
-        #{designerNo,jdbcType=VARCHAR},
-      </if>
-      <if test="designerName != null">
-        #{designerName,jdbcType=VARCHAR},
       </if>
       <if test="totalPrice != null">
         #{totalPrice,jdbcType=NUMERIC},
@@ -444,12 +429,6 @@
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="record.designerNo != null">
-        designer_no = #{record.designerNo,jdbcType=VARCHAR},
-      </if>
-      <if test="record.designerName != null">
-        designer_name = #{record.designerName,jdbcType=VARCHAR},
-      </if>
       <if test="record.totalPrice != null">
         total_price = #{record.totalPrice,jdbcType=NUMERIC},
       </if>
@@ -504,8 +483,6 @@
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       is_delete = #{record.isDelete,jdbcType=SMALLINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      designer_no = #{record.designerNo,jdbcType=VARCHAR},
-      designer_name = #{record.designerName,jdbcType=VARCHAR},
       total_price = #{record.totalPrice,jdbcType=NUMERIC},
       overdue_days = #{record.overdueDays,jdbcType=SMALLINT},
       progress_stage = #{record.progressStage,jdbcType=SMALLINT},
@@ -579,12 +556,6 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="designerNo != null">
-        designer_no = #{designerNo,jdbcType=VARCHAR},
-      </if>
-      <if test="designerName != null">
-        designer_name = #{designerName,jdbcType=VARCHAR},
-      </if>
       <if test="totalPrice != null">
         total_price = #{totalPrice,jdbcType=NUMERIC},
       </if>
@@ -636,8 +607,6 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       is_delete = #{isDelete,jdbcType=SMALLINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      designer_no = #{designerNo,jdbcType=VARCHAR},
-      designer_name = #{designerName,jdbcType=VARCHAR},
       total_price = #{totalPrice,jdbcType=NUMERIC},
       overdue_days = #{overdueDays,jdbcType=SMALLINT},
       progress_stage = #{progressStage,jdbcType=SMALLINT},

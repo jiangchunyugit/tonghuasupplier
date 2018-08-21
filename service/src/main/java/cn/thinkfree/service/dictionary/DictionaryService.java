@@ -44,4 +44,10 @@ public interface DictionaryService {
      */
     List<ProjectType> findAllProjectType();
 
+    /**
+     * 根据区域编码查询公司信息
+     * @param areaCode
+     * @return
+     */
+    List<CompanyInfo> findCompanyByAreaCode(Integer areaCode);
 }

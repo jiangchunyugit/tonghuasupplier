@@ -47,8 +47,8 @@ public class SecuritySuccessAuthHandler
             return;
         }
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
-
-        MyEventBus.getInstance().publicEvent(new UserLoginAfter(((SecurityUser)authentication.getPrincipal()).getUsername()));
+        MyEventBus.getInstance().publicEvent(
+                new UserLoginAfter(user.getUsername(),user.getPhone(),SecurityRequestUtil.getRequestIp(request)));
         sendAjaxResult(request,response);
         Map<String, Object> result = new HashMap<String, Object>();
         Map<String,Object> userModel = new HashMap<>();
