@@ -122,8 +122,8 @@ public class SystemMessageController extends AbsBaseController {
 
         int line = sysMsgService.saveSysMsg(uservo.getPcUserInfo(),systemMessage);
         if(line > 0){
-            return sendJsonData(ResultMessage.FAIL, line);
+            return sendJsonData(ResultMessage.SUCCESS, line);
         }
-        return sendJsonData(ResultMessage.SUCCESS, line);
+        return sendJsonData(ResultMessage.FAIL, line);
     }
 }
