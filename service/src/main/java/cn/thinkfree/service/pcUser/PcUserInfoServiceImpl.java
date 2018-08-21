@@ -14,6 +14,7 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    public List<PcUserInfoVo> findByParam(UserVO userVO, MyPageHelper myPageHelper) {
+    public PageInfo<PcUserInfoVo> findByParam(UserVO userVO, MyPageHelper myPageHelper) {
         Map<String, Object> params = new HashMap<>();
         Object param = myPageHelper.getData();
         if(null == param || "".equals(param)){
@@ -57,7 +58,9 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         params.put("param", param);
         params.put("companyId", userVO.getRelationMap());
         PageHelper.startPage(myPageHelper.getPage(), myPageHelper.getRows());
-        return pcUserInfoMapper.findByParam(params);
+        List<PcUserInfoVo> pcUserInfoVos = pcUserInfoMapper.findByParam(params);
+        PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = new PageInfo<>(pcUserInfoVos);
+        return pcUserInfoVoPageInfo;
     }
 
     /**

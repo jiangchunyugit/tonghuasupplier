@@ -93,4 +93,20 @@ public interface PcUserResourceMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PcUserResource record);
+
+    /**
+     * 根据userID查询资源权限
+     * @param userId
+     * @return
+     */
+
+    List<Integer> selectByUserId(String userId);
+
+    int deleteByUserId(String userId);
+
+    /**
+     *
+     * @return
+     */
+    int insertBatch(List<PcUserResource> list);
 }
