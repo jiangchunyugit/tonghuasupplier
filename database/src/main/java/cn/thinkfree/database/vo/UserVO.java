@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 public class UserVO extends SecurityUser {
@@ -133,4 +134,23 @@ public class UserVO extends SecurityUser {
     }
 
 
+    @Override
+    public String getName() {
+        return pcUserInfo.getName();
+    }
+
+    @Override
+    public String getPhone() {
+        return pcUserInfo.getPhone();
+    }
+
+    @Override
+    public String getCompanyName() {
+        return companyInfo.getCompanyName();
+    }
+
+    @Override
+    public Date getCreateTime() {
+        return pcUserInfo.getCreateTime();
+    }
 }

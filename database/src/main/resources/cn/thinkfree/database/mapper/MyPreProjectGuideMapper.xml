@@ -116,7 +116,7 @@
     </select>
 
 
-    <select id="selectProjectVOForPerson" parameterType="java.lang.String" resultMap="ProjectVO">
+    <select id="selectProjectVOForPerson"  resultMap="ProjectVO">
 
         select
             ppg.project_no,
@@ -127,6 +127,8 @@
             ppg.customer_name,
             ppg.customer_phone,
             ppg.status,
+            ppg.project_starttime,
+            ppg.project_endtime,
           (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
           (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
 

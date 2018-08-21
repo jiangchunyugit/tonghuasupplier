@@ -23,6 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 @ComponentScan( basePackages = {"cn.thinkfree"} )
 @MapperScan(basePackages = "cn.thinkfree.database.mapper")
+//@EnableFeignClients(basePackages = "cn.thinkfree.service.feign")
 public class ApplicationBoot extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(ApplicationBoot.class, args);

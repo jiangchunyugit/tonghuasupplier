@@ -9,7 +9,9 @@ import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.project.ProjectService;
+import cn.thinkfree.service.remote.CloudService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class ProjectController extends AbsBaseController {
     @Autowired
     ProjectService projectService;
 
+    @Autowired
+    CloudService cloudService;
 
     /**
      * 项目列表
@@ -145,5 +149,11 @@ public class ProjectController extends AbsBaseController {
         return sendSuccessMessage(mes);
     }
 
+    @PostMapping("/feign")
+    @MyRespBody
+    public void testFeign(){
+          cloudService.projectUpOnline("ITEM18081417200100002EH", ProjectStatus.WaitStart.shortVal());
+        cloudService.sendSms("18910471835","156321");
+    }
 
 }

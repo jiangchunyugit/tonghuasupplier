@@ -34,6 +34,7 @@
     <result column="is_acceptance" jdbcType="SMALLINT" property="isAcceptance" />
     <result column="status" jdbcType="SMALLINT" property="status" />
     <result column="project_pic" jdbcType="VARCHAR" property="projectPic" />
+    <result column="project_endtime" jdbcType="TIMESTAMP" property="projectEndtime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -110,7 +111,7 @@
     contract_starttime, contract_endtime, project_starttime, province, city, area, address, 
     longitude, latitude, update_time, is_delete, create_time, designer_no, designer_name, 
     total_price, overdue_days, progress_stage, acceptance_stage, is_acceptance, status, 
-    project_pic
+    project_pic, project_endtime
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PreProjectGuideExample" resultMap="BaseResultMap">
     <!--
@@ -172,7 +173,7 @@
       create_time, designer_no, designer_name, 
       total_price, overdue_days, progress_stage, 
       acceptance_stage, is_acceptance, status, 
-      project_pic)
+      project_pic, project_endtime)
     values (#{id,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, #{projectName,jdbcType=VARCHAR}, 
       #{customerName,jdbcType=VARCHAR}, #{customerPhone,jdbcType=VARCHAR}, #{customerNo,jdbcType=VARCHAR}, 
       #{contractNo,jdbcType=VARCHAR}, #{contractStarttime,jdbcType=TIMESTAMP}, #{contractEndtime,jdbcType=TIMESTAMP}, 
@@ -182,7 +183,7 @@
       #{createTime,jdbcType=TIMESTAMP}, #{designerNo,jdbcType=VARCHAR}, #{designerName,jdbcType=VARCHAR}, 
       #{totalPrice,jdbcType=NUMERIC}, #{overdueDays,jdbcType=SMALLINT}, #{progressStage,jdbcType=SMALLINT}, 
       #{acceptanceStage,jdbcType=SMALLINT}, #{isAcceptance,jdbcType=SMALLINT}, #{status,jdbcType=SMALLINT}, 
-      #{projectPic,jdbcType=VARCHAR})
+      #{projectPic,jdbcType=VARCHAR}, #{projectEndtime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PreProjectGuide">
     <!--
@@ -275,6 +276,9 @@
       <if test="projectPic != null">
         project_pic,
       </if>
+      <if test="projectEndtime != null">
+        project_endtime,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -360,6 +364,9 @@
       </if>
       <if test="projectPic != null">
         #{projectPic,jdbcType=VARCHAR},
+      </if>
+      <if test="projectEndtime != null">
+        #{projectEndtime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -464,6 +471,9 @@
       <if test="record.projectPic != null">
         project_pic = #{record.projectPic,jdbcType=VARCHAR},
       </if>
+      <if test="record.projectEndtime != null">
+        project_endtime = #{record.projectEndtime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -502,7 +512,8 @@
       acceptance_stage = #{record.acceptanceStage,jdbcType=SMALLINT},
       is_acceptance = #{record.isAcceptance,jdbcType=SMALLINT},
       status = #{record.status,jdbcType=SMALLINT},
-      project_pic = #{record.projectPic,jdbcType=VARCHAR}
+      project_pic = #{record.projectPic,jdbcType=VARCHAR},
+      project_endtime = #{record.projectEndtime,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -595,6 +606,9 @@
       <if test="projectPic != null">
         project_pic = #{projectPic,jdbcType=VARCHAR},
       </if>
+      <if test="projectEndtime != null">
+        project_endtime = #{projectEndtime,jdbcType=TIMESTAMP},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -630,7 +644,8 @@
       acceptance_stage = #{acceptanceStage,jdbcType=SMALLINT},
       is_acceptance = #{isAcceptance,jdbcType=SMALLINT},
       status = #{status,jdbcType=SMALLINT},
-      project_pic = #{projectPic,jdbcType=VARCHAR}
+      project_pic = #{projectPic,jdbcType=VARCHAR},
+      project_endtime = #{projectEndtime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

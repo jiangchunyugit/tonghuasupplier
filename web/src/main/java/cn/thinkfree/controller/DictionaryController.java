@@ -6,6 +6,8 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.dictionary.DictionaryService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@ApiOperation("字典相关接口")
 @RestController
 @RequestMapping("dictionary")
 public class DictionaryController extends AbsBaseController {
@@ -23,10 +26,12 @@ public class DictionaryController extends AbsBaseController {
     DictionaryService dictionaryService;
 
 
+
     /**
      * 获取省份信息
      * @return
      */
+    @ApiOperation(value = "获取省份信息",notes = "获取省份信息")
     @GetMapping("/province")
     @MyRespBody
     public MyRespBundle<List<Province>>  province(){
@@ -42,9 +47,10 @@ public class DictionaryController extends AbsBaseController {
      * @param provinceCode
      * @return
      */
+    @ApiOperation(value = "获取省份下市区信息",notes = "获取省份下市区信息")
     @GetMapping("/city")
     @MyRespBody
-    public MyRespBundle<List<City>> city(@RequestParam String provinceCode){
+    public MyRespBundle<List<City>> city(@ApiParam("省份编码") @RequestParam String provinceCode){
         List<City> cityList = dictionaryService.findCityByProvince(provinceCode);
         return sendJsonData(ResultMessage.SUCCESS,cityList);
     }

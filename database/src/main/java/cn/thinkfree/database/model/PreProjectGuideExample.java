@@ -2025,6 +2025,66 @@ public class PreProjectGuideExample {
             addCriterion("project_pic not between", value1, value2, "projectPic");
             return (Criteria) this;
         }
+
+        public Criteria andProjectEndtimeIsNull() {
+            addCriterion("project_endtime is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeIsNotNull() {
+            addCriterion("project_endtime is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeEqualTo(Date value) {
+            addCriterion("project_endtime =", value, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeNotEqualTo(Date value) {
+            addCriterion("project_endtime <>", value, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeGreaterThan(Date value) {
+            addCriterion("project_endtime >", value, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("project_endtime >=", value, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeLessThan(Date value) {
+            addCriterion("project_endtime <", value, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeLessThanOrEqualTo(Date value) {
+            addCriterion("project_endtime <=", value, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeIn(List<Date> values) {
+            addCriterion("project_endtime in", values, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeNotIn(List<Date> values) {
+            addCriterion("project_endtime not in", values, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeBetween(Date value1, Date value2) {
+            addCriterion("project_endtime between", value1, value2, "projectEndtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectEndtimeNotBetween(Date value1, Date value2) {
+            addCriterion("project_endtime not between", value1, value2, "projectEndtime");
+            return (Criteria) this;
+        }
     }
 
     /**

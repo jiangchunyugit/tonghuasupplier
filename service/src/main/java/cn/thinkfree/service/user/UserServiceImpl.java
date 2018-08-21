@@ -1,5 +1,6 @@
 package cn.thinkfree.service.user;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.database.constants.UserLevel;
@@ -73,7 +74,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         UserVO userVO = new UserVO();
 
         UserRegisterExample userRegisterExample = new UserRegisterExample();
-        userRegisterExample.createCriteria().andPhoneEqualTo(phone);
+        userRegisterExample.createCriteria().andPhoneEqualTo(phone).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<UserRegister> users = userRegisterMapper.selectByExample(userRegisterExample);
         if(users.isEmpty()|| users.size() > 1){
             printErrorMes("用户账号信息错误",phone);

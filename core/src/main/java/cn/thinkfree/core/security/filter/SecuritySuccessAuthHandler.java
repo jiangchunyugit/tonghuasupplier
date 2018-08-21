@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -45,23 +46,19 @@ public class SecuritySuccessAuthHandler
             this.logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
+        SecurityUser user = (SecurityUser) authentication.getPrincipal();
+
         MyEventBus.getInstance().publicEvent(new UserLoginAfter(((SecurityUser)authentication.getPrincipal()).getUsername()));
         sendAjaxResult(request,response);
-//        Map<String, Object> result = new HashMap<String, Object>();
-//     result.put("user", ((SecurityUser)authentication.getPrincipal()).getName());
-//     result.put("pwd",((SecurityUser) authentication.getPrincipal()).getPassword());
-//     SecurityUser u = ((SecurityUser)authentication.getPrincipal());
-//     result.put("userModel",u);
-//     saveMessage(request, result);
-//        if (SecurityRequestUtil.isAjax(request)) {
-//            sendAjaxResult(request, response, targetUrl);
-//        } else {
-//            if (isUseForward(request)) {
-//                request.getRequestDispatcher(targetUrl).forward(request, response);
-//            } else {
-//                this.redirectStrategy.sendRedirect(request, response, targetUrl);
-//            }
-//        }
+        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String,Object> userModel = new HashMap<>();
+        userModel.put("username",user.getUsername());
+        userModel.put("companyName",user.getCompanyName());
+        userModel.put("name",user.getName());
+        userModel.put("createTime",user.getCreateTime());
+        result.put("userModel",userModel);
+
+        saveMessage(request, result);
 
     }
 
@@ -76,16 +73,14 @@ public class SecuritySuccessAuthHandler
     private void sendAjaxResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
+        response.setHeader("Access-Control-Allow-Origin","*");
         MyRespBundle<String> resp = new MyRespBundle<>();
         resp.setTimestamp(Instant.now().toEpochMilli());
         resp.setMessage("登录成功!");
         resp.setCode(200);
         resp.setData("登录成功!");
         response.getWriter().write(new Gson().toJson(resp));
-//     LoginResult loginResult = new LoginResult();
-//     loginResult.setCode(0);
-//     loginResult.setMessage("登录成功");
-//     response.getWriter().write(new Gson().toJson(loginResult));
+
     }
 
     protected final void saveMessage(HttpServletRequest request, Map<String, Object> result) {
