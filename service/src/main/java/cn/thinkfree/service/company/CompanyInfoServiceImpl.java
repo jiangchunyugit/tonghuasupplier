@@ -3,6 +3,7 @@ package cn.thinkfree.service.company;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
+import cn.thinkfree.database.vo.CompanyInfoSEO;
 import cn.thinkfree.database.vo.UserVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -32,7 +33,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Override
     @Transactional
     public int addCompanyInfo(CompanyInfo companyInfo) {
-
+        companyInfo.setCompanyId("");
         return companyInfoMapper.insertSelective(companyInfo);
     }
 
@@ -46,17 +47,17 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     }
 
     @Override
-    public PageInfo<CompanyInfo> list(CompanyInfo companyInfo) {
-        if(null != companyInfo.getLegalName() || !"".equals(companyInfo.getLegalName())){
-            String name = companyInfo.getLegalName();
-            companyInfo.setLegalName("%"+name+"%");
+    public PageInfo<CompanyInfo> list(CompanyInfoSEO companyInfoSEO) {
+        if(null != companyInfoSEO.getLegalName() || !"".equals(companyInfoSEO.getLegalName())){
+            String name = companyInfoSEO.getLegalName();
+            companyInfoSEO.setLegalName("%"+name+"%");
         }
-        if(null != companyInfo.getLegalPhone() || !"".equals(companyInfo.getLegalPhone())){
-            String phone = companyInfo.getLegalPhone();
-            companyInfo.setLegalPhone("%"+phone+"%");
+        if(null != companyInfoSEO.getLegalPhone() || !"".equals(companyInfoSEO.getLegalPhone())){
+            String phone = companyInfoSEO.getLegalPhone();
+            companyInfoSEO.setLegalPhone("%"+phone+"%");
         }
-        PageHelper.startPage(0,15);
-        List<CompanyInfo> companyInfos = companyInfoMapper.selectCompanyByParam(companyInfo);
+        PageHelper.startPage(companyInfoSEO.getPage(),companyInfoSEO.getRows());
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectCompanyByParam(companyInfoSEO);
         return new PageInfo<>(companyInfos);
     }
 }

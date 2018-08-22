@@ -58,7 +58,7 @@
 
     </select>
 
-    <select id="selectCompanyByParam" parameterType="cn.thinkfree.database.model.CompanyInfo" resultMap="BaseResultMap">
+    <select id="selectCompanyByParam" parameterType="cn.thinkfree.database.vo.CompanyInfoSEO" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List" />
         FROM

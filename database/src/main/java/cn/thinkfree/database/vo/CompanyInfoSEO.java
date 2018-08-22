@@ -1,5 +1,9 @@
 package cn.thinkfree.database.vo;
 
+
+/**
+ * 子公司管理查询条件  继承分页
+ */
 public class CompanyInfoSEO extends AbsPageSearchCriteria  {
     private String provinceCode;
     private String cityCode;

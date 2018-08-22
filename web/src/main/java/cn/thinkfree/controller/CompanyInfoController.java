@@ -6,6 +6,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.CompanyInfoSEO;
 import cn.thinkfree.service.company.CompanyInfoService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiImplicitParam;
@@ -83,16 +84,16 @@ public class CompanyInfoController extends AbsBaseController{
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="子公司查询")
+    @ApiOperation(value="查询公告信息", notes="根据操作人和日期查询公告信息")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "page", value = "当前页码", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "rows", value = "每页展示条数", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "sendUserId", value = "发送人id", required = false, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "sendTime", value = "日期", required = false, dataType = "String")
     })
-    public MyRespBundle<PageInfo<SystemMessage>> list(CompanyInfo companyInfo){
+    public MyRespBundle<PageInfo<SystemMessage>> list(CompanyInfoSEO companyInfoSEO){
 
-        PageInfo<CompanyInfo> pageInfo = companyInfoService.list(companyInfo);
+        PageInfo<CompanyInfo> pageInfo = companyInfoService.list(companyInfoSEO);
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }

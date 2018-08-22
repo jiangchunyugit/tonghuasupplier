@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.CompanyInfoSEO;
 import org.apache.ibatis.annotations.Param;
 
 public interface CompanyInfoMapper {
@@ -92,9 +94,9 @@ public interface CompanyInfoMapper {
     CompanyInfo findByCompanyId(String companyId);
 
     /**
-     * 根据公司信息获取子公司详细信息
-     * @param companyInfo
+     *
+     * @param companyInfoSEO
      * @return
      */
-    List<CompanyInfo> selectCompanyByParam(CompanyInfo companyInfo);
+    List<CompanyInfo> selectCompanyByParam(CompanyInfoSEO companyInfoSEO);
 }
