@@ -83,7 +83,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
 
         UserVO userVO = new UserVO();
-
+        printDebugMes("用户登录:{}",phone);
         UserRegisterExample userRegisterExample = new UserRegisterExample();
         userRegisterExample.createCriteria().andPhoneEqualTo(phone).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<UserRegister> users = userRegisterMapper.selectByExample(userRegisterExample);
