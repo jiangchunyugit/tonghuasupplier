@@ -187,7 +187,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     public ProjectDetailsVO selectProjectDetailsVOByProjectNo(String projectNo) {
 
         ProjectDetailsVO projectDetailsVO = preProjectGuideMapper.selectProjectDetailsByProjectNo(projectNo);
-
+        if(projectDetailsVO == null){
+            return new ProjectDetailsVO();
+        }
         PreProjectUserRoleExample roleExample = new PreProjectUserRoleExample();
         roleExample.createCriteria().andProjectNoEqualTo(projectNo).andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<PreProjectUserRole> preProjectUserRoles = preProjectUserRoleMapper.selectByExample(roleExample);
