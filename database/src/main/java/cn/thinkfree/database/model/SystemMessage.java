@@ -7,8 +7,6 @@ public class SystemMessage {
 
     private String content;
 
-    private String skipUrl;
-
     private Date sendTime;
 
     private String title;
@@ -20,14 +18,6 @@ public class SystemMessage {
     private String sendUserId;
 
     private String companyId;
-
-    public String getSendUserId() {
-        return sendUserId;
-    }
-
-    public void setSendUserId(String sendUserId) {
-        this.sendUserId = sendUserId;
-    }
 
     public Integer getId() {
         return id;
@@ -43,14 +33,6 @@ public class SystemMessage {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
-    }
-
-    public String getSkipUrl() {
-        return skipUrl;
-    }
-
-    public void setSkipUrl(String skipUrl) {
-        this.skipUrl = skipUrl == null ? null : skipUrl.trim();
     }
 
     public Date getSendTime() {
@@ -85,6 +67,13 @@ public class SystemMessage {
         this.sendUser = sendUser == null ? null : sendUser.trim();
     }
 
+    public String getSendUserId() {
+        return sendUserId;
+    }
+
+    public void setSendUserId(String sendUserId) {
+        this.sendUserId = sendUserId == null ? null : sendUserId.trim();
+    }
 
     public String getCompanyId() {
         return companyId;

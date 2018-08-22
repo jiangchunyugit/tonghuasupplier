@@ -77,9 +77,6 @@ public interface CompanyInfoMapper {
     CompanyInfo selectCompanyInfoByProjectNo(String projectNo);
 
 
-
-    List<String> selectRelationMapByRootCompany(String rootCompanyId);
-
     /**
      * 根据id获取公司信息
      * @param companyId
@@ -93,4 +90,11 @@ public interface CompanyInfoMapper {
      * @return
      */
     CompanyInfo findByCompanyId(String companyId);
+
+    /**
+     * 根据公司信息获取子公司详细信息
+     * @param companyInfo
+     * @return
+     */
+    List<CompanyInfo> selectCompanyByParam(CompanyInfo companyInfo);
 }
