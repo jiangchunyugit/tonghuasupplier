@@ -3,13 +3,13 @@ package cn.thinkfree.database.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("首页项目报表")
+@ApiModel(description = "项目状态统计")
 public class IndexProjectReportVO {
 
         /**
          * 待上线
          */
-        @ApiModelProperty("未上线")
+        @ApiModelProperty("待上线")
         private Integer  notOnLine;
         /**
          * 未开始

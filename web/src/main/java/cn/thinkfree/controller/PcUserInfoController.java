@@ -55,9 +55,7 @@ public class PcUserInfoController extends AbsBaseController {
     })
     public MyRespBundle<String> saveByUserInfo(PcUserInfoVo pcUserInfoVo){
 
-        UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
-
-        boolean flag = pcUserInfoService.saveUserInfo(uservo, pcUserInfoVo);
+        boolean flag = pcUserInfoService.saveUserInfo(pcUserInfoVo);
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS, flag);
         }
@@ -103,7 +101,7 @@ public class PcUserInfoController extends AbsBaseController {
     /**
      *  删除账户
      */
-    @RequestMapping(value = "/delByUserId", method = RequestMethod.POST)
+    @RequestMapping(value = "/delByUserId", method = RequestMethod.DELETE)
     @MyRespBody
     @ApiOperation(value="删除账户", notes="")
     @ApiImplicitParams({

@@ -13,7 +13,7 @@ public interface PcUserInfoService {
     List<PcUserInfo> selectByParam(UserVO userVO);
     PageInfo<PcUserInfoVo> findByParam(UserVO userVO, MyPageHelper myPageHelper);
     boolean delPcUserInfo(String userId);
-    boolean saveUserInfo(UserVO userVO, PcUserInfoVo pcUserInfoVo);
+    boolean saveUserInfo(PcUserInfoVo pcUserInfoVo);
     boolean updateUserInfo(PcUserInfoVo pcUserInfoVo);
     PcUserInfoVo findByUserId(String userId);
 
