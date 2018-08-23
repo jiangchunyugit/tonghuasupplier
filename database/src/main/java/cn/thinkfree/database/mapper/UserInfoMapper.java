@@ -94,4 +94,5 @@ public interface UserInfoMapper {
      */
     int updateByPrimaryKey(UserInfo record);
 
+    List<UserInfo> queryStaffList(String name, String phone, Integer status);
 }

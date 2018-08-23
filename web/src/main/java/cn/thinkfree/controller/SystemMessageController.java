@@ -28,13 +28,13 @@ public class SystemMessageController extends AbsBaseController {
 
     /**
      * 公告查询
-     * @param pn
-     * @param pageSize
+     * @param page
+     * @param rows
      * @param sendUserId
      * @param sendTime
      * @return
      */
-    @RequestMapping(value = "/findByParam", method = RequestMethod.POST)
+    @RequestMapping(value = "/findByParam", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="查询公告信息", notes="根据操作人和日期查询公告信息")
     @ApiImplicitParams({
@@ -86,7 +86,7 @@ public class SystemMessageController extends AbsBaseController {
      * @param id
      * @return
      */
-    @RequestMapping(value = "/findById", method = RequestMethod.POST)
+    @RequestMapping(value = "/findById", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="公告列表查看", notes="根据公告id查看信息")
     @ApiImplicitParams({
@@ -105,7 +105,7 @@ public class SystemMessageController extends AbsBaseController {
 
     /**
      * 添加公告
-     * @param sysMsg
+     * @param systemMessage
      * @return
      */
 //    @MySysLog(desc = "/sysMsg/saveSysMsg",action = SysLogAction.QUERY,module = SysLogModule.PC_NEWS)
