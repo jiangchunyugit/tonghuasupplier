@@ -15,6 +15,10 @@
         <result column="role_id" property="roleId" />
     </resultMap>
 
+    <resultMap id="CompanyUserSetVo" type="cn.thinkfree.database.vo.CompanyUserSetVo" extends="BaseResultMap">
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    </resultMap>
+
     <select id="countCompanyUser" parameterType="java.util.List" resultMap="IndexUserReportVO">
 
 
@@ -51,4 +55,15 @@
             order by ${orderByClause}
         </if>
     </select>
+
+
+    <select id="findByUserId" parameterType="string" resultMap="CompanyUserSetVo">
+        select cu.*, ro.role_name, co.company_name  from company_user_set cu
+        join user_role_set ro on cu.role_id = ro.role_code
+        join company_info co on cu.company_id = co.company_id where cu.id=#{id}
+    </select>
+
+    <update id="updateIsJob" parameterType="java.lang.Integer">
+        UPDATE company_user_set SET is_job=2 WHERE user_id=#{userId}
+    </update>
 </mapper>

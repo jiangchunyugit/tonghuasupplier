@@ -410,8 +410,4 @@
     </where>
   </select>
 
-  <update id="updateDelCompanyUser" parameterType="java.lang.Integer">
-    UPDATE company_user_set SET is_job=2 WHERE id=#{id}
-  </update>
-
 </mapper>
