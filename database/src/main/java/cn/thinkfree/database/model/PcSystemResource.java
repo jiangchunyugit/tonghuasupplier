@@ -1,20 +1,32 @@
 package cn.thinkfree.database.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+@ApiModel(description = "权限资源表")
 public class PcSystemResource {
+    @ApiModelProperty("主键")
     private Integer id;
 
+    @ApiModelProperty("模块")
     private String module;
 
+    @ApiModelProperty("资源名")
     private String name;
 
+    @ApiModelProperty("资源编码")
     private String code;
 
+    @ApiModelProperty("资源路径")
     private String url;
 
+    @ApiModelProperty("资源类型")
     private String type;
 
+    @ApiModelProperty("排序号")
     private Integer sortNum;
 
+    @ApiModelProperty("父节点")
     private Integer pid;
 
     public Integer getId() {

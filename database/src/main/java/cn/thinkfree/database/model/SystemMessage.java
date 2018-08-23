@@ -1,22 +1,35 @@
 package cn.thinkfree.database.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel(description = "公告信息表")
 public class SystemMessage {
+
+    @ApiModelProperty("主键")
     private Integer id;
 
+    @ApiModelProperty("公告内容")
     private String content;
 
+    @ApiModelProperty("发送时间")
     private Date sendTime;
 
+    @ApiModelProperty("标题")
     private String title;
 
+    @ApiModelProperty("发送对象：管家，工长。。")
     private String receiveRole;
 
+    @ApiModelProperty("发送账户")
     private String sendUser;
 
+    @ApiModelProperty("发送账户")
     private String sendUserId;
 
+    @ApiModelProperty("发送账户所属公司")
     private String companyId;
 
     public Integer getId() {
