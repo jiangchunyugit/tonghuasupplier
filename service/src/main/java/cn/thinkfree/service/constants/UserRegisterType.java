@@ -6,7 +6,8 @@ public enum  UserRegisterType {
 
     Enterprise(2,"企业"),
 
-    Staff(3,"企业员工");
+    Customer(3,"业主"),
+    Staff(4,"企业员工");
 
     public final Integer code;
     public final String mes;
