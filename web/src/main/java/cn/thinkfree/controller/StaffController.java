@@ -1,9 +1,12 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.SysLogAction;
+import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.model.PreProjectGuide;
@@ -163,13 +166,13 @@ public class StaffController extends AbsBaseController{
      */
     @PostMapping("/insetCompanyUser")
     @MyRespBody
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_STAFFS,desc = "邀请员工")
     public MyRespBundle<String> insertCompanyUser(CompanyUserSet companyUserSet){
-        UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        Integer mes = this.staffService.insetCompanyUser(companyUserSet);
-        if(mes > 0){
-            return sendJsonData(ResultMessage.SUCCESS, mes);
-        }
-        return sendJsonData(ResultMessage.FAIL, mes);
+
+        String mes = this.staffService.insetCompanyUser(companyUserSet);
+
+        return sendJsonData(ResultMessage.SUCCESS, mes);
+
     }
 
     /**
@@ -193,6 +196,21 @@ public class StaffController extends AbsBaseController{
             return sendJsonData(ResultMessage.SUCCESS,"邀请成功!!!");
         }
     }
+
+    /**
+     * 再次邀请员工
+     * @param userID
+     * @return
+     */
+    @ApiOperation(value = "再次邀请员工",notes = "再次邀请员工")
+    @PostMapping("/reInvitation")
+    @MyRespBody
+    public MyRespBundle<String> reInvitation(@RequestParam String userID){
+        String mes = staffService.reInvitation(userID);
+        return sendSuccessMessage(mes);
+    }
+
+
 }
 
 

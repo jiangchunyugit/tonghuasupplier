@@ -6,15 +6,19 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
-import cn.thinkfree.database.model.CompanyUserSet;
-import cn.thinkfree.database.model.CompanyUserSetExample;
-import cn.thinkfree.database.model.PcUserInfo;
-import cn.thinkfree.database.model.PreProjectUserRole;
+import cn.thinkfree.database.mapper.UserInfoMapper;
+import cn.thinkfree.database.mapper.UserRegisterMapper;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.remote.RemoteResult;
+import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.temporal.ChronoField;
 import java.util.Date;
@@ -28,6 +32,15 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
 
     @Autowired
     private CompanyUserSetMapper companyUserSetMapper;
+
+    @Autowired
+    UserRegisterMapper userRegisterMapper;
+
+    @Autowired
+    UserInfoMapper userInfoMapper;
+
+    @Autowired
+    CloudService cloudService;
 
     /**
      * 所谓五分钟
@@ -50,10 +63,48 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     }
 
     @Override
-    public Integer insetCompanyUser(CompanyUserSet companyUserSet) {
+    public String insetCompanyUser(CompanyUserSet companyUserSet) {
 
+        String activationCode = RandomNumUtils.random(6);
+        String userID = UserNoUtils.getUserNo(companyUserSet.getRoleId());
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        printInfoMes("插入员工记录表");
+        companyUserSet.setBindTime(new Date());
+        companyUserSet.setActivationCode(activationCode);
+        companyUserSet.setIsBind(SysConstants.YesOrNo.NO.shortVal());
+        companyUserSet.setIsJob(SysConstants.YesOrNo.YES.shortVal());
+        companyUserSet.setUserId(userID);
+        companyUserSet.setCompanyId(userVO.getCompanyID());
 
-        return this.companyUserSetMapper.insertSelective(companyUserSet);
+        companyUserSetMapper.insertSelective(companyUserSet);
+
+        printInfoMes("插入用户注册表");
+        UserRegister userRegister = new UserRegister();
+        userRegister.setUserId(userID);
+        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userRegister.setPhone(companyUserSet.getPhone());
+        userRegister.setType(UserRegisterType.Personal.shortVal());
+        userRegisterMapper.insertSelective(userRegister);
+
+        printInfoMes("插入用户信息表");
+        UserInfo userInfo = new UserInfo();
+        userInfo.setCompanyId(userVO.getCompanyID());
+        userInfo.setUserId(userID);
+        userInfo.setPhone(companyUserSet.getPhone());
+        userInfo.setCreateTime(new Date());
+        // 该处是因为 服务组使用是否不统一
+        // 已授权为2 未授权为1
+        userInfo.setIsAuth(SysConstants.YesOrNo.YES.shortVal());
+        userInfo.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
+        userInfo.setCityCode(Short.valueOf(userVO.getPcUserInfo().getCity()));
+        userInfo.setAreaCode(Integer.valueOf(userVO.getPcUserInfo().getArea()));
+        userInfoMapper.insertSelective(userInfo);
+
+        RemoteResult<String> rs = cloudService.sendSms(companyUserSet.getPhone(), activationCode);
+        if(!rs.isComplete()){
+            throw new RuntimeException("总有你想不到的意外");
+        }
+        return "操作成功!";
     }
 
     /*
@@ -71,6 +122,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      * @param userID
      * @return
      */
+    @Transactional
     @Override
     public String reInvitation(String userID) {
 

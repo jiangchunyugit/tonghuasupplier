@@ -19,7 +19,12 @@ public interface StaffService {
 
     Integer updateCompanyWei(Integer id,String roleName);
 
-    Integer insetCompanyUser(CompanyUserSet companyUserSet);
+    /**
+     * 邀请员工
+     * @param companyUserSet
+     * @return
+     */
+    String insetCompanyUser(CompanyUserSet companyUserSet);
 
     /*
     * 删除员工逻辑删除
