@@ -1,5 +1,8 @@
 package cn.thinkfree.database.vo;
 
+import io.swagger.annotations.ApiModel;
+
+@ApiModel("首页报表汇总")
 public class IndexReportVO {
 
 

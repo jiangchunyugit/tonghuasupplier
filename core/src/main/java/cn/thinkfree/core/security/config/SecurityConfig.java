@@ -29,6 +29,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 import javax.servlet.Filter;
@@ -46,6 +47,11 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Autowired
     SecurityResourceDao securityResourceDao;
 
+//    @Autowired
+//    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+
+    @Autowired
+    SecuritySuccessAuthHandler securitySuccessAuthHandler;
 
     @Override
     public void configure(WebSecurity web){
@@ -78,14 +84,15 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
         // 细粒度 更精细的配置~
-
+//        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAt(mySecurityPcFilter(), FilterSecurityInterceptor.class);
 
         // 自定义登录页面
         http.csrf().disable()
                 .formLogin()
                 .loginPage(SecurityConstants.LOGIN_PAGE)
-                .successHandler(successHandler())
+//                .successHandler(successHandler())
+                .successHandler(securitySuccessAuthHandler)
                 .failureHandler(failHandler())
                 .loginProcessingUrl(SecurityConstants.LOGIN_URL)
                 .usernameParameter(SecurityConstants.LOGIN_USERNAME)
@@ -139,15 +146,15 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         return securityFailAuthHandler;
     }
 
-    /**
-     * 配置鉴权成功处理器
-     * @return
-     */
-    protected AuthenticationSuccessHandler successHandler(){
-        SecuritySuccessAuthHandler securitySuccessAuthHandler = new SecuritySuccessAuthHandler();
-        securitySuccessAuthHandler.setDefaultTargetUrl(SecurityConstants.LOGIN_SUCCESS_PAGE);
-        return securitySuccessAuthHandler;
-    }
+//    /**
+//     * 配置鉴权成功处理器
+//     * @return
+//     */
+//    protected AuthenticationSuccessHandler successHandler(){
+//        SecuritySuccessAuthHandler securitySuccessAuthHandler = new SecuritySuccessAuthHandler();
+//        securitySuccessAuthHandler.setDefaultTargetUrl(SecurityConstants.LOGIN_SUCCESS_PAGE);
+//        return securitySuccessAuthHandler;
+//    }
 
 
     @Override

@@ -197,6 +197,13 @@ public class ProjectController extends AbsBaseController {
     }
 
 
+    @ApiOperation(value = "邀请业主",notes = "邀请业主")
+    @PostMapping("/notifyOwner")
+    public MyRespBundle<String> notifyOwner(String phone){
+        // TODO 后续
+        return sendSuccessMessage("操作成功!");
+    }
+
 //
 //
 //    @PostMapping("/test")

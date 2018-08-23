@@ -26,8 +26,8 @@ public enum ProjectStatus {
      */
     Complete(4,"竣工");
 
-    public Integer code;
-    public String mes;
+    public final Integer code;
+    public final String mes;
 
     ProjectStatus(Integer code ,String mes){
         this.code = code;

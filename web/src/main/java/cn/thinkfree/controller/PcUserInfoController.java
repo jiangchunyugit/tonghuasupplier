@@ -30,7 +30,6 @@ public class PcUserInfoController extends AbsBaseController {
     @RequestMapping(value = "/findByParam", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="公告详情:获取操作人信息", notes="操作人信息")
-    @CrossOrigin("")
     public MyRespBundle<PageInfo<PcUserInfo>> findByParam(){
         UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
 

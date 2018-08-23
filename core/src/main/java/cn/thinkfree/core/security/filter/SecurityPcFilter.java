@@ -39,7 +39,7 @@ import java.time.Instant;
 			FilterChain chain) throws IOException, ServletException {
 		//获取拦截请求
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
-		HttpServletResponse httpResponse = (HttpServletResponse)response;
+//		HttpServletResponse httpResponse = (HttpServletResponse)response;
 		String url = httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), "");
 
 		logger.info("拦截请求：" + url);

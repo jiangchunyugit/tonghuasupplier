@@ -10,7 +10,7 @@ public class SysConstants {
      */
     public enum YesOrNo {
         YES("1"), NO("0");
-        public Byte val;
+        public final Byte val;
 
         YesOrNo(String val) {
             this.val = Byte.valueOf(val);

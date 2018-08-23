@@ -14,8 +14,8 @@ public enum  SysLogAction {
     CHANGE_STATE(5,"改变状态"),
     EDIT(6,"编辑");
 
-    public String mes;
-    public Integer code;
+    public final String mes;
+    public final Integer code;
     SysLogAction(Integer code, String mes) {
         this.code = code;
         this.mes = mes;

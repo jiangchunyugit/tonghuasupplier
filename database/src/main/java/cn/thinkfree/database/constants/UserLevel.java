@@ -12,8 +12,8 @@ public enum  UserLevel {
     Company_Area(4,"区级账号"),
     Company_City_Master(5,"公司市级兼省级");
 
-    public Integer code;
-    public String desc;
+    public final Integer code;
+    public final String desc;
     UserLevel(Integer code, String desc) {
         this.code = code;
         this.desc = desc;

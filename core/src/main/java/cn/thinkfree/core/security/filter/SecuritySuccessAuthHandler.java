@@ -6,11 +6,14 @@ import cn.thinkfree.core.event.MyEventBus;
 import cn.thinkfree.core.event.model.UserLoginAfter;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
+import cn.thinkfree.core.security.utils.JwtUtils;
 import com.google.gson.Gson;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +24,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Component
 public class SecuritySuccessAuthHandler
         extends SimpleUrlAuthenticationSuccessHandler {
 
@@ -30,6 +33,8 @@ public class SecuritySuccessAuthHandler
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private boolean forwardToDestination = false;
 
+//    @Autowired
+//    JwtUtils jwtUtils;
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
@@ -49,7 +54,7 @@ public class SecuritySuccessAuthHandler
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
         MyEventBus.getInstance().publicEvent(
                 new UserLoginAfter(user.getUsername(),user.getPhone(),SecurityRequestUtil.getRequestIp(request)));
-        sendAjaxResult(request,response);
+//        sendAjaxResult(request,response);
         Map<String, Object> result = new HashMap<String, Object>();
         Map<String,Object> userModel = new HashMap<>();
         userModel.put("username",user.getUsername());
@@ -57,8 +62,11 @@ public class SecuritySuccessAuthHandler
         userModel.put("name",user.getName());
         userModel.put("createTime",user.getCreateTime());
         result.put("userModel",userModel);
-
+//        String token = jwtUtils.generateToken(user);
+//        System.out.println(token);
+//        result.put("token",token);
         saveMessage(request, result);
+//        request.getRequestDispatcher("/index").forward(request, response);
 
     }
 

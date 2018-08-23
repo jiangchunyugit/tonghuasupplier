@@ -60,6 +60,7 @@ public class DictionaryController extends AbsBaseController {
      * @param cityCode
      * @return
      */
+    @ApiOperation(value = "根据市区获取县区",notes = "根据市区获取县信息")
     @GetMapping("/area")
     @MyRespBody
     public MyRespBundle<List<Area>> area(@RequestParam String cityCode){
@@ -71,6 +72,7 @@ public class DictionaryController extends AbsBaseController {
      * 获取房屋类型
      * @return
      */
+    @ApiOperation(value = "获取房屋类型",notes = "获取房屋类型")
     @GetMapping("/houseType")
     @MyRespBody
     public MyRespBundle<List<PreProjectHouseType>> houseType(){
@@ -82,6 +84,7 @@ public class DictionaryController extends AbsBaseController {
      * 获取房屋新旧程度
      * @return
      */
+    @ApiOperation(value = "获取房屋新旧程度",notes = "获取房屋新旧程度")
     @GetMapping("/houseStatus")
     @MyRespBody
     public MyRespBundle<List<HousingStatus>> houseStatus(){
@@ -93,6 +96,7 @@ public class DictionaryController extends AbsBaseController {
      * 获取项目套餐类型
      * @return
      */
+    @ApiOperation(value = "获取项目套餐类型",notes = "获取项目套餐类型")
     @GetMapping("/projectType")
     @MyRespBody
     public MyRespBundle<List<ProjectType>> projectType(){
@@ -105,6 +109,7 @@ public class DictionaryController extends AbsBaseController {
      * @param areaCode
      * @return
      */
+    @ApiOperation(value = "根据县区获取公司信息",notes = "根据县区获取公司")
     @GetMapping("/companyByAreaCode")
     @MyRespBody
     public MyRespBundle<String> company(@RequestParam  Integer areaCode){

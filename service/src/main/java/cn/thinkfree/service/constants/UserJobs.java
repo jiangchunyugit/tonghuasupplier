@@ -19,8 +19,8 @@ public enum  UserJobs {
      */
     QualityInspector(4,"质检");
 
-    public Integer code;
-    public String mes;
+    public final Integer code;
+    public final String mes;
 
     UserJobs(Integer code, String mes) {
         this.code = code;

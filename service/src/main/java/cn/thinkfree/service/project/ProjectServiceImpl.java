@@ -87,6 +87,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         List<String> projectNos = Lists.newArrayList();
         // 过滤管家所负责的项目
         if(projectSEO.getSteward() != null  ){
+            printDebugMes("项目分页查询,存在管家条件:{}",projectSEO.getSteward());
             PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
             preProjectUserRoleExample.createCriteria().andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                     .andRoleIdEqualTo(UserJobs.Steward.mes)
@@ -96,6 +97,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         }
         // 过滤项目经理所负责的项目
         if(projectSEO.getProjectManager() != null){
+            printDebugMes("项目分页查询,存在项目经理条件:{}",projectSEO.getProjectManager());
             PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
             preProjectUserRoleExample.createCriteria().andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                     .andRoleIdEqualTo(UserJobs.ProjectManager.mes)
@@ -105,12 +107,12 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         }
 
         if(needFilter && projectNos.isEmpty()){
+            printDebugMes("存在管家或项目经理,但过滤后无项目编号");
             // 为空直接返回
             return new PageInfo();
         }
 
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-
         projectSEO.setCompanyRelationMap(userVO.getRelationMap());
         PageHelper.startPage(projectSEO.getPage(),projectSEO.getRows());
         List<ProjectVO> projectVOS = preProjectGuideMapper.selectProjectVOBySEO(projectSEO);
@@ -227,6 +229,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     @Override
     public ProjectQuotationVO selectProjectQuotationVoByProjectNo(String projectNo) {
         ProjectQuotationVO projectQuotationVO = preProjectInfoMapper.selectProjectQuotationVOByProjectNo(projectNo);
+        if(projectQuotationVO == null){
+            return new ProjectQuotationVO();
+        }
         List<ProjectQuotationItemVO> projectQuotationVOList= preProjectConstructionMapper.selectProjectQuotationItemVoByProjectNo(projectNo);
         projectQuotationVO.setItems(projectQuotationVOList);
         return projectQuotationVO;

@@ -9,8 +9,8 @@ public enum  IndexChartUnit {
     Month(2,"月"),
     Range(3,"区间");
 
-    public Integer code;
-    public String desc;
+    public final Integer code;
+    public final String desc;
     IndexChartUnit(Integer code, String desc) {
         this.code = code;
         this.desc = desc;

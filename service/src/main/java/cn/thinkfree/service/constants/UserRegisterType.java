@@ -8,8 +8,8 @@ public enum  UserRegisterType {
 
     Staff(3,"企业员工");
 
-    public Integer code;
-    public String mes;
+    public final Integer code;
+    public final String mes;
     UserRegisterType(Integer code, String mes) {
         this.code = code;
         this.mes = mes;

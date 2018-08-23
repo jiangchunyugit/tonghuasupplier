@@ -47,7 +47,7 @@ public class DateUtils {
      * @param localDate
      * @return
      */
-    public static Date LocalDate2Date(LocalDate localDate){
+    public static Date localDate2Date(LocalDate localDate){
         return Date.from(localDate.atStartOfDay().atZone( ZoneId.systemDefault()).toInstant());
     }
 
@@ -56,7 +56,7 @@ public class DateUtils {
      * @param date
      * @return
      */
-    public static LocalDate Date2LocalDate(Date date){
+    public static LocalDate date2LocalDate(Date date){
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 

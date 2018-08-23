@@ -72,7 +72,7 @@ public class MySpringConvert extends AbstractGenericHttpMessageConverter<Object>
         MyRespBundle myRespBundle = makeComplete((MyRespBundle) o);
         String result = JSONUtil.bean2JsonStr(myRespBundle);
         logger.debug("出口数据转换结束{}:{},",String.valueOf(Instant.now().toEpochMilli()),result);
-        httpOutputMessage.getBody().write(result.getBytes());
+        httpOutputMessage.getBody().write(result.getBytes("UTF-8"));
     }
 
     @Override
@@ -95,7 +95,7 @@ public class MySpringConvert extends AbstractGenericHttpMessageConverter<Object>
 
     private Object readMap(Class clz, HttpInputMessage inputMessage) throws IOException, HttpMessageNotReadableException {
         MyRequBundle requestData = initBundle(inputMessage);
-        requestData.setModel(JSONUtil.BeanParser(requestData.getModel(), clz));
+        requestData.setModel(JSONUtil.beanParser(requestData.getModel(), clz));
 
         logger.debug("入口数据转换结束:{},时间戳:{}",requestData,String.valueOf(Instant.now().toEpochMilli()));
         return requestData;
@@ -104,8 +104,8 @@ public class MySpringConvert extends AbstractGenericHttpMessageConverter<Object>
     private MyRequBundle initBundle(HttpInputMessage inputMessage) throws IOException {
         logger.info("入口数据转换,时间戳:{}", Instant.now().toEpochMilli());
         InputStream inputStream = inputMessage.getBody();
-        HttpHeaders header = inputMessage.getHeaders();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+//        HttpHeaders header = inputMessage.getHeaders();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,"UTF-8"));
         MyRequBundle requestData = JSONUtil.reader2Bean(reader,  MyRequBundle.class);
         return requestData;
     }

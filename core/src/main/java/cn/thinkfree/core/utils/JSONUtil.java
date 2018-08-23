@@ -59,7 +59,7 @@ public class JSONUtil {
      * @param <T>
      * @return
      */
-    public  static <T> T  BeanParser(Object obj,Class kls) {
+    public  static <T> T  beanParser(Object obj,Class kls) {
 
         return getGson().fromJson(getGson().toJson(obj), TypeToken.get(kls).getType());
     }

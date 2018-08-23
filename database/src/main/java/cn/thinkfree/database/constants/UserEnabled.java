@@ -5,8 +5,8 @@ public enum UserEnabled {
     Enabled_true(1,"启用"),
     Enabled_false(0,"不启用");
 
-    public Integer code;
-    public String desc;
+    public final Integer code;
+    public final String desc;
     UserEnabled(Integer code, String desc) {
         this.code = code;
         this.desc = desc;
