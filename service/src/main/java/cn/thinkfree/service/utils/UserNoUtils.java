@@ -16,14 +16,14 @@ public class UserNoUtils {
 	private static final String maxNumStr = "VVVVV";
 	private static final int maxLength = 5;
 	private static final long maxNum = UnCompressNumber(maxNumStr);
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+	private static final SimpleDateFormat formatter = new SimpleDateFormat("yyMMddHHmmss");
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		System.out.println(getNonceStr());
 		for(int i=0;i<8;i++){
 			System.out.println(getUserNo("pc"));
 		}
-	}
+	}*/
 
 
 	/**

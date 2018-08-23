@@ -5,7 +5,7 @@
     <select id="selectByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List" />
-        from u_app_system_message
+        from pc_system_message
         where 1=1
         <if test="sendTime != null and sendTime != ''">
            and send_time = #{sendTime,jdbcType=TIMESTAMP}

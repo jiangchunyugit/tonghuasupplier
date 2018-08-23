@@ -1,33 +1,36 @@
 package cn.thinkfree.database.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
+@ApiModel(description = "公告信息表")
 public class SystemMessage {
+
+    @ApiModelProperty("主键")
     private Integer id;
 
+    @ApiModelProperty("公告内容")
     private String content;
 
-    private String skipUrl;
-
+    @ApiModelProperty("发送时间")
     private Date sendTime;
 
+    @ApiModelProperty("标题")
     private String title;
 
+    @ApiModelProperty("发送对象：管家，工长。。")
     private String receiveRole;
 
+    @ApiModelProperty("发送账户")
     private String sendUser;
 
+    @ApiModelProperty("发送账户")
     private String sendUserId;
 
+    @ApiModelProperty("发送账户所属公司")
     private String companyId;
-
-    public String getSendUserId() {
-        return sendUserId;
-    }
-
-    public void setSendUserId(String sendUserId) {
-        this.sendUserId = sendUserId;
-    }
 
     public Integer getId() {
         return id;
@@ -43,14 +46,6 @@ public class SystemMessage {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
-    }
-
-    public String getSkipUrl() {
-        return skipUrl;
-    }
-
-    public void setSkipUrl(String skipUrl) {
-        this.skipUrl = skipUrl == null ? null : skipUrl.trim();
     }
 
     public Date getSendTime() {
@@ -85,6 +80,13 @@ public class SystemMessage {
         this.sendUser = sendUser == null ? null : sendUser.trim();
     }
 
+    public String getSendUserId() {
+        return sendUserId;
+    }
+
+    public void setSendUserId(String sendUserId) {
+        this.sendUserId = sendUserId == null ? null : sendUserId.trim();
+    }
 
     public String getCompanyId() {
         return companyId;

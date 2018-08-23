@@ -13,10 +13,11 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.remote.RemoteResult;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
     @Autowired
     CompanyUserSetMapper companyUserSetMapper;
+
+    @Autowired
+    CloudService cloudService;
 
 
 
@@ -183,12 +187,14 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     public ProjectDetailsVO selectProjectDetailsVOByProjectNo(String projectNo) {
 
         ProjectDetailsVO projectDetailsVO = preProjectGuideMapper.selectProjectDetailsByProjectNo(projectNo);
-
+        if(projectDetailsVO == null){
+            return new ProjectDetailsVO();
+        }
         PreProjectUserRoleExample roleExample = new PreProjectUserRoleExample();
         roleExample.createCriteria().andProjectNoEqualTo(projectNo).andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<PreProjectUserRole> preProjectUserRoles = preProjectUserRoleMapper.selectByExample(roleExample);
         projectDetailsVO.setStaffs(preProjectUserRoles);
-        projectDetailsVO.setProjectQuotationVO(selectProjectQuotationVoByProjectNo(projectNo));
+//        projectDetailsVO.setProjectQuotationVO(selectProjectQuotationVoByProjectNo(projectNo));
 
 
         return projectDetailsVO;
@@ -299,7 +305,13 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         preProjectInfoExample.createCriteria().andIdEqualTo(preProjectInfo.getId());
         preProjectInfoMapper.updateByExampleSelective(preProjectInfo,preProjectInfoExample);
 
-        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
+//        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
+
+        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
+        if(!rs.isComplete()){
+            throw  new RuntimeException("神奇的操作,无法理解");
+        }
+
         return "操作成功!";
     }
 
@@ -370,6 +382,74 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     public IndexProjectReportVO countProjectForPerson(String userID) {
 
         return preProjectCompanySetMapper.countProjectForPerson(userID);
+    }
+
+    /**
+     * 根据项目编号查询主材信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public List<PreProjectMaterial> selectProjectMaterilsByProjectNo(String projectNo) {
+
+        PreProjectMaterialExample preProjectMaterialExample = new PreProjectMaterialExample();
+
+        preProjectMaterialExample.setOrderByClause(" create_time ");
+
+        preProjectMaterialExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal())
+                .andProjectNoEqualTo(projectNo);
+
+        return preProjectMaterialMapper.selectByExample(preProjectMaterialExample);
+    }
+
+    /**
+     * 编辑主材信息
+     *
+     *
+     * @param projectNo
+     * @param preProjectMaterials
+     * @return
+     */
+    @Override
+    public String editMaterials(String projectNo, List<PreProjectMaterial> preProjectMaterials) {
+
+        printInfoMes("删除主材信息:{}",projectNo);
+        PreProjectMaterialExample preProjectMaterialExample = new PreProjectMaterialExample();
+        preProjectMaterialExample.createCriteria().andProjectNoEqualTo(projectNo);
+        PreProjectMaterial delObj = new PreProjectMaterial();
+        delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        preProjectMaterialMapper.updateByExampleSelective(delObj,preProjectMaterialExample);
+        if(preProjectMaterials.isEmpty()){
+            return "操作成功!";
+        }
+
+        preProjectMaterials.forEach(m->{
+            m.setProjectNo(projectNo);
+            m.setCreateTime(new Date());
+            m.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+            preProjectMaterialMapper.insertSelective(m);
+        });
+
+        return "操作成功!";
+    }
+
+    /**
+     * 查询一个公司及子公司的项目
+     *
+     * @param companyID
+     * @param status
+     * @param rows
+     * @param page
+     * @return
+     */
+    @Override
+    public PageInfo<ProjectVO> selectProjectVOForCompany(String companyID, Integer status, Integer rows, Integer page) {
+
+
+        PageHelper.startPage(page,rows);
+        List<ProjectVO> list = preProjectGuideMapper.selectProjectVOForCompany(companyID,status);
+        return new PageInfo<>(list);
     }
 
 

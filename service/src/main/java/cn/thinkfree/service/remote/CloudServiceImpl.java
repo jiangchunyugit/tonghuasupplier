@@ -1,43 +1,47 @@
 package cn.thinkfree.service.remote;
 
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class CloudServiceImpl implements CloudService {
 
     @Autowired
     RestTemplate restTemplate;
+    @Value("${custom.cloud.projectUpOnlineUrl}")
+    String projectUpOnlineUrl;
+    @Value("${custom.cloud.sendSmsUrl}")
+    String sendSmsUrl;
 
+    static Integer SuccessCode = 1000;
+
+    private RemoteResult buildFailResult(){
+        RemoteResult remoteResult = new RemoteResult();
+        remoteResult.setIsComplete(Boolean.FALSE);
+        return remoteResult;
+    }
 
     @Override
     public RemoteResult<String> projectUpOnline(String projectNo, Short status) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+
+        MultiValueMap<String, Object> param = initParam();
         param.add("projectNo", projectNo);
         param.add("state",status);
-        ResponseEntity<RemoteResult> rs = restTemplate.postForEntity("http://10.240.10.93:8789/project/status", param, RemoteResult.class);
-        System.out.println(rs);
-        if(rs.getStatusCode().value() == 1000){
+        RemoteResult<String> result = null;
+        try {
+           result = invokeRemoteMethod(projectUpOnlineUrl,param);
 
-        }else{
-
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
         }
-        return null;
+        return result;
     }
 
     /**
@@ -49,15 +53,34 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> sendSms(String phone, String activeCode) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+
+        MultiValueMap<String, Object> param = initParam();
         param.add("phone", phone);
         param.add("activationCode",activeCode);
-        ResponseEntity<RemoteResult> rs = restTemplate.postForEntity("http://10.240.10.78:5000/userapi/userRegister/smsAndSaveCode", param, RemoteResult.class);
-        System.out.println(rs);
-        return null;
+        RemoteResult<String> result = null;
+        try {
+            result = invokeRemoteMethod(sendSmsUrl,param);
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+    }
+
+    private RemoteResult<String> invokeRemoteMethod(String sendSmsUrl, MultiValueMap<String, Object> param) {
+        RemoteResult<String> result  = restTemplate.postForObject(sendSmsUrl, param, RemoteResult.class);
+        result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
+        return result;
+    }
+
+    private MultiValueMap<String, Object> initParam() {
+
+//        HttpHeaders headers = new HttpHeaders();
+//        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+//        headers.setContentType(type);
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
+        return param;
     }
 
     /**

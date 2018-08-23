@@ -1,5 +1,6 @@
 package cn.thinkfree.service.project;
 
+import cn.thinkfree.database.model.PreProjectMaterial;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 
@@ -83,7 +84,7 @@ public interface ProjectService {
 
 
     /**
-     * 项目图标 总览
+     * 项目图表 总览
      * @param firstDayOfWeek
      * @param lastDayOfWeek
      * @return
@@ -108,4 +109,30 @@ public interface ProjectService {
      */
     IndexProjectReportVO countProjectForPerson(String userID);
 
+    /**
+     * 根据项目编号查询主材信息
+     * @param projectNo
+     * @return
+     */
+    List<PreProjectMaterial> selectProjectMaterilsByProjectNo(String projectNo);
+
+    /**
+     * 编辑主材信息
+     *
+     * @param projectNo
+     * @param preProjectMaterials
+     *
+     * @return
+     */
+    String editMaterials(String projectNo, List<PreProjectMaterial> preProjectMaterials);
+
+    /**
+     *  查询一个公司及子公司的项目
+     * @param companyID
+     * @param status
+     * @param rows
+     * @param page
+     * @return
+     */
+    PageInfo<ProjectVO> selectProjectVOForCompany(String companyID,Integer status,Integer rows,Integer page);
 }

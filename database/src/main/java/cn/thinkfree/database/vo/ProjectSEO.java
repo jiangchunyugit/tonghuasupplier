@@ -6,41 +6,49 @@ import io.swagger.annotations.ApiModelProperty;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
-@ApiModel
+@ApiModel("项目搜索条件")
 public class ProjectSEO extends AbsPageSearchCriteria {
 
     /**
      * 省
      */
+    @ApiModelProperty("省份编码")
     private String province;
     /**
      * 市
      */
+    @ApiModelProperty("市编码")
     private String city;
     /**
      * 县
      */
+    @ApiModelProperty("县编码")
     private String area;
     /**
      * 状态
      */
+    @ApiModelProperty("状态")
     private String status;
     /**
      * 客户姓名
      */
+    @ApiModelProperty("客户姓名")
     private String customName;
     /**
      * 项目经理
      */
+    @ApiModelProperty("项目经理")
     private String projectManager;
     /**
      * 管家
      */
+    @ApiModelProperty("管家")
     private String steward;
 
     /**
      * 所属店面
      */
+    @ApiModelProperty("所属店面")
     private String hall;
 
     /**

@@ -169,8 +169,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     public PcUserInfoVo findByUserId(String userId) {
         PcUserInfoVo pcUserInfoVo = pcUserInfoMapper.findByUserId(userId);
-        MultipleMd5 md5 = new MultipleMd5();
-        //TODO  解密？？？
+//        MultipleMd5 md5 = new MultipleMd5();
 //        pcUserInfoVo.setPassword(md5.matches());
         return pcUserInfoVo;
     }

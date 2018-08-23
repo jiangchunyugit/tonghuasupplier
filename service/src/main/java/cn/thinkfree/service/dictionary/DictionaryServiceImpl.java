@@ -1,7 +1,10 @@
 package cn.thinkfree.service.dictionary;
 
+import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,9 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Autowired
     ProjectTypeMapper projectTypeMapper;
+
+    @Autowired
+    CompanyInfoMapper companyInfoMapper;
 
 
     /**
@@ -98,6 +104,26 @@ public class DictionaryServiceImpl implements DictionaryService {
         ProjectTypeExample projectTypeExample = new ProjectTypeExample();
         projectTypeExample.setOrderByClause(" sort_no");
         return projectTypeMapper.selectByExample(projectTypeExample);
+    }
+
+    /**
+     * 根据区域编码查询公司信息
+     *
+     * @param areaCode
+     * @return
+     */
+    @Override
+    public List<CompanyInfo> findCompanyByAreaCode(Integer areaCode) {
+
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        List<String> companyRelationMap = userVO.getRelationMap();
+
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal())
+                .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
+                .andAreaCodeEqualTo(areaCode);
+
+        return companyInfoMapper.selectByExample(companyInfoExample);
     }
 
 
