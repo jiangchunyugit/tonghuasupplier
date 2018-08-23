@@ -427,4 +427,10 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+
+
+  <select id="queryStaffList" resultType="cn.thinkfree.database.model.UserInfo">
+
+  </select>
 </mapper>
