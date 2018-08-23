@@ -25,5 +25,12 @@ public interface StaffService {
     * 删除员工逻辑删除
     * */
     Integer updateDelCompanyUser(Integer id);
+
+    /**
+     * 再次邀请用户
+     * @param userID
+     * @return
+     */
+    String reInvitation(String userID);
 }
 

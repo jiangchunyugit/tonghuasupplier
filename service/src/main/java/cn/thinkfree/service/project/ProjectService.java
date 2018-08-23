@@ -135,4 +135,11 @@ public interface ProjectService {
      * @return
      */
     PageInfo<ProjectVO> selectProjectVOForCompany(String companyID,Integer status,Integer rows,Integer page);
+
+    /**
+     * 再次通知业主
+     * @param phone
+     * @return
+     */
+    String notifyOwner(String phone);
 }

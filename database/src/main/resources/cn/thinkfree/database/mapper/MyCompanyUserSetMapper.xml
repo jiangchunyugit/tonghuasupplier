@@ -9,7 +9,10 @@
     </resultMap>
 
     <resultMap id="StaffsVO" type="cn.thinkfree.database.vo.StaffsVO" extends="BaseResultMap">
-
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="name" property="name"/>
+        <result column="user_id"   property="userId" />
+        <result column="role_id" property="roleId" />
     </resultMap>
 
     <select id="countCompanyUser" parameterType="java.util.List" resultMap="IndexUserReportVO">
@@ -36,10 +39,10 @@
     <select id="selectStaffsVOByExample" parameterType="cn.thinkfree.database.model.CompanyUserSetExample" resultMap="StaffsVO">
 
         select
-        <if test="distinct">
-            distinct
-        </if>
-        <include refid="Base_Column_List" />
+        phone,
+        name,
+        role_id,
+        user_id
         from company_user_set
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />

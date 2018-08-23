@@ -201,17 +201,9 @@ public class ProjectController extends AbsBaseController {
     @PostMapping("/notifyOwner")
     public MyRespBundle<String> notifyOwner(String phone){
         // TODO 后续
-        return sendSuccessMessage("操作成功!");
+        String mes = projectService.notifyOwner(phone);
+        return sendSuccessMessage(mes);
     }
 
-//
-//
-//    @PostMapping("/test")
-//    @MyRespBody
-//    @MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_PROJECT,desc = "测试")
-//    public void testFeign(){
-//          cloudService.projectUpOnline("ITEM18081417200100002EH", ProjectStatus.WaitStart.shortVal());
-////        cloudService.sendSms("18910471835","156321");
-//    }
 
 }

@@ -1,31 +1,41 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 项目详情
  */
+@ApiModel("项目交互详情")
 public class ProjectVO extends PreProjectGuide {
 
+    @ApiModelProperty("公司信息")
     private PreProjectCompanySet preProjectCompanySet;
+    @ApiModelProperty("项目信息")
     private PreProjectInfo preProjectInfo;
-    private PreProjectStatus preProjectStatus;
+//    @ApiModelProperty("项目状态")
+//    private PreProjectStatus preProjectStatus;
+    @ApiModelProperty("项目员工")
     private PreProjectUserRole preProjectUserRole;
 
     /**
      * 管家姓名
      */
+    @ApiModelProperty("管家姓名")
     private String stewardName;
 
     /**
      * 项目经理名称
      */
+    @ApiModelProperty("项目经理姓名")
     private String projectManagerName;
 
     /**
      * 所属公司
      * @return
      */
+    @ApiModelProperty("所属公司名称")
     public String companyName;
 
     public String getCompanyName() {
@@ -68,13 +78,13 @@ public class ProjectVO extends PreProjectGuide {
         this.preProjectInfo = preProjectInfo;
     }
 
-    public PreProjectStatus getPreProjectStatus() {
-        return preProjectStatus;
-    }
-
-    public void setPreProjectStatus(PreProjectStatus preProjectStatus) {
-        this.preProjectStatus = preProjectStatus;
-    }
+//    public PreProjectStatus getPreProjectStatus() {
+//        return preProjectStatus;
+//    }
+//
+//    public void setPreProjectStatus(PreProjectStatus preProjectStatus) {
+//        this.preProjectStatus = preProjectStatus;
+//    }
 
     public PreProjectUserRole getPreProjectUserRole() {
         return preProjectUserRole;

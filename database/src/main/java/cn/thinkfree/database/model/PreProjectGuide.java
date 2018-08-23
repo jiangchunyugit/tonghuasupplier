@@ -73,7 +73,7 @@ public class PreProjectGuide extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("项目电话")
+    @ApiModelProperty("业主电话")
     private String customerPhone;
 
     /**

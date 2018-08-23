@@ -4,6 +4,7 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.event.MyEventBus;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.event.ProjectStopEvent;
@@ -216,7 +217,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         companyUserSetExample.createCriteria().andCompanyIdEqualTo(userVO.getCompanyID())
                 .andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                 .andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal())
-                .andRoleIdEqualTo(job);
+                .andRoleIdEqualTo(job.toUpperCase());
         return companyUserSetMapper.selectStaffsVOByExample(companyUserSetExample);
     }
 
@@ -455,6 +456,20 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         PageHelper.startPage(page,rows);
         List<ProjectVO> list = preProjectGuideMapper.selectProjectVOForCompany(companyID,status);
         return new PageInfo<>(list);
+    }
+
+    /**
+     * 再次通知业主
+     *
+     * @param phone
+     * @return
+     */
+    @Override
+    public String notifyOwner(String phone) {
+
+
+        RemoteResult<String> rs = cloudService.sendSms(phone, RandomNumUtils.random(6));
+        return rs.isComplete() ? "操作成功":"操作失败";
     }
 
 
