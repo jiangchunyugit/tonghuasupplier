@@ -94,8 +94,6 @@ public class StaffController extends AbsBaseController{
     @GetMapping("/companyList")
     @MyRespBody
     public MyRespBundle<PageInfo<PreProjectGuide>> list(ProjectSEO projectSEO){
-
-
         PageInfo<ProjectVO> pageInfo = projectService.pageProjectBySEO(projectSEO);
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }
