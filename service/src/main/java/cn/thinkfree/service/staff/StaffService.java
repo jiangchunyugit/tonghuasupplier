@@ -1,0 +1,29 @@
+package cn.thinkfree.service.staff;
+
+import cn.thinkfree.database.model.CompanyUserSet;
+import cn.thinkfree.database.model.PreProjectUserRole;
+import cn.thinkfree.database.vo.UserVO;
+
+import java.util.List;
+
+
+public interface StaffService {
+
+    List<CompanyUserSet> queryStaffList(Integer page, Integer rows, String name, String phone, Integer isBind);
+
+    CompanyUserSet queryCompanyUser(Integer id);
+
+    List<PreProjectUserRole> queryRole();
+
+    Integer deletCompanyByNo(Integer id);
+
+    Integer updateCompanyWei(Integer id,String roleName);
+
+    Integer insetCompanyUser(CompanyUserSet companyUserSet);
+
+    /*
+    * 删除员工逻辑删除
+    * */
+    Integer updateDelCompanyUser(Integer id);
+}
+
