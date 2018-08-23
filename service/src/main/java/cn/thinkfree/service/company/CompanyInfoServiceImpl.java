@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
 import cn.thinkfree.database.vo.CompanyInfoSEO;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Override
     @Transactional
     public int addCompanyInfo(CompanyInfo companyInfo) {
-        companyInfo.setCompanyId("");
+        companyInfo.setCompanyId(UserNoUtils.getUserNo(""));
         return companyInfoMapper.insertSelective(companyInfo);
     }
 

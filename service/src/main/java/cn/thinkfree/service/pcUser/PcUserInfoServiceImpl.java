@@ -1,5 +1,6 @@
 package cn.thinkfree.service.pcUser;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
@@ -82,12 +83,13 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     /**
      * 添加账户
-     * @param userVO
+     * @param pcUserInfoVo
      * @return
      */
     @Override
     @Transactional
-    public boolean saveUserInfo(UserVO userVO, PcUserInfoVo pcUserInfoVo) {
+    public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         String userId = UserNoUtils.getUserNo("pc");
         Date date = new Date();
         pcUserInfoVo.setCreateTime(date);

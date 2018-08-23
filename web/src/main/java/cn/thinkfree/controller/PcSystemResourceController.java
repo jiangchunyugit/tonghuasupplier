@@ -47,12 +47,12 @@ public class PcSystemResourceController extends AbsBaseController {
 //    @MySysLog(desc = "/sysMsg/delSysMsg",action = SysLogAction.QUERY,module = SysLogModule.PC_NEWS)
     @RequestMapping(value = "/updateByUser", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="修改权限", notes="")
+    @ApiOperation(value="修改权限")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "userId", value = "用户ID", required = true, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "resourceId", value = "权限资源ID", required = true, dataType = "List")
     })
-    public MyRespBundle<MySystemResource> updateByUser(@RequestParam(value = "userId")String userId,
+    public MyRespBundle<String> updateByUser(@RequestParam(value = "userId")String userId,
     @RequestParam(value = "resourceId")List<Integer> resourceId){
         boolean flag = false;
         if(resourceId != null && resourceId.size() > 0){

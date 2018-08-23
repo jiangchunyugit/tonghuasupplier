@@ -64,7 +64,7 @@ public class SystemMessageController extends AbsBaseController {
      * @return
      */
 //    @MySysLog(desc = "/sysMsg/delSysMsg",action = SysLogAction.QUERY,module = SysLogModule.PC_NEWS)
-    @RequestMapping(value = "/delSysMsg", method = RequestMethod.POST)
+    @RequestMapping(value = "/delSysMsg", method = RequestMethod.DELETE)
     @MyRespBody
     @ApiOperation(value="公告删除", notes="根据公告id删除公告")
     @ApiImplicitParams({
