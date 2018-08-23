@@ -1,15 +1,30 @@
 package cn.thinkfree.database.vo;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 子公司管理查询条件  继承分页
  */
+@ApiModel(description = "子公司管理条件")
 public class CompanyInfoSEO extends AbsPageSearchCriteria  {
+    @ApiModelProperty("省id")
     private String provinceCode;
+
+    @ApiModelProperty("市id")
     private String cityCode;
+
+    @ApiModelProperty("区id")
     private String areaCode;
+
+    @ApiModelProperty("公司id")
     private String companyId;
+
+    @ApiModelProperty("法人名称")
     private String legalName;
+
+    @ApiModelProperty("法人电话号码")
     private String legalPhone;
 
     public String getProvinceCode() {

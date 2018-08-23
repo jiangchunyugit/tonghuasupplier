@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration debug="false" scan="true" scanPeriod="1000 seconds">
-	<property name="dir" value="F://logs//tomcat"/>
+	<property name="dir" value="D://logs//tomcat"/>
 	<property name="fileName" value="designer"/>
 	<timestamp key="date" datePattern="yyyyMMdd" />
 	<!-- Output to Console -->

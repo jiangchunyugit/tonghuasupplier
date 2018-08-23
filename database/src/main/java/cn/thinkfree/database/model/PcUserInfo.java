@@ -1,6 +1,8 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import io.swagger.annotations.ApiModel;
+
 import java.util.Date;
 
 /**
@@ -19,6 +21,7 @@ public class PcUserInfo extends BaseModel {
      *
      * @mbg.generated
      */
+
     private String id;
 
     /**
