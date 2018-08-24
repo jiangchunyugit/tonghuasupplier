@@ -156,7 +156,7 @@ public class StaffController extends AbsBaseController{
      * @param
      * @return
      */
-    @DeleteMapping("/isDel")
+    @GetMapping("/isDel")
     @MyRespBody
     @ApiOperation(value = "员工详情--->判断是否移除员工")
     @ApiImplicitParams({
@@ -174,7 +174,7 @@ public class StaffController extends AbsBaseController{
      * @param
      * @return
      */
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     @MyRespBody
     @ApiOperation(value = "员工详情--->移除员工")
     @ApiImplicitParams({
@@ -212,7 +212,7 @@ public class StaffController extends AbsBaseController{
      * 查看详细信息
      * @return
      */
-    @PostMapping("/details")
+    @GetMapping("/details")
     @MyRespBody
     @ApiOperation(value = "员工列表--->查看")
     @ApiImplicitParams({
@@ -227,7 +227,7 @@ public class StaffController extends AbsBaseController{
     /**
      * 岗位信息
      */
-    @PostMapping("/getRole")
+    @GetMapping("/getRole")
     @MyRespBody
     @ApiOperation(value = "员工详情--->修改岗位--->岗位信息")
     public MyRespBundle<List<UserRoleSet>> getRole(){
