@@ -63,28 +63,28 @@
         <include refid="Base_Column_List" />
         FROM
         company_info
-        <where>
-            and is_delete = 0
-            <if test="companyId != null and companyId != ''">
-              and company_id = #{companyId}
-            </if>
-            <if test="provinceCode != null and parentCompanyId == 2">
-                and province_code = #{provinceCode}
-            </if>
-            <if test="cityCode != null and parentCompanyId == 3">
-                and city_code = #{cityCode}
-            </if>
-            <if test="areaCode != null and parentCompanyId == 4">
-                and area_code = #{areaCode}
-            </if>
-            <if test="legalName != null and legalName != ''">
-                and legal_name like #{legalName}
-            </if>
-            <if test="legalPhone != null and legalPhone != ''">
-                and legal_phone like #{legalPhone}
-            </if>
+        <!--<where>-->
+            <!--and is_delete = 2-->
+            <!--<if test="companyId != null and companyId != ''">-->
+              <!--and company_id = #{companyId}-->
+            <!--</if>-->
+            <!--<if test="provinceCode != null and parentCompanyId == 2">-->
+                <!--and province_code = #{provinceCode}-->
+            <!--</if>-->
+            <!--<if test="cityCode != null and parentCompanyId == 3">-->
+                <!--and city_code = #{cityCode}-->
+            <!--</if>-->
+            <!--<if test="areaCode != null and parentCompanyId == 4">-->
+                <!--and area_code = #{areaCode}-->
+            <!--</if>-->
+            <!--<if test="legalName != null and legalName != ''">-->
+                <!--and legal_name like #{legalName}-->
+            <!--</if>-->
+            <!--<if test="legalPhone != null and legalPhone != ''">-->
+                <!--and legal_phone like #{legalPhone}-->
+            <!--</if>-->
 
-        </where>
+        <!--</where>-->
 
 
     </select>

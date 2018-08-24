@@ -57,11 +57,11 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Override
     public PageInfo<CompanyInfo> list(CompanyInfoSEO companyInfoSEO) {
-        if(null != companyInfoSEO.getLegalName() || !"".equals(companyInfoSEO.getLegalName())){
+        if(null != companyInfoSEO.getLegalName() && !"".equals(companyInfoSEO.getLegalName())){
             String name = companyInfoSEO.getLegalName();
             companyInfoSEO.setLegalName("%"+name+"%");
         }
-        if(null != companyInfoSEO.getLegalPhone() || !"".equals(companyInfoSEO.getLegalPhone())){
+        if(null != companyInfoSEO.getLegalPhone() && !"".equals(companyInfoSEO.getLegalPhone())){
             String phone = companyInfoSEO.getLegalPhone();
             companyInfoSEO.setLegalPhone("%"+phone+"%");
         }

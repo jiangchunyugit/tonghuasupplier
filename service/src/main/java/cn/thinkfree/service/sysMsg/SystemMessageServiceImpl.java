@@ -53,8 +53,9 @@ public class SystemMessageServiceImpl implements SystemMessageService {
 
         PageHelper.startPage(no,pageSize);
         List<SystemMessageVo> systemMessage = sysMsgMapper.selectByParam(param);
+        //查询岗位 信息
         UserRoleSetExample example = new UserRoleSetExample();
-        //查询岗位显示的信息
+        //设置岗位显示的信息
         Short isShow = 1;
         example.createCriteria().andIsShowEqualTo(isShow);
         List<UserRoleSet> userRoleSets = userRoleSetMapper.selectByExample(example);

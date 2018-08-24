@@ -252,7 +252,7 @@ public class CompanyInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty("是否删除")
-    private Short isDelete;
+    private Short isDelete = 2;
 
     /**
      * Database Column Remarks:
