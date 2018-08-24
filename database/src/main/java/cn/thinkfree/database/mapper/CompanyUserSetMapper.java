@@ -4,6 +4,8 @@ import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.model.CompanyUserSetExample;
 import java.util.List;
 import java.util.Map;
+
+import cn.thinkfree.database.vo.CompanyUserSetVo;
 import cn.thinkfree.database.vo.IndexUserReportVO;
 import cn.thinkfree.database.vo.StaffsVO;
 import org.apache.ibatis.annotations.Param;
@@ -115,8 +117,17 @@ public interface CompanyUserSetMapper {
      */
     List<CompanyUserSet> queryStaffList(Map<String,Object> map);
 
-    /*
-     * 删除员工逻辑删除
-     * */
-    Integer updateDelCompanyUser(Integer id);
+    /**
+     * 员工移除
+     * @param userId
+     * @return
+     */
+    int updateIsJob(String userId);
+
+    /**
+     * 根据id查询员工信息
+     * @param id
+     * @return
+     */
+    CompanyUserSetVo findByUserId(Integer id);
 }

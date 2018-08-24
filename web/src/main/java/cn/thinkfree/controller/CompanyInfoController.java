@@ -12,9 +12,7 @@ import cn.thinkfree.database.vo.ProjectVO;
 import cn.thinkfree.service.company.CompanyInfoService;
 import cn.thinkfree.service.project.ProjectService;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/company")
-@ApiOperation(value="子公司管理")
+@Api("子公司管理")
 public class CompanyInfoController extends AbsBaseController{
 
     @Autowired
@@ -53,7 +51,7 @@ public class CompanyInfoController extends AbsBaseController{
 //            @ApiImplicitParam(paramType="query", name = "legalPhone", value = "负责人手机号", required = true, dataType = "String"),
 //            @ApiImplicitParam(paramType="query", name = "regPhone", value = "备注", required = false, dataType = "String")
 //    })
-    public MyRespBundle<String> saveCompanyInfo(CompanyInfo companyInfo){
+    public MyRespBundle<String> saveCompanyInfo(@ApiParam("公司信息") CompanyInfo companyInfo){
 
         int line = companyInfoService.addCompanyInfo(companyInfo);
         if(line > 0){
@@ -79,7 +77,7 @@ public class CompanyInfoController extends AbsBaseController{
 //            @ApiImplicitParam(paramType="query", name = "legalPhone", value = "负责人手机号", required = true, dataType = "String"),
 //            @ApiImplicitParam(paramType="query", name = "regPhone", value = "备注", required = false, dataType = "String")
 //    })
-    public MyRespBundle<String> updateCompanyInfo(CompanyInfo companyInfo){
+    public MyRespBundle<String> updateCompanyInfo(@ApiParam("公司信息")CompanyInfo companyInfo){
 
         int line = companyInfoService.updateCompanyInfo(companyInfo);
         if(line > 0){
@@ -95,7 +93,7 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="查询子公司信息")
-    public MyRespBundle<PageInfo<SystemMessage>> list(CompanyInfoSEO companyInfoSEO){
+    public MyRespBundle<PageInfo<CompanyInfo>> list(@ApiParam("查询公司参数")CompanyInfoSEO companyInfoSEO){
 
         PageInfo<CompanyInfo> pageInfo = companyInfoService.list(companyInfoSEO);
 

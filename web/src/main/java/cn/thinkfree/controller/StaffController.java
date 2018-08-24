@@ -8,10 +8,8 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
-import cn.thinkfree.database.model.CompanyUserSet;
-import cn.thinkfree.database.model.PreProjectGuide;
-import cn.thinkfree.database.model.PreProjectUserRole;
-import cn.thinkfree.database.model.UserInfo;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.CompanyUserSetVo;
 import cn.thinkfree.database.vo.ProjectSEO;
 import cn.thinkfree.database.vo.ProjectVO;
 import cn.thinkfree.database.vo.UserVO;
@@ -103,63 +101,6 @@ public class StaffController extends AbsBaseController{
 
 
     /**
-     *
-     * 查询岗位
-     * @return
-     */
-    @GetMapping("/queryUserRole")
-    @MyRespBody
-    public MyRespBundle<PreProjectUserRole> queryRole(){
-        List<PreProjectUserRole> userRoleList = this.staffService.queryRole();
-        return sendJsonData(ResultMessage.SUCCESS,userRoleList);
-    }
-
-    /**
-     * 删除员工逻辑删除
-     * @param id
-     * @return
-     */
-    @DeleteMapping("/updateDelCompanyUser")
-    @MyRespBody
-    public MyRespBundle<String> updateDelCompanyUser(){
-        Integer id = 4;
-        Integer mes = this.staffService.updateDelCompanyUser(id);
-        if(mes > 0){
-            return sendJsonData(ResultMessage.SUCCESS, "删除成功!");
-        }
-        return sendJsonData(ResultMessage.FAIL, mes);
-    }
-
-    /**
-     * 删除员工
-     * @param id
-     * @return
-     */
-    @DeleteMapping("/delCompanyUser")
-    @MyRespBody
-    public MyRespBundle<String> delCompanyUser(@RequestParam("id")Integer id){
-
-        Integer mes = this.staffService.deletCompanyByNo(id);
-        if(mes > 0){
-            return sendJsonData(ResultMessage.SUCCESS, mes);
-        }
-        return sendJsonData(ResultMessage.FAIL, mes);
-    }
-
-    //TODO 待实现
-    @PostMapping("/updateCompanyWei")
-    @MyRespBody
-    public MyRespBundle<String> updateCompanyWei(@RequestParam("id")Integer id,
-                                                 @RequestParam("roleName")String roleName){
-        Integer mes = this.staffService.updateCompanyWei(id,roleName);
-        if(mes > 0){
-            return sendJsonData(ResultMessage.SUCCESS, mes);
-        }
-        return sendJsonData(ResultMessage.FAIL, mes);
-    }
-
-
-    /**
      * 邀请员工
      * @param companyUserSet
      * @return
@@ -210,7 +151,90 @@ public class StaffController extends AbsBaseController{
         return sendSuccessMessage(mes);
     }
 
+    /**
+     * 判断员工是否可以移除
+     * @param
+     * @return
+     */
+    @GetMapping("/isDel")
+    @MyRespBody
+    @ApiOperation(value = "员工详情--->判断是否移除员工")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String")
+    })
+    public MyRespBundle<String> isDel(@RequestParam(value = "userId") String userId){
 
+        String msg = staffService.updateDelCompanyUser(userId);
+
+        return sendJsonData(ResultMessage.SUCCESS, msg);
+    }
+
+    /**
+     * 移除员工  修改字段
+     * @param
+     * @return
+     */
+    @PostMapping("/delete")
+    @MyRespBody
+    @ApiOperation(value = "员工详情--->移除员工")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String")
+    })
+    public MyRespBundle<String> delete(@RequestParam(value = "userId") String userId){
+
+        int line = staffService.updateIsJob(userId);
+
+        if(line > 0){
+            return sendJsonData(ResultMessage.SUCCESS, line);
+        }
+        return sendJsonData(ResultMessage.FAIL, line);
+    }
+
+    /**
+     * 修改岗位
+     * @return
+     */
+    @PostMapping("/updateRole")
+    @MyRespBody
+    @ApiOperation(value = "员工详情--->修改岗位")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "roleId", value = "roleId", required = true, dataType = "String")
+    })
+    public MyRespBundle<String> updateRole(@RequestParam("userId")String userId,
+                                           @RequestParam("roleId")String roleId){
+        String mes = staffService.updateRole(userId,roleId);
+
+        return sendJsonData(ResultMessage.SUCCESS, mes);
+    }
+
+    /**
+     * 查看详细信息
+     * @return
+     */
+    @GetMapping("/details")
+    @MyRespBody
+    @ApiOperation(value = "员工列表--->查看")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String"),
+    })
+    public MyRespBundle<CompanyUserSetVo> details(@RequestParam("id")int id){
+        CompanyUserSetVo companyUserSetVo = staffService.detail(id);
+
+        return sendJsonData(ResultMessage.SUCCESS, companyUserSetVo);
+    }
+
+    /**
+     * 岗位信息
+     */
+    @GetMapping("/getRole")
+    @MyRespBody
+    @ApiOperation(value = "员工详情--->修改岗位--->岗位信息")
+    public MyRespBundle<List<UserRoleSet>> getRole(){
+
+        List<UserRoleSet> userRoleSet = staffService.getRole();
+        return sendJsonData(ResultMessage.SUCCESS, userRoleSet);
+    }
 }
 
 

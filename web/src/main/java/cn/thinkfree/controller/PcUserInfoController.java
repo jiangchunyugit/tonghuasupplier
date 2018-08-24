@@ -11,9 +11,7 @@ import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/userInfo")
+@Api("账户信息（权限管理）")
 public class PcUserInfoController extends AbsBaseController {
 
     @Autowired
@@ -53,7 +52,7 @@ public class PcUserInfoController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = false, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "memo", value = "备注", required = false, dataType = "String")
     })*/
-    public MyRespBundle<String> saveByUserInfo(PcUserInfoVo pcUserInfoVo){
+    public MyRespBundle<String> saveByUserInfo(@ApiParam("账户信息")PcUserInfoVo pcUserInfoVo){
 
         boolean flag = pcUserInfoService.saveUserInfo(pcUserInfoVo);
         if(flag){
@@ -130,7 +129,7 @@ public class PcUserInfoController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "memo", value = "备注", required = false, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "id", value = "账号id", required = true, dataType = "String")
     })*/
-    public MyRespBundle<String> updateByUserId(PcUserInfoVo pcUserInfoVo){
+    public MyRespBundle<String> updateByUserId(@ApiParam("账户信息")PcUserInfoVo pcUserInfoVo){
 
         boolean flag = pcUserInfoService.updateUserInfo(pcUserInfoVo);
         if (flag){

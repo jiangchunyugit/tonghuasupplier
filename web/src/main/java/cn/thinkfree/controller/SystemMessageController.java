@@ -9,18 +9,17 @@ import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/sysMsg")
-
+@Api("公告管理")
 public class SystemMessageController extends AbsBaseController {
 
     @Autowired

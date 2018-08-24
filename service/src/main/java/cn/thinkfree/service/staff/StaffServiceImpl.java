@@ -4,11 +4,10 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.RandomNumUtils;
-import cn.thinkfree.database.mapper.CompanyUserSetMapper;
-import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
-import cn.thinkfree.database.mapper.UserInfoMapper;
-import cn.thinkfree.database.mapper.UserRegisterMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.CompanyUserSetVo;
+import cn.thinkfree.database.vo.IndexProjectReportVO;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
@@ -41,6 +40,12 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
 
     @Autowired
     CloudService cloudService;
+
+    @Autowired
+    PreProjectCompanySetMapper preProjectCompanySetMapper;
+
+    @Autowired
+    UserRoleSetMapper userRoleSetMapper;
 
     /**
      * 所谓五分钟
@@ -105,15 +110,6 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
             throw new RuntimeException("总有你想不到的意外");
         }
         return "操作成功!";
-    }
-
-    /*
-    * 删除员工逻辑删除
-    * */
-    @Override
-    public Integer updateDelCompanyUser(Integer id) {
-
-        return this.companyUserSetMapper.updateDelCompanyUser(id);
     }
 
     /**
@@ -185,6 +181,80 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         map.put("phone", phone);
         map.put("isBind", isBind);
         return this.companyUserSetMapper.queryStaffList(map);
+    }
+
+    /**
+     * 判断员工是否有进行中的项目
+     * @param userId
+     * @return
+     */
+    @Override
+    public String updateDelCompanyUser(String userId) {
+        if(isJob(userId)){
+            return "该员工还有进行中的项目请先移交项目后，再移除员工";
+        }
+        return "员工移除后将不可恢复确定移除？";
+    }
+
+    /**
+     * 判断员工是否有在建项目 true:有项目  false：无项目
+     * @param userId
+     * @return
+     */
+    public boolean isJob(String userId){
+        IndexProjectReportVO indexProjectReportVO = preProjectCompanySetMapper.countProjectForPerson(userId);
+
+        if(indexProjectReportVO.getWorking() > 0){
+            return true;
+        }
+        return false;
+    }
+    /**
+     * 移除员工  修改isJob字段
+     * @param userId
+     * @return
+     */
+    @Override
+    public int updateIsJob(String userId){
+
+        return companyUserSetMapper.updateIsJob(userId);
+    }
+
+    @Override
+    public CompanyUserSetVo detail(Integer id) {
+        return companyUserSetMapper.findByUserId(id);
+    }
+
+    @Override
+    public List<UserRoleSet> getRole() {
+        UserRoleSetExample example = new UserRoleSetExample();
+        //查询岗位显示的信息
+        Short isShow = 1;
+        example.createCriteria().andIsShowEqualTo(isShow);
+        return userRoleSetMapper.selectByExample(example);
+    }
+
+    /**
+     * 修改岗位
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    @Override
+    public String updateRole(String userId, String roleId) {
+        if(isJob(userId)){
+            return "该员工还有进行中的项目请先移交项目后，再修改岗位";
+        }
+        PreProjectUserRole preProjectUserRole = new PreProjectUserRole();
+//        preProjectUserRole.setUserId(userId);
+        preProjectUserRole.setRoleId(roleId);
+        PreProjectUserRoleExample example = new PreProjectUserRoleExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        int line = preProjectUserRoleMapper.updateByExampleSelective(preProjectUserRole,example);
+        if(line > 0){
+            return "操作成功";
+        }
+        return "操作失败";
     }
 }
 

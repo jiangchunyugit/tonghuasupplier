@@ -6,6 +6,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.vo.MySystemResource;
 import cn.thinkfree.service.userResource.PcSystemResourceService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -19,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "systemResource")
-@ApiOperation(value="权限管理", notes="")
+@Api("权限管理")
 public class PcSystemResourceController extends AbsBaseController {
 
     @Autowired
