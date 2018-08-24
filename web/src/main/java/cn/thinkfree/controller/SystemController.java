@@ -54,11 +54,11 @@ public class SystemController extends AbsBaseController {
         return "index";
     }
 
-    @GetMapping("/lo")
-    public String lo(){
-        return  "/login";
+    @RequestMapping("/gotoPage")
+    public String gotoPage(String page){
+        System.out.println(page);
+        return page;
     }
-
 
 
 

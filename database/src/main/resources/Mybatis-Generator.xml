@@ -51,7 +51,7 @@
         <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
         <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->
         <!--<table tableName="pre_project_construction_info" domainObjectName="PreProjectConstructionInfo"/>-->
-        <table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />
+        <!--<table tableName="pre_project_guide" domainObjectName="PreProjectGuide" />-->
         <!--<table tableName="pre_project_house_type" domainObjectName="PreProjectHouseType"/>-->
         <!--<table tableName="pre_project_info" domainObjectName="PreProjectInfo" />-->
         <!--<table tableName="pre_project_material" domainObjectName="PreProjectMaterial"/>-->
@@ -62,12 +62,14 @@
         <!--<table tableName="user_login_log" domainObjectName="UserLoginLog" />-->
         <!--<table tableName="user_role" domainObjectName="UserRole"/>-->
         <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
-        <table tableName="pc_system_log" domainObjectName="LogInfo"/>
+        <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
         <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
         <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
         <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
         <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
         <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
+        <table tableName="consumer_set" domainObjectName="ConsumerSet"/>
+
     </context>
 </generatorConfiguration>

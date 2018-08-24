@@ -4,6 +4,7 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.filter.util.TempTestUtils;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcUserInfo;
+import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.UserRegister;
 import cn.thinkfree.database.vo.UserVO;
 import com.google.common.collect.Lists;
@@ -55,6 +56,28 @@ public class TempUserUtils implements TempTestUtils {
         userVO.setCompanyInfo(companyInfo);
 
         userVO.setRelationMap(Lists.newArrayList("BD2018080710405900001"));
+
+        SystemResource systemResource = new SystemResource();
+        systemResource.setModule("项目管理");
+        systemResource.setSortNum(1);
+        systemResource.setCode("PROJECT");
+        systemResource.setId(1);
+        systemResource.setName("项目管理");
+        systemResource.setUrl("/project/list");
+        systemResource.setType("0");
+        systemResource.setPid(0);
+        SystemResource s= new SystemResource();
+        s.setModule("员工管理");
+        s.setPid(0);
+        s.setSortNum(2);
+        s.setCode("STAFFS");
+        s.setId(1);
+        s.setName("员工管理");
+        s.setUrl("/staffs/list");
+        s.setType("0");
+
+
+        userVO.setResources(Lists.newArrayList(systemResource,s));
         return userVO;
     }
 

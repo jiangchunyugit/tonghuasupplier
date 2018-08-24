@@ -66,7 +66,7 @@ public class SecuritySuccessAuthHandler
 //        System.out.println(token);
 //        result.put("token",token);
         saveMessage(request, result);
-//        request.getRequestDispatcher("/index").forward(request, response);
+        request.getRequestDispatcher("/index").forward(request, response);
 
     }
 

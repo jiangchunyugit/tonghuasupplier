@@ -36,13 +36,13 @@ public class ApplicationBoot extends SpringBootServletInitializer {
         return builder.sources(this.getClass());
     }
 
-    @Bean
-    public InternalResourceViewResolver internalResourceViewResolver(){
-        InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
-        internalResourceViewResolver.setPrefix("/WEB-INF/pages/");
-        internalResourceViewResolver.setSuffix(".jsp");
-        return internalResourceViewResolver;
-    }
+//    @Bean
+//    public InternalResourceViewResolver internalResourceViewResolver(){
+//        InternalResourceViewResolver internalResourceViewResolver = new InternalResourceViewResolver();
+//        internalResourceViewResolver.setPrefix("/WEB-INF/pages/");
+//        internalResourceViewResolver.setSuffix(".html");
+//        return internalResourceViewResolver;
+//    }
 
 
 }

@@ -8,7 +8,6 @@ import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.event.ProjectStopEvent;
-import cn.thinkfree.database.event.ProjectUpOnline;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -19,7 +18,9 @@ import cn.thinkfree.service.remote.RemoteResult;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,10 +57,20 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     CompanyUserSetMapper companyUserSetMapper;
 
     @Autowired
+    UserRegisterMapper userRegisterMapper;
+
+    @Autowired
     CloudService cloudService;
 
+    @Autowired
+    ConsumerSetMapper consumerSetMapper;
 
 
+    /**
+     * 所谓五分钟
+     */
+    @Value("${custom.sendSMS.threshold}")
+    private static Long threshold ; // 300000L
 
     /**
      * 汇总公司项目情况
@@ -207,17 +218,28 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      * 根据职位查询员工
      *
      * @param job
+     * @param filter
      * @return
      */
     @Override
-    public List<StaffsVO> selectStaffsByJob(String job) {
+    public List<StaffsVO> selectStaffsByJob(String job, String filter) {
 
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         CompanyUserSetExample companyUserSetExample = new CompanyUserSetExample();
-        companyUserSetExample.createCriteria().andCompanyIdEqualTo(userVO.getCompanyID())
+        CompanyUserSetExample.Criteria firstCriteria = companyUserSetExample.createCriteria();
+        firstCriteria.andCompanyIdEqualTo(userVO.getCompanyID())
                 .andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                 .andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal())
                 .andRoleIdEqualTo(job.toUpperCase());
+        if(StringUtils.isNotBlank(filter)){
+            firstCriteria.andNameLike("%"+filter+"%");
+            companyUserSetExample.or().andCompanyIdEqualTo(userVO.getCompanyID())
+                    .andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
+                    .andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal())
+                    .andRoleIdEqualTo(job.toUpperCase())
+                    .andPhoneLike("%"+filter+"%");
+        }
+
         return companyUserSetMapper.selectStaffsVOByExample(companyUserSetExample);
     }
 
@@ -464,11 +486,46 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      * @param phone
      * @return
      */
+    @Transactional
     @Override
     public String notifyOwner(String phone) {
+        String activeCode = RandomNumUtils.random(6);
+
+        ConsumerSetExample consumerSetExample = new ConsumerSetExample();
+        consumerSetExample.createCriteria().andPhoneEqualTo(phone);
 
 
-        RemoteResult<String> rs = cloudService.sendSms(phone, RandomNumUtils.random(6));
+        List<ConsumerSet> consumerSets = consumerSetMapper.selectByExample(consumerSetExample);
+        if(consumerSets.isEmpty() || consumerSets.size() > 1){
+            return "数据异常";
+        }
+        ConsumerSet consumerSet = consumerSets.get(0);
+
+        if(SysConstants.YesOrNo.YES.shortVal().equals(consumerSet.getIsBind())){
+            return "已激活用户无需再次激活";
+        }
+
+
+        Date lastBindTime = consumerSet.getBindTime();
+        if(lastBindTime != null){
+            Long ms=lastBindTime.getTime();
+            Long now = new Date().getTime();
+            if((now-ms) > threshold){
+                ConsumerSet update = new ConsumerSet();
+                update.setBindTime(new Date());
+                update.setActivationCode(activeCode);
+                consumerSetMapper.updateByExampleSelective(update,consumerSetExample);
+            }else{
+                return "邀请频率过高,请稍后重试";
+            }
+        }else{
+            ConsumerSet update = new ConsumerSet();
+            update.setBindTime(new Date());
+            update.setActivationCode(activeCode);
+            consumerSetMapper.updateByExampleSelective(update,consumerSetExample);
+        }
+        RemoteResult<String> rs = cloudService.sendSms(phone,activeCode);
+        if(!rs.isComplete()) throw  new RuntimeException("总有你想不到的意外");
         return rs.isComplete() ? "操作成功":"操作失败";
     }
 

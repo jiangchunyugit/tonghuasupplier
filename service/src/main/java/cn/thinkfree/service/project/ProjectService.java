@@ -49,10 +49,11 @@ public interface ProjectService {
 
     /**
      * 根据职位查询员工
-     * @param job
+     * @param job   职位
+     * @param filter 过滤条件
      * @return
      */
-    List<StaffsVO> selectStaffsByJob(String job);
+    List<StaffsVO> selectStaffsByJob(String job, String filter);
 
     /**
      *  查询项目报价单

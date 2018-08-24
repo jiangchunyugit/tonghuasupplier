@@ -139,14 +139,14 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         }
 
         Date lastBindTime = companyUserSet.getBindTime();
-
+        String activeCode = RandomNumUtils.random(6);
         if(lastBindTime != null){
             Long ms=lastBindTime.getTime();
             Long now = new Date().getTime();
             if((now-ms) > threshold){
                 CompanyUserSet update = new CompanyUserSet();
                 update.setBindTime(new Date());
-                update.setActivationCode(RandomNumUtils.random(6));
+                update.setActivationCode(activeCode);
                 companyUserSetMapper.updateByExampleSelective(update,companyUserSetExample);
             }else{
                 return "邀请频率过高,请稍后重试";
@@ -154,9 +154,11 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         }else{
             CompanyUserSet update = new CompanyUserSet();
             update.setBindTime(new Date());
-            update.setActivationCode(RandomNumUtils.random(6));
+            update.setActivationCode(activeCode);
             companyUserSetMapper.updateByExampleSelective(update,companyUserSetExample);
         }
+        RemoteResult<String> rs = cloudService.sendSms(companyUserSet.getPhone(), activeCode);
+        if(!rs.isComplete())throw  new RuntimeException("超乎你的想象");
         return "操作成功";
     }
 

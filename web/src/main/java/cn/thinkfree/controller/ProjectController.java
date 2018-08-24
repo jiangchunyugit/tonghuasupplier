@@ -115,8 +115,8 @@ public class ProjectController extends AbsBaseController {
     @ApiOperation(value = "获取公司下相应职位员工", notes = "根据职位编号获取公司里相应职位员工")
     @GetMapping("/staffs")
     @MyRespBody
-    public MyRespBundle<List<StaffsVO>> staffs(@ApiParam("职位编号 CS,PM之流")@RequestParam String job){
-        List<StaffsVO> staffsVOS = projectService.selectStaffsByJob(job);
+    public MyRespBundle<List<StaffsVO>> staffs(@ApiParam("职位编号 CS,PM之流")@RequestParam String job,@ApiParam("过滤条件") String filter){
+        List<StaffsVO> staffsVOS = projectService.selectStaffsByJob(job,filter);
         return sendJsonData(ResultMessage.SUCCESS,staffsVOS);
     }
 
