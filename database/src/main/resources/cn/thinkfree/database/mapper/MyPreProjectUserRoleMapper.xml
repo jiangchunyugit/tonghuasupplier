@@ -2,6 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.PreProjectUserRoleMapper">
 
+  <resultMap id="ProjectUserRoleVO" type="cn.thinkfree.database.vo.ProjectUserRoleVO" extends="BaseResultMap">
+      <result column="userName" property="userName"/>
+  </resultMap>
 
   <select id="selectProjectNoByExample" parameterType="cn.thinkfree.database.model.PreProjectUserRoleExample" resultType="java.lang.String">
 
@@ -12,4 +15,28 @@
       <include refid="Example_Where_Clause" />
     </if>
   </select>
+
+  <select id="selectProjectUserRoleVOByExample" parameterType="cn.thinkfree.database.model.PreProjectUserRoleExample" resultMap="ProjectUserRoleVO">
+
+    select
+      cus.name as userName,
+      ppur.id,
+      ppur.project_no,
+      ppur.role_id,
+      ppur.user_id,
+      ppur.create_time,
+      ppur.is_job,
+      ppur.is_transfer,
+      ppur.transfer_user_id,
+      ppur.transfer_time,
+      ppur.update_time,
+      ppur.leave_time
+    from pre_project_user_role ppur
+    join  company_user_set cus on ppur.user_id = cus.user_id
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+
+
 </mapper>

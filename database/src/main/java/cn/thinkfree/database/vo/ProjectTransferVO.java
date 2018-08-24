@@ -19,7 +19,7 @@ public class ProjectTransferVO extends BaseModel {
     /**
      * 项目员工信息
      */
-    private List<PreProjectUserRole> staffs;
+    private List<ProjectUserRoleVO> staffs;
 
 
     public String getProjectNo() {
@@ -38,11 +38,11 @@ public class ProjectTransferVO extends BaseModel {
         this.thumbnail = thumbnail;
     }
 
-    public List<PreProjectUserRole> getStaffs() {
+    public List<ProjectUserRoleVO> getStaffs() {
         return staffs;
     }
 
-    public void setStaffs(List<PreProjectUserRole> staffs) {
+    public void setStaffs(List<ProjectUserRoleVO> staffs) {
         this.staffs = staffs;
     }
 }

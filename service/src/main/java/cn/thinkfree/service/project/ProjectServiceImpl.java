@@ -102,7 +102,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             printDebugMes("项目分页查询,存在管家条件:{}",projectSEO.getSteward());
             PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
             preProjectUserRoleExample.createCriteria().andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
-                    .andRoleIdEqualTo(UserJobs.Steward.mes)
+                    .andRoleIdEqualTo(UserJobs.Steward.roleCode)
                     .andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal()).andUserIdEqualTo(projectSEO.getSteward());
            projectNos.addAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
            needFilter = true;
@@ -112,7 +112,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             printDebugMes("项目分页查询,存在项目经理条件:{}",projectSEO.getProjectManager());
             PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
             preProjectUserRoleExample.createCriteria().andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
-                    .andRoleIdEqualTo(UserJobs.ProjectManager.mes)
+                    .andRoleIdEqualTo(UserJobs.ProjectManager.roleCode)
                     .andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal()).andUserIdEqualTo(projectSEO.getProjectManager());
             projectNos.addAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
             needFilter = true;
@@ -206,7 +206,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         }
         PreProjectUserRoleExample roleExample = new PreProjectUserRoleExample();
         roleExample.createCriteria().andProjectNoEqualTo(projectNo).andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal());
-        List<PreProjectUserRole> preProjectUserRoles = preProjectUserRoleMapper.selectByExample(roleExample);
+        List<ProjectUserRoleVO> preProjectUserRoles = preProjectUserRoleMapper.selectProjectUserRoleVOByExample(roleExample);
         projectDetailsVO.setStaffs(preProjectUserRoles);
 //        projectDetailsVO.setProjectQuotationVO(selectProjectQuotationVoByProjectNo(projectNo));
 
@@ -335,10 +335,10 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
 //        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
 
-        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
-        if(!rs.isComplete()){
-            throw  new RuntimeException("神奇的操作,无法理解");
-        }
+//        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
+//        if(!rs.isComplete()){
+//            throw  new RuntimeException("神奇的操作,无法理解");
+//        }
 
         return "操作成功!";
     }
@@ -555,7 +555,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      * 替换人员
      * @param preProjectUserRoles
      */
-    private void replacement(List<PreProjectUserRole> preProjectUserRoles) {
+    private void replacement(List<ProjectUserRoleVO> preProjectUserRoles) {
 
         for(PreProjectUserRole vo : preProjectUserRoles){
             PreProjectUserRole preProjectUserRole = new PreProjectUserRole();

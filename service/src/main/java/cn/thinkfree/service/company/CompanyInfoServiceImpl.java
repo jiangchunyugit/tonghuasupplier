@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springfox.documentation.schema.Example;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -35,6 +36,10 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Transactional
     public int addCompanyInfo(CompanyInfo companyInfo) {
         companyInfo.setCompanyId(UserNoUtils.getUserNo(""));
+        // TODO 以后再改吧
+        companyInfo.setRoleId("BD");
+        companyInfo.setCreateTime(new Date());
+        companyInfo.setPhone(companyInfo.getLegalPhone());
         return companyInfoMapper.insertSelective(companyInfo);
     }
 

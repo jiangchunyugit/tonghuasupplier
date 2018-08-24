@@ -9,6 +9,7 @@
     </resultMap>
 
     <resultMap id="StaffsVO" type="cn.thinkfree.database.vo.StaffsVO" extends="BaseResultMap">
+        <result column="id"  property="id" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
         <result column="name" property="name"/>
         <result column="user_id"   property="userId" />
@@ -43,6 +44,7 @@
     <select id="selectStaffsVOByExample" parameterType="cn.thinkfree.database.model.CompanyUserSetExample" resultMap="StaffsVO">
 
         select
+        id,
         phone,
         name,
         role_id,

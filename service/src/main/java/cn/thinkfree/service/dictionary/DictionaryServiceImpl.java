@@ -119,7 +119,7 @@ public class DictionaryServiceImpl implements DictionaryService {
         List<String> companyRelationMap = userVO.getRelationMap();
 
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal())
+        companyInfoExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
                 .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
                 .andAreaCodeEqualTo(areaCode);
 

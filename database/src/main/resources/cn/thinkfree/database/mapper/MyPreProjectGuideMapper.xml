@@ -5,6 +5,7 @@
         <result column="stewardName" property="stewardName"/>
         <result column="projectManagerName" property="projectManagerName"/>
         <result column="company_name" property="companyName"/>
+        <result column="houseTypeName" property="houseTypeName"/>
         <association property="preProjectInfo" javaType="cn.thinkfree.database.model.PreProjectInfo">
             <result column="house_area" property="houseArea"/>
             <result column="house_type" property="houseType"/>
@@ -43,13 +44,15 @@
             ppi.store,
             ppg.status,
             ci.company_name,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
+            ppht.house_illustrate as houseTypeName,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
         FROM
           pre_project_guide ppg
         JOIN pre_project_company_set ppcs ON ppg.project_no = ppcs.project_no
         JOIN pre_project_info ppi ON ppi.project_no = ppg.project_no
         join company_info ci on ci.company_id = ppcs.company_id
+        left join pre_project_house_type ppht on ppht.house_type = ppi.house_type
 
         <where>
            and ppg.is_delete = 0
@@ -129,8 +132,8 @@
             ppg.status,
             ppg.project_starttime,
             ppg.project_endtime,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
 
         from
         pre_project_guide ppg
@@ -159,8 +162,8 @@
         ppg.status,
         ppg.project_starttime,
         ppg.project_endtime,
-        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
-        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
+        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
+        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
 
         from
         pre_project_guide ppg

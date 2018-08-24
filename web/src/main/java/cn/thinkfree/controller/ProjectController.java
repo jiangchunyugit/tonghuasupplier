@@ -44,7 +44,7 @@ public class ProjectController extends AbsBaseController {
     @ApiOperation(value = "项目列表", notes = "根据一定条件获取分页项目记录")
     @GetMapping("/list")
     @MyRespBody
-    public MyRespBundle<PageInfo<PreProjectGuide>> list(@ApiParam("项目搜索条件") ProjectSEO projectSEO){
+    public MyRespBundle<PageInfo<ProjectVO>> list(@ApiParam("项目搜索条件") ProjectSEO projectSEO){
 
         PageInfo<ProjectVO> pageInfo = projectService.pageProjectBySEO(projectSEO);
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);

@@ -6,6 +6,7 @@ import cn.thinkfree.core.model.BaseModel;
 public class StaffsVO extends BaseModel {
 
 
+    private Integer id;
 
     /**
      * 用户主键
@@ -50,5 +51,13 @@ public class StaffsVO extends BaseModel {
 
     public void setRoleId(String roleId) {
         this.roleId = roleId;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

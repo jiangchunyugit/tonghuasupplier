@@ -38,6 +38,13 @@ public class ProjectVO extends PreProjectGuide {
     @ApiModelProperty("所属公司名称")
     public String companyName;
 
+    /**
+     * 户型名称
+     */
+    @ApiModelProperty("户型")
+    private String houseTypeName;
+
+
     public String getCompanyName() {
         return companyName;
     }
@@ -92,5 +99,13 @@ public class ProjectVO extends PreProjectGuide {
 
     public void setPreProjectUserRole(PreProjectUserRole preProjectUserRole) {
         this.preProjectUserRole = preProjectUserRole;
+    }
+
+    public String getHouseTypeName() {
+        return houseTypeName;
+    }
+
+    public void setHouseTypeName(String houseTypeName) {
+        this.houseTypeName = houseTypeName;
     }
 }

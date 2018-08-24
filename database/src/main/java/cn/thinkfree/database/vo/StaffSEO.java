@@ -3,7 +3,7 @@ package cn.thinkfree.database.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("地区")
+@ApiModel("员工查询条件")
 public class StaffSEO extends AbsPageSearchCriteria{
 
     /*

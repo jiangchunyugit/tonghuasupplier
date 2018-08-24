@@ -4,6 +4,7 @@ import cn.thinkfree.database.mapper.SystemMessageMapper;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.remote.CloudService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class SystemMessageServiceImpl implements SystemMessageService {
 
     @Autowired
     SystemMessageMapper sysMsgMapper;
+
+    @Autowired
+    CloudService cloudService;
 
     @Override
     @Transactional
@@ -54,6 +58,9 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         record.setSendUser(userInfo.getName());
         record.setCompanyId(userInfo.getCompanyId());
         record.setSendTime(new Date());
-        return sysMsgMapper.insertSelective(record);
+        sysMsgMapper.insertSelective(record);
+
+
+        return 1;
     }
 }

@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PreProjectUserRole;
 import cn.thinkfree.database.model.PreProjectUserRoleExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.ProjectUserRoleVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PreProjectUserRoleMapper {
@@ -100,4 +102,11 @@ public interface PreProjectUserRoleMapper {
      * @return
      */
     List<String> selectProjectNoByExample(PreProjectUserRoleExample preProjectUserRoleExample);
+
+    /**
+     * 查询项目员工VO
+     * @param roleExample
+     * @return
+     */
+    List<ProjectUserRoleVO> selectProjectUserRoleVOByExample(PreProjectUserRoleExample roleExample);
 }

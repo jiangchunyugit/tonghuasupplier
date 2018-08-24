@@ -26,7 +26,7 @@ public class ProjectDetailsVO extends PreProjectGuide {
      * 项目员工信息
      */
     @ApiModelProperty("项目员工信息")
-    private List<PreProjectUserRole> staffs;
+    private List<ProjectUserRoleVO> staffs;
 
     /**
      * 报价单
@@ -87,11 +87,11 @@ public class ProjectDetailsVO extends PreProjectGuide {
         this.info = info;
     }
 
-    public List<PreProjectUserRole> getStaffs() {
+    public List<ProjectUserRoleVO> getStaffs() {
         return staffs;
     }
 
-    public void setStaffs(List<PreProjectUserRole> staffs) {
+    public void setStaffs(List<ProjectUserRoleVO> staffs) {
         this.staffs = staffs;
     }
 }

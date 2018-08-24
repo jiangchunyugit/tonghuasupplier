@@ -37,9 +37,9 @@ public class SessionUserDetailsUtil {
 			userDetails = (UserDetails) ac.getPrincipal();
 		}
 
-//		if(userDetails == null){
-//			userDetails = tempTestUtils.builderUserVO();
-//		}
+		if(userDetails == null){
+			userDetails = tempTestUtils.builderUserVO();
+		}
 		return userDetails;
 	}
 
