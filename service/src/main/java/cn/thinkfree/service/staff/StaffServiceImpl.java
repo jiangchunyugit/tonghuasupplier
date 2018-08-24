@@ -24,6 +24,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import cn.thinkfree.core.logger.AbsLogPrinter;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.mapper.CompanyUserSetMapper;
+import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.StaffSEO;
+import cn.thinkfree.database.vo.UserVO;
+import com.github.pagehelper.PageHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -173,13 +187,28 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         return this.companyUserSetMapper.selectByPrimaryKey(id);
     }
 
+    /**
+     *
+     * 员工列表，条件查询
+     * @param page
+     * @param rows
+     * @param name
+     * @param phone
+     * @param isBind
+     * @param staffSEO
+     * @return
+     */
     @Override
-    public List<CompanyUserSet> queryStaffList(Integer page, Integer rows, String name, String phone, Integer isBind) {
+    public List<CompanyUserSet> queryStaffList(Integer page, Integer rows, String name, String phone, Integer isBind,StaffSEO staffSEO) {
         PageHelper.startPage(page, rows);
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("name", name);
         map.put("phone", phone);
         map.put("isBind", isBind);
+        map.put("province_code",staffSEO.getProvince_code());
+        map.put("area_code",staffSEO.getArea_code());
+        map.put("city_code",staffSEO.getCity_code());
+        map.put("company_id",staffSEO.getCompany_id());
         return this.companyUserSetMapper.queryStaffList(map);
     }
 

@@ -5,16 +5,34 @@ import cn.thinkfree.database.model.PreProjectUserRole;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.vo.CompanyUserSetVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.StaffSEO;
+
+
 
 import java.util.List;
 
 
 public interface StaffService {
 
-    List<CompanyUserSet> queryStaffList(Integer page, Integer rows, String name, String phone, Integer isBind);
+    /**
+     *查询员工列表
+     * @param page
+     * @return
+     */
+    List<CompanyUserSet> queryStaffList(Integer page, Integer rows,
+                                        String name, String phone, Integer isBind,StaffSEO staffSEO);
 
+    /**
+     *查询员工信息
+     * @param id
+     * @return
+     */
     CompanyUserSet queryCompanyUser(Integer id);
-
+    /**
+     *查询岗位
+     * @param
+     * @return
+     */
     List<PreProjectUserRole> queryRole();
 
     Integer deletCompanyByNo(Integer id);

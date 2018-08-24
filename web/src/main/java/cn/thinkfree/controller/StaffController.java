@@ -23,6 +23,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import cn.thinkfree.database.vo.StaffSEO;
+
+
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +39,17 @@ public class StaffController extends AbsBaseController{
 
     @Autowired
     ProjectService projectService;
-    /*
-    * 员工列表，以及条件查询
-    * */
+    /**
+     * 员工列表，以及条件查询
+     * @param page
+     * @param rows
+     * @param name
+     * @param phone
+     * @param isBind
+     * @param staffSEO
+     * @return
+     */
+
     @RequestMapping(value = "/findList", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="查询员工列表", notes="根据员工姓名和电话和状态查询员工列表")
@@ -49,9 +60,9 @@ public class StaffController extends AbsBaseController{
             @ApiImplicitParam(paramType="query", name = "phone", value = "电话", required = true, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "isBind", value = "状态", required = true, dataType = "Integer")
     })
-    public MyRespBundle<List<UserInfo>> queryStaffList(@RequestParam("page") Integer page,@RequestParam("rows") Integer rows,
-                                                       @RequestParam("name") String name, @RequestParam("phone") String phone,
-                                                       @RequestParam("isBind") Integer isBind){
+    public MyRespBundle<List<UserInfo>> queryStaffList(@RequestParam(value = "page",defaultValue = "0") Integer page,@RequestParam(value = "rows",defaultValue = "15") Integer rows,
+                                                       @RequestParam(value = "name",defaultValue = "") String name, @RequestParam(value = "phone",defaultValue = "") String phone,
+                                                       @RequestParam(value = "isBind",defaultValue = "") Integer isBind,StaffSEO staffSEO){
         if (page == null){
             page = 0;
         }
@@ -62,7 +73,7 @@ public class StaffController extends AbsBaseController{
         if(uservo.getPcUserInfo() == null){
             return sendJsonData(ResultMessage.FAIL, "用户为空");
         }*/
-        List<CompanyUserSet> companyUserSetList = this.staffService.queryStaffList(page,rows,name,phone,isBind);
+        List<CompanyUserSet> companyUserSetList = this.staffService.queryStaffList(page,rows,name,phone,isBind,staffSEO);
         PageInfo<CompanyUserSet> pageInfo = new PageInfo<>(companyUserSetList);
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }
