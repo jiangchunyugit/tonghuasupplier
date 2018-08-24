@@ -35,6 +35,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Autowired
     CompanyInfoMapper companyInfoMapper;
 
+    @Autowired
+    UserRoleSetMapper userRoleSetMapper;
+
 
     /**
      * 查询所有省份
@@ -124,6 +127,15 @@ public class DictionaryServiceImpl implements DictionaryService {
                 .andAreaCodeEqualTo(areaCode);
 
         return companyInfoMapper.selectByExample(companyInfoExample);
+    }
+
+    @Override
+    public List<UserRoleSet> getRole() {
+        UserRoleSetExample example = new UserRoleSetExample();
+        //查询岗位显示的信息
+        Short isShow = 1;
+        example.createCriteria().andIsShowEqualTo(isShow);
+        return userRoleSetMapper.selectByExample(example);
     }
 
 

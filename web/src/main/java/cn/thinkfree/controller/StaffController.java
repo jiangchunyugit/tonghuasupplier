@@ -16,6 +16,7 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.staff.StaffService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,7 @@ import java.util.List;
 
 @RequestMapping("/staff")
 @RestController
+@Api(value = "员工管理",description = "员工管理")
 public class StaffController extends AbsBaseController{
 
     @Autowired
@@ -175,9 +177,9 @@ public class StaffController extends AbsBaseController{
     })
     public MyRespBundle<String> isDel(@RequestParam(value = "userId") String userId){
 
-        String msg = staffService.updateDelCompanyUser(userId);
+        boolean flag = staffService.updateDelCompanyUser(userId);
 
-        return sendJsonData(ResultMessage.SUCCESS, msg);
+        return sendJsonData(ResultMessage.SUCCESS, flag);
     }
 
     /**
@@ -235,17 +237,6 @@ public class StaffController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS, companyUserSetVo);
     }
 
-    /**
-     * 岗位信息
-     */
-    @GetMapping("/getRole")
-    @MyRespBody
-    @ApiOperation(value = "员工详情--->修改岗位--->岗位信息")
-    public MyRespBundle<List<UserRoleSet>> getRole(){
-
-        List<UserRoleSet> userRoleSet = staffService.getRole();
-        return sendJsonData(ResultMessage.SUCCESS, userRoleSet);
-    }
 }
 
 

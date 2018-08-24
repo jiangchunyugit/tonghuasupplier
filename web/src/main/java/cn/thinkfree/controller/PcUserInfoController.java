@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/userInfo")
-@Api("账户信息（权限管理）")
+@Api(value = "账户信息（权限管理）", description = "账户信息（权限管理）")
 public class PcUserInfoController extends AbsBaseController {
 
     @Autowired

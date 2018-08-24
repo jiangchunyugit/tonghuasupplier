@@ -2,7 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.SystemMessageMapper">
 
-    <select id="selectByParam" parameterType="java.util.Map" resultMap="BaseResultMap">
+    <resultMap id="SystemMessageVo" type="cn.thinkfree.database.vo.CompanyUserSetVo" extends="BaseResultMap">
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    </resultMap>
+
+    <select id="selectByParam" parameterType="java.util.Map" resultMap="SystemMessageVo">
         select
         <include refid="Base_Column_List" />
         from pc_system_message

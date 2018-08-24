@@ -24,7 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/company")
-@Api("子公司管理")
+@Api(value = "子公司管理",description = "子公司管理")
 public class CompanyInfoController extends AbsBaseController{
 
     @Autowired
@@ -39,18 +39,6 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/saveCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="子公司管理：新增")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType="query", name = "provinceCode", value = "省", required = true, dataType = "int"),
-//            @ApiImplicitParam(paramType="query", name = "cityCode", value = "市", required = true, dataType = "int"),
-//            @ApiImplicitParam(paramType="query", name = "areaCode", value = "县", required = true, dataType = "int"),
-//            @ApiImplicitParam(paramType="query", name = "phone", value = "地图选点", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "address", value = "详细地址", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "companyName", value = "分公司名称", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "telephone", value = "联系方式", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "legalName", value = "负责人姓名", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "legalPhone", value = "负责人手机号", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "regPhone", value = "备注", required = false, dataType = "String")
-//    })
     public MyRespBundle<String> saveCompanyInfo(@ApiParam("公司信息") CompanyInfo companyInfo){
 
         int line = companyInfoService.addCompanyInfo(companyInfo);
@@ -65,18 +53,6 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/updateCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="子公司管理：编辑")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType="query", name = "provinceCode", value = "省", required = true, dataType = "int"),
-//            @ApiImplicitParam(paramType="query", name = "cityCode", value = "市", required = true, dataType = "int"),
-//            @ApiImplicitParam(paramType="query", name = "name", value = "县", required = true, dataType = "int"),
-//            @ApiImplicitParam(paramType="query", name = "phone", value = "地图选点", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "address", value = "详细地址", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "companyName", value = "分公司名称", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "telephone", value = "联系方式", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "legalName", value = "负责人姓名", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "legalPhone", value = "负责人手机号", required = true, dataType = "String"),
-//            @ApiImplicitParam(paramType="query", name = "regPhone", value = "备注", required = false, dataType = "String")
-//    })
     public MyRespBundle<String> updateCompanyInfo(@ApiParam("公司信息")CompanyInfo companyInfo){
 
         int line = companyInfoService.updateCompanyInfo(companyInfo);

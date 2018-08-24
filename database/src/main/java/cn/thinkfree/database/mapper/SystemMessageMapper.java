@@ -1,6 +1,7 @@
 package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.SystemMessageVo;
 
 import java.util.List;
 import java.util.Map;
@@ -18,5 +19,5 @@ public interface SystemMessageMapper {
 
     int updateByPrimaryKey(SystemMessage record);
 
-    List<SystemMessage> selectByParam(Map<String, Object> param);
+    List<SystemMessageVo> selectByParam(Map<String, Object> param);
 }

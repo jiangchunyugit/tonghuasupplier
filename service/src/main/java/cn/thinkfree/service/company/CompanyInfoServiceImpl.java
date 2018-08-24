@@ -1,5 +1,6 @@
 package cn.thinkfree.service.company;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springfox.documentation.schema.Example;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -34,7 +36,13 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Override
     @Transactional
     public int addCompanyInfo(CompanyInfo companyInfo) {
-        companyInfo.setCompanyId(UserNoUtils.getUserNo(""));
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        companyInfo.setCompanyId(UserNoUtils.getUserNo("BD"));
+        companyInfo.setCreateTime(new Date());
+        companyInfo.setPhone(companyInfo.getLegalPhone());
+        companyInfo.setRoleId("BD");
+        companyInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        companyInfo.setParentCompanyId(userVO.getCompanyID());
         return companyInfoMapper.insertSelective(companyInfo);
     }
 

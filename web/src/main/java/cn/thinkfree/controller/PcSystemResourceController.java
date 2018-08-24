@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "systemResource")
-@Api("权限管理")
+@Api(value = "权限管理",description = "权限管理")
 public class PcSystemResourceController extends AbsBaseController {
 
     @Autowired

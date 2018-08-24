@@ -59,7 +59,7 @@ public interface StaffService {
      * @param userId
      * @return
      */
-    String updateDelCompanyUser(String userId);
+    boolean updateDelCompanyUser(String userId);
 
     /**
      * 移除员工
@@ -75,11 +75,6 @@ public interface StaffService {
      */
     CompanyUserSetVo detail(Integer id);
 
-    /**
-     * 获取岗位信息
-     * @return
-     */
-    List<UserRoleSet> getRole();
 
     /**
      * 修改岗位

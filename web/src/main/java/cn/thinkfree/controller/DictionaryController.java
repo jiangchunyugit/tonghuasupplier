@@ -117,7 +117,20 @@ public class DictionaryController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,companyInfos);
     }
 
+    /**
+     * 获取岗位信息
+     */
+    /**
+     * 岗位信息
+     */
+    @GetMapping("/getRole")
+    @MyRespBody
+    @ApiOperation(value = "员工详情(公告--->对象)--->修改岗位--->岗位信息")
+    public MyRespBundle<List<UserRoleSet>> getRole(){
 
+        List<UserRoleSet> userRoleSet = dictionaryService.getRole();
+        return sendJsonData(ResultMessage.SUCCESS, userRoleSet);
+    }
 
 
 }
