@@ -68,7 +68,7 @@ public class CompanyInfoController extends AbsBaseController{
      * 查询公司信息
      */
 
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="查询子公司信息")
     public MyRespBundle<PageInfo<CompanyInfo>> list(@ApiParam("查询公司参数")CompanyInfoSEO companyInfoSEO){
@@ -80,7 +80,7 @@ public class CompanyInfoController extends AbsBaseController{
     /**
      * 子公司管理：项目信息 项目情况
      */
-    @RequestMapping(value = "/findProjectById", method = RequestMethod.POST)
+    @RequestMapping(value = "/findProjectById", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司管理：项目信息--->项目情况")
     public MyRespBundle<IndexProjectReportVO> findProjectById(@RequestParam(value = "companyId") String companyId){
@@ -102,7 +102,7 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司管理：项目信息---->项目详情")
-    public MyRespBundle<PageInfo<ProjectVO>> details(@RequestParam(value = "companyID") String companyId, @RequestParam(value = "status",required = false) Integer status,
+    public MyRespBundle<PageInfo<ProjectVO>> details(@RequestParam(value = "companyId") String companyId, @RequestParam(value = "status",required = false) Integer status,
                                                      @RequestParam(value = "rows") Integer rows, @RequestParam(value = "page") Integer page){
 
         PageInfo<ProjectVO> projectvo = projectService.selectProjectVOForCompany(companyId,status,rows,page);
@@ -114,7 +114,7 @@ public class CompanyInfoController extends AbsBaseController{
      * 子公司：员工信息
      * @return
      */
-    @RequestMapping(value = "/staffMseeage",method = RequestMethod.POST)
+    @RequestMapping(value = "/staffMseeage",method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司：员工信息")
     public MyRespBundle<PageInfo<CompanyUserSet>> staffMessage(
@@ -133,7 +133,7 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/companyDetails", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司管理：公司详情")
-    public MyRespBundle<PageInfo<ProjectVO>> companyDetails(@RequestParam(value = "companyID") String companyId){
+    public MyRespBundle<PageInfo<ProjectVO>> companyDetails(@RequestParam(value = "companyId") String companyId){
 
         List<CompanyInfo> companyInfo = companyInfoService.companyDetails(companyId);
 
