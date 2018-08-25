@@ -30,4 +30,11 @@ public interface CompanyInfoService {
      */
     PageInfo<CompanyUserSet> staffMessage(String companyId, Integer page, Integer rows);
 
+
+    /**
+     * 根据公司id查询公司详情
+     * @param companyId
+     * @return
+     */
+    List<CompanyInfo> companyDetails(String companyId);
 }

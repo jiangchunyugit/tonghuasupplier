@@ -120,8 +120,24 @@ public class CompanyInfoController extends AbsBaseController{
     public MyRespBundle<PageInfo<CompanyUserSet>> staffMessage(
             @RequestParam("company_id")String company_id,@RequestParam("page")Integer page,@RequestParam("rows")Integer rows) {
 
-        PageInfo<CompanyUserSet> companyUserSet = this.companyInfoService.staffMessage(company_id,page,rows);
+        PageInfo<CompanyUserSet> companyUserSet = companyInfoService.staffMessage(company_id,page,rows);
         return sendJsonData(ResultMessage.SUCCESS,companyUserSet);
+    }
+
+    /**
+     * 公司详情
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "companyId", value = "公司id", required = true, dataType = "String"),
+    })
+    @RequestMapping(value = "/companyDetails", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="子公司管理：公司详情")
+    public MyRespBundle<PageInfo<ProjectVO>> companyDetails(@RequestParam(value = "companyID") String companyId){
+
+        List<CompanyInfo> companyInfo = companyInfoService.companyDetails(companyId);
+
+        return sendJsonData(ResultMessage.SUCCESS, companyInfo);
     }
 }
 

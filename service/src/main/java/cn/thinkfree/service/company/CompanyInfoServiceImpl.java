@@ -80,4 +80,12 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         List<CompanyUserSet> companyUserSets = companyUserSetMapper.staffByCompanyID(companyId);
         return new PageInfo<>(companyUserSets);
     }
+
+    @Override
+    public List<CompanyInfo> companyDetails(String companyId) {
+        CompanyInfoExample example = new CompanyInfoExample();
+        example.createCriteria().andCompanyIdEqualTo(companyId);
+
+        return companyInfoMapper.selectByExample(example);
+    }
 }
