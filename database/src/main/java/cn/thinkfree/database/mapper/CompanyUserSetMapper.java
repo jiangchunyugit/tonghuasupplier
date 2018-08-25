@@ -130,4 +130,11 @@ public interface CompanyUserSetMapper {
      * @return
      */
     CompanyUserSetVo findByUserId(Integer id);
+
+    /**
+     * 子公司：员工信息  根据公司id查询员工
+     * @param companyId
+     * @return
+     */
+    List<CompanyUserSet> staffByCompanyID(String companyId);
 }

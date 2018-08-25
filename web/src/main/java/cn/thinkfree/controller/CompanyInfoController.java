@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.thinkfree.database.model.CompanyUserSet;
+
 @RestController
 @RequestMapping(value = "/company")
 @Api(value = "子公司管理",description = "子公司管理")
@@ -107,6 +109,19 @@ public class CompanyInfoController extends AbsBaseController{
 
         return sendJsonData(ResultMessage.SUCCESS, projectvo);
     }
+    /**
+     *
+     * 子公司：员工信息
+     * @return
+     */
+    @RequestMapping(value = "/staffMseeage",method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="子公司：员工信息")
+    public MyRespBundle<PageInfo<CompanyUserSet>> staffMessage(
+            @RequestParam("company_id")String company_id,@RequestParam("page")Integer page,@RequestParam("rows")Integer rows) {
 
-
+        PageInfo<CompanyUserSet> companyUserSet = this.companyInfoService.staffMessage(company_id,page,rows);
+        return sendJsonData(ResultMessage.SUCCESS,companyUserSet);
+    }
 }
+

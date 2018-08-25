@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import springfox.documentation.schema.Example;
+import cn.thinkfree.database.model.CompanyUserSet;
+import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +25,8 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Autowired
     CompanyInfoMapper companyInfoMapper;
 
+    @Autowired
+    CompanyUserSetMapper companyUserSetMapper;
     /**
      * 根据相关公司id查询公司信息
      * @param userVO
@@ -68,5 +72,12 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         PageHelper.startPage(companyInfoSEO.getPage(),companyInfoSEO.getRows());
         List<CompanyInfo> companyInfos = companyInfoMapper.selectCompanyByParam(companyInfoSEO);
         return new PageInfo<>(companyInfos);
+    }
+    @Override
+    public PageInfo<CompanyUserSet> staffMessage(String companyId, Integer page, Integer rows) {
+
+        PageHelper.startPage(page, rows);
+        List<CompanyUserSet> companyUserSets = companyUserSetMapper.staffByCompanyID(companyId);
+        return new PageInfo<>(companyUserSets);
     }
 }

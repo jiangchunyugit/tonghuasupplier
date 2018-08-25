@@ -23,12 +23,11 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import cn.thinkfree.database.vo.StaffSEO;
-
-
 import java.util.Date;
 import java.util.List;
+import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
+
 
 
 @RequestMapping("/staff")
@@ -41,6 +40,9 @@ public class StaffController extends AbsBaseController{
 
     @Autowired
     ProjectService projectService;
+
+    @Autowired
+    private PreProjectUserRoleMapper preProjectUserRoleMapper;
     /**
      * 员工列表，以及条件查询
      * @param page

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.company;
 
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.vo.CompanyInfoSEO;
 import cn.thinkfree.database.vo.UserVO;
 import com.github.pagehelper.PageInfo;
@@ -23,4 +24,10 @@ public interface CompanyInfoService {
      * 查询公司信息
      */
     PageInfo<CompanyInfo> list(CompanyInfoSEO companyInfoSEO);
+
+    /**
+     * 员工信息
+     */
+    PageInfo<CompanyUserSet> staffMessage(String companyId, Integer page, Integer rows);
+
 }
