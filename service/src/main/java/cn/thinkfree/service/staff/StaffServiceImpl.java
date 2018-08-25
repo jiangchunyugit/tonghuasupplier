@@ -58,8 +58,6 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     @Autowired
     PreProjectCompanySetMapper preProjectCompanySetMapper;
 
-    @Autowired
-    UserRoleSetMapper userRoleSetMapper;
 
     /**
      * 所谓五分钟
@@ -218,11 +216,11 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      * @return
      */
     @Override
-    public String updateDelCompanyUser(String userId) {
+    public boolean updateDelCompanyUser(String userId) {
         if(isJob(userId)){
-            return "该员工还有进行中的项目请先移交项目后，再移除员工";
+            return true;
         }
-        return "员工移除后将不可恢复确定移除？";
+        return false;
     }
 
     /**
@@ -252,15 +250,6 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     @Override
     public CompanyUserSetVo detail(Integer id) {
         return companyUserSetMapper.findByUserId(id);
-    }
-
-    @Override
-    public List<UserRoleSet> getRole() {
-        UserRoleSetExample example = new UserRoleSetExample();
-        //查询岗位显示的信息
-        Short isShow = 1;
-        example.createCriteria().andIsShowEqualTo(isShow);
-        return userRoleSetMapper.selectByExample(example);
     }
 
     /**

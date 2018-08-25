@@ -50,4 +50,10 @@ public interface DictionaryService {
      * @return
      */
     List<CompanyInfo> findCompanyByAreaCode(Integer areaCode);
+
+    /**
+     * 获取岗位信息
+     * @return
+     */
+    List<UserRoleSet> getRole();
 }

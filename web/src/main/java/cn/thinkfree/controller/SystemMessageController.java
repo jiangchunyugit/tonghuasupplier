@@ -6,6 +6,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.SystemMessageVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageInfo;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(value = "/sysMsg")
-@Api("公告管理")
+@Api(value = "公告管理",description = "公告管理")
 public class SystemMessageController extends AbsBaseController {
 
     @Autowired
@@ -50,9 +51,8 @@ public class SystemMessageController extends AbsBaseController {
         if (rows == null){
             rows = 15;
         }
-        UserVO uservo = (UserVO)SessionUserDetailsUtil.getUserDetails();
 
-        PageInfo<SystemMessage> pageInfo = sysMsgService.selectByParam(uservo, page, rows, sendUserId, sendTime);
+        PageInfo<SystemMessageVo> pageInfo = sysMsgService.selectByParam(page, rows, sendUserId, sendTime);
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }

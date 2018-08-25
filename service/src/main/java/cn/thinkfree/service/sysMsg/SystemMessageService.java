@@ -2,6 +2,7 @@ package cn.thinkfree.service.sysMsg;
 
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.SystemMessageVo;
 import cn.thinkfree.database.vo.UserVO;
 import com.github.pagehelper.PageInfo;
 
@@ -29,7 +30,7 @@ public interface SystemMessageService {
      * @param sendTime
      * @return
      */
-    PageInfo<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime);
+    PageInfo<SystemMessageVo> selectByParam(Integer no, Integer pageSize, Object sendUserId, String sendTime);
 
     int saveSysMsg(PcUserInfo userInfo, SystemMessage record);
 }

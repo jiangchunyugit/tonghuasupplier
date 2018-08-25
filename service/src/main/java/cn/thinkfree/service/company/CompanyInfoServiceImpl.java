@@ -1,5 +1,6 @@
 package cn.thinkfree.service.company;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
@@ -35,11 +36,13 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Override
     @Transactional
     public int addCompanyInfo(CompanyInfo companyInfo) {
-        companyInfo.setCompanyId(UserNoUtils.getUserNo(""));
-        // TODO 以后再改吧
-        companyInfo.setRoleId("BD");
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        companyInfo.setCompanyId(UserNoUtils.getUserNo("BD"));
         companyInfo.setCreateTime(new Date());
         companyInfo.setPhone(companyInfo.getLegalPhone());
+        companyInfo.setRoleId("BD");
+        companyInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        companyInfo.setParentCompanyId(userVO.getCompanyID());
         return companyInfoMapper.insertSelective(companyInfo);
     }
 
@@ -54,11 +57,11 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Override
     public PageInfo<CompanyInfo> list(CompanyInfoSEO companyInfoSEO) {
-        if(null != companyInfoSEO.getLegalName() || !"".equals(companyInfoSEO.getLegalName())){
+        if(null != companyInfoSEO.getLegalName() && !"".equals(companyInfoSEO.getLegalName())){
             String name = companyInfoSEO.getLegalName();
             companyInfoSEO.setLegalName("%"+name+"%");
         }
-        if(null != companyInfoSEO.getLegalPhone() || !"".equals(companyInfoSEO.getLegalPhone())){
+        if(null != companyInfoSEO.getLegalPhone() && !"".equals(companyInfoSEO.getLegalPhone())){
             String phone = companyInfoSEO.getLegalPhone();
             companyInfoSEO.setLegalPhone("%"+phone+"%");
         }

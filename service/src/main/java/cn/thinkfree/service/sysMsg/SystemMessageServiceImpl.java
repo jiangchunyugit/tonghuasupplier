@@ -1,10 +1,14 @@
 package cn.thinkfree.service.sysMsg;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.SystemMessageMapper;
+import cn.thinkfree.database.mapper.UserRoleSetMapper;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.model.UserRoleSetExample;
+import cn.thinkfree.database.vo.SystemMessageVo;
 import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.remote.CloudService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +25,8 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     SystemMessageMapper sysMsgMapper;
 
     @Autowired
-    CloudService cloudService;
+    UserRoleSetMapper userRoleSetMapper;
+
 
     @Override
     @Transactional
@@ -35,7 +40,9 @@ public class SystemMessageServiceImpl implements SystemMessageService {
     }
 
     @Override
-    public PageInfo<SystemMessage> selectByParam(UserVO userVO, Integer no, Integer pageSize, Object sendUserId, String sendTime) {
+    public PageInfo<SystemMessageVo> selectByParam(Integer no, Integer pageSize, Object sendUserId, String sendTime) {
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
         Map<String, Object> param = new HashMap<>();
 
         if(null == sendUserId) sendUserId = "";
@@ -45,8 +52,26 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         param.put("companyId", userVO.getRelationMap());
 
         PageHelper.startPage(no,pageSize);
-        List<SystemMessage> systemMessage = sysMsgMapper.selectByParam(param);
-        PageInfo<SystemMessage> pageInfo = new PageInfo<>(systemMessage);
+        List<SystemMessageVo> systemMessage = sysMsgMapper.selectByParam(param);
+        //查询岗位 信息
+        UserRoleSetExample example = new UserRoleSetExample();
+        //设置岗位显示的信息
+        Short isShow = 1;
+        example.createCriteria().andIsShowEqualTo(isShow);
+        List<UserRoleSet> userRoleSets = userRoleSetMapper.selectByExample(example);
+        Map<String, String> map = new HashMap<>();
+        for(UserRoleSet userRoleSet: userRoleSets){
+            map.put(userRoleSet.getId().toString(),userRoleSet.getRoleName());
+        }
+        for (SystemMessageVo vo: systemMessage){
+            String[] roleId = vo.getReceiveRole().split(",");
+            String roleName = "";
+            for(int i = 0; i < roleId.length; i++){
+                roleName += map.get(roleId[i]) + " ";
+            }
+            vo.setRoleName(roleName);
+        }
+        PageInfo<SystemMessageVo> pageInfo = new PageInfo<>(systemMessage);
         return pageInfo;
     }
 
@@ -58,9 +83,6 @@ public class SystemMessageServiceImpl implements SystemMessageService {
         record.setSendUser(userInfo.getName());
         record.setCompanyId(userInfo.getCompanyId());
         record.setSendTime(new Date());
-        sysMsgMapper.insertSelective(record);
-
-
-        return 1;
+        return sysMsgMapper.insertSelective(record);
     }
 }
