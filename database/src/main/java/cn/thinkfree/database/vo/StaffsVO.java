@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(value = "员工信息")
 public class StaffsVO extends CompanyUserSet {
+    @ApiModelProperty("岗位名称")
+    private String roleName;
 
     @ApiModelProperty("状态")
     private String statusName;
@@ -21,9 +23,17 @@ public class StaffsVO extends CompanyUserSet {
             statusName = "待激活";
         }
         if(getIsJob() == 2){
-            statusName = "移除";
+            statusName = "被移除";
         }
         return statusName;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     public void setStatusName(String statusName) {

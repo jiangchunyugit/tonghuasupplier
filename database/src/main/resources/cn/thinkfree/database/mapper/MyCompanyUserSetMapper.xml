@@ -54,10 +54,10 @@
     </select>
 
 
-    <select id="findByUserId" parameterType="string" resultMap="CompanyUserSetVo">
+    <select id="findByUserId" parameterType="java.lang.String" resultMap="StaffsVO">
         select cu.*, ro.role_name, co.company_name  from company_user_set cu
         join user_role_set ro on cu.role_id = ro.role_code
-        join company_info co on cu.company_id = co.company_id where cu.id=#{id}
+        join company_info co on cu.company_id = co.company_id where cu.user_id=#{userId}
     </select>
 
     <update id="updateIsJob" parameterType="java.lang.Integer">

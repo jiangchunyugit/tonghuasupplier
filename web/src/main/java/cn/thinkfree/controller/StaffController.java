@@ -207,10 +207,10 @@ public class StaffController extends AbsBaseController{
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String"),
     })
-    public MyRespBundle<CompanyUserSetVo> details(@RequestParam("id")int id){
-        CompanyUserSetVo companyUserSetVo = staffService.detail(id);
+    public MyRespBundle<CompanyUserSetVo> details(@RequestParam("userId")String userId){
+        StaffsVO staffsVO = staffService.detail(userId);
 
-        return sendJsonData(ResultMessage.SUCCESS, companyUserSetVo);
+        return sendJsonData(ResultMessage.SUCCESS, staffsVO);
     }
 
 }

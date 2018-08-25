@@ -255,8 +255,8 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     }
 
     @Override
-    public CompanyUserSetVo detail(Integer id) {
-        return companyUserSetMapper.findByUserId(id);
+    public StaffsVO detail(String userId) {
+        return companyUserSetMapper.findByUserId(userId);
     }
 
     /**

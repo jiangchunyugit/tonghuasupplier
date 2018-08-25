@@ -72,7 +72,7 @@ public interface StaffService {
      * @param id
      * @return
      */
-    CompanyUserSetVo detail(Integer id);
+    StaffsVO detail(String userId);
 
 
     /**
