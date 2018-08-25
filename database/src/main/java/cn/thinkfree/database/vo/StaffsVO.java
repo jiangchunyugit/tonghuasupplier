@@ -1,54 +1,40 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.core.model.BaseModel;
+import cn.thinkfree.database.model.CompanyUserSet;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+@ApiModel(value = "员工信息")
+public class StaffsVO extends CompanyUserSet {
 
-public class StaffsVO extends BaseModel {
+    @ApiModelProperty("状态")
+    private String statusName;
 
+    @ApiModelProperty("公司名称")
+    private String companyName;
 
-
-    /**
-     * 用户主键
-     */
-    private String userId;
-    /**
-     * 手机号
-     */
-    private String phone;
-
-    private String roleId;
-
-    private String name;
-
-    public String getName() {
-        return name;
+    public String getStatusName() {
+        if(getIsBind() == 1){
+            statusName = "正常";
+        }
+        if(getIsBind() == 2){
+            statusName = "待激活";
+        }
+        if(getIsJob() == 2){
+            statusName = "移除";
+        }
+        return statusName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStatusName(String statusName) {
+        this.statusName = statusName;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getCompanyName() {
+        return companyName;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(String roleId) {
-        this.roleId = roleId;
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

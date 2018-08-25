@@ -9,10 +9,7 @@
     </resultMap>
 
     <resultMap id="StaffsVO" type="cn.thinkfree.database.vo.StaffsVO" extends="BaseResultMap">
-        <result column="phone" jdbcType="VARCHAR" property="phone" />
-        <result column="name" property="name"/>
-        <result column="user_id"   property="userId" />
-        <result column="role_id" property="roleId" />
+        <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     </resultMap>
 
     <resultMap id="CompanyUserSetVo" type="cn.thinkfree.database.vo.CompanyUserSetVo" extends="BaseResultMap">
@@ -22,19 +19,19 @@
     <select id="countCompanyUser" parameterType="java.util.List" resultMap="IndexUserReportVO">
 
 
-      SELECT
-         sum(CASE WHEN role_id = 'CS' THEN 1 ELSE 0 END) as steward,
-         sum(CASE WHEN role_id = 'CP' THEN 1 ELSE 0 END) as projectManager,
-         sum(CASE WHEN role_id = 'CQ' THEN 1 ELSE 0 END) as qualityInspector,
-         sum(CASE WHEN role_id = 'CM' THEN 1 ELSE 0 END) as foreman
+        SELECT
+        sum(CASE WHEN role_id = 'CS' THEN 1 ELSE 0 END) as steward,
+        sum(CASE WHEN role_id = 'CP' THEN 1 ELSE 0 END) as projectManager,
+        sum(CASE WHEN role_id = 'CQ' THEN 1 ELSE 0 END) as qualityInspector,
+        sum(CASE WHEN role_id = 'CM' THEN 1 ELSE 0 END) as foreman
 
-      from company_user_set
-      where
-       is_job = 0
-      and company_id in
-      <foreach collection="list"  separator="," open="(" item="listItem" close=")">
-        #{listItem}
-      </foreach>
+        from company_user_set
+        where
+        is_job = 0
+        and company_id in
+        <foreach collection="list"  separator="," open="(" item="listItem" close=")">
+            #{listItem}
+        </foreach>
 
     </select>
 
@@ -73,30 +70,32 @@
         where c.company_id = #{companyId}
     </select>
 
-    <select id="queryStaffList" resultType="cn.thinkfree.database.model.CompanyUserSet" parameterType="map">
-        select * from company_user_set
+    <select id="findStaffByParam" resultMap="StaffsVO" parameterType="cn.thinkfree.database.vo.StaffSEO">
+        select *, com.company_name from company_user_set us join company_info com on us.company_id = com.company_id
         <where>
             <if test="name!=null and name!=''">
-                and name like concat(concat('%',#{name},'%'))
+                and us.name like #{name}
             </if>
             <if test="phone!=null and phone!=''">
-                and phone like concat(concat('%',#{phone},'%'))
+                and us.phone like #{phone}
             </if>
             <if test="isBind!=null and isBind!=''">
-                and is_bind like concat(concat('%',#{isBind},'%'))
+                and us.is_bind = #{isBind}
             </if>
-
-            <if test="province_code !=null and province_code!=''">
-                and provinve_code=#{province_code}
+            <if test="isJob!=null and isJob!=''">
+                and us.is_job = #{isJob}
             </if>
-            <if test="city_code !=null and city_code!=''">
-                and city_code=#{city_code}
+            <if test="provinceCode !=null and provinceCode!=''">
+                and us.provinve_code=#{provinceCode}
             </if>
-            <if test="area_code !=null and area_code!=''">
-                and area_code=#{area_code}
+            <if test="cityCode !=null and cityCode!=''">
+                and us.city_code=#{cityCode}
             </if>
-            <if test="company_id !=null and company_id!=''">
-                and company_id=#{company_id}
+            <if test="areaCode !=null and areaCode!=''">
+                and us.area_code=#{areaCode}
+            </if>
+            <if test="companyId !=null and companyId!=''">
+                and us.company_id=#{companyId}
             </if>
 
         </where>

@@ -3,17 +3,17 @@ package cn.thinkfree.service.staff;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.CompanyUserSetVo;
-import cn.thinkfree.database.vo.IndexProjectReportVO;
-import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,6 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.StaffSEO;
 import cn.thinkfree.database.vo.UserVO;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +71,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
 
 
     @Override
+    @Transactional
     public Integer updateCompanyWei(Integer id, String roleName) {
         PreProjectUserRole preProjectUserRole = new PreProjectUserRole();
         preProjectUserRole.setId(id);
@@ -80,9 +80,11 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     }
 
     @Override
+    @Transactional
     public String insetCompanyUser(CompanyUserSet companyUserSet) {
-
+        Date date = new Date();
         String activationCode = RandomNumUtils.random(6);
+        //TODO
         String userID = UserNoUtils.getUserNo(companyUserSet.getRoleId());
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         printInfoMes("插入员工记录表");
@@ -101,6 +103,12 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
         userRegister.setPhone(companyUserSet.getPhone());
         userRegister.setType(UserRegisterType.Personal.shortVal());
+        MultipleMd5 md5 = new MultipleMd5();
+        //默认密码123456
+        userRegister.setPassword(md5.encode("123456"));
+        userRegister.setRegisterTime(date);
+        userRegister.setType(UserRegisterType.Staff.shortVal());
+        userRegister.setUpdateTime(date);
         userRegisterMapper.insertSelective(userRegister);
 
         printInfoMes("插入用户信息表");
@@ -115,12 +123,14 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         userInfo.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
         userInfo.setCityCode(Short.valueOf(userVO.getPcUserInfo().getCity()));
         userInfo.setAreaCode(Integer.valueOf(userVO.getPcUserInfo().getArea()));
+        userInfo.setRoleId(companyUserSet.getRoleId());
+        userInfo.setName(companyUserSet.getName());
         userInfoMapper.insertSelective(userInfo);
 
-        RemoteResult<String> rs = cloudService.sendSms(companyUserSet.getPhone(), activationCode);
+        /*RemoteResult<String> rs = cloudService.sendSms(companyUserSet.getPhone(), activationCode);
         if(!rs.isComplete()){
             throw new RuntimeException("总有你想不到的意外");
-        }
+        }*/
         return "操作成功!";
     }
 
@@ -188,26 +198,22 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     /**
      *
      * 员工列表，条件查询
-     * @param page
-     * @param rows
-     * @param name
-     * @param phone
-     * @param isBind
      * @param staffSEO
      * @return
      */
     @Override
-    public List<CompanyUserSet> queryStaffList(Integer page, Integer rows, String name, String phone, Integer isBind,StaffSEO staffSEO) {
-        PageHelper.startPage(page, rows);
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("name", name);
-        map.put("phone", phone);
-        map.put("isBind", isBind);
-        map.put("province_code",staffSEO.getProvince_code());
-        map.put("area_code",staffSEO.getArea_code());
-        map.put("city_code",staffSEO.getCity_code());
-        map.put("company_id",staffSEO.getCompany_id());
-        return this.companyUserSetMapper.queryStaffList(map);
+    public PageInfo<StaffsVO> queryStaffList(StaffSEO staffSEO) {
+        if(null != staffSEO.getName() && !"".equals(staffSEO.getName())){
+            String name = staffSEO.getName();
+            staffSEO.setName("%"+name+"%");
+        }
+        if(null != staffSEO.getPhone() && !"".equals(staffSEO.getPhone())){
+            String phone = staffSEO.getPhone();
+            staffSEO.setPhone("%"+phone+"%");
+        }
+        PageHelper.startPage(staffSEO.getPage(), staffSEO.getRows());
+        List<StaffsVO> staffsVOS = companyUserSetMapper.findStaffByParam(staffSEO);
+        return new PageInfo<>(staffsVOS);
     }
 
     /**
@@ -242,6 +248,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      * @return
      */
     @Override
+    @Transactional
     public int updateIsJob(String userId){
 
         return companyUserSetMapper.updateIsJob(userId);
@@ -259,6 +266,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      * @return
      */
     @Override
+    @Transactional
     public String updateRole(String userId, String roleId) {
         if(isJob(userId)){
             return "该员工还有进行中的项目请先移交项目后，再修改岗位";

@@ -3,76 +3,118 @@ package cn.thinkfree.database.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-@ApiModel("地区")
+@ApiModel("员工查询参数")
 public class StaffSEO extends AbsPageSearchCriteria{
 
-    /*
-     * 省
-     * */
     @ApiModelProperty("省编号")
-    private String province_code;
+    private String provinceCode;
 
-    /*
-     * 市
-     * */
     @ApiModelProperty("市编号")
-    private String city_code;
+    private String cityCode;
 
-    /*
-     *县编号
-     * */
     @ApiModelProperty("县编号")
-    private String area_code;
+    private String areaCode;
 
     /**
      * 公司编号
      */
     @ApiModelProperty("公司编号")
-    private String company_id;
+    private String companyId;
 
-    /*
-     * 公司名称
-     * */
-    @ApiModelProperty("公司名称")
-    private String company_name;
+    @ApiModelProperty("员工名称")
+    private String name;
 
-    public String getCompany_id() {
-        return company_id;
+    @ApiModelProperty("员工手机号")
+    private String phone;
+
+    @ApiModelProperty("状态-->1:正常 2：待激活 3：移除")
+    private Integer status;
+
+    private Integer isBind;
+
+    private Integer isJob;
+
+    public Integer getIsJob() {
+        if("3".equals(getStatus()) || getStatus() == 3){
+            isJob = 2;
+        }else{
+            isJob = null;
+        }
+        return isJob;
     }
 
-    public void setCompany_id(String company_id) {
-        this.company_id = company_id;
+    public void setIsJob(Integer isJob) {
+        this.isJob = isJob;
     }
 
-    public String getProvince_code() {
-        return province_code;
+    public Integer getIsBind() {
+        if("1".equals(getStatus()) || getStatus() == 1){
+            isBind = 1;
+        }else if("2".equals(getStatus()) || getStatus() == 2){
+            isBind = 2;
+        }else{
+            isBind = null;
+        }
+        return isBind;
     }
 
-    public void setProvince_code(String province_code) {
-        this.province_code = province_code;
+    public void setIsBind(Integer isBind) {
+        this.isBind = isBind;
     }
 
-    public String getCity_code() {
-        return city_code;
+    public String getProvinceCode() {
+        return provinceCode;
     }
 
-    public void setCity_code(String city_code) {
-        this.city_code = city_code;
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
     }
 
-    public String getArea_code() {
-        return area_code;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setArea_code(String area_code) {
-        this.area_code = area_code;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
-    public String getCompany_name() {
-        return company_name;
+    public String getAreaCode() {
+        return areaCode;
     }
 
-    public void setCompany_name(String company_name) {
-        this.company_name = company_name;
+    public void setAreaCode(String areaCode) {
+        this.areaCode = areaCode;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
