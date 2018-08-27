@@ -8,6 +8,7 @@ import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.PcUserInfoMapper;
 import cn.thinkfree.database.mapper.UserRegisterMapper;
+import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.UserRegister;
 import cn.thinkfree.database.vo.MyPageHelper;
@@ -103,19 +104,20 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         pcUserInfoVo.setId(userId);
         pcUserInfoVo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         pcUserInfoVo.setEnabled(UserEnabled.Enabled_false.shortVal());
-        //TODO 应该有问题  根据登陆用户级别插入level
-        if(userVO.getPcUserInfo().getLevel() == UserLevel.Company_Admin.shortVal()){
-            pcUserInfoVo.setLevel(UserLevel.Company_Province.shortVal());
-        }else if (userVO.getPcUserInfo().getLevel() == UserLevel.Company_Province.shortVal()){
-            pcUserInfoVo.setLevel(UserLevel.Company_City.shortVal());
+        //根据新增公司id和登录用户公司id 是否相等判断level
+        if(userVO.getCompanyID() == pcUserInfoVo.getCompanyId()){
+            pcUserInfoVo.setLevel(userVO.getPcUserInfo().getLevel());
         }else{
-            pcUserInfoVo.setLevel(UserLevel.Company_City.shortVal());
+            pcUserInfoVo.setLevel(getLevel(userVO.getPcUserInfo().getLevel()));
         }
         pcUserInfoVo.setParentCompanyId(userVO.getCompanyID());
-        //TODO 省市区未存
-//        CompanyInfo companyInfo = companyInfoMapper.findByCompanyId(pcUserInfo.getCompanyId());
-//        pcUserInfo.setCity(companyInfo.getCityCode());
-
+        //省市区存储
+        CompanyInfo companyInfo = companyInfoMapper.findByCompanyId(pcUserInfoVo.getCompanyId());
+        if(null != companyInfo){
+            pcUserInfoVo.setCity(companyInfo.getCityCode().toString());
+            pcUserInfoVo.setProvince(companyInfo.getProvinceCode().toString());
+            pcUserInfoVo.setArea(companyInfo.getAreaCode().toString());
+        }
 
         //注册表
         UserRegister userRegister = new UserRegister();
@@ -181,6 +183,20 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 //        MultipleMd5 md5 = new MultipleMd5();
 //        pcUserInfoVo.setPassword(md5.matches());
         return pcUserInfoVo;
+    }
+
+    public short getLevel(Short level){
+        if(UserLevel.Creator.shortVal() == level){
+            return UserLevel.Company_Admin.shortVal();
+        }else if(UserLevel.Company_Admin.shortVal() == level){
+            return UserLevel.Company_Province.shortVal();
+        }else if (UserLevel.Company_Province.shortVal() == level){
+            return UserLevel.Company_City.shortVal();
+        }else if(UserLevel.Company_City.shortVal() == level){
+            return UserLevel.Company_Area.shortVal();
+        }else{
+            return UserLevel.Company_City_Master.shortVal();
+        }
     }
 
 }
