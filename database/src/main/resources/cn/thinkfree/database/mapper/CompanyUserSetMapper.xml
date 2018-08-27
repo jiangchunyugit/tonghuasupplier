@@ -395,19 +395,6 @@
       quit_time = #{quitTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="queryStaffList" resultType="cn.thinkfree.database.model.CompanyUserSet" parameterType="map">
-    select * from company_user_set
-    <where>
-      <if test="name!=null and name!=''">
-        and name like concat(concat('%',#{name},'%'))
-      </if>
-      <if test="phone!=null and phone!=''">
-        and phone like concat(concat('%',#{phone},'%'))
-      </if>
-      <if test="isBind!=null and isBind!=''">
-        and is_bind like concat(concat('%',#{isBind},'%'))
-      </if>
-    </where>
-  </select>
+
 
 </mapper>

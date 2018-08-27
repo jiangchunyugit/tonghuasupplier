@@ -7,6 +7,7 @@ import java.util.Map;
 
 import cn.thinkfree.database.vo.CompanyUserSetVo;
 import cn.thinkfree.database.vo.IndexUserReportVO;
+import cn.thinkfree.database.vo.StaffSEO;
 import cn.thinkfree.database.vo.StaffsVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -115,7 +116,7 @@ public interface CompanyUserSetMapper {
     /**
      * 查询员工列表信息
      */
-    List<CompanyUserSet> queryStaffList(Map<String,Object> map);
+    List<StaffsVO> findStaffByParam(StaffSEO staffSEO);
 
     /**
      * 员工移除
@@ -129,5 +130,12 @@ public interface CompanyUserSetMapper {
      * @param id
      * @return
      */
-    CompanyUserSetVo findByUserId(Integer id);
+    StaffsVO findByUserId(String userId);
+
+    /**
+     * 子公司：员工信息  根据公司id查询员工
+     * @param companyId
+     * @return
+     */
+    List<CompanyUserSet> staffByCompanyID(String companyId);
 }

@@ -77,11 +77,12 @@ public class SystemMessageServiceImpl implements SystemMessageService {
 
     @Override
     @Transactional
-    public int saveSysMsg(PcUserInfo userInfo, SystemMessage record) {
+    public int saveSysMsg(SystemMessage record) {
         //TODO  发布消息 触发事件
-        record.setSendUserId(userInfo.getId());
-        record.setSendUser(userInfo.getName());
-        record.setCompanyId(userInfo.getCompanyId());
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        record.setSendUserId(userVO.getPcUserInfo().getId());
+        record.setSendUser(userVO.getPcUserInfo().getName());
+        record.setCompanyId(userVO.getCompanyID());
         record.setSendTime(new Date());
         return sysMsgMapper.insertSelective(record);
     }

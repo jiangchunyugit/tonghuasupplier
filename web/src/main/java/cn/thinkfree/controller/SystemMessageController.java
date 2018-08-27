@@ -117,9 +117,8 @@ public class SystemMessageController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "receiveRole", value = "对象", required = true, dataType = "String")
     })
     public MyRespBundle<String> saveSysMsg(SystemMessage systemMessage){
-        UserVO uservo = (UserVO)SessionUserDetailsUtil.getUserDetails();
 
-        int line = sysMsgService.saveSysMsg(uservo.getPcUserInfo(),systemMessage);
+        int line = sysMsgService.saveSysMsg(systemMessage);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
         }

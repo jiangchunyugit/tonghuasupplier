@@ -32,5 +32,5 @@ public interface SystemMessageService {
      */
     PageInfo<SystemMessageVo> selectByParam(Integer no, Integer pageSize, Object sendUserId, String sendTime);
 
-    int saveSysMsg(PcUserInfo userInfo, SystemMessage record);
+    int saveSysMsg(SystemMessage record);
 }

@@ -4,9 +4,10 @@ import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.model.PreProjectUserRole;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.vo.CompanyUserSetVo;
+import cn.thinkfree.database.vo.StaffsVO;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.StaffSEO;
-
+import com.github.pagehelper.PageInfo;
 
 
 import java.util.List;
@@ -16,11 +17,9 @@ public interface StaffService {
 
     /**
      *查询员工列表
-     * @param page
      * @return
      */
-    List<CompanyUserSet> queryStaffList(Integer page, Integer rows,
-                                        String name, String phone, Integer isBind,StaffSEO staffSEO);
+    PageInfo<StaffsVO> queryStaffList(StaffSEO staffSEO);
 
     /**
      *查询员工信息
@@ -73,7 +72,7 @@ public interface StaffService {
      * @param id
      * @return
      */
-    CompanyUserSetVo detail(Integer id);
+    StaffsVO detail(String userId);
 
 
     /**

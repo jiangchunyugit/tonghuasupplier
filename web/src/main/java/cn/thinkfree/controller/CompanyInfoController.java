@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.thinkfree.database.model.CompanyUserSet;
+
 @RestController
 @RequestMapping(value = "/company")
 @Api(value = "子公司管理",description = "子公司管理")
@@ -63,7 +65,7 @@ public class CompanyInfoController extends AbsBaseController{
      * 查询公司信息
      */
 
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="查询子公司信息")
     public MyRespBundle<PageInfo<CompanyInfo>> list(@ApiParam("查询公司参数")CompanyInfoSEO companyInfoSEO){
@@ -75,7 +77,7 @@ public class CompanyInfoController extends AbsBaseController{
     /**
      * 子公司管理：项目信息 项目情况
      */
-    @RequestMapping(value = "/findProjectById", method = RequestMethod.POST)
+    @RequestMapping(value = "/findProjectById", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司管理：项目信息--->项目情况")
     public MyRespBundle<IndexProjectReportVO> findProjectById(@RequestParam(value = "companyId") String companyId){
@@ -97,14 +99,42 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/details", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司管理：项目信息---->项目详情")
-    public MyRespBundle<PageInfo<ProjectVO>> details(@RequestParam(value = "companyID") String companyId, @RequestParam(value = "status",required = false) Integer status,
+    public MyRespBundle<PageInfo<ProjectVO>> details(@RequestParam(value = "companyId") String companyId, @RequestParam(value = "status",required = false) Integer status,
                                                      @RequestParam(value = "rows") Integer rows, @RequestParam(value = "page") Integer page){
 
         PageInfo<ProjectVO> projectvo = projectService.selectProjectVOForCompany(companyId,status,rows,page);
 
         return sendJsonData(ResultMessage.SUCCESS, projectvo);
     }
+    /**
+     *
+     * 子公司：员工信息
+     * @return
+     */
+    @RequestMapping(value = "/staffMseeage",method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="子公司：员工信息")
+    public MyRespBundle<PageInfo<CompanyUserSet>> staffMessage(
+            @RequestParam("company_id")String company_id,@RequestParam("page")Integer page,@RequestParam("rows")Integer rows) {
 
+        PageInfo<CompanyUserSet> companyUserSet = companyInfoService.staffMessage(company_id,page,rows);
+        return sendJsonData(ResultMessage.SUCCESS,companyUserSet);
+    }
 
+    /**
+     * 公司详情
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "companyId", value = "公司id", required = true, dataType = "String"),
+    })
+    @RequestMapping(value = "/companyDetails", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="子公司管理：公司详情")
+    public MyRespBundle<PageInfo<ProjectVO>> companyDetails(@RequestParam(value = "companyId") String companyId){
 
+        List<CompanyInfo> companyInfo = companyInfoService.companyDetails(companyId);
+
+        return sendJsonData(ResultMessage.SUCCESS, companyInfo);
+    }
 }
+
