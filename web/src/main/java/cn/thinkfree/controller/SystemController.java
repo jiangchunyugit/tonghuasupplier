@@ -57,7 +57,8 @@ public class SystemController extends AbsBaseController {
     @RequestMapping("/gotoPage")
     public String gotoPage(String page){
         System.out.println(page);
-        return page;
+        int pos = page.indexOf("?");
+        return  (pos > -1? page.substring(0,pos)  :page);
     }
 
 

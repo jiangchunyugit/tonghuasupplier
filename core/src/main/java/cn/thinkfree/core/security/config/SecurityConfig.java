@@ -47,8 +47,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Autowired
     SecurityResourceDao securityResourceDao;
 
-//    @Autowired
-//    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    @Autowired
+    JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     @Autowired
     SecuritySuccessAuthHandler securitySuccessAuthHandler;
@@ -58,7 +58,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         // 设置不拦截规则
         web.ignoring()
                 .antMatchers("/error")
-                .antMatchers("/static/**/*", SecurityConstants.LOGIN_PAGE,"/**/*.jsp")
+                .antMatchers("/static/**", SecurityConstants.LOGIN_PAGE,"/**/*.jsp")
                 .antMatchers("/api-docs", "/swagger-resources/**", "/swagger-ui.html","/webjars/**");
 
     }
@@ -84,7 +84,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
         // 细粒度 更精细的配置~
-//        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAt(mySecurityPcFilter(), FilterSecurityInterceptor.class);
 
         // 自定义登录页面

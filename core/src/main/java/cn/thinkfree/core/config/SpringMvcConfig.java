@@ -29,10 +29,10 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 //        registry.addResourceHandler("/resources/**")
 //                .addResourceLocations("classpath:/resources/");
-//        registry.addResourceHandler("/static/**")
-//                .addResourceLocations("classpath:/resources/static/");
         registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/webapp/**");
+                .addResourceLocations("classpath:/static/");
+//        registry.addResourceHandler("/static/**")
+//                .addResourceLocations("classpath:/webapp/**");
         registry.addResourceHandler("swagger-ui.html")
                 .addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**")

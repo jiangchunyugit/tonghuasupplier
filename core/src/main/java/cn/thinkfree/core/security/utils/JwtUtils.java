@@ -10,12 +10,12 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-//@Component
+@Component
 public class JwtUtils {
     /**
      * 密钥
      */
-    private final String secret = "aaaaaaaa";
+    private final String secret = "thinkfree";
 
     /**
      * 从数据声明生成令牌

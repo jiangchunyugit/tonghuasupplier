@@ -130,7 +130,7 @@ public class ProjectController extends AbsBaseController {
     @PostMapping("/edit")
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PROJECT)
-    public MyRespBundle<String> editQuotation(@ApiParam ProjectQuotationVO projectQuotationVO){
+    public MyRespBundle<String> editQuotation(@ApiParam @RequestBody ProjectQuotationVO projectQuotationVO){
 
         String mes = projectService.editQuotation(projectQuotationVO);
 
@@ -146,7 +146,7 @@ public class ProjectController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT)
     public MyRespBundle<String> up(@ApiParam ProjectDetailsVO projectDetailsVO){
-        System.out.println(projectDetailsVO);
+
         String mes = projectService.updateProjectForUpOnline(projectDetailsVO);
         return sendSuccessMessage(mes);
     }
@@ -185,15 +185,14 @@ public class ProjectController extends AbsBaseController {
 
     /**
      * 编辑项目主材信息
-     * @param projectNo
-     * @param preProjectMaterials
+     * @param preProjectMaterialVO
      * @return
      */
     @ApiOperation(value = "编辑项目主材信息", notes = "编辑项目主材信息")
-    @GetMapping("/editMaterial")
+    @PostMapping("/editMaterial")
     @MyRespBody
-    public MyRespBundle<String> editMaterial(String projectNo,List<PreProjectMaterial> preProjectMaterials){
-       String mes=projectService.editMaterials(projectNo,preProjectMaterials);
+    public MyRespBundle<String> editMaterial(@RequestBody PreProjectMaterialVO preProjectMaterialVO){
+       String mes=projectService.editMaterials(preProjectMaterialVO.getProjectNo(),preProjectMaterialVO.getPreProjectMaterials());
         return sendJsonData(ResultMessage.SUCCESS,mes);
     }
 
@@ -201,7 +200,7 @@ public class ProjectController extends AbsBaseController {
     @ApiOperation(value = "邀请业主",notes = "邀请业主")
     @PostMapping("/notifyOwner")
     public MyRespBundle<String> notifyOwner(String phone){
-        // TODO 后续
+
         String mes = projectService.notifyOwner(phone);
         return sendSuccessMessage(mes);
     }

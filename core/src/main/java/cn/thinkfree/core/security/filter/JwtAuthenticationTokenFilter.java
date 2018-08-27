@@ -16,13 +16,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-//@Component
+@Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
     private SecurityUserDao securityUserDao;
     private JwtUtils jwtTokenUtil;
 
-//    @Autowired
+    @Autowired
     public JwtAuthenticationTokenFilter(SecurityUserDao userDetailsService, JwtUtils jwtTokenUtil) {
         this.securityUserDao = userDetailsService;
         this.jwtTokenUtil = jwtTokenUtil;

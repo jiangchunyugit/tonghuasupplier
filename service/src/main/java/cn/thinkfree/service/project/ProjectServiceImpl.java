@@ -15,9 +15,14 @@ import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
+import cn.thinkfree.service.utils.ProjectQuotationItemSortUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import org.apache.commons.collections.MultiMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,8 +30,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService {
@@ -251,12 +256,54 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      */
     @Override
     public ProjectQuotationVO selectProjectQuotationVoByProjectNo(String projectNo) {
-        ProjectQuotationVO projectQuotationVO = preProjectInfoMapper.selectProjectQuotationVOByProjectNo(projectNo);
-        if(projectQuotationVO == null){
+        ProjectQuotationVO projectQuotationVO = new ProjectQuotationVO();
+        List<ProjectQuotationItemVO> items = new ArrayList<>();
+
+        PreProjectInfoExample preProjectInfoExample= new PreProjectInfoExample();
+        preProjectInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        List<PreProjectInfo> info = preProjectInfoMapper.selectByExample(preProjectInfoExample);
+        if(info.isEmpty() || info.size() > 1){
             return new ProjectQuotationVO();
         }
-        List<ProjectQuotationItemVO> projectQuotationVOList= preProjectConstructionMapper.selectProjectQuotationItemVoByProjectNo(projectNo);
-        projectQuotationVO.setItems(projectQuotationVOList);
+        SpringBeanUtil.copy(info.get(0),projectQuotationVO);
+        PreProjectConstructionExample preProjectConstructionExample = new PreProjectConstructionExample();
+        preProjectConstructionExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        List<PreProjectConstruction> preProjectConstructions = preProjectConstructionMapper.selectByExample(preProjectConstructionExample);
+
+        PreProjectConstructionInfoExample preProjectConstructionInfoExample = new PreProjectConstructionInfoExample();
+        preProjectConstructionInfoExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal())
+                .andProjectNoEqualTo(projectNo);
+        List<PreProjectConstructionInfo> pcis = preProjectConstructionInfoMapper.selectByExample(preProjectConstructionInfoExample);
+
+
+        for(PreProjectConstruction p:preProjectConstructions){
+            ProjectQuotationItemVO tmp = new ProjectQuotationItemVO();
+            SpringBeanUtil.copy(p,tmp);
+            tmp.setPreProjectConstructionInfo(pcis.stream()
+                    .filter(i->i.getConstrucionProjectNo().equals(p.getConstructionProjectNo()))
+                    .findFirst().get());
+            items.add(tmp);
+        }
+
+//        ProjectQuotationVO projectQuotationVO = preProjectInfoMapper.selectProjectQuotationVOByProjectNo(projectNo);
+//        if(projectQuotationVO == null){
+//            return new ProjectQuotationVO();
+//        }
+//        List<ProjectQuotationItemVO> is = projectQuotationVO.getItems();
+        Set<String> dis = items.stream().map(ProjectQuotationItemVO::getConstructionProjectType).collect(Collectors.toSet());
+        List<ProjectQuotationItemVO> bigType = new ArrayList<>();
+        dis.forEach(d->{
+            ProjectQuotationItemVO v = new ProjectQuotationItemVO();
+            v.setConstructionProjectType(d);
+            v.setDetailItem(items.stream().filter(i->d.equals(i.getConstructionProjectType())).collect(Collectors.toList()));
+            bigType.add(v);
+        });
+        Collections.sort(bigType, Comparator.comparing(o -> ProjectQuotationItemSortUtils.sortNo(o.getConstructionProjectType())));
+        projectQuotationVO.setItems(bigType);
+        projectQuotationVO.setProjectNo(projectNo);
+//        List<ProjectQuotationItemVO> projectQuotationVOList= preProjectConstructionMapper.selectProjectQuotationItemVoByProjectNo(projectNo);
+//
+//        projectQuotationVO.setItems(projectQuotationVOList);
         return projectQuotationVO;
     }
 
@@ -282,17 +329,17 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             return "数据状态不可编辑!";
         }
 
-        PreProjectInfo updateInfo = new PreProjectInfo();
-        SpringBeanUtil.copy(projectQuotationVO,updateInfo);
-        PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
-        preProjectInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
-        preProjectInfoMapper.updateByExampleSelective(updateInfo,preProjectInfoExample);
-
-        printInfoMes("编辑报价单,汇总信息编辑完成,处理报价单条目");
-        PreProjectGuide updateGuide = new PreProjectGuide();
-        updateGuide.setTotalPrice(projectQuotationVO.getTotalPrice());
-
-        preProjectGuideMapper.updateByExampleSelective(updateGuide,preProjectGuideExample);
+//        PreProjectInfo updateInfo = new PreProjectInfo();
+//        SpringBeanUtil.copy(projectQuotationVO,updateInfo);
+//        PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
+//        preProjectInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+//        preProjectInfoMapper.updateByExampleSelective(updateInfo,preProjectInfoExample);
+//
+//        printInfoMes("编辑报价单,汇总信息编辑完成,处理报价单条目");
+//        PreProjectGuide updateGuide = new PreProjectGuide();
+//        updateGuide.setTotalPrice(projectQuotationVO.getTotalPrice());
+//
+//        preProjectGuideMapper.updateByExampleSelective(updateGuide,preProjectGuideExample);
 
         delProjectConstructionAndInfo(projectNo);
 
@@ -314,10 +361,6 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         PreProjectGuideExample preProjectGuideExample = new PreProjectGuideExample();
         preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectDetailsVO.getProjectNo());
         projectDetailsVO.setStatus(ProjectStatus.WaitStart.shortVal());
-        if(projectDetailsVO.getQRCodeFile() != null){
-            String filePath = WebFileUtil.fileCopy("/project", projectDetailsVO.getQRCodeFile());
-            projectDetailsVO.getInfo().setProjectCode(filePath);
-        }
         if(projectDetailsVO.getThumbnail() != null){
             String filePath = WebFileUtil.fileCopy("/project",projectDetailsVO.getThumbnail());
             projectDetailsVO.setProjectPic(filePath);
@@ -355,8 +398,6 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     @Override
     public String updateProjectByTransfer(ProjectTransferVO projectTransferVO) {
 
-
-
         if(projectTransferVO.getThumbnail() != null){
             String filePath = WebFileUtil.fileCopy("/project",projectTransferVO.getThumbnail());
 
@@ -366,8 +407,26 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectTransferVO.getProjectNo());
             preProjectGuideMapper.updateByExampleSelective(updateObj,preProjectGuideExample);
         }
+        List<ProjectUserRoleVO> projectUserRoleVOS = projectTransferVO.getStaffs();
+        projectUserRoleVOS.forEach(p->{
+            PreProjectUserRole updateObj = new PreProjectUserRole();
+            updateObj.setIsTransfer(SysConstants.YesOrNo.YES.shortVal());
+            updateObj.setTransferUserId(p.getUserId());
+            updateObj.setTransferTime(new Date());
+            PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
+            preProjectUserRoleExample.createCriteria().andIdEqualTo(p.getId());
+            preProjectUserRoleMapper.updateByExampleSelective(updateObj,preProjectUserRoleExample);
 
-        replacement(projectTransferVO.getStaffs());
+            PreProjectUserRole insert = new PreProjectUserRole();
+            insert.setIsTransfer(SysConstants.YesOrNo.NO.shortVal());
+            insert.setIsJob(SysConstants.YesOrNo.YES.shortVal());
+            insert.setCreateTime(new Date());
+            insert.setUserId(p.getUserId());
+            insert.setRoleId(p.getRoleId());
+            insert.setProjectNo(projectTransferVO.getProjectNo());
+            preProjectUserRoleMapper.insertSelective(insert);
+        });
+//        replacement(projectTransferVO.getStaffs());
         return "操作成功!";
     }
 
@@ -439,6 +498,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      * @param preProjectMaterials
      * @return
      */
+    @Transactional
     @Override
     public String editMaterials(String projectNo, List<PreProjectMaterial> preProjectMaterials) {
 
@@ -535,19 +595,21 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      * @param projectQuotationVO
      */
     private void saveProjectConstructionAndInfo(ProjectQuotationVO projectQuotationVO) {
-        List<ProjectQuotationItemVO> allWaitSave = projectQuotationVO.getItems();
+        List<ProjectQuotationItemVO> allWaitSave =   projectQuotationVO.getItems();
         PreProjectConstructionInfo update = null;
         for(ProjectQuotationItemVO vo : allWaitSave){
             vo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
             vo.setCreatTime(new Date());
             vo.setProjectNo(projectQuotationVO.getProjectNo());
-            preProjectConstructionMapper.insert(vo);
+            preProjectConstructionMapper.insertSelective(vo);
 
             update = vo.getPreProjectConstructionInfo();
             update.setCreateTime(new Date());
+            update.setProjectNo(vo.getProjectNo());
+            update.setConstrucionProjectNo(vo.getConstructionProjectNo());
             update.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
             update.setProjectNo(projectQuotationVO.getProjectNo());
-            preProjectConstructionInfoMapper.insert(update);
+            preProjectConstructionInfoMapper.insertSelective(update);
         }
     }
 

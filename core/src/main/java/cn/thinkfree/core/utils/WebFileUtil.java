@@ -33,21 +33,19 @@ public class WebFileUtil {
      * 文件上传路径
      */
     private static String uploadDir;
-
-
     /**
      * 文件服务器路径
      */
-    private static String serviceUrl;
+    private static String publicURL;
 
-    @Value("${server.file.publicPath}")
-    public static void setServiceUrl(String serviceUrl) {
-        WebFileUtil.serviceUrl = serviceUrl;
+    @Value("${custom.file.publicURL}")
+    public  void setPublicURL(String publicURL) {
+        WebFileUtil.publicURL = publicURL;
     }
 
     @Value("${server.file.uploadDir}")
     public  void setUploadDir(String up) {
-        uploadDir = up;
+        WebFileUtil.uploadDir = up;
     }
 
     static MyLogger logger = LogUtil.getLogger(WebFileUtil.class);
@@ -153,9 +151,10 @@ public class WebFileUtil {
      */
     private static String makePath(boolean isShow,String tmpDir, String ... name) {
         System.out.println(uploadDir);
+        System.out.println(publicURL);
         String tmpPath =
                 isShow ?
-                        serviceUrl
+                        publicURL
                                 +new SimpleDateFormat("yyyyMMdd").format(new Date())
                                 +File.separator+tmpDir
                         :

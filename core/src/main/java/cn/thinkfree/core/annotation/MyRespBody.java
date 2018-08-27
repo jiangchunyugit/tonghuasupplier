@@ -15,6 +15,6 @@ import static java.lang.annotation.ElementType.METHOD;
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(METHOD)
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*",allowedHeaders = {"Content-Type","XFILENAME","XFILECATEGORY","XFILESIZE","x-requested-with","Authorization"})
 public @interface MyRespBody {
 }

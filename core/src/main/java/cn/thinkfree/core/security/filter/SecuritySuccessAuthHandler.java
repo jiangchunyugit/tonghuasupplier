@@ -16,10 +16,12 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +35,8 @@ public class SecuritySuccessAuthHandler
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private boolean forwardToDestination = false;
 
-//    @Autowired
-//    JwtUtils jwtUtils;
+    @Autowired
+    JwtUtils jwtUtils;
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
@@ -62,11 +64,13 @@ public class SecuritySuccessAuthHandler
         userModel.put("name",user.getName());
         userModel.put("createTime",user.getCreateTime());
         result.put("userModel",userModel);
-//        String token = jwtUtils.generateToken(user);
-//        System.out.println(token);
-//        result.put("token",token);
-        saveMessage(request, result);
-        request.getRequestDispatcher("/index").forward(request, response);
+        String token = jwtUtils.generateToken(user);
+        System.out.println(token);
+        result.put("token",token);
+
+        sendAjaxResult(request,response,result);
+//        saveMessage(request, result);
+//        request.getRequestDispatcher("/index").forward(request, response);
 
     }
 
@@ -76,17 +80,18 @@ public class SecuritySuccessAuthHandler
      *
      * @param request
      * @param response
+     * @param result
      * @throws IOException
      */
-    private void sendAjaxResult(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    private void sendAjaxResult(HttpServletRequest request, HttpServletResponse response, Map<String, Object> result) throws IOException {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin","*");
-        MyRespBundle<String> resp = new MyRespBundle<>();
+        MyRespBundle<Map> resp = new MyRespBundle<>();
         resp.setTimestamp(Instant.now().toEpochMilli());
         resp.setMessage("登录成功!");
         resp.setCode(200);
-        resp.setData("登录成功!");
+        resp.setData(result);
         response.getWriter().write(new Gson().toJson(resp));
 
     }
