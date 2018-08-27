@@ -85,7 +85,11 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      */
     @Override
     public IndexProjectReportVO countProjectReportVO(List<String> companyRelationMap) {
-        return preProjectCompanySetMapper.countCompanyProject(companyRelationMap);
+        IndexProjectReportVO indexProjectReportVO = preProjectCompanySetMapper.countCompanyProject(companyRelationMap);
+        if(null == indexProjectReportVO){
+            return new IndexProjectReportVO().init();
+        }
+        return indexProjectReportVO;
     }
 
     /**
@@ -467,8 +471,11 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
      */
     @Override
     public IndexProjectReportVO countProjectForPerson(String userID) {
-
-        return preProjectCompanySetMapper.countProjectForPerson(userID);
+        IndexProjectReportVO indexProjectReportVO = preProjectCompanySetMapper.countProjectForPerson(userID);
+        if(null == indexProjectReportVO){
+            return new IndexProjectReportVO().init();
+        }
+        return indexProjectReportVO;
     }
 
     /**

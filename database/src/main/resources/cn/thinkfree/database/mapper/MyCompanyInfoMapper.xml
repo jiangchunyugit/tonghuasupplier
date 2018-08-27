@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.CompanyInfoMapper">
 
+    <resultMap id="CompanyInfoVo" type="cn.thinkfree.database.vo.CompanyInfoVo" extends="BaseResultMap">
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    </resultMap>
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
       select
         company_id
@@ -63,29 +68,43 @@
         <include refid="Base_Column_List" />
         FROM
         company_info
-        <!--<where>-->
-            <!--and is_delete = 2-->
-            <!--<if test="companyId != null and companyId != ''">-->
-              <!--and company_id = #{companyId}-->
-            <!--</if>-->
-            <!--<if test="provinceCode != null and parentCompanyId == 2">-->
-                <!--and province_code = #{provinceCode}-->
-            <!--</if>-->
-            <!--<if test="cityCode != null and parentCompanyId == 3">-->
-                <!--and city_code = #{cityCode}-->
-            <!--</if>-->
-            <!--<if test="areaCode != null and parentCompanyId == 4">-->
-                <!--and area_code = #{areaCode}-->
-            <!--</if>-->
-            <!--<if test="legalName != null and legalName != ''">-->
-                <!--and legal_name like #{legalName}-->
-            <!--</if>-->
-            <!--<if test="legalPhone != null and legalPhone != ''">-->
-                <!--and legal_phone like #{legalPhone}-->
-            <!--</if>-->
+        <where>
+            and is_delete = 2
+            <if test="companyId != null and companyId != ''">
+              and company_id = #{companyId}
+            </if>
+            <if test="provinceCode != null and provinceCode != ''">
+                and province_code = #{provinceCode}
+            </if>
+            <if test="cityCode != null and cityCode != ''">
+                and city_code = #{cityCode}
+            </if>
+            <if test="areaCode != null and areaCode != ''">
+                and area_code = #{areaCode}
+            </if>
+            <if test="legalName != null and legalName != ''">
+                and legal_name like #{legalName}
+            </if>
+            <if test="legalPhone != null and legalPhone != ''">
+                and legal_phone like #{legalPhone}
+            </if>
 
-        <!--</where>-->
+        </where>
 
 
     </select>
+
+    <select id="selectByCompanyId" parameterType="string" resultMap="CompanyInfoVo">
+        select info.lbs,info.address,info.company_name,info.company_id,
+        info.telephone,info.legal_name,info.legal_phone,info.city_code,
+        info.province_code,info.area_code,
+        province.province_name, city.city_name, area.area_name
+        from company_info info left join province province on
+        info.province_code = province.province_code left join
+        city city on info.city_code = city.city_code left join
+        area area on info.area_code = area.area_code
+        where info.company_id = #{companyId}
+
+    </select>
+
 </mapper>

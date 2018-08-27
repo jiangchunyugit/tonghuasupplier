@@ -62,22 +62,27 @@
 
     <select id="findByUserId" parameterType="java.lang.String" resultMap="StaffsVO">
         select cu.*, ro.role_name, co.company_name  from company_user_set cu
-        join user_role_set ro on cu.role_id = ro.role_code
-        join company_info co on cu.company_id = co.company_id where cu.user_id=#{userId}
+       left join user_role_set ro on cu.role_id = ro.role_code
+       left join company_info co on cu.company_id = co.company_id where cu.user_id=#{userId}
     </select>
 
-    <update id="updateIsJob" parameterType="java.lang.Integer">
+    <update id="updateIsJob" parameterType="java.lang.String">
         UPDATE company_user_set SET is_job=2 WHERE user_id=#{userId}
     </update>
 
     <select id="staffByCompanyID" parameterType="string" resultMap="BaseResultMap">
 
-        select c.company_id,c.is_job,c.phone,c.name,c.bind_time,c.user_id,c.id from company_user_set c
-        where c.company_id = #{companyId}
+        select us.*, com.company_name from company_user_set us join company_info com on us.company_id = com.company_id
+        <where>
+            <if test="companyId !=null and companyId!=''">
+                and us.company_id=#{companyId}
+            </if>
+
+        </where>
     </select>
 
     <select id="findStaffByParam" resultMap="StaffsVO" parameterType="cn.thinkfree.database.vo.StaffSEO">
-        select *, com.company_name from company_user_set us join company_info com on us.company_id = com.company_id
+        select us.*, com.company_name from company_user_set us join company_info com on us.company_id = com.company_id
         <where>
             <if test="name!=null and name!=''">
                 and us.name like #{name}
@@ -92,13 +97,13 @@
                 and us.is_job = #{isJob}
             </if>
             <if test="provinceCode !=null and provinceCode!=''">
-                and us.provinve_code=#{provinceCode}
+                and com.province_code=#{provinceCode}
             </if>
             <if test="cityCode !=null and cityCode!=''">
-                and us.city_code=#{cityCode}
+                and com.city_code=#{cityCode}
             </if>
             <if test="areaCode !=null and areaCode!=''">
-                and us.area_code=#{areaCode}
+                and com.area_code=#{areaCode}
             </if>
             <if test="companyId !=null and companyId!=''">
                 and us.company_id=#{companyId}

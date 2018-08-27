@@ -43,15 +43,6 @@ public class PcUserInfoController extends AbsBaseController {
     @RequestMapping(value = "/saveByUserInfo", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="新增")
-    /*@ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "pcUserInfo", value = "账户信息是json字符串,其他不是参数，是json字段命名", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "companyId", value = "公司ID", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "name", value = "姓名", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "regPhone", value = "账号", required = true, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "memo", value = "备注", required = false, dataType = "String")
-    })*/
     public MyRespBundle<String> saveByUserInfo(@ApiParam("账户信息")PcUserInfoVo pcUserInfoVo){
 
         boolean flag = pcUserInfoService.saveUserInfo(pcUserInfoVo);

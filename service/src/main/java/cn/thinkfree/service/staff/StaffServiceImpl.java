@@ -5,6 +5,7 @@ import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
+import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -14,6 +15,7 @@ import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -82,16 +84,21 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     @Override
     @Transactional
     public String insetCompanyUser(CompanyUserSet companyUserSet) {
+        //判断输入的手机号码是否已经注册过
+        List<String> phones = userRegisterMapper.findPhoneAll();
+        boolean flag = phones.contains(companyUserSet.getPhone());
+        if(flag){
+            return "手机号码已被注册过，请更换手机号码！！";
+        }
         Date date = new Date();
         String activationCode = RandomNumUtils.random(6);
-        //TODO
         String userID = UserNoUtils.getUserNo(companyUserSet.getRoleId());
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         printInfoMes("插入员工记录表");
         companyUserSet.setBindTime(new Date());
         companyUserSet.setActivationCode(activationCode);
-        companyUserSet.setIsBind(SysConstants.YesOrNo.NO.shortVal());
-        companyUserSet.setIsJob(SysConstants.YesOrNo.YES.shortVal());
+        companyUserSet.setIsBind(OneTrue.YesOrNo.NO.shortVal());
+        companyUserSet.setIsJob(OneTrue.YesOrNo.YES.shortVal());
         companyUserSet.setUserId(userID);
         companyUserSet.setCompanyId(userVO.getCompanyID());
 
@@ -107,7 +114,6 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         //默认密码123456
         userRegister.setPassword(md5.encode("123456"));
         userRegister.setRegisterTime(date);
-        userRegister.setType(UserRegisterType.Staff.shortVal());
         userRegister.setUpdateTime(date);
         userRegisterMapper.insertSelective(userRegister);
 
@@ -203,11 +209,11 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      */
     @Override
     public PageInfo<StaffsVO> queryStaffList(StaffSEO staffSEO) {
-        if(null != staffSEO.getName() && !"".equals(staffSEO.getName())){
+        if(StringUtils.isNotBlank(staffSEO.getName())){
             String name = staffSEO.getName();
             staffSEO.setName("%"+name+"%");
         }
-        if(null != staffSEO.getPhone() && !"".equals(staffSEO.getPhone())){
+        if(StringUtils.isNotBlank(staffSEO.getPhone())){
             String phone = staffSEO.getPhone();
             staffSEO.setPhone("%"+phone+"%");
         }
@@ -237,7 +243,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     public boolean isJob(String userId){
         IndexProjectReportVO indexProjectReportVO = preProjectCompanySetMapper.countProjectForPerson(userId);
 
-        if(indexProjectReportVO.getWorking() > 0){
+        if(indexProjectReportVO != null && indexProjectReportVO.getWorking() > 0){
             return true;
         }
         return false;
@@ -271,12 +277,12 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         if(isJob(userId)){
             return "该员工还有进行中的项目请先移交项目后，再修改岗位";
         }
-        PreProjectUserRole preProjectUserRole = new PreProjectUserRole();
-//        preProjectUserRole.setUserId(userId);
-        preProjectUserRole.setRoleId(roleId);
-        PreProjectUserRoleExample example = new PreProjectUserRoleExample();
+        CompanyUserSet companyUserSet = new CompanyUserSet();
+        companyUserSet.setUserId(userId);
+        companyUserSet.setRoleId(roleId);
+        CompanyUserSetExample example = new CompanyUserSetExample();
         example.createCriteria().andUserIdEqualTo(userId);
-        int line = preProjectUserRoleMapper.updateByExampleSelective(preProjectUserRole,example);
+        int line = companyUserSetMapper.updateByExampleSelective(companyUserSet,example);
         if(line > 0){
             return "操作成功";
         }

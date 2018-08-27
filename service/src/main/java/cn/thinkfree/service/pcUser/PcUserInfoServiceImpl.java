@@ -1,5 +1,6 @@
 package cn.thinkfree.service.pcUser;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.database.constants.UserEnabled;
@@ -89,6 +90,12 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     @Transactional
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
+        //判断输入的手机号码是否已经注册过
+        List<String> phones = userRegisterMapper.findPhoneAll();
+        boolean flag = phones.contains(pcUserInfoVo.getPhone());
+        if(flag){
+            return false;
+        }
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         String userId = UserNoUtils.getUserNo("pc");
         Date date = new Date();
@@ -113,6 +120,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         //注册表
         UserRegister userRegister = new UserRegister();
         userRegister.setRegisterTime(date);
+        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
         userRegister.setType(UserRegisterType.Staff.shortVal());
         userRegister.setUpdateTime(date);
         MultipleMd5 md5 = new MultipleMd5();
@@ -126,11 +134,10 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         int pcLine = pcUserInfoMapper.insertUserInfoVo(pcUserInfoVo);
         int regLine = userRegisterMapper.insertSelective(userRegister);
 
-        boolean flag = false;
         if(pcLine > 0 && regLine > 0){
-            flag = true;
+            return true;
         }
-        return flag;
+        return false;
     }
 
     /**

@@ -45,6 +45,7 @@ public class ProjectVO extends PreProjectGuide {
     private String houseTypeName;
 
 
+
     public String getCompanyName() {
         return companyName;
     }

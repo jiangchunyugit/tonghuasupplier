@@ -3,6 +3,8 @@ package cn.thinkfree.service.company;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.vo.CompanyInfoSEO;
+import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.database.vo.StaffsVO;
 import cn.thinkfree.database.vo.UserVO;
 import com.github.pagehelper.PageInfo;
 
@@ -28,7 +30,7 @@ public interface CompanyInfoService {
     /**
      * 员工信息
      */
-    PageInfo<CompanyUserSet> staffMessage(String companyId, Integer page, Integer rows);
+    PageInfo<StaffsVO> staffMessage(String companyId, Integer page, Integer rows);
 
 
     /**
@@ -36,5 +38,5 @@ public interface CompanyInfoService {
      * @param companyId
      * @return
      */
-    List<CompanyInfo> companyDetails(String companyId);
+    CompanyInfoVo companyDetails(String companyId);
 }

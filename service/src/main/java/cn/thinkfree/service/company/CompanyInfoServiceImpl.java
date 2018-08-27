@@ -5,6 +5,8 @@ import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
 import cn.thinkfree.database.vo.CompanyInfoSEO;
+import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.database.vo.StaffsVO;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
@@ -54,7 +56,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     @Transactional
     public int updateCompanyInfo(CompanyInfo companyInfo) {
         CompanyInfoExample example = new CompanyInfoExample();
-        example.createCriteria().andIdEqualTo(companyInfo.getId());
+        example.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
 
         return companyInfoMapper.updateByExampleSelective(companyInfo,example);
     }
@@ -74,18 +76,16 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         return new PageInfo<>(companyInfos);
     }
     @Override
-    public PageInfo<CompanyUserSet> staffMessage(String companyId, Integer page, Integer rows) {
+    public PageInfo<StaffsVO> staffMessage(String companyId, Integer page, Integer rows) {
 
         PageHelper.startPage(page, rows);
-        List<CompanyUserSet> companyUserSets = companyUserSetMapper.staffByCompanyID(companyId);
+        List<StaffsVO> companyUserSets = companyUserSetMapper.staffByCompanyID(companyId);
         return new PageInfo<>(companyUserSets);
     }
 
     @Override
-    public List<CompanyInfo> companyDetails(String companyId) {
-        CompanyInfoExample example = new CompanyInfoExample();
-        example.createCriteria().andCompanyIdEqualTo(companyId);
+    public CompanyInfoVo companyDetails(String companyId) {
 
-        return companyInfoMapper.selectByExample(example);
+        return companyInfoMapper.selectByCompanyId(companyId);
     }
 }

@@ -137,5 +137,5 @@ public interface CompanyUserSetMapper {
      * @param companyId
      * @return
      */
-    List<CompanyUserSet> staffByCompanyID(String companyId);
+    List<StaffsVO> staffByCompanyID(String companyId);
 }

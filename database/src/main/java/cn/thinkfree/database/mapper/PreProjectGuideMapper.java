@@ -140,5 +140,5 @@ public interface PreProjectGuideMapper {
      * @param status
      * @return
      */
-    List<ProjectVO> selectProjectVOForCompany(@Param("companyID") String userID,@Param("status") Integer status);
+    List<ProjectVO> selectProjectVOForCompany(@Param("companyID") String companyID,@Param("status") Integer status);
 }
