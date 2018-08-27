@@ -70,8 +70,8 @@
         company_info
         <where>
             and is_delete = 2
-            <if test="companyId != null and companyId != ''">
-              and company_id = #{companyId}
+            <if test="companyName != null and companyName != ''">
+              and company_name like #{companyName}
             </if>
             <if test="provinceCode != null and provinceCode != ''">
                 and province_code = #{provinceCode}

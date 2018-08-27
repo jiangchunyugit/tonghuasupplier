@@ -11,11 +11,10 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import springfox.documentation.schema.Example;
-import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 
 import java.util.Date;
@@ -63,13 +62,17 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Override
     public PageInfo<CompanyInfo> list(CompanyInfoSEO companyInfoSEO) {
-        if(null != companyInfoSEO.getLegalName() && !"".equals(companyInfoSEO.getLegalName())){
+        if(!StringUtils.isBlank(companyInfoSEO.getLegalName())){
             String name = companyInfoSEO.getLegalName();
             companyInfoSEO.setLegalName("%"+name+"%");
         }
-        if(null != companyInfoSEO.getLegalPhone() && !"".equals(companyInfoSEO.getLegalPhone())){
+        if(!StringUtils.isBlank(companyInfoSEO.getLegalPhone())){
             String phone = companyInfoSEO.getLegalPhone();
             companyInfoSEO.setLegalPhone("%"+phone+"%");
+        }
+        if(!StringUtils.isBlank(companyInfoSEO.getCompanyName())){
+            String companyName = companyInfoSEO.getCompanyName();
+            companyInfoSEO.setCompanyName("%"+companyName+"%");
         }
         PageHelper.startPage(companyInfoSEO.getPage(),companyInfoSEO.getRows());
         List<CompanyInfo> companyInfos = companyInfoMapper.selectCompanyByParam(companyInfoSEO);

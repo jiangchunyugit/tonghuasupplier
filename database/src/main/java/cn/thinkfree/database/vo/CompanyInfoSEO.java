@@ -18,7 +18,7 @@ public class CompanyInfoSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("区id")
     private String areaCode;
 
-    @ApiModelProperty("公司id")
+    @ApiModelProperty("公司id,不用这个字段")
     private String companyId;
 
     @ApiModelProperty("法人名称")
@@ -26,6 +26,16 @@ public class CompanyInfoSEO extends AbsPageSearchCriteria  {
 
     @ApiModelProperty("法人电话号码")
     private String legalPhone;
+
+    private String companyName;
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
 
     public String getProvinceCode() {
         return provinceCode;
