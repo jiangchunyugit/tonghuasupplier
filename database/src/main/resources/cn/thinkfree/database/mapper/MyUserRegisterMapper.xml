@@ -47,4 +47,8 @@
         where user_id = #{userId,jdbcType=VARCHAR}
     </update>
 
+    <select id="findPhoneAll" resultType="java.lang.String">
+
+        select phone from user_register
+    </select>
 </mapper>

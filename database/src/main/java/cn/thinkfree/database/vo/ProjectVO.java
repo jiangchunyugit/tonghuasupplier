@@ -38,6 +38,7 @@ public class ProjectVO extends PreProjectGuide {
     @ApiModelProperty("所属公司名称")
     public String companyName;
 
+
     public String getCompanyName() {
         return companyName;
     }

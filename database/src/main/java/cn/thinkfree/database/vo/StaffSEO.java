@@ -35,10 +35,10 @@ public class StaffSEO extends AbsPageSearchCriteria{
     private Integer isJob;
 
     public Integer getIsJob() {
-        if("3".equals(getStatus()) || getStatus() == 3){
+        if(getStatus() != null && ("3".equals(getStatus()) || getStatus() == 3)){
             isJob = 2;
         }else{
-            isJob = null;
+            isJob = 1;
         }
         return isJob;
     }
@@ -48,12 +48,10 @@ public class StaffSEO extends AbsPageSearchCriteria{
     }
 
     public Integer getIsBind() {
-        if("1".equals(getStatus()) || getStatus() == 1){
+        if(getStatus() != null && ("1".equals(getStatus()) || getStatus() == 1)){
             isBind = 1;
-        }else if("2".equals(getStatus()) || getStatus() == 2){
+        }else if(getStatus() != null && ("2".equals(getStatus()) || getStatus() == 2)){
             isBind = 2;
-        }else{
-            isBind = null;
         }
         return isBind;
     }

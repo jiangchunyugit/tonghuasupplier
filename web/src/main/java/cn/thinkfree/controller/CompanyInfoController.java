@@ -6,9 +6,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.SystemMessage;
-import cn.thinkfree.database.vo.CompanyInfoSEO;
-import cn.thinkfree.database.vo.IndexProjectReportVO;
-import cn.thinkfree.database.vo.ProjectVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.company.CompanyInfoService;
 import cn.thinkfree.service.project.ProjectService;
 import com.github.pagehelper.PageInfo;
@@ -117,10 +115,10 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/staffMseeage",method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司：员工信息")
-    public MyRespBundle<PageInfo<CompanyUserSet>> staffMessage(
+    public MyRespBundle<PageInfo<StaffsVO>> staffMessage(
             @RequestParam("company_id")String company_id,@RequestParam("page")Integer page,@RequestParam("rows")Integer rows) {
 
-        PageInfo<CompanyUserSet> companyUserSet = companyInfoService.staffMessage(company_id,page,rows);
+        PageInfo<StaffsVO> companyUserSet = companyInfoService.staffMessage(company_id,page,rows);
         return sendJsonData(ResultMessage.SUCCESS,companyUserSet);
     }
 
@@ -133,9 +131,9 @@ public class CompanyInfoController extends AbsBaseController{
     @RequestMapping(value = "/companyDetails", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="子公司管理：公司详情")
-    public MyRespBundle<PageInfo<ProjectVO>> companyDetails(@RequestParam(value = "companyId") String companyId){
+    public MyRespBundle<PageInfo<CompanyInfoVo>> companyDetails(@RequestParam(value = "companyId") String companyId){
 
-        List<CompanyInfo> companyInfo = companyInfoService.companyDetails(companyId);
+        CompanyInfoVo companyInfo = companyInfoService.companyDetails(companyId);
 
         return sendJsonData(ResultMessage.SUCCESS, companyInfo);
     }

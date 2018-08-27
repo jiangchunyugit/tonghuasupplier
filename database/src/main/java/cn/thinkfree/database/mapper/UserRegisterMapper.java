@@ -113,4 +113,10 @@ public interface UserRegisterMapper {
      * @return
      */
     int updateByUserId(UserRegister userRegister);
+
+    /**
+     * 查询所有注册过的手机号码
+     * @return
+     */
+    List<String> findPhoneAll();
 }

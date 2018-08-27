@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.CompanyInfoExample;
 import java.util.List;
 
 import cn.thinkfree.database.vo.CompanyInfoSEO;
+import cn.thinkfree.database.vo.CompanyInfoVo;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -101,4 +102,11 @@ public interface CompanyInfoMapper {
      * @return
      */
     List<CompanyInfo> selectCompanyByParam(CompanyInfoSEO companyInfoSEO);
+
+    /**
+     * 查询公司详细信息
+     * @param companyId
+     * @return
+     */
+    CompanyInfoVo selectByCompanyId(String companyId);
 }

@@ -129,8 +129,8 @@
             ppg.status,
             ppg.project_starttime,
             ppg.project_endtime,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
+          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
 
         from
         pre_project_guide ppg
@@ -140,7 +140,7 @@
         and ppg.is_delete = 0
         and ppur.is_job = 1
         and  ppur.is_transfer = 0
-        <if test="status != null">
+        <if test="status != null and status != 100">
             and ppg.status = #{status}
         </if>
     </select>
@@ -159,18 +159,17 @@
         ppg.status,
         ppg.project_starttime,
         ppg.project_endtime,
-        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '管家') as stewardName,
-        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = '项目经理') as projectManagerName
+        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
+        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
 
         from
         pre_project_guide ppg
         join  pre_project_company_set ppcs on ppg.project_no = ppcs.project_no
         where
-        ppur.user_id = #{userID}
-        and ppg.is_delete = 0
+        ppg.is_delete = 0
         and ppcs.is_delete = 0
         and ppcs.company_id = #{companyID}
-        <if test="status != null">
+        <if test="status != null and status != 100">
             and ppg.status = #{status}
         </if>
     </select>
