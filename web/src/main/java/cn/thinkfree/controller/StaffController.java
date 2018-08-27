@@ -183,16 +183,16 @@ public class StaffController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value = "员工详情--->移除员工")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String")
+            @ApiImplicitParam(paramType="String", name = "userId", value = "userId", required = true, dataType = "String")
     })
-    public MyRespBundle<String> delete(@RequestParam(value = "userId") String userId){
+    public MyRespBundle<String> delete(@RequestParam(value = "userId",defaultValue = "") String  userId){
 
         int line = staffService.updateIsJob(userId);
+        System.out.println(line);
+        System.out.println(line);
 
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
-        }
-        return sendJsonData(ResultMessage.FAIL, line);
+        return sendJsonData(ResultMessage.SUCCESS, line);
+
     }
 
     /**
