@@ -72,7 +72,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         }
         if(!StringUtils.isBlank(companyInfoSEO.getCompanyName())){
             String companyName = companyInfoSEO.getCompanyName();
-            companyInfoSEO.setLegalPhone("%"+companyName+"%");
+            companyInfoSEO.setCompanyName("%"+companyName+"%");
         }
         PageHelper.startPage(companyInfoSEO.getPage(),companyInfoSEO.getRows());
         List<CompanyInfo> companyInfos = companyInfoMapper.selectCompanyByParam(companyInfoSEO);
