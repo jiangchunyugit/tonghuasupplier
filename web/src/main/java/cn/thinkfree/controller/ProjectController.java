@@ -10,6 +10,7 @@ import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectMaterial;
+import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.project.ProjectService;
@@ -19,6 +20,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,8 +46,8 @@ public class ProjectController extends AbsBaseController {
     @ApiOperation(value = "项目列表", notes = "根据一定条件获取分页项目记录")
     @GetMapping("/list")
     @MyRespBody
-    public MyRespBundle<PageInfo<ProjectVO>> list(@ApiParam("项目搜索条件") ProjectSEO projectSEO){
-
+    public MyRespBundle<PageInfo<ProjectVO>> list(@ApiParam("项目搜索条件")   ProjectSEO projectSEO){
+//        BeanValidator.validate(projectSEO);
         PageInfo<ProjectVO> pageInfo = projectService.pageProjectBySEO(projectSEO);
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 @ApiModel("项目搜索条件")
 public class ProjectSEO extends AbsPageSearchCriteria {
@@ -13,11 +14,13 @@ public class ProjectSEO extends AbsPageSearchCriteria {
      * 省
      */
     @ApiModelProperty("省份编码")
+
     private String province;
     /**
      * 市
      */
     @ApiModelProperty("市编码")
+
     private String city;
     /**
      * 县

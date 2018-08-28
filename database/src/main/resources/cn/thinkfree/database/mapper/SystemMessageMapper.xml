@@ -33,6 +33,9 @@
       #{sendUserId,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.SystemMessage">
+    <selectKey resultType="java.lang.Integer"  order="AFTER" keyProperty="id" >
+      SELECT currval('pc_system_message_id_seq') AS id
+    </selectKey>
     insert into pc_system_message
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

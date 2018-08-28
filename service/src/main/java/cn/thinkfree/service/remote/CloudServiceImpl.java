@@ -1,5 +1,6 @@
 package cn.thinkfree.service.remote;
 
+import cn.thinkfree.database.model.SystemMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ public class CloudServiceImpl implements CloudService {
     String projectUpOnlineUrl;
     @Value("${custom.cloud.sendSmsUrl}")
     String sendSmsUrl;
+    @Value("${custom.cloud.sendNotice}")
+    String sendNotice;
+
+    @Value("${custom.cloud.noticeShowUrl}")
+    String noticeShowUrl;
 
     static Integer SuccessCode = 1000;
 
@@ -85,13 +91,26 @@ public class CloudServiceImpl implements CloudService {
 
     /**
      * 发送公告
-     * TODO 等待前端定制业务后再做
-     * @param noticeNo 公告主键
+     * @param systemMessage 公告主键
      * @param receive  接收人
      * @return
      */
     @Override
-    public RemoteResult<String> sendNotice(String noticeNo, List<String> receive) {
-        return null;
+    public RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive) {
+        MultiValueMap<String, Object> param = initParam();
+        param.add("content", systemMessage.getContent());
+        param.add("skipUrl",noticeShowUrl+systemMessage.getId());
+        param.add("title",systemMessage.getTitle());
+        param.add("companyNo",systemMessage.getCompanyId());
+        param.add("senderNo",systemMessage.getSendUserId());
+        param.add("userNo",receive);
+        RemoteResult<String> result = null;
+        try {
+            result = invokeRemoteMethod(sendNotice,param);
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
     }
 }

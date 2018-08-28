@@ -5,6 +5,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.utils.VersionUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ValidationException;
 import java.time.Instant;
 
 
@@ -58,7 +60,20 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		return buildErrorInfo(HttpStatus.UNAUTHORIZED, e, req);
     }
 
-	
+    @ExceptionHandler(value = ValidationException.class)
+	@ResponseBody
+	public MyRespBundle<String> exceptionHandler(HttpServletRequest req, HttpServletResponse response, ValidationException e) throws Exception {
+		responseHandler(response, HttpStatus.BAD_REQUEST);
+		return buildErrorInfo(HttpStatus.BAD_REQUEST, e, req);
+	}
+	@ExceptionHandler(value = BindException.class)
+	@ResponseBody
+	public MyRespBundle<String> exceptionHandler(HttpServletRequest req, HttpServletResponse response, BindException e) throws Exception {
+		System.out.println(e);
+		responseHandler(response, HttpStatus.BAD_REQUEST);
+		return buildErrorInfo(HttpStatus.BAD_REQUEST, e, req);
+	}
+
 
 	@ExceptionHandler(value = Exception.class)
     @ResponseBody
@@ -73,6 +88,17 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		if(response != null)
 			response.setStatus(status.value());
 	}
+
+	private MyRespBundle<String> buildErrorInfo(HttpStatus code, ValidationException e, HttpServletRequest req){
+		printErrorMes(e.getMessage());
+		e.printStackTrace();
+		MyRespBundle<String> resp = buildErrorInfo(code, e.getMessage(), req);
+		resp.setData(e.getMessage());
+		resp.setMessage("参数错误");
+		return  resp;
+	}
+
+
 
 	private MyRespBundle<String> buildErrorInfo(HttpStatus code, Exception e, HttpServletRequest req){
 		printErrorMes(e.getMessage());

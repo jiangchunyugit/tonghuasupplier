@@ -66,7 +66,7 @@ public class SecuritySuccessAuthHandler
         result.put("userModel",userModel);
         String token = jwtUtils.generateToken(user);
         System.out.println(token);
-        result.put("token",token);
+        result.put("token","Bearer "+token);
 
         sendAjaxResult(request,response,result);
 //        saveMessage(request, result);

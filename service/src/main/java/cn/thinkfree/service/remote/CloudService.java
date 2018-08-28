@@ -1,5 +1,7 @@
 package cn.thinkfree.service.remote;
 
+import cn.thinkfree.database.model.SystemMessage;
+
 import java.util.List;
 
 public interface CloudService {
@@ -22,9 +24,9 @@ public interface CloudService {
 
     /**
      * 发送公告
-     * @param noticeNo 公告主键
+     * @param systemMessage 公告
      * @param receive  接收人
      * @return
      */
-      RemoteResult<String> sendNotice(String noticeNo, List<String> receive);
+      RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 }

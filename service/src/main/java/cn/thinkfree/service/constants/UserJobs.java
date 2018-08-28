@@ -1,5 +1,8 @@
 package cn.thinkfree.service.constants;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum  UserJobs {
 
     /**
@@ -26,5 +29,10 @@ public enum  UserJobs {
         this.code = code;
         this.mes = mes;
         this.roleCode = roleCode;
+    }
+
+    public static UserJobs findByCode(String code){
+        Optional<UserJobs> op = Arrays.stream(UserJobs.values()).filter(j -> Short.valueOf(code).equals(j.code.shortValue())).findFirst();
+       return op.isPresent() ? op.get():null;
     }
 }

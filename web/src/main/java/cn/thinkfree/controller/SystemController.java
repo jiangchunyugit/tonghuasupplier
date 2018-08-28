@@ -5,8 +5,11 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.SpringContextHolder;
+import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.IndexMenuVO;
 import cn.thinkfree.service.index.IndexService;
+import cn.thinkfree.service.remote.CloudService;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,8 @@ public class SystemController extends AbsBaseController {
     @Autowired
     IndexService indexService;
 
+    @Autowired
+    CloudService cloudService;
 
     /**
      * 获取首页菜单
@@ -41,7 +46,7 @@ public class SystemController extends AbsBaseController {
 
 
     @RequestMapping("/loginPage")
-    public String test(){
+    public String loginPage(){
         ApplicationContext ac = SpringContextHolder.getApplicationContext();
         System.out.println(ac);
         System.out.println("gotoLogin");
@@ -59,6 +64,18 @@ public class SystemController extends AbsBaseController {
         System.out.println(page);
         int pos = page.indexOf("?");
         return  (pos > -1? page.substring(0,pos)  :page);
+    }
+
+    @RequestMapping("/test")
+    public void test(){
+        SystemMessage systemMessage = new SystemMessage();
+        systemMessage.setCompanyId("2");
+        systemMessage.setSendUserId("1");
+        systemMessage.setTitle("1");
+        systemMessage.setContent("2");
+        systemMessage.setId(1);
+        systemMessage.setSendUser("user");
+        cloudService.sendNotice(systemMessage, Lists.newArrayList("1"));
     }
 
 

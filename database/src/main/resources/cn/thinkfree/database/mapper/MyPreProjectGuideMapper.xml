@@ -45,8 +45,14 @@
             ppg.status,
             ci.company_name,
             ppht.house_illustrate as houseTypeName,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
+          (SELECT
+              tpur.user_name
+            FROM
+              pre_project_user_role tpur
+            where tpur.project_no = ppg.project_no
+            and tpur.role_id = 'CS'
+            and tpur.is_transfer =0 and tpur.is_job = 1) as stewardName,
+          (SELECT tpur.user_name FROM pre_project_user_role tpur where tpur.project_no = ppg.project_no and tpur.role_id = 'CP' and tpur.is_job = 1 and tpur.is_transfer=0) as projectManagerName
         FROM
           pre_project_guide ppg
         JOIN pre_project_company_set ppcs ON ppg.project_no = ppcs.project_no
@@ -132,8 +138,14 @@
             ppg.status,
             ppg.project_starttime,
             ppg.project_endtime,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
-          (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
+        (SELECT
+        tpur.user_name
+        FROM
+        pre_project_user_role tpur
+        where tpur.project_no = ppg.project_no
+        and tpur.role_id = 'CS'
+        and tpur.is_transfer =0 and tpur.is_job = 1) as stewardName,
+        (SELECT tpur.user_name FROM pre_project_user_role tpur where tpur.project_no = ppg.project_no and tpur.role_id = 'CP' and tpur.is_job = 1 and tpur.is_transfer=0) as projectManagerName
 
         from
         pre_project_guide ppg
@@ -162,8 +174,14 @@
         ppg.status,
         ppg.project_starttime,
         ppg.project_endtime,
-        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CS') as stewardName,
-        (SELECT user_name FROM pre_project_user_role where project_no = ppg.project_no and role_id = 'CP') as projectManagerName
+        (SELECT
+        tpur.user_name
+        FROM
+        pre_project_user_role tpur
+        where tpur.project_no = ppg.project_no
+        and tpur.role_id = 'CS'
+        and tpur.is_transfer =0 and tpur.is_job = 1) as stewardName,
+        (SELECT tpur.user_name FROM pre_project_user_role tpur where tpur.project_no = ppg.project_no and tpur.role_id = 'CP' and tpur.is_job = 1 and tpur.is_transfer=0) as projectManagerName
 
         from
         pre_project_guide ppg
