@@ -630,6 +630,8 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             PreProjectUserRole preProjectUserRole = new PreProjectUserRole();
             preProjectUserRole.setRoleId(vo.getRoleId());
             preProjectUserRole.setUserId(vo.getUserId());
+            preProjectUserRole.setIsJob(SysConstants.YesOrNo.YES.shortVal());
+            preProjectUserRole.setIsTransfer(SysConstants.YesOrNo.NO.shortVal());
             PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
             preProjectUserRoleExample.createCriteria().andIdEqualTo(vo.getId());
             preProjectUserRoleMapper.updateByExampleSelective(preProjectUserRole,preProjectUserRoleExample);

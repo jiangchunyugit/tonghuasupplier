@@ -35,6 +35,18 @@ public class BeanValidator {
         throw new ValidationException(convertErrorMsg(constraintViolations));
     }
 
+    public static <T> void validate(T object,Class kls) {
+        //获得验证器
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        //执行验证
+        Set<ConstraintViolation<T>> constraintViolations = validator.validate(object,kls);
+        //如果有验证信息，则取出来包装成异常返回
+        if (CollectionUtils.isEmpty(constraintViolations)) {
+            return;
+        }
+        throw new ValidationException(convertErrorMsg(constraintViolations));
+    }
+
     /**
      * 转换异常信息
      * @param set
