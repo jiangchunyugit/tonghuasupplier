@@ -251,15 +251,26 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         return false;
     }
     /**
-     * 移除员工  修改isJob字段
+     * 移除员工  修改isJob字段  userRegister 修改isDelete字段
      * @param userId
      * @return
      */
     @Override
     @Transactional
-    public int updateIsJob(String userId){
-
-        return companyUserSetMapper.updateIsJob(userId);
+    public boolean updateIsJob(String userId){
+        //修改注册表is_delete
+        UserRegister userRegister = new UserRegister();
+        userRegister.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        userRegister.setUserId(userId);
+        UserRegisterExample example = new UserRegisterExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        int line = userRegisterMapper.updateByExampleSelective(userRegister, example);
+        //修改companyUserSet表is_job
+        int setLine = companyUserSetMapper.updateIsJob(userId);
+        if(line > 0 && setLine > 0){
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -279,13 +290,22 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         if(isJob(userId)){
             return "该员工还有进行中的项目请先移交项目后，再修改岗位";
         }
+        //companyUserSet表
         CompanyUserSet companyUserSet = new CompanyUserSet();
         companyUserSet.setUserId(userId);
         companyUserSet.setRoleId(roleId);
         CompanyUserSetExample example = new CompanyUserSetExample();
         example.createCriteria().andUserIdEqualTo(userId);
         int line = companyUserSetMapper.updateByExampleSelective(companyUserSet,example);
-        if(line > 0){
+
+        //userInfo表
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUserId(userId);
+        userInfo.setRoleId(roleId);
+        UserInfoExample example1 = new UserInfoExample();
+        example1.createCriteria().andUserIdEqualTo(userId);
+        int infoLine = userInfoMapper.updateByExampleSelective(userInfo, example1);
+        if(line > 0 && infoLine > 0){
             return "操作成功";
         }
         return "操作失败";

@@ -65,7 +65,7 @@ public interface StaffService {
      * @param userId
      * @return
      */
-    int updateIsJob(String userId);
+    boolean updateIsJob(String userId);
 
     /**
      * 查询员工详情

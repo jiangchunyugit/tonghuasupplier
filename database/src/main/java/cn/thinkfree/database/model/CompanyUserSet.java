@@ -1,6 +1,12 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import cn.thinkfree.database.vo.Severitys;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -75,6 +81,9 @@ public class CompanyUserSet extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("手机号")
+    @NotBlank(message = "手机号不能为空")
+    @Pattern(regexp = "^1\\d{10}$", message = "负责人手机号是11位以1开头数字")
     private String phone;
 
     /**
@@ -86,6 +95,8 @@ public class CompanyUserSet extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("员工姓名")
+    @NotBlank(message = "员工姓名不能为空")
     private String name;
 
     /**
@@ -97,6 +108,8 @@ public class CompanyUserSet extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("岗位id")
+    @NotBlank(message = "员工姓名不能为空")
     private String roleId;
 
     /**

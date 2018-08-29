@@ -1,6 +1,5 @@
 package cn.thinkfree.controller;
 
-import ch.qos.logback.classic.net.SyslogAppender;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
@@ -8,11 +7,8 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
-import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectMaterial;
-import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
-import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.remote.CloudService;
 import com.github.pagehelper.PageInfo;
@@ -20,9 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 

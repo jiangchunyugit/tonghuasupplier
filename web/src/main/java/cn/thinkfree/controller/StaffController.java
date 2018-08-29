@@ -9,18 +9,16 @@ import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.staff.StaffService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.List;
-import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
 
 
 
@@ -35,8 +33,6 @@ public class StaffController extends AbsBaseController{
     @Autowired
     ProjectService projectService;
 
-    @Autowired
-    private PreProjectUserRoleMapper preProjectUserRoleMapper;
     /**
      * 员工列表，以及条件查询
      * @param staffSEO
@@ -47,10 +43,7 @@ public class StaffController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value="查询员工列表(子公司：员工信息)", notes="根据员工姓名和电话和状态查询员工列表")
     public MyRespBundle<PageInfo<StaffsVO>> queryStaffList(@ApiParam("参数信息") StaffSEO staffSEO){
-        /*UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        if(uservo.getPcUserInfo() == null){
-            return sendJsonData(ResultMessage.FAIL, "用户为空");
-        }*/
+
         PageInfo<StaffsVO> staffsVOPageInfo = staffService.queryStaffList(staffSEO);
 
         return sendJsonData(ResultMessage.SUCCESS,staffsVOPageInfo);
@@ -61,17 +54,15 @@ public class StaffController extends AbsBaseController{
      * @param id
      * @return
      */
-    @RequestMapping(value = "/queryCompanyUser",method = RequestMethod.GET)
+    /*@RequestMapping(value = "/queryCompanyUser",method = RequestMethod.GET)
     public MyRespBundle<PageInfo<CompanyUserSet>> queryCompanyUser(
             @RequestParam("id")Integer id,@RequestParam("userID") String userID,@RequestParam("status") Integer status,@RequestParam("rows")Integer rows,@RequestParam("page")Integer page){
-        if(StringUtils.isEmpty(id.toString())){
-            return sendJsonData(ResultMessage.FAIL, "参数有误");
-        }
+
         projectService.selectProjectVOForPerson(userID,status,rows,page);
         projectService.countProjectForPerson(userID);
         CompanyUserSet companyUserSet = this.staffService.queryCompanyUser(id);
         return sendJsonData(ResultMessage.SUCCESS,companyUserSet);
-    }
+    }*/
 
     /*@PostMapping("/save-user")
     @MyRespBody
@@ -89,7 +80,8 @@ public class StaffController extends AbsBaseController{
             @ApiImplicitParam(paramType="query", name = "userId", value = "rows", required = true, dataType = "Integer"),
             @ApiImplicitParam(paramType="query", name = "roleId", value = "page", required = true, dataType = "Integer")
     })
-    public MyRespBundle<PageInfo<ProjectVO>> list(String userId,Integer status,Integer rows,Integer page){
+    public MyRespBundle<PageInfo<ProjectVO>> list(@RequestParam(value = "userId") String userId,@RequestParam(value = "status")Integer status,
+                                                  @RequestParam(value = "rows")Integer rows,@RequestParam(value = "page")Integer page){
         PageInfo<ProjectVO> pageInfo = projectService.selectProjectVOForPerson(userId, status, rows, page);
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }
@@ -100,7 +92,7 @@ public class StaffController extends AbsBaseController{
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String")
     })
-    public MyRespBundle<IndexProjectReportVO> projectNum(String userId){
+    public MyRespBundle<IndexProjectReportVO> projectNum(@RequestParam(value = "userId")String userId){
         IndexProjectReportVO indexProjectReportVO = projectService.countProjectForPerson(userId);
         return sendJsonData(ResultMessage.SUCCESS,indexProjectReportVO);
     }
@@ -113,7 +105,9 @@ public class StaffController extends AbsBaseController{
     @PostMapping("/insetCompanyUser")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_STAFFS,desc = "邀请员工")
-    public MyRespBundle<String> insertCompanyUser(CompanyUserSet companyUserSet){
+    public MyRespBundle<String> insertCompanyUser(@ApiParam(value = "员工信息") CompanyUserSet companyUserSet){
+        //参数校验
+        BeanValidator.validate(companyUserSet);
 
         String mes = this.staffService.insetCompanyUser(companyUserSet);
 
@@ -183,16 +177,15 @@ public class StaffController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value = "员工详情--->移除员工")
     @ApiImplicitParams({
-            @ApiImplicitParam(paramType="String", name = "userId", value = "userId", required = true, dataType = "String")
+            @ApiImplicitParam(paramType="query", name = "userId", value = "userId", required = true, dataType = "String")
     })
-    public MyRespBundle<String> delete(@RequestParam(value = "userId",defaultValue = "") String  userId){
+    public MyRespBundle<String> delete(@RequestParam(value = "userId") String  userId){
 
-        int line = staffService.updateIsJob(userId);
-        System.out.println(line);
-        System.out.println(line);
-
-        return sendJsonData(ResultMessage.SUCCESS, line);
-
+        boolean flag = staffService.updateIsJob(userId);
+        if(flag){
+            return sendJsonData(ResultMessage.SUCCESS, flag);
+        }
+        return sendJsonData(ResultMessage.FAIL, flag);
     }
 
     /**
