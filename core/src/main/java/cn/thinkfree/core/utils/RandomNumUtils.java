@@ -12,9 +12,11 @@ public class RandomNumUtils {
     public static String random(int length){
         SecureRandom random = new SecureRandom();
         StringBuffer sb = new StringBuffer(length);
-        for(int i=0;i<length;i++){
+        sb.append(random.nextInt(9)+1);
+        for(int i=1;i<length;i++){
             sb.append(random.nextInt(9));
         }
+
         return sb.toString();
     }
 
