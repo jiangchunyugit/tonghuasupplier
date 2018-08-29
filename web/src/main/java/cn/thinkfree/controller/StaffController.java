@@ -151,7 +151,7 @@ public class StaffController extends AbsBaseController{
     @ApiOperation(value = "再次邀请员工",notes = "再次邀请员工")
     @PostMapping("/reInvitation")
     @MyRespBody
-    public MyRespBundle<String> reInvitation(@RequestParam String userID){
+    public MyRespBundle<String> reInvitation(@RequestParam("userID") String userID){
         String mes = staffService.reInvitation(userID);
         return sendSuccessMessage(mes);
     }

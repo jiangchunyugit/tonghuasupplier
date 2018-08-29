@@ -2,6 +2,7 @@ package cn.thinkfree.core.security.config;
 
 
 import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.security.dao.SecurityResourceDao;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.exception.MySecurityException;
@@ -10,6 +11,7 @@ import cn.thinkfree.core.security.filter.util.SecurityConstants;
 
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
+import com.google.gson.Gson;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -23,6 +25,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
@@ -30,9 +33,16 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 
 import javax.servlet.Filter;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Map;
 
 /**
  * JAVA CONFIG SECURITY
@@ -102,7 +112,21 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         // 自定义注销
         http.logout()
                 .logoutUrl(SecurityConstants.LOGIN_OUT)
-                .logoutSuccessUrl(SecurityConstants.LOGIN_PAGE)
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException, ServletException {
+                        httpServletResponse.setCharacterEncoding("UTF-8");
+                        httpServletResponse.setContentType("application/json;charset=utf-8");
+                        httpServletResponse.setHeader("Access-Control-Allow-Origin","*");
+                        MyRespBundle<String> resp = new MyRespBundle<>();
+                        resp.setTimestamp(Instant.now().toEpochMilli());
+                        resp.setMessage("操作成功!");
+                        resp.setCode(200);
+                        resp.setData("操作成功");
+                        httpServletResponse.getWriter().write(new Gson().toJson(resp));
+                    }
+                })
+//                .logoutSuccessUrl(SecurityConstants.LOGIN_PAGE)
                 .invalidateHttpSession(true);
 
         // session管理

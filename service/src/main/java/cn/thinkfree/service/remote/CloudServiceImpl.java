@@ -1,9 +1,19 @@
 package cn.thinkfree.service.remote;
 
+import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.database.mapper.PreProjectGuideMapper;
+import cn.thinkfree.database.model.PreProjectGuide;
+import cn.thinkfree.database.model.PreProjectGuideExample;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.service.constants.ProjectStatus;
+import cn.thinkfree.service.project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -25,7 +35,10 @@ public class CloudServiceImpl implements CloudService {
     @Value("${custom.cloud.noticeShowUrl}")
     String noticeShowUrl;
 
-    static Integer SuccessCode = 1000;
+    Integer SuccessCode = 1000;
+    Integer ProjectUpFailCode = 2005;
+
+
 
     private RemoteResult buildFailResult(){
         RemoteResult remoteResult = new RemoteResult();
@@ -33,16 +46,24 @@ public class CloudServiceImpl implements CloudService {
         return remoteResult;
     }
 
+    @Transactional
     @Override
     public RemoteResult<String> projectUpOnline(String projectNo, Short status) {
 
         MultiValueMap<String, Object> param = initParam();
         param.add("projectNo", projectNo);
         param.add("state",status);
-        RemoteResult<String> result = null;
-        try {
-           result = invokeRemoteMethod(projectUpOnlineUrl,param);
 
+
+        RemoteResult<String> result = null;
+
+        try {
+            result = restTemplate.postForObject(projectUpOnlineUrl, param, RemoteResult.class);
+           if(SuccessCode.equals(result.getCode())){
+               result.setIsComplete(true);
+           }else if(ProjectUpFailCode.equals(result.getCode())){
+               result.setIsComplete(false);
+           }
         }catch (Exception e){
             e.printStackTrace();
             return buildFailResult();
@@ -63,6 +84,7 @@ public class CloudServiceImpl implements CloudService {
         MultiValueMap<String, Object> param = initParam();
         param.add("phone", phone);
         param.add("activationCode",activeCode);
+
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(sendSmsUrl,param);
@@ -74,17 +96,19 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-    private RemoteResult<String> invokeRemoteMethod(String sendSmsUrl, MultiValueMap<String, Object> param) {
-        RemoteResult<String> result  = restTemplate.postForObject(sendSmsUrl, param, RemoteResult.class);
+    private RemoteResult<String> invokeRemoteMethod(String url, MultiValueMap<String, Object> param) {
+        RemoteResult<String> result  = restTemplate.postForObject(url, param, RemoteResult.class);
+        result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
+        return result;
+    }
+
+    private RemoteResult<String> invokeRemoteMethod(String url, HttpEntity<MultiValueMap> param) {
+        RemoteResult<String> result  = restTemplate.postForObject(url, param, RemoteResult.class);
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
 
     private MultiValueMap<String, Object> initParam() {
-
-//        HttpHeaders headers = new HttpHeaders();
-//        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-//        headers.setContentType(type);
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
         return param;
     }

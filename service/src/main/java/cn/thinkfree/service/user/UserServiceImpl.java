@@ -58,8 +58,8 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
      */
     @Override
     public IndexUserReportVO countCompanyUser(List<String> companyRelationMap) {
-
-        return companyUserSetMapper.countCompanyUser(companyRelationMap);
+        IndexUserReportVO i = companyUserSetMapper.countCompanyUser(companyRelationMap);
+        return i == null ? new IndexUserReportVO():i;
     }
 
     @Transactional

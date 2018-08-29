@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -382,10 +383,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
 //        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
 
-//        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
-//        if(!rs.isComplete()){
-//            throw  new RuntimeException("神奇的操作,无法理解");
-//        }
+        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
+        if(!rs.isComplete()) throw  new RuntimeException("神奇的操作,无法理解");
+
 
         return "操作成功!";
     }
@@ -595,6 +595,8 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         if(!rs.isComplete()) throw  new RuntimeException("总有你想不到的意外");
         return rs.isComplete() ? "操作成功":"操作失败";
     }
+
+
 
 
     /**

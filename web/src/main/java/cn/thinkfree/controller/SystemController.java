@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.IndexMenuVO;
+import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.index.IndexService;
 import cn.thinkfree.service.remote.CloudService;
 import com.google.common.collect.Lists;
@@ -68,15 +69,25 @@ public class SystemController extends AbsBaseController {
 
     @RequestMapping("/test")
     public void test(){
-        SystemMessage systemMessage = new SystemMessage();
-        systemMessage.setCompanyId("2");
-        systemMessage.setSendUserId("1");
-        systemMessage.setTitle("1");
-        systemMessage.setContent("2");
-        systemMessage.setId(1);
-        systemMessage.setSendUser("user");
-        cloudService.sendNotice(systemMessage, Lists.newArrayList("1"));
+//        SystemMessage systemMessage = new SystemMessage();
+//        systemMessage.setCompanyId("2");
+//        systemMessage.setSendUserId("1");
+//        systemMessage.setTitle("1");
+//        systemMessage.setContent("2");
+//        systemMessage.setId(1);
+//        systemMessage.setSendUser("user");
+//        cloudService.sendNotice(systemMessage, Lists.newArrayList("1"));
+//        cloudService.sendSms("18910441835","123456");
+        cloudService.projectUpOnline("ITEM18082910221300000EH", ProjectStatus.WaitStart.shortVal());
     }
+
+    @RequestMapping("/test1")
+    public void test1(){
+
+        cloudService.sendSms("18910471835","123456");
+
+    }
+
 
 
 

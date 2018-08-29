@@ -63,8 +63,12 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     /**
      * 所谓五分钟
      */
-    @Value("${custom.sendSMS.threshold}")
     private static Long threshold ; // 300000L
+
+    @Value("${custom.sendSMS.threshold}")
+    public  void setThreshold(Long threshold) {
+        StaffServiceImpl.threshold = threshold;
+    }
 
     @Override
     public Integer deletCompanyByNo(Integer id) {
@@ -133,10 +137,8 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         userInfo.setName(companyUserSet.getName());
         userInfoMapper.insertSelective(userInfo);
 
-        /*RemoteResult<String> rs = cloudService.sendSms(companyUserSet.getPhone(), activationCode);
-        if(!rs.isComplete()){
-            throw new RuntimeException("总有你想不到的意外");
-        }*/
+        RemoteResult<String> rs = cloudService.sendSms(companyUserSet.getPhone(), activationCode);
+        if(!rs.isComplete())throw new RuntimeException("总有你想不到的意外");
         return "操作成功!";
     }
 

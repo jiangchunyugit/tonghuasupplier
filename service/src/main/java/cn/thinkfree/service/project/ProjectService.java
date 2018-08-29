@@ -1,5 +1,7 @@
 package cn.thinkfree.service.project;
 
+import cn.thinkfree.database.model.PreProjectGuide;
+import cn.thinkfree.database.model.PreProjectGuideExample;
 import cn.thinkfree.database.model.PreProjectMaterial;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
@@ -143,4 +145,6 @@ public interface ProjectService {
      * @return
      */
     String notifyOwner(String phone);
+
+
 }

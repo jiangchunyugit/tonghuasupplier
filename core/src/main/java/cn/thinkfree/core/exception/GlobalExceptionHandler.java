@@ -110,6 +110,7 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 //		ErrorInfo<String> info = new ErrorInfo<>(code.value(),message);
 		MyRespBundle<String> myRespBundle = new MyRespBundle<>();
 		myRespBundle.setCode(code.value());
+		myRespBundle.setData(message);
 		myRespBundle.setMessage(message);
 		myRespBundle.setVersion(VersionUtil.getVersion());
 		myRespBundle.setTimestamp(Instant.now().toEpochMilli());

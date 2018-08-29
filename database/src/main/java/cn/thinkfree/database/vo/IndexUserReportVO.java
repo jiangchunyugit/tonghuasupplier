@@ -9,22 +9,22 @@ public class IndexUserReportVO{
          * 管家
          */
         @ApiModelProperty("管家")
-        private Integer  steward;
+        private Integer  steward=0;
         /**
          * 项目经理
          */
         @ApiModelProperty("项目经理")
-        private Integer projectManager;
+        private Integer projectManager=0;
         /**
          * 工长
          */
         @ApiModelProperty("工长")
-        private Integer foreman;
+        private Integer foreman=0;
         /**
          * 质检
          */
         @ApiModelProperty("质检")
-        private Integer qualityInspector;
+        private Integer qualityInspector=0;
 
         public Integer getSteward() {
             return steward;

@@ -23,4 +23,12 @@ public class IndexProjectChartItemVO {
     public void setNum(String num) {
         this.num = num;
     }
+
+    public IndexProjectChartItemVO() {
+    }
+
+    public IndexProjectChartItemVO(String dateLine, String num) {
+        this.dateLine = dateLine;
+        this.num = num;
+    }
 }

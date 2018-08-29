@@ -1,10 +1,15 @@
 package cn.thinkfree.core.utils;
 
+import java.math.BigInteger;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class DateUtils {
 
@@ -60,6 +65,34 @@ public class DateUtils {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
+    /**
+     * 获取周天数
+     * @return
+     */
+    public static List<String> getWeekDays(){
+        List<String> list = new ArrayList<>();
+        for(int i=1;i<8;i++){
+            LocalDate d = LocalDate.now().with(ChronoField.DAY_OF_WEEK, i);
+            list.add(d.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        }
+        return list;
+    }
+
+    /**
+     * 获取月天数
+     * @return
+     */
+    public static List<String> getMonthDays(){
+        List<String> list = new ArrayList<>();
+        LocalDate date = LocalDate.now();
+        for(int i=0;;i++){
+            LocalDate td = date.with(TemporalAdjusters.firstDayOfMonth()).plusDays(i);
+            list.add(td.format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+            if(td.equals(date.with(TemporalAdjusters.lastDayOfMonth())))break;
+        }
+        return list;
+
+    }
 
 
 

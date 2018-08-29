@@ -79,10 +79,10 @@
             and ppg.status = #{status}
           </if>
           <if test="hall != null and hall != ''">
-            and ppg.hall = #{hall}
+            and ppi.store = #{hall}
           </if>
           <if test="customName != null and customName != ''">
-            and ppg.customName = #{customName}
+            and ppg.customer_name = #{customName}
           </if>
           <if test="filterProjectNos != null and filterProjectNos.size > 0">
             and ppg.project_no in
@@ -120,8 +120,8 @@
           <foreach collection="relationMap" item="companyItem" open="(" close=")" separator=",">
             #{companyItem}
           </foreach>
-        GROUP BY p.create_time
-        order by p.create_time
+        GROUP BY to_char(p.create_time, 'YYYY/MM/DD')
+        order by to_char(p.create_time, 'YYYY/MM/DD')
     </select>
 
 

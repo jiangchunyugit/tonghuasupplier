@@ -32,7 +32,7 @@
 
         from company_user_set
         where
-        is_job = 0
+        is_job = 1
         and company_id in
         <foreach collection="list"  separator="," open="(" item="listItem" close=")">
             #{listItem}

@@ -16,10 +16,8 @@ import cn.thinkfree.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.math.BigInteger;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -86,12 +84,36 @@ public class IndexServiceImpl implements IndexService  {
     @Override
     public List<IndexProjectChartItemVO> summaryProjectChart(Integer unit) {
         if(IndexChartUnit.Week.code.equals(unit)){
-
-            return projectService.summaryProjectChart(DateUtils.firstDayOfWeek(),DateUtils.lastDayOfWeek());
+            List<IndexProjectChartItemVO> dataLine = projectService.summaryProjectChart(DateUtils.firstDayOfWeek(), DateUtils.lastDayOfWeek());
+            List<String> weekDays = DateUtils.getWeekDays();
+            List<IndexProjectChartItemVO> result = makeUpDateLine(dataLine,weekDays);
+            return result;
         }else if(IndexChartUnit.Month.code.equals(unit)){
-            return projectService.summaryProjectChart(DateUtils.firstDayOfMonth(),DateUtils.lastDayOfMonth());
+            List<IndexProjectChartItemVO> dataLine = projectService.summaryProjectChart(DateUtils.firstDayOfMonth(), DateUtils.lastDayOfMonth());
+            List<String> monthDays = DateUtils.getMonthDays();
+            List<IndexProjectChartItemVO> result = makeUpDateLine(dataLine,monthDays);
+            return result;
         }
         return Collections.EMPTY_LIST;
+    }
+
+    /**
+     * 补全空日期
+     * @param dataLine
+     * @param days
+     * @return
+     */
+    private List<IndexProjectChartItemVO> makeUpDateLine(List<IndexProjectChartItemVO> dataLine, List<String> days) {
+        List<IndexProjectChartItemVO> result = new ArrayList<>();
+        for(String day:days){
+            Optional<IndexProjectChartItemVO> op = dataLine.stream().filter(d -> d.getDateLine().equals(day)).findFirst();
+            if(op.isPresent()){
+                result.add(op.get());
+            }else{
+                result.add(new IndexProjectChartItemVO(day, BigInteger.ZERO.toString()));
+            }
+        }
+        return result;
     }
 
     /**
