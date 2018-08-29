@@ -102,24 +102,24 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         companyUserSet.setBindTime(new Date());
         companyUserSet.setActivationCode(activationCode);
         companyUserSet.setIsBind(OneTrue.YesOrNo.NO.shortVal());
-        companyUserSet.setIsJob(OneTrue.YesOrNo.YES.shortVal());
+        companyUserSet.setIsJob(OneTrue.YesOrNo.NO.shortVal());
         companyUserSet.setUserId(userID);
         companyUserSet.setCompanyId(userVO.getCompanyID());
 
         companyUserSetMapper.insertSelective(companyUserSet);
 
-        printInfoMes("插入用户注册表");
-        UserRegister userRegister = new UserRegister();
-        userRegister.setUserId(userID);
-        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
-        userRegister.setPhone(companyUserSet.getPhone());
-        userRegister.setType(UserRegisterType.Personal.shortVal());
-        MultipleMd5 md5 = new MultipleMd5();
-        //默认密码123456
-        userRegister.setPassword(md5.encode("123456"));
-        userRegister.setRegisterTime(date);
-        userRegister.setUpdateTime(date);
-        userRegisterMapper.insertSelective(userRegister);
+//        printInfoMes("插入用户注册表");
+//        UserRegister userRegister = new UserRegister();
+//        userRegister.setUserId(userID);
+//        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+//        userRegister.setPhone(companyUserSet.getPhone());
+//        userRegister.setType(UserRegisterType.Personal.shortVal());
+//        MultipleMd5 md5 = new MultipleMd5();
+//        //默认密码123456
+//        userRegister.setPassword(md5.encode("123456"));
+//        userRegister.setRegisterTime(date);
+//        userRegister.setUpdateTime(date);
+//        userRegisterMapper.insertSelective(userRegister);
 
         printInfoMes("插入用户信息表");
         UserInfo userInfo = new UserInfo();
