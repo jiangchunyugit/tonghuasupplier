@@ -2,6 +2,10 @@ package cn.thinkfree.database.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Range;
+
+import javax.print.attribute.standard.Severity;
+import javax.validation.constraints.*;
 
 @ApiModel("员工查询参数")
 public class StaffSEO extends AbsPageSearchCriteria{
@@ -25,6 +29,7 @@ public class StaffSEO extends AbsPageSearchCriteria{
     private String name;
 
     @ApiModelProperty("员工手机号")
+    @Max(11)
     private String phone;
 
     @ApiModelProperty("状态-->1:正常 2：待激活 3：移除")
