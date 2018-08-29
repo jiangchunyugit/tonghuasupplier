@@ -102,7 +102,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         companyUserSet.setBindTime(new Date());
         companyUserSet.setActivationCode(activationCode);
         companyUserSet.setIsBind(OneTrue.YesOrNo.NO.shortVal());
-        companyUserSet.setIsJob(OneTrue.YesOrNo.NO.shortVal());
+        companyUserSet.setIsJob(OneTrue.YesOrNo.YES.shortVal());
         companyUserSet.setUserId(userID);
         companyUserSet.setCompanyId(userVO.getCompanyID());
 
