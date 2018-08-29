@@ -3,6 +3,9 @@ package cn.thinkfree.database.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Range;
+
+import javax.validation.constraints.Pattern;
 
 /**
  * 子公司管理查询条件  继承分页
@@ -22,11 +25,15 @@ public class CompanyInfoSEO extends AbsPageSearchCriteria  {
     private String companyId;
 
     @ApiModelProperty("法人名称")
+    @Range(min = 0, max = 10, message = "负责人姓名限制长度1-10个字", payload = {Severitys.Insert.class, Severitys.Update.class})
     private String legalName;
 
     @ApiModelProperty("法人电话号码")
+    @Pattern(regexp = "/^1\\d{10}$/", message = "负责人手机号是11位以1开头数字")
     private String legalPhone;
 
+    @Range(min = 0, max = 23)
+    @ApiModelProperty("公司名称")
     private String companyName;
 
     public String getCompanyName() {

@@ -6,6 +6,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.company.CompanyInfoService;
 import cn.thinkfree.service.project.ProjectService;
@@ -37,6 +38,7 @@ public class CompanyInfoController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value="子公司管理：新增")
     public MyRespBundle<String> saveCompanyInfo(@ApiParam("公司信息") CompanyInfo companyInfo){
+        BeanValidator.validate(companyInfo, Severitys.Insert.class);
 
         int line = companyInfoService.addCompanyInfo(companyInfo);
         if(line > 0){
@@ -51,7 +53,7 @@ public class CompanyInfoController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value="子公司管理：编辑")
     public MyRespBundle<String> updateCompanyInfo(@ApiParam("公司信息")CompanyInfo companyInfo){
-
+        BeanValidator.validate(companyInfo, Severitys.Update.class);
         int line = companyInfoService.updateCompanyInfo(companyInfo);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
@@ -67,7 +69,7 @@ public class CompanyInfoController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value="查询子公司信息")
     public MyRespBundle<PageInfo<CompanyInfo>> list(@ApiParam("查询公司参数")CompanyInfoSEO companyInfoSEO){
-
+        BeanValidator.validate(companyInfoSEO);
         PageInfo<CompanyInfo> pageInfo = companyInfoService.list(companyInfoSEO);
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);

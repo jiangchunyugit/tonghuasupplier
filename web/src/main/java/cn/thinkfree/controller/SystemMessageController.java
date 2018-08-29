@@ -6,16 +6,18 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.utils.BeanValidator;
+import cn.thinkfree.database.vo.Severitys;
 import cn.thinkfree.database.vo.SystemMessageVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 
 @RestController
@@ -45,13 +47,6 @@ public class SystemMessageController extends AbsBaseController {
     })
     public MyRespBundle<PageInfo<SystemMessage>> list(@RequestParam(value = "page")Integer page, @RequestParam(value = "rows")Integer rows,
                                                       @RequestParam(required = false,value = "sendUserId")String sendUserId, @RequestParam(required = false,value = "sendTime")String sendTime){
-        if (page == null){
-            page = 0;
-        }
-        if (rows == null){
-            rows = 15;
-        }
-
         PageInfo<SystemMessageVo> pageInfo = sysMsgService.selectByParam(page, rows, sendUserId, sendTime);
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
@@ -69,10 +64,7 @@ public class SystemMessageController extends AbsBaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "id", value = "公告id", required = true, dataType = "Integer")
     })
-    public MyRespBundle<String> delSysMsg(@RequestParam(required = true,value = "id")Integer id){
-        /*if(null == id){
-            return sendJsonData(ResultMessage.FAIL, "参数为空");
-        }*/
+    public MyRespBundle<String> delSysMsg(@RequestParam(value = "id")Integer id){
         int line = sysMsgService.deleteByPrimaryKey(id);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
@@ -92,9 +84,6 @@ public class SystemMessageController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "id", value = "公告id", required = true, dataType = "Integer")
     })
     public MyRespBundle<PageInfo<SystemMessage>> findById(@RequestParam(value = "id")Integer id){
-        if(null == id){
-            return sendJsonData(ResultMessage.FAIL, "参数为空");
-        }
         SystemMessage sysMsg = sysMsgService.selectByPrimaryKey(id);
         if(null == sysMsg){
             return sendJsonData(ResultMessage.FAIL, "失败");
@@ -116,8 +105,8 @@ public class SystemMessageController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "title", value = "标题", required = true, dataType = "String"),
             @ApiImplicitParam(paramType="query", name = "receiveRole", value = "对象", required = true, dataType = "String")
     })
-    public MyRespBundle<String> saveSysMsg(SystemMessage systemMessage){
-
+    public MyRespBundle<String> saveSysMsg(@ApiParam("公告信息") SystemMessage systemMessage){
+        BeanValidator.validate(systemMessage);
         int line = sysMsgService.saveSysMsg(systemMessage);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);

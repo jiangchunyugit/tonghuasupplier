@@ -12,7 +12,7 @@
         from pc_system_message
         where 1=1
         <if test="sendTime != null and sendTime != ''">
-           and send_time = #{sendTime,jdbcType=TIMESTAMP}
+            and to_char(send_time, 'YYYY-MM-DD') = #{sendTime}
         </if>
         <if test="sendUser != null and sendUser != ''">
            and send_user = #{sendUser,jdbcType=VARCHAR}

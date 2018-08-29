@@ -3,8 +3,12 @@ package cn.thinkfree.database.vo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Range;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 @ApiModel("项目搜索条件")
@@ -14,7 +18,9 @@ public class ProjectSEO extends AbsPageSearchCriteria {
      * 省
      */
     @ApiModelProperty("省份编码")
-
+    @NotBlank(message = "")
+    @Min(0)
+    @Range(max = 10,min = 1,message = "",groups ={Severitys.Insert.class})
     private String province;
     /**
      * 市
