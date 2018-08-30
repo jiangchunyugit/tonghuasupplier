@@ -69,7 +69,7 @@ public class CompanyInfoController extends AbsBaseController{
     @MyRespBody
     @ApiOperation(value="查询子公司信息")
     public MyRespBundle<PageInfo<CompanyInfo>> list(@ApiParam("查询公司参数")CompanyInfoSEO companyInfoSEO){
-        BeanValidator.validate(companyInfoSEO);
+
         PageInfo<CompanyInfo> pageInfo = companyInfoService.list(companyInfoSEO);
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);

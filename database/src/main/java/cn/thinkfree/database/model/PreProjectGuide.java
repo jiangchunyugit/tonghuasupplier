@@ -4,6 +4,7 @@ import cn.thinkfree.core.model.BaseModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -194,6 +195,7 @@ public class PreProjectGuide extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty("经度")
+    @NotBlank(message = "经度不能为空")
     private String longitude;
 
     /**
@@ -206,6 +208,7 @@ public class PreProjectGuide extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty("纬度")
+    @NotBlank(message = "纬度不能为空")
     private String latitude;
 
     /**

@@ -15,6 +15,7 @@
         <result column="user_id"   property="userId" />
         <result column="role_id" property="roleId" />
         <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     </resultMap>
 
     <resultMap id="CompanyUserSetVo" type="cn.thinkfree.database.vo.CompanyUserSetVo" extends="BaseResultMap">
@@ -84,7 +85,9 @@
     </select>
 
     <select id="findStaffByParam" resultMap="StaffsVO" parameterType="cn.thinkfree.database.vo.StaffSEO">
-        select us.*, com.company_name from company_user_set us join company_info com on us.company_id = com.company_id
+        select us.*, com.company_name, role.role_name from company_user_set us
+        join company_info com on us.company_id = com.company_id
+        join user_role_set role on us.role_id = role.role_code
         <where>
             <if test="name!=null and name!=''">
                 and us.name like #{name}

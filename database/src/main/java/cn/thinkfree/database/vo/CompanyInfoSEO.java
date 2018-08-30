@@ -26,14 +26,11 @@ public class CompanyInfoSEO extends AbsPageSearchCriteria  {
     private String companyId;
 
     @ApiModelProperty("法人名称")
-    @Max(value = 10, message = "负责人姓名最长不超过10个字")
     private String legalName;
 
     @ApiModelProperty("法人电话号码")
-    @Max(value = 11, message = "负责人手机号最长不超过10个字")
     private String legalPhone;
 
-    @Max(value = 23, message = "分公司名称最长不超过23个字")
     @ApiModelProperty("公司名称")
     private String companyName;
 

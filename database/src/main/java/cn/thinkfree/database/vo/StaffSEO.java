@@ -29,7 +29,6 @@ public class StaffSEO extends AbsPageSearchCriteria{
     private String name;
 
     @ApiModelProperty("员工手机号")
-    @Max(value = 11, message = "员工手机号不能超过11位")
     private String phone;
 
     @ApiModelProperty("状态-->1:正常 2：待激活 3：移除")

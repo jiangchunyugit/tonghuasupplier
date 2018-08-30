@@ -8,6 +8,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.PreProjectMaterial;
+import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.remote.CloudService;
@@ -142,7 +143,7 @@ public class ProjectController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT)
     public MyRespBundle<String> up(@ApiParam ProjectDetailsVO projectDetailsVO){
-
+        BeanValidator.validate(projectDetailsVO);
         String mes = projectService.updateProjectForUpOnline(projectDetailsVO);
         return sendSuccessMessage(mes);
     }

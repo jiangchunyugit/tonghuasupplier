@@ -19,10 +19,4 @@ public class Severitys {
     public interface Update extends Payload{
 
     }
-    /**
-     * 条件查询  查询时需要验证字段组
-     */
-    public interface Select extends Payload{
-
-    }
 }
