@@ -343,16 +343,16 @@ public class CompanyInfo extends BaseModel {
     @Length(min = 1, max = 20, message = "联系方式限制长度1-20个字符", groups = {Severitys.Insert.class, Severitys.Update.class})
     private String telephone;
 
-    @Length(min = 1, max = 100, message = "备注长度1-100个字", groups = Severitys.Insert.class)
+    //@Length(min = 1, max = 100, message = "备注长度1-100个字", groups = Severitys.Insert.class)
     @ApiModelProperty("备注")
-    private String desc;
+    private String content;
 
-    public String getDesc() {
-        return desc;
+    public String getContent() {
+        return content;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     /**

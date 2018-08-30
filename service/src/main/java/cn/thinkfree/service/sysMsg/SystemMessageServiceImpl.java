@@ -73,12 +73,17 @@ public class SystemMessageServiceImpl extends AbsLogPrinter implements SystemMes
             map.put(userRoleSet.getId().toString(),userRoleSet.getRoleName());
         }
         for (SystemMessageVo vo: systemMessage){
-            String[] roleId = vo.getReceiveRole().split(",");
             String roleName = "";
-            for(int i = 0; i < roleId.length; i++){
-                roleName += map.get(roleId[i]) + " ";
+            if(null != vo.getReceiveRole()){
+                String[] roleId = vo.getReceiveRole().split(",");
+                for(int i = 0; i < roleId.length; i++){
+                    roleName += map.get(roleId[i]) + " ";
+                }
+                vo.setRoleName(roleName);
+            }else{
+                vo.setRoleName(roleName);
             }
-            vo.setRoleName(roleName);
+
         }
         PageInfo<SystemMessageVo> pageInfo = new PageInfo<>(systemMessage);
         return pageInfo;
