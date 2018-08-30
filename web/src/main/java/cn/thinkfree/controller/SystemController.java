@@ -8,6 +8,9 @@ import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.IndexMenuVO;
 import cn.thinkfree.service.constants.ProjectStatus;
+import cn.thinkfree.service.designer.service.HomeStylerService;
+import cn.thinkfree.service.designer.vo.HomeStyler;
+import cn.thinkfree.service.designer.vo.HomeStylerVO;
 import cn.thinkfree.service.index.IndexService;
 import cn.thinkfree.service.remote.CloudService;
 import com.google.common.collect.Lists;
@@ -18,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 
@@ -31,6 +35,10 @@ public class SystemController extends AbsBaseController {
 
     @Autowired
     CloudService cloudService;
+
+    @Autowired
+    HomeStylerService homeStylerService;
+
 
     /**
      * 获取首页菜单
@@ -87,6 +95,26 @@ public class SystemController extends AbsBaseController {
         cloudService.sendSms("18910471835","123456");
 
     }
+
+    @RequestMapping("/spiler")
+    @ResponseBody
+    public String spiler(String id){
+
+        String ls = homeStylerService.saveHomeStyler(id);
+
+        return "Success";
+    }
+
+    @RequestMapping("/homeStyler")
+    @ResponseBody
+    public MyRespBundle<HomeStylerVO> mock(String id){
+        HomeStyler homeStyler = homeStylerService.findDataByProjectNo(id);
+        HomeStylerVO homeStylerVO = new HomeStylerVO();
+        homeStylerVO.setProjectNo(id);
+        homeStylerVO.setSpaceDetailsBeans(homeStyler.getSpaceDetails());
+        return sendJsonData(ResultMessage.SUCCESS,homeStylerVO);
+    }
+
 
 
 

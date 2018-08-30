@@ -59,11 +59,9 @@ public class CloudServiceImpl implements CloudService {
 
         try {
             result = restTemplate.postForObject(projectUpOnlineUrl, param, RemoteResult.class);
-           if(SuccessCode.equals(result.getCode())){
-               result.setIsComplete(true);
-           }else if(ProjectUpFailCode.equals(result.getCode())){
-               result.setIsComplete(false);
-           }
+            System.out.println(result);
+            result.setIsComplete(SuccessCode.equals(result.getCode()));
+
         }catch (Exception e){
             e.printStackTrace();
             return buildFailResult();

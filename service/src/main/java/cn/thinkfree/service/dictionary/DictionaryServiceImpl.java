@@ -2,6 +2,7 @@ package cn.thinkfree.service.dictionary;
 
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.MenuType;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
@@ -37,6 +38,9 @@ public class DictionaryServiceImpl implements DictionaryService {
 
     @Autowired
     UserRoleSetMapper userRoleSetMapper;
+
+//    @Autowired
+//    SystemResourceMapper systemResourceMapper;
 
 
     /**
@@ -137,6 +141,20 @@ public class DictionaryServiceImpl implements DictionaryService {
         example.createCriteria().andIsShowEqualTo(isShow);
         return userRoleSetMapper.selectByExample(example);
     }
+
+//    /**
+//     * 查询可用权限
+//     *
+//     * @return
+//     */
+//    @Override
+//    public List<SystemResource> listResource() {
+//        SystemResourceExample systemResourceExample = new SystemResourceExample();
+//        systemResourceExample.setOrderByClause("  sort_num");
+//        systemResourceExample.createCriteria().andTypeEqualTo(MenuType.MENU.code+"");
+//
+//        return  systemResourceMapper.selectByExample(systemResourceExample);
+//    }
 
 
 }

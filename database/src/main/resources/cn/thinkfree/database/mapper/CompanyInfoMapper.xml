@@ -108,7 +108,7 @@
     id, company_id, company_name, role_id, province_code, address, legal_name, legal_phone, 
     legal_id_card, business_code, organization_code, tax_code, is_check, create_time, 
     phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code, 
-    area_code, root_company_id, parent_company_id, is_center, telephone, desc
+    area_code, root_company_id, parent_company_id, is_center, telephone, 'desc'
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.CompanyInfoExample" resultMap="BaseResultMap">
     <!--

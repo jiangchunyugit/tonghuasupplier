@@ -56,4 +56,11 @@ public interface DictionaryService {
      * @return
      */
     List<UserRoleSet> getRole();
+
+//    /**
+//     * 查询可用权限
+//     * @return
+//     */
+//    List<SystemResource> listResource();
+
 }

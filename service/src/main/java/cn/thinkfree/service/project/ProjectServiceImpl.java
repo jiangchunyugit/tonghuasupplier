@@ -124,7 +124,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             preProjectUserRoleExample.createCriteria().andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                     .andRoleIdEqualTo(UserJobs.ProjectManager.roleCode)
                     .andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal()).andUserIdEqualTo(projectSEO.getProjectManager());
-            projectNos.addAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
+//            projectNos.addAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
+            // 取交集
+            projectNos.retainAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
             needFilter = true;
         }
 
