@@ -2,6 +2,7 @@ package cn.thinkfree.database.model;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ public class SystemMessage {
     private Date sendTime;
 
     @ApiModelProperty("标题")
-    @Range(min = 2, max = 20, message = "标题输入2-20个字(数字、字母、汉字、符号)")
+    @Length(min = 2, max = 20, message = "标题输入2-20个字(数字、字母、汉字、符号)")
     private String title;
 
     @ApiModelProperty("发送对象：管家，工长。。")

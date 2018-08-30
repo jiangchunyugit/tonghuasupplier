@@ -4,6 +4,7 @@ import cn.thinkfree.core.model.BaseModel;
 import cn.thinkfree.database.vo.Severitys;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotBlank;
@@ -56,7 +57,7 @@ public class CompanyInfo extends BaseModel {
      */
     @ApiModelProperty("公司名称")
     @NotBlank(message = "分公司名称不能是空值", groups = {Severitys.Insert.class, Severitys.Update.class})
-    @Range(min = 1, max = 23, message = "分公司名称限制长度1-23个字", groups = {Severitys.Insert.class, Severitys.Update.class})
+    @Length(min = 1, max = 23, message = "分公司名称限制长度1-23个字", groups = {Severitys.Insert.class, Severitys.Update.class})
     private String companyName;
 
     /**
@@ -94,8 +95,8 @@ public class CompanyInfo extends BaseModel {
      */
     @ApiModelProperty("公司详细地址")
     @NotBlank(message = "公司详细地址不能为空", groups = {Severitys.Insert.class, Severitys.Update.class})
-    @Range(min = 1, max = 50, message = "公司详细地址限制长度1-50个字", groups = {Severitys.Insert.class})
-    @Range(min = 1, max = 30, message = "公司详细地址限制长度1-30个字", groups = {Severitys.Update.class})
+    @Length(min = 1, max = 50, message = "公司详细地址限制长度1-50个字", groups = {Severitys.Insert.class})
+    @Length(min = 1, max = 30, message = "公司详细地址限制长度1-30个字", groups = {Severitys.Update.class})
     private String address;
 
     /**
@@ -108,7 +109,7 @@ public class CompanyInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty("法人名字")
-    @Range(min = 1, max = 10, message = "负责人姓名限制长度1-10个字", groups = {Severitys.Insert.class, Severitys.Update.class})
+    @Length(min = 1, max = 10, message = "负责人姓名限制长度1-10个字", groups = {Severitys.Insert.class, Severitys.Update.class})
     @NotBlank(message = "负责人姓名不能为空", groups = {Severitys.Insert.class, Severitys.Update.class})
     private String legalName;
 
@@ -339,10 +340,10 @@ public class CompanyInfo extends BaseModel {
      */
     @ApiModelProperty(value = "公司座机")
     @NotBlank(message = "联系方式不能为空", groups = {Severitys.Insert.class, Severitys.Update.class})
-    @Range(min = 1, max = 20, message = "联系方式限制长度1-20个字符", groups = {Severitys.Insert.class, Severitys.Update.class})
+    @Length(min = 1, max = 20, message = "联系方式限制长度1-20个字符", groups = {Severitys.Insert.class, Severitys.Update.class})
     private String telephone;
 
-    @Range(min = 1, max = 100, message = "备注长度1-100个字", groups = Severitys.Insert.class)
+    @Length(min = 1, max = 100, message = "备注长度1-100个字", groups = Severitys.Insert.class)
     @ApiModelProperty("备注")
     private String desc;
 
