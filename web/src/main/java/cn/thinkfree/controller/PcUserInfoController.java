@@ -113,13 +113,6 @@ public class PcUserInfoController extends AbsBaseController {
     @RequestMapping(value = "/updateByUserId", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="编辑账户")
-    /*@ApiImplicitParams({
-            @ApiImplicitParam(paramType="query", name = "name", value = "姓名", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "phone", value = "手机号", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "password", value = "密码", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "memo", value = "备注", required = false, dataType = "String"),
-            @ApiImplicitParam(paramType="query", name = "id", value = "账号id", required = true, dataType = "String")
-    })*/
     public MyRespBundle<String> updateByUserId(@ApiParam("账户信息")PcUserInfoVo pcUserInfoVo){
 
         boolean flag = pcUserInfoService.updateUserInfo(pcUserInfoVo);
@@ -127,5 +120,20 @@ public class PcUserInfoController extends AbsBaseController {
             return sendJsonData(ResultMessage.SUCCESS, flag);
         }
         return sendJsonData(ResultMessage.SUCCESS, flag);
+    }
+
+    /**
+     * 修改密码
+     */
+    @RequestMapping(value = "/updatePassWord", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="修改密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "oldPassWord", value = "原始密码", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "newPassWord", value = "新密码", required = true, dataType = "String")
+    })
+    public MyRespBundle<String> updatePassWord(@RequestParam String oldPassWord, @RequestParam String newPassWord){
+        String msg = pcUserInfoService.updatePassWord(oldPassWord, newPassWord);
+        return sendJsonData(ResultMessage.SUCCESS, msg);
     }
 }

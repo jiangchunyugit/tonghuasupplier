@@ -16,5 +16,9 @@ public interface PcUserInfoService {
     boolean saveUserInfo(PcUserInfoVo pcUserInfoVo);
     boolean updateUserInfo(PcUserInfoVo pcUserInfoVo);
     PcUserInfoVo findByUserId(String userId);
+    /**
+     * 修改密码
+     */
+    String updatePassWord(String oldPassWord, String newPassWord);
 
 }
