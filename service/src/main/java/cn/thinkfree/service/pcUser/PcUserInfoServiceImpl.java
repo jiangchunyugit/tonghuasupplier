@@ -74,7 +74,12 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Transactional
     public boolean delPcUserInfo(String userId) {
 
-//        int pcline = pcUserInfoMapper.deleteByPrimaryKey(userId);
+        PcUserInfo pcUserInfo = new PcUserInfo();
+        pcUserInfo.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        pcUserInfo.setId(userId);
+        PcUserInfoExample example1 = new PcUserInfoExample();
+        example1.createCriteria().andIdEqualTo(userId);
+        int pcline = pcUserInfoMapper.updateByExampleSelective(pcUserInfo, example1);
 
         //注册表修改
         UserRegister userRegister = new UserRegister();
@@ -83,7 +88,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         UserRegisterExample exampleReg = new UserRegisterExample();
         exampleReg.createCriteria().andUserIdEqualTo(userId);
         int regLine = userRegisterMapper.updateByExampleSelective(userRegister, exampleReg);
-        if(regLine > 0){
+        if(regLine > 0 && pcline > 0){
             return true;
         }
         return false;
@@ -108,6 +113,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         Date date = new Date();
         pcUserInfoVo.setCreateTime(date);
         pcUserInfoVo.setId(userId);
+        pcUserInfoVo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
         pcUserInfoVo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         pcUserInfoVo.setEnabled(UserEnabled.Enabled_false.shortVal());
         //根据新增公司id和登录用户公司id 是否相等判断level
