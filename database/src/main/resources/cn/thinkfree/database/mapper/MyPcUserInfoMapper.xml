@@ -26,7 +26,8 @@
     </select>
 
     <select id="findByParam" parameterType="java.util.Map" resultMap="pcUserInfoVo">
-        select pc.id,pc.name, pc.phone, pc.memo, pc.enabled,pc.is_delete, pc.company_id, log.login_time, reg.phone regPhone, com.company_name
+        select pc.id,pc.name, pc.phone, pc.memo, pc.enabled,pc.is_delete, pc.company_id,
+        log.login_time, reg.phone regPhone, com.company_name,pc.create_time
         from pc_user_info pc
         left join (select phone, max(login_time) login_time from user_login_log
         group by phone) log on pc.phone = log.phone left join user_register reg on pc.id = reg.user_id

@@ -98,11 +98,11 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Transactional
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
         //判断输入的手机号码是否已经注册过
-        /*List<String> phones = userRegisterMapper.findPhoneAll();
+        List<String> phones = userRegisterMapper.findPhoneAll();
         boolean flag = phones.contains(pcUserInfoVo.getPhone());
         if(flag){
             return false;
-        }*/
+        }
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         String userId = UserNoUtils.getUserNo("PC");
         Date date = new Date();
