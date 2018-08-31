@@ -115,5 +115,6 @@
             </if>
 
         </where>
+        order by to_char(us.update_time, 'YYYY/MM/DD')
     </select>
 </mapper>

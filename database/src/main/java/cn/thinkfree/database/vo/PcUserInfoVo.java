@@ -19,7 +19,7 @@ public class PcUserInfoVo extends PcUserInfo {
     @ApiModelProperty("公司名称")
     private String companyName;
 
-    @ApiModelProperty("公司座机")
+    @ApiModelProperty("账号")
     private String regPhone;
 
     public String getRegPhone() {

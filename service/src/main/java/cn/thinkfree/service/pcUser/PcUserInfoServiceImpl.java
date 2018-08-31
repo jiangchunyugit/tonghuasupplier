@@ -8,10 +8,7 @@ import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.PcUserInfoMapper;
 import cn.thinkfree.database.mapper.UserRegisterMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.PcUserInfo;
-import cn.thinkfree.database.model.UserRegister;
-import cn.thinkfree.database.model.UserRegisterExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
@@ -19,6 +16,7 @@ import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,16 +49,16 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    public PageInfo<PcUserInfoVo> findByParam(UserVO userVO, MyPageHelper myPageHelper) {
+    public PageInfo<PcUserInfoVo> findByParam(MyPageHelper myPageHelper) {
+        UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
         Map<String, Object> params = new HashMap<>();
         Object param = myPageHelper.getData();
-        if(null == param || "".equals(param)){
-            param = "";
-        }else{
+        if(null != param && StringUtils.isNotBlank(param.toString())){
             param = "%" + param +"%";
+            params.put("param", param);
         }
-        params.put("param", param);
-        params.put("companyId", userVO.getRelationMap());
+        params.put("companyId", uservo.getRelationMap());
         PageHelper.startPage(myPageHelper.getPage(), myPageHelper.getRows());
         List<PcUserInfoVo> pcUserInfoVos = pcUserInfoMapper.findByParam(params);
         PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = new PageInfo<>(pcUserInfoVos);
@@ -75,13 +73,20 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     @Transactional
     public boolean delPcUserInfo(String userId) {
-        boolean flag = false;
-        int pcline = pcUserInfoMapper.deleteByPrimaryKey(userId);
-        int regLine = userRegisterMapper.deleteByUserId(userId);
-        if(pcline > 0 && regLine > 0){
-            flag = true;
+
+//        int pcline = pcUserInfoMapper.deleteByPrimaryKey(userId);
+
+        //注册表修改
+        UserRegister userRegister = new UserRegister();
+        userRegister.setUserId(userId);
+        userRegister.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        UserRegisterExample exampleReg = new UserRegisterExample();
+        exampleReg.createCriteria().andUserIdEqualTo(userId);
+        int regLine = userRegisterMapper.updateByExampleSelective(userRegister, exampleReg);
+        if(regLine > 0){
+            return true;
         }
-        return flag;
+        return false;
     }
 
     /**
@@ -93,20 +98,20 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Transactional
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
         //判断输入的手机号码是否已经注册过
-        List<String> phones = userRegisterMapper.findPhoneAll();
+        /*List<String> phones = userRegisterMapper.findPhoneAll();
         boolean flag = phones.contains(pcUserInfoVo.getPhone());
         if(flag){
             return false;
-        }
+        }*/
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        String userId = UserNoUtils.getUserNo("pc");
+        String userId = UserNoUtils.getUserNo("PC");
         Date date = new Date();
         pcUserInfoVo.setCreateTime(date);
         pcUserInfoVo.setId(userId);
         pcUserInfoVo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         pcUserInfoVo.setEnabled(UserEnabled.Enabled_false.shortVal());
         //根据新增公司id和登录用户公司id 是否相等判断level
-        if(userVO.getCompanyID() == pcUserInfoVo.getCompanyId()){
+        if(userVO.getCompanyID().equals(pcUserInfoVo.getCompanyId())){
             pcUserInfoVo.setLevel(userVO.getPcUserInfo().getLevel());
         }else{
             pcUserInfoVo.setLevel(getLevel(userVO.getPcUserInfo().getLevel()));
@@ -207,6 +212,20 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         }
         return "原密码输入错误";
 
+    }
+
+    @Override
+    public String canEnabled(String id, Integer enabled) {
+        PcUserInfo pcUserInfo = new PcUserInfo();
+        pcUserInfo.setId(id);
+        pcUserInfo.setEnabled(enabled.shortValue());
+        PcUserInfoExample example = new PcUserInfoExample();
+        example.createCriteria().andIdEqualTo(id);
+        int line = pcUserInfoMapper.updateByExampleSelective(pcUserInfo, example);
+        if(line > 0){
+            return "操作成功";
+        }
+        return "操作失败";
     }
 
     public short getLevel(Short level){

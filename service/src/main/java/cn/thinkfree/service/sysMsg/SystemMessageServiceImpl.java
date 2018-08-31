@@ -61,13 +61,16 @@ public class SystemMessageServiceImpl extends AbsLogPrinter implements SystemMes
         param.put("companyId", userVO.getRelationMap());
 
         PageHelper.startPage(no,pageSize);
+
         List<SystemMessageVo> systemMessage = sysMsgMapper.selectByParam(param);
+
         //查询岗位 信息
         UserRoleSetExample example = new UserRoleSetExample();
         //设置岗位显示的信息
         Short isShow = 1;
         example.createCriteria().andIsShowEqualTo(isShow);
         List<UserRoleSet> userRoleSets = userRoleSetMapper.selectByExample(example);
+
         Map<String, String> map = new HashMap<>();
         for(UserRoleSet userRoleSet: userRoleSets){
             map.put(userRoleSet.getId().toString(),userRoleSet.getRoleName());

@@ -45,7 +45,7 @@
         <include refid="Base_Column_List" />
         from company_info
         where 1=1
-        <if test="companyId != null and companyId != ''">
+        <if test="_parameter!= null and _parameter!= ''">
             and company_id = #{companyId}
         </if>
     </select>
@@ -88,7 +88,7 @@
             <if test="legalPhone != null and legalPhone != ''">
                 and legal_phone like #{legalPhone}
             </if>
-
+            order by to_char(create_time, 'YYYY/MM/DD')
         </where>
 
 
