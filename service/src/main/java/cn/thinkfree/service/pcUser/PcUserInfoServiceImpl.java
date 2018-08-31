@@ -11,6 +11,7 @@ import cn.thinkfree.database.mapper.UserRegisterMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.UserRegister;
+import cn.thinkfree.database.model.UserRegisterExample;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
@@ -183,6 +184,29 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 //        MultipleMd5 md5 = new MultipleMd5();
 //        pcUserInfoVo.setPassword(md5.matches());
         return pcUserInfoVo;
+    }
+
+    @Override
+    @Transactional
+    public String updatePassWord(String oldPassWord, String newPassWord) {
+        MultipleMd5 md5 = new MultipleMd5();
+        String oldPass = md5.encode(oldPassWord);
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        if(userVO.getPassword().equals(oldPass)){
+            UserRegister userRegister = new UserRegister();
+            userRegister.setUserId(userVO.getUserRegister().getUserId());
+            //加密
+            userRegister.setPassword(md5.encode(newPassWord));
+            UserRegisterExample example = new UserRegisterExample();
+            example.createCriteria().andUserIdEqualTo(userVO.getUserRegister().getUserId());
+            int line = userRegisterMapper.updateByExampleSelective(userRegister, example);
+            if(line > 0){
+                return "操作成功";
+            }
+            return "操作失败";
+        }
+        return "原密码输入错误";
+
     }
 
     public short getLevel(Short level){
