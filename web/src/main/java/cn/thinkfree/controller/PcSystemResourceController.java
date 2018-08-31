@@ -30,7 +30,7 @@ public class PcSystemResourceController extends AbsBaseController {
      * 查看权限
      */
 //    @MySysLog(desc = "/sysMsg/delSysMsg",action = SysLogAction.QUERY,module = SysLogModule.PC_NEWS)
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="查看权限", notes="")
     @ApiImplicitParams({
@@ -54,14 +54,8 @@ public class PcSystemResourceController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "resourceId", value = "权限资源ID", required = true, dataType = "List")
     })
     public MyRespBundle<String> updateByUser(@RequestParam(value = "userId")String userId,
-    @RequestParam(value = "resourceId")List<Integer> resourceId){
-        boolean flag = false;
-        if(resourceId != null && resourceId.size() > 0){
-            flag = pcSystemResourceService.saveByUserId(userId,resourceId);
-            if(flag){
-                return sendJsonData(ResultMessage.SUCCESS, flag);
-            }
-        }
-        return sendJsonData(ResultMessage.FAIL, flag);
+    @RequestParam(value = "resourceId")String resourceId){
+        boolean flag = pcSystemResourceService.saveByUserId(userId,resourceId);
+        return sendJsonData(ResultMessage.SUCCESS, flag);
     }
 }

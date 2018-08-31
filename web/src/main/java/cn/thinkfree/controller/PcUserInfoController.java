@@ -55,7 +55,7 @@ public class PcUserInfoController extends AbsBaseController {
     /**
      * 账户查询更据条件查询
      */
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
 //    @MyRespBody
     @ApiOperation(value="模糊查询", notes="")
     @ApiImplicitParams({
@@ -64,9 +64,8 @@ public class PcUserInfoController extends AbsBaseController {
             @ApiImplicitParam(paramType="query", name = "data", value = "模糊查询类型随便", required = false, dataType = "Object")
     })
     public MyRespBundle<PageInfo<PcUserInfoVo>> list(MyPageHelper pageHelper){
-        UserVO uservo = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
-        PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = pcUserInfoService.findByParam(uservo, pageHelper);
+        PageInfo<PcUserInfoVo> pcUserInfoVoPageInfo = pcUserInfoService.findByParam(pageHelper);
 
         return sendJsonData(ResultMessage.SUCCESS, pcUserInfoVoPageInfo);
     }
@@ -91,7 +90,7 @@ public class PcUserInfoController extends AbsBaseController {
     /**
      *  删除账户
      */
-    @RequestMapping(value = "/delByUserId", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delByUserId", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="删除账户", notes="")
     @ApiImplicitParams({
@@ -134,6 +133,21 @@ public class PcUserInfoController extends AbsBaseController {
     })
     public MyRespBundle<String> updatePassWord(@RequestParam String oldPassWord, @RequestParam String newPassWord){
         String msg = pcUserInfoService.updatePassWord(oldPassWord, newPassWord);
+        return sendJsonData(ResultMessage.SUCCESS, msg);
+    }
+
+    /**
+     * 启用账户
+     */
+    @RequestMapping(value = "/canEnabled", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="启用账户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "id", value = "id", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "enabled", value = "是否启动", required = true, dataType = "Integer")
+    })
+    public MyRespBundle<String> canEnabled(@RequestParam String id, @RequestParam Integer enabled){
+        String msg = pcUserInfoService.canEnabled(id, enabled);
         return sendJsonData(ResultMessage.SUCCESS, msg);
     }
 }

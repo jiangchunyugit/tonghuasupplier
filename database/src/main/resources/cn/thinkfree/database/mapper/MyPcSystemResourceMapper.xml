@@ -14,7 +14,7 @@
   <select id="selectAll" resultMap="ResultMap">
     select 
     <include refid="Base_Column_List" />
-    from pc_system_resource;
+    from pc_system_resource where type = 1
   </select>
 
 </mapper>

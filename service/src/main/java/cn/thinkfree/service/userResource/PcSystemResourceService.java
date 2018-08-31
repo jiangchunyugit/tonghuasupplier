@@ -11,5 +11,5 @@ public interface PcSystemResourceService {
 
     List<MySystemResource> getUserResource(String userId);
 
-    boolean saveByUserId(String userId, List<Integer> resourceId);
+    boolean saveByUserId(String userId, String resourceId);
 }

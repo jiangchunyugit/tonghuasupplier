@@ -115,6 +115,7 @@
             </if>
 
         </where>
+        order by to_char(us.update_time, 'YYYY/MM/DD')
     </select>
 
     <!--<insert id="insertDis" >-->

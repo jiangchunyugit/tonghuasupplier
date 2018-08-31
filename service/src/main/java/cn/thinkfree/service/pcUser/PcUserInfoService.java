@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface PcUserInfoService {
     List<PcUserInfo> selectByParam(UserVO userVO);
-    PageInfo<PcUserInfoVo> findByParam(UserVO userVO, MyPageHelper myPageHelper);
+    PageInfo<PcUserInfoVo> findByParam(MyPageHelper myPageHelper);
     boolean delPcUserInfo(String userId);
     boolean saveUserInfo(PcUserInfoVo pcUserInfoVo);
     boolean updateUserInfo(PcUserInfoVo pcUserInfoVo);
@@ -20,5 +20,10 @@ public interface PcUserInfoService {
      * 修改密码
      */
     String updatePassWord(String oldPassWord, String newPassWord);
+
+    /**
+     * 启用账户
+     */
+    String canEnabled(String id, Integer enabled);
 
 }

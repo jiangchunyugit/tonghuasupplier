@@ -49,21 +49,28 @@ public class PcSystemResourceServiceImpl implements PcSystemResourceService{
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean saveByUserId(String userId, List<Integer> resourceId){
+    public boolean saveByUserId(String userId, String resourceId){
         int delLine = pcUserResourceMapper.deleteByUserId(userId);
 
 //        String[] resource = resourceId.split(",");
-
+        int saveLine = 0;
         List<PcUserResource> pcUserResources = new ArrayList<>();
-
-        resourceId.forEach(s->{
+        if(null != resourceId && !"".equals(resourceId)){
+            String[] resourceSp = resourceId.split(",");
+            for(int i = 0; i < resourceSp.length; i++){
+                PcUserResource pu = new PcUserResource();
+                pu.setUserId(userId);
+                pu.setResourceId(Integer.valueOf(resourceSp[i]));
+                pcUserResources.add(pu);
+            }
+            saveLine = pcUserResourceMapper.insertBatch(pcUserResources);
+        }
+        /*resourceSp.forEach(s->{
             PcUserResource pu = new PcUserResource();
             pu.setUserId(userId);
             pu.setResourceId(s);
             pcUserResources.add(pu);
-        });
-
-        int saveLine = pcUserResourceMapper.insertBatch(pcUserResources);
+        });*/
 
         if(saveLine == pcUserResources.size() && delLine >= 0){
             return true;
