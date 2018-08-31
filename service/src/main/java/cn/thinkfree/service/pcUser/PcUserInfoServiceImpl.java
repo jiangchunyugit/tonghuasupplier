@@ -104,7 +104,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
         //判断输入的手机号码是否已经注册过
         List<String> phones = userRegisterMapper.findPhoneAll();
-        boolean flag = phones.contains(pcUserInfoVo.getPhone());
+        boolean flag = phones.contains(pcUserInfoVo.getRegPhone());
         if(flag){
             return false;
         }
@@ -115,7 +115,8 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         pcUserInfoVo.setId(userId);
         pcUserInfoVo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
         pcUserInfoVo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        pcUserInfoVo.setEnabled(UserEnabled.Enabled_false.shortVal());
+        //临时启用
+        pcUserInfoVo.setEnabled(UserEnabled.Enabled_true.shortVal());
         //根据新增公司id和登录用户公司id 是否相等判断level
         if(userVO.getCompanyID().equals(pcUserInfoVo.getCompanyId())){
             pcUserInfoVo.setLevel(userVO.getPcUserInfo().getLevel());
