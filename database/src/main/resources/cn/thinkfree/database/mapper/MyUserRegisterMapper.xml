@@ -51,4 +51,98 @@
 
         select phone from user_register
     </select>
+
+    <insert id="insertOnlyONe" parameterType="cn.thinkfree.database.model.UserRegister">
+        insert into user_register
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="headPortraits != null">
+                head_portraits,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="registerTime != null">
+                register_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null">
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                #{userId,jdbcType=VARCHAR},
+            </if>
+            <if test="headPortraits != null">
+                #{headPortraits,jdbcType=VARCHAR},
+            </if>
+            <if test="type != null">
+                #{type,jdbcType=SMALLINT},
+            </if>
+            <if test="registerTime != null">
+                #{registerTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="isDelete != null">
+                #{isDelete,jdbcType=SMALLINT},
+            </if>
+        </trim>
+        select
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="password != null">
+                password,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="headPortraits != null">
+                head_portraits,
+            </if>
+            <if test="type != null">
+                type,
+            </if>
+            <if test="registerTime != null">
+                register_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="isDelete != null">
+                is_delete,
+            </if>
+        </trim>
+        from user_register
+        where exists (select 1 from user_register where phone = #{phone,jdbcType=VARCHAR})
+    </insert>
 </mapper>

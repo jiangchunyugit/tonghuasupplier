@@ -119,4 +119,11 @@ public interface UserRegisterMapper {
      * @return
      */
     List<String> findPhoneAll();
+
+    /**
+     * 添加唯一的账号
+     * @param userRegister
+     * @return
+     */
+    int insertOnlyONe(UserRegister userRegister);
 }
