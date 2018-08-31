@@ -82,7 +82,7 @@ import java.time.Instant;
 //			if (SecurityRequestUtil.isAjax(httpRequest)) {
 				MyRespBundle<String> myRespBundle =buildErrorResp();
 				httpResponse.setHeader("Content-Type","application/json; charset=utf-8");
-				httpResponse.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
+				httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
 				httpResponse.getWriter().write(new Gson().toJson(myRespBundle));
 //			} else {
 //				httpResponse.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);

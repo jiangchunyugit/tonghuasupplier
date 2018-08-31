@@ -53,9 +53,9 @@ import java.util.stream.Collectors;
 	 public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		 String url = ((FilterInvocation)object).getRequestUrl();
 		 url = url.replaceAll("/\\d{1,}","/{id}");
-// 		if(StringUtils.isNotBlank(url)&& url.indexOf("?") > 0){
-// 			url = url.substring(0,url.indexOf("?"));
-//		}
+ 		if(StringUtils.isNotBlank(url)&& url.indexOf("?") > 0){
+ 			url = url.substring(0,url.indexOf("?"));
+		}
 		 if(SecurityUrlTrustHolder.isTrust(url)|| resources.isEmpty()){
 			 return null;
 		 }

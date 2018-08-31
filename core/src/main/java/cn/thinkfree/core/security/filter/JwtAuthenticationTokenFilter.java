@@ -1,8 +1,11 @@
 package cn.thinkfree.core.security.filter;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.utils.JwtUtils;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +19,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Map;
+
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
@@ -41,6 +47,17 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                }else{
+                    response.setCharacterEncoding("UTF-8");
+                    response.setContentType("application/json;charset=utf-8");
+                    response.setHeader("Access-Control-Allow-Origin","*");
+                    MyRespBundle<String> resp = new MyRespBundle<>();
+                    resp.setTimestamp(Instant.now().toEpochMilli());
+                    resp.setMessage("非法授权!");
+                    resp.setCode(HttpStatus.FORBIDDEN.value());
+                    resp.setData("非法授权");
+                    response.getWriter().write(new Gson().toJson(resp));
+                    return;
                 }
             }
         }

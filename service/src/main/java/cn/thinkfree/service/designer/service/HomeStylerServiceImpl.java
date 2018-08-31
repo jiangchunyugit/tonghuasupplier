@@ -1,10 +1,21 @@
 package cn.thinkfree.service.designer.service;
 
+import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.database.mapper.PreProjectGuideMapper;
+import cn.thinkfree.database.mapper.PreProjectInfoMapper;
+import cn.thinkfree.database.model.PreProjectGuide;
+import cn.thinkfree.database.model.PreProjectGuideExample;
+import cn.thinkfree.database.model.PreProjectInfo;
+import cn.thinkfree.database.model.PreProjectInfoExample;
 import cn.thinkfree.service.designer.vo.HomeStyler;
+import cn.thinkfree.service.project.ProjectService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Service
 public class HomeStylerServiceImpl implements HomeStylerService {
@@ -19,6 +30,9 @@ public class HomeStylerServiceImpl implements HomeStylerService {
 
     @Autowired
     RestTemplate restTemplate;
+
+    @Autowired
+    PreProjectInfoMapper preProjectInfoMapper;
 
     /**
      * 获取CaseID
@@ -56,9 +70,20 @@ public class HomeStylerServiceImpl implements HomeStylerService {
      */
     @Override
     public HomeStyler findDataByProjectNo(String projectNo) {
-//        String url = getCaseIDUrl+projectNo;
-//        String caseID = restTemplate.getForObject(url, String.class);
-        HomeStyler homeStyler = restTemplate.getForObject(getHomeStylerUrl + projectNo, HomeStyler.class);
+
+        PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
+        preProjectInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        List<PreProjectInfo> preProjectInfos = preProjectInfoMapper.selectByExample(preProjectInfoExample);
+
+        if(preProjectInfos.isEmpty() || preProjectInfos.size() > 1){
+            return new HomeStyler();
+        }
+        PreProjectInfo preProjectInfo = preProjectInfos.get(0);
+        String filePackage = preProjectInfo.getFilePackage();
+        if(StringUtils.isBlank(filePackage)){
+            return new HomeStyler();
+        }
+        HomeStyler homeStyler = restTemplate.getForObject(getHomeStylerUrl + convertUrl(filePackage), HomeStyler.class);
         return homeStyler;
     }
 

@@ -54,6 +54,7 @@ public class HomeStyler extends BaseModel {
     private String jMemberId;
     private List<SpaceDetailsBean> spaceDetails;
 
+
     public String getName() {
         return name;
     }

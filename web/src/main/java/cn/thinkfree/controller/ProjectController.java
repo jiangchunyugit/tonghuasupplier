@@ -10,6 +10,9 @@ import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.PreProjectMaterial;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.designer.service.HomeStylerService;
+import cn.thinkfree.service.designer.vo.HomeStyler;
+import cn.thinkfree.service.designer.vo.HomeStylerVO;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.remote.CloudService;
 import com.github.pagehelper.PageInfo;
@@ -32,6 +35,9 @@ public class ProjectController extends AbsBaseController {
 
     @Autowired
     CloudService cloudService;
+
+    @Autowired
+    HomeStylerService homeStylerService;
 
     /**
      * 项目列表
@@ -202,7 +208,13 @@ public class ProjectController extends AbsBaseController {
         return sendSuccessMessage(mes);
     }
 
-
+    @GetMapping("/homeStyler")
+    public MyRespBundle<HomeStylerVO> homeStyler(@RequestParam("id") String projectNo){
+        HomeStyler homeStyler = homeStylerService.findDataByProjectNo(projectNo);
+        HomeStylerVO homeStylerVO = new HomeStylerVO();
+        homeStylerVO.setSpaceDetailsBeans(homeStyler.getSpaceDetails());
+        return sendJsonData(ResultMessage.SUCCESS,homeStylerVO);
+    }
 
 
 }

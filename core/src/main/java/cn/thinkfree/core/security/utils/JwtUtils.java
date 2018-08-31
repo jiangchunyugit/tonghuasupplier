@@ -4,9 +4,11 @@ import cn.thinkfree.core.security.model.SecurityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,8 +53,9 @@ public class JwtUtils {
      * @return 令牌
      */
     public String generateToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>(2);
+        Map<String, Object> claims = new HashMap<>(3);
         claims.put("sub", userDetails.getUsername());
+        claims.put("pwd",userDetails.getPassword());
         claims.put("created", new Date());
         return generateToken(claims);
     }
@@ -118,6 +121,22 @@ public class JwtUtils {
     public Boolean validateToken(String token, UserDetails userDetails) {
         SecurityUser user = (SecurityUser) userDetails;
         String username = getUsernameFromToken(token);
+        String pwd = getUserPwdFormToken(token);
+
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
+//        return (username.equals(user.getUsername()) && (user.getPassword().equals(pwd)) && !isTokenExpired(token));
+
     }
+
+    private String getUserPwdFormToken(String token) {
+        Claims claims = getClaimsFromToken(token);
+        String pwd;
+        try {
+            pwd = String.valueOf(claims.get("pwd"));
+        } catch (Exception e) {
+            pwd = null;
+        }
+        return pwd;
+    }
+
 }
