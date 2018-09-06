@@ -8,5 +8,11 @@
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://rm-2zea5t7it298uz8786o.ppas.rds.aliyuncs.com:3432/easy_home</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="postgres@rm-2ze03v8v22mzojek54o.ppas.rds.aliyuncs.com" uuid="3af76c1e-5ed1-48e5-b2f9-deeec25167c8">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://rm-2ze03v8v22mzojek54o.ppas.rds.aliyuncs.com:3432/postgres</jdbc-url>
+    </data-source>
   </component>
 </project>

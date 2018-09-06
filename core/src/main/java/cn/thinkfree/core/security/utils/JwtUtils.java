@@ -55,7 +55,7 @@ public class JwtUtils {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>(3);
         claims.put("sub", userDetails.getUsername());
-        claims.put("pwd",userDetails.getPassword());
+//        claims.put("pwd",userDetails.getPassword());
         claims.put("created", new Date());
         return generateToken(claims);
     }
@@ -121,7 +121,7 @@ public class JwtUtils {
     public Boolean validateToken(String token, UserDetails userDetails) {
         SecurityUser user = (SecurityUser) userDetails;
         String username = getUsernameFromToken(token);
-        String pwd = getUserPwdFormToken(token);
+//        String pwd = getUserPwdFormToken(token);
 
         return (username.equals(user.getUsername()) && !isTokenExpired(token));
 //        return (username.equals(user.getUsername()) && (user.getPassword().equals(pwd)) && !isTokenExpired(token));

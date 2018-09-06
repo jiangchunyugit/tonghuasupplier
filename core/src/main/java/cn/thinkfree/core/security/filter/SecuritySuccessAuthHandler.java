@@ -8,6 +8,7 @@ import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.utils.JwtUtils;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
@@ -62,7 +63,7 @@ public class SecuritySuccessAuthHandler
         userModel.put("username",user.getUsername());
         userModel.put("companyName",user.getCompanyName());
         userModel.put("name",user.getName());
-        userModel.put("createTime",user.getCreateTime());
+        userModel.put("createTime",(user.getCreateTime() !=null) ?user.getCreateTime().getTime() : null);
         result.put("userModel",userModel);
         String token = jwtUtils.generateToken(user);
         System.out.println(token);
@@ -87,12 +88,12 @@ public class SecuritySuccessAuthHandler
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=utf-8");
         response.setHeader("Access-Control-Allow-Origin","*");
-        MyRespBundle<Map> resp = new MyRespBundle<>();
+        MyRespBundle<Map<String,Object>> resp = new MyRespBundle<>();
         resp.setTimestamp(Instant.now().toEpochMilli());
         resp.setMessage("登录成功!");
         resp.setCode(200);
         resp.setData(result);
-        response.getWriter().write(new Gson().toJson(resp));
+        response.getWriter().write(new GsonBuilder().serializeNulls().create().toJson(resp));
 
     }
 

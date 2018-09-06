@@ -71,7 +71,9 @@ public class WebFileUtil {
         if(StringUtils.isNotBlank(makePath) && makePath.length() > 7){
             makePath=makePath.replaceAll("\\\\", "/");
         }
-        return makePath;
+
+        logger.error(makePath);
+        return  makePath.replace("http:/","http://");
     }
 
 
@@ -150,8 +152,8 @@ public class WebFileUtil {
      * @return
      */
     private static String makePath(boolean isShow,String tmpDir, String ... name) {
-        System.out.println(uploadDir);
-        System.out.println(publicURL);
+
+
         String tmpPath =
                 isShow ?
                         publicURL

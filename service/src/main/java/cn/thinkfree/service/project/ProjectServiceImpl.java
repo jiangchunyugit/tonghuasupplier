@@ -71,6 +71,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     @Autowired
     ConsumerSetMapper consumerSetMapper;
 
+    @Autowired
+    UserInfoMapper userInfoMapper;
+
 
     /**
      * 所谓五分钟
@@ -367,7 +370,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
         PreProjectGuideExample preProjectGuideExample = new PreProjectGuideExample();
         preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectDetailsVO.getProjectNo());
-        projectDetailsVO.setStatus(ProjectStatus.WaitStart.shortVal());
+//        projectDetailsVO.setStatus(ProjectStatus.WaitStart.shortVal());
         if(projectDetailsVO.getThumbnail() != null){
             String filePath = WebFileUtil.fileCopy("/project",projectDetailsVO.getThumbnail());
             projectDetailsVO.setProjectPic(filePath);
@@ -385,8 +388,8 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
 //        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
 
-        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
-        if(!rs.isComplete()) throw  new RuntimeException("神奇的操作,无法理解");
+//        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
+//        if(!rs.isComplete()) throw  new RuntimeException("神奇的操作,无法理解");
 
 
         return "操作成功!";
@@ -415,6 +418,15 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         }
         List<ProjectUserRoleVO> projectUserRoleVOS = projectTransferVO.getStaffs();
         projectUserRoleVOS.forEach(p->{
+
+            String userName = "";
+            UserInfoExample userInfoExample = new UserInfoExample();
+            userInfoExample.createCriteria().andUserIdEqualTo(p.getUserId());
+            List<UserInfo> users = userInfoMapper.selectByExample(userInfoExample);
+
+            if(!users.isEmpty() || !(users.size() > 1)){
+                userName = users.get(0).getName();
+            }
             PreProjectUserRole updateObj = new PreProjectUserRole();
             updateObj.setIsTransfer(SysConstants.YesOrNo.YES.shortVal());
             updateObj.setTransferUserId(p.getUserId());
@@ -429,6 +441,8 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             insert.setCreateTime(new Date());
             insert.setUserId(p.getUserId());
             insert.setRoleId(p.getRoleId());
+            insert.setUserName(userName);
+            insert.setRoleName(UserJobs.findByCodeStr(p.getRoleId()).mes);
             insert.setProjectNo(projectTransferVO.getProjectNo());
             preProjectUserRoleMapper.insertSelective(insert);
         });
@@ -631,9 +645,19 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     private void replacement(List<ProjectUserRoleVO> preProjectUserRoles) {
 
         for(PreProjectUserRole vo : preProjectUserRoles){
+            String userName = "";
+            UserInfoExample userInfoExample = new UserInfoExample();
+            userInfoExample.createCriteria().andUserIdEqualTo(vo.getUserId());
+            List<UserInfo> users = userInfoMapper.selectByExample(userInfoExample);
+
+            if(!users.isEmpty() || !(users.size() > 1)){
+                userName = users.get(0).getName();
+            }
             PreProjectUserRole preProjectUserRole = new PreProjectUserRole();
             preProjectUserRole.setRoleId(vo.getRoleId());
             preProjectUserRole.setUserId(vo.getUserId());
+            preProjectUserRole.setUserName(userName);
+            preProjectUserRole.setRoleName(UserJobs.findByCodeStr(vo.getRoleId()).mes);
             preProjectUserRole.setIsJob(SysConstants.YesOrNo.YES.shortVal());
             preProjectUserRole.setIsTransfer(SysConstants.YesOrNo.NO.shortVal());
             PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();

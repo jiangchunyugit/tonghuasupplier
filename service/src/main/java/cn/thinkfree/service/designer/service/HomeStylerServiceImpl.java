@@ -1,6 +1,7 @@
 package cn.thinkfree.service.designer.service;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.mapper.PreProjectInfoMapper;
 import cn.thinkfree.database.model.PreProjectGuide;
@@ -18,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 @Service
-public class HomeStylerServiceImpl implements HomeStylerService {
+public class HomeStylerServiceImpl extends AbsLogPrinter implements HomeStylerService {
 
 
     @Value("${custom.design.caseIDUrl}")
@@ -71,6 +72,9 @@ public class HomeStylerServiceImpl implements HomeStylerService {
     @Override
     public HomeStyler findDataByProjectNo(String projectNo) {
 
+        if(StringUtils.isBlank(projectNo)){
+            return new HomeStyler();
+        }
         PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
         preProjectInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<PreProjectInfo> preProjectInfos = preProjectInfoMapper.selectByExample(preProjectInfoExample);
@@ -83,12 +87,17 @@ public class HomeStylerServiceImpl implements HomeStylerService {
         if(StringUtils.isBlank(filePackage)){
             return new HomeStyler();
         }
-        HomeStyler homeStyler = restTemplate.getForObject(getHomeStylerUrl + convertUrl(filePackage), HomeStyler.class);
-        return homeStyler;
+        try {
+            HomeStyler homeStyler = restTemplate.getForObject(getHomeStylerUrl + convertUrl(filePackage), HomeStyler.class);
+            return homeStyler;
+        }catch (Exception e){
+            printErrorMes(e.getMessage());
+            return new HomeStyler();
+        }
     }
 
     private String convertUrl(String url){
-        url ="https://3d.homestyler.com/cn/?assetId=3a477ee0-5210-4c26-9707-0df911104a87";
+//        url ="https://3d.homestyler.com/cn/?assetId=3a477ee0-5210-4c26-9707-0df911104a87";
         return url.replace(templateUrl,"");
     }
 }

@@ -20,7 +20,15 @@ public enum  UserJobs {
     /**
      * 质检
      */
-    QualityInspector(4,"质检","CQM");
+    QualityInspector(4,"质检","CQM"),
+    /**
+     * 设计师
+     */
+    Designer(5,"设计师","CD"),
+    /**
+     * 业主
+     */
+    Owner(6,"业主","CC");
 
     public final Integer code;
     public final String mes;
@@ -34,5 +42,9 @@ public enum  UserJobs {
     public static UserJobs findByCode(String code){
         Optional<UserJobs> op = Arrays.stream(UserJobs.values()).filter(j -> Short.valueOf(code).equals(j.code.shortValue())).findFirst();
        return op.isPresent() ? op.get():null;
+    }
+    public static UserJobs findByCodeStr(String code){
+        Optional<UserJobs> op = Arrays.stream(UserJobs.values()).filter(j ->code.equals(j.roleCode)).findFirst();
+        return op.isPresent() ? op.get():null;
     }
 }

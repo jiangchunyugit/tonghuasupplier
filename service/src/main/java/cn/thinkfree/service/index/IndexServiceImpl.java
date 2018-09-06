@@ -89,7 +89,7 @@ public class IndexServiceImpl implements IndexService  {
             List<IndexProjectChartItemVO> result = makeUpDateLine(dataLine,weekDays);
             return result;
         }else if(IndexChartUnit.Month.code.equals(unit)){
-            List<IndexProjectChartItemVO> dataLine = projectService.summaryProjectChart(DateUtils.firstDayOfMonth(), DateUtils.lastDayOfMonth());
+            List<IndexProjectChartItemVO> dataLine = projectService.summaryProjectChart(DateUtils.firstDayOfMonth(), DateUtils.lastDayOfMonth().plusDays(1));
             List<String> monthDays = DateUtils.getMonthDays();
             List<IndexProjectChartItemVO> result = makeUpDateLine(dataLine,monthDays);
             return result;

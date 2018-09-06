@@ -56,7 +56,7 @@
         <!--<table tableName="pre_project_info" domainObjectName="PreProjectInfo" />-->
         <!--<table tableName="pre_project_material" domainObjectName="PreProjectMaterial"/>-->
         <!--<table tableName="pre_project_status" domainObjectName="PreProjectStatus" />-->
-        <!--<table tableName="pre_project_user_role" domainObjectName="PreProjectUserRole"/>-->
+        <table tableName="pre_project_user_role" domainObjectName="PreProjectUserRole"/>
         <!--<table tableName="user_info" domainObjectName="UserInfo" />-->
         <!--<table tableName="user_register" domainObjectName="UserRegister"/>-->
         <!--<table tableName="user_login_log" domainObjectName="UserLoginLog" />-->
@@ -69,7 +69,7 @@
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
         <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
         <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
-        <table tableName="consumer_set" domainObjectName="ConsumerSet"/>
+        <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
 
     </context>
 </generatorConfiguration>

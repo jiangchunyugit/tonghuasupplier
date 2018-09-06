@@ -4,6 +4,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.utils.JwtUtils;
 import com.google.gson.Gson;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,9 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
+//        if (request.getMethod().equals("OPTIONS")) {
+//            response.setStatus(HttpServletResponse.SC_OK);
+//        }
         String tokenHead = "Bearer ";
         if (authHeader != null && authHeader.startsWith(tokenHead)) {
             String authToken = authHeader.substring(tokenHead.length());
