@@ -166,7 +166,7 @@ public class WebFileUtil {
                                 +File.separator+tmpDir;
 
         File pathDir= new File(tmpPath );
-        if(!pathDir.exists()){
+        if(!isShow  && !pathDir.exists()){
             pathDir.mkdirs();
         }
         String tmpName =null;

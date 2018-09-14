@@ -67,6 +67,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web){
         // 设置不拦截规则
         web.ignoring()
+                .antMatchers("/open/**")
                 .antMatchers("/error")
                 .antMatchers("/static/**", SecurityConstants.LOGIN_PAGE,"/**/*.jsp")
                 .antMatchers("/api-docs", "/swagger-resources/**", "/swagger-ui.html","/webjars/**");
@@ -92,7 +93,6 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
         // 该死的Frame
         http.headers().frameOptions().disable();
-
         // 细粒度 更精细的配置~
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAt(mySecurityPcFilter(), FilterSecurityInterceptor.class);

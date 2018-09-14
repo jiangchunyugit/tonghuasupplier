@@ -1,16 +1,10 @@
 package cn.thinkfree.core.security.filter.util;
 
-import cn.thinkfree.core.utils.SpringBeanUtil;
-import cn.thinkfree.core.utils.SpringContextHolder;
-import com.google.common.collect.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 
 /**
  * 登陆用户信息工具类
@@ -20,7 +14,6 @@ import javax.annotation.PostConstruct;
 public class SessionUserDetailsUtil {
 
 
-	public static  TempTestUtils tempTestUtils;
 
 
 
@@ -37,9 +30,6 @@ public class SessionUserDetailsUtil {
 			userDetails = (UserDetails) ac.getPrincipal();
 		}
 
-//		if(userDetails == null){
-//			userDetails = tempTestUtils.builderUserVO();
-//		}
 		return userDetails;
 	}
 

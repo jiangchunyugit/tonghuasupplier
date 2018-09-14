@@ -147,4 +147,10 @@ public interface ProjectService {
     String notifyOwner(String phone);
 
 
+    /**
+     * 判断业主是否已激活
+     * @param projectNo
+     * @return
+     */
+    Boolean selectOwnerIsActivatByProjectNo(String projectNo);
 }

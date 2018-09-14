@@ -75,6 +75,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
     UserInfoMapper userInfoMapper;
 
 
+
     /**
      * 所谓五分钟
      */
@@ -294,12 +295,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
                     .findFirst().get());
             items.add(tmp);
         }
-
-//        ProjectQuotationVO projectQuotationVO = preProjectInfoMapper.selectProjectQuotationVOByProjectNo(projectNo);
-//        if(projectQuotationVO == null){
-//            return new ProjectQuotationVO();
-//        }
-//        List<ProjectQuotationItemVO> is = projectQuotationVO.getItems();
+        // 排序也是很有趣的工作
         Set<String> dis = items.stream().map(ProjectQuotationItemVO::getConstructionProjectType).collect(Collectors.toSet());
         List<ProjectQuotationItemVO> bigType = new ArrayList<>();
         dis.forEach(d->{
@@ -311,9 +307,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         Collections.sort(bigType, Comparator.comparing(o -> ProjectQuotationItemSortUtils.sortNo(o.getConstructionProjectType())));
         projectQuotationVO.setItems(bigType);
         projectQuotationVO.setProjectNo(projectNo);
-//        List<ProjectQuotationItemVO> projectQuotationVOList= preProjectConstructionMapper.selectProjectQuotationItemVoByProjectNo(projectNo);
-//
-//        projectQuotationVO.setItems(projectQuotationVOList);
+
         return projectQuotationVO;
     }
 
@@ -370,16 +364,19 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
         PreProjectGuideExample preProjectGuideExample = new PreProjectGuideExample();
         preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectDetailsVO.getProjectNo());
-//        projectDetailsVO.setStatus(ProjectStatus.WaitStart.shortVal());
+
         if(projectDetailsVO.getThumbnail() != null){
             String filePath = WebFileUtil.fileCopy("/project",projectDetailsVO.getThumbnail());
             projectDetailsVO.setProjectPic(filePath);
         }
         preProjectGuideMapper.updateByExampleSelective(projectDetailsVO,preProjectGuideExample);
 
+        // 处理业主信息
+        updateConsumer(projectDetailsVO);
+
         printInfoMes("处理项目员工信息");
 
-        replacement(projectDetailsVO.getStaffs());
+        replacement(projectDetailsVO);
 
         PreProjectInfo preProjectInfo = projectDetailsVO.getInfo();
         PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
@@ -388,11 +385,30 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
 //        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
 
-//        RemoteResult<String> rs = cloudService.projectUpOnline(projectDetailsVO.getProjectNo(), ProjectStatus.WaitStart.shortVal());
-//        if(!rs.isComplete()) throw  new RuntimeException("神奇的操作,无法理解");
 
 
         return "操作成功!";
+    }
+
+    /**
+     * 更新业主信息
+     * @param projectDetailsVO
+     */
+    private void updateConsumer(ProjectDetailsVO projectDetailsVO) {
+        PreProjectGuide tmp = preProjectGuideMapper.selectByPrimaryKey(projectDetailsVO.getId());
+        ConsumerSet updateConsumer = new ConsumerSet();
+        updateConsumer.setName(projectDetailsVO.getCustomerName());
+        updateConsumer.setPhone(projectDetailsVO.getCustomerPhone());
+        ConsumerSetExample consumerSetExample = new ConsumerSetExample();
+        consumerSetExample.createCriteria().andConsumerIdNotEqualTo(tmp.getCustomerNo());
+        consumerSetMapper.updateByExampleSelective(updateConsumer,consumerSetExample);
+
+        PreProjectUserRole updatePreProjectUserRole = new PreProjectUserRole();
+        updatePreProjectUserRole.setUserName(projectDetailsVO.getCustomerName());
+        PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
+        preProjectUserRoleExample.createCriteria().andProjectNoEqualTo(projectDetailsVO.getProjectNo())
+                .andRoleIdEqualTo(UserJobs.Owner.roleCode).andUserIdEqualTo(tmp.getContractNo());
+        preProjectUserRoleMapper.updateByExampleSelective(updatePreProjectUserRole,preProjectUserRoleExample);
     }
 
 
@@ -446,7 +462,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             insert.setProjectNo(projectTransferVO.getProjectNo());
             preProjectUserRoleMapper.insertSelective(insert);
         });
-//        replacement(projectTransferVO.getStaffs());
+
         return "操作成功!";
     }
 
@@ -612,7 +628,27 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         return rs.isComplete() ? "操作成功":"操作失败";
     }
 
+    /**
+     * 判断业主是否已激活
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public Boolean selectOwnerIsActivatByProjectNo(String projectNo) {
+        PreProjectGuideExample preProjectGuideExample = new PreProjectGuideExample();
+        preProjectGuideExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<PreProjectGuide> ps = preProjectGuideMapper.selectByExample(preProjectGuideExample);
 
+        if(ps.isEmpty() || ps.size() >1){
+            return Boolean.TRUE;
+        }
+        PreProjectGuide p = ps.get(0);
+        ConsumerSetExample consumerSetExample = new ConsumerSetExample();
+        consumerSetExample.createCriteria().andConsumerIdNotEqualTo(p.getContractNo()).andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal());
+        List<ConsumerSet> cs = consumerSetMapper.selectByExample(consumerSetExample);
+        return !cs.isEmpty();
+    }
 
 
     /**
@@ -640,10 +676,14 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
     /**
      * 替换人员
-     * @param preProjectUserRoles
+     * @param projectDetailsVO
      */
-    private void replacement(List<ProjectUserRoleVO> preProjectUserRoles) {
+    private void replacement(ProjectDetailsVO projectDetailsVO) {
 
+        List<ProjectUserRoleVO> preProjectUserRoles = projectDetailsVO.getStaffs();
+        PreProjectUserRoleExample del =new PreProjectUserRoleExample();
+        del.createCriteria().andProjectNoEqualTo(projectDetailsVO.getProjectNo()).andRoleIdNotEqualTo(UserJobs.Owner.roleCode);
+        preProjectUserRoleMapper.deleteByExample(del);
         for(PreProjectUserRole vo : preProjectUserRoles){
             String userName = "";
             UserInfoExample userInfoExample = new UserInfoExample();
@@ -654,15 +694,18 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
                 userName = users.get(0).getName();
             }
             PreProjectUserRole preProjectUserRole = new PreProjectUserRole();
+            preProjectUserRole.setProjectNo(projectDetailsVO.getProjectNo());
             preProjectUserRole.setRoleId(vo.getRoleId());
             preProjectUserRole.setUserId(vo.getUserId());
             preProjectUserRole.setUserName(userName);
             preProjectUserRole.setRoleName(UserJobs.findByCodeStr(vo.getRoleId()).mes);
             preProjectUserRole.setIsJob(SysConstants.YesOrNo.YES.shortVal());
             preProjectUserRole.setIsTransfer(SysConstants.YesOrNo.NO.shortVal());
-            PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
-            preProjectUserRoleExample.createCriteria().andIdEqualTo(vo.getId());
-            preProjectUserRoleMapper.updateByExampleSelective(preProjectUserRole,preProjectUserRoleExample);
+            preProjectUserRole.setCreateTime(new Date());
+            preProjectUserRoleMapper.insertSelective(preProjectUserRole);
+//            PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
+//            preProjectUserRoleExample.createCriteria().andIdEqualTo(vo.getId());
+//            preProjectUserRoleMapper.updateByExampleSelective(preProjectUserRole,preProjectUserRoleExample);
         }
     }
 

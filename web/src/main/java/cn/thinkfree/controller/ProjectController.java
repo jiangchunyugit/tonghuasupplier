@@ -48,7 +48,7 @@ public class ProjectController extends AbsBaseController {
     @GetMapping("/list")
     @MyRespBody
     public MyRespBundle<PageInfo<ProjectVO>> list(@ApiParam("项目搜索条件")   ProjectSEO projectSEO){
-//        BeanValidator.validate(projectSEO);
+
         PageInfo<ProjectVO> pageInfo = projectService.pageProjectBySEO(projectSEO);
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }
@@ -141,7 +141,7 @@ public class ProjectController extends AbsBaseController {
     }
 
     /**
-     * 上线项目
+     * 保存项目
      * @return
      */
     @ApiOperation(value = "项目上线", notes = "项目上线")
@@ -214,6 +214,17 @@ public class ProjectController extends AbsBaseController {
         HomeStylerVO homeStylerVO = new HomeStylerVO();
         homeStylerVO.setSpaceDetailsBeans(homeStyler.getSpaceDetails());
         return sendJsonData(ResultMessage.SUCCESS,homeStylerVO);
+    }
+
+    /**
+     * 判断业主是否激活
+     * @param projectNo
+     * @return
+     */
+    @GetMapping("/isActivated")
+    public MyRespBundle<Boolean> isActivated(String projectNo){
+        Boolean flag = projectService.selectOwnerIsActivatByProjectNo(projectNo);
+        return sendJsonData(ResultMessage.SUCCESS,flag);
     }
 
 
