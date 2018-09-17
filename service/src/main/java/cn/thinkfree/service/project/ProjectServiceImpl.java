@@ -407,7 +407,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         updatePreProjectUserRole.setUserName(projectDetailsVO.getCustomerName());
         PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
         preProjectUserRoleExample.createCriteria().andProjectNoEqualTo(projectDetailsVO.getProjectNo())
-                .andRoleIdEqualTo(UserJobs.Owner.roleCode).andUserIdEqualTo(tmp.getContractNo());
+                .andRoleIdEqualTo(UserJobs.Owner.roleCode).andUserIdEqualTo(tmp.getCustomerNo());
         preProjectUserRoleMapper.updateByExampleSelective(updatePreProjectUserRole,preProjectUserRoleExample);
     }
 
@@ -645,7 +645,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         }
         PreProjectGuide p = ps.get(0);
         ConsumerSetExample consumerSetExample = new ConsumerSetExample();
-        consumerSetExample.createCriteria().andConsumerIdNotEqualTo(p.getContractNo()).andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal());
+        consumerSetExample.createCriteria().andConsumerIdEqualTo(p.getCustomerNo()).andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal());
         List<ConsumerSet> cs = consumerSetMapper.selectByExample(consumerSetExample);
         return !cs.isEmpty();
     }
