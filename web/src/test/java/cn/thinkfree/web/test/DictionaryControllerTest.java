@@ -1,31 +1,17 @@
 package cn.thinkfree.web.test;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.ProjectDetailsVO;
-import cn.thinkfree.database.vo.ProjectSEO;
-import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.constants.ProjectStatus;
-import com.google.common.collect.Lists;
-import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import javax.servlet.Filter;
 import java.lang.reflect.Type;
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;

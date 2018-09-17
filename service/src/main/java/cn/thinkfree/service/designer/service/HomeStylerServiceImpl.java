@@ -2,14 +2,10 @@ package cn.thinkfree.service.designer.service;
 
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
-import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.mapper.PreProjectInfoMapper;
-import cn.thinkfree.database.model.PreProjectGuide;
-import cn.thinkfree.database.model.PreProjectGuideExample;
 import cn.thinkfree.database.model.PreProjectInfo;
 import cn.thinkfree.database.model.PreProjectInfoExample;
 import cn.thinkfree.service.designer.vo.HomeStyler;
-import cn.thinkfree.service.project.ProjectService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

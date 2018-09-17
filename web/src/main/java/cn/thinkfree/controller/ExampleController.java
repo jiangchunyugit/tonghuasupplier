@@ -13,7 +13,6 @@ import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.model.PreProjectGuide;
-import cn.thinkfree.database.model.UserInfo;
 import cn.thinkfree.service.user.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

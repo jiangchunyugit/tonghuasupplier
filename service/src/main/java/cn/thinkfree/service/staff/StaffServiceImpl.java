@@ -3,16 +3,15 @@ package cn.thinkfree.service.staff;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
-import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
-import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.UserNoUtils;
+import com.edb.util.PSQLException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -21,24 +20,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.temporal.ChronoField;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import cn.thinkfree.core.logger.AbsLogPrinter;
-import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
-import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
-import com.github.pagehelper.PageHelper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 @Service
@@ -89,12 +77,11 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     @Transactional
     public String insetCompanyUser(CompanyUserSet companyUserSet) {
         //判断输入的手机号码是否已经注册过
-        List<String> phones = userRegisterMapper.findPhoneAll();
+        List<String> phones = companyUserSetMapper.listAlreadyUsedPhone();
         boolean flag = phones.contains(companyUserSet.getPhone());
         if(flag){
             return "手机号码已被注册过，请更换手机号码！！";
         }
-        Date date = new Date();
         String activationCode = RandomNumUtils.random(6);
         String userID = UserNoUtils.getUserNo(companyUserSet.getRoleId());
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
@@ -107,19 +94,6 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         companyUserSet.setCompanyId(userVO.getCompanyID());
 
         companyUserSetMapper.insertSelective(companyUserSet);
-
-//        printInfoMes("插入用户注册表");
-//        UserRegister userRegister = new UserRegister();
-//        userRegister.setUserId(userID);
-//        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
-//        userRegister.setPhone(companyUserSet.getPhone());
-//        userRegister.setType(UserRegisterType.Personal.shortVal());
-//        MultipleMd5 md5 = new MultipleMd5();
-//        //默认密码123456
-//        userRegister.setPassword(md5.encode("123456"));
-//        userRegister.setRegisterTime(date);
-//        userRegister.setUpdateTime(date);
-//        userRegisterMapper.insertSelective(userRegister);
 
         printInfoMes("插入用户信息表");
         UserInfo userInfo = new UserInfo();
@@ -310,6 +284,8 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         }
         return "操作失败";
     }
+
+
 }
 
 

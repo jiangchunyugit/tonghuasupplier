@@ -16,8 +16,12 @@ import cn.thinkfree.service.staff.StaffService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 
@@ -49,27 +53,7 @@ public class StaffController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS,staffsVOPageInfo);
     }
 
-    /**
-     * 查询员工信息
-     * @param id
-     * @return
-     */
-    /*@RequestMapping(value = "/queryCompanyUser",method = RequestMethod.GET)
-    public MyRespBundle<PageInfo<CompanyUserSet>> queryCompanyUser(
-            @RequestParam("id")Integer id,@RequestParam("userID") String userID,@RequestParam("status") Integer status,@RequestParam("rows")Integer rows,@RequestParam("page")Integer page){
 
-        projectService.selectProjectVOForPerson(userID,status,rows,page);
-        projectService.countProjectForPerson(userID);
-        CompanyUserSet companyUserSet = this.staffService.queryCompanyUser(id);
-        return sendJsonData(ResultMessage.SUCCESS,companyUserSet);
-    }*/
-
-    /*@PostMapping("/save-user")
-    @MyRespBody
-    @SuppressWarnings("unchecked")
-    public MyRespBundle saveUserInfo(@RequestBody SaveUserInfo userInfo){
-        userService.saveUserInfo(userInfo);
-    }*/
 
     @ApiOperation("员工管理--->详情-->项目列表")
     @GetMapping("/companyList")
@@ -221,6 +205,23 @@ public class StaffController extends AbsBaseController{
 
         return sendJsonData(ResultMessage.SUCCESS, staffsVO);
     }
+
+    /**
+     * 过渡数据库唯一索引问题
+     * @param req
+     * @param response
+     * @param e
+     * @return
+     * @throws Exception
+     */
+    @ExceptionHandler(value = DataIntegrityViolationException.class)
+    @ResponseBody
+    public MyRespBundle<String> exceptionHandler(HttpServletRequest req, HttpServletResponse response, DataIntegrityViolationException e) throws Exception {
+
+        return  sendSuccessMessage("手机号已存在!");
+    }
+
+
 
 }
 

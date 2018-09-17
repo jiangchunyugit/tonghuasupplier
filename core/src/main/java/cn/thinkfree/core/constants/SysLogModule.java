@@ -3,7 +3,6 @@ package cn.thinkfree.core.constants;
 /**
  * 系统日志模块
  * 配合切面和注解
- * @see cn.thinkfree.core.annotation.MySysLog
  */
 public enum  SysLogModule {
 

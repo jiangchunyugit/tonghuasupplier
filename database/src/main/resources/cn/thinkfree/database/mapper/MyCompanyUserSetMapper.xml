@@ -210,4 +210,8 @@
         <!--)-->
 
     <!--</insert>-->
+    <select id="listAlreadyUsedPhone" resultType="java.lang.String">
+        select phone from company_user_set
+        where is_job = 1
+    </select>
 </mapper>

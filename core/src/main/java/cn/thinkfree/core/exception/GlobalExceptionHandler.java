@@ -69,10 +69,11 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 	@ExceptionHandler(value = BindException.class)
 	@ResponseBody
 	public MyRespBundle<String> exceptionHandler(HttpServletRequest req, HttpServletResponse response, BindException e) throws Exception {
-		System.out.println(e);
 		responseHandler(response, HttpStatus.BAD_REQUEST);
 		return buildErrorInfo(HttpStatus.BAD_REQUEST, e, req);
 	}
+
+
 
 
 	@ExceptionHandler(value = Exception.class)

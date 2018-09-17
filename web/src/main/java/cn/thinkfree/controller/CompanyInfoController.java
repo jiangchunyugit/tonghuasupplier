@@ -5,7 +5,6 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.company.CompanyInfoService;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.thinkfree.database.model.CompanyUserSet;
 
 @RestController
 @RequestMapping(value = "/company")

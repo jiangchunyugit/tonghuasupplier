@@ -138,4 +138,11 @@ public interface CompanyUserSetMapper {
      * @return
      */
     List<StaffsVO> staffByCompanyID(String companyId);
+
+    /**
+     * 查询已经占用的手机号
+     * @return
+     */
+    List<String> listAlreadyUsedPhone();
+
 }

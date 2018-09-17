@@ -2,7 +2,6 @@ package cn.thinkfree.service.dictionary;
 
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
-import cn.thinkfree.database.constants.MenuType;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;

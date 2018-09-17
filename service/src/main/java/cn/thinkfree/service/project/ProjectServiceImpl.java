@@ -18,16 +18,11 @@ import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.ProjectQuotationItemSortUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import org.apache.commons.collections.MultiMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
@@ -400,7 +395,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         updateConsumer.setName(projectDetailsVO.getCustomerName());
         updateConsumer.setPhone(projectDetailsVO.getCustomerPhone());
         ConsumerSetExample consumerSetExample = new ConsumerSetExample();
-        consumerSetExample.createCriteria().andConsumerIdNotEqualTo(tmp.getCustomerNo());
+        consumerSetExample.createCriteria().andConsumerIdEqualTo(tmp.getCustomerNo());
         consumerSetMapper.updateByExampleSelective(updateConsumer,consumerSetExample);
 
         PreProjectUserRole updatePreProjectUserRole = new PreProjectUserRole();

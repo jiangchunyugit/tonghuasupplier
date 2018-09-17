@@ -1,17 +1,9 @@
 package cn.thinkfree.service.remote;
 
-import cn.thinkfree.core.constants.SysConstants;
-import cn.thinkfree.database.mapper.PreProjectGuideMapper;
-import cn.thinkfree.database.model.PreProjectGuide;
-import cn.thinkfree.database.model.PreProjectGuideExample;
 import cn.thinkfree.database.model.SystemMessage;
-import cn.thinkfree.service.constants.ProjectStatus;
-import cn.thinkfree.service.project.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;

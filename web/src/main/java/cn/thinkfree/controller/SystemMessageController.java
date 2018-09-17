@@ -4,20 +4,14 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.utils.BeanValidator;
-import cn.thinkfree.database.vo.Severitys;
 import cn.thinkfree.database.vo.SystemMessageVo;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 
 @RestController
