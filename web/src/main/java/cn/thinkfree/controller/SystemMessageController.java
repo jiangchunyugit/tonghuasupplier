@@ -107,4 +107,5 @@ public class SystemMessageController extends AbsBaseController {
         }
         return sendJsonData(ResultMessage.FAIL, line);
     }
+
 }

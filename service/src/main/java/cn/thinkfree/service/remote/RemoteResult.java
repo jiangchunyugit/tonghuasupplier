@@ -11,7 +11,7 @@ public class RemoteResult<T> extends BaseModel {
 
     private Integer code;
     private String msg;
-    private Date timestamp;
+//    private Date timestamp;
     private T data;
 
     public Integer getCode() {
@@ -30,13 +30,13 @@ public class RemoteResult<T> extends BaseModel {
         this.msg = msg;
     }
 
-    public Date getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Date timestamp) {
-        this.timestamp = timestamp;
-    }
+//    public Date getTimestamp() {
+//        return timestamp;
+//    }
+//
+//    public void setTimestamp(Date timestamp) {
+//        this.timestamp = timestamp;
+//    }
 
     public T getData() {
         return data;

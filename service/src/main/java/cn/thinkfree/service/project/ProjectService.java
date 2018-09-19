@@ -3,8 +3,10 @@ package cn.thinkfree.service.project;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectGuideExample;
 import cn.thinkfree.database.model.PreProjectMaterial;
+import cn.thinkfree.database.model.ProjectDocument;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -153,4 +155,18 @@ public interface ProjectService {
      * @return
      */
     Boolean selectOwnerIsActivatByProjectNo(String projectNo);
+
+    /**
+     * 上传项目资料包
+     * @param projectDocumentContainer
+     * @return
+     */
+    String uploadProjectDocuments(ProjectDocumentContainer projectDocumentContainer);
+
+    /**
+     * 查询项目资料包
+     * @param projectNo
+     * @return
+     */
+    List<ProjectDocument> listProjectDocuments(String projectNo);
 }

@@ -8,6 +8,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.PreProjectMaterial;
+import cn.thinkfree.database.model.ProjectDocument;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.designer.service.HomeStylerService;
@@ -20,9 +21,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Api(value = "项目相关信息",description = "项目相关信息描述")
 @RestController
@@ -213,6 +219,7 @@ public class ProjectController extends AbsBaseController {
         HomeStyler homeStyler = homeStylerService.findDataByProjectNo(projectNo);
         HomeStylerVO homeStylerVO = new HomeStylerVO();
         homeStylerVO.setSpaceDetailsBeans(homeStyler.getSpaceDetails());
+        homeStylerVO.setProjectDocuments(projectService.listProjectDocuments(projectNo));
         return sendJsonData(ResultMessage.SUCCESS,homeStylerVO);
     }
 
@@ -221,11 +228,40 @@ public class ProjectController extends AbsBaseController {
      * @param projectNo
      * @return
      */
+    @ApiOperation(value = "判断业主是否激活",notes = "判断业主是否激活 传递项目编号 ")
     @GetMapping("/isActivated")
     public MyRespBundle<Boolean> isActivated(String projectNo){
         Boolean flag = projectService.selectOwnerIsActivatByProjectNo(projectNo);
         return sendJsonData(ResultMessage.SUCCESS,flag);
     }
+
+    /**
+     * 项目资料包上传
+
+     * @param projectDocumentContainer 项目资料容器
+     * @return
+     */
+    @ApiOperation(value = "项目资料包上传",notes = "项目资料包上传")
+    @PostMapping("/document")
+    @MyRespBody
+    public MyRespBundle<String> document(  ProjectDocumentContainer projectDocumentContainer){
+        if(projectDocumentContainer == null || projectDocumentContainer.getProjectDocuments() == null){
+            return sendFailMessage("参数不全");
+        }
+        String mes =  projectService.uploadProjectDocuments( projectDocumentContainer);
+        return sendSuccessMessage(mes);
+
+    }
+
+
+    @ApiOperation(value = "查询项目资料包",notes = "查询项目资料包")
+    @GetMapping("/document")
+    @MyRespBody
+    public MyRespBundle<List<ProjectDocument>> getDocument(String projectNo){
+        List<ProjectDocument> documents = projectService.listProjectDocuments(projectNo);
+       return sendJsonData(ResultMessage.SUCCESS,documents);
+    }
+
 
 
 }

@@ -105,20 +105,32 @@ public class SystemMessageServiceImpl extends AbsLogPrinter implements SystemMes
         printInfoMes("保存完毕,通知远程服务器");
         String[] roles=record.getReceiveRole().split(",");
         List<String> roleCodes = new ArrayList<>();
+        UserRoleSetExample example = new UserRoleSetExample();
+        example.createCriteria().andIsShowEqualTo(SysConstants.YesOrNo.YES.shortVal());
+        List<UserRoleSet> userRoleSets = userRoleSetMapper.selectByExample(example);
         for(String role:roles){
-            UserJobs userJobs = UserJobs.findByCode(role);
-            if(userJobs != null){
-                roleCodes.add(userJobs.roleCode);
-            }
+//            UserJobs userJobs = UserJobs.findByCodeStr(role);
+//            if(userJobs != null){
+//                roleCodes.add(userJobs.roleCode);
+//            }
+            roleCodes.add(userRoleSets.stream()
+//                    .peek(System.out::println)
+                    .filter(r->r.getId().equals(Short.parseShort(role)))
+                    .findFirst().get().getRoleCode());
         }
+
+        printInfoMes("角色转换成功:{}",roleCodes);
         if(!roleCodes.isEmpty() ){
+            printInfoMes("执行远程通知");
             CompanyUserSetExample companyUserSetExample = new CompanyUserSetExample();
             companyUserSetExample.createCriteria().andIsBindEqualTo(SysConstants.YesOrNo.YES.shortVal())
                     .andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                     .andRoleIdIn(roleCodes)
                     .andCompanyIdIn(userVO.getRelationMap());
             List<CompanyUserSet> companyUserSets = companyUserSetMapper.selectByExample(companyUserSetExample);
+            printInfoMes("公司角色集拼装完成");
             RemoteResult<String> rs = cloudService.sendNotice(record, companyUserSets.stream().map(CompanyUserSet::getUserId).collect(Collectors.toList()));
+            printInfoMes("远程通告结束:{}",rs);
             if(!rs.isComplete()) throw new RuntimeException("远程公告发送失败!");
         }
         return row;

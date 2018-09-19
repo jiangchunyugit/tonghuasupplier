@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -68,6 +69,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
     @Autowired
     UserInfoMapper userInfoMapper;
+
+    @Autowired
+    ProjectDocumentMapper projectDocumentMapper;
 
 
 
@@ -123,7 +127,6 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             preProjectUserRoleExample.createCriteria().andIsJobEqualTo(SysConstants.YesOrNo.YES.shortVal())
                     .andRoleIdEqualTo(UserJobs.ProjectManager.roleCode)
                     .andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal()).andUserIdEqualTo(projectSEO.getProjectManager());
-//            projectNos.addAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
             // 取交集
             projectNos.retainAll(preProjectUserRoleMapper.selectProjectNoByExample(preProjectUserRoleExample));
             needFilter = true;
@@ -219,8 +222,6 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         roleExample.createCriteria().andProjectNoEqualTo(projectNo).andIsTransferEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<ProjectUserRoleVO> preProjectUserRoles = preProjectUserRoleMapper.selectProjectUserRoleVOByExample(roleExample);
         projectDetailsVO.setStaffs(preProjectUserRoles);
-//        projectDetailsVO.setProjectQuotationVO(selectProjectQuotationVoByProjectNo(projectNo));
-
 
         return projectDetailsVO;
     }
@@ -328,17 +329,6 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             return "数据状态不可编辑!";
         }
 
-//        PreProjectInfo updateInfo = new PreProjectInfo();
-//        SpringBeanUtil.copy(projectQuotationVO,updateInfo);
-//        PreProjectInfoExample preProjectInfoExample = new PreProjectInfoExample();
-//        preProjectInfoExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
-//        preProjectInfoMapper.updateByExampleSelective(updateInfo,preProjectInfoExample);
-//
-//        printInfoMes("编辑报价单,汇总信息编辑完成,处理报价单条目");
-//        PreProjectGuide updateGuide = new PreProjectGuide();
-//        updateGuide.setTotalPrice(projectQuotationVO.getTotalPrice());
-//
-//        preProjectGuideMapper.updateByExampleSelective(updateGuide,preProjectGuideExample);
 
         delProjectConstructionAndInfo(projectNo);
 
@@ -367,7 +357,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         preProjectGuideMapper.updateByExampleSelective(projectDetailsVO,preProjectGuideExample);
 
         // 处理业主信息
-        updateConsumer(projectDetailsVO);
+//        updateConsumer(projectDetailsVO);
 
         printInfoMes("处理项目员工信息");
 
@@ -379,8 +369,6 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         preProjectInfoMapper.updateByExampleSelective(preProjectInfo,preProjectInfoExample);
 
 //        MyEventBus.getInstance().publicEvent(new ProjectUpOnline(projectDetailsVO.getProjectNo()));
-
-
 
         return "操作成功!";
     }
@@ -645,6 +633,70 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         return !cs.isEmpty();
     }
 
+    /**
+     * 上传项目资料包
+     *
+     * @param projectDocumentContainer
+     * @return
+     */
+    @Transactional
+    @Override
+    public String uploadProjectDocuments(ProjectDocumentContainer projectDocumentContainer) {
+
+        List<ProjectDocumentVO> documents = projectDocumentContainer.getProjectDocuments();
+        if(documents.isEmpty()){
+            return "上传文件为空";
+        }
+        String projectNo = documents.get(0).getProjectNo();
+        printInfoMes("清除旧资料包:{}",projectNo);
+        ProjectDocument del = new ProjectDocument();
+        del.setIsDel(SysConstants.YesOrNo.YES.shortVal());
+        ProjectDocumentExample projectDocumentExample = new ProjectDocumentExample();
+        projectDocumentExample.createCriteria().andProjectNoEqualTo(projectNo);
+        projectDocumentMapper.updateByExampleSelective(del,projectDocumentExample);
+        printInfoMes("写入新的资料包:{}",projectNo);
+        documents.forEach(d->{
+            ProjectDocument insert = new ProjectDocument();
+            SpringBeanUtil.copy(d,insert);
+            String filePath = d.getFileUrl();
+            if(d.getFile() != null){
+                filePath = WebFileUtil.fileCopy("/project/document",d.getFile());
+                insert.setFileName(d.getFile().getOriginalFilename());
+            }
+            insert.setFileUrl(filePath);
+            insert.setIsDel(SysConstants.YesOrNo.NO.shortVal());
+            insert.setProjectNo(projectNo);
+            if(d.getId() != null){
+                projectDocumentExample.clear();
+                projectDocumentMapper.updateByPrimaryKeySelective(insert);
+            }else {
+                projectDocumentMapper.insertSelective(insert);
+            }
+//            insert.setFileDesc(d.getFileD);
+//            insert.setSortNo(d.getSortNo());
+        });
+
+        return "操作成功";
+    }
+
+    /**
+     * 查询项目资料包
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public List<ProjectDocument> listProjectDocuments(String projectNo) {
+        if(StringUtils.isBlank(projectNo)){
+            return Collections.EMPTY_LIST;
+        }
+
+        ProjectDocumentExample projectDocumentExample = new ProjectDocumentExample();
+        projectDocumentExample.createCriteria().andProjectNoEqualTo(projectNo).andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal());
+
+        return projectDocumentMapper.selectByExample(projectDocumentExample);
+    }
+
 
     /**
      * 新增报价单条目信息
@@ -698,9 +750,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             preProjectUserRole.setIsTransfer(SysConstants.YesOrNo.NO.shortVal());
             preProjectUserRole.setCreateTime(new Date());
             preProjectUserRoleMapper.insertSelective(preProjectUserRole);
-//            PreProjectUserRoleExample preProjectUserRoleExample = new PreProjectUserRoleExample();
-//            preProjectUserRoleExample.createCriteria().andIdEqualTo(vo.getId());
-//            preProjectUserRoleMapper.updateByExampleSelective(preProjectUserRole,preProjectUserRoleExample);
+
         }
     }
 

@@ -25,6 +25,6 @@
                                     #{item}
                               </foreach>
         </if>
-        order by to_char(send_time, 'YYYY/MM/DD') desc
+        order by  send_time  desc
     </select>
 </mapper>
