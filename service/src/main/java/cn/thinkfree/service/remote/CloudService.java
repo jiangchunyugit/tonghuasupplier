@@ -29,4 +29,5 @@ public interface CloudService {
      * @return
      */
       RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
+
 }

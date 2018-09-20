@@ -2,7 +2,6 @@ package cn.thinkfree.service.event;
 
 import cn.thinkfree.core.event.MyEventBus;
 import cn.thinkfree.core.event.model.UserLoginAfter;
-import cn.thinkfree.database.mapper.UserLoginLogMapper;
 import cn.thinkfree.database.model.UserLoginLog;
 import cn.thinkfree.service.user.UserService;
 import com.google.common.eventbus.Subscribe;
@@ -29,6 +28,7 @@ public class MyEventListener {
         userLoginLog.setUserId(userLoginAfter.getSource());
         userService.userLoginAfter(userLoginLog);
     }
+
 
     @PostConstruct
     public void init(){

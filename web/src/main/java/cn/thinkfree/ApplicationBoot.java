@@ -15,6 +15,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
+ * 我不会就是分支了吧……
  * Created by lenovo on 2017/5/3.
  */
 @SpringBootConfiguration

@@ -12,5 +12,9 @@
         <module name="web" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="base" target="1.8" />
+      <module name="constants" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

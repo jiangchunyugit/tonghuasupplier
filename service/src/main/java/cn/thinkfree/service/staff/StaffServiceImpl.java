@@ -47,6 +47,9 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     @Autowired
     PreProjectCompanySetMapper preProjectCompanySetMapper;
 
+    @Autowired
+    ConsumerSetMapper consumerSetMapper;
+
 
     /**
      * 所谓五分钟
@@ -78,6 +81,8 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     public String insetCompanyUser(CompanyUserSet companyUserSet) {
         //判断输入的手机号码是否已经注册过
         List<String> phones = companyUserSetMapper.listAlreadyUsedPhone();
+        // TODO 临时增加业主手机号判断
+        phones.addAll(consumerSetMapper.listAlreadyUsedPhone());
         boolean flag = phones.contains(companyUserSet.getPhone());
         if(flag){
             return "手机号码已被注册过，请更换手机号码！！";

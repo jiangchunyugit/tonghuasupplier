@@ -84,13 +84,14 @@ public class SystemController extends AbsBaseController {
 //        systemMessage.setSendUser("user");
 //        cloudService.sendNotice(systemMessage, Lists.newArrayList("1"));
 //        cloudService.sendSms("18910441835","123456");
-        cloudService.projectUpOnline("ITEM18082910221300000EH", ProjectStatus.WaitStart.shortVal());
+//        cloudService.projectUpOnline("ITEM18082910221300000EH", ProjectStatus.WaitStart.shortVal());
+
     }
 
     @RequestMapping("/test1")
     public void test1(){
 
-        cloudService.sendSms("18910471835","123456");
+//        cloudService.sendSms("18910471835","123456");
 
     }
 
