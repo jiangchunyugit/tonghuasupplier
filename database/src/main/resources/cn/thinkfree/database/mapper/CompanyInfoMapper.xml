@@ -33,6 +33,11 @@
     <result column="is_center" jdbcType="SMALLINT" property="isCenter" />
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="audit_status" jdbcType="VARCHAR" property="auditStatus" />
+    <result column="lefal_card_up_url" jdbcType="VARCHAR" property="lefalCardUpUrl" />
+    <result column="lefal_card_down_url" jdbcType="VARCHAR" property="lefalCardDownUrl" />
+    <result column="work_card_from" jdbcType="VARCHAR" property="workCardFrom" />
+    <result column="work_card_indate" jdbcType="TIMESTAMP" property="workCardIndate" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -108,7 +113,8 @@
     id, company_id, company_name, role_id, province_code, address, legal_name, legal_phone, 
     legal_id_card, business_code, organization_code, tax_code, is_check, create_time, 
     phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code, 
-    area_code, root_company_id, parent_company_id, is_center, telephone, content
+    area_code, root_company_id, parent_company_id, is_center, telephone, content, audit_status, 
+    lefal_card_up_url, lefal_card_down_url, work_card_from, work_card_indate
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.CompanyInfoExample" resultMap="BaseResultMap">
     <!--
@@ -151,7 +157,9 @@
       business_photo_url, work_photo_url, deposit_money, 
       lbs, is_delete, city_code, 
       area_code, root_company_id, parent_company_id, 
-      is_center, telephone)
+      is_center, telephone, content, 
+      audit_status, lefal_card_up_url, lefal_card_down_url, 
+      work_card_from, work_card_indate)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -160,7 +168,9 @@
       #{businessPhotoUrl,jdbcType=VARCHAR}, #{workPhotoUrl,jdbcType=VARCHAR}, #{depositMoney,jdbcType=INTEGER}, 
       #{lbs,jdbcType=VARCHAR}, #{isDelete,jdbcType=SMALLINT}, #{cityCode,jdbcType=SMALLINT}, 
       #{areaCode,jdbcType=INTEGER}, #{rootCompanyId,jdbcType=VARCHAR}, #{parentCompanyId,jdbcType=VARCHAR}, 
-      #{isCenter,jdbcType=SMALLINT}, #{telephone,jdbcType=VARCHAR})
+      #{isCenter,jdbcType=SMALLINT}, #{telephone,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{auditStatus,jdbcType=VARCHAR}, #{lefalCardUpUrl,jdbcType=VARCHAR}, #{lefalCardDownUrl,jdbcType=VARCHAR}, 
+      #{workCardFrom,jdbcType=VARCHAR}, #{workCardIndate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CompanyInfo">
     <!--
@@ -247,6 +257,24 @@
       <if test="telephone != null">
         telephone,
       </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="auditStatus != null">
+        audit_status,
+      </if>
+      <if test="lefalCardUpUrl != null">
+        lefal_card_up_url,
+      </if>
+      <if test="lefalCardDownUrl != null">
+        lefal_card_down_url,
+      </if>
+      <if test="workCardFrom != null">
+        work_card_from,
+      </if>
+      <if test="workCardIndate != null">
+        work_card_indate,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -326,6 +354,24 @@
       </if>
       <if test="telephone != null">
         #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="auditStatus != null">
+        #{auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="lefalCardUpUrl != null">
+        #{lefalCardUpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="lefalCardDownUrl != null">
+        #{lefalCardDownUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="workCardFrom != null">
+        #{workCardFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="workCardIndate != null">
+        #{workCardIndate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -424,6 +470,24 @@
       <if test="record.telephone != null">
         telephone = #{record.telephone,jdbcType=VARCHAR},
       </if>
+      <if test="record.content != null">
+        content = #{record.content,jdbcType=VARCHAR},
+      </if>
+      <if test="record.auditStatus != null">
+        audit_status = #{record.auditStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lefalCardUpUrl != null">
+        lefal_card_up_url = #{record.lefalCardUpUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.lefalCardDownUrl != null">
+        lefal_card_down_url = #{record.lefalCardDownUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workCardFrom != null">
+        work_card_from = #{record.workCardFrom,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workCardIndate != null">
+        work_card_indate = #{record.workCardIndate,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -460,7 +524,13 @@
       root_company_id = #{record.rootCompanyId,jdbcType=VARCHAR},
       parent_company_id = #{record.parentCompanyId,jdbcType=VARCHAR},
       is_center = #{record.isCenter,jdbcType=SMALLINT},
-      telephone = #{record.telephone,jdbcType=VARCHAR}
+      telephone = #{record.telephone,jdbcType=VARCHAR},
+      content = #{record.content,jdbcType=VARCHAR},
+      audit_status = #{record.auditStatus,jdbcType=VARCHAR},
+      lefal_card_up_url = #{record.lefalCardUpUrl,jdbcType=VARCHAR},
+      lefal_card_down_url = #{record.lefalCardDownUrl,jdbcType=VARCHAR},
+      work_card_from = #{record.workCardFrom,jdbcType=VARCHAR},
+      work_card_indate = #{record.workCardIndate,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
