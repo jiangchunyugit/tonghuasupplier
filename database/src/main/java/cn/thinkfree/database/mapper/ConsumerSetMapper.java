@@ -93,4 +93,10 @@ public interface ConsumerSetMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ConsumerSet record);
+
+    /**
+     * 查询所有已占用手机号
+     * @return
+     */
+    List<String> listAlreadyUsedPhone();
 }

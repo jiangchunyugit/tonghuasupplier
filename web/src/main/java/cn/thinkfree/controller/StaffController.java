@@ -206,20 +206,6 @@ public class StaffController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS, staffsVO);
     }
 
-    /**
-     * 过渡数据库唯一索引问题
-     * @param req
-     * @param response
-     * @param e
-     * @return
-     * @throws Exception
-     */
-    @ExceptionHandler(value = DataIntegrityViolationException.class)
-    @ResponseBody
-    public MyRespBundle<String> exceptionHandler(HttpServletRequest req, HttpServletResponse response, DataIntegrityViolationException e) throws Exception {
-
-        return  sendSuccessMessage("手机号已存在!");
-    }
 
 
 
