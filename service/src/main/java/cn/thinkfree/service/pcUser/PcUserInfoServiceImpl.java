@@ -71,7 +71,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean delPcUserInfo(String userId) {
 
         PcUserInfo pcUserInfo = new PcUserInfo();
@@ -100,7 +100,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
         //判断输入的手机号码是否已经注册过
         List<String> phones = userRegisterMapper.findPhoneAll();
@@ -161,7 +161,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateUserInfo(PcUserInfoVo pcUserInfoVo) {
         /*PcUserInfo pcUserInfo = new PcUserInfo();
         pcUserInfo.setId(pcUserInfoVo.getId());

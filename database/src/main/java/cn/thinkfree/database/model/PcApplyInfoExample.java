@@ -1024,6 +1024,66 @@ public class PcApplyInfoExample {
             addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
+
+        public Criteria andTransactTypeIsNull() {
+            addCriterion("transact_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeIsNotNull() {
+            addCriterion("transact_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeEqualTo(Short value) {
+            addCriterion("transact_type =", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeNotEqualTo(Short value) {
+            addCriterion("transact_type <>", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeGreaterThan(Short value) {
+            addCriterion("transact_type >", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("transact_type >=", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeLessThan(Short value) {
+            addCriterion("transact_type <", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeLessThanOrEqualTo(Short value) {
+            addCriterion("transact_type <=", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeIn(List<Short> values) {
+            addCriterion("transact_type in", values, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeNotIn(List<Short> values) {
+            addCriterion("transact_type not in", values, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeBetween(Short value1, Short value2) {
+            addCriterion("transact_type between", value1, value2, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeNotBetween(Short value1, Short value2) {
+            addCriterion("transact_type not between", value1, value2, "transactType");
+            return (Criteria) this;
+        }
     }
 
     /**
