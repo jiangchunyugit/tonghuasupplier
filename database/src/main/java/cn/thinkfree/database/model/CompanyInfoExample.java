@@ -2394,6 +2394,76 @@ public class CompanyInfoExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andWorkCodeIsNull() {
+            addCriterion("work_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeIsNotNull() {
+            addCriterion("work_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeEqualTo(String value) {
+            addCriterion("work_code =", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotEqualTo(String value) {
+            addCriterion("work_code <>", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeGreaterThan(String value) {
+            addCriterion("work_code >", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("work_code >=", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeLessThan(String value) {
+            addCriterion("work_code <", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeLessThanOrEqualTo(String value) {
+            addCriterion("work_code <=", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeLike(String value) {
+            addCriterion("work_code like", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotLike(String value) {
+            addCriterion("work_code not like", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeIn(List<String> values) {
+            addCriterion("work_code in", values, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotIn(List<String> values) {
+            addCriterion("work_code not in", values, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeBetween(String value1, String value2) {
+            addCriterion("work_code between", value1, value2, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotBetween(String value1, String value2) {
+            addCriterion("work_code not between", value1, value2, "workCode");
+            return (Criteria) this;
+        }
     }
 
     /**
