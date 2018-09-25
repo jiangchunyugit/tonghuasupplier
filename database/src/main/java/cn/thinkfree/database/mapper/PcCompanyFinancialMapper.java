@@ -61,4 +61,14 @@ public interface PcCompanyFinancialMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") PcCompanyFinancial record, @Param("example") PcCompanyFinancialExample example);
+    
+    
+    /**
+     * 
+     * 根据公司编号查询 银行卡信息
+     * @author lvqidong
+     * @@别删啊 
+     */
+    
+    PcCompanyFinancial findPcCompanyFinancialByCompanyId(String companyId);
 }

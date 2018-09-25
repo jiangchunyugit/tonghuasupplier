@@ -93,4 +93,16 @@ public interface PcContractTemplateMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PcContractTemplate record);
+    
+    
+    
+    /**
+     * 根据公司类型 查询 合同模板记录
+     * @author lvqidong
+     * @returen list 
+     */
+    List<PcContractTemplate> queryListByType(String contractTpType);
+    
+    
+    
 }

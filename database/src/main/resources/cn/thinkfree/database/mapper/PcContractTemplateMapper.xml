@@ -316,4 +316,15 @@
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  
+  
+    <select id="queryListByType" parameterType="cn.thinkfree.database.model.PcContractTemplate" resultMap="BaseResultMap" >
+   
+           select * from pc_contract_template
+            where  contract_tp_type = #{contractTpType}
+          
+          
+
+  </select>
 </mapper>

@@ -13,6 +13,7 @@ import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.model.PreProjectGuide;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.user.UserService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -94,7 +95,21 @@ public class ExampleController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,pi);
     }
 
+	@Autowired
+	ContractService contractService;
 
+    /**
+     * 测试创建合同
+     * @return
+     */
+    @MyRespBody
+    @GetMapping("/createContract")
+    public String createContract(){
+    	contractService.createContractDoc("HT2018080710405900001");
+        return "成功";
+    }
+    
+    
 
 
 }

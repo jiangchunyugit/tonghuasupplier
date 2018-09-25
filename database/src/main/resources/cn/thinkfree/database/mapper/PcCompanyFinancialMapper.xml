@@ -336,4 +336,10 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  
+  <select id="findPcCompanyFinancialByCompanyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  
+  select * from pc_company_financial where company_id = #{companyId}
+  
+  </select>
 </mapper>

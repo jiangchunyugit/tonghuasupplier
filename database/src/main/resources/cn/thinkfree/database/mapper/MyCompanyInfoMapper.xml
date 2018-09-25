@@ -98,7 +98,7 @@
         select info.lbs,info.address,info.company_name,info.company_id,
         info.telephone,info.legal_name,info.legal_phone,info.city_code,
         info.province_code,info.area_code,
-        province.province_name, city.city_name, area.area_name
+        province.province_name, city.city_name, area.area_name,info.role_id
         from company_info info left join province province on
         info.province_code = province.province_code left join
         city city on info.city_code = city.city_code left join
@@ -106,5 +106,67 @@
         where info.company_id = #{companyId}
 
     </select>
+    
+    
+<!-- 修改公司审核状态 新写的 别删了啊 -->
+<update id="updateauditStatus" parameterType="cn.thinkfree.database.model.CompanyInfo">
+  update company_info set audit_status = #{auditStatus} where  company_id = #{companyId}
+</update>
 
+<select id="selectCompanyDetails" parameterType="java.lang.String" resultType="cn.thinkfree.database.vo.ContractDetails">
+
+	select audit_status auditStatus ,company_name as companyName
+	,t.company_id as
+	companyId,legal_name as legalName,register_address as
+	registerAddress,
+	concat(pr.province_name,'>',ci.city_name,'>',ar.area_name,'>',f.register_address)
+	as companyLocation,
+	legal_id_card as
+	legalIdCard,postcode,email,lefal_card_up_url as
+	lefalCardUpUrl,lefal_card_down_url as lefalCardDownUrl,
+	(CASE WHEN company_type = '0' THEN
+	'有限责任公司'
+	WHEN company_type = '1' THEN '股份有限公司'
+	WHEN company_type = '2'
+	THEN '股份有限公司'
+	WHEN company_type = '3' THEN '股份有限公司'
+	WHEN company_type =
+	'4' THEN '股份有限公司'
+	WHEN company_type = '5' THEN '股份有限公司'
+	ELSE '其他' END )
+	as companyType,
+	(CASE WHEN comapny_nature = '0' THEN '自营'
+	WHEN
+	comapny_nature = '1' THEN '合作'
+	ELSE '其他' END ) as comapnyNature,
+	(CASE
+	WHEN is_three_to_one = '0' THEN '是'
+	WHEN is_three_to_one = '1' THEN '否'
+	ELSE '其他' END ) as isThreeToOne,
+	business_code as
+	businessCode,legal_phone as legalPhone ,organization_code AS
+	organizationCode,
+	(CASE WHEN is_taxpayer = '0' THEN '是'
+	WHEN is_taxpayer
+	= '1' THEN '否'
+	ELSE '其他' END ) as isTaxpayer,
+	tax_code_photo_url AS
+	taxCodePhotoUrl ,business_photo_url AS businessPhotoUrl,
+	work_card_from
+	AS workCardFrom,work_card_indate AS workCardIndate,
+	work_photo_url AS
+	workPhotoUrl,
+	work_code AS workCode
+	from company_info t
+	left join
+	company_info_expand f on t.company_id = f.company_id
+	left join province
+	pr on f.register_province_code = pr.province_code
+	left join city ci on
+	f.register_city_code = ci.city_code
+	left join area ar on
+	f.register_area_code = ar.area_code
+	where t.company_id
+	= #{companyId}
+</select>
 </mapper>

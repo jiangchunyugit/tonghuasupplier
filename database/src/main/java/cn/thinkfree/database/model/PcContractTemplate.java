@@ -1,6 +1,9 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -201,8 +204,9 @@ public class PcContractTemplate extends BaseModel {
      *
      * @mbg.generated
      */
-    public Date getUploadTime() {
-        return uploadTime;
+    public String getUploadTime() {
+    	 DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        return format1.format(uploadTime);
     }
 
     /**

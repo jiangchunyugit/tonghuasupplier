@@ -1,5 +1,7 @@
 package cn.thinkfree.service.constants;
 
+import java.util.Map;
+
 /**
  * @author ying007
  * 公司入驻审批状态 0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金6已交保证金 7入驻成功
@@ -48,5 +50,15 @@ public enum CompanyAuditStatus {
     public String stringVal(){
         return code.toString();
     }
+    
+    public static String getDesc(Integer value) {  
+    	CompanyAuditStatus[] businessModeEnums = values();  
+        for (CompanyAuditStatus businessModeEnum : businessModeEnums) {  
+            if (businessModeEnum.code == value) {  
+                return businessModeEnum.mes;  
+            }  
+        }  
+        return null;  
+    }  
 
 }

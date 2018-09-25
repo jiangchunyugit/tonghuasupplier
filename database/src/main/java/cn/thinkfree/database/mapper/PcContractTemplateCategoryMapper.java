@@ -61,4 +61,13 @@ public interface PcContractTemplateCategoryMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") PcContractTemplateCategory record, @Param("example") PcContractTemplateCategoryExample example);
+    
+    
+    
+    /**
+     * 查询分类 
+     * @param example
+     * @return
+     */
+    List<PcContractTemplateCategory> selectPcContractTemplateCategoryByType(PcContractTemplateCategory example);
 }
