@@ -39,7 +39,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int addCompanyInfo(CompanyInfo companyInfo) {
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         companyInfo.setCompanyId(UserNoUtils.getUserNo("BD"));
@@ -52,7 +52,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateCompanyInfo(CompanyInfo companyInfo) {
         CompanyInfoExample example = new CompanyInfoExample();
         example.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());

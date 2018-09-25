@@ -37,23 +37,16 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
-    /**
-     * 账号添加---->提交----->确认
-     * @param companySubmitVo
-     * @return
-     */
-    /*@RequestMapping(value = "/addCompanyInfo", method = RequestMethod.POST)
-    @MyRespBody
-    @ApiOperation(value="账号添加(创建公司信息)---->提交----->确认")
-    public MyRespBundle<String> addCompanyInfo(@ApiParam("公司资质信息")CompanySubmitVo companySubmitVo){
-        boolean flag = companySubmitService.addCompanyInfo(companySubmitVo);
-        if(flag){
-            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
-        }
-        return sendJsonData(ResultMessage.FAIL, "操作失败");
-    }*/
+    //公司资质查询list
+
+    //补全合同
+
+    //公司详情
+
+    //查看合同
+
+    //合同条款设置
 
     //运营人员审批
 
-    //完成签约付费
 }

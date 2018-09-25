@@ -102,12 +102,10 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
-        //判断输入的手机号码是否已经注册过
-        List<String> phones = userRegisterMapper.findPhoneAll();
-        boolean flag = phones.contains(pcUserInfoVo.getRegPhone());
-        if(flag){
+        if (isEnable(pcUserInfoVo.getRegPhone())) {
             return false;
         }
+
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         String userId = UserNoUtils.getUserNo("PC");
         Date date = new Date();
@@ -150,6 +148,16 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         int regLine = userRegisterMapper.insertSelective(userRegister);
 
         if(pcLine > 0 && regLine > 0){
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isEnable(String name) {
+        //判断输入的账号是否已经注册过
+        List<String> phones = userRegisterMapper.findPhoneAll();
+        boolean flag = phones.contains(name);
+        if(flag){
             return true;
         }
         return false;

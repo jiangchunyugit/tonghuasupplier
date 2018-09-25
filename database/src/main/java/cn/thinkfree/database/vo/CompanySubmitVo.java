@@ -14,10 +14,10 @@ public class CompanySubmitVo {
     /**
      * 公司资质相关文件
      */
-    CompanySubmitFileVo companySubmitFileVo;
+    private CompanySubmitFileVo companySubmitFileVo;
 
     /**
-     * 公司表表
+     * 公司表
      */
     private CompanyInfo companyInfo;
 

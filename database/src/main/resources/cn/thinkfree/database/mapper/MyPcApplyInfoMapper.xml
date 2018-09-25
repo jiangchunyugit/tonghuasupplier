@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.PcApplyInfoMapper">
     <resultMap id="PcApplyInfoVo" type="cn.thinkfree.database.vo.PcApplyInfoVo" extends="BaseResultMap">
-        <result column="roleName" jdbcType="VARCHAR" property="roleName" />
-        <result column="provinceName" jdbcType="VARCHAR" property="provinceName" />
-        <result column="cityName" jdbcType="VARCHAR" property="cityName" />
-        <result column="areaName" jdbcType="VARCHAR" property="areaName" />
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
     </resultMap>
     <sql id="Column_List">
         id, company_id, apply_type, apply_date, apply_thing_type, company_role, company_name,
@@ -15,25 +15,25 @@
     <select id="findById" resultMap="PcApplyInfoVo" parameterType="int">
         select info.id, info.company_id, info.apply_type, info.apply_date, info.apply_thing_type, info.company_role, info.company_name,
         info.city_code, info.area_code, info.province_code, info.contact_name, info.contact_phone, info.is_delete,
-		role.role_name, province.province_name, city.city_name, area.area_name
+		role.role_name, province.province_name, city.city_name, area.area_name, info.transact_type
         from pc_apply_info info
         left join user_role_set role on info.company_role = role_code
         left join province province on info.province_code = province.province_code
         left join city city on city.city_code = info.city_code
         left join area area on info.area_code = area.area_code
-        where info.id = #{id}
+        where info.id = #{id} and info.is_delete = 0
     </select>
 
     <select id="findByParam" resultMap="PcApplyInfoVo" parameterType="cn.thinkfree.database.vo.CompanyApplySEO">
         select info.id, info.company_id, info.apply_type, info.apply_date, info.apply_thing_type, info.company_role, info.company_name,
         info.city_code, info.area_code, info.province_code, info.contact_name, info.contact_phone, info.is_delete,
-        role.role_name, province.province_name, city.city_name, area.area_name
+        role.role_name, province.province_name, city.city_name, area.area_name, info.transact_type
         from pc_apply_info info
         left join user_role_set role on info.company_role = role_code
         left join province province on info.province_code = province.province_code
         left join city city on city.city_code = info.city_code
         left join area area on info.area_code = area.area_code
-        where
+        where info.is_delete = 0
         <if test="applyDate != null and applyDate != ''">
             and to_char(info.apply_date, 'YYYY-MM-DD') = #{applyDate}
         </if>
@@ -44,7 +44,9 @@
             and info.company_role = #{companyRole}
         </if>
         <if test="param != null and param != ''">
-            and (info.company_name like #{param} or info.contact_name like #{param} or info.contact_phone like #{param})
+            and (info.company_name like #{param}
+                  or info.contact_name like #{param}
+                  or info.contact_phone like #{param})
         </if>
         <if test="cityCode != null and cityCode != ''">
             and info.city_code = #{cityCode}
@@ -55,6 +57,6 @@
         <if test="provinceCode != null and provinceCode != ''">
             and info.province_code = #{provinceCode}
         </if>
-        info.is_delete = 0 order info.apply_date desc
+        order by info.transact_type asc, info.apply_date desc
     </select>
 </mapper>

@@ -115,7 +115,7 @@ public interface UserRegisterMapper {
     int updateByUserId(UserRegister userRegister);
 
     /**
-     * 查询所有注册过的手机号码
+     * 查询所有注册过的手机号码(is_delete=0)
      * @return
      */
     List<String> findPhoneAll();

@@ -235,7 +235,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateIsJob(String userId){
         //修改注册表is_delete
         UserRegister userRegister = new UserRegister();
