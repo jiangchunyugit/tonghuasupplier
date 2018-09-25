@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.event.LoggerListener;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +28,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
@@ -74,6 +77,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -96,7 +101,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         // 细粒度 更精细的配置~
         http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAt(mySecurityPcFilter(), FilterSecurityInterceptor.class);
-
+        http.addFilterAt(new MyCustomProcessFiter(),UsernamePasswordAuthenticationFilter.class);
         // 自定义登录页面
         http.csrf().disable()
                 .formLogin()
@@ -181,9 +186,13 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 //    }
 
 
+
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
+//        auth.authenticationProvider()
+
         auth.userDetailsService(userService).passwordEncoder(new MultipleMd5());
     }
 
