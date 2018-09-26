@@ -11,16 +11,24 @@ public interface ContractTemplateService {
 	/**
 	 * 
 	 * 查询 合同模板list  
-	 * @param ContractSEO
-	 * @return pageList
+	 * @param type
+	 * @return PcContractTemplatelist
 	 */
     List<PcContractTemplate> PcContractTemplateList(String type);
+    
+   
+    /**
+     * 根据合同模板类型编辑合同模板的可用/不可用
+     * @param map
+     * 
+     */
+    Map<String,String> updateContractTemplateStatus(String type,String stauts);
     
     /**
 	 * 
 	 * 根据合同类型 查询 合同附加条款项目信息
-	 * @param ContractSEO
-	 * @return pageList
+	 * @param type
+	 * @return 
 	 */
     
     MyContractTemplateDetails getMyContractTemplateDetailsByType(String type);

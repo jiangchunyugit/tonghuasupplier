@@ -92,6 +92,31 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 		return resMap;
 	}
 
+
+	@Override
+	public Map<String, String> updateContractTemplateStatus(String type,String stauts) {
+		Map<String, String> resMap = new HashMap<>();
+		if(StringUtil.isEmpty(type)){
+			resMap.put("code", "1");
+			resMap.put("msg", "type is null");
+			return resMap;
+		}
+		if(StringUtil.isEmpty(stauts)){
+			resMap.put("code", "1");
+			resMap.put("msg", "stauts is null");
+			return resMap;
+		}
+		PcContractTemplate tl = new PcContractTemplate();
+		tl.setContractStatus(stauts);
+		tl.setContractTpType(type);
+		int  flag = pcContractTemplateMapper.updatePcContractTemplateStatus(tl);
+		if(flag > 0){
+			resMap.put("code", "1");
+			resMap.put("msg", "操作成功");
+		}
+		return resMap;
+	}
+
 	
 	
    
