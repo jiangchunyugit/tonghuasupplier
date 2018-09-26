@@ -139,43 +139,43 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			return  map;
 		}
 		if(auditCase.equals("0")){
-        //运营审核通过生成合同编号
-		String contractNumber = String.valueOf(UUID.randomUUID());
-		
-		//修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝
-		ContractVo vo = new ContractVo();
-		vo.setCompanyId(companyId);
-		vo.setContractNumber(contractNumber);
-		vo.setContractStatus("0");
-		int flag = contractInfoMapper.updateContractStatus(vo);
-		//修改公司表 
-	
-		CompanyInfo companyInfo = new CompanyInfo();
-		companyInfo.setCompanyId(companyId);
-		if(auditCase.equals("0")){//运营审核通过
-			companyInfo.setAuditStatus(CompanyAuditStatus.APTITUDETG.stringVal());
-		}else{//财务审核不通过
-			companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSJOSB.stringVal());
-		}
-		int flagT = companyInfoMapper.updateauditStatus(companyInfo);
-		
-		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-		String auditPersion = userVO ==null?"":userVO.getUsername();
-		//添加审核记录表
-		PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
-				companyId, auditCase, contractNumber);
-		
-		int flagi = pcAuditInfoMapper.insertSelective(record);
-	    
-		if(flag > 0 && flagT > 0 &&  flagi  > 0 ){
+	        //运营审核通过生成合同编号
+			String contractNumber = String.valueOf(UUID.randomUUID());
 			
-			map.put("code", "0");
-			map.put("msg", "审核成功");
+			//修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝
+			ContractVo vo = new ContractVo();
+			vo.setCompanyId(companyId);
+			vo.setContractNumber(contractNumber);
+			vo.setContractStatus("0");
+			int flag = contractInfoMapper.updateContractStatus(vo);
+			//修改公司表 
+		
+			CompanyInfo companyInfo = new CompanyInfo();
+			companyInfo.setCompanyId(companyId);
+			if(auditCase.equals("0")){//运营审核通过
+				companyInfo.setAuditStatus(CompanyAuditStatus.APTITUDETG.stringVal());
+			}else{//财务审核不通过
+				companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSJOSB.stringVal());
+			}
+			int flagT = companyInfoMapper.updateauditStatus(companyInfo);
 			
-		}else{
-			map.put("code", "1");
-			map.put("msg", "审核失败");
-		}
+			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+			String auditPersion = userVO ==null?"":userVO.getUsername();
+			//添加审核记录表
+			PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
+					companyId, auditCase, contractNumber);
+			
+			int flagi = pcAuditInfoMapper.insertSelective(record);
+		    
+			if(flag > 0 && flagT > 0 &&  flagi  > 0 ){
+				
+				map.put("code", "0");
+				map.put("msg", "审核成功");
+				
+			}else{
+				map.put("code", "1");
+				map.put("msg", "审核失败");
+			}
 		}else{//审核失败
 
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
