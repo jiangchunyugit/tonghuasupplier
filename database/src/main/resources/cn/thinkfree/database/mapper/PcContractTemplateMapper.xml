@@ -323,8 +323,14 @@
    
            select * from pc_contract_template
             where  contract_tp_type = #{contractTpType}
-          
-          
 
   </select>
+  
+  <update id="updatePcContractTemplateStatus" parameterType="cn.thinkfree.database.model.PcContractTemplate">
+    update pc_contract_template
+    set contract_status = {contractStatus}
+    where contract_tp_type = #{contractTpType,jdbcType=INTEGER}
+  </update>
+  
+  
 </mapper>

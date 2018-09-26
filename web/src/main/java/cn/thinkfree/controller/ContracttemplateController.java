@@ -69,7 +69,7 @@ public class ContracttemplateController extends AbsBaseController{
 	
 	
 	/**
-     * 合同模板类型
+     * 根据合同模板类型查询合同模板列表
      * @author lqd
      * @param String type
      * @return PcContractTemplate
@@ -82,6 +82,23 @@ public class ContracttemplateController extends AbsBaseController{
     	List<PcContractTemplate> list = contractTemplateService.PcContractTemplateList(type);
         
         return sendJsonData(ResultMessage.SUCCESS,list);
+    }
+    
+    
+    /**
+     * 根据合同模板类型修改编辑合同模板是否可用
+     * @author lqd
+     * @param String type
+     * @return PcContractTemplate
+     */
+    @ApiOperation(value = "根据合同模板类型修改编辑合同模板", notes = "根据合同模板类型修改编辑合同模板是否可用/不可用")
+    @PostMapping("/updateContractTemplate")
+    @MyRespBody
+    public MyRespBundle<Map<String,String>> updateContractTemplate(@ApiParam("合同类型") String type,@ApiParam("合同编辑是否可用状态（0可用 1不可用）") String status){
+
+    	Map<String,String> resMap = contractTemplateService.updateContractTemplateStatus(type,status);
+        
+        return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     
     
@@ -135,6 +152,7 @@ public class ContracttemplateController extends AbsBaseController{
     
     
     /**
+     * 
      * 下载合同类型
      * @author lqd
      * @param 

@@ -104,5 +104,12 @@ public interface PcContractTemplateMapper {
     List<PcContractTemplate> queryListByType(String contractTpType);
     
     
+    /**
+     * 根据合同类型 修改 合同模板
+     * 
+     */
+    int updatePcContractTemplateStatus(PcContractTemplate tlp);
+    
+    
     
 }

@@ -1,5 +1,7 @@
 package cn.thinkfree.service.companysubmit;
 
+import java.util.Map;
+
 import cn.thinkfree.database.vo.CompanySubmitVo;
 
 /**
@@ -13,4 +15,13 @@ public interface CompanySubmitService {
      * @return true false
      */
     boolean upCompanyInfo(CompanySubmitVo companySubmitVo);
+    
+    
+    /**
+     * 运营审批
+     * @author lvqidong
+     * 
+     */
+    
+    Map<String,String>  auditContract(String companyId,String auditStatus,String auditCase);  
 }
