@@ -7,6 +7,22 @@
         <result column="city_name" jdbcType="VARCHAR" property="cityName" />
         <result column="area_name" jdbcType="VARCHAR" property="areaName" />
     </resultMap>
+
+    <resultMap id="CompanyListVo" type="cn.thinkfree.database.vo.CompanyListVo" extends="BaseResultMap">
+        <result column="comapny_nature" jdbcType="SMALLINT" property="comapnyNature" />
+        <result column="site_province_code" jdbcType="SMALLINT" property="siteProvinceCode" />
+        <result column="site_province_name" jdbcType="VARCHAR" property="siteProvinceName" />
+        <result column="site_city_code" jdbcType="SMALLINT" property="siteCityCode" />
+        <result column="site_city_name" jdbcType="VARCHAR" property="siteCityName" />
+        <result column="site_code" jdbcType="SMALLINT" property="siteCode" />
+        <result column="site_name" jdbcType="VARCHAR" property="siteName" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="signed_time" jdbcType="TIMESTAMP" property="signedTime" />
+        <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
+        <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
+        <result column="" jdbcType="VARCHAR" property="contractNumber" />
+    </resultMap>
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
       select
         company_id
@@ -169,4 +185,19 @@
 	where t.company_id
 	= #{companyId}
 </select>
+
+    <select id="list" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
+        select info.company_id,  role.role_name, expand.comapny_nature, info.company_name,
+        contract.start_time,contract.end_time, contract.signed_time,info.legal_name,
+        expand.contact_name,expand.contact_phone,info.deposit_money,info.audit_status
+        from company_info info
+        left join company_info_expand expand on info.company_id = expand.company_id
+        left join user_role_set role on info.role_id = role.role_code
+        left join (SELECT id, contract_number, contract_status, signed_time,
+                   start_time, end_time, create_time, company_id, contract_url,contract_remark
+                   from pc_contract_info where id in
+                  (SELECT max(id) FROM pc_contract_info group by company_id )) contract
+        on info.company_id = contract.company_id
+
+    </select>
 </mapper>

@@ -1,10 +1,10 @@
 package cn.thinkfree.service.companysubmit;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
+import cn.thinkfree.database.vo.*;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +23,6 @@ import cn.thinkfree.database.model.CompanyInfoExpand;
 import cn.thinkfree.database.model.CompanyInfoExpandExample;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.vo.CompanySubmitFileVo;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.ContractVo;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 
 /**
@@ -51,6 +47,18 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Autowired
 	PcAuditInfoMapper pcAuditInfoMapper;
 
+
+	/**
+	 * 公司列表
+	 * @param companyListSEO
+	 * @return
+	 */
+	@Override
+	public PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO) {
+		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
+		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
+		return new PageInfo<>(companyListVoList);
+	}
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -81,7 +89,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         //企业税务登记证
         companyInfoExpand.setTaxCodePhotoUrl(WebFileUtil.fileCopy("static/", companySubmitFileVo.getTaxCodePhotoUrl()));
         CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
-        companyInfoExpandExample.createCriteria().andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
+        companyInfoExpandExample.createCriteria()
+				.andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
         return companyInfoExpandMapper.updateByExampleSelective(companyInfoExpand,companyInfoExpandExample);
     }
 

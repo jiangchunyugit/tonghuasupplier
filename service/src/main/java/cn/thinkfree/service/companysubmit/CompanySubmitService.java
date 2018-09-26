@@ -2,7 +2,10 @@ package cn.thinkfree.service.companysubmit;
 
 import java.util.Map;
 
+import cn.thinkfree.database.vo.CompanyListSEO;
+import cn.thinkfree.database.vo.CompanyListVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
+import com.github.pagehelper.PageInfo;
 
 /**
  * @author ying007
@@ -23,5 +26,12 @@ public interface CompanySubmitService {
      * 
      */
     
-    Map<String,String>  auditContract(String companyId,String auditStatus,String auditCase);  
+    Map<String,String>  auditContract(String companyId,String auditStatus,String auditCase);
+
+    /**
+     * 公司列表
+     * @param companyListSEO
+     * @return
+     */
+    PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO);
 }
