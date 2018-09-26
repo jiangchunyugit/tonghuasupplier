@@ -97,7 +97,7 @@ public class ContractInfoServiceImpl implements ContractService {
 		ContractVo vo = new ContractVo();
 		vo.setCompanyId(companyId);
 		vo.setContractNumber(contractNumber);
-		if(auditCase.equals("1") ){
+		if(auditCase.equals("0") ){//
 			vo.setContractStatus("2");
 		}else{
 			vo.setContractStatus("3");

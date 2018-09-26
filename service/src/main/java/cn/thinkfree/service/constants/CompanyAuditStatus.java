@@ -38,7 +38,25 @@ public enum CompanyAuditStatus {
     /**
      * 入驻成功
      */
-    SUCCESSJOIN(7,"入驻成功");
+    SUCCESSJOIN(7,"入驻成功"),
+	
+	 /**
+	  * 8 910';
+     * 入驻成功
+     */
+	APTITUDEING(8,"资质待审核中"),
+    
+    
+    /**
+     * 入驻成功
+     */
+	APTITUDETG(8,"资质审核通过 "),
+    
+    
+    /**
+     * 入驻成功
+     */
+    SUCCESSJOSB(10,"资质审核不通过");
 
     public final Integer code;
     public final String mes;

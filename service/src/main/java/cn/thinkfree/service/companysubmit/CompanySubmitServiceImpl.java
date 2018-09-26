@@ -1,14 +1,21 @@
 package cn.thinkfree.service.companysubmit;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
+import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.CompanySubmitFileVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
+import cn.thinkfree.database.vo.ContractVo;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.utils.UserNoUtils;
+
+import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ying007
@@ -33,6 +42,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
     @Autowired
     CompanyInfoMapper companyInfoMapper;
+    
+    @Autowired
+	ContractInfoMapper contractInfoMapper;
+	
+	@Autowired
+	PcAuditInfoMapper pcAuditInfoMapper;
 
 
     @Override
@@ -102,4 +117,68 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         companyInfoExample.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
         return companyInfoMapper.updateByExampleSelective(companyInfo,companyInfoExample);
     }
+
+	@Override
+	public Map<String, String> auditContract(String contractNumber, String companyId, String auditStatus,
+			String auditCase) {
+		Map<String,String> map = new HashMap<>();
+		
+		if(StringUtils.isEmpty(contractNumber)){
+			map.put("code", "1");
+			map.put("msg", "合同编号为空");
+			return  map;
+		}if(StringUtils.isEmpty(companyId)){
+			map.put("code", "1");
+			map.put("msg", "公司编号为空");
+			return  map;
+		}if(StringUtils.isEmpty(auditStatus)){
+			map.put("code", "1");
+			map.put("msg", "审核状态为空");
+			return  map;
+		}if(!StringUtils.isEmpty(auditStatus) && auditCase.equals("1") && StringUtils.isEmpty(auditCase)){
+			map.put("code", "1");
+			map.put("msg", "清填写审核不通过原因");
+			return  map;
+		}
+		
+		//修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝
+		ContractVo vo = new ContractVo();
+		vo.setCompanyId(companyId);
+		vo.setContractNumber(contractNumber);
+		if(auditCase.equals("0") ){
+			vo.setContractStatus("2");
+		}else{
+			vo.setContractStatus("3");
+		}
+		
+		//修改公司表 
+		int flag = contractInfoMapper.updateContractStatus(vo);
+		CompanyInfo companyInfo = new CompanyInfo();
+		companyInfo.setCompanyId(companyId);
+		if(auditCase.equals("0")){//运营审核通过
+			companyInfo.setAuditStatus(CompanyAuditStatus.APTITUDETG.stringVal());
+		}else{//财务审核不通过
+			companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSJOSB.stringVal());
+		}
+		int flagT = companyInfoMapper.updateauditStatus(companyInfo);
+		
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+		String auditPersion = userVO ==null?"":userVO.getUsername();
+		//添加审核记录表
+		PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
+				companyId, auditCase, contractNumber);
+		
+		int flagi = pcAuditInfoMapper.insertSelective(record);
+	    
+		if(flag > 0 && flagT > 0 &&  flagi  > 0 ){
+			
+			map.put("code", "0");
+			map.put("msg", "审核成功");
+			
+		}else{
+			map.put("code", "1");
+			map.put("msg", "审核失败");
+		}
+		return map;
+	}
 }
