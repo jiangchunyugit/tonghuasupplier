@@ -107,7 +107,7 @@ public class ContractInfoServiceImpl implements ContractService {
 		int flag = contractInfoMapper.updateContractStatus(vo);
 		CompanyInfo companyInfo = new CompanyInfo();
 		companyInfo.setCompanyId(companyId);
-		if(auditCase.equals("1")){//财务审核通过
+		if(auditCase.equals("0")){//财务审核通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSCHECK.stringVal());
 		}else{//财务审核不通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.FAILCHECK.stringVal());

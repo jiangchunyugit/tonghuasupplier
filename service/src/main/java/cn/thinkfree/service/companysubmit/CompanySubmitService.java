@@ -23,5 +23,5 @@ public interface CompanySubmitService {
      * 
      */
     
-    Map<String,String>  auditContract(String contractNumber,String companyId,String auditStatus,String auditCase);  
+    Map<String,String>  auditContract(String companyId,String auditStatus,String auditCase);  
 }

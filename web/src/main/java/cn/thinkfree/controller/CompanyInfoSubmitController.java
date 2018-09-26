@@ -62,12 +62,12 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/audit")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> audit(@ApiParam("合同编号")@RequestParam String contractNumber,
+    public MyRespBundle<String> audit(
     		@ApiParam("公司编号")@RequestParam String companyId,
     		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
     		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
         
-    	 Map<String,String>  resMap = companySubmitService.auditContract(contractNumber, companyId,auditStatus,auditCase);
+    	 Map<String,String>  resMap = companySubmitService.auditContract(companyId,auditStatus,auditCase);
     	 
     	 String code = String.valueOf(resMap.get("code"));
     	 
