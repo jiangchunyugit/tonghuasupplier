@@ -46,7 +46,7 @@ public interface CompanyApplyService {
      * @param roleId
      * @return
      */
-    String generateCompanyId(String roleId);
+    //String generateCompanyId(String roleId);
 
     /**
      * b:添加账号--》创建用户

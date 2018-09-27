@@ -55,6 +55,13 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	 */
 	@Override
 	public PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO) {
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+		List<String> relationMap = userVO.getRelationMap();
+		if(userVO.isRoot()){
+			relationMap.remove(userVO.getCompanyID());
+		}
+		companyListSEO.setRelationMap(relationMap);
+
 		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
 		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
 		return new PageInfo<>(companyListVoList);

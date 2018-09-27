@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import java.sql.Date;
+import java.util.List;
 
 /**
  * 公司列表参数
@@ -47,6 +48,11 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      * 站点
      */
     private String siteCode;
+
+    /**
+     * 相关公司：登陆的运营人员相关联的公司
+     */
+    private List<String> relationMap;
 
     public String getCompanyId() {
         return companyId;
@@ -118,6 +124,14 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
 
     public void setSiteCode(String siteCode) {
         this.siteCode = siteCode;
+    }
+
+    public List<String> getRelationMap() {
+        return relationMap;
+    }
+
+    public void setRelationMap(List<String> relationMap) {
+        this.relationMap = relationMap;
     }
 
     @Override

@@ -5,6 +5,7 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -139,6 +140,33 @@ public class DictionaryServiceImpl implements DictionaryService {
         Short isShow = 1;
         example.createCriteria().andIsShowEqualTo(isShow);
         return userRoleSetMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<UserRoleSet> getCompanyRole() {
+        UserRoleSetExample example = new UserRoleSetExample();
+        //查询岗位显示的信息
+        Integer pid = 0;
+        example.createCriteria().andPidEqualTo(pid);
+        return userRoleSetMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<CompanyInfo> findCompanyByCode(Integer provinceCode, Integer cityCode) {
+        CompanyInfoExample example = new CompanyInfoExample();
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+        if(StringUtils.isNotBlank(provinceCode.toString())){
+            example.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+                    .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
+                    .andProvinceCodeEqualTo(provinceCode.shortValue());
+        }
+        if(StringUtils.isNotBlank(provinceCode.toString())){
+            example.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+                    .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
+                    .andProvinceCodeEqualTo(cityCode.shortValue());
+        }
+        return null;
     }
 
 //    /**

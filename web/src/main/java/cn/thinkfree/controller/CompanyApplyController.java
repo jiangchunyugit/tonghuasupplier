@@ -105,13 +105,13 @@ public class CompanyApplyController extends AbsBaseController {
      * a:添加账号---》返回id
      * @return
      */
-    @RequestMapping(value = "/generateCompanyId", method = RequestMethod.GET)
+    /*@RequestMapping(value = "/generateCompanyId", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="公司管理--->（办理）添加账号--->提交（返回公司id）")
     public MyRespBundle<String> generateCompanyId(@RequestParam(value = "roleId")String roleId){
         String companyId = companyApplyService.generateCompanyId(roleId);
         return sendJsonData(ResultMessage.SUCCESS, companyId);
-    }
+    }*/
 
     /**
      * b:添加账号--》创建用户
