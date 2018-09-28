@@ -40,6 +40,7 @@
     <result column="work_card_indate" jdbcType="TIMESTAMP" property="workCardIndate" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="work_code" jdbcType="VARCHAR" property="workCode" />
+    <result column="company_classify" jdbcType="SMALLINT" property="companyClassify" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -117,7 +118,7 @@
     phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code, 
     area_code, root_company_id, parent_company_id, is_center, telephone, content, audit_status, 
     lefal_card_up_url, lefal_card_down_url, work_card_from, work_card_indate, update_time, 
-    work_code
+    work_code, company_classify
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.CompanyInfoExample" resultMap="BaseResultMap">
     <!--
@@ -163,7 +164,7 @@
       is_center, telephone, content, 
       audit_status, lefal_card_up_url, lefal_card_down_url, 
       work_card_from, work_card_indate, update_time, 
-      work_code)
+      work_code, company_classify)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -175,7 +176,7 @@
       #{isCenter,jdbcType=SMALLINT}, #{telephone,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
       #{auditStatus,jdbcType=VARCHAR}, #{lefalCardUpUrl,jdbcType=VARCHAR}, #{lefalCardDownUrl,jdbcType=VARCHAR}, 
       #{workCardFrom,jdbcType=VARCHAR}, #{workCardIndate,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{workCode,jdbcType=VARCHAR})
+      #{workCode,jdbcType=VARCHAR}, #{companyClassify,jdbcType=SMALLINT})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CompanyInfo">
     <!--
@@ -286,6 +287,9 @@
       <if test="workCode != null">
         work_code,
       </if>
+      <if test="companyClassify != null">
+        company_classify,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -389,6 +393,9 @@
       </if>
       <if test="workCode != null">
         #{workCode,jdbcType=VARCHAR},
+      </if>
+      <if test="companyClassify != null">
+        #{companyClassify,jdbcType=SMALLINT},
       </if>
     </trim>
   </insert>
@@ -511,6 +518,9 @@
       <if test="record.workCode != null">
         work_code = #{record.workCode,jdbcType=VARCHAR},
       </if>
+      <if test="record.companyClassify != null">
+        company_classify = #{record.companyClassify,jdbcType=SMALLINT},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -555,7 +565,8 @@
       work_card_from = #{record.workCardFrom,jdbcType=VARCHAR},
       work_card_indate = #{record.workCardIndate,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      work_code = #{record.workCode,jdbcType=VARCHAR}
+      work_code = #{record.workCode,jdbcType=VARCHAR},
+      company_classify = #{record.companyClassify,jdbcType=SMALLINT}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

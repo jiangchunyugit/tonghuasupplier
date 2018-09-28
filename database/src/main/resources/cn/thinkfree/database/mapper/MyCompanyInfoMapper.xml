@@ -21,7 +21,8 @@
         <result column="signed_time" jdbcType="TIMESTAMP" property="signedTime" />
         <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
         <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
-        <result column="" jdbcType="VARCHAR" property="contractNumber" />
+        <result column="contract_number" jdbcType="VARCHAR" property="contractNumber" />
+        <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     </resultMap>
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
       select
@@ -190,15 +191,16 @@
         SELECT
 	info.company_id,
 	role.role_name,
-	expand.comapny_nature,
+	expand.comapny_nature as comapny_nature,
 	info.company_name,
 	contract.start_time,
 	contract.end_time,
 	contract.signed_time,
+    contract.contract_number,
 	info.legal_name,
-	childCompany.province_name,
+	childCompany.province_name as siteProvinceName,
 	childCompany.company_name site_name,
-	childCompany.city_name,
+	childCompany.city_name as siteCityName,
 	childCompany.area_name,
 	expand.contact_name,
 	expand.contact_phone,
@@ -206,7 +208,7 @@
 	info.audit_status
 FROM
 	company_info info
-	RIGHT JOIN (
+	LEFT JOIN (
 SELECT
 	info.company_id,
 	info.company_name,
@@ -221,10 +223,10 @@ FROM
 	LEFT JOIN province province ON province.province_code = info.province_code
 	LEFT JOIN city city ON city.city_code = info.city_code
 	LEFT JOIN area area ON area.area_code = info.area_code
-WHERE 1 = 1
+WHERE (company_classify = 0 or company_classify = 1)
      <if test="relationMap != null">
-        and info.company_id in <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
-        #{relationMap}
+        and info.company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
+        #{item}
         </foreach>
      </if>
     <if test="provinceCode != null and provinceCode != ''">
@@ -237,7 +239,7 @@ WHERE 1 = 1
             AND company_id = #{siteCode}
         </if>
 
-	) childCompany ON info.company_id = childCompany.company_id
+	) childCompany ON info.root_company_id = childCompany.company_id
 	LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
 	LEFT JOIN user_role_set role ON info.role_id = role.role_code
 	LEFT JOIN (
@@ -257,7 +259,7 @@ FROM
 WHERE
 	id IN ( SELECT max( id ) FROM pc_contract_info GROUP BY company_id )
 	) contract ON info.company_id = contract.company_id
-WHERE 1= 1
+WHERE info.company_classify = 2
         <if test="companyId != null and companyId != ''">
             AND info.company_id = #{companyId}
         </if>

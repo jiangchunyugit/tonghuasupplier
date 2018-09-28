@@ -2,6 +2,7 @@ package cn.thinkfree.service.companysubmit;
 
 import java.util.*;
 
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -57,9 +58,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	public PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO) {
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 		List<String> relationMap = userVO.getRelationMap();
-		if(userVO.isRoot()){
-			relationMap.remove(userVO.getCompanyID());
-		}
 		companyListSEO.setRelationMap(relationMap);
 
 		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());

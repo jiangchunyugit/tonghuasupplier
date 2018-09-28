@@ -2464,6 +2464,66 @@ public class CompanyInfoExample {
             addCriterion("work_code not between", value1, value2, "workCode");
             return (Criteria) this;
         }
+
+        public Criteria andCompanyClassifyIsNull() {
+            addCriterion("company_classify is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyIsNotNull() {
+            addCriterion("company_classify is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyEqualTo(Short value) {
+            addCriterion("company_classify =", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyNotEqualTo(Short value) {
+            addCriterion("company_classify <>", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyGreaterThan(Short value) {
+            addCriterion("company_classify >", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyGreaterThanOrEqualTo(Short value) {
+            addCriterion("company_classify >=", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyLessThan(Short value) {
+            addCriterion("company_classify <", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyLessThanOrEqualTo(Short value) {
+            addCriterion("company_classify <=", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyIn(List<Short> values) {
+            addCriterion("company_classify in", values, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyNotIn(List<Short> values) {
+            addCriterion("company_classify not in", values, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyBetween(Short value1, Short value2) {
+            addCriterion("company_classify between", value1, value2, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyNotBetween(Short value1, Short value2) {
+            addCriterion("company_classify not between", value1, value2, "companyClassify");
+            return (Criteria) this;
+        }
     }
 
     /**

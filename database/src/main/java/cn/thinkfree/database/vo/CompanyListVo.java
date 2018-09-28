@@ -63,6 +63,19 @@ public class CompanyListVo extends CompanyInfo {
      */
     private String contractNumber;
 
+    /**
+     * 公司类型
+     */
+    private String roleName;
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
     public Short getComapnyNature() {
         return comapnyNature;
     }

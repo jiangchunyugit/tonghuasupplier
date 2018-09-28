@@ -54,6 +54,19 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      */
     private List<String> relationMap;
 
+    /**
+     * 公司级别：一级，二级，三级
+     */
+    private Short companyClassify;
+
+    public Short getCompanyClassify() {
+        return companyClassify;
+    }
+
+    public void setCompanyClassify(Short companyClassify) {
+        this.companyClassify = companyClassify;
+    }
+
     public String getCompanyId() {
         return companyId;
     }

@@ -3,6 +3,7 @@ package cn.thinkfree.service.companyapply;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
+import cn.thinkfree.database.constants.CompanyClassify;
 import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.PcApplyInfoMapper;
@@ -104,6 +105,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
         companyInfo.setRootCompanyId(pcApplyInfoSEO.getCompanyId());
+        //公司级别：入驻公司为三级公司
+        companyInfo.setCompanyClassify(CompanyClassify.TERTIARY_COMPANY.shortVal());
         int infoLine = companyInfoMapper.insertSelective(companyInfo);
 
         //插入公司拓展表

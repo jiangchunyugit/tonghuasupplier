@@ -50,7 +50,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @ApiOperation(value = "公司查询：装饰公司，设计公司")
     public MyRespBundle<PageInfo<CompanyListVo>> list(@ApiParam("公司资质信息") CompanyListSEO companyListSEO) {
         PageInfo<CompanyListVo> pageInfo = companySubmitService.list(companyListSEO);
-        return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }
 
         //补全合同
