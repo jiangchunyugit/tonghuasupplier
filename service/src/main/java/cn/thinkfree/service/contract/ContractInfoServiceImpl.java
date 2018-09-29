@@ -1,5 +1,6 @@
 package cn.thinkfree.service.contract;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -9,8 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.service.constants.AuditStatus;
+import cn.thinkfree.service.constants.ContractStatus;
 import org.apache.commons.lang3.StringUtils;
+import org.jodconverter.DocumentConverter;
+import org.jodconverter.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +56,9 @@ public class ContractInfoServiceImpl implements ContractService {
 	
 	@Autowired
 	PcCompanyFinancialMapper pcCompanyFinancialMapper;
+	
+	
+
 	
 	
 	@Override
@@ -97,17 +106,17 @@ public class ContractInfoServiceImpl implements ContractService {
 		ContractVo vo = new ContractVo();
 		vo.setCompanyId(companyId);
 		vo.setContractNumber(contractNumber);
-		if(auditCase.equals("0") ){//
-			vo.setContractStatus("2");
+		if(auditCase.equals(AuditStatus.AuditPass.shortVal()) ){//
+			vo.setContractStatus(ContractStatus.AuditPass.shortVal());
 		}else{
-			vo.setContractStatus("3");
+			vo.setContractStatus(ContractStatus.AuditDecline.shortVal());
 		}
 		
 		//修改公司表 
 		int flag = contractInfoMapper.updateContractStatus(vo);
 		CompanyInfo companyInfo = new CompanyInfo();
 		companyInfo.setCompanyId(companyId);
-		if(auditCase.equals("0")){//财务审核通过
+		if(auditCase.equals(AuditStatus.AuditPass.shortVal())){//财务审核通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSCHECK.stringVal());
 		}else{//财务审核不通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.FAILCHECK.stringVal());
@@ -198,6 +207,7 @@ public class ContractInfoServiceImpl implements ContractService {
 
 	@Override
 	public Map<String, String> createContractDoc(String contractNumber) {
+		
 		Map<String,String> map = new HashMap<>();
 		ContractVo  vo  = new ContractVo();
 		vo.setContractNumber(contractNumber);
@@ -252,13 +262,13 @@ public class ContractInfoServiceImpl implements ContractService {
 				//自定义魔板中的信息
 		        reportresult.add(rep);
 		        root.put("reportresult", reportresult);
-				WordUtil.createWord(root, "sj_ftl.xml", "d://ces", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
+				WordUtil.createWord(root, "sj_ftl.xml", "", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
 				
 			}else if(companyInfo.getRoleId().equals("SJ")){//设计公司
 				//自定义魔板中的信息
 		        reportresult.add(rep);
 		        root.put("reportresult", reportresult);
-				WordUtil.createWord(root, "sj_ftl.xml", "d://ces", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
+				WordUtil.createWord(root, "sj_ftl.xml", "http://localhost:7181/static/", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
 			}
 			
 		}else{

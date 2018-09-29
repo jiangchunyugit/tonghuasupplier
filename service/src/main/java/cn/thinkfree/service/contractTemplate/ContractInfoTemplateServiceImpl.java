@@ -1,5 +1,6 @@
 package cn.thinkfree.service.contractTemplate;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -8,9 +9,13 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.StringUtil;
+import com.mysql.fabric.xmlrpc.base.Data;
 
+import cn.thinkfree.core.bundle.MyRequBundle;
+import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.PcContractTemplateCategoryMapper;
 import cn.thinkfree.database.mapper.PcContractTemplateDictMapper;
 import cn.thinkfree.database.mapper.PcContractTemplateMapper;
@@ -115,6 +120,27 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 			resMap.put("msg", "操作成功");
 		}
 		return resMap;
+	}
+
+
+	@Override
+	public Map<String, String> updateContractTemplateInfo(String type,String contractTpName, String contractTpRemark, MultipartFile file) {
+		//生成pdf 返回url 
+		String url = WebFileUtil.fileCopy("static/contractTemplate/", file);//上传合同模板
+		
+		Map<String, String> map = new HashMap<>();
+		
+		PcContractTemplate con = new PcContractTemplate();
+		
+		con.setContractTpName(contractTpName);
+		
+		con.setContractStatus("0");
+		
+		con.setContractTpRemark(contractTpRemark);
+		
+		con.setUpdateTime(new Date());
+		
+		return map;
 	}
 
 	
