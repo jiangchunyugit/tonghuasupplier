@@ -4,11 +4,10 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.vo.CompanyListSEO;
-import cn.thinkfree.database.vo.CompanyListVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
+import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
-import com.github.pagehelper.PageInfo;
+import cn.thinkfree.service.contract.ContractService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -33,58 +32,72 @@ import org.springframework.web.bind.annotation.RestController;
 public class CompanyInfoSubmitController extends AbsBaseController {
     @Autowired
     CompanySubmitService companySubmitService;
+    
+    @Autowired
+	ContractService contractService;
 
     @RequestMapping(value = "/upCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value = "审核资质上传")
-    public MyRespBundle<String> upCompanyInfo(@ApiParam("公司资质信息") CompanySubmitVo companySubmitVo) {
+    @ApiOperation(value="审核资质上传")
+    public MyRespBundle<String> upCompanyInfo(@ApiParam("公司资质信息")CompanySubmitVo companySubmitVo){
         boolean flag = companySubmitService.upCompanyInfo(companySubmitVo);
-        if (flag) {
+        if(flag){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    //公司资质查询list
+
+    //补全合同
+
+    //公司详情
+
+    //查看合同
+
+    //合同条款设置
+
+    
+    /**
+     * 运营人员审批
+     * @author lqd
+     * @return Message
+     */
+    @ApiOperation(value = "公司详情", notes = "公司详情")
+    @PostMapping("/companyDetails")
     @MyRespBody
-    @ApiOperation(value = "公司查询：装饰公司，设计公司")
-    public MyRespBundle<PageInfo<CompanyListVo>> list(@ApiParam("公司资质信息") CompanyListSEO companyListSEO) {
-        PageInfo<CompanyListVo> pageInfo = companySubmitService.list(companyListSEO);
-        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
+    public MyRespBundle<String> companyDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
+    		@ApiParam("公司编号")@RequestParam String companyId){
+    	ContractDetails jbj =  contractService.contractDetails(contractNumber, companyId);
+        return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
-        //补全合同
-
-        //公司详情
-
-        //查看合同
-
-        //合同条款设置
-
-        /**
-         * 运营人员审批
-         * @author lqd
-         * @return Message
-         */
-        @ApiOperation(value = "资质审批", notes = "运营审核")
-        @PostMapping("/audit")
-        @MyRespBody
-        //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-        public MyRespBundle<String> audit (@ApiParam("公司编号") @RequestParam String companyId,
-                @ApiParam("审批状态 0 代表通过 1 拒绝 ") @RequestParam String auditStatus,
-                @ApiParam("审核成功或者失败的原因 ") @RequestParam String auditCase){
-
-            Map<String, String> resMap = companySubmitService.auditContract(companyId, auditStatus, auditCase);
-
-            String code = String.valueOf(resMap.get("code"));
-
-            String mes = String.valueOf(resMap.get("msg"));
-
-            if (code.equals("1")) {//失败的情况
-                return sendFailMessage(mes);
-            } else {//成功的情况
-                return sendSuccessMessage(mes);
-            }
-
-        }
+    
+    /**
+     * 运营人员审批
+     * @author lqd
+     * @return Message
+     */
+    @ApiOperation(value = "资质审批", notes = "运营审核")
+    @PostMapping("/auditCompany")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
+    public MyRespBundle<String> auditCompany(
+    		@ApiParam("公司编号")@RequestParam String companyId,
+    		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
+    		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
+        
+    	 Map<String,String>  resMap = companySubmitService.auditContract(companyId,auditStatus,auditCase);
+    	 
+    	 String code = String.valueOf(resMap.get("code"));
+    	 
+    	 String mes = String.valueOf(resMap.get("msg"));
+    	 
+    	 if(code.equals("1")){//失败的情况
+    		 return sendFailMessage(mes);
+    	 }else{//成功的情况
+    		 return sendSuccessMessage(mes);
+    	 }
+       
     }
+}

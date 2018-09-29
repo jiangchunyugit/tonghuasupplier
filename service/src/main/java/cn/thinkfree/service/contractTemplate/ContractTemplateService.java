@@ -3,8 +3,12 @@ package cn.thinkfree.service.contractTemplate;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import cn.thinkfree.core.bundle.MyRequBundle;
 import cn.thinkfree.database.model.PcContractTemplate;
 import cn.thinkfree.database.vo.MyContractTemplateDetails;
+import io.swagger.annotations.ApiParam;
 
 public interface ContractTemplateService {
 
@@ -23,6 +27,15 @@ public interface ContractTemplateService {
      * 
      */
     Map<String,String> updateContractTemplateStatus(String type,String stauts);
+    
+    
+    /**
+     * 根据合同模板类型编辑合同模板的可用/不可用
+     * @param map 返回pdf路径和上传时间
+     * 生成pdf 
+     * 
+     */
+    Map<String,String> updateContractTemplateInfo(String type,String contractTpName, String contractTpRemark,MultipartFile file);
     
     /**
 	 * 

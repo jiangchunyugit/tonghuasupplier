@@ -15,8 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -75,9 +78,10 @@ public class ContracttemplateController extends AbsBaseController{
      * @return PcContractTemplate
      */
     @ApiOperation(value = "合同模板管理列表", notes = "根据合同类型查询合同模板数据")
-    @PostMapping("/list")
+    //@PostMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @MyRespBody
-    public MyRespBundle<List<PcContractTemplate>> list(@ApiParam("合同类型") String type){
+    public MyRespBundle<List<PcContractTemplate>> list(@RequestBody @ApiParam("合同类型") String type){
 
     	List<PcContractTemplate> list = contractTemplateService.PcContractTemplateList(type);
         
@@ -106,13 +110,13 @@ public class ContracttemplateController extends AbsBaseController{
      * 添加合同（新增）
      * 
      */
-    @ApiOperation(value = "添加合同模板数据", notes = "根据合同类型添加合同模板数据")
-    @PostMapping("/insert")
+    @ApiOperation(value = "修改合同模板数据", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
+    @PostMapping("/update")
     @MyRespBody
-    public MyRespBundle<List<PcContractTemplate>> insert(@ApiParam("合同类型") String type){
-
-        
-        return sendJsonData(ResultMessage.SUCCESS,null);
+    public MyRespBundle<List<PcContractTemplate>> update(@ApiParam("合同类型") String type,@ApiParam("合同名称")String contractTpName,
+    		@ApiParam("合同备注") String contractTpRemark,@AppParameter @RequestParam("file") MultipartFile  file){
+    	Map<String,String> resMap = contractTemplateService.updateContractTemplateInfo(type, contractTpName, contractTpRemark,file);
+        return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     
     
@@ -131,24 +135,24 @@ public class ContracttemplateController extends AbsBaseController{
         
         return sendJsonData(ResultMessage.SUCCESS,map);
     }
-    
-    /**
-     * 根据合同分类设置动态的值
-     * @author lqd
-     * @param 
-     * @return 
-     */
-    @ApiOperation(value = "添加动态模板值", notes = "根据合同类型查询合同模板子分类的集合 key 为模板中保证金设置code value为值名称")
-    @PostMapping("/insertCategoryDitc")
-    @MyRespBody
-    public MyRespBundle< Map<String,String>> insertCategoryDitc(@ApiParam("添加项目分类id") String categoryId,
-    		@ApiParam("自定义key和value的值") Map<String,String> paramMap){
-
-    	 Map<String,String> resmap = contractTemplateService.insertdict(categoryId, paramMap);
-        
-        return sendJsonData(ResultMessage.SUCCESS,resmap);
-    }
-    
+//    
+//    /**
+//     * 根据合同分类设置动态的值
+//     * @author lqd
+//     * @param 
+//     * @return 
+//     */
+//    @ApiOperation(value = "添加动态模板值", notes = "根据合同类型查询合同模板子分类的集合 key 为模板中保证金设置code value为值名称")
+//    @PostMapping("/insertCategoryDitc")
+//    @MyRespBody
+//    public MyRespBundle< Map<String,String>> insertCategoryDitc(@ApiParam("添加项目分类id") String categoryId,
+//    		@ApiParam("自定义key和value的值") Map<String,String> paramMap){
+//
+//    	 Map<String,String> resmap = contractTemplateService.insertdict(categoryId, paramMap);
+//        
+//        return sendJsonData(ResultMessage.SUCCESS,resmap);
+//    }
+//    
     
     
     /**

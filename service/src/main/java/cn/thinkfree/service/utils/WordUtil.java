@@ -1,12 +1,38 @@
 package cn.thinkfree.service.utils;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
 import freemarker.template.Configuration;
 import freemarker.template.Template;
- 
-import java.io.*;
-import java.util.Map;
- 
+@Component
 public class WordUtil {
+	
+	/**
+     * 文件上传路径
+     */
+    private static String uploadDir;
+    /**
+     * 文件服务器路径
+     */
+    private static String publicURL;
+
+    @Value("${custom.file.publicURL}")
+    public  void setPublicURL(String publicURL) {
+    	WordUtil.publicURL = publicURL;
+    }
+
+    @Value("${server.file.uploadDir}")
+    public  void setUploadDir(String up) {
+    	WordUtil.uploadDir = up;
+    }
  
     /**
      * 生成word文件
@@ -31,7 +57,7 @@ public class WordUtil {
             Template template = configuration.getTemplate(templateName);
  
             //输出文件
-            File outFile = new File(filePath+File.separator+fileName);
+            File outFile = new File("D:/11/"+File.separator+fileName);
  
             //如果输出目标文件夹不存在，则创建
             if (!outFile.getParentFile().exists()){

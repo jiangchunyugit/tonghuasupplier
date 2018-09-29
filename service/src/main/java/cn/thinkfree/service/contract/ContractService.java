@@ -66,4 +66,6 @@ public interface ContractService {
       * @return map  code 0 成功  1 失败  mess 失败的原因
       */
       Map<String,String> createContractDoc(String contractNumber);
+      
+      
 }
