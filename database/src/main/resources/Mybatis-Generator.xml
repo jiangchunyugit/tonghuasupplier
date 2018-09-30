@@ -71,7 +71,8 @@
         <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
-        <table tableName="pre_project_document" domainObjectName="ProjectDocument"/>
+        <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
+        <table tableName="project_construction_sort" domainObjectName="ProjectBigScheduling"/>
 
     </context>
 </generatorConfiguration>
