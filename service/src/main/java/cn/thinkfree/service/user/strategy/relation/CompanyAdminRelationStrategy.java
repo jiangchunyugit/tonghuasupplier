@@ -1,4 +1,4 @@
-package cn.thinkfree.service.user.builder;
+package cn.thinkfree.service.user.strategy.relation;
 
 import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 @Component
-public class CompanyProvinceStrategy implements Strategy {
+public class CompanyAdminRelationStrategy implements RelationStrategy {
+
 
     @Autowired
     CompanyInfoMapper companyInfoMapper;
-
     /**
      * 构建关系图
      *
@@ -21,12 +21,10 @@ public class CompanyProvinceStrategy implements Strategy {
      * @param userVO
      */
     @Override
-    public List<String> builder(UserVO userVO) {
-
+    public List<String> build(UserVO userVO) {
         CompanyInfo condition = new CompanyInfo();
         condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        condition.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
-        condition.setParentCompanyId(UserLevel.Company_Province.code+"");
+        condition.setParentCompanyId(UserLevel.Creator.code+"");
         return companyInfoMapper.selectRelationMap(condition);
     }
 }

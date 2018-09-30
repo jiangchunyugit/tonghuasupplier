@@ -9,32 +9,23 @@ import cn.thinkfree.core.security.exception.MySecurityException;
 import cn.thinkfree.core.security.filter.*;
 import cn.thinkfree.core.security.filter.util.SecurityConstants;
 
+import cn.thinkfree.core.security.provider.MyCustomProvider;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
 import com.google.gson.Gson;
-import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.event.LoggerListener;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
@@ -45,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Map;
 
 /**
  * JAVA CONFIG SECURITY
@@ -99,9 +89,13 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
         // 该死的Frame
         http.headers().frameOptions().disable();
         // 细粒度 更精细的配置~
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 //        http.addFilterAt(mySecurityPcFilter(), FilterSecurityInterceptor.class);
-        http.addFilterAt(new MyCustomProcessFiter(),UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        MyCustomProcessFilter myCustomProcessFilter = new MyCustomProcessFilter();
+        myCustomProcessFilter.setAuthenticationManager(authenticationManager());
+        myCustomProcessFilter.setAuthenticationSuccessHandler(securitySuccessAuthHandler);
+        myCustomProcessFilter.setAuthenticationFailureHandler(failHandler());
+        http.addFilterAt(myCustomProcessFilter,UsernamePasswordAuthenticationFilter.class);
         // 自定义登录页面
         http.csrf().disable()
                 .formLogin()
@@ -191,8 +185,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth)
             throws Exception {
-//        auth.authenticationProvider()
-
+        auth.authenticationProvider(new MyCustomProvider(userService,new MultipleMd5()));
         auth.userDetailsService(userService).passwordEncoder(new MultipleMd5());
     }
 
