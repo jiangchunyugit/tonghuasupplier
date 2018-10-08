@@ -13,7 +13,7 @@ import lombok.Data;
 /**
  * 项目详情
  */
-@ApiModel("项目施工顺序")
+@ApiModel("项目施工节点")
 @Data
 public class ProjectBigSchedulingVO {
 
