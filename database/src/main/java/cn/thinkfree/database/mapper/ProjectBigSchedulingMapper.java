@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.model.ProjectBigSchedulingExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectBigSchedulingMapper {
@@ -93,4 +95,12 @@ public interface ProjectBigSchedulingMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectBigScheduling record);
+    /**
+     * @Author chengpunan
+     * @Description 根据公司编号查找大排期基础信息
+     * @Date
+     * @Param
+     * @return
+     **/
+    ProjectBigSchedulingVO selectProjectBigSchedulingByCompanyId(@Param("companyId") String companyId);
 }

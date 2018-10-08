@@ -1,5 +1,7 @@
 package cn.thinkfree.service.scheduling;
 
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
+
 /**
  * 正常排期操作
  *
@@ -7,4 +9,5 @@ package cn.thinkfree.service.scheduling;
  * @Date 2018-09-30
  */
 public interface SchedulingService {
+    ProjectBigSchedulingVO selectProjectBigSchedulingByCompanyId(String companyId);
 }
