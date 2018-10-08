@@ -41,4 +41,18 @@ public class SchedulingController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, projectBigSchedulingVO);
     }
 
+    @RequestMapping(value = "saveProjectScheduling",method = RequestMethod.POST)
+    @ApiOperation(value = "添加公司施工节点")
+    public MyRespBundle saveProjectScheduling(@ApiParam(value = "施工节点信息") ProjectBigSchedulingVO projectBigSchedulingVO){
+        String result = schedulingService.saveProjectScheduling(projectBigSchedulingVO);
+        return sendSuccessMessage(result);
+    }
+
+    @RequestMapping(value = "deleteProjectScheduling",method = RequestMethod.POST)
+    @ApiOperation(value = "删除公司施工节点")
+    public MyRespBundle deleteProjectScheduling(@ApiParam(value = "施工节点信息") ProjectBigSchedulingVO projectBigSchedulingVO){
+        String result = schedulingService.deleteProjectScheduling(projectBigSchedulingVO);
+        return sendSuccessMessage(result);
+    }
+
 }
