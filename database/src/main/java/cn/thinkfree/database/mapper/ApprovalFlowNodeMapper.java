@@ -1,8 +1,11 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowNodeExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.ApprovalFlowNodeVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface ApprovalFlowNodeMapper {
@@ -93,4 +96,6 @@ public interface ApprovalFlowNodeMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ApprovalFlowNode record);
+
+    List<ApprovalFlowNodeVo> findByExternalUniqueCode(String ExternalUniqueCode);
 }

@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import cn.thinkfree.database.model.ApprovalFlowOptions;
 import cn.thinkfree.database.model.ApprovalFlowOptionsExample;
 import java.util.List;
@@ -93,4 +94,6 @@ public interface ApprovalFlowOptionsMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ApprovalFlowOptions record);
+
+    List<ApprovalFlowOptions> findByExternalUniqueCode(String ExternalUniqueCode);
 }

@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import cn.thinkfree.database.model.ApprovalFlowNoticeUrls;
 import cn.thinkfree.database.model.ApprovalFlowNoticeUrlsExample;
 import java.util.List;
@@ -93,4 +94,6 @@ public interface ApprovalFlowNoticeUrlsMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ApprovalFlowNoticeUrls record);
+
+    List<ApprovalFlowNoticeUrls> findByExternalUniqueCode(String ExternalUniqueCode);
 }
