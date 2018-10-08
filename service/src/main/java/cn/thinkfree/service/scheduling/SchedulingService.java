@@ -9,5 +9,11 @@ import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
  * @Date 2018-09-30
  */
 public interface SchedulingService {
+    /**
+     * 项目列表
+     *
+     * @param companyId
+     * @return
+     */
     ProjectBigSchedulingVO selectProjectBigSchedulingByCompanyId(String companyId);
 }

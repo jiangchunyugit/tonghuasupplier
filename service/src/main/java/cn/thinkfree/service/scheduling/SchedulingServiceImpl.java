@@ -17,6 +17,12 @@ public class SchedulingServiceImpl implements SchedulingService {
     @Autowired(required = false)
     private ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
+    /**
+     * 项目列表
+     *
+     * @param companyId
+     * @return
+     */
     @Override
     public ProjectBigSchedulingVO selectProjectBigSchedulingByCompanyId(String companyId) {
         ProjectBigSchedulingVO projectBigSchedulingVO = projectBigSchedulingMapper.selectProjectBigSchedulingByCompanyId(companyId);
