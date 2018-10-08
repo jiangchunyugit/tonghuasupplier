@@ -72,5 +72,19 @@ public interface ContractTemplateService {
     Map<String,String>  insertInfoContractTemplate(PcContractTemplate pcContractTemplate);
     
     
-  
+    /**
+     * 根据合同类型 查询合同类型模板
+     * @author lvqidong
+     * @param type
+     * @return string
+     */
+    String getTemplatePdfUrl(String type);
+    
+    /**
+     * 
+     * 根据合同类型 查询 合同字典code
+     * @param contractNumber 
+     * @retuen map 
+     */
+    Map<String,String> queryContractDic(String type);
 }

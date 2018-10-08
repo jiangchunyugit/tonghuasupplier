@@ -19,14 +19,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import cn.thinkfree.core.annotation.AppParameter;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
-import cn.thinkfree.core.bundle.MyRequBundle;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.PcContractTemplate;
@@ -98,7 +96,7 @@ public class ContracttemplateController extends AbsBaseController{
     @ApiOperation(value = "根据合同模板类型修改编辑合同模板", notes = "根据合同模板类型修改编辑合同模板是否可用/不可用")
     @PostMapping("/updateContractTemplate")
     @MyRespBody
-    public MyRespBundle<Map<String,String>> updateContractTemplate(@ApiParam("合同类型") String type,@ApiParam("合同编辑是否可用状态（0可用 1不可用）") String status){
+    public MyRespBundle<Map<String,String>> updateContractTemplate(@RequestBody @ApiParam("合同类型") String type,@RequestBody @ApiParam("合同编辑是否可用状态（0可用 1不可用）") String status){
 
     	Map<String,String> resMap = contractTemplateService.updateContractTemplateStatus(type,status);
         
@@ -113,7 +111,8 @@ public class ContracttemplateController extends AbsBaseController{
     @ApiOperation(value = "修改合同模板数据", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
     @PostMapping("/update")
     @MyRespBody
-    public MyRespBundle<List<PcContractTemplate>> update(@ApiParam("合同类型") String type,@ApiParam("合同名称")String contractTpName,
+    
+    public MyRespBundle<List<PcContractTemplate>> update(@RequestBody @ApiParam("合同类型") String type,@RequestBody @ApiParam("合同名称")String contractTpName,
     		@ApiParam("合同备注") String contractTpRemark,@AppParameter @RequestParam("file") MultipartFile  file){
     	Map<String,String> resMap = contractTemplateService.updateContractTemplateInfo(type, contractTpName, contractTpRemark,file);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
@@ -129,7 +128,7 @@ public class ContracttemplateController extends AbsBaseController{
     @ApiOperation(value = "查询合同模板下的所有分类", notes = "根据合同类型查询合同模板子分类的集合 key 为模板中保证金设置code value为值名称")
     @PostMapping("/categorylist")
     @MyRespBody
-    public MyRespBundle< Map<String,String>> categorylist(@ApiParam("合同类型") String type){
+    public MyRespBundle< Map<String,String>> categorylist(@RequestBody @ApiParam("合同类型") String type){
 
     	 Map<String,String> map = contractTemplateService.getTemplateCategoryList(type);
         
@@ -153,16 +152,37 @@ public class ContracttemplateController extends AbsBaseController{
 //        return sendJsonData(ResultMessage.SUCCESS,resmap);
 //    }
 //    
-    
-    
-    /**
+
+	/**
+	 *
+	 * 合同模板预览
+	 * @author lqd
+	 * @param
+	 * @return
+	 */
+	/**
+	 * 预览pdf文件
+	 * @param fileName
+	 */
+	@ApiOperation(value = "预览合同模板", notes = "根据合同类型预览合同模板（只返回存储路径  项目访问地址需拼接）")
+	@GetMapping("/preview")
+	public MyRespBundle<String> pdfStreamHandler(@RequestBody @ApiParam("合同类型") String type,
+			HttpServletResponse response) {
+		
+		 String url =  contractTemplateService.getTemplatePdfUrl(type);
+		 
+		 return sendJsonData(ResultMessage.SUCCESS,url);
+	}
+
+
+	/**
      * 
      * 下载合同类型
      * @author lqd
      * @param 
      * @return 
      */
-    @ApiOperation(value = "下载合同", notes = "根据合同类型查下载合同")
+    @ApiOperation(value = "下载合同", notes = "根据合同类型查下载合同（下载必须走form表达提交啊）")
     @PostMapping("/download")
     @MyRespBody
     public String download(@ApiParam("合同类型") String type,HttpServletResponse response){

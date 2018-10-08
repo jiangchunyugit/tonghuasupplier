@@ -22,6 +22,7 @@ import cn.thinkfree.database.mapper.PcContractTemplateMapper;
 import cn.thinkfree.database.model.PcContractTemplate;
 import cn.thinkfree.database.model.PcContractTemplateCategory;
 import cn.thinkfree.database.model.PcContractTemplateDict;
+import cn.thinkfree.database.model.PcContractTemplateDictExample;
 import cn.thinkfree.database.vo.MyContractTemplateDetails;
 
 @Service
@@ -141,6 +142,31 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 		con.setUpdateTime(new Date());
 		
 		return map;
+	}
+
+
+	@Override
+	public String getTemplatePdfUrl(String type) {
+		// TODO Auto-generated method stub
+		return pcContractTemplateMapper.queryListByType(type).get(0).getPdfUrl();
+	}
+
+
+	@Override
+	public Map<String, String> queryContractDic(String type) {
+		PcContractTemplateDictExample example = new PcContractTemplateDictExample();
+		if (type.equals("0")) {
+			example.createCriteria().andTypeEqualTo(type);
+		} else if (type.equals("1")) {
+			example.createCriteria().andTypeEqualTo(type);
+		}
+
+		List<PcContractTemplateDict> list = pcContractTemplateDictMapper.selectByExample(example);
+		Map<String,String> resMap = new HashMap<>();
+		for (int i = 0; i < list.size(); i++) {
+			resMap.put(list.get(i).getCode(), list.get(i).getName());
+		}
+		return resMap;
 	}
 
 	

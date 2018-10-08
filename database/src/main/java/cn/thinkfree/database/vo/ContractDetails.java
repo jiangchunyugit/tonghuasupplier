@@ -301,4 +301,6 @@ public class ContractDetails extends CompanySubmitVo{
 	public void setAuditInfo(List<PcAuditInfo> auditInfo) {
 		this.auditInfo = auditInfo;
 	}
+
+
 }

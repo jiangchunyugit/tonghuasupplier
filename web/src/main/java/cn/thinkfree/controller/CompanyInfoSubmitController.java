@@ -1,5 +1,16 @@
 package cn.thinkfree.controller;
 
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
@@ -8,18 +19,10 @@ import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.contractTemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author ying007
@@ -35,6 +38,8 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     
     @Autowired
 	ContractService contractService;
+    @Autowired
+    ContractTemplateService contractTemplateService;
 
     @RequestMapping(value = "/upCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
@@ -56,13 +61,48 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     //查看合同
 
     //合同条款设置
-
+    
     
     /**
-     * 运营人员审批
+     * 查询字典
+     * @author lqd
+     * @return Message
+     * 
+     */
+    @ApiOperation(value = "查看合同条款字典", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/text")
+    @PostMapping("/queryContractDic/")
+    public MyRespBundle<String> queryContractDic(@RequestParam String type){
+    	 Map<String,String>  resMap  =  contractTemplateService.queryContractDic(type);
+        return sendJsonData(ResultMessage.SUCCESS,resMap);
+    }
+    
+    
+    
+    /**
+     * 
+     * 合同条款设置
      * @author lqd
      * @return Message
      */
+    @ApiOperation(value = "合同条款设置", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/json")
+    @PostMapping("/settingContractClause/{contractNumber}/{companyId}")
+    @MyRespBody
+    public MyRespBundle<String> settingContractClause(@PathVariable("contractNumber") String contractNumber,
+    		@PathVariable("companyId") String companyId,
+    		@ApiParam("合同条款key和value值")@RequestBody (required = true) Map<String,String> paramMap){
+    	 Map<String,String>  resMap  =  contractService.insertContractClause(contractNumber, companyId, paramMap);
+        return sendJsonData(ResultMessage.SUCCESS,resMap);
+    }
+
+
+    
+    
+    /**
+     * 公司详情
+     * @author lqd
+     * @return Message
+     */
+    
     @ApiOperation(value = "公司详情", notes = "公司详情")
     @PostMapping("/companyDetails")
     @MyRespBody

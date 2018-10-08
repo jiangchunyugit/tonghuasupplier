@@ -1,5 +1,6 @@
 package cn.thinkfree.service.contract;
 
+import java.util.List;
 import java.util.Map;
 
 import com.github.pagehelper.PageInfo;
@@ -66,6 +67,24 @@ public interface ContractService {
       * @return map  code 0 成功  1 失败  mess 失败的原因
       */
       Map<String,String> createContractDoc(String contractNumber);
+      
+      
+      /**
+       * 新增合同 条款信息(如果信息存再删除添加 不存在新增 )
+       *  @param contractNumber
+       *  @param map 合同
+       */
+      Map<String,String>  insertContractClause(String contractNumber,String companyId,Map<String,String> map);
+      
+      
+      
+      /**
+       * 合同详情 （查询 运营设置完的合同）
+       * @param contractNumber 
+       * @return 
+       */
+      Map<String,String> getContractBycontractNumber(String contractNumber);
+      
       
       
 }

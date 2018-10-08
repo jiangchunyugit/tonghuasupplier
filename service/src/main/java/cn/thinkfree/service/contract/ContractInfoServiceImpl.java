@@ -1,22 +1,17 @@
 package cn.thinkfree.service.contract;
 
-import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import cn.thinkfree.service.constants.AuditStatus;
-import cn.thinkfree.service.constants.ContractStatus;
 import org.apache.commons.lang3.StringUtils;
-import org.jodconverter.DocumentConverter;
-import org.jodconverter.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +23,22 @@ import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
+import cn.thinkfree.database.mapper.PcContractTermsMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.model.PcCompanyFinancialExample;
+import cn.thinkfree.database.model.PcContractTerms;
+import cn.thinkfree.database.model.PcContractTermsExample;
 import cn.thinkfree.database.vo.CompanyInfoVo;
-import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
+import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.utils.WordUtil;
 
 @Service
@@ -56,6 +55,9 @@ public class ContractInfoServiceImpl implements ContractService {
 	
 	@Autowired
 	PcCompanyFinancialMapper pcCompanyFinancialMapper;
+	
+	@Autowired
+	PcContractTermsMapper pcContractTermsMapper;
 	
 	
 
@@ -192,7 +194,7 @@ public class ContractInfoServiceImpl implements ContractService {
 			auexample.setOrderByClause("audit_time");
 			List<PcAuditInfo> auditList = pcAuditInfoMapper.selectByExample(auexample);
 			companyVo.setAuditInfo(auditList);
-			//结算信息
+			//合同信息
 		}
 		
 		return companyVo;
@@ -277,6 +279,41 @@ public class ContractInfoServiceImpl implements ContractService {
 		}
 		
 		return map;
+	}
+    
+	@Transactional
+	@Override
+	public Map<String, String> insertContractClause(String contractNumber,String companyId,Map<String,String> map) {
+		
+		Map<String,String> resMap = new HashMap<>();
+		//List<PcContractTerms> list = new ArrayList<>();
+		Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator(); 
+		while (entries.hasNext()) { 
+		  Map.Entry<String, String> entry = entries.next(); 
+		  String key = entry.getKey();
+		  String value = entry.getValue();
+		  PcContractTerms terms = new PcContractTerms();
+		  terms.setCompanyId(companyId);
+		  terms.setContractNumber(contractNumber);
+		  terms.setCreateTime(new Date());
+		  terms.setUpdateTime(new Date());
+		  terms.setContractDictCode(key);
+		  terms.setContractValue(value);
+		  //list.add(terms);
+		  PcContractTermsExample exp = new PcContractTermsExample();
+		  exp.createCriteria().andCompanyIdEqualTo(companyId).andContractDictCodeEqualTo(key).andContractNumberEqualTo(contractNumber);
+		  pcContractTermsMapper.deleteByExample(exp);
+		  pcContractTermsMapper.insertSelective(terms);
+		}
+		resMap.put("code", "0");
+		resMap.put("msg", "设置成功");
+		return resMap;
+	}
+
+	@Override
+	public Map<String, String> getContractBycontractNumber(String contractNumber) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
    
