@@ -40,7 +40,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
 //        userVO.setUserRegister(user);
         completionDetailInfo(userVO,userID);
         completionUserRole(userVO,userID);
-        return null;
+        return userVO;
     }
 
     /**
