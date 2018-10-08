@@ -89,7 +89,6 @@
         <!--<table tableName="approval_flow_push_msg" domainObjectName="ApprovalFlowPushMsg"/>-->
         <!--<table tableName="approval_flow_roles" domainObjectName="ApprovalFlowRoles"/>-->
         <!--<table tableName="approval_flow_timeout_notice" domainObjectName="ApprovalFlowTimeoutNotice"/>-->
-        <!--<table tableName="user_role_set" domainObjectName="Role"/>-->
         <!--approval flow end-->
     </context>
 </generatorConfiguration>
