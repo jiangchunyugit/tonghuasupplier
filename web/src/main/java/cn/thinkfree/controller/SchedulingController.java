@@ -1,11 +1,17 @@
 package cn.thinkfree.controller;
 
+import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
+import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
+import cn.thinkfree.database.vo.ProjectSEO;
+import cn.thinkfree.database.vo.ProjectVO;
 import cn.thinkfree.service.scheduling.SchedulingService;
-import io.swagger.annotations.Api;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author gejiaming
@@ -17,5 +23,22 @@ public class SchedulingController extends AbsBaseController {
 
     @Autowired
     private SchedulingService schedulingService;
+
+    /**
+     * 项目列表
+     *
+     * @param companyId
+     * @return
+     */
+    @ApiOperation(value = "施工配置列表", notes = "")
+    @PostMapping("/list")
+    @MyRespBody
+    public MyRespBundle<ProjectBigSchedulingVO> list(@RequestParam(name = "companyId") @ApiParam(value = "公司编号", name = "companyId") String companyId) {
+        if ("".equals(companyId) || null == companyId) {
+            sendJsonData(ResultMessage.ERROR, "公司编号为空");
+        }
+        ProjectBigSchedulingVO projectBigSchedulingVO = schedulingService.selectProjectBigSchedulingByCompanyId(companyId);
+        return sendJsonData(ResultMessage.SUCCESS, projectBigSchedulingVO);
+    }
 
 }
