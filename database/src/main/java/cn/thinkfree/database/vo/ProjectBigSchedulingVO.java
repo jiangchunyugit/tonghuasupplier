@@ -8,70 +8,36 @@ package cn.thinkfree.database.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * 项目详情
  */
 @ApiModel("项目施工顺序")
+@Data
 public class ProjectBigSchedulingVO {
-    @ApiModelProperty("id")
-    private Long id;
+
     @ApiModelProperty("公司编号")
     private String companyId;
     @ApiModelProperty("序号")
     private Integer sort;
-    @ApiModelProperty("工作模块名称")
-    private String name;
-    @ApiModelProperty("自定义大排期名字")
+    @ApiModelProperty("节点名称")
     private String rename;
-    @ApiModelProperty("状态(1,正常  2,失效)")
-    private Integer status;
+    @ApiModelProperty("节点阶段")
+    private String name;
+    @ApiModelProperty("节点描述")
+    private String description;
+    @ApiModelProperty("是否需要验收")
+    private boolean check;
+    @ApiModelProperty("是否需要支付")
+    private boolean pay;
+    @ApiModelProperty("对应支付节点")
+    private Integer payNode;
+    @ApiModelProperty("未支付预警额度")
+    private Integer noPayQuota;
+    @ApiModelProperty("是否需要上传附件")
+    private boolean uploadEnclosure;
+    @ApiModelProperty("附件类型")
+    private String enclosureType;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getRename() {
-        return rename;
-    }
-
-    public void setRename(String rename) {
-        this.rename = rename;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
 }

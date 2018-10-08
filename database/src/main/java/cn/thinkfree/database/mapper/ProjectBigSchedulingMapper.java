@@ -103,4 +103,11 @@ public interface ProjectBigSchedulingMapper {
      * @return
      **/
     ProjectBigSchedulingVO selectProjectBigSchedulingByCompanyId(@Param("companyId") String companyId);
+
+    /**
+     * 修改
+     * @param record
+     * @return
+     */
+    int updateByProjectBigScheduling(@Param("record") ProjectBigScheduling record);
 }
