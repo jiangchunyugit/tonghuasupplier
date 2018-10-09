@@ -44,7 +44,7 @@ public class ContractVo {
     @ApiModelProperty("保证金金额")
     private String depositMoney;
     
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty("合同状态")
     private String contractStatus;
     
     

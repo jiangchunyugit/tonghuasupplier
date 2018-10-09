@@ -20,7 +20,18 @@ public enum ContractStatus {
     /**
      * 审批拒绝
      */
-    AuditDecline(3,"审批拒绝");
+    AuditDecline(3,"审批拒绝"),
+	
+	 /**
+     * 审批拒绝
+     */
+    Waitdeposit(4,"待确认保证金"),
+    
+    /**
+     * 审批拒绝
+     */
+    suredeposit(5,"已确认保证金");
+    
 
 
     public final Integer code;
@@ -33,5 +44,19 @@ public enum ContractStatus {
     public String shortVal(){
          return code.toString();
     }
-
+    
+    /**
+     * 字典翻译
+     * @param value
+     * @return
+     */
+    public static String getDesc(String value) {  
+    	ContractStatus[] businessModeEnums = values();  
+        for (ContractStatus businessModeEnum : businessModeEnums) {  
+            if (businessModeEnum.code.equals(value)) {  
+                return businessModeEnum.mes;  
+            }  
+        }  
+        return null;  
+    }  
 }

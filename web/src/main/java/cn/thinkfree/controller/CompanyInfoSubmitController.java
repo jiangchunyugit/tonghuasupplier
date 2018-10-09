@@ -56,13 +56,22 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 
     //补全合同
 
-    //公司详情
 
     //查看合同
-
-    //合同条款设置
     
-    
+    /**
+     * 查看合同
+     * @author lqd
+     * @return Message
+     * 
+     */
+    @ApiOperation(value = "查看合同", notes = "查看合同",consumes = "application/text")
+    @PostMapping("/getContractDetailInfo")
+    public MyRespBundle<String> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
+    		@ApiParam("公司编号")@RequestParam(required = true) String companyId){
+    	Map<String,Object>   resMap  =  contractService.getContractDetailInfo(contractNumber, companyId);
+        return sendJsonData(ResultMessage.SUCCESS,resMap);
+    }
     /**
      * 查询字典
      * @author lqd

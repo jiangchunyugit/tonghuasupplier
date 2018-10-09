@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder.BorderSide;
 
@@ -23,9 +22,10 @@ public class ExcelUtils {
 	
     public static void exportExcel(HttpServletResponse response, String fileName, ExcelData data) throws Exception {
         // 告诉浏览器用什么软件可以打开此文件
+        response.setCharacterEncoding("UTF-8");
         response.setHeader("content-Type", "application/vnd.ms-excel");
-        // 下载文件的默认名称
-        response.setHeader("Content-Disposition", "attachment;filename="+URLEncoder.encode(fileName, "utf-8"));
+        response.setHeader("Content-Disposition",
+                "attachment;filename=" + URLEncoder.encode(fileName, "UTF-8"));
         exportExcel(data, response.getOutputStream());
     }
 
@@ -37,9 +37,6 @@ public class ExcelUtils {
             if (null == sheetName) {
                 sheetName = "Sheet1";
             }
-            XSSFSheet sheet = wb.createSheet(sheetName);
-            writeExcel(wb, sheet, data);
-
             wb.write(out);
         } catch(Exception e){
             e.printStackTrace();

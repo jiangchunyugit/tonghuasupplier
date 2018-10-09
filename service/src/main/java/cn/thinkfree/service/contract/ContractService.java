@@ -1,7 +1,8 @@
 package cn.thinkfree.service.contract;
 
-import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
 
@@ -18,8 +19,15 @@ public interface ContractService {
 	 * @return pageList
 	 */
     PageInfo<ContractVo> pageContractBySEO(ContractSEO projectSEO);
-	
     
+    
+    /**
+     * 导出数据 （根据数据导出）
+     * @param ContractSEO
+     * @return null
+     */
+	
+    void exportList(ContractSEO projectSEO,HttpServletResponse response);
     
     /**
 	 * 
@@ -85,6 +93,13 @@ public interface ContractService {
        */
       Map<String,String> getContractBycontractNumber(String contractNumber);
       
+      
+      /**
+       * 查看合同详情 (公司信息和合同条款信息)
+       * @param  contractNumber, companyId
+       * @return list
+       */
+      Map<String,Object> getContractDetailInfo(String contractNumber,String companyId);
       
       
 }

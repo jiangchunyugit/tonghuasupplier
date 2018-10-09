@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ContractInfoMapper;
@@ -39,10 +42,12 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.utils.ExcelData;
+import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.WordUtil;
 
 @Service
-public class ContractInfoServiceImpl implements ContractService {
+public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
 
 	@Autowired
 	ContractInfoMapper contractInfoMapper;
@@ -67,9 +72,62 @@ public class ContractInfoServiceImpl implements ContractService {
 	public PageInfo<ContractVo> pageContractBySEO(ContractSEO contractSEO) {
 		PageHelper.startPage(contractSEO.getPage(),contractSEO.getRows());
 		List<ContractVo>  list =  contractInfoMapper.selectContractMap(contractSEO);
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setContractStatus(ContractStatus.getDesc(list.get(i).getContractStatus()));
+		}
 	   return new PageInfo<>(list);
 	}
     
+	
+	
+
+	@Override
+	public void exportList(ContractSEO contractSEO,HttpServletResponse response) {
+		ExcelData data = new ExcelData();
+		String title = "合同信息数据";
+        data.setName(title);
+        //添加表头
+        List<String> titles = new ArrayList<>();
+        titles.add("签约日期");
+        titles.add("合同编码");
+        titles.add("公司编码");
+        titles.add("公司名称");
+        titles.add("公司类型");
+        titles.add("所在地");
+        titles.add("保证金");
+        titles.add("合同状态");
+        data.setTitles(titles);
+        //添加列
+        List<List<Object>> rows = new ArrayList<>();
+        List<Object> row = null;
+        PageHelper.startPage(contractSEO.getPage(),contractSEO.getRows());
+		List<ContractVo>  list =  contractInfoMapper.selectContractMap(contractSEO);
+		for (int i = 0; i < list.size(); i++) {
+			list.get(i).setContractStatus(ContractStatus.getDesc(list.get(i).getContractStatus()));
+		}
+       for(int i=0; i<list.size();i++){
+           row=new ArrayList<>();
+           row.add(list.get(i).getSignedTime());
+           row.add(list.get(i).getContractNumber());
+           row.add(list.get(i).getCompanyId());
+           row.add(list.get(i).getCompanyName());
+           row.add(list.get(i).getCompanyType());
+           row.add(list.get(i).getCompanyLocation());
+           row.add(list.get(i).getDepositMoney());
+           row.add(list.get(i).getDepositMoney());
+           rows.add(row);
+       }
+        data.setRows(rows);
+        SimpleDateFormat fdate=new SimpleDateFormat("yyyy-MM-dd-HHmmss");
+        String fileName=title+"_"+fdate.format(new Date())+".xls";
+        try {
+			ExcelUtils.exportExcel(response, fileName, data);
+		} catch (Exception e) {
+			printErrorMes("合同导出异常",e.getMessage());
+		}
+	}
+	
+	
 	/**
 	 * 
 	 * 财务审核的时候要 
@@ -315,6 +373,34 @@ public class ContractInfoServiceImpl implements ContractService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public Map<String, Object> getContractDetailInfo(String contractNumber, String companyId) {
+
+		Map<String, Object> reMap = new HashMap<>();
+		// 公司详情
+		CompanyInfoVo companyInfo = companyInfoMapper.selectByCompanyId(companyId);
+		
+		// 合同详情
+		PcContractTermsExample exp = new PcContractTermsExample();
+		//判断公司类型
+		exp.createCriteria().andCompanyIdEqualTo(companyId).
+		andContractNumberEqualTo(contractNumber);
+		
+		List<PcContractTerms> list = pcContractTermsMapper.selectByExample(exp);
+		
+		if(list.size() == 0 && companyInfo != null){
+			PcContractTerms term_0 = new PcContractTerms("01","居然设计家");
+			PcContractTerms term_1 = new PcContractTerms("02",companyInfo.getCompanyName());
+			list.add(term_0);
+			list.add(term_1);
+		}
+		reMap.put("companyMap", companyInfo==null?"":companyInfo);
+		reMap.put("ContractList", list);
+
+		return reMap;
+	}
+
 
    
 }

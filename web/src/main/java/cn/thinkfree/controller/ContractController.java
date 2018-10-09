@@ -54,7 +54,7 @@ public class ContractController extends AbsBaseController{
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "合同管理列表", notes = "根据一定条件获取分页项目记录")
+    @ApiOperation(value = "合同管理列表", notes = "根据一定条件获取分页合同记录")
     @PostMapping("/list")
     @MyRespBody
     public MyRespBundle<PageInfo<ContractVo>> list(@ApiParam("项目搜索条件")   ContractSEO contractSEO){
@@ -63,6 +63,21 @@ public class ContractController extends AbsBaseController{
         
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }
+    
+    /**
+     * 合同导出
+     * @author lqd
+     * @param ContractSEO
+     * @return pageList
+     */
+    @ApiOperation(value = "合同数据导出", notes = "根据一定条件获取分页数据导出")
+    @PostMapping("/exportList")
+    @MyRespBody
+    public void exportList(HttpServletResponse response,
+    		@ApiParam("项目搜索条件")   ContractSEO contractSEO){
+        contractService.exportList(contractSEO, response);
+    }
+    
     
     /**
      * 合同审批
@@ -191,6 +206,7 @@ public class ContractController extends AbsBaseController{
 
     
     
+
     
     
 

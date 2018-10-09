@@ -12,6 +12,7 @@
            <result column="companyLocation" jdbcType="VARCHAR" property="companyLocation" />
            <result column="companyType" jdbcType="VARCHAR" property="companyType" />
             <result column="contract_url" jdbcType="VARCHAR" property="contractUrl" />
+               <result column="contract_status" jdbcType="VARCHAR" property="contractStatus" />
            
     </resultMap>
     
@@ -21,7 +22,8 @@
     SELECT c.signed_time as signed_time,c.contract_number as contract_number,
 		c.company_id as company_id,p.company_name as company_name,p.deposit_money as deposit_money,
 		concat(pr.province_name,'>',ci.city_name,'>',ar.area_name) as companyLocation ,se.role_name as companyType,
-		c.id as id ,c.start_time as start_time,c.end_time as end_time
+		c.id as id ,c.start_time as start_time,c.end_time as end_time,
+		c.contract_status as contract_status
 		from  pc_contract_info c  left join company_info p
 		on c.company_id = p.company_id
 		left join province pr on  p.province_code = pr.province_code
@@ -30,7 +32,6 @@
 		left join user_role_set se on p.role_id = se.role_code
       <where>
 <!--            and  (p.audit_status = '2' or p.audit_status = '3' or p.audit_status = '5' ) -->
-           
 <!--            and c.contract_status !='0'  -->
            
           <if test="contractNumber != null and contractNumber !='' ">
