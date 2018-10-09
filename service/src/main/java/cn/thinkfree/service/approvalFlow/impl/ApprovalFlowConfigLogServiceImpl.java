@@ -15,6 +15,9 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 审批流配置记录服务层
+ */
 @Service
 public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogService {
 
@@ -27,7 +30,11 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
     @Resource
     private RoleService roleService;
 
-
+    /**
+     * 根据审批流编号查询当前版本的审批流信息
+     * @param approvalFlowNum 审批流编号
+     * @return 当前版本的审批流信息
+     */
     @Override
     public ApprovalFlowDetailVo detail(String approvalFlowNum) {
         ApprovalFlow approvalFlow = configService.findByNum(approvalFlowNum);
@@ -39,11 +46,16 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         ApprovalFlowDetailVo detailVo = new ApprovalFlowDetailVo();
         detailVo.setApprovalFlow(approvalFlow);
         detailVo.setConfigLogs(configLogs);
-        detailVo.setNodes(nodeVos);
+        detailVo.setNodeVos(nodeVos);
         detailVo.setUserRoleSets(userRoleSets);
         return detailVo;
     }
 
+    /**
+     * 根据审批流编号查询所有版本的审批流信息，并以版本号正序排序
+     * @param approvalFlowNum 审批流编号
+     * @return 审批流信息
+     */
     private List<ApprovalFlowConfigLog> findByApprovalFlowNumOrderByVersionAsc(String approvalFlowNum){
         ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
         configLogExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
@@ -51,6 +63,11 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         return configLogMapper.selectByExample(configLogExample);
     }
 
+    /**
+     * 创建新的审批流配置记录
+     * @param approvalFlow 审批流配置
+     * @param approvalFlowNodeVos 审批流节点信息
+     */
     @Override
     public void create(ApprovalFlow approvalFlow, List<ApprovalFlowNodeVo> approvalFlowNodeVos) {
         ApprovalFlowConfigLog configLog = new ApprovalFlowConfigLog();
@@ -67,6 +84,10 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         nodeService.create(configLog.getRecordUniqueCode(), approvalFlowNodeVos);
     }
 
+    /**
+     * 插入单个配置记录
+     * @param configLog 审批配置记录
+     */
     public void insert(ApprovalFlowConfigLog configLog){
         configLogMapper.insert(configLog);
     }

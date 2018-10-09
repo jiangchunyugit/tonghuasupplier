@@ -21,7 +21,7 @@ public class ApprovalFlowDetailVo {
      * 审批节点信息
      */
     @ApiModelProperty("审批流节点信息")
-    private List<ApprovalFlowNodeVo> nodes;
+    private List<ApprovalFlowNodeVo> nodeVos;
     /**
      * 审批流修改日志表
      */
@@ -39,12 +39,12 @@ public class ApprovalFlowDetailVo {
         this.approvalFlow = approvalFlow;
     }
 
-    public List<ApprovalFlowNodeVo> getNodes() {
-        return nodes;
+    public List<ApprovalFlowNodeVo> getNodeVos() {
+        return nodeVos;
     }
 
-    public void setNodes(List<ApprovalFlowNodeVo> nodes) {
-        this.nodes = nodes;
+    public void setNodeVos(List<ApprovalFlowNodeVo> nodeVos) {
+        this.nodeVos = nodeVos;
     }
 
     public List<ApprovalFlowConfigLog> getConfigLogs() {

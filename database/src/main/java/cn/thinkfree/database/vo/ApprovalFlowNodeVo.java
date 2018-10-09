@@ -20,7 +20,7 @@ public class ApprovalFlowNodeVo extends ApprovalFlowNode {
     private List<ApprovalFlowTimeoutNotice> timeoutNotices;
 
     @ApiModelProperty("该节点需要展示的表单数据")
-    private List<ApprovalFlowFormDataVo> formDatas;
+    private List<ApprovalFlowFormDataVo> formDataVos;
 
     public List<ApprovalFlowOption> getOptions() {
         return options;
@@ -54,11 +54,11 @@ public class ApprovalFlowNodeVo extends ApprovalFlowNode {
         this.timeoutNotices = timeoutNotices;
     }
 
-    public List<ApprovalFlowFormDataVo> getFormDatas() {
-        return formDatas;
+    public List<ApprovalFlowFormDataVo> getFormDataVos() {
+        return formDataVos;
     }
 
-    public void setFormDatas(List<ApprovalFlowFormDataVo> formDatas) {
-        this.formDatas = formDatas;
+    public void setFormDataVos(List<ApprovalFlowFormDataVo> formDataVos) {
+        this.formDataVos = formDataVos;
     }
 }

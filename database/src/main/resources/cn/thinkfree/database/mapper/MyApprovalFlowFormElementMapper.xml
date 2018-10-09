@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ApprovalFlowFormElementMapper">
-  <resultMap id="ApprovalFlowFormElementVo" type="cn.thinkfree.database.vo.ApprovalFlowFormElementVo" extends="BaseResultMap">
-    <collection property="formElements" column="record_unique_code"
-                ofType="cn.thinkfree.database.vo.ApprovalFlowFormElementVo"
-                select="cn.thinkfree.database.mapper.ApprovalFlowFormElementMapper.findByExternalUniqueCode"/>
-  </resultMap>
-  <select id="findByExternalUniqueCode" parameterType="java.lang.String"  resultMap="ApprovalFlowFormElementVo">
+  <select id="findByExternalUniqueCode" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from approval_flow_form_element

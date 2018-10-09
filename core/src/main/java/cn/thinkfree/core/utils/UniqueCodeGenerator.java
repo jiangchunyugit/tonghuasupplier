@@ -29,7 +29,7 @@ public enum UniqueCodeGenerator {
     AF_FORM_DATA("AF_FORM_DATA-");
 
     private String prefix;
-    
+
     UniqueCodeGenerator(String prefix){
         this.prefix = prefix;
     }

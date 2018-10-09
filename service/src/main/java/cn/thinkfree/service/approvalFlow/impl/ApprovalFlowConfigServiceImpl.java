@@ -13,6 +13,9 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 审批流配置服务层
+ */
 @Service
 public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService {
 
@@ -21,6 +24,10 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
     @Resource
     private ApprovalFlowConfigLogService configLogService;
 
+    /**
+     * 查询所有审批流，并以sort正序
+     * @return 所有审批流
+     */
     @Override
     public List<ApprovalFlow> list() {
         ApprovalFlowExample approvalFlowExample = new ApprovalFlowExample();
@@ -28,6 +35,11 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         return approvalFlowMapper.selectByExample(approvalFlowExample);
     }
 
+    /**
+     * 根据审批流编号查询审批流
+     * @param approvalFlowNum 审批流编号
+     * @return 审批流
+     */
     @Override
     public ApprovalFlow findByNum(String approvalFlowNum){
         ApprovalFlowExample approvalFlowExample = new ApprovalFlowExample();
@@ -36,6 +48,10 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         return approvalFlows != null && approvalFlows.size() > 0 ? approvalFlows.get(0) : null;
     }
 
+    /**
+     * 编辑审批流
+     * @param configLogDTO 审批流信息
+     */
     @Override
     public void edit(ApprovalFlowConfigLogDTO configLogDTO) {
         if (StringUtils.isEmpty(configLogDTO.getApprovalFlowNum())) {
@@ -57,7 +73,11 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         configLogService.create(approvalFlow, configLogDTO.getApprovalFlowNodeVos());
     }
 
-    public void save(ApprovalFlow approvalFlow){
+    /**
+     * 保存审批流
+     * @param approvalFlow 审批流
+     */
+    private void save(ApprovalFlow approvalFlow){
         approvalFlowMapper.updateByPrimaryKey(approvalFlow);
     }
 }
