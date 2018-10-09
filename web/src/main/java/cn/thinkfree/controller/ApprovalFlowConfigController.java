@@ -33,15 +33,15 @@ public class ApprovalFlowConfigController extends AbsBaseController{
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="审批流节点信息")
-    @ApiParam(name = "approvalFlowNum" ,value = "审批流编号", required = true)
-    public MyRespBundle detail(@RequestParam(name = "approvalFlowNum",required = false) String approvalFlowNum){
+    @ApiParam(name = "approvalFlowNum", value= "审批流编号", required = true)
+    public MyRespBundle detail(@RequestParam(name = "approvalFlowNum") String approvalFlowNum){
         return sendJsonData(ResultMessage.SUCCESS, configLogService.detail(approvalFlowNum));
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="修改审批流")
-    @ApiParam(name = "approvalFlowNum" ,value = "审批流编号", required = true)
+    @ApiParam(name = "approvalFlowNum" ,value = "审批流信息", required = true)
     public MyRespBundle edit(@RequestBody ApprovalFlowConfigLogDTO configLogDTO){
         configService.edit(configLogDTO);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
