@@ -8,13 +8,13 @@ import java.util.List;
 public class ApprovalFlowNodeVo extends ApprovalFlowNode {
 
     @ApiModelProperty("节点操作项集合")
-    private List<ApprovalFlowOptions> optionsList;
+    private List<ApprovalFlowOption> options;
 
     @ApiModelProperty("订阅通知消息地址集合")
-    private List<ApprovalFlowNoticeUrls> noticeUrlsList;
+    private List<ApprovalFlowNoticeUrl> noticeUrls;
 
     @ApiModelProperty("审批流角色信息表")
-    private List<ApprovalFlowRoles> roles;
+    private List<ApprovalFlowNodeRole> nodeRoles;
 
     @ApiModelProperty("审批超时通知")
     private List<ApprovalFlowTimeoutNotice> timeoutNotices;
@@ -22,28 +22,28 @@ public class ApprovalFlowNodeVo extends ApprovalFlowNode {
     @ApiModelProperty("该节点需要展示的表单数据")
     private List<ApprovalFlowFormDataVo> formDatas;
 
-    public List<ApprovalFlowOptions> getOptionsList() {
-        return optionsList;
+    public List<ApprovalFlowOption> getOptions() {
+        return options;
     }
 
-    public void setOptionsList(List<ApprovalFlowOptions> optionsList) {
-        this.optionsList = optionsList;
+    public void setOptions(List<ApprovalFlowOption> options) {
+        this.options = options;
     }
 
-    public List<ApprovalFlowNoticeUrls> getNoticeUrlsList() {
-        return noticeUrlsList;
+    public List<ApprovalFlowNoticeUrl> getNoticeUrls() {
+        return noticeUrls;
     }
 
-    public void setNoticeUrlsList(List<ApprovalFlowNoticeUrls> noticeUrlsList) {
-        this.noticeUrlsList = noticeUrlsList;
+    public void setNoticeUrls(List<ApprovalFlowNoticeUrl> noticeUrls) {
+        this.noticeUrls = noticeUrls;
     }
 
-    public List<ApprovalFlowRoles> getRoles() {
-        return roles;
+    public List<ApprovalFlowNodeRole> getNodeRoles() {
+        return nodeRoles;
     }
 
-    public void setRoles(List<ApprovalFlowRoles> roles) {
-        this.roles = roles;
+    public void setNodeRoles(List<ApprovalFlowNodeRole> nodeRoles) {
+        this.nodeRoles = nodeRoles;
     }
 
     public List<ApprovalFlowTimeoutNotice> getTimeoutNotices() {

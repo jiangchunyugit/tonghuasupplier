@@ -4,13 +4,13 @@
   <resultMap id="ApprovalFlowNodeVo" type="cn.thinkfree.database.vo.ApprovalFlowNodeVo" extends="BaseResultMap">
       <collection property="optionsList" column="record_unique_code"
                   ofType="cn.thinkfree.database.model.ApprovalFlowOptions"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowOptionsMapper.findByExternalUniqueCode"/>
+                  select="cn.thinkfree.database.mapper.ApprovalFlowOptionMapper.findByExternalUniqueCode"/>
       <collection property="noticeUrlsList" column="record_unique_code"
                   ofType="cn.thinkfree.database.model.ApprovalFlowNoticeUrls"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowNoticeUrlsMapper.findByExternalUniqueCode"/>
+                  select="cn.thinkfree.database.mapper.ApprovalFlowNoticeUrlMapper.findByExternalUniqueCode"/>
       <collection property="roles" column="record_unique_code"
-                  ofType="cn.thinkfree.database.model.ApprovalFlowRoles"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowRolesMapper.findByExternalUniqueCode"/>
+                  ofType="cn.thinkfree.database.model.ApprovalFlowNodeRole"
+                  select="cn.thinkfree.database.mapper.ApprovalFlowNodeRoleMapper.findByExternalUniqueCode"/>
       <collection property="timeoutNotices" column="record_unique_code"
                   ofType="cn.thinkfree.database.model.ApprovalFlowTimeoutNotice"
                   select="cn.thinkfree.database.mapper.ApprovalFlowTimeoutNoticeMapper.findByExternalUniqueCode"/>

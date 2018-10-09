@@ -8,4 +8,6 @@ import java.util.List;
 public interface ApprovalFlowNodeService {
 
     List<ApprovalFlowNodeVo> findByExternalUniqueCode(String externalUniqueCode);
+
+    void create(String configLogNum, List<ApprovalFlowNodeVo> approvalFlowNodeVos);
 }
