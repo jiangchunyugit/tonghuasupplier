@@ -14,4 +14,6 @@ public interface ApprovalFlowConfigService {
 
     void edit(ApprovalFlowConfigLogDTO configLogDTO);
 
+    void add(ApprovalFlowConfigLogDTO configLogDTO);
+
 }

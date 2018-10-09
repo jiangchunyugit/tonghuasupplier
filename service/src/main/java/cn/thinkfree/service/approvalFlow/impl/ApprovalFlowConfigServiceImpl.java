@@ -1,8 +1,10 @@
 package cn.thinkfree.service.approvalFlow.impl;
 
+import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
 import cn.thinkfree.database.mapper.ApprovalFlowMapper;
 import cn.thinkfree.database.model.ApprovalFlow;
+import cn.thinkfree.database.model.ApprovalFlowConfigLogExample;
 import cn.thinkfree.database.model.ApprovalFlowExample;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigLogService;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigService;
@@ -79,5 +81,40 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
      */
     private void save(ApprovalFlow approvalFlow){
         approvalFlowMapper.updateByPrimaryKey(approvalFlow);
+    }
+
+    /**
+     * 添加审批流
+     * @param configLogDTO 审批流信息
+     */
+    @Override
+    public void add(ApprovalFlowConfigLogDTO configLogDTO) {
+        if (StringUtils.isEmpty(configLogDTO.getApprovalFlowNum())) {
+            throw new RuntimeException("审批流编号不能为空");
+        }
+        ApprovalFlow approvalFlow = findByNum(configLogDTO.getApprovalFlowNum());
+        if (approvalFlow == null) {
+            throw new RuntimeException("数据无效");
+        }
+        approvalFlow.setId(0);
+        approvalFlow.setVersion(approvalFlow.getVersion() + 1);
+        approvalFlow.setApprovalFlowNum(UniqueCodeGenerator.AF.getCode());
+        approvalFlow.setUpdateUserId(configLogDTO.getCreateUserId());
+        approvalFlow.setUpdateTime(new Date());
+        approvalFlow.setApprovalFlowName(configLogDTO.getApprovalFlowName());
+        approvalFlow.setCompanyNum(configLogDTO.getCompanyNum());
+        approvalFlow.setH5Link(configLogDTO.getH5Link());
+        approvalFlow.setH5Resume(configLogDTO.getH5Resume());
+        approvalFlow.setType(configLogDTO.getType());
+        insert(approvalFlow);
+        configLogService.create(approvalFlow, configLogDTO.getApprovalFlowNodeVos());
+    }
+
+    /**
+     * 插入单个配置
+     * @param approvalFlow
+     */
+    private void insert(ApprovalFlow approvalFlow) {
+        approvalFlowMapper.insert(approvalFlow);
     }
 }

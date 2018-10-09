@@ -2,8 +2,11 @@ package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.utils.JSONUtil;
+import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
 import cn.thinkfree.database.model.ApprovalFlow;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigLogService;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/approvalFlowConfig")
 @Api(value = "审批流",description = "审批流")
 public class ApprovalFlowConfigController extends AbsBaseController{
+
+    private MyLogger logger = LogUtil.getLogger(this.getClass());
 
     @Autowired
     private ApprovalFlowConfigService configService;
@@ -43,7 +48,17 @@ public class ApprovalFlowConfigController extends AbsBaseController{
     @ApiOperation(value="修改审批流")
     @ApiParam(name = "approvalFlowNum" ,value = "审批流信息", required = true)
     public MyRespBundle edit(@RequestBody ApprovalFlowConfigLogDTO configLogDTO){
+        logger.info("params:{}", JSONUtil.bean2JsonStr(configLogDTO));
         configService.edit(configLogDTO);
+        return sendSuccessMessage(ResultMessage.SUCCESS.message);
+    }
+
+    @ApiOperation("添加审批流")
+    @ResponseBody
+    @PostMapping(value = "add", produces = "application/json")
+    public MyRespBundle add(@RequestBody ApprovalFlowConfigLogDTO configLogDTO){
+        logger.info("params:{}", JSONUtil.bean2JsonStr(configLogDTO));
+        configService.add(configLogDTO);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 }
