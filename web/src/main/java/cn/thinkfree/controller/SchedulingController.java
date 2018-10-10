@@ -24,12 +24,6 @@ public class SchedulingController extends AbsBaseController {
     @Autowired
     private SchedulingService schedulingService;
 
-    /**
-     * 项目列表
-     *
-     * @param companyId
-     * @return
-     */
     @ApiOperation(value = "施工配置列表", notes = "")
     @PostMapping("/list")
     @MyRespBody
