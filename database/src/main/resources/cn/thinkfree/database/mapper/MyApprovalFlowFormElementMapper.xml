@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ApprovalFlowFormElementMapper">
-  <select id="findByExternalUniqueCode" parameterType="java.lang.String"  resultMap="BaseResultMap">
+  <select id="findByFormNum" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from approval_flow_form_element
-    where external_unique_code = #{externalUniqueCode,jdbcType=VARCHAR}
+    where form_num = #{formNum,jdbcType=VARCHAR}
   </select>
 </mapper>

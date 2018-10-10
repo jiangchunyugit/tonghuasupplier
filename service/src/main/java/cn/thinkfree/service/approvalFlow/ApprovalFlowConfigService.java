@@ -1,15 +1,15 @@
 package cn.thinkfree.service.approvalFlow;
 
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
-import cn.thinkfree.database.model.ApprovalFlow;
+import cn.thinkfree.database.model.ApprovalFlowConfig;
 
 import java.util.List;
 
 public interface ApprovalFlowConfigService {
 
-    ApprovalFlow findByNum(String approvalFlowNum);
+    ApprovalFlowConfig findByNum(String approvalFlowNum);
 
-    List<ApprovalFlow> list();
+    List<ApprovalFlowConfig> list();
 
     void edit(ApprovalFlowConfigLogDTO configLogDTO);
 

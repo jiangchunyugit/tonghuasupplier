@@ -2,7 +2,6 @@ package cn.thinkfree.service.approvalFlow;
 
 
 import cn.thinkfree.database.model.ApprovalFlowFormElement;
-import cn.thinkfree.database.model.ApprovalFlowNodeRole;
 
 import java.util.List;
 

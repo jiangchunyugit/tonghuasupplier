@@ -72,22 +72,22 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
-        <table tableName="project_construction_sort" domainObjectName="ProjectBigScheduling"/>
+        <!--<table tableName="project_construction_sort" domainObjectName="ProjectBigScheduling"/>-->
         <!--approval flow start-->
         <!--<table tableName="approval_change_data" domainObjectName="ApprovalChangeData"/>-->
         <!--<table tableName="approval_check_data_log" domainObjectName="ApprovalCheckData"/>-->
+        <!--<table tableName="approval_flow_config" domainObjectName="ApprovalFlowConfig"/>-->
         <!--<table tableName="approval_flow_config_log" domainObjectName="ApprovalFlowConfigLog"/>-->
         <!--<table tableName="approval_flow_create_log" domainObjectName="ApprovalFlowCreateLog"/>-->
-        <!--<table tableName="approval_flow" domainObjectName="ApprovalFlow"/>-->
-        <!--<table tableName="approval_flow_form_data" domainObjectName="ApprovalFlowFormData"/>-->
+        <!--<table tableName="approval_flow_form" domainObjectName="ApprovalFlowForm"/>-->
         <!--<table tableName="approval_flow_form_element" domainObjectName="ApprovalFlowFormElement"/>-->
         <!--<table tableName="approval_flow_form_element_type" domainObjectName="ApprovalFlowFormElementType"/>-->
         <!--<table tableName="approval_flow_log" domainObjectName="ApprovalFlowLog"/>-->
         <!--<table tableName="approval_flow_node" domainObjectName="ApprovalFlowNode"/>-->
-        <!--<table tableName="approval_flow_notice_urls" domainObjectName="ApprovalFlowNoticeUrl"/>-->
-        <!--<table tableName="approval_flow_options" domainObjectName="ApprovalFlowOption"/>-->
+        <!--<table tableName="approval_flow_node_role" domainObjectName="ApprovalFlowNodeRole"/>-->
+        <!--<table tableName="approval_flow_notice_url" domainObjectName="ApprovalFlowNoticeUrl"/>-->
+        <!--<table tableName="approval_flow_option" domainObjectName="ApprovalFlowOption"/>-->
         <!--<table tableName="approval_flow_push_msg" domainObjectName="ApprovalFlowPushMsg"/>-->
-        <!--<table tableName="approval_flow_roles" domainObjectName="ApprovalFlowNodeRole"/>-->
         <!--<table tableName="approval_flow_timeout_notice" domainObjectName="ApprovalFlowTimeoutNotice"/>-->
         <!--approval flow end-->
     </context>

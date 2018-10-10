@@ -254,73 +254,73 @@ public class ApprovalChangeDataExample {
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumIsNull() {
-            addCriterion("approval_flow_node_num is null");
+        public Criteria andNodeNumIsNull() {
+            addCriterion("node_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumIsNotNull() {
-            addCriterion("approval_flow_node_num is not null");
+        public Criteria andNodeNumIsNotNull() {
+            addCriterion("node_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumEqualTo(String value) {
-            addCriterion("approval_flow_node_num =", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumEqualTo(String value) {
+            addCriterion("node_num =", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumNotEqualTo(String value) {
-            addCriterion("approval_flow_node_num <>", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumNotEqualTo(String value) {
+            addCriterion("node_num <>", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumGreaterThan(String value) {
-            addCriterion("approval_flow_node_num >", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumGreaterThan(String value) {
+            addCriterion("node_num >", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumGreaterThanOrEqualTo(String value) {
-            addCriterion("approval_flow_node_num >=", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumGreaterThanOrEqualTo(String value) {
+            addCriterion("node_num >=", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumLessThan(String value) {
-            addCriterion("approval_flow_node_num <", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumLessThan(String value) {
+            addCriterion("node_num <", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumLessThanOrEqualTo(String value) {
-            addCriterion("approval_flow_node_num <=", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumLessThanOrEqualTo(String value) {
+            addCriterion("node_num <=", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumLike(String value) {
-            addCriterion("approval_flow_node_num like", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumLike(String value) {
+            addCriterion("node_num like", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumNotLike(String value) {
-            addCriterion("approval_flow_node_num not like", value, "approvalFlowNodeNum");
+        public Criteria andNodeNumNotLike(String value) {
+            addCriterion("node_num not like", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumIn(List<String> values) {
-            addCriterion("approval_flow_node_num in", values, "approvalFlowNodeNum");
+        public Criteria andNodeNumIn(List<String> values) {
+            addCriterion("node_num in", values, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumNotIn(List<String> values) {
-            addCriterion("approval_flow_node_num not in", values, "approvalFlowNodeNum");
+        public Criteria andNodeNumNotIn(List<String> values) {
+            addCriterion("node_num not in", values, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumBetween(String value1, String value2) {
-            addCriterion("approval_flow_node_num between", value1, value2, "approvalFlowNodeNum");
+        public Criteria andNodeNumBetween(String value1, String value2) {
+            addCriterion("node_num between", value1, value2, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNodeNumNotBetween(String value1, String value2) {
-            addCriterion("approval_flow_node_num not between", value1, value2, "approvalFlowNodeNum");
+        public Criteria andNodeNumNotBetween(String value1, String value2) {
+            addCriterion("node_num not between", value1, value2, "nodeNum");
             return (Criteria) this;
         }
 

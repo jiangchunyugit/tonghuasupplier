@@ -95,5 +95,5 @@ public interface ApprovalFlowTimeoutNoticeMapper {
      */
     int updateByPrimaryKey(ApprovalFlowTimeoutNotice record);
 
-    List<ApprovalFlowTimeoutNotice> findByExternalUniqueCode(String ExternalUniqueCode);
+    List<ApprovalFlowTimeoutNotice> findByNodeNum(String nodeNum);
 }

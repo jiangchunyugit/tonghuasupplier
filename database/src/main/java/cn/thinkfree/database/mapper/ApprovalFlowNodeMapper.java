@@ -97,5 +97,5 @@ public interface ApprovalFlowNodeMapper {
      */
     int updateByPrimaryKey(ApprovalFlowNode record);
 
-    List<ApprovalFlowNodeVo> findByExternalUniqueCode(String ExternalUniqueCode);
+    List<ApprovalFlowNodeVo> findByConfigLogNum(String configLogNum);
 }

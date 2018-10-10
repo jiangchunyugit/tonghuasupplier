@@ -1,6 +1,6 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.ApprovalFlow;
+import cn.thinkfree.database.model.ApprovalFlowConfig;
 import cn.thinkfree.database.model.ApprovalFlowConfigLog;
 import cn.thinkfree.database.model.UserRoleSet;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +16,7 @@ public class ApprovalFlowDetailVo {
      * 审批流信息
      */
     @ApiModelProperty("审批流对象")
-    private ApprovalFlow approvalFlow;
+    private ApprovalFlowConfig config;
     /**
      * 审批节点信息
      */
@@ -31,12 +31,12 @@ public class ApprovalFlowDetailVo {
     @ApiModelProperty("角色信息集合")
     private List<UserRoleSet> userRoleSets;
 
-    public ApprovalFlow getApprovalFlow() {
-        return approvalFlow;
+    public ApprovalFlowConfig getConfig() {
+        return config;
     }
 
-    public void setApprovalFlow(ApprovalFlow approvalFlow) {
-        this.approvalFlow = approvalFlow;
+    public void setConfig(ApprovalFlowConfig config) {
+        this.config = config;
     }
 
     public List<ApprovalFlowNodeVo> getNodeVos() {

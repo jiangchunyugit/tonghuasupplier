@@ -21,7 +21,7 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     @Resource
     private ApprovalFlowNodeMapper nodeMapper;
     @Resource
-    private ApprovalFlowFormDataService formDataService;
+    private ApprovalFlowFormService formDataService;
     @Resource
     private ApprovalFlowNoticeUrlService noticeUrlService;
     @Resource
@@ -33,12 +33,12 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
 
     /**
      * 根据节点编号查询节点信息
-     * @param externalUniqueCode 节点编号
+     * @param configLogNum 节点编号
      * @return 审批流节点信息
      */
     @Override
-    public List<ApprovalFlowNodeVo> findByExternalUniqueCode(String externalUniqueCode) {
-        return nodeMapper.findByExternalUniqueCode(externalUniqueCode);
+    public List<ApprovalFlowNodeVo> findByConfigLogNum(String configLogNum) {
+        return nodeMapper.findByConfigLogNum(configLogNum);
     }
 
     /**
@@ -50,14 +50,14 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     public void create(String configLogNum, List<ApprovalFlowNodeVo> nodeVos) {
         if (nodeVos != null){
             for (ApprovalFlowNodeVo nodeVo : nodeVos){
-                nodeVo.setExternalUniqueCode(configLogNum);
-                nodeVo.setRecordUniqueCode(UniqueCodeGenerator.AF_NODE.getCode());
+                nodeVo.setConfigLogNum(configLogNum);
+                nodeVo.setNum(UniqueCodeGenerator.AF_NODE.getCode());
 
-                formDataService.create(nodeVo.getRecordUniqueCode(), nodeVo.getFormDataVos());
-                noticeUrlService.create(nodeVo.getRecordUniqueCode(),  nodeVo.getNoticeUrls());
-                optionService.create(nodeVo.getRecordUniqueCode(), nodeVo.getOptions());
-                nodeRoleService.create(nodeVo.getRecordUniqueCode(), nodeVo.getNodeRoles());
-                timeoutNoticeService.create(nodeVo.getRecordUniqueCode(), nodeVo.getTimeoutNotices());
+                formDataService.create(nodeVo.getNum(), nodeVo.getFormVos());
+                noticeUrlService.create(nodeVo.getNum(),  nodeVo.getNoticeUrls());
+                optionService.create(nodeVo.getNum(), nodeVo.getOptions());
+                nodeRoleService.create(nodeVo.getNum(), nodeVo.getNodeRoles());
+                timeoutNoticeService.create(nodeVo.getNum(), nodeVo.getTimeoutNotices());
 
                 nodeMapper.insert(nodeVo);
             }
@@ -67,7 +67,7 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     @Override
     public void deleteByConfigLogNum(String configLogNum) {
         ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
-        nodeExample.createCriteria().andExternalUniqueCodeEqualTo(configLogNum);
+        nodeExample.createCriteria().andNumEqualTo(configLogNum);
         nodeMapper.deleteByExample(nodeExample);
     }
 }

@@ -14,7 +14,7 @@ public enum UniqueCodeGenerator {
     /**
      * 审批流编码
      */
-    AF("AF-"),
+    AF_CONFIG("AF_CONFIG-"),
     /**
      * 审批流节点编码前缀
      */
@@ -22,11 +22,11 @@ public enum UniqueCodeGenerator {
     /**
      * 审批流配置记录log表前缀
      */
-    AF_LOG("AF_LOG-"),
+    AF_CONFIG_LOG("AF_CONFIG_LOG-"),
     /**
      * 审批流配置节点表单前缀
      */
-    AF_FORM_DATA("AF_FORM_DATA-");
+    AF_FORM("AF_FORM_-");
 
     private String prefix;
 

@@ -28,7 +28,7 @@ public class ApprovalFlowOptionServiceImpl implements ApprovalFlowOptionService 
     public void create(String nodeNum, List<ApprovalFlowOption> options) {
         for (ApprovalFlowOption option : options) {
             option.setId(0);
-            option.setExternalUniqueCode(nodeNum);
+            option.setNodeNum(nodeNum);
             optionMapper.insert(option);
         }
     }

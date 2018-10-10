@@ -2,26 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ApprovalFlowNodeMapper">
   <resultMap id="ApprovalFlowNodeVo" type="cn.thinkfree.database.vo.ApprovalFlowNodeVo" extends="BaseResultMap">
-      <collection property="options" column="record_unique_code"
+      <collection property="options" column="num"
                   ofType="cn.thinkfree.database.model.ApprovalFlowOptions"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowOptionMapper.findByExternalUniqueCode"/>
-      <collection property="noticeUrls" column="record_unique_code"
+                  select="cn.thinkfree.database.mapper.ApprovalFlowOptionMapper.findByNodeNum"/>
+      <collection property="noticeUrls" column="num"
                   ofType="cn.thinkfree.database.model.ApprovalFlowNoticeUrls"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowNoticeUrlMapper.findByExternalUniqueCode"/>
-      <collection property="nodeRoles" column="record_unique_code"
+                  select="cn.thinkfree.database.mapper.ApprovalFlowNoticeUrlMapper.findByNodeNum"/>
+      <collection property="nodeRoles" column="num"
                   ofType="cn.thinkfree.database.model.ApprovalFlowNodeRole"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowNodeRoleMapper.findByExternalUniqueCode"/>
-      <collection property="timeoutNotices" column="record_unique_code"
+                  select="cn.thinkfree.database.mapper.ApprovalFlowNodeRoleMapper.findByNodeNum"/>
+      <collection property="timeoutNotices" column="num"
                   ofType="cn.thinkfree.database.model.ApprovalFlowTimeoutNotice"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowTimeoutNoticeMapper.findByExternalUniqueCode"/>
-      <collection property="formDataVos" column="record_unique_code"
-                  ofType="cn.thinkfree.database.vo.ApprovalFlowFormDataVo"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowFormDataMapper.findByExternalUniqueCode"/>
+                  select="cn.thinkfree.database.mapper.ApprovalFlowTimeoutNoticeMapper.findByNodeNum"/>
+      <collection property="formVos" column="num"
+                  ofType="cn.thinkfree.database.vo.ApprovalFlowFormVo"
+                  select="cn.thinkfree.database.mapper.ApprovalFlowFormMapper.findByNodeNum"/>
   </resultMap>
-    <select id="findByExternalUniqueCode" parameterType="java.lang.String" resultMap="ApprovalFlowNodeVo">
+    <select id="findByConfigLogNum" parameterType="java.lang.String" resultMap="ApprovalFlowNodeVo">
         select
         <include refid="Base_Column_List" />
         from approval_flow_node
-        where external_unique_code = #{externalUniqueCode,jdbcType=VARCHAR}
+        where config_log_num = #{configLogNum,jdbcType=VARCHAR}
     </select>
 </mapper>

@@ -254,73 +254,73 @@ public class ApprovalFlowTimeoutNoticeExample {
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIsNull() {
-            addCriterion("external_unique_code is null");
+        public Criteria andNodeNumIsNull() {
+            addCriterion("node_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIsNotNull() {
-            addCriterion("external_unique_code is not null");
+        public Criteria andNodeNumIsNotNull() {
+            addCriterion("node_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeEqualTo(String value) {
-            addCriterion("external_unique_code =", value, "externalUniqueCode");
+        public Criteria andNodeNumEqualTo(String value) {
+            addCriterion("node_num =", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotEqualTo(String value) {
-            addCriterion("external_unique_code <>", value, "externalUniqueCode");
+        public Criteria andNodeNumNotEqualTo(String value) {
+            addCriterion("node_num <>", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeGreaterThan(String value) {
-            addCriterion("external_unique_code >", value, "externalUniqueCode");
+        public Criteria andNodeNumGreaterThan(String value) {
+            addCriterion("node_num >", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("external_unique_code >=", value, "externalUniqueCode");
+        public Criteria andNodeNumGreaterThanOrEqualTo(String value) {
+            addCriterion("node_num >=", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLessThan(String value) {
-            addCriterion("external_unique_code <", value, "externalUniqueCode");
+        public Criteria andNodeNumLessThan(String value) {
+            addCriterion("node_num <", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLessThanOrEqualTo(String value) {
-            addCriterion("external_unique_code <=", value, "externalUniqueCode");
+        public Criteria andNodeNumLessThanOrEqualTo(String value) {
+            addCriterion("node_num <=", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLike(String value) {
-            addCriterion("external_unique_code like", value, "externalUniqueCode");
+        public Criteria andNodeNumLike(String value) {
+            addCriterion("node_num like", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotLike(String value) {
-            addCriterion("external_unique_code not like", value, "externalUniqueCode");
+        public Criteria andNodeNumNotLike(String value) {
+            addCriterion("node_num not like", value, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIn(List<String> values) {
-            addCriterion("external_unique_code in", values, "externalUniqueCode");
+        public Criteria andNodeNumIn(List<String> values) {
+            addCriterion("node_num in", values, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotIn(List<String> values) {
-            addCriterion("external_unique_code not in", values, "externalUniqueCode");
+        public Criteria andNodeNumNotIn(List<String> values) {
+            addCriterion("node_num not in", values, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeBetween(String value1, String value2) {
-            addCriterion("external_unique_code between", value1, value2, "externalUniqueCode");
+        public Criteria andNodeNumBetween(String value1, String value2) {
+            addCriterion("node_num between", value1, value2, "nodeNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotBetween(String value1, String value2) {
-            addCriterion("external_unique_code not between", value1, value2, "externalUniqueCode");
+        public Criteria andNodeNumNotBetween(String value1, String value2) {
+            addCriterion("node_num not between", value1, value2, "nodeNum");
             return (Criteria) this;
         }
 

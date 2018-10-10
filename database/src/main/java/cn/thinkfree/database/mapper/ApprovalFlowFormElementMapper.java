@@ -94,5 +94,5 @@ public interface ApprovalFlowFormElementMapper {
      */
     int updateByPrimaryKey(ApprovalFlowFormElement record);
 
-    List<ApprovalFlowFormElement> findByExternalUniqueCode(String ExternalUniqueCode);
+    List<ApprovalFlowFormElement> findByFormNum(String formNum);
 }

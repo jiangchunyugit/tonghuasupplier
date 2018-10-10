@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.ApprovalFlowFormMapper">
+
+  <resultMap id="ApprovalFlowFormVo" type="cn.thinkfree.database.vo.ApprovalFlowFormVo" extends="BaseResultMap">
+    <collection property="formElements" column="num"
+                ofType="cn.thinkfree.database.vo.ApprovalFlowFormElement"
+                select="cn.thinkfree.database.mapper.ApprovalFlowFormElementMapper.findByFormNum"/>
+  </resultMap>
+  <!-- 根据审批流节点查询 -->
+  <select id="findByNodeNum" parameterType="java.lang.String"  resultMap="ApprovalFlowFormVo">
+    select
+    <include refid="Base_Column_List" />
+    from approval_flow_form
+    where node_num = #{nodeNum,jdbcType=VARCHAR}
+  </select>
+</mapper>

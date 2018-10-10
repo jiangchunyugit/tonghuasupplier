@@ -29,7 +29,7 @@ public class ApprovalFlowNodeRoleServiceImpl implements ApprovalFlowNodeRoleServ
         if (null != nodeRoles){
             for (ApprovalFlowNodeRole nodeRole : nodeRoles) {
                 nodeRole.setId(0);
-                nodeRole.setExternalUniqueCode(nodeNum);
+                nodeRole.setNodeNum(nodeNum);
                 nodeRoleMapper.insert(nodeRole);
             }
         }

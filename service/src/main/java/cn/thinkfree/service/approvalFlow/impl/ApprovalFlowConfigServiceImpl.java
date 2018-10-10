@@ -2,7 +2,7 @@ package cn.thinkfree.service.approvalFlow.impl;
 
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
-import cn.thinkfree.database.mapper.ApprovalFlowMapper;
+import cn.thinkfree.database.mapper.ApprovalFlowConfigMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigLogService;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigService;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService {
 
     @Resource
-    private ApprovalFlowMapper approvalFlowMapper;
+    private ApprovalFlowConfigMapper configMapper;
     @Resource
     private ApprovalFlowConfigLogService configLogService;
 
@@ -31,10 +31,10 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
      * @return 所有审批流
      */
     @Override
-    public List<ApprovalFlow> list() {
-        ApprovalFlowExample approvalFlowExample = new ApprovalFlowExample();
-        approvalFlowExample.setOrderByClause("sort asc");
-        return approvalFlowMapper.selectByExample(approvalFlowExample);
+    public List<ApprovalFlowConfig> list() {
+        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
+        configExample.setOrderByClause("sort asc");
+        return configMapper.selectByExample(configExample);
     }
 
     /**
@@ -43,11 +43,11 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
      * @return 审批流
      */
     @Override
-    public ApprovalFlow findByNum(String approvalFlowNum){
-        ApprovalFlowExample approvalFlowExample = new ApprovalFlowExample();
-        approvalFlowExample.createCriteria().andApprovalFlowNameEqualTo(approvalFlowNum);
-        List<ApprovalFlow> approvalFlows = approvalFlowMapper.selectByExample(approvalFlowExample);
-        return approvalFlows != null && approvalFlows.size() > 0 ? approvalFlows.get(0) : null;
+    public ApprovalFlowConfig findByNum(String approvalFlowNum){
+        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
+        configExample.createCriteria().andApprovalFlowNameEqualTo(approvalFlowNum);
+        List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
+        return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }
 
     /**
@@ -59,28 +59,28 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         if (StringUtils.isEmpty(configLogDTO.getApprovalFlowNum())) {
             throw new RuntimeException("审批流编号不能为空");
         }
-        ApprovalFlow approvalFlow = findByNum(configLogDTO.getApprovalFlowNum());
-        if (approvalFlow == null) {
+        ApprovalFlowConfig config = findByNum(configLogDTO.getApprovalFlowNum());
+        if (config == null) {
             throw new RuntimeException("数据无效");
         }
-        approvalFlow.setVersion(approvalFlow.getVersion() + 1);
-        approvalFlow.setUpdateUserId(configLogDTO.getCreateUserId());
-        approvalFlow.setUpdateTime(new Date());
-        approvalFlow.setApprovalFlowName(configLogDTO.getApprovalFlowName());
-        approvalFlow.setCompanyNum(configLogDTO.getCompanyNum());
-        approvalFlow.setH5Link(configLogDTO.getH5Link());
-        approvalFlow.setH5Resume(configLogDTO.getH5Resume());
-        approvalFlow.setType(configLogDTO.getType());
-        save(approvalFlow);
-        configLogService.create(approvalFlow, configLogDTO.getApprovalFlowNodeVos());
+        config.setVersion(config.getVersion() + 1);
+        config.setUpdateUserId(configLogDTO.getCreateUserId());
+        config.setUpdateTime(new Date());
+        config.setApprovalFlowName(configLogDTO.getApprovalFlowName());
+        config.setCompanyNum(configLogDTO.getCompanyNum());
+        config.setH5Link(configLogDTO.getH5Link());
+        config.setH5Resume(configLogDTO.getH5Resume());
+        config.setType(configLogDTO.getType());
+        save(config);
+        configLogService.create(config, configLogDTO.getApprovalFlowNodeVos());
     }
 
     /**
      * 保存审批流
-     * @param approvalFlow 审批流
+     * @param config 审批流
      */
-    private void save(ApprovalFlow approvalFlow){
-        approvalFlowMapper.updateByPrimaryKey(approvalFlow);
+    private void save(ApprovalFlowConfig config){
+        configMapper.updateByPrimaryKey(config);
     }
 
     /**
@@ -92,30 +92,30 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         if (StringUtils.isEmpty(configLogDTO.getApprovalFlowNum())) {
             throw new RuntimeException("审批流编号不能为空");
         }
-        ApprovalFlow approvalFlow = findByNum(configLogDTO.getApprovalFlowNum());
-        if (approvalFlow == null) {
+        ApprovalFlowConfig config = findByNum(configLogDTO.getApprovalFlowNum());
+        if (config == null) {
             throw new RuntimeException("数据无效");
         }
-        approvalFlow.setId(0);
-        approvalFlow.setVersion(approvalFlow.getVersion() + 1);
-        approvalFlow.setApprovalFlowNum(UniqueCodeGenerator.AF.getCode());
-        approvalFlow.setUpdateUserId(configLogDTO.getCreateUserId());
-        approvalFlow.setUpdateTime(new Date());
-        approvalFlow.setApprovalFlowName(configLogDTO.getApprovalFlowName());
-        approvalFlow.setCompanyNum(configLogDTO.getCompanyNum());
-        approvalFlow.setH5Link(configLogDTO.getH5Link());
-        approvalFlow.setH5Resume(configLogDTO.getH5Resume());
-        approvalFlow.setType(configLogDTO.getType());
-        insert(approvalFlow);
-        configLogService.create(approvalFlow, configLogDTO.getApprovalFlowNodeVos());
+        config.setId(0);
+        config.setVersion(config.getVersion() + 1);
+        config.setApprovalFlowNum(UniqueCodeGenerator.AF_CONFIG.getCode());
+        config.setUpdateUserId(configLogDTO.getCreateUserId());
+        config.setUpdateTime(new Date());
+        config.setApprovalFlowName(configLogDTO.getApprovalFlowName());
+        config.setCompanyNum(configLogDTO.getCompanyNum());
+        config.setH5Link(configLogDTO.getH5Link());
+        config.setH5Resume(configLogDTO.getH5Resume());
+        config.setType(configLogDTO.getType());
+        insert(config);
+        configLogService.create(config, configLogDTO.getApprovalFlowNodeVos());
     }
 
     /**
      * 插入单个配置
-     * @param approvalFlow 审批流
+     * @param config 审批流
      */
-    private void insert(ApprovalFlow approvalFlow) {
-        approvalFlowMapper.insert(approvalFlow);
+    private void insert(ApprovalFlowConfig config) {
+        configMapper.insert(config);
     }
 
     /**
@@ -124,9 +124,9 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
      */
     @Override
     public void delete(String approvalFlowNum) {
-        ApprovalFlowExample approvalFlowExample = new ApprovalFlowExample();
-        approvalFlowExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
-        approvalFlowMapper.deleteByExample(approvalFlowExample);
+        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
+        configExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+        configMapper.deleteByExample(configExample);
 
         configLogService.deleteByApprovalFlowNum(approvalFlowNum);
     }

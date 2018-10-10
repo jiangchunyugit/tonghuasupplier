@@ -95,6 +95,6 @@ public interface ApprovalFlowOptionMapper {
      */
     int updateByPrimaryKey(ApprovalFlowOption record);
 
-    List<ApprovalFlowOption> findByExternalUniqueCode(String ExternalUniqueCode);
+    List<ApprovalFlowOption> findByNodeNum(String nodeNum);
 
 }
