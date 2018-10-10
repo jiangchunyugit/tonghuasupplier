@@ -27,6 +27,12 @@ public class ProjectBigSchedulingVO {
     private String name;
     @ApiModelProperty("节点描述")
     private String description;
+    @ApiModelProperty("下限平米")
+    private Integer squareMetreStart;
+    @ApiModelProperty("上限平米")
+    private Integer squareMetreEnd;
+    @ApiModelProperty("施工工期，单位（天）")
+    private Integer workload;
     @ApiModelProperty("是否需要验收")
     private boolean check;
     @ApiModelProperty("是否需要支付")
