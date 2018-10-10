@@ -5,6 +5,6 @@ import cn.thinkfree.database.model.UserRoleSet;
 
 import java.util.List;
 
-public interface UserRoleSetService {
+public interface RoleService {
     List<UserRoleSet> findAll();
 }

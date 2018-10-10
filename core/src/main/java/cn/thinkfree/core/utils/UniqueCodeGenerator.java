@@ -22,9 +22,14 @@ public enum UniqueCodeGenerator {
     /**
      * 审批流配置记录log表前缀
      */
-    AF_LOG("AF_LOG-");
+    AF_LOG("AF_LOG-"),
+    /**
+     * 审批流配置节点表单前缀
+     */
+    AF_FORM_DATA("AF_FORM_DATA-");
 
     private String prefix;
+
     UniqueCodeGenerator(String prefix){
         this.prefix = prefix;
     }

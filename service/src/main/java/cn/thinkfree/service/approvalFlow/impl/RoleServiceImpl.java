@@ -2,14 +2,16 @@ package cn.thinkfree.service.approvalFlow.impl;
 
 import cn.thinkfree.database.mapper.UserRoleSetMapper;
 import cn.thinkfree.database.model.UserRoleSet;
-import cn.thinkfree.service.approvalFlow.UserRoleSetService;
+import cn.thinkfree.service.approvalFlow.RoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
 
 @Service
-public class UserRoleSetServiceImpl implements UserRoleSetService {
+@Transactional
+public class RoleServiceImpl implements RoleService {
 
     @Resource
     private UserRoleSetMapper userRoleSetMapper;

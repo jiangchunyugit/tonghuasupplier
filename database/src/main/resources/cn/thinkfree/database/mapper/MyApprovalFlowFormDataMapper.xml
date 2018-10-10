@@ -4,7 +4,7 @@
 
   <resultMap id="ApprovalFlowFormDataVo" type="cn.thinkfree.database.vo.ApprovalFlowFormDataVo" extends="BaseResultMap">
     <collection property="formElements" column="record_unique_code"
-                ofType="cn.thinkfree.database.vo.ApprovalFlowFormElementVo"
+                ofType="cn.thinkfree.database.vo.ApprovalFlowFormElement"
                 select="cn.thinkfree.database.mapper.ApprovalFlowFormElementMapper.findByExternalUniqueCode"/>
   </resultMap>
   <!-- 根据审批流节点查询 -->
