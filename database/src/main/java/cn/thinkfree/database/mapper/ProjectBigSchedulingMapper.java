@@ -3,7 +3,6 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.model.ProjectBigSchedulingExample;
 import java.util.List;
-import java.util.TreeSet;
 
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import org.apache.ibatis.annotations.Param;
@@ -111,12 +110,4 @@ public interface ProjectBigSchedulingMapper {
      * @return
      */
     int updateByProjectBigScheduling(@Param("record") ProjectBigScheduling record);
-
-    /**
-     * 查询已有基础大排期
-     * @param status
-     * @param companyId
-     * @return
-     */
-    TreeSet<String> selectByStatus(@Param("status") Integer status, @Param("companyId") String companyId);
 }

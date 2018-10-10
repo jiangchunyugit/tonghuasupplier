@@ -11,6 +11,7 @@ import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 public interface SchedulingService {
     /**
      * 项目列表
+     *
      * @param companyId
      * @return
      */
@@ -18,6 +19,7 @@ public interface SchedulingService {
 
     /**
      * 添加公司施工节点
+     *
      * @param projectBigSchedulingVO
      * @return
      */
@@ -25,15 +27,9 @@ public interface SchedulingService {
 
     /**
      * 删除公司施工节点
+     *
      * @param projectBigSchedulingVO
      * @return
      */
     String deleteProjectScheduling(ProjectBigSchedulingVO projectBigSchedulingVO);
-
-    /**
-     * 同步基础大排期数据
-     * @param companyId
-     * @return
-     */
-    String synchronizedBaseScheduling(String companyId);
 }

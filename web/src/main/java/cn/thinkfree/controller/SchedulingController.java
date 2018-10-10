@@ -1,17 +1,17 @@
 package cn.thinkfree.controller;
 
-        import cn.thinkfree.core.annotation.MyRespBody;
-        import cn.thinkfree.core.base.AbsBaseController;
-        import cn.thinkfree.core.bundle.MyRespBundle;
-        import cn.thinkfree.core.constants.ResultMessage;
-        import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
-        import cn.thinkfree.database.vo.ProjectSEO;
-        import cn.thinkfree.database.vo.ProjectVO;
-        import cn.thinkfree.service.scheduling.SchedulingService;
-        import com.github.pagehelper.PageInfo;
-        import io.swagger.annotations.*;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.web.bind.annotation.*;
+import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.base.AbsBaseController;
+import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
+import cn.thinkfree.database.vo.ProjectSEO;
+import cn.thinkfree.database.vo.ProjectVO;
+import cn.thinkfree.service.scheduling.SchedulingService;
+import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author gejiaming
@@ -48,14 +48,5 @@ public class SchedulingController extends AbsBaseController {
         String result = schedulingService.deleteProjectScheduling(projectBigSchedulingVO);
         return sendSuccessMessage(result);
     }
-
-    @RequestMapping(value = "synchronizedBaseScheduling",method = RequestMethod.POST)
-    @ApiOperation(value = "同步基础大排期数据")
-    public MyRespBundle synchronizedBaseScheduling(@ApiParam(name ="companyId" ,value = "公司编号")String companyId){
-        String result = schedulingService.synchronizedBaseScheduling(companyId);
-        return sendSuccessMessage(result);
-    }
-
-
 
 }
