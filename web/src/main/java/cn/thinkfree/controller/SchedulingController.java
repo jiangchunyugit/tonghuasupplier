@@ -24,7 +24,13 @@ public class SchedulingController extends AbsBaseController {
     @Autowired
     private SchedulingService schedulingService;
 
-    @ApiOperation(value = "施工配置列表")
+    /**
+     * 项目列表
+     *
+     * @param companyId
+     * @return
+     */
+    @ApiOperation(value = "施工配置列表", notes = "")
     @PostMapping("/list")
     @MyRespBody
     public MyRespBundle<ProjectBigSchedulingVO> list(@RequestParam(name = "companyId") @ApiParam(value = "公司编号", name = "companyId") String companyId) {
@@ -48,7 +54,5 @@ public class SchedulingController extends AbsBaseController {
         String result = schedulingService.deleteProjectScheduling(projectBigSchedulingVO);
         return sendSuccessMessage(result);
     }
-
-
 
 }

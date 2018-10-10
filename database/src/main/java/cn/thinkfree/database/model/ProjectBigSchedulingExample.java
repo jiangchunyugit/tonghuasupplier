@@ -525,256 +525,6 @@ public class ProjectBigSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andDescriptionIsNull() {
-            addCriterion("description is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionIsNotNull() {
-            addCriterion("description is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionEqualTo(String value) {
-            addCriterion("description =", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionNotEqualTo(String value) {
-            addCriterion("description <>", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionGreaterThan(String value) {
-            addCriterion("description >", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionGreaterThanOrEqualTo(String value) {
-            addCriterion("description >=", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionLessThan(String value) {
-            addCriterion("description <", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionLessThanOrEqualTo(String value) {
-            addCriterion("description <=", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionLike(String value) {
-            addCriterion("description like", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionNotLike(String value) {
-            addCriterion("description not like", value, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionIn(List<String> values) {
-            addCriterion("description in", values, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionNotIn(List<String> values) {
-            addCriterion("description not in", values, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionBetween(String value1, String value2) {
-            addCriterion("description between", value1, value2, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andDescriptionNotBetween(String value1, String value2) {
-            addCriterion("description not between", value1, value2, "description");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartIsNull() {
-            addCriterion("square_metre_start is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartIsNotNull() {
-            addCriterion("square_metre_start is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartEqualTo(Integer value) {
-            addCriterion("square_metre_start =", value, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartNotEqualTo(Integer value) {
-            addCriterion("square_metre_start <>", value, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartGreaterThan(Integer value) {
-            addCriterion("square_metre_start >", value, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartGreaterThanOrEqualTo(Integer value) {
-            addCriterion("square_metre_start >=", value, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartLessThan(Integer value) {
-            addCriterion("square_metre_start <", value, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartLessThanOrEqualTo(Integer value) {
-            addCriterion("square_metre_start <=", value, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartIn(List<Integer> values) {
-            addCriterion("square_metre_start in", values, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartNotIn(List<Integer> values) {
-            addCriterion("square_metre_start not in", values, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartBetween(Integer value1, Integer value2) {
-            addCriterion("square_metre_start between", value1, value2, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreStartNotBetween(Integer value1, Integer value2) {
-            addCriterion("square_metre_start not between", value1, value2, "squareMetreStart");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndIsNull() {
-            addCriterion("square_metre_end is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndIsNotNull() {
-            addCriterion("square_metre_end is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndEqualTo(Integer value) {
-            addCriterion("square_metre_end =", value, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndNotEqualTo(Integer value) {
-            addCriterion("square_metre_end <>", value, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndGreaterThan(Integer value) {
-            addCriterion("square_metre_end >", value, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndGreaterThanOrEqualTo(Integer value) {
-            addCriterion("square_metre_end >=", value, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndLessThan(Integer value) {
-            addCriterion("square_metre_end <", value, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndLessThanOrEqualTo(Integer value) {
-            addCriterion("square_metre_end <=", value, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndIn(List<Integer> values) {
-            addCriterion("square_metre_end in", values, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndNotIn(List<Integer> values) {
-            addCriterion("square_metre_end not in", values, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndBetween(Integer value1, Integer value2) {
-            addCriterion("square_metre_end between", value1, value2, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andSquareMetreEndNotBetween(Integer value1, Integer value2) {
-            addCriterion("square_metre_end not between", value1, value2, "squareMetreEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadIsNull() {
-            addCriterion("workload is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadIsNotNull() {
-            addCriterion("workload is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadEqualTo(Integer value) {
-            addCriterion("workload =", value, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadNotEqualTo(Integer value) {
-            addCriterion("workload <>", value, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadGreaterThan(Integer value) {
-            addCriterion("workload >", value, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadGreaterThanOrEqualTo(Integer value) {
-            addCriterion("workload >=", value, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadLessThan(Integer value) {
-            addCriterion("workload <", value, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadLessThanOrEqualTo(Integer value) {
-            addCriterion("workload <=", value, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadIn(List<Integer> values) {
-            addCriterion("workload in", values, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadNotIn(List<Integer> values) {
-            addCriterion("workload not in", values, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadBetween(Integer value1, Integer value2) {
-            addCriterion("workload between", value1, value2, "workload");
-            return (Criteria) this;
-        }
-
-        public Criteria andWorkloadNotBetween(Integer value1, Integer value2) {
-            addCriterion("workload not between", value1, value2, "workload");
-            return (Criteria) this;
-        }
-
         public Criteria andStatusIsNull() {
             addCriterion("status is null");
             return (Criteria) this;
@@ -892,6 +642,76 @@ public class ProjectBigSchedulingExample {
 
         public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
             addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionIsNull() {
+            addCriterion("description is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionIsNotNull() {
+            addCriterion("description is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionEqualTo(String value) {
+            addCriterion("description =", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotEqualTo(String value) {
+            addCriterion("description <>", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionGreaterThan(String value) {
+            addCriterion("description >", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionGreaterThanOrEqualTo(String value) {
+            addCriterion("description >=", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionLessThan(String value) {
+            addCriterion("description <", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionLessThanOrEqualTo(String value) {
+            addCriterion("description <=", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionLike(String value) {
+            addCriterion("description like", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotLike(String value) {
+            addCriterion("description not like", value, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionIn(List<String> values) {
+            addCriterion("description in", values, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotIn(List<String> values) {
+            addCriterion("description not in", values, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionBetween(String value1, String value2) {
+            addCriterion("description between", value1, value2, "description");
+            return (Criteria) this;
+        }
+
+        public Criteria andDescriptionNotBetween(String value1, String value2) {
+            addCriterion("description not between", value1, value2, "description");
             return (Criteria) this;
         }
     }
