@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ApprovalFlowNodeService {
 
-    List<ApprovalFlowNodeVo> findByExternalUniqueCode(String externalUniqueCode);
+    List<ApprovalFlowNodeVo> findByConfigLogNum(String configLogNum);
 
     void create(String configLogNum, List<ApprovalFlowNodeVo> approvalFlowNodeVos);
 

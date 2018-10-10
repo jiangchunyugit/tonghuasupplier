@@ -21,15 +21,15 @@ public class ApprovalFlowFormElementServiceImpl implements ApprovalFlowFormEleme
 
     /**
      * 创建新的审批流节点表单元素
-     * @param formDataNum 表单编号
+     * @param formNum 表单编号
      * @param formElements 表单元素信息
      */
     @Override
-    public void create(String formDataNum, List<ApprovalFlowFormElement> formElements) {
+    public void create(String formNum, List<ApprovalFlowFormElement> formElements) {
         if (null != formElements) {
             for (ApprovalFlowFormElement formElement : formElements) {
                 formElement.setId(0);
-                formElement.setExternalUniqueCode(formDataNum);
+                formElement.setFormNum(formNum);
                 formElementMapper.insert(formElement);
             }
         }

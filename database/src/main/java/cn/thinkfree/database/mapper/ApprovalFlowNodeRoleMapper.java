@@ -95,6 +95,6 @@ public interface ApprovalFlowNodeRoleMapper {
      */
     int updateByPrimaryKey(ApprovalFlowNodeRole record);
 
-    List<ApprovalFlowNodeRole> findByExternalUniqueCode(String ExternalUniqueCode);
+    List<ApprovalFlowNodeRole> findByNodeNum(String nodeNum);
 
 }

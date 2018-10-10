@@ -254,73 +254,73 @@ public class ApprovalFlowNodeExample {
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIsNull() {
-            addCriterion("external_unique_code is null");
+        public Criteria andConfigLogNumIsNull() {
+            addCriterion("config_log_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIsNotNull() {
-            addCriterion("external_unique_code is not null");
+        public Criteria andConfigLogNumIsNotNull() {
+            addCriterion("config_log_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeEqualTo(String value) {
-            addCriterion("external_unique_code =", value, "externalUniqueCode");
+        public Criteria andConfigLogNumEqualTo(String value) {
+            addCriterion("config_log_num =", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotEqualTo(String value) {
-            addCriterion("external_unique_code <>", value, "externalUniqueCode");
+        public Criteria andConfigLogNumNotEqualTo(String value) {
+            addCriterion("config_log_num <>", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeGreaterThan(String value) {
-            addCriterion("external_unique_code >", value, "externalUniqueCode");
+        public Criteria andConfigLogNumGreaterThan(String value) {
+            addCriterion("config_log_num >", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("external_unique_code >=", value, "externalUniqueCode");
+        public Criteria andConfigLogNumGreaterThanOrEqualTo(String value) {
+            addCriterion("config_log_num >=", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLessThan(String value) {
-            addCriterion("external_unique_code <", value, "externalUniqueCode");
+        public Criteria andConfigLogNumLessThan(String value) {
+            addCriterion("config_log_num <", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLessThanOrEqualTo(String value) {
-            addCriterion("external_unique_code <=", value, "externalUniqueCode");
+        public Criteria andConfigLogNumLessThanOrEqualTo(String value) {
+            addCriterion("config_log_num <=", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLike(String value) {
-            addCriterion("external_unique_code like", value, "externalUniqueCode");
+        public Criteria andConfigLogNumLike(String value) {
+            addCriterion("config_log_num like", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotLike(String value) {
-            addCriterion("external_unique_code not like", value, "externalUniqueCode");
+        public Criteria andConfigLogNumNotLike(String value) {
+            addCriterion("config_log_num not like", value, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIn(List<String> values) {
-            addCriterion("external_unique_code in", values, "externalUniqueCode");
+        public Criteria andConfigLogNumIn(List<String> values) {
+            addCriterion("config_log_num in", values, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotIn(List<String> values) {
-            addCriterion("external_unique_code not in", values, "externalUniqueCode");
+        public Criteria andConfigLogNumNotIn(List<String> values) {
+            addCriterion("config_log_num not in", values, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeBetween(String value1, String value2) {
-            addCriterion("external_unique_code between", value1, value2, "externalUniqueCode");
+        public Criteria andConfigLogNumBetween(String value1, String value2) {
+            addCriterion("config_log_num between", value1, value2, "configLogNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotBetween(String value1, String value2) {
-            addCriterion("external_unique_code not between", value1, value2, "externalUniqueCode");
+        public Criteria andConfigLogNumNotBetween(String value1, String value2) {
+            addCriterion("config_log_num not between", value1, value2, "configLogNum");
             return (Criteria) this;
         }
 
@@ -584,73 +584,73 @@ public class ApprovalFlowNodeExample {
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeIsNull() {
-            addCriterion("record_unique_code is null");
+        public Criteria andNumIsNull() {
+            addCriterion("num is null");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeIsNotNull() {
-            addCriterion("record_unique_code is not null");
+        public Criteria andNumIsNotNull() {
+            addCriterion("num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeEqualTo(String value) {
-            addCriterion("record_unique_code =", value, "recordUniqueCode");
+        public Criteria andNumEqualTo(String value) {
+            addCriterion("num =", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotEqualTo(String value) {
-            addCriterion("record_unique_code <>", value, "recordUniqueCode");
+        public Criteria andNumNotEqualTo(String value) {
+            addCriterion("num <>", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeGreaterThan(String value) {
-            addCriterion("record_unique_code >", value, "recordUniqueCode");
+        public Criteria andNumGreaterThan(String value) {
+            addCriterion("num >", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("record_unique_code >=", value, "recordUniqueCode");
+        public Criteria andNumGreaterThanOrEqualTo(String value) {
+            addCriterion("num >=", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeLessThan(String value) {
-            addCriterion("record_unique_code <", value, "recordUniqueCode");
+        public Criteria andNumLessThan(String value) {
+            addCriterion("num <", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeLessThanOrEqualTo(String value) {
-            addCriterion("record_unique_code <=", value, "recordUniqueCode");
+        public Criteria andNumLessThanOrEqualTo(String value) {
+            addCriterion("num <=", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeLike(String value) {
-            addCriterion("record_unique_code like", value, "recordUniqueCode");
+        public Criteria andNumLike(String value) {
+            addCriterion("num like", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotLike(String value) {
-            addCriterion("record_unique_code not like", value, "recordUniqueCode");
+        public Criteria andNumNotLike(String value) {
+            addCriterion("num not like", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeIn(List<String> values) {
-            addCriterion("record_unique_code in", values, "recordUniqueCode");
+        public Criteria andNumIn(List<String> values) {
+            addCriterion("num in", values, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotIn(List<String> values) {
-            addCriterion("record_unique_code not in", values, "recordUniqueCode");
+        public Criteria andNumNotIn(List<String> values) {
+            addCriterion("num not in", values, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeBetween(String value1, String value2) {
-            addCriterion("record_unique_code between", value1, value2, "recordUniqueCode");
+        public Criteria andNumBetween(String value1, String value2) {
+            addCriterion("num between", value1, value2, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotBetween(String value1, String value2) {
-            addCriterion("record_unique_code not between", value1, value2, "recordUniqueCode");
+        public Criteria andNumNotBetween(String value1, String value2) {
+            addCriterion("num not between", value1, value2, "num");
             return (Criteria) this;
         }
 

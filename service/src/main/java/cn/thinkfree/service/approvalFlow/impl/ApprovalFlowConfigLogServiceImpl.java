@@ -39,14 +39,14 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
      */
     @Override
     public ApprovalFlowDetailVo detail(String approvalFlowNum) {
-        ApprovalFlow approvalFlow = configService.findByNum(approvalFlowNum);
+        ApprovalFlowConfig config = configService.findByNum(approvalFlowNum);
         List<ApprovalFlowConfigLog> configLogs = findByApprovalFlowNumOrderByVersionAsc(approvalFlowNum);
         ApprovalFlowConfigLog configLog = configLogs.get(configLogs.size() - 1);
-        List<ApprovalFlowNodeVo> nodeVos = nodeService.findByExternalUniqueCode(configLog.getRecordUniqueCode());
+        List<ApprovalFlowNodeVo> nodeVos = nodeService.findByConfigLogNum(configLog.getNum());
         List<UserRoleSet> userRoleSets = roleService.findAll();
 
         ApprovalFlowDetailVo detailVo = new ApprovalFlowDetailVo();
-        detailVo.setApprovalFlow(approvalFlow);
+        detailVo.setConfig(config);
         detailVo.setConfigLogs(configLogs);
         detailVo.setNodeVos(nodeVos);
         detailVo.setUserRoleSets(userRoleSets);
@@ -67,23 +67,23 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
 
     /**
      * 创建新的审批流配置记录
-     * @param approvalFlow 审批流配置
+     * @param config 审批流配置
      * @param approvalFlowNodeVos 审批流节点信息
      */
     @Override
-    public void create(ApprovalFlow approvalFlow, List<ApprovalFlowNodeVo> approvalFlowNodeVos) {
+    public void create(ApprovalFlowConfig config, List<ApprovalFlowNodeVo> approvalFlowNodeVos) {
         ApprovalFlowConfigLog configLog = new ApprovalFlowConfigLog();
-        configLog.setApprovalFlowNum(approvalFlow.getApprovalFlowNum());
+        configLog.setApprovalFlowNum(config.getApprovalFlowNum());
         configLog.setCreateTime(new Date());
-        configLog.setCreateUserId(approvalFlow.getCreateUserId());
-        configLog.setRecordUniqueCode(UniqueCodeGenerator.AF_LOG.getCode());
-        configLog.setVersion(approvalFlow.getVersion());
-        configLog.setH5Link(approvalFlow.getH5Link());
-        configLog.setH5Resume(approvalFlow.getH5Resume());
-        configLog.setType(approvalFlow.getType());
-        configLog.setCompanyNum(approvalFlow.getCompanyNum());
+        configLog.setCreateUserId(config.getCreateUserId());
+        configLog.setNum(UniqueCodeGenerator.AF_CONFIG_LOG.getCode());
+        configLog.setVersion(config.getVersion());
+        configLog.setH5Link(config.getH5Link());
+        configLog.setH5Resume(config.getH5Resume());
+        configLog.setType(config.getType());
+        configLog.setCompanyNum(config.getCompanyNum());
         insert(configLog);
-        nodeService.create(configLog.getRecordUniqueCode(), approvalFlowNodeVos);
+        nodeService.create(configLog.getNum(), approvalFlowNodeVos);
     }
 
     /**
@@ -102,7 +102,7 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         List<ApprovalFlowConfigLog> configLogs = configLogMapper.selectByExample(configLogExample);
         if (configLogs != null) {
             for(ApprovalFlowConfigLog configLog : configLogs){
-                nodeService.deleteByConfigLogNum(configLog.getRecordUniqueCode());
+                nodeService.deleteByConfigLogNum(configLog.getNum());
             }
         }
 

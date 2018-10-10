@@ -29,7 +29,7 @@ public class ApprovalFlowTimeoutNoticeServiceImpl implements ApprovalFlowTimeout
         if (timeoutNotices != null) {
             for (ApprovalFlowTimeoutNotice timeoutNotice : timeoutNotices){
                 timeoutNotice.setId(0);
-                timeoutNotice.setExternalUniqueCode(nodeNum);
+                timeoutNotice.setNodeNum(nodeNum);
                 timeoutNoticeMapper.insert(timeoutNotice);
             }
         }

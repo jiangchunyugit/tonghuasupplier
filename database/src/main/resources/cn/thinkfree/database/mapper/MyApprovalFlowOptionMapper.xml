@@ -3,10 +3,10 @@
 <mapper namespace="cn.thinkfree.database.mapper.ApprovalFlowOptionMapper">
 
   <!-- 根据审批流节点查询操作信息 -->
-  <select id="findByExternalUniqueCode" parameterType="java.lang.String"  resultMap="BaseResultMap">
+  <select id="findByNodeNum" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from approval_flow_options
-    where external_unique_code = #{externalUniqueCode,jdbcType=VARCHAR}
+    from approval_flow_option
+    where node_num = #{nodeNum,jdbcType=VARCHAR}
   </select>
 </mapper>

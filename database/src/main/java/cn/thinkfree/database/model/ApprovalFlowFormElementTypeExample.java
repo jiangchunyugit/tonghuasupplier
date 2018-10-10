@@ -394,73 +394,73 @@ public class ApprovalFlowFormElementTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeIsNull() {
-            addCriterion("record_unique_code is null");
+        public Criteria andNumIsNull() {
+            addCriterion("num is null");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeIsNotNull() {
-            addCriterion("record_unique_code is not null");
+        public Criteria andNumIsNotNull() {
+            addCriterion("num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeEqualTo(String value) {
-            addCriterion("record_unique_code =", value, "recordUniqueCode");
+        public Criteria andNumEqualTo(String value) {
+            addCriterion("num =", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotEqualTo(String value) {
-            addCriterion("record_unique_code <>", value, "recordUniqueCode");
+        public Criteria andNumNotEqualTo(String value) {
+            addCriterion("num <>", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeGreaterThan(String value) {
-            addCriterion("record_unique_code >", value, "recordUniqueCode");
+        public Criteria andNumGreaterThan(String value) {
+            addCriterion("num >", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("record_unique_code >=", value, "recordUniqueCode");
+        public Criteria andNumGreaterThanOrEqualTo(String value) {
+            addCriterion("num >=", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeLessThan(String value) {
-            addCriterion("record_unique_code <", value, "recordUniqueCode");
+        public Criteria andNumLessThan(String value) {
+            addCriterion("num <", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeLessThanOrEqualTo(String value) {
-            addCriterion("record_unique_code <=", value, "recordUniqueCode");
+        public Criteria andNumLessThanOrEqualTo(String value) {
+            addCriterion("num <=", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeLike(String value) {
-            addCriterion("record_unique_code like", value, "recordUniqueCode");
+        public Criteria andNumLike(String value) {
+            addCriterion("num like", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotLike(String value) {
-            addCriterion("record_unique_code not like", value, "recordUniqueCode");
+        public Criteria andNumNotLike(String value) {
+            addCriterion("num not like", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeIn(List<String> values) {
-            addCriterion("record_unique_code in", values, "recordUniqueCode");
+        public Criteria andNumIn(List<String> values) {
+            addCriterion("num in", values, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotIn(List<String> values) {
-            addCriterion("record_unique_code not in", values, "recordUniqueCode");
+        public Criteria andNumNotIn(List<String> values) {
+            addCriterion("num not in", values, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeBetween(String value1, String value2) {
-            addCriterion("record_unique_code between", value1, value2, "recordUniqueCode");
+        public Criteria andNumBetween(String value1, String value2) {
+            addCriterion("num between", value1, value2, "num");
             return (Criteria) this;
         }
 
-        public Criteria andRecordUniqueCodeNotBetween(String value1, String value2) {
-            addCriterion("record_unique_code not between", value1, value2, "recordUniqueCode");
+        public Criteria andNumNotBetween(String value1, String value2) {
+            addCriterion("num not between", value1, value2, "num");
             return (Criteria) this;
         }
 

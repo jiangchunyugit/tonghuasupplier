@@ -384,73 +384,73 @@ public class ApprovalFlowFormElementExample {
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIsNull() {
-            addCriterion("external_unique_code is null");
+        public Criteria andFormNumIsNull() {
+            addCriterion("form_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIsNotNull() {
-            addCriterion("external_unique_code is not null");
+        public Criteria andFormNumIsNotNull() {
+            addCriterion("form_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeEqualTo(String value) {
-            addCriterion("external_unique_code =", value, "externalUniqueCode");
+        public Criteria andFormNumEqualTo(String value) {
+            addCriterion("form_num =", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotEqualTo(String value) {
-            addCriterion("external_unique_code <>", value, "externalUniqueCode");
+        public Criteria andFormNumNotEqualTo(String value) {
+            addCriterion("form_num <>", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeGreaterThan(String value) {
-            addCriterion("external_unique_code >", value, "externalUniqueCode");
+        public Criteria andFormNumGreaterThan(String value) {
+            addCriterion("form_num >", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeGreaterThanOrEqualTo(String value) {
-            addCriterion("external_unique_code >=", value, "externalUniqueCode");
+        public Criteria andFormNumGreaterThanOrEqualTo(String value) {
+            addCriterion("form_num >=", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLessThan(String value) {
-            addCriterion("external_unique_code <", value, "externalUniqueCode");
+        public Criteria andFormNumLessThan(String value) {
+            addCriterion("form_num <", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLessThanOrEqualTo(String value) {
-            addCriterion("external_unique_code <=", value, "externalUniqueCode");
+        public Criteria andFormNumLessThanOrEqualTo(String value) {
+            addCriterion("form_num <=", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeLike(String value) {
-            addCriterion("external_unique_code like", value, "externalUniqueCode");
+        public Criteria andFormNumLike(String value) {
+            addCriterion("form_num like", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotLike(String value) {
-            addCriterion("external_unique_code not like", value, "externalUniqueCode");
+        public Criteria andFormNumNotLike(String value) {
+            addCriterion("form_num not like", value, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeIn(List<String> values) {
-            addCriterion("external_unique_code in", values, "externalUniqueCode");
+        public Criteria andFormNumIn(List<String> values) {
+            addCriterion("form_num in", values, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotIn(List<String> values) {
-            addCriterion("external_unique_code not in", values, "externalUniqueCode");
+        public Criteria andFormNumNotIn(List<String> values) {
+            addCriterion("form_num not in", values, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeBetween(String value1, String value2) {
-            addCriterion("external_unique_code between", value1, value2, "externalUniqueCode");
+        public Criteria andFormNumBetween(String value1, String value2) {
+            addCriterion("form_num between", value1, value2, "formNum");
             return (Criteria) this;
         }
 
-        public Criteria andExternalUniqueCodeNotBetween(String value1, String value2) {
-            addCriterion("external_unique_code not between", value1, value2, "externalUniqueCode");
+        public Criteria andFormNumNotBetween(String value1, String value2) {
+            addCriterion("form_num not between", value1, value2, "formNum");
             return (Criteria) this;
         }
 
@@ -774,73 +774,73 @@ public class ApprovalFlowFormElementExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNull() {
-            addCriterion("type is null");
+        public Criteria andTypeNumIsNull() {
+            addCriterion("type_num is null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIsNotNull() {
-            addCriterion("type is not null");
+        public Criteria andTypeNumIsNotNull() {
+            addCriterion("type_num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(String value) {
-            addCriterion("type =", value, "type");
+        public Criteria andTypeNumEqualTo(String value) {
+            addCriterion("type_num =", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(String value) {
-            addCriterion("type <>", value, "type");
+        public Criteria andTypeNumNotEqualTo(String value) {
+            addCriterion("type_num <>", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(String value) {
-            addCriterion("type >", value, "type");
+        public Criteria andTypeNumGreaterThan(String value) {
+            addCriterion("type_num >", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(String value) {
-            addCriterion("type >=", value, "type");
+        public Criteria andTypeNumGreaterThanOrEqualTo(String value) {
+            addCriterion("type_num >=", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(String value) {
-            addCriterion("type <", value, "type");
+        public Criteria andTypeNumLessThan(String value) {
+            addCriterion("type_num <", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(String value) {
-            addCriterion("type <=", value, "type");
+        public Criteria andTypeNumLessThanOrEqualTo(String value) {
+            addCriterion("type_num <=", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLike(String value) {
-            addCriterion("type like", value, "type");
+        public Criteria andTypeNumLike(String value) {
+            addCriterion("type_num like", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotLike(String value) {
-            addCriterion("type not like", value, "type");
+        public Criteria andTypeNumNotLike(String value) {
+            addCriterion("type_num not like", value, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<String> values) {
-            addCriterion("type in", values, "type");
+        public Criteria andTypeNumIn(List<String> values) {
+            addCriterion("type_num in", values, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<String> values) {
-            addCriterion("type not in", values, "type");
+        public Criteria andTypeNumNotIn(List<String> values) {
+            addCriterion("type_num not in", values, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(String value1, String value2) {
-            addCriterion("type between", value1, value2, "type");
+        public Criteria andTypeNumBetween(String value1, String value2) {
+            addCriterion("type_num between", value1, value2, "typeNum");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(String value1, String value2) {
-            addCriterion("type not between", value1, value2, "type");
+        public Criteria andTypeNumNotBetween(String value1, String value2) {
+            addCriterion("type_num not between", value1, value2, "typeNum");
             return (Criteria) this;
         }
     }

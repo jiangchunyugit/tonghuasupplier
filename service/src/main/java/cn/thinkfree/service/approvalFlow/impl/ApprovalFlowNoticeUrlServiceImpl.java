@@ -29,7 +29,7 @@ public class ApprovalFlowNoticeUrlServiceImpl implements ApprovalFlowNoticeUrlSe
         if (null != noticeUrls){
             for (ApprovalFlowNoticeUrl noticeUrl : noticeUrls){
                 noticeUrl.setId(0);
-                noticeUrl.setExternalUniqueCode(nodeNum);
+                noticeUrl.setNodeNum(nodeNum);
                 noticeUrlMapper.insert(noticeUrl);
             }
         }

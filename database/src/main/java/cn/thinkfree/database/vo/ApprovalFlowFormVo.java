@@ -1,12 +1,12 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.ApprovalFlowFormData;
+import cn.thinkfree.database.model.ApprovalFlowForm;
 import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-public class ApprovalFlowFormDataVo extends ApprovalFlowFormData {
+public class ApprovalFlowFormVo extends ApprovalFlowForm {
 
     @ApiModelProperty("该节点需要展示的表单数据")
     private List<ApprovalFlowFormElement> formElements;
