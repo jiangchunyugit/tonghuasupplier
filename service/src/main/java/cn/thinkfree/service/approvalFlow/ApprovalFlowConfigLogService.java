@@ -12,4 +12,6 @@ public interface ApprovalFlowConfigLogService {
     ApprovalFlowDetailVo detail(String approvalFlowNum);
 
     void create(ApprovalFlow approvalFlow, List<ApprovalFlowNodeVo> approvalFlowNodes);
+
+    void deleteByApprovalFlowNum(String approvalFlowNum);
 }

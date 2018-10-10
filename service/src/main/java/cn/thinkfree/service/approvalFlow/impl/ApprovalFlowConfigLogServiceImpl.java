@@ -10,6 +10,7 @@ import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigService;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowNodeService;
 import cn.thinkfree.service.approvalFlow.RoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.List;
  * 审批流配置记录服务层
  */
 @Service
+@Transactional
 public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogService {
 
     @Resource
@@ -90,5 +92,20 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
      */
     public void insert(ApprovalFlowConfigLog configLog){
         configLogMapper.insert(configLog);
+    }
+
+    @Override
+    public void deleteByApprovalFlowNum(String approvalFlowNum) {
+        ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
+        configLogExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+
+        List<ApprovalFlowConfigLog> configLogs = configLogMapper.selectByExample(configLogExample);
+        if (configLogs != null) {
+            for(ApprovalFlowConfigLog configLog : configLogs){
+                nodeService.deleteByConfigLogNum(configLog.getRecordUniqueCode());
+            }
+        }
+
+        configLogMapper.deleteByExample(configLogExample);
     }
 }

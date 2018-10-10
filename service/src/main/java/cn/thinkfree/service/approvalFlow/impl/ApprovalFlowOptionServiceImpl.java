@@ -4,6 +4,7 @@ import cn.thinkfree.database.mapper.ApprovalFlowOptionMapper;
 import cn.thinkfree.database.model.ApprovalFlowOption;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowOptionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * 审批流节点操作项服务层
  */
 @Service
+@Transactional
 public class ApprovalFlowOptionServiceImpl implements ApprovalFlowOptionService {
 
     @Resource

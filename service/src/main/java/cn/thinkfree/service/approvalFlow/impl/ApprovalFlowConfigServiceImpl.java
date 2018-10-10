@@ -3,13 +3,12 @@ package cn.thinkfree.service.approvalFlow.impl;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
 import cn.thinkfree.database.mapper.ApprovalFlowMapper;
-import cn.thinkfree.database.model.ApprovalFlow;
-import cn.thinkfree.database.model.ApprovalFlowConfigLogExample;
-import cn.thinkfree.database.model.ApprovalFlowExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigLogService;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -19,6 +18,7 @@ import java.util.List;
  * 审批流配置服务层
  */
 @Service
+@Transactional
 public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService {
 
     @Resource
@@ -112,9 +112,22 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
 
     /**
      * 插入单个配置
-     * @param approvalFlow
+     * @param approvalFlow 审批流
      */
     private void insert(ApprovalFlow approvalFlow) {
         approvalFlowMapper.insert(approvalFlow);
+    }
+
+    /**
+     * 根据审批流编号删除审批流
+     * @param approvalFlowNum 审批流编号
+     */
+    @Override
+    public void delete(String approvalFlowNum) {
+        ApprovalFlowExample approvalFlowExample = new ApprovalFlowExample();
+        approvalFlowExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+        approvalFlowMapper.deleteByExample(approvalFlowExample);
+
+        configLogService.deleteByApprovalFlowNum(approvalFlowNum);
     }
 }

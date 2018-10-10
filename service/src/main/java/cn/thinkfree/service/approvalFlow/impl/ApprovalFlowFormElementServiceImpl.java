@@ -4,6 +4,7 @@ import cn.thinkfree.database.mapper.ApprovalFlowFormElementMapper;
 import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowFormElementService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * 审批流节点表单元素服务层
  */
 @Service
+@Transactional
 public class ApprovalFlowFormElementServiceImpl implements ApprovalFlowFormElementService {
 
     @Resource

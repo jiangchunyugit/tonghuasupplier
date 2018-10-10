@@ -2,10 +2,11 @@ package cn.thinkfree.service.approvalFlow.impl;
 
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.ApprovalFlowNodeMapper;
-import cn.thinkfree.database.model.ApprovalFlowNode;
+import cn.thinkfree.database.model.ApprovalFlowNodeExample;
 import cn.thinkfree.database.vo.ApprovalFlowNodeVo;
 import cn.thinkfree.service.approvalFlow.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
  * 审批流节点服务层
  */
 @Service
+@Transactional
 public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
 
     @Resource
@@ -60,5 +62,12 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
                 nodeMapper.insert(nodeVo);
             }
         }
+    }
+
+    @Override
+    public void deleteByConfigLogNum(String configLogNum) {
+        ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
+        nodeExample.createCriteria().andExternalUniqueCodeEqualTo(configLogNum);
+        nodeMapper.deleteByExample(nodeExample);
     }
 }

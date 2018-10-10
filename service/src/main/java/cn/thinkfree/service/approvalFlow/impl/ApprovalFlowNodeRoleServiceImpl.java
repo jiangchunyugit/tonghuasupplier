@@ -4,6 +4,7 @@ import cn.thinkfree.database.mapper.ApprovalFlowNodeRoleMapper;
 import cn.thinkfree.database.model.ApprovalFlowNodeRole;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowNodeRoleService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
  * 审批流节点与角色的关联关系服务层
  */
 @Service
+@Transactional
 public class ApprovalFlowNodeRoleServiceImpl implements ApprovalFlowNodeRoleService {
 
     @Resource
