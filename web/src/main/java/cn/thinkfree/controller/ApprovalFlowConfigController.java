@@ -71,20 +71,5 @@ public class ApprovalFlowConfigController extends AbsBaseController{
         configService.delete(approvalFlowNum);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
-
-    @ApiOperation("查询审批流审批角色顺序")
-    @ResponseBody
-    @PostMapping(value = "findNodeRoleSequence")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "approvalFlowNum", value = "审批流编号"),
-            @ApiImplicitParam(name = "companyId", value = "公司编号"),
-            @ApiImplicitParam(name = "projectBigSchedulingId", value = "项目节点编号")
-            })
-    public MyRespBundle findNodeRoleSequence(@RequestParam("approvalFlowNum")String approvalFlowNum,
-                                             @RequestParam("companyId")String companyId,
-                                             @RequestParam("projectBigSchedulingId")long projectBigSchedulingId){
-        printInfoMes("approvalFlowNum:{},companyId:{},projectBigSchedulingId:{}", approvalFlowNum, companyId, projectBigSchedulingId);
-        return sendJsonData(ResultMessage.SUCCESS, nodeService.findNodeRoleSequence(approvalFlowNum, companyId, projectBigSchedulingId));
-    }
 }
 

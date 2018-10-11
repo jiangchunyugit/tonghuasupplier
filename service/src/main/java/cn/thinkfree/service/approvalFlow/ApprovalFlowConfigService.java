@@ -2,6 +2,9 @@ package cn.thinkfree.service.approvalFlow;
 
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
 import cn.thinkfree.database.model.ApprovalFlowConfig;
+import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.vo.ApprovalFlowFormVo;
+import cn.thinkfree.database.vo.ScheduleApprovalFlowConfigVo;
 
 import java.util.List;
 
@@ -16,5 +19,9 @@ public interface ApprovalFlowConfigService {
     void add(ApprovalFlowConfigLogDTO configLogDTO);
 
     void delete(String approvalFlowNum);
+
+    ScheduleApprovalFlowConfigVo findScheduleApprovalFlowConfigVo(String companyNum, Integer ProjectBigScheduleSort);
+
+    void saveScheduleApprovalFlowConfigVo(String companyNum, Integer ProjectBigScheduleSort, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo);
 
 }

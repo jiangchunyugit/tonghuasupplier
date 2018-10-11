@@ -1,9 +1,12 @@
 package cn.thinkfree.service.approvalFlow.impl;
 
+import cn.thinkfree.core.constants.AFType;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.dto.ApprovalFlowConfigLogDTO;
 import cn.thinkfree.database.mapper.ApprovalFlowConfigMapper;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.ApprovalFlowFormVo;
+import cn.thinkfree.database.vo.ScheduleApprovalFlowConfigVo;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigLogService;
 import cn.thinkfree.service.approvalFlow.ApprovalFlowConfigService;
 import org.apache.commons.lang3.StringUtils;
@@ -129,5 +132,49 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         configMapper.deleteByExample(configExample);
 
         configLogService.deleteByApprovalFlowNum(approvalFlowNum);
+    }
+
+
+    /**
+     * 根据公司编号与项目节点序号查询审批配置信息
+     * @param companyNum 公司编号
+     * @param ProjectBigScheduleSort 项目节点序号
+     * @return 审批配置信息
+     */
+    @Override
+    public ScheduleApprovalFlowConfigVo findScheduleApprovalFlowConfigVo(String companyNum, Integer ProjectBigScheduleSort) {
+        return null;
+    }
+
+    /**
+     * 根据公司编号与项目节点序号查询审批角色顺序
+     * @param companyNum 公司编号
+     * @param ProjectBigScheduleSort 项目节点序号
+     * @return 审批角色顺序
+     */
+    public List<List<UserRoleSet>> findNodeRoleSequence(String companyNum, Integer ProjectBigScheduleSort) {
+        ApprovalFlowConfig config = findByNumAndCompanyNum(AFType.CHECK_APPLICATION.num, companyNum);
+
+
+
+        return null;
+    }
+
+    private ApprovalFlowConfig findByNumAndCompanyNum(String approvalFlowNum, String companyNum){
+        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
+        configExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum).andCompanyNumEqualTo(companyNum);
+        List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
+        return configs != null && configs.size() > 0 ? configs.get(0) : null;
+    }
+
+    public ApprovalFlowFormVo findApprovalFlowForm(String companyNum, Integer ProjectBigScheduleSort) {
+        ApprovalFlowConfig config = findByNumAndCompanyNum(AFType.CHECK_APPLICATION.num, companyNum);
+
+        return null;
+    }
+
+    @Override
+    public void saveScheduleApprovalFlowConfigVo(String companyNum, Integer ProjectBigScheduleSort, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo) {
+
     }
 }
