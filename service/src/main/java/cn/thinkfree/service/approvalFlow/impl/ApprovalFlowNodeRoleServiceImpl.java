@@ -34,4 +34,9 @@ public class ApprovalFlowNodeRoleServiceImpl implements ApprovalFlowNodeRoleServ
             }
         }
     }
+
+    @Override
+    public List<ApprovalFlowNodeRole> findLastVersionByNodeNumAndProjectBigSchedulingId(String nodeNum, Long projectBigSchedulingId) {
+        return nodeRoleMapper.findLastVersionByNodeNumAndProjectBigSchedulingId(nodeNum, projectBigSchedulingId);
+    }
 }

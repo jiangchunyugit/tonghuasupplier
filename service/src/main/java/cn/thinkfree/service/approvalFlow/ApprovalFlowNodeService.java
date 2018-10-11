@@ -1,15 +1,21 @@
 package cn.thinkfree.service.approvalFlow;
 
 
+import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.vo.ApprovalFlowNodeVo;
+import cn.thinkfree.database.vo.NodeRoleSequenceVo;
 
 import java.util.List;
 
 public interface ApprovalFlowNodeService {
 
-    List<ApprovalFlowNodeVo> findByConfigLogNum(String configLogNum);
+    List<ApprovalFlowNodeVo> findVoByConfigLogNum(String configLogNum);
+
+    List<ApprovalFlowNode> findByConfigLogNum(String configLogNum);
 
     void create(String configLogNum, List<ApprovalFlowNodeVo> approvalFlowNodeVos);
 
-    void deleteByConfigLogNum(String configLogNum);
+    void deleteByConfigLogNums(List<String> configLogNums);
+
+    List<NodeRoleSequenceVo> findNodeRoleSequence(String approvalFlowNum, String companyId, Long projectBigSchedulingId);
 }

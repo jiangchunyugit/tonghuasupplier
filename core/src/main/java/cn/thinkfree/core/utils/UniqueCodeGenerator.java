@@ -26,7 +26,15 @@ public enum UniqueCodeGenerator {
     /**
      * 审批流配置节点表单前缀
      */
-    AF_FORM("AF_FORM_-");
+    AF_FORM("AF_FORM-"),
+    /**
+     * 审批流配置节点表单前缀
+     */
+    AF_FORM_ELEMENT("AF_FORM_ELEMENT-"),
+    /**
+     * 审批流配置节点表单前缀
+     */
+    AF_FORM_ELEMENT_TYPE("AF_FORM_ELEMENT_TYPE-");
 
     private String prefix;
 

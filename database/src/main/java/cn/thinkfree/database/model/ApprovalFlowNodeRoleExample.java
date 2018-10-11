@@ -453,6 +453,126 @@ public class ApprovalFlowNodeRoleExample {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
+
+        public Criteria andProjectBigSchedulingIdIsNull() {
+            addCriterion("project_big_scheduling_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdIsNotNull() {
+            addCriterion("project_big_scheduling_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id =", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdNotEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id <>", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdGreaterThan(Long value) {
+            addCriterion("project_big_scheduling_id >", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id >=", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdLessThan(Long value) {
+            addCriterion("project_big_scheduling_id <", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdLessThanOrEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id <=", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdIn(List<Long> values) {
+            addCriterion("project_big_scheduling_id in", values, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdNotIn(List<Long> values) {
+            addCriterion("project_big_scheduling_id not in", values, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdBetween(Long value1, Long value2) {
+            addCriterion("project_big_scheduling_id between", value1, value2, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdNotBetween(Long value1, Long value2) {
+            addCriterion("project_big_scheduling_id not between", value1, value2, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIsNull() {
+            addCriterion("version is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIsNotNull() {
+            addCriterion("version is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionEqualTo(Integer value) {
+            addCriterion("version =", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotEqualTo(Integer value) {
+            addCriterion("version <>", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionGreaterThan(Integer value) {
+            addCriterion("version >", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("version >=", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionLessThan(Integer value) {
+            addCriterion("version <", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionLessThanOrEqualTo(Integer value) {
+            addCriterion("version <=", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIn(List<Integer> values) {
+            addCriterion("version in", values, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotIn(List<Integer> values) {
+            addCriterion("version not in", values, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionBetween(Integer value1, Integer value2) {
+            addCriterion("version between", value1, value2, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotBetween(Integer value1, Integer value2) {
+            addCriterion("version not between", value1, value2, "version");
+            return (Criteria) this;
+        }
     }
 
     /**

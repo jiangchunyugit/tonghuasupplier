@@ -45,7 +45,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
     @Override
     public ApprovalFlowConfig findByNum(String approvalFlowNum){
         ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andApprovalFlowNameEqualTo(approvalFlowNum);
+        configExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
         List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
         return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }

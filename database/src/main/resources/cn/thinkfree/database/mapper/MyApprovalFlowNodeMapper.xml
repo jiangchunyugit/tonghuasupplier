@@ -23,5 +23,6 @@
         <include refid="Base_Column_List" />
         from approval_flow_node
         where config_log_num = #{configLogNum,jdbcType=VARCHAR}
+        order by sort asc
     </select>
 </mapper>

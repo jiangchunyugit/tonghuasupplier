@@ -29,7 +29,7 @@ public class ApprovalFlowDetailVo {
     private List<ApprovalFlowConfigLog> configLogs;
 
     @ApiModelProperty("角色信息集合")
-    private List<UserRoleSet> userRoleSets;
+    private List<UserRoleSet> roles;
 
     public ApprovalFlowConfig getConfig() {
         return config;
@@ -55,11 +55,11 @@ public class ApprovalFlowDetailVo {
         this.configLogs = configLogs;
     }
 
-    public List<UserRoleSet> getUserRoleSets() {
-        return userRoleSets;
+    public List<UserRoleSet> getRoles() {
+        return roles;
     }
 
-    public void setUserRoleSets(List<UserRoleSet> userRoleSets) {
-        this.userRoleSets = userRoleSets;
+    public void setRoles(List<UserRoleSet> roles) {
+        this.roles = roles;
     }
 }

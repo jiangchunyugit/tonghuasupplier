@@ -8,4 +8,12 @@
     from approval_flow_node_role
     where node_num = #{nodeNum,jdbcType=VARCHAR}
   </select>
+  <select id="findLastVersionByNodeNumAndProjectBigSchedulingId" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from approval_flow_node_role
+    where node_num = #{nodeNum,jdbcType=VARCHAR}
+    and projectBigSchedulingId = #{projectBigSchedulingId}
+    and version = max (version)
+  </select>
 </mapper>

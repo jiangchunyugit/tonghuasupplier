@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,14 +43,14 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         ApprovalFlowConfig config = configService.findByNum(approvalFlowNum);
         List<ApprovalFlowConfigLog> configLogs = findByApprovalFlowNumOrderByVersionAsc(approvalFlowNum);
         ApprovalFlowConfigLog configLog = configLogs.get(configLogs.size() - 1);
-        List<ApprovalFlowNodeVo> nodeVos = nodeService.findByConfigLogNum(configLog.getNum());
-        List<UserRoleSet> userRoleSets = roleService.findAll();
+        List<ApprovalFlowNodeVo> nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
+        List<UserRoleSet> roles = roleService.findAll();
 
         ApprovalFlowDetailVo detailVo = new ApprovalFlowDetailVo();
         detailVo.setConfig(config);
         detailVo.setConfigLogs(configLogs);
         detailVo.setNodeVos(nodeVos);
-        detailVo.setUserRoleSets(userRoleSets);
+        detailVo.setRoles(roles);
         return detailVo;
     }
 
@@ -94,6 +95,10 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         configLogMapper.insert(configLog);
     }
 
+    /**
+     * 根据审批流编号删除审批流
+     * @param approvalFlowNum 审批流编号
+     */
     @Override
     public void deleteByApprovalFlowNum(String approvalFlowNum) {
         ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
@@ -101,11 +106,19 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
 
         List<ApprovalFlowConfigLog> configLogs = configLogMapper.selectByExample(configLogExample);
         if (configLogs != null) {
+            List<String> configLogNums = new ArrayList<>();
             for(ApprovalFlowConfigLog configLog : configLogs){
-                nodeService.deleteByConfigLogNum(configLog.getNum());
+                configLogNums.add(configLog.getNum());
             }
+            nodeService.deleteByConfigLogNums(configLogNums);
         }
 
         configLogMapper.deleteByExample(configLogExample);
+    }
+
+    @Override
+    public ApprovalFlowConfigLog findLastVersionByApprovalFlowNum(String approvalFlowNum){
+        List<ApprovalFlowConfigLog> configLogs = findByApprovalFlowNumOrderByVersionAsc(approvalFlowNum);
+        return configLogs.get(configLogs.size() - 1);
     }
 }
