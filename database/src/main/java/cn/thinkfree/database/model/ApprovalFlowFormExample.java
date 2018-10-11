@@ -254,63 +254,63 @@ public class ApprovalFlowFormExample {
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdIsNull() {
-            addCriterion("data_resource_id is null");
+        public Criteria andDataResourceSerialIsNull() {
+            addCriterion("data_resource_serial is null");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdIsNotNull() {
-            addCriterion("data_resource_id is not null");
+        public Criteria andDataResourceSerialIsNotNull() {
+            addCriterion("data_resource_serial is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdEqualTo(Integer value) {
-            addCriterion("data_resource_id =", value, "dataResourceId");
+        public Criteria andDataResourceSerialEqualTo(Integer value) {
+            addCriterion("data_resource_serial =", value, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdNotEqualTo(Integer value) {
-            addCriterion("data_resource_id <>", value, "dataResourceId");
+        public Criteria andDataResourceSerialNotEqualTo(Integer value) {
+            addCriterion("data_resource_serial <>", value, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdGreaterThan(Integer value) {
-            addCriterion("data_resource_id >", value, "dataResourceId");
+        public Criteria andDataResourceSerialGreaterThan(Integer value) {
+            addCriterion("data_resource_serial >", value, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("data_resource_id >=", value, "dataResourceId");
+        public Criteria andDataResourceSerialGreaterThanOrEqualTo(Integer value) {
+            addCriterion("data_resource_serial >=", value, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdLessThan(Integer value) {
-            addCriterion("data_resource_id <", value, "dataResourceId");
+        public Criteria andDataResourceSerialLessThan(Integer value) {
+            addCriterion("data_resource_serial <", value, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdLessThanOrEqualTo(Integer value) {
-            addCriterion("data_resource_id <=", value, "dataResourceId");
+        public Criteria andDataResourceSerialLessThanOrEqualTo(Integer value) {
+            addCriterion("data_resource_serial <=", value, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdIn(List<Integer> values) {
-            addCriterion("data_resource_id in", values, "dataResourceId");
+        public Criteria andDataResourceSerialIn(List<Integer> values) {
+            addCriterion("data_resource_serial in", values, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdNotIn(List<Integer> values) {
-            addCriterion("data_resource_id not in", values, "dataResourceId");
+        public Criteria andDataResourceSerialNotIn(List<Integer> values) {
+            addCriterion("data_resource_serial not in", values, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdBetween(Integer value1, Integer value2) {
-            addCriterion("data_resource_id between", value1, value2, "dataResourceId");
+        public Criteria andDataResourceSerialBetween(Integer value1, Integer value2) {
+            addCriterion("data_resource_serial between", value1, value2, "dataResourceSerial");
             return (Criteria) this;
         }
 
-        public Criteria andDataResourceIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("data_resource_id not between", value1, value2, "dataResourceId");
+        public Criteria andDataResourceSerialNotBetween(Integer value1, Integer value2) {
+            addCriterion("data_resource_serial not between", value1, value2, "dataResourceSerial");
             return (Criteria) this;
         }
 
@@ -454,73 +454,73 @@ public class ApprovalFlowFormExample {
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainIsNull() {
-            addCriterion("form_data_explain is null");
+        public Criteria andDescribeIsNull() {
+            addCriterion("describe is null");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainIsNotNull() {
-            addCriterion("form_data_explain is not null");
+        public Criteria andDescribeIsNotNull() {
+            addCriterion("describe is not null");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainEqualTo(String value) {
-            addCriterion("form_data_explain =", value, "formDataExplain");
+        public Criteria andDescribeEqualTo(String value) {
+            addCriterion("describe =", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainNotEqualTo(String value) {
-            addCriterion("form_data_explain <>", value, "formDataExplain");
+        public Criteria andDescribeNotEqualTo(String value) {
+            addCriterion("describe <>", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainGreaterThan(String value) {
-            addCriterion("form_data_explain >", value, "formDataExplain");
+        public Criteria andDescribeGreaterThan(String value) {
+            addCriterion("describe >", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainGreaterThanOrEqualTo(String value) {
-            addCriterion("form_data_explain >=", value, "formDataExplain");
+        public Criteria andDescribeGreaterThanOrEqualTo(String value) {
+            addCriterion("describe >=", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainLessThan(String value) {
-            addCriterion("form_data_explain <", value, "formDataExplain");
+        public Criteria andDescribeLessThan(String value) {
+            addCriterion("describe <", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainLessThanOrEqualTo(String value) {
-            addCriterion("form_data_explain <=", value, "formDataExplain");
+        public Criteria andDescribeLessThanOrEqualTo(String value) {
+            addCriterion("describe <=", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainLike(String value) {
-            addCriterion("form_data_explain like", value, "formDataExplain");
+        public Criteria andDescribeLike(String value) {
+            addCriterion("describe like", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainNotLike(String value) {
-            addCriterion("form_data_explain not like", value, "formDataExplain");
+        public Criteria andDescribeNotLike(String value) {
+            addCriterion("describe not like", value, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainIn(List<String> values) {
-            addCriterion("form_data_explain in", values, "formDataExplain");
+        public Criteria andDescribeIn(List<String> values) {
+            addCriterion("describe in", values, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainNotIn(List<String> values) {
-            addCriterion("form_data_explain not in", values, "formDataExplain");
+        public Criteria andDescribeNotIn(List<String> values) {
+            addCriterion("describe not in", values, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainBetween(String value1, String value2) {
-            addCriterion("form_data_explain between", value1, value2, "formDataExplain");
+        public Criteria andDescribeBetween(String value1, String value2) {
+            addCriterion("describe between", value1, value2, "describe");
             return (Criteria) this;
         }
 
-        public Criteria andFormDataExplainNotBetween(String value1, String value2) {
-            addCriterion("form_data_explain not between", value1, value2, "formDataExplain");
+        public Criteria andDescribeNotBetween(String value1, String value2) {
+            addCriterion("describe not between", value1, value2, "describe");
             return (Criteria) this;
         }
 
@@ -711,6 +711,126 @@ public class ApprovalFlowFormExample {
 
         public Criteria andNumNotBetween(String value1, String value2) {
             addCriterion("num not between", value1, value2, "num");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdIsNull() {
+            addCriterion("project_big_scheduling_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdIsNotNull() {
+            addCriterion("project_big_scheduling_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id =", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdNotEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id <>", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdGreaterThan(Long value) {
+            addCriterion("project_big_scheduling_id >", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdGreaterThanOrEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id >=", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdLessThan(Long value) {
+            addCriterion("project_big_scheduling_id <", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdLessThanOrEqualTo(Long value) {
+            addCriterion("project_big_scheduling_id <=", value, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdIn(List<Long> values) {
+            addCriterion("project_big_scheduling_id in", values, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdNotIn(List<Long> values) {
+            addCriterion("project_big_scheduling_id not in", values, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdBetween(Long value1, Long value2) {
+            addCriterion("project_big_scheduling_id between", value1, value2, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectBigSchedulingIdNotBetween(Long value1, Long value2) {
+            addCriterion("project_big_scheduling_id not between", value1, value2, "projectBigSchedulingId");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIsNull() {
+            addCriterion("version is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIsNotNull() {
+            addCriterion("version is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionEqualTo(Integer value) {
+            addCriterion("version =", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotEqualTo(Integer value) {
+            addCriterion("version <>", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionGreaterThan(Integer value) {
+            addCriterion("version >", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("version >=", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionLessThan(Integer value) {
+            addCriterion("version <", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionLessThanOrEqualTo(Integer value) {
+            addCriterion("version <=", value, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionIn(List<Integer> values) {
+            addCriterion("version in", values, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotIn(List<Integer> values) {
+            addCriterion("version not in", values, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionBetween(Integer value1, Integer value2) {
+            addCriterion("version between", value1, value2, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andVersionNotBetween(Integer value1, Integer value2) {
+            addCriterion("version not between", value1, value2, "version");
             return (Criteria) this;
         }
     }

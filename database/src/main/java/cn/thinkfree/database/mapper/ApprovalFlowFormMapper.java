@@ -3,7 +3,6 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.ApprovalFlowForm;
 import cn.thinkfree.database.model.ApprovalFlowFormExample;
 import java.util.List;
-
 import org.apache.ibatis.annotations.Param;
 
 public interface ApprovalFlowFormMapper {
