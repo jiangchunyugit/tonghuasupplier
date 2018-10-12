@@ -54,7 +54,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
     @Override
     public ApprovalFlowConfig findByNum(String approvalFlowNum){
         ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+        configExample.createCriteria().andNumEqualTo(approvalFlowNum);
         List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
         return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }
@@ -75,7 +75,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         config.setVersion(config.getVersion() + 1);
         config.setUpdateUserId(configLogDTO.getCreateUserId());
         config.setUpdateTime(new Date());
-        config.setApprovalFlowName(configLogDTO.getApprovalFlowName());
+        config.setName(configLogDTO.getApprovalFlowName());
         config.setCompanyNum(configLogDTO.getCompanyNum());
         config.setH5Link(configLogDTO.getH5Link());
         config.setH5Resume(configLogDTO.getH5Resume());
@@ -107,10 +107,10 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         }
         config.setId(0);
         config.setVersion(config.getVersion() + 1);
-        config.setApprovalFlowNum(UniqueCodeGenerator.AF_CONFIG.getCode());
+        config.setNum(UniqueCodeGenerator.AF_CONFIG.getCode());
         config.setUpdateUserId(configLogDTO.getCreateUserId());
         config.setUpdateTime(new Date());
-        config.setApprovalFlowName(configLogDTO.getApprovalFlowName());
+        config.setName(configLogDTO.getApprovalFlowName());
         config.setCompanyNum(configLogDTO.getCompanyNum());
         config.setH5Link(configLogDTO.getH5Link());
         config.setH5Resume(configLogDTO.getH5Resume());
@@ -134,7 +134,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
     @Override
     public void delete(String approvalFlowNum) {
         ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+        configExample.createCriteria().andNumEqualTo(approvalFlowNum);
         configMapper.deleteByExample(configExample);
 
         configLogService.deleteByApprovalFlowNum(approvalFlowNum);
@@ -162,7 +162,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
      */
     public List<List<UserRoleSet>> findNodeRoleSequence(String companyNum, Integer projectBigScheduleSort) {
         ApprovalFlowConfig config = findByNumAndCompanyNum(AFType.CHECK_APPLICATION.num, companyNum);
-        ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getApprovalFlowNum());
+        ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getNum());
         List<ApprovalFlowNode> nodes = nodeService.findByConfigLogNum(configLog.getNum());
 
         return null;
@@ -170,7 +170,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
 
     private ApprovalFlowConfig findByNumAndCompanyNum(String approvalFlowNum, String companyNum){
         ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum).andCompanyNumEqualTo(companyNum);
+        configExample.createCriteria().andNumEqualTo(approvalFlowNum).andCompanyNumEqualTo(companyNum);
         List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
         if (configs != null && configs.size() > 0) {
             return configs.get(0);

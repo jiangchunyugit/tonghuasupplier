@@ -74,7 +74,7 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
     @Override
     public void create(ApprovalFlowConfig config, List<ApprovalFlowNodeVo> approvalFlowNodeVos) {
         ApprovalFlowConfigLog configLog = new ApprovalFlowConfigLog();
-        configLog.setApprovalFlowNum(config.getApprovalFlowNum());
+        configLog.setApprovalFlowNum(config.getNum());
         configLog.setCreateTime(new Date());
         configLog.setCreateUserId(config.getCreateUserId());
         configLog.setNum(UniqueCodeGenerator.AF_CONFIG_LOG.getCode());
