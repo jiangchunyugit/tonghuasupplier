@@ -83,7 +83,7 @@ public class DataAuthorityInterceptor implements Interceptor {
 				for (Method method : classType.getDeclaredMethods()) {
 					//抽象接口中 返回true
 					if(obj != null){
-						boolean flag = (boolean) ReflectUtil.getFieldValue(obj, "dataFlag");
+						boolean flag = ReflectUtil.getFieldValue(obj, "dataFlag")==null?false:(boolean) ReflectUtil.getFieldValue(obj, "dataFlag");
 						
 						if (flag == true && mappedStatement.getSqlCommandType().toString().equals("SELECT")) {
 							String sql = boundSql.getSql();
