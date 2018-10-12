@@ -2,14 +2,11 @@ package cn.thinkfree.controller;
 
 import java.util.Map;
 
+import cn.thinkfree.database.vo.CompanyListSEO;
+import cn.thinkfree.database.vo.CompanyListVo;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
@@ -23,6 +20,8 @@ import cn.thinkfree.service.contractTemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author ying007
@@ -52,12 +51,28 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
-    //公司资质查询list
+    /**
+     * 公司资质查询list
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="公司申请信息审批列表")
+    public MyRespBundle<String> list(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+        PageInfo<CompanyListVo> pageInfo = companySubmitService.list(companyListSEO);
+        return sendJsonData(success, "操作成功", pageInfo);
+    }
+
+    /**
+     * 导出
+     */
+    @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
+    @ExceptionHandler(value=Exception.class)
+    @ApiOperation(value="公司申请信息审批列表导出")
+    public void downLoad(HttpServletResponse response, @ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+        companySubmitService.downLoad(response, companyListSEO);
+    }
 
     //补全合同
-
-
-    //查看合同
     
     /**
      * 查看合同

@@ -7,16 +7,22 @@ import cn.thinkfree.database.model.PcApplyInfo;
  * 添加账号需要的参数
  */
 public class PcApplyInfoSEO extends PcApplyInfo {
+    /**
+     * 密码
+     */
     private String password;
 
-    private String email;
+    /**
+     * 验证码
+     */
+    private String verifyCode;
 
-    public String getEmail() {
-        return email;
+    public String getVerifyCode() {
+        return verifyCode;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setVerifyCode(String verifyCode) {
+        this.verifyCode = verifyCode;
     }
 
     public String getPassword() {
@@ -31,6 +37,7 @@ public class PcApplyInfoSEO extends PcApplyInfo {
     public String toString() {
         return "PcApplyInfoSEO{" +
                 "password='" + password + '\'' +
+                ", verifyCode='" + verifyCode + '\'' +
                 '}';
     }
 }

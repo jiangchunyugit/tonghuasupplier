@@ -23,10 +23,10 @@ public class CompanyCityStrategy implements Strategy {
     @Override
     public List<String> builder(UserVO userVO) {
         CompanyInfo condition = new CompanyInfo();
-        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+//        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         condition.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
         condition.setCityCode(Short.valueOf(userVO.getPcUserInfo().getCity()));
-        condition.setParentCompanyId(UserLevel.Company_City.code+"");
+//        condition.setParentCompanyId(UserLevel.Company_City.code+"");
         return companyInfoMapper.selectRelationMap(condition);
     }
 }

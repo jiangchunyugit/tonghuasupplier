@@ -131,4 +131,11 @@ public interface CompanyInfoMapper {
      * @return
      */
     List<CompanyListVo> list(CompanyListSEO companyListSEO);
+
+    /**
+     * 下载公司列表
+     * @param companyListSEO
+     * @return
+     */
+    List<CompanyListVo> downLoad(CompanyListSEO companyListSEO);
 }

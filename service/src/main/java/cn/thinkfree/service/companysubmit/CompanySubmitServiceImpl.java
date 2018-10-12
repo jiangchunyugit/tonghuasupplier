@@ -1,9 +1,12 @@
 package cn.thinkfree.service.companysubmit;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.utils.ExcelData;
+import cn.thinkfree.service.utils.ExcelUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +28,8 @@ import cn.thinkfree.database.model.CompanyInfoExpandExample;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author ying007
@@ -65,7 +70,52 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		return new PageInfo<>(companyListVoList);
 	}
 
-    @Override
+	@Override
+	public void downLoad(HttpServletResponse response, CompanyListSEO companyListSEO) {
+		ExcelData data = new ExcelData();
+		data.setName("用户信息数据");
+		//添加表头
+		String[] titleArrays = {"公司编号","公司类型","公司性质","所属站点","公司名称",
+				"入驻日期","截至时间","签约时间","法人","联系人","联系电话","保证金","状态"};
+		List<String> titles = new ArrayList();
+		for(String title: titleArrays){
+			titles.add(title);
+		}
+		data.setTitles(titles);
+		//添加列
+		List<List<Object>> rows = new ArrayList();
+		List<Object> row = null;
+		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
+
+		for(CompanyListVo vo: companyListVoList){
+			row=new ArrayList();
+			row.add(vo.getCompanyId());
+			row.add(vo.getRoleName());
+			row.add(vo.getComapnyNature());
+			row.add(vo.getSiteProvinceName()+vo.getSiteCityName()+vo.getSiteName());
+			row.add(vo.getCompanyName());
+			row.add(vo.getStartTime());
+			row.add(vo.getEndTime());
+			row.add(vo.getSignedTime());
+			row.add(vo.getLegalName());
+			row.add(vo.getContactName());
+			row.add(vo.getContactPhone());
+			row.add(vo.getDepositMoney());
+			row.add(CompanyAuditStatus.getDesc(Integer.parseInt(vo.getAuditStatus())));
+			rows.add(row);
+		}
+		data.setRows(rows);
+
+		SimpleDateFormat fdate=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+		String fileName=fdate.format(new Date())+".xls";
+		try{
+			ExcelUtils.exportExcel(response, fileName, data);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	@Override
     @Transactional(rollbackFor = Exception.class)
     public boolean upCompanyInfo(CompanySubmitVo companySubmitVo) {
         Date date = new Date();

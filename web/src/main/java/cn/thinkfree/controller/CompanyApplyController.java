@@ -36,14 +36,14 @@ public class CompanyApplyController extends AbsBaseController {
 
     /**
      * 公司申请事项
-     * @param pcApplyInfo
+     * @param pcApplyInfoSEO
      * @return
      */
     @RequestMapping(value = "/applyThink", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="添加公司申请事项：入驻，资质变更，续约")
-    public MyRespBundle<String> applyThink(@ApiParam("申请信息")PcApplyInfo pcApplyInfo){
-        boolean flag = companyApplyService.addApplyInfo(pcApplyInfo);
+    public MyRespBundle<String> applyThink(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
+        boolean flag = companyApplyService.addApplyInfo(pcApplyInfoSEO);
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
@@ -105,13 +105,13 @@ public class CompanyApplyController extends AbsBaseController {
      * a:添加账号---》返回id
      * @return
      */
-    /*@RequestMapping(value = "/generateCompanyId", method = RequestMethod.GET)
+    @RequestMapping(value = "/generateCompanyId", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="公司管理--->（办理）添加账号--->提交（返回公司id）")
     public MyRespBundle<String> generateCompanyId(@RequestParam(value = "roleId")String roleId){
         String companyId = companyApplyService.generateCompanyId(roleId);
         return sendJsonData(ResultMessage.SUCCESS, companyId);
-    }*/
+    }
 
     /**
      * b:添加账号--》创建用户

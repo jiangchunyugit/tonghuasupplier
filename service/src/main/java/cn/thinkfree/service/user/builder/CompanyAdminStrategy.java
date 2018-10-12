@@ -23,8 +23,8 @@ public class CompanyAdminStrategy implements Strategy{
     @Override
     public List<String> builder(UserVO userVO) {
         CompanyInfo condition = new CompanyInfo();
-        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        condition.setParentCompanyId(UserLevel.Creator.code+"");
+//        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+//        condition.setParentCompanyId(UserLevel.Creator.code+"");
         return companyInfoMapper.selectRelationMap(condition);
     }
 }

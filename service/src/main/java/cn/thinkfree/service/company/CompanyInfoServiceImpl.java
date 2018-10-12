@@ -46,8 +46,8 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         companyInfo.setCreateTime(new Date());
         companyInfo.setPhone(companyInfo.getLegalPhone());
         companyInfo.setRoleId("BD");
-        companyInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        companyInfo.setParentCompanyId(userVO.getCompanyID());
+        /*companyInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        companyInfo.setParentCompanyId(userVO.getCompanyID());*/
         return companyInfoMapper.insertSelective(companyInfo);
     }
 

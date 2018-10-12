@@ -15,10 +15,10 @@ import com.github.pagehelper.PageInfo;
 public interface CompanyApplyService {
     /**
      * 公司申请事项（运营人员添加入驻信息）
-     * @param pcApplyInfo
+     * @param pcApplyInfoSEO
      * @return
      */
-    boolean addApplyInfo(PcApplyInfo pcApplyInfo);
+    boolean addApplyInfo(PcApplyInfoSEO pcApplyInfoSEO);
 
     /**
      * 删除申请记录（is_delete)
@@ -46,7 +46,7 @@ public interface CompanyApplyService {
      * @param roleId
      * @return
      */
-    //String generateCompanyId(String roleId);
+    String generateCompanyId(String roleId);
 
     /**
      * b:添加账号--》创建用户

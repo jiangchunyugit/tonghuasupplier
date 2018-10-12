@@ -59,6 +59,20 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      */
     private Short companyClassify;
 
+    /**
+     * 导出条件项
+     * @return
+     */
+    private List<String> companyIds;
+
+    public List<String> getCompanyIds() {
+        return companyIds;
+    }
+
+    public void setCompanyIds(List<String> companyIds) {
+        this.companyIds = companyIds;
+    }
+
     public Short getCompanyClassify() {
         return companyClassify;
     }

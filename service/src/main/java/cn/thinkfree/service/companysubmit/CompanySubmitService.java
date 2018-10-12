@@ -7,6 +7,8 @@ import cn.thinkfree.database.vo.CompanyListVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
 import com.github.pagehelper.PageInfo;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * @author ying007
  * 公司入驻业务
@@ -34,4 +36,10 @@ public interface CompanySubmitService {
      * @return
      */
     PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO);
+
+    /**
+     * 列表导出
+     * @param companyListSEO
+     */
+    void downLoad(HttpServletResponse response, CompanyListSEO companyListSEO);
 }

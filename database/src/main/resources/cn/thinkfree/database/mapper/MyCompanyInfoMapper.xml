@@ -186,8 +186,7 @@
 	where t.company_id
 	= #{companyId}
 </select>
-
-    <select id="list" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
+<select id="list" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
         SELECT
 	info.company_id,
 	role.role_name,

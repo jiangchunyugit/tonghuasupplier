@@ -73,6 +73,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      * @param roleId
      * @return
      */
+    @Override
     public String generateCompanyId(String roleId) {
         String companyId = UserNoUtils.getUserNo(roleId);
         if(isEnable(companyId)){
@@ -104,7 +105,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
-        companyInfo.setRootCompanyId(pcApplyInfoSEO.getCompanyId());
         //公司级别：入驻公司为三级公司
         companyInfo.setCompanyClassify(CompanyClassify.TERTIARY_COMPANY.shortVal());
         int infoLine = companyInfoMapper.insertSelective(companyInfo);
@@ -178,7 +178,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean addApplyInfo(PcApplyInfo pcApplyInfo) {
+    public boolean addApplyInfo(PcApplyInfoSEO pcApplyInfoSEO) {
+        //TODO 校验验证码
+
+        PcApplyInfo pcApplyInfo = pcApplyInfoSEO;
+
         Date date = new Date();
         pcApplyInfo.setApplyDate(date);
         //是否办理

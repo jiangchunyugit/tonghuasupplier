@@ -127,7 +127,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-                .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
+//                .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
                 .andAreaCodeEqualTo(areaCode);
 
         return companyInfoMapper.selectByExample(companyInfoExample);
@@ -158,12 +158,12 @@ public class DictionaryServiceImpl implements DictionaryService {
 
         if(StringUtils.isNotBlank(provinceCode.toString())){
             example.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-                    .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
+//                    .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
                     .andProvinceCodeEqualTo(provinceCode.shortValue());
         }
         if(StringUtils.isNotBlank(provinceCode.toString())){
             example.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-                    .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
+//                    .andRootCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId())
                     .andProvinceCodeEqualTo(cityCode.shortValue());
         }
         return null;
