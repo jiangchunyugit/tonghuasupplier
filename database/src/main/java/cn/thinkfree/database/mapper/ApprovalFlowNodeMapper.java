@@ -1,6 +1,5 @@
 package cn.thinkfree.database.mapper;
 
-import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowNodeExample;
 import java.util.List;

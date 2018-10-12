@@ -14,9 +14,6 @@
       <collection property="timeoutNotices" column="num"
                   ofType="cn.thinkfree.database.model.ApprovalFlowTimeoutNotice"
                   select="cn.thinkfree.database.mapper.ApprovalFlowTimeoutNoticeMapper.findByNodeNum"/>
-      <collection property="formVos" column="num"
-                  ofType="cn.thinkfree.database.vo.ApprovalFlowFormVo"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowFormMapper.findByNodeNum"/>
   </resultMap>
     <select id="findByConfigLogNum" parameterType="java.lang.String" resultMap="ApprovalFlowNodeVo">
         select
