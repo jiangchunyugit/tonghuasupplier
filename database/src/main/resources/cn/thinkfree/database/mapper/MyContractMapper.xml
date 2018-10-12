@@ -18,7 +18,7 @@
     
     
   <!--合同列表分页查询-->
-  <select id="selectContractMap" parameterType="cn.thinkfree.database.vo.ContractSEO" resultMap="contractInfoVo" >
+  <select id="selectContractPage" parameterType="cn.thinkfree.database.vo.ContractSEO" resultMap="contractInfoVo" >
     SELECT c.signed_time as signed_time,c.contract_number as contract_number,
 		c.company_id as company_id,p.company_name as company_name,p.deposit_money as deposit_money,
 		concat(pr.province_name,'>',ci.city_name,'>',ar.area_name) as companyLocation ,se.role_name as companyType,

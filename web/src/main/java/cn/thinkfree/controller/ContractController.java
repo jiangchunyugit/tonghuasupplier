@@ -5,14 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -155,12 +153,12 @@ public class ContractController extends AbsBaseController{
     
     @ApiOperation(value = "合同下载", notes = "根据合同编号和公司的编号下载合同", consumes = "application/pdf")
     @PostMapping(path = "downloadContract")
-    public String downloadContract(@ApiParam("项目编号")@RequestParam String contractNumber, HttpServletResponse response) {    
+    public String downloadContract(@ApiParam("合同编号")@RequestParam(required=true) String contractNumber, HttpServletResponse response) {    
     	//根据合同编号查询下载地址
         String downloadUrl = contractService.selectContractBycontractNumber(contractNumber);
         //下载文件
         String fileName = "aim_test.txt";// 设置文件名，根据业务需要替换成要下载的文件名
-        if (fileName != null) {
+        if (downloadUrl != null) {
             //设置文件路径
             String realPath = "D://aim//";
             File file = new File(realPath , fileName);
@@ -199,6 +197,8 @@ public class ContractController extends AbsBaseController{
                     }
                 }
             }
+        }else{
+        	return "下载失败，合同编号不存在";
         }
         return null;
     

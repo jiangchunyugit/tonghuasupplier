@@ -71,7 +71,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public PageInfo<ContractVo> pageContractBySEO(ContractSEO contractSEO) {
 		PageHelper.startPage(contractSEO.getPage(),contractSEO.getRows());
-		List<ContractVo>  list =  contractInfoMapper.selectContractMap(contractSEO);
+		List<ContractVo>  list =  contractInfoMapper.selectContractPage(contractSEO);
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setContractStatus(ContractStatus.getDesc(list.get(i).getContractStatus()));
 		}
@@ -101,7 +101,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         List<List<Object>> rows = new ArrayList<>();
         List<Object> row = null;
         PageHelper.startPage(contractSEO.getPage(),contractSEO.getRows());
-		List<ContractVo>  list =  contractInfoMapper.selectContractMap(contractSEO);
+		List<ContractVo>  list =  contractInfoMapper.selectContractPage(contractSEO);
 		for (int i = 0; i < list.size(); i++) {
 			list.get(i).setContractStatus(ContractStatus.getDesc(list.get(i).getContractStatus()));
 		}
@@ -114,7 +114,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
            row.add(list.get(i).getCompanyType());
            row.add(list.get(i).getCompanyLocation());
            row.add(list.get(i).getDepositMoney());
-           row.add(list.get(i).getDepositMoney());
+           row.add(list.get(i).getContractStatus());
            rows.add(row);
        }
         data.setRows(rows);
@@ -262,7 +262,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	public String selectContractBycontractNumber(String contractNumber) {
 		ContractVo  vo = new ContractVo();
 		vo.setContractNumber(contractNumber);
-		return contractInfoMapper.selectContractBycontractNumber(vo).getContractUrl();
+		return contractInfoMapper.selectContractBycontractNumber(vo)==null?"":
+			contractInfoMapper.selectContractBycontractNumber(vo).getContractUrl();
 	}
 
 	@Override

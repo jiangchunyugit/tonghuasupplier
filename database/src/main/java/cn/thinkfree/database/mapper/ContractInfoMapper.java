@@ -2,6 +2,7 @@ package cn.thinkfree.database.mapper;
 
 import java.util.List;
 
+import cn.thinkfree.database.Annotation.CompanyAnnotation;
 import cn.thinkfree.database.model.UserRole;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
@@ -27,7 +28,8 @@ public interface ContractInfoMapper {
 	 * @author lvqidong
      *  @date 2018-09-20 
 	 */
-	public  List<ContractVo>  selectContractMap(ContractSEO secVo);
+	@CompanyAnnotation()
+	public  List<ContractVo>  selectContractPage(ContractSEO secVo);
 	
 	
 	

@@ -53,7 +53,7 @@ public enum ContractStatus {
     public static String getDesc(String value) {  
     	ContractStatus[] businessModeEnums = values();  
         for (ContractStatus businessModeEnum : businessModeEnums) {  
-            if (businessModeEnum.code.equals(value)) {  
+            if ((businessModeEnum.code+"").equals(value)) {  
                 return businessModeEnum.mes;  
             }  
         }  
