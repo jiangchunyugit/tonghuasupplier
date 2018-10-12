@@ -3,22 +3,21 @@ package cn.thinkfree.service.user;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
+import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.token.MyCustomUserDetailToken;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.IndexUserReportVO;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.user.strategy.StrategyFactory;
+import cn.thinkfree.service.utils.ThreadLocalHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -83,7 +82,6 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         printDebugMes("用户登录:{}",phone);
         UserRegisterExample userRegisterExample = new UserRegisterExample();
         userRegisterExample.createCriteria().andPhoneEqualTo(phone)
-                .andTypeEqualTo(UserRegisterType.Staff.shortVal())
                 .andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
         List<UserRegister> users = userRegisterMapper.selectByExample(userRegisterExample);
         if(users.isEmpty()|| users.size() > 1){
@@ -91,11 +89,15 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
             throw  new UsernameNotFoundException("用户账号信息错误");
         }
         UserRegister user = users.get(0);
+        // 省去一次查询
+        ThreadLocalHolder.set(user);
 
         UserRegisterType type = UserRegisterType.values()[Integer.valueOf(user.getType())];
-        UserDetails userDetails = strategyFactory.getStrategy(type).build(user.getUserId());
+        SecurityUser userDetails = strategyFactory.getStrategy(type).build(user.getUserId());
 
-
+        if(userDetails == null){
+            throw  new UsernameNotFoundException("用户账号信息错误");
+        }
 
         return userDetails;
     }

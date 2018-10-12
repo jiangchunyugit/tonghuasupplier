@@ -1,6 +1,5 @@
 package cn.thinkfree.database.model;
 
-import cn.thinkfree.core.model.BaseModel;
 import cn.thinkfree.core.security.model.SecurityResource;
 
 /**

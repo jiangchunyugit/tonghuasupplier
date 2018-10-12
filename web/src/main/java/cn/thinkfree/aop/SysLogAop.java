@@ -8,7 +8,6 @@ import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.model.LogInfo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.system.LogInfoService;
-import jdk.jfr.events.ThrowablesEvent;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;

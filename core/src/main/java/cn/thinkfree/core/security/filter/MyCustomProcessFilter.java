@@ -31,7 +31,7 @@ public class MyCustomProcessFilter extends AbstractAuthenticationProcessingFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException{
 
-        Authentication token = new AuthenticationFactory().builder(httpServletRequest);
+          Authentication token = new AuthenticationFactory().builder(httpServletRequest);
 
         Authentication authenticate = this.getAuthenticationManager().authenticate(token);
         if(authenticate != null && authenticate.isAuthenticated()){

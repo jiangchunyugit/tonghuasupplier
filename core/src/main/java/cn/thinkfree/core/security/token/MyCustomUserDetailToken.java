@@ -1,8 +1,6 @@
 package cn.thinkfree.core.security.token;
 
-import cn.thinkfree.core.security.model.SecurityUser;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;

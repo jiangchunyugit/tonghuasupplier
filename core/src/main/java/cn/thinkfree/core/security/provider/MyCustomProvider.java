@@ -1,13 +1,8 @@
 package cn.thinkfree.core.security.provider;
 
-import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.token.MyCustomUserDetailToken;
-import cn.thinkfree.core.utils.LogUtil;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;

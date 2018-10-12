@@ -1,6 +1,7 @@
 package cn.thinkfree.service.user.strategy.build;
 
 import cn.thinkfree.core.logger.AbsLogPrinter;
+import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.PcUserInfoMapper;
 import cn.thinkfree.database.mapper.PcUserResourceMapper;
@@ -8,17 +9,20 @@ import cn.thinkfree.database.mapper.SystemResourceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.user.strategy.StrategyFactory;
+import cn.thinkfree.service.utils.ThreadLocalHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 企业平台人员构建
+ * 运营人员
  */
+@Component
 public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuildStrategy {
 
 
@@ -35,12 +39,24 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
 
 
     @Override
-    public UserDetails build(String userID) {
-        UserVO userVO = new UserVO();
-//        userVO.setUserRegister(user);
-        completionDetailInfo(userVO,userID);
-        completionUserRole(userVO,userID);
-        return userVO;
+    public SecurityUser build(String userID) {
+         UserVO userVO = new UserVO();
+         UserRegister userRegister = (UserRegister) ThreadLocalHolder.get();
+         userVO.setUserRegister(userRegister);
+         completionDetailInfo(userVO,userID);
+         completionUserRole(userVO,userID);
+         completionThirdUserInfo(userVO,userID);
+         ThreadLocalHolder.clear();
+         return userVO;
+    }
+
+    /**
+     * 补全第三方用户信息
+     * @param userVO
+     * @param userID
+     */
+    private void completionThirdUserInfo(UserVO userVO, String userID) {
+
     }
 
     /**

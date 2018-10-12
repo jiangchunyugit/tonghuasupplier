@@ -5,7 +5,10 @@ package cn.thinkfree.service.constants;
  * 因为其他地方有依赖序号及排放顺序的翻转
  */
 public enum  UserRegisterType {
-
+    /**
+     * 管理员
+     */
+    Admin(0,"管理员"),
     /**
      * 个人用户
      */

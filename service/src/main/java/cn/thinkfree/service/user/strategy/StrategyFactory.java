@@ -2,6 +2,7 @@ package cn.thinkfree.service.user.strategy;
 
 import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.service.user.strategy.build.PlatformUserBuildStrategy;
 import cn.thinkfree.service.user.strategy.relation.*;
 import cn.thinkfree.service.user.strategy.build.EnterpriseUserBuildStrategy;
 import cn.thinkfree.service.user.strategy.build.UserBuildStrategy;
@@ -27,6 +28,9 @@ public class StrategyFactory {
     EnterpriseUserBuildStrategy enterpriseLoginStrategy;
 
     @Autowired
+    PlatformUserBuildStrategy platformUserBuildStrategy;
+
+    @Autowired
     SmartUserBuildStrategy smartLoginStrategy;
 
 
@@ -48,10 +52,11 @@ public class StrategyFactory {
 
     public UserBuildStrategy getStrategy(UserRegisterType type) {
         switch (type){
-            case Staff: return smartLoginStrategy;
-            case Customer: return smartLoginStrategy;
             case Personal:return smartLoginStrategy;
             case Enterprise: return enterpriseLoginStrategy;
+            case Customer: return smartLoginStrategy;
+            case Staff: return platformUserBuildStrategy;
+            case Platform:return platformUserBuildStrategy;
             default:return smartLoginStrategy;
         }
     }
