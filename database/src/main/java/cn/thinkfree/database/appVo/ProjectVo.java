@@ -6,6 +6,7 @@ import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Map;
 
 @Data
 @ApiModel(value = "ProjectVo",description = "项目详情")
@@ -30,10 +31,10 @@ public class ProjectVo {
     private Integer projectOrder;
     @ApiModelProperty(name = "projectData",value = "项目资料")
     private Integer projectData;
-    @ApiModelProperty(name = "designOrderVo",value = "设计订单详情")
-    private DesignOrderVo designOrderVo;
-    @ApiModelProperty(name = "constructionOrderVo",value = "施工订单详情")
-    private ConstructionOrderVo constructionOrderVo;
+    @ApiModelProperty(name = "modular",value = "订单模块集合")
+    private Map<String,Object> modular;
+//    @ApiModelProperty(name = "constructionOrderVo",value = "施工订单详情")
+//    private ConstructionOrderVo constructionOrderVo;
 //    @ApiModelProperty(name = "",value = "")
 
 
