@@ -155,6 +155,49 @@ public class AppProjectController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS,projectVo1);
     }
 
+    @RequestMapping(value = "getDesignData",method = RequestMethod.POST)
+    @ApiOperation(value = "获取设计资料")
+    public MyRespBundle<DesignDataVo> getDesignData(@ApiParam(name = "projectNo",value = "项目编号")String projectNo){
+        DesignDataVo designDataVo = new DesignDataVo();
+        List<DataDetailVo> dataDetailVoList = new ArrayList<DataDetailVo>();
+        List<String> list1 = new ArrayList<String>();
+        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        List<String> list2 = new ArrayList<String>();
+        list2.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list2.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list2.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        List<String> list3 = new ArrayList<String>();
+        list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),1);
+        DataDetailVo dataDetailVo2 = new DataDetailVo(list2,new Date(),2);
+        DataDetailVo dataDetailVo3 = new DataDetailVo(list3,new Date(),3);
+        dataDetailVoList.add(dataDetailVo1);
+        dataDetailVoList.add(dataDetailVo2);
+        dataDetailVoList.add(dataDetailVo3);
+        designDataVo.setDesignDataList(dataDetailVoList);
+        return sendJsonData(ResultMessage.SUCCESS,designDataVo);
+    }
+
+    @RequestMapping(value = "getConstructionData",method = RequestMethod.POST)
+    @ApiOperation(value = "获取施工资料")
+    public MyRespBundle<ConstructionDataVo> getConstructionData(@ApiParam(name = "projectNo",value = "项目编号")String projectNo){
+        ConstructionDataVo constructionDataVo = new ConstructionDataVo();
+        List<String> list1 = new ArrayList<String>();
+        List<DataDetailVo> dataDetailVoList = new ArrayList<DataDetailVo>();
+        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),4);
+        dataDetailVoList.add(dataDetailVo1);
+        constructionDataVo.setConstructionDataList(dataDetailVoList);
+        return sendJsonData(ResultMessage.SUCCESS,constructionDataVo);
+    }
+
 
 //    @RequestMapping(value = "",method = RequestMethod.POST)
 //    @ApiOperation(value = "")
