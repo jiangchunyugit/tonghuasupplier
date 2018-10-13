@@ -3,10 +3,7 @@ package cn.thinkfree.appController;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.appVo.*;
-import cn.thinkfree.database.model.LogInfo;
-import cn.thinkfree.database.model.ProjectBigScheduling;
-import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
+import cn.thinkfree.database.appvo.*;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -83,7 +80,7 @@ public class AppProjectController extends AbsBaseController{
         projectVo1.setProjectDynamic(0);
         projectVo1.setProjectOrder(0);
         projectVo1.setProjectData(1);
-        Map<String,Object> map = new HashMap<String,Object>();
+        Map<Integer,Object> map = new HashMap<Integer,Object>();
         //设计订单
         DesignOrderVo designOrderVo = new DesignOrderVo();
         designOrderVo.setOrderNo("2918308308303883");
@@ -102,15 +99,16 @@ public class AppProjectController extends AbsBaseController{
         designList.add(designBaseVo5);
         designOrderVo.setDesignTask(designList);
         designOrderVo.setTaskStage(3);
-        designOrderVo.setDesignCompany("北京居然设计家装饰有限公司");
-        designOrderVo.setDesigner("马云");
-        designOrderVo.setPhone("15666666666");
-        designOrderVo.setTaskNum(11);
-        designOrderVo.setCost(100000);
-        designOrderVo.setSchedule(20);
-        designOrderVo.setDelay(2);
+        //组合展示实体
+        DesignOrderPlayVo designOrderPlayVo = new DesignOrderPlayVo();
+        designOrderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
+        List<PersionVo> persionVoList = new LinkedList<PersionVo>();
+        PersionVo persionVo = new PersionVo("15666666666","马云",true,"CM");
+        persionVoList.add(persionVo);
+        designOrderPlayVo.setPersionList(persionVoList);
+        designOrderVo.setDesignOrderPlayVo(designOrderPlayVo);
         designOrderVo.setCancle(false);
-        map.put("装修设计",designOrderVo);
+        map.put(1,designOrderVo);
         //施工订单
         ConstructionOrderVo constructionOrderVo = new ConstructionOrderVo();
         constructionOrderVo.setOrderNo("2918308308303883");
@@ -139,15 +137,20 @@ public class AppProjectController extends AbsBaseController{
         proList.add(pro5);
         constructionOrderVo.setProjectBigSchedulingList(proList);
         constructionOrderVo.setTaskStage(2);
-        constructionOrderVo.setConstructionCompany("北京居然设计家装饰有限公司");
-        constructionOrderVo.setForeman("刘强东");
-        constructionOrderVo.setPhone("17888888888");
-        constructionOrderVo.setTaskNum(11);
-        constructionOrderVo.setCost(100000);
-        constructionOrderVo.setSchedule(20);
-        constructionOrderVo.setDelay(2);
+        //组合展示实体
+        ConstructionOrderPlayVo constructionOrderPlayVo = new ConstructionOrderPlayVo();
+        constructionOrderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
+        List<PersionVo> persionVoList1 = new LinkedList<PersionVo>();
+        PersionVo persionVo1 = new PersionVo("17888888888","刘强东",true,"CM");
+        persionVoList.add(persionVo1);
+        constructionOrderPlayVo.setPersionList(persionVoList1);
+        constructionOrderPlayVo.setTaskNum(11);
+        constructionOrderPlayVo.setCost(32000);
+        constructionOrderPlayVo.setSchedule(25);
+        constructionOrderPlayVo.setDelay(10);
+        constructionOrderVo.setConstructionOrderPlayVo(constructionOrderPlayVo);
         constructionOrderVo.setCancle(true);
-        map.put("施工任务",constructionOrderVo);
+        map.put(2,constructionOrderVo);
         projectVo1.setModular(map);
         return sendJsonData(ResultMessage.SUCCESS,projectVo1);
     }

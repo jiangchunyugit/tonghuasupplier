@@ -1,13 +1,14 @@
-package cn.thinkfree.database.appVo;
+package cn.thinkfree.database.appvo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import io.swagger.models.auth.In;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.Map;
-
+/**
+ * @author gejiaming
+ */
 @Data
 @ApiModel(value = "ProjectVo",description = "项目详情")
 public class ProjectVo {
@@ -32,7 +33,7 @@ public class ProjectVo {
     @ApiModelProperty(name = "projectData",value = "项目资料")
     private Integer projectData;
     @ApiModelProperty(name = "modular",value = "订单模块集合")
-    private Map<String,Object> modular;
+    private Map<Integer,Object> modular;
 //    @ApiModelProperty(name = "constructionOrderVo",value = "施工订单详情")
 //    private ConstructionOrderVo constructionOrderVo;
 //    @ApiModelProperty(name = "",value = "")

@@ -1,12 +1,16 @@
-package cn.thinkfree.database.appVo;
+package cn.thinkfree.database.appvo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-@ApiModel(value = "SchedulingBaseBigVo--大排期基础信息")
+/**
+ * @author gejiaming
+ */
+@ApiModel(value = "DesignBaseVo,设计订单阶段基础信息")
 @Data
-public class SchedulingBaseBigVo {
+@AllArgsConstructor
+public class DesignBaseVo {
     @ApiModelProperty(name = "sort",value ="序号" )
     private Integer sort;
     @ApiModelProperty(name = "name",value ="名字" )
