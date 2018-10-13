@@ -1,0 +1,12 @@
+/.idea
+*.iml
+/*/*.iml
+/*/*/*.iml
+/logs/*
+/*.iml
+/web/*.iml
+/service/*.iml
+/service/service.iml
+/database/database.iml
+/core/core.iml
+/core/target
