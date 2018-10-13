@@ -1,6 +1,5 @@
 package cn.thinkfree.database.mapper;
 
-import cn.thinkfree.database.model.ApprovalFlowFormElement;
 import cn.thinkfree.database.model.ApprovalFlowTimeoutNotice;
 import cn.thinkfree.database.model.ApprovalFlowTimeoutNoticeExample;
 import java.util.List;

@@ -39,5 +39,7 @@ public class ProjectBigSchedulingVO {
     private boolean uploadEnclosure;
     @ApiModelProperty("附件类型")
     private String enclosureType;
+    @ApiModelProperty("节点审批信息")
+    private ScheduleApprovalFlowConfigVo approvalFlowConfigVo;
 
 }

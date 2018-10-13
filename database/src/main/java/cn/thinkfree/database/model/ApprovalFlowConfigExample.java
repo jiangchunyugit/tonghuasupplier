@@ -255,143 +255,143 @@ public class ApprovalFlowConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameIsNull() {
-            addCriterion("approval_flow_name is null");
+        public Criteria andNameIsNull() {
+            addCriterion("name is null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameIsNotNull() {
-            addCriterion("approval_flow_name is not null");
+        public Criteria andNameIsNotNull() {
+            addCriterion("name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameEqualTo(String value) {
-            addCriterion("approval_flow_name =", value, "approvalFlowName");
+        public Criteria andNameEqualTo(String value) {
+            addCriterion("name =", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameNotEqualTo(String value) {
-            addCriterion("approval_flow_name <>", value, "approvalFlowName");
+        public Criteria andNameNotEqualTo(String value) {
+            addCriterion("name <>", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameGreaterThan(String value) {
-            addCriterion("approval_flow_name >", value, "approvalFlowName");
+        public Criteria andNameGreaterThan(String value) {
+            addCriterion("name >", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameGreaterThanOrEqualTo(String value) {
-            addCriterion("approval_flow_name >=", value, "approvalFlowName");
+        public Criteria andNameGreaterThanOrEqualTo(String value) {
+            addCriterion("name >=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameLessThan(String value) {
-            addCriterion("approval_flow_name <", value, "approvalFlowName");
+        public Criteria andNameLessThan(String value) {
+            addCriterion("name <", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameLessThanOrEqualTo(String value) {
-            addCriterion("approval_flow_name <=", value, "approvalFlowName");
+        public Criteria andNameLessThanOrEqualTo(String value) {
+            addCriterion("name <=", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameLike(String value) {
-            addCriterion("approval_flow_name like", value, "approvalFlowName");
+        public Criteria andNameLike(String value) {
+            addCriterion("name like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameNotLike(String value) {
-            addCriterion("approval_flow_name not like", value, "approvalFlowName");
+        public Criteria andNameNotLike(String value) {
+            addCriterion("name not like", value, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameIn(List<String> values) {
-            addCriterion("approval_flow_name in", values, "approvalFlowName");
+        public Criteria andNameIn(List<String> values) {
+            addCriterion("name in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameNotIn(List<String> values) {
-            addCriterion("approval_flow_name not in", values, "approvalFlowName");
+        public Criteria andNameNotIn(List<String> values) {
+            addCriterion("name not in", values, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameBetween(String value1, String value2) {
-            addCriterion("approval_flow_name between", value1, value2, "approvalFlowName");
+        public Criteria andNameBetween(String value1, String value2) {
+            addCriterion("name between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNameNotBetween(String value1, String value2) {
-            addCriterion("approval_flow_name not between", value1, value2, "approvalFlowName");
+        public Criteria andNameNotBetween(String value1, String value2) {
+            addCriterion("name not between", value1, value2, "name");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumIsNull() {
-            addCriterion("approval_flow_num is null");
+        public Criteria andNumIsNull() {
+            addCriterion("num is null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumIsNotNull() {
-            addCriterion("approval_flow_num is not null");
+        public Criteria andNumIsNotNull() {
+            addCriterion("num is not null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumEqualTo(String value) {
-            addCriterion("approval_flow_num =", value, "approvalFlowNum");
+        public Criteria andNumEqualTo(String value) {
+            addCriterion("num =", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumNotEqualTo(String value) {
-            addCriterion("approval_flow_num <>", value, "approvalFlowNum");
+        public Criteria andNumNotEqualTo(String value) {
+            addCriterion("num <>", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumGreaterThan(String value) {
-            addCriterion("approval_flow_num >", value, "approvalFlowNum");
+        public Criteria andNumGreaterThan(String value) {
+            addCriterion("num >", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumGreaterThanOrEqualTo(String value) {
-            addCriterion("approval_flow_num >=", value, "approvalFlowNum");
+        public Criteria andNumGreaterThanOrEqualTo(String value) {
+            addCriterion("num >=", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumLessThan(String value) {
-            addCriterion("approval_flow_num <", value, "approvalFlowNum");
+        public Criteria andNumLessThan(String value) {
+            addCriterion("num <", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumLessThanOrEqualTo(String value) {
-            addCriterion("approval_flow_num <=", value, "approvalFlowNum");
+        public Criteria andNumLessThanOrEqualTo(String value) {
+            addCriterion("num <=", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumLike(String value) {
-            addCriterion("approval_flow_num like", value, "approvalFlowNum");
+        public Criteria andNumLike(String value) {
+            addCriterion("num like", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumNotLike(String value) {
-            addCriterion("approval_flow_num not like", value, "approvalFlowNum");
+        public Criteria andNumNotLike(String value) {
+            addCriterion("num not like", value, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumIn(List<String> values) {
-            addCriterion("approval_flow_num in", values, "approvalFlowNum");
+        public Criteria andNumIn(List<String> values) {
+            addCriterion("num in", values, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumNotIn(List<String> values) {
-            addCriterion("approval_flow_num not in", values, "approvalFlowNum");
+        public Criteria andNumNotIn(List<String> values) {
+            addCriterion("num not in", values, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumBetween(String value1, String value2) {
-            addCriterion("approval_flow_num between", value1, value2, "approvalFlowNum");
+        public Criteria andNumBetween(String value1, String value2) {
+            addCriterion("num between", value1, value2, "num");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalFlowNumNotBetween(String value1, String value2) {
-            addCriterion("approval_flow_num not between", value1, value2, "approvalFlowNum");
+        public Criteria andNumNotBetween(String value1, String value2) {
+            addCriterion("num not between", value1, value2, "num");
             return (Criteria) this;
         }
 
