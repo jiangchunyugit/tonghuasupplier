@@ -2,6 +2,7 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.database.mapper.ApprovalFlowNoticeUrlMapper;
 import cn.thinkfree.database.model.ApprovalFlowNoticeUrl;
+import cn.thinkfree.database.model.ApprovalFlowNoticeUrlExample;
 import cn.thinkfree.service.approvalflow.ApprovalFlowNoticeUrlService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,19 +20,21 @@ public class ApprovalFlowNoticeUrlServiceImpl implements ApprovalFlowNoticeUrlSe
     @Resource
     private ApprovalFlowNoticeUrlMapper noticeUrlMapper;
 
-    /**
-     * 创建审批流节点发送消息地址
-     * @param nodeNum
-     * @param noticeUrls
-     */
     @Override
     public void create(String nodeNum, List<ApprovalFlowNoticeUrl> noticeUrls) {
         if (null != noticeUrls){
             for (ApprovalFlowNoticeUrl noticeUrl : noticeUrls){
-                noticeUrl.setId(0);
+                noticeUrl.setId(null);
                 noticeUrl.setNodeNum(nodeNum);
-                noticeUrlMapper.insert(noticeUrl);
+                noticeUrlMapper.insertSelective(noticeUrl);
             }
         }
+    }
+
+    @Override
+    public void deleteByNodeNums(List<String> nodeNums) {
+        ApprovalFlowNoticeUrlExample example = new ApprovalFlowNoticeUrlExample();
+        example.createCriteria().andNodeNumIn(nodeNums);
+        noticeUrlMapper.deleteByExample(example);
     }
 }

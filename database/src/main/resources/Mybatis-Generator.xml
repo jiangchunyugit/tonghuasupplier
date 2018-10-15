@@ -85,6 +85,7 @@
         <!--<table tableName="approval_flow_config_super" domainObjectName="ApprovalFlowConfigSuper"/>-->
         <!--<table tableName="approval_flow_node" domainObjectName="ApprovalFlowNode"/>-->
         <!--<table tableName="approval_flow_node_role" domainObjectName="ApprovalFlowNodeRole"/>-->
+        <!--<table tableName="approval_flow_schedule_node_role" domainObjectName="ApprovalFlowScheduleNodeRole"/>-->
         <!--<table tableName="approval_flow_notice_url" domainObjectName="ApprovalFlowNoticeUrl"/>-->
         <!--<table tableName="approval_flow_option" domainObjectName="ApprovalFlowOption"/>-->
         <!--<table tableName="approval_flow_push_msg" domainObjectName="ApprovalFlowPushMsg"/>-->

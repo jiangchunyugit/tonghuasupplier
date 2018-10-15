@@ -11,8 +11,6 @@ import java.util.List;
 @Data
 public class ScheduleApprovalFlowConfigVo {
 
-    @ApiModelProperty("审批流编号")
-    private String approvalFlowNum;
     @ApiModelProperty("审批角色顺序")
     private List<List<UserRoleSet>> nodeRoleSequence;
     @ApiModelProperty("所有角色信息")

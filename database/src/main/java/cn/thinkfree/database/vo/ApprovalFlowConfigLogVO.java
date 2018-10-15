@@ -11,7 +11,7 @@ import java.util.List;
  * 审批流详细信息
  * @author songchuanrang
  */
-public class ApprovalFlowDetailVo {
+public class ApprovalFlowConfigLogVO {
     /**
      * 审批流信息
      */
@@ -21,7 +21,7 @@ public class ApprovalFlowDetailVo {
      * 审批节点信息
      */
     @ApiModelProperty("审批流节点信息")
-    private List<ApprovalFlowNodeVo> nodeVos;
+    private List<ApprovalFlowNodeVO> nodeVos;
     /**
      * 审批流修改日志表
      */
@@ -39,11 +39,11 @@ public class ApprovalFlowDetailVo {
         this.config = config;
     }
 
-    public List<ApprovalFlowNodeVo> getNodeVos() {
+    public List<ApprovalFlowNodeVO> getNodeVos() {
         return nodeVos;
     }
 
-    public void setNodeVos(List<ApprovalFlowNodeVo> nodeVos) {
+    public void setNodeVos(List<ApprovalFlowNodeVO> nodeVos) {
         this.nodeVos = nodeVos;
     }
 
