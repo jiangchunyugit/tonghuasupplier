@@ -1,6 +1,10 @@
 package cn.thinkfree.service.scheduling;
 
+import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
+
+import java.util.List;
 
 /**
  * 正常排期操作
@@ -32,4 +36,12 @@ public interface SchedulingService {
      * @return
      */
     String deleteProjectScheduling(ProjectBigSchedulingVO projectBigSchedulingVO);
+
+    /**
+     * 获取排期信息
+     *
+     * @param projectNo
+     * @return
+     */
+    List<ProjectBigSchedulingDetails> getScheduling(String projectNo);
 }

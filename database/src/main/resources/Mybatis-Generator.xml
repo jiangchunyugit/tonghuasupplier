@@ -72,7 +72,10 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
+        <!--Scheduling start-->
         <!--<table tableName="project_construction_sort" domainObjectName="ProjectBigScheduling"/>-->
+        <table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>
+        <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="approval_change_data" domainObjectName="ApprovalChangeData"/>-->
         <!--<table tableName="approval_check_data_log" domainObjectName="ApprovalCheckData"/>-->
