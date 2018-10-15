@@ -5,6 +5,7 @@ import java.util.Map;
 import cn.thinkfree.database.vo.CompanyListSEO;
 import cn.thinkfree.database.vo.CompanyListVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
+import cn.thinkfree.database.vo.CompanyTemporaryVo;
 import com.github.pagehelper.PageInfo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,4 +43,18 @@ public interface CompanySubmitService {
      * @param companyListSEO
      */
     void downLoad(HttpServletResponse response, CompanyListSEO companyListSEO);
+
+    /**
+     * 入驻公司资质变更回显
+     * @param companyId
+     * @return
+     */
+    CompanySubmitVo findCompanyInfo(String companyId);
+
+    /**
+     * 入驻公司资质变更更新
+     * @param companyTemporaryVo
+     * @return
+     */
+    boolean changeCompanyInfo(CompanyTemporaryVo companyTemporaryVo);
 }

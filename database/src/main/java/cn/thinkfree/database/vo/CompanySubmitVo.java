@@ -31,6 +31,19 @@ public class CompanySubmitVo {
      */
     private PcCompanyFinancial pcCompanyFinancial;
 
+    /**
+     * 公司类型  比如：有限公司，集体公司
+     */
+    private String companyTypeName;
+
+    public String getCompanyTypeName() {
+        return companyTypeName;
+    }
+
+    public void setCompanyTypeName(String companyTypeName) {
+        this.companyTypeName = companyTypeName;
+    }
+
     public CompanyInfo getCompanyInfo() {
         return companyInfo;
     }

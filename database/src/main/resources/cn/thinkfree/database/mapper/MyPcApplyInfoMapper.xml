@@ -34,8 +34,8 @@
         left join city city on city.city_code = info.city_code
         left join area area on info.area_code = area.area_code
         where info.is_delete = 0
-        <if test="applyDate != null and applyDate != ''">
-            and to_char(info.apply_date, 'YYYY-MM-DD') = #{applyDate}
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            and to_char(info.apply_date, 'YYYY-MM-DD') between #{startDate} and #{endDate}
         </if>
         <if test="applyThingType != null and applyThingType != ''">
             and info.apply_thing_type = #{applyThingType}

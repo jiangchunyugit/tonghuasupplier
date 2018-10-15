@@ -15,10 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author ying007
@@ -34,6 +31,19 @@ public class CompanyApplyController extends AbsBaseController {
     @Autowired
     CompanyApplyService companyApplyService;
 
+
+    /**
+     * 发送邮件验证码
+     * @param email
+     * @return
+     */
+    @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="发送邮件验证码")
+    public void sendMessage(@ApiParam("邮箱") @RequestParam String email){
+        companyApplyService.sendMessage(email);
+    }
+
     /**
      * 公司申请事项
      * @param pcApplyInfoSEO
@@ -42,7 +52,7 @@ public class CompanyApplyController extends AbsBaseController {
     @RequestMapping(value = "/applyThink", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="添加公司申请事项：入驻，资质变更，续约")
-    public MyRespBundle<String> applyThink(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
+    public MyRespBundle<String> applyThink(@ApiParam("申请信息")@RequestBody PcApplyInfoSEO pcApplyInfoSEO){
         boolean flag = companyApplyService.addApplyInfo(pcApplyInfoSEO);
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
@@ -81,7 +91,7 @@ public class CompanyApplyController extends AbsBaseController {
     }
 
     /**
-     * 申请记录查询
+     * 指定申请记录查询
      * @return
      */
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
@@ -91,6 +101,17 @@ public class CompanyApplyController extends AbsBaseController {
         PcApplyInfoVo pcApplyInfoVo = companyApplyService.findById(id);
         return sendJsonData(ResultMessage.SUCCESS, pcApplyInfoVo);
     }
+
+
+    //申请列表条数
+    @RequestMapping(value = "/countApply", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="公司管理---->办理")
+    public MyRespBundle<Long> countApply(@RequestParam(value = "role")String role){
+        Long line = companyApplyService.countApply(role);
+        return sendJsonData(ResultMessage.SUCCESS, line);
+    }
+
 
     /**
      * 1，a:添加账号---》返回id   b:添加账号--》1，app注册运营添加账号：参数：角色  返回公司id  提交：插入公司表，注册表，更新注册表公司id
@@ -132,7 +153,7 @@ public class CompanyApplyController extends AbsBaseController {
      * 激活账号
      * @return
      */
-    @RequestMapping(value = "/actiCompanyAdmin", method = RequestMethod.POST)
+    /*@RequestMapping(value = "/actiCompanyAdmin", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="激活账号")
     public MyRespBundle<String> actiCompanyAdmin(@ApiParam("用户注册")UserRegister userRegister){
@@ -141,6 +162,6 @@ public class CompanyApplyController extends AbsBaseController {
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
-    }
+    }*/
 
 }

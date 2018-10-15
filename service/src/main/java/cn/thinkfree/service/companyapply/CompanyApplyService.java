@@ -62,4 +62,17 @@ public interface CompanyApplyService {
      * @return
      */
     boolean updateRegister(UserRegister userRegister);
+
+    /**
+     * 根据角色查询申请数量  未办理
+     * @param role
+     * @return
+     */
+    Long countApply(String role);
+
+    /**
+     * 发送邮件验证码
+     * @param email
+     */
+    void sendMessage(String email);
 }
