@@ -1,4 +1,4 @@
-package cn.thinkfree.database.Annotation;
+package cn.thinkfree.database.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.METHOD,ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface CompanyAnnotation {
+public @interface AuthAnnotation {
 	/** * 公司ID(暂未启用) * @return */
 	String CompanyId() default "";
 
