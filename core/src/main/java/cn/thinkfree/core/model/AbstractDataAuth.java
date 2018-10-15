@@ -1,4 +1,4 @@
-package cn.thinkfree.database.model;
+package cn.thinkfree.core.model;
 
 public abstract class AbstractDataAuth {
 

@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
-import cn.thinkfree.database.Annotation.CompanyAnnotation;
+import cn.thinkfree.database.annotation.AuthAnnotation;
 import cn.thinkfree.database.utils.ReflectUtil;
 import cn.thinkfree.database.vo.UserVO;
 
@@ -93,8 +93,8 @@ public class DataAuthorityInterceptor implements Interceptor {
 						}
 					}
 					//自定义注解走这里
-					if (method.isAnnotationPresent(CompanyAnnotation.class) && mName.equals(method.getName())) {
-						CompanyAnnotation companyAnnotation = method.getAnnotation(CompanyAnnotation.class);
+					if (method.isAnnotationPresent(AuthAnnotation.class) && mName.equals(method.getName())) {
+						AuthAnnotation companyAnnotation = method.getAnnotation(AuthAnnotation.class);
 						String sql = boundSql.getSql();
 						if (mappedStatement.getSqlCommandType().toString().equals("SELECT")) {
 							sql = permissionSql(sql);
