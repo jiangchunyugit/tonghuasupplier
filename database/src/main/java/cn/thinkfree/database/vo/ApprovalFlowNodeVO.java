@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
-public class ApprovalFlowNodeVo extends ApprovalFlowNode {
+public class ApprovalFlowNodeVO extends ApprovalFlowNode {
 
     @ApiModelProperty("节点操作项集合")
     private List<ApprovalFlowOption> options;

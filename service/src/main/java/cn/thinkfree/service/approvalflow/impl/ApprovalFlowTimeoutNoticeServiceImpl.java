@@ -2,6 +2,7 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.database.mapper.ApprovalFlowTimeoutNoticeMapper;
 import cn.thinkfree.database.model.ApprovalFlowTimeoutNotice;
+import cn.thinkfree.database.model.ApprovalFlowTimeoutNoticeExample;
 import cn.thinkfree.service.approvalflow.ApprovalFlowTimeoutNoticeService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,10 +29,17 @@ public class ApprovalFlowTimeoutNoticeServiceImpl implements ApprovalFlowTimeout
     public void create(String nodeNum, List<ApprovalFlowTimeoutNotice> timeoutNotices) {
         if (timeoutNotices != null) {
             for (ApprovalFlowTimeoutNotice timeoutNotice : timeoutNotices){
-                timeoutNotice.setId(0);
+                timeoutNotice.setId(null);
                 timeoutNotice.setNodeNum(nodeNum);
-                timeoutNoticeMapper.insert(timeoutNotice);
+                timeoutNoticeMapper.insertSelective(timeoutNotice);
             }
         }
+    }
+
+    @Override
+    public void deleteByNodeNums(List<String> nodeNums) {
+        ApprovalFlowTimeoutNoticeExample example = new ApprovalFlowTimeoutNoticeExample();
+        example.createCriteria().andNodeNumIn(nodeNums);
+        timeoutNoticeMapper.deleteByExample(example);
     }
 }

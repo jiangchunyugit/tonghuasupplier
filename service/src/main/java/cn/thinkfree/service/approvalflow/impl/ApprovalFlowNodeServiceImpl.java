@@ -6,7 +6,7 @@ import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowNodeExample;
 import cn.thinkfree.database.model.ApprovalFlowNodeRole;
 import cn.thinkfree.database.model.UserRoleSet;
-import cn.thinkfree.database.vo.ApprovalFlowNodeVo;
+import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
 import cn.thinkfree.database.vo.NodeRoleSequenceVo;
 import cn.thinkfree.service.approvalflow.*;
 import org.springframework.stereotype.Service;
@@ -44,7 +44,7 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
      * @return 审批流节点信息
      */
     @Override
-    public List<ApprovalFlowNodeVo> findVoByConfigLogNum(String configLogNum) {
+    public List<ApprovalFlowNodeVO> findVoByConfigLogNum(String configLogNum) {
         return nodeMapper.findByConfigLogNum(configLogNum);
     }
     /**
@@ -66,9 +66,10 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
      * @param nodeVos 审批流节点信息
      */
     @Override
-    public void create(String configLogNum, List<ApprovalFlowNodeVo> nodeVos) {
+    public void create(String configLogNum, List<ApprovalFlowNodeVO> nodeVos) {
         if (nodeVos != null){
-            for (ApprovalFlowNodeVo nodeVo : nodeVos){
+            for (ApprovalFlowNodeVO nodeVo : nodeVos){
+                nodeVo.setId(null);
                 nodeVo.setConfigLogNum(configLogNum);
                 nodeVo.setNum(UniqueCodeGenerator.AF_NODE.getCode());
 
@@ -77,7 +78,7 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
                 nodeRoleService.create(nodeVo.getNum(), nodeVo.getNodeRoles());
                 timeoutNoticeService.create(nodeVo.getNum(), nodeVo.getTimeoutNotices());
 
-                nodeMapper.insert(nodeVo);
+                nodeMapper.insertSelective(nodeVo);
             }
         }
     }
@@ -90,31 +91,20 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     public void deleteByConfigLogNums(List<String> configLogNums) {
         ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
         nodeExample.createCriteria().andNumIn(configLogNums);
-        nodeMapper.deleteByExample(nodeExample);
-    }
 
-    @Override
-    public List<NodeRoleSequenceVo> findNodeRoleSequence(String approvalFlowNum, String companyId, Long projectBigSchedulingId) {
-        configLogService.findLastVersionByApprovalFlowNum(approvalFlowNum);
-        List<ApprovalFlowNode> nodes = findByConfigLogNum(approvalFlowNum);
-        List<NodeRoleSequenceVo> nodeRoleSequenceVos = new ArrayList<>(nodes.size());
-        List<UserRoleSet> userRoleSets = roleService.findAll();
-        for (ApprovalFlowNode node : nodes) {
-            List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findLastVersionByNodeNumAndProjectBigSchedulingId(node.getNum(), projectBigSchedulingId);
-            List<UserRoleSet> roles = new ArrayList<>(nodeRoles.size());
-            for (ApprovalFlowNodeRole nodeRole : nodeRoles){
-                for (UserRoleSet userRoleSet : userRoleSets){
-                    if (nodeRole.getRoleId().equals(userRoleSet.getRoleCode())){
-                        roles.add(userRoleSet);
-                    }
-                }
+        List<ApprovalFlowNode> nodes = nodeMapper.selectByExample(nodeExample);
+
+        if (nodes != null && nodes.size() > 0) {
+            List<String> nodeNums = new ArrayList<>(nodes.size());
+            for (ApprovalFlowNode node : nodes) {
+                nodeNums.add(node.getNum());
             }
-            NodeRoleSequenceVo nodeRoleSequenceVo = new NodeRoleSequenceVo();
-            nodeRoleSequenceVo.setNodeNum(node.getNum());
-            nodeRoleSequenceVo.setSort(node.getSort());
-            nodeRoleSequenceVo.setRoles(roles);
-            nodeRoleSequenceVos.add(nodeRoleSequenceVo);
+            noticeUrlService.deleteByNodeNums(nodeNums);
+            optionService.deleteByNodeNums(nodeNums);
+            nodeRoleService.deleteByNodeNums(nodeNums);
+            timeoutNoticeService.deleteByNodeNums(nodeNums);
         }
-        return nodeRoleSequenceVos;
+
+        nodeMapper.deleteByExample(nodeExample);
     }
 }

@@ -4,7 +4,7 @@ import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowNodeExample;
 import java.util.List;
 
-import cn.thinkfree.database.vo.ApprovalFlowNodeVo;
+import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ApprovalFlowNodeMapper {
@@ -96,5 +96,5 @@ public interface ApprovalFlowNodeMapper {
      */
     int updateByPrimaryKey(ApprovalFlowNode record);
 
-    List<ApprovalFlowNodeVo> findByConfigLogNum(String configLogNum);
+    List<ApprovalFlowNodeVO> findByConfigLogNum(String configLogNum);
 }
