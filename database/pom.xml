@@ -50,45 +50,55 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.4</version>
         </dependency>
-
-
+        <dependency>
+        <groupId>org.mybatis.generator</groupId>
+        <artifactId>mybatis-generator-core</artifactId>
+        <version>1.3.7</version>
+        </dependency>
     </dependencies>
 
-    <!--<build>-->
-        <!--<plugins>-->
-            <!--<plugin>-->
-                <!--&lt;!&ndash;Mybatis-generator插件,用于自动生成Mapper和POJO&ndash;&gt;-->
-                <!--<groupId>org.mybatis.generator</groupId>-->
-                <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
-                <!--<version>1.3.7</version>-->
+    <build>
+        <plugins>
+            <plugin>
+                <!--Mybatis-generator插件,用于自动生成Mapper和POJO-->
+                <groupId>org.mybatis.generator</groupId>
+                <artifactId>mybatis-generator-maven-plugin</artifactId>
+                <version>1.3.7</version>
 
-                <!--<configuration>-->
-                    <!--&lt;!&ndash;配置文件的位置&ndash;&gt;-->
-                    <!--<configurationFile>src/main/resources/Mybatis-Generator.xml</configurationFile>-->
-                    <!--<verbose>true</verbose>-->
-                    <!--&lt;!&ndash; 覆盖旧文件&ndash;&gt;-->
-                    <!--<overwrite>true</overwrite>-->
+                <configuration>
+                    <!--配置文件的位置-->
+                    <configurationFile>src/main/resources/Mybatis-Generator.xml</configurationFile>
+                    <verbose>true</verbose>
+                    <!-- 覆盖旧文件-->
+                    <overwrite>true</overwrite>
                     <!--&lt;!&ndash; 统一输出路径 &ndash;&gt;-->
-                    <!--&lt;!&ndash;<outputDirectory>G:/thinkFreeWsp/designer_service/database/src/main/java/</outputDirectory>&ndash;&gt;-->
-                <!--</configuration>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<id>Generate MyBatis Artifacts</id>-->
-                        <!--<goals>-->
-                            <!--<goal>generate</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-                <!--<dependencies>-->
-                    <!--<dependency>-->
-                        <!--<groupId>org.mybatis.generator</groupId>-->
-                        <!--<artifactId>mybatis-generator-core</artifactId>-->
-                        <!--<version>1.3.7</version>-->
-                    <!--</dependency>-->
+                    <!--<outputDirectory>D:/generator/designer_service/database/src/main/java/</outputDirectory>-->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>Generate MyBatis Artifacts</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.mybatis.generator</groupId>
+                        <artifactId>mybatis-generator-core</artifactId>
+                        <version>1.3.7</version>
+                    </dependency>
 
-                <!--</dependencies>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
+                    <dependency>
+                        <groupId>cn.thinkfree</groupId>
+                        <artifactId>core</artifactId>
+                        <version>1.0-SNAPSHOT</version>
+                        <scope>system</scope>
+                        <systemPath>D:/jiang_work/designer_service/database/target/database-1.0-SNAPSHOT.jar</systemPath>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
 
-    <!--</build>-->
+    </build>
 </project>
