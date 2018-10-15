@@ -38,8 +38,10 @@ public class ApprovalFlowTimeoutNoticeServiceImpl implements ApprovalFlowTimeout
 
     @Override
     public void deleteByNodeNums(List<String> nodeNums) {
-        ApprovalFlowTimeoutNoticeExample example = new ApprovalFlowTimeoutNoticeExample();
-        example.createCriteria().andNodeNumIn(nodeNums);
-        timeoutNoticeMapper.deleteByExample(example);
+        if (nodeNums != null && nodeNums.size() > 0 ) {
+            ApprovalFlowTimeoutNoticeExample example = new ApprovalFlowTimeoutNoticeExample();
+            example.createCriteria().andNodeNumIn(nodeNums);
+            timeoutNoticeMapper.deleteByExample(example);
+        }
     }
 }
