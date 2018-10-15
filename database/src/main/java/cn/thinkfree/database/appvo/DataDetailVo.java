@@ -25,12 +25,4 @@ public class DataDetailVo {
      * 类型
      */
     private Integer type;
-    /**
-     * 是否确认
-     */
-    private Boolean confirm;
-    /**
-     * 3D图URL
-     */
-    private String thirdUrl;
 }
