@@ -1,6 +1,5 @@
 package cn.thinkfree.service.index;
 
-import cn.thinkfree.core.security.dao.SecurityResourceDao;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.DateUtils;
 import cn.thinkfree.database.constants.IndexChartUnit;
@@ -9,7 +8,6 @@ import cn.thinkfree.database.mapper.MenuMapper;
 import cn.thinkfree.database.model.Menu;
 import cn.thinkfree.database.model.MenuExample;
 import cn.thinkfree.database.model.SystemResource;
-import cn.thinkfree.database.model.UserRegister;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.user.UserService;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class IndexServiceImpl implements IndexService  {

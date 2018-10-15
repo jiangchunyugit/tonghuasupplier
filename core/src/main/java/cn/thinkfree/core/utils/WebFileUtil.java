@@ -63,8 +63,8 @@ public class WebFileUtil {
         } catch ( IOException e) {
             logger.error("The FileCopy Is Error :{}",e);
         }
-        //String path = escapePath(makePath(true, target,source.getOriginalFilename(),timestamp));
-        return FileName;
+        String path = escapePath(makePath(true, target,source.getOriginalFilename(),timestamp));
+        return path;
     }
 
     private static String escapePath(String makePath) {

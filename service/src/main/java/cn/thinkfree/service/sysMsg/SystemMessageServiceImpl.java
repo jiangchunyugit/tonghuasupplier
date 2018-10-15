@@ -9,7 +9,6 @@ import cn.thinkfree.database.mapper.UserRoleSetMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.SystemMessageVo;
 import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
 import com.github.pagehelper.PageHelper;

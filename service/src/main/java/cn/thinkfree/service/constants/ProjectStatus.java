@@ -20,11 +20,11 @@ public enum ProjectStatus {
     /**
      * 停工
      */
-    StopTheWork(3,"停工"),
+    StopTheWork(4,"停工"),
     /**
      * 竣工
      */
-    Complete(4,"竣工");
+    Complete(3,"竣工");
 
     public final Integer code;
     public final String mes;

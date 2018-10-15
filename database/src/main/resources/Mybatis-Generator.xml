@@ -6,6 +6,7 @@
     <classPathEntry
             location="src/main/resources/edb-jdbc16.jar" />
     <context id="context1"  >
+        <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
         <!-- 该死的注释 -->
         <commentGenerator  >
             <property name="addRemarkComments" value="true"/>
@@ -36,17 +37,17 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <!--<javaClientGenerator
+        <javaClientGenerator
                 targetPackage="cn.thinkfree.database.mapper"
                 targetProject="src/main/java/"
                 type="XMLMAPPER" >
             <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>-->
+        </javaClientGenerator>
         <!-- 表-->
-        <!--<table tableName="province" domainObjectName="Province" />-->
+        <table tableName="province" domainObjectName="Province" />
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
-        <table tableName="company_info" domainObjectName="CompanyInfo"/>
+        <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->
         <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
         <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
         <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->
@@ -62,18 +63,11 @@
         <!--<table tableName="user_login_log" domainObjectName="UserLoginLog" />-->
         <!--<table tableName="user_role" domainObjectName="UserRole"/>-->
         <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
-        <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
-        <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
-        <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
-        <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
-        <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
-        <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
-        <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--<table tableName="company_info_expand" domainObjectName="CompanyInfoExpand"/>-->
-        <table tableName="pc_apply_info" domainObjectName="PcApplyInfo"/>
+        <!--<table tableName="pc_apply_info" domainObjectName="PcApplyInfo"/>-->
         <!--<table tableName="pc_company_financial" domainObjectName="PcCompanyFinancial"/>-->
         <!--<table tableName="pc_audit_info" domainObjectName="PcAuditInfo"/>-->
         <!--<table tableName="pc_contract_template" domainObjectName="PcContractTemplate"/>-->
@@ -81,5 +75,19 @@
         <!--<table tableName="pc_contract_template_dict" domainObjectName="PcContractTemplateDict"/>-->
         <!--<table tableName="pc_contract_terms" domainObjectName="PcContractTerms"/>-->
         <!--<table tableName="pc_contract_info" domainObjectName="PcContractInfo"/>-->
+        <!-- 权限相关 S-->
+        <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
+        <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
+        <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
+        <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
+        <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
+        <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
+        <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
+        <!--<table tableName="pc_system_permission" domainObjectName="SystemPermission"/>-->
+        <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
+        <!--<table tableName="pc_system_role" domainObjectName="SystemRole"/>-->
+        <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
+        <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
+        <!-- 权限相关 E-->
     </context>
 </generatorConfiguration>
