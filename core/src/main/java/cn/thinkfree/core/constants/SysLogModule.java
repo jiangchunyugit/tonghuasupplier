@@ -8,7 +8,8 @@ public enum  SysLogModule {
 
     PC_USER(1,"用户模块"),
     PC_PROJECT(2,"项目模块"),
-    PC_STAFFS(3,"员工模块");
+    PC_STAFFS(3,"员工模块"),
+	PC_CONTRACT(4,"合同模块");
 
     public final String mes;
     public final Integer code;

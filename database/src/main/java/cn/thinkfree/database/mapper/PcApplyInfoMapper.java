@@ -3,6 +3,9 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PcApplyInfo;
 import cn.thinkfree.database.model.PcApplyInfoExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.CompanyApplySEO;
+import cn.thinkfree.database.vo.PcApplyInfoVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface PcApplyInfoMapper {
@@ -93,4 +96,16 @@ public interface PcApplyInfoMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(PcApplyInfo record);
+
+    /**
+     * 根据id查询申请记录
+     */
+    PcApplyInfoVo findById(Integer id);
+
+    /**
+     * 根据参数查询申请信息
+     * @param companyApplySEO
+     * @return
+     */
+    List<PcApplyInfoVo> findByParam(CompanyApplySEO companyApplySEO);
 }

@@ -1,13 +1,13 @@
 package cn.thinkfree.database.mapper;
 
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
 import java.util.List;
 
-import cn.thinkfree.database.vo.CompanyInfoSEO;
-import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.database.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
+
+import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.CompanyInfoExample;
 
 @Component
 public interface CompanyInfoMapper {
@@ -109,4 +109,33 @@ public interface CompanyInfoMapper {
      * @return
      */
     CompanyInfoVo selectByCompanyId(String companyId);
+    
+    /**
+     * 根据公司编号修改 公司审核状态
+     * @param companyInfo
+     * @return
+     */
+    
+    int  updateauditStatus(CompanyInfo companyInfo);
+    
+    /**
+     * 
+     * 根据公司编号查询合同详情
+     * @return
+     */
+    ContractDetails  selectCompanyDetails(String companyId);
+
+    /**
+     * 公司列表查询
+     * @param companyListSEO
+     * @return
+     */
+    List<CompanyListVo> list(CompanyListSEO companyListSEO);
+
+    /**
+     * 下载公司列表
+     * @param companyListSEO
+     * @return
+     */
+    List<CompanyListVo> downLoad(CompanyListSEO companyListSEO);
 }

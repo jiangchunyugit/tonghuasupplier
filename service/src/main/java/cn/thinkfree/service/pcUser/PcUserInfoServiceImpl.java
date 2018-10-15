@@ -71,7 +71,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean delPcUserInfo(String userId) {
 
         PcUserInfo pcUserInfo = new PcUserInfo();
@@ -100,14 +100,12 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean saveUserInfo(PcUserInfoVo pcUserInfoVo) {
-        //判断输入的手机号码是否已经注册过
-        List<String> phones = userRegisterMapper.findPhoneAll();
-        boolean flag = phones.contains(pcUserInfoVo.getRegPhone());
-        if(flag){
+        if (isEnable(pcUserInfoVo.getRegPhone())) {
             return false;
         }
+
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         String userId = UserNoUtils.getUserNo("PC");
         Date date = new Date();
@@ -155,13 +153,23 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         return false;
     }
 
+    private boolean isEnable(String name) {
+        //判断输入的账号是否已经注册过
+        List<String> phones = userRegisterMapper.findPhoneAll();
+        boolean flag = phones.contains(name);
+        if(flag){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * 更新用户信息
      * @param
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateUserInfo(PcUserInfoVo pcUserInfoVo) {
         /*PcUserInfo pcUserInfo = new PcUserInfo();
         pcUserInfo.setId(pcUserInfoVo.getId());

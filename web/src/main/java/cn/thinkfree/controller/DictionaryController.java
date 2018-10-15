@@ -116,7 +116,18 @@ public class DictionaryController extends AbsBaseController {
         List<CompanyInfo> companyInfos=dictionaryService.findCompanyByAreaCode(areaCode);
         return sendJsonData(ResultMessage.SUCCESS,companyInfos);
     }
-
+    /**
+     * 根据省市级编码获取公司信息
+     * @param cityCode
+     * @return
+     */
+    @ApiOperation(value = "根据省市级级获取公司信息",notes = "根据省市级级获取公司")
+    @GetMapping("/findCompanyByCode")
+    @MyRespBody
+    public MyRespBundle<String> companyByCityCode(@RequestParam(required = false) Integer provinceCode, @RequestParam(required = false) Integer cityCode){
+        List<CompanyInfo> companyInfos=dictionaryService.findCompanyByCode(provinceCode,cityCode);
+        return sendJsonData(ResultMessage.SUCCESS,companyInfos);
+    }
     /**
      * 获取岗位信息
      */
@@ -129,6 +140,17 @@ public class DictionaryController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, userRoleSet);
     }
 
+    /**
+     * 获取岗位信息
+     */
+    @GetMapping("/getCompanyRole")
+    @MyRespBody
+    @ApiOperation(value = "入驻公司角色")
+    public MyRespBundle<List<UserRoleSet>> getCompanyRole(){
+
+        List<UserRoleSet> userRoleSet = dictionaryService.getCompanyRole();
+        return sendJsonData(ResultMessage.SUCCESS, userRoleSet);
+    }
 //    @GetMapping("/resource")
 //    @MyRespBody
 //    public MyRespBundle<List<SystemResource>> resources(){

@@ -36,17 +36,17 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <javaClientGenerator
+        <!--<javaClientGenerator
                 targetPackage="cn.thinkfree.database.mapper"
                 targetProject="src/main/java/"
                 type="XMLMAPPER" >
             <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>
+        </javaClientGenerator>-->
         <!-- 表-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
-        <!--<table tableName="company_info" domainObjectName="CompanyInfo"/>-->
+        <table tableName="company_info" domainObjectName="CompanyInfo"/>
         <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
         <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
         <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->
@@ -71,7 +71,15 @@
         <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
-        <table tableName="pre_project_document" domainObjectName="ProjectDocument"/>
-
+        <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
+        <!--<table tableName="company_info_expand" domainObjectName="CompanyInfoExpand"/>-->
+        <table tableName="pc_apply_info" domainObjectName="PcApplyInfo"/>
+        <!--<table tableName="pc_company_financial" domainObjectName="PcCompanyFinancial"/>-->
+        <!--<table tableName="pc_audit_info" domainObjectName="PcAuditInfo"/>-->
+        <!--<table tableName="pc_contract_template" domainObjectName="PcContractTemplate"/>-->
+        <!--<table tableName="pc_contract_template_category" domainObjectName="PcContractTemplateCategory"/>-->
+        <!--<table tableName="pc_contract_template_dict" domainObjectName="PcContractTemplateDict"/>-->
+        <!--<table tableName="pc_contract_terms" domainObjectName="PcContractTerms"/>-->
+        <!--<table tableName="pc_contract_info" domainObjectName="PcContractInfo"/>-->
     </context>
 </generatorConfiguration>

@@ -39,20 +39,20 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int addCompanyInfo(CompanyInfo companyInfo) {
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         companyInfo.setCompanyId(UserNoUtils.getUserNo("BD"));
         companyInfo.setCreateTime(new Date());
         companyInfo.setPhone(companyInfo.getLegalPhone());
         companyInfo.setRoleId("BD");
-        companyInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        companyInfo.setParentCompanyId(userVO.getCompanyID());
+        /*companyInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        companyInfo.setParentCompanyId(userVO.getCompanyID());*/
         return companyInfoMapper.insertSelective(companyInfo);
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int updateCompanyInfo(CompanyInfo companyInfo) {
         CompanyInfoExample example = new CompanyInfoExample();
         example.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());

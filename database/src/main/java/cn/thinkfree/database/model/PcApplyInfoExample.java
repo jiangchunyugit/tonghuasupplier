@@ -1024,6 +1024,136 @@ public class PcApplyInfoExample {
             addCriterion("is_delete not between", value1, value2, "isDelete");
             return (Criteria) this;
         }
+
+        public Criteria andTransactTypeIsNull() {
+            addCriterion("transact_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeIsNotNull() {
+            addCriterion("transact_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeEqualTo(Short value) {
+            addCriterion("transact_type =", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeNotEqualTo(Short value) {
+            addCriterion("transact_type <>", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeGreaterThan(Short value) {
+            addCriterion("transact_type >", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("transact_type >=", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeLessThan(Short value) {
+            addCriterion("transact_type <", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeLessThanOrEqualTo(Short value) {
+            addCriterion("transact_type <=", value, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeIn(List<Short> values) {
+            addCriterion("transact_type in", values, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeNotIn(List<Short> values) {
+            addCriterion("transact_type not in", values, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeBetween(Short value1, Short value2) {
+            addCriterion("transact_type between", value1, value2, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andTransactTypeNotBetween(Short value1, Short value2) {
+            addCriterion("transact_type not between", value1, value2, "transactType");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIsNull() {
+            addCriterion("email is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIsNotNull() {
+            addCriterion("email is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailEqualTo(String value) {
+            addCriterion("email =", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotEqualTo(String value) {
+            addCriterion("email <>", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailGreaterThan(String value) {
+            addCriterion("email >", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailGreaterThanOrEqualTo(String value) {
+            addCriterion("email >=", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLessThan(String value) {
+            addCriterion("email <", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLessThanOrEqualTo(String value) {
+            addCriterion("email <=", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLike(String value) {
+            addCriterion("email like", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotLike(String value) {
+            addCriterion("email not like", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIn(List<String> values) {
+            addCriterion("email in", values, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotIn(List<String> values) {
+            addCriterion("email not in", values, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailBetween(String value1, String value2) {
+            addCriterion("email between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotBetween(String value1, String value2) {
+            addCriterion("email not between", value1, value2, "email");
+            return (Criteria) this;
+        }
     }
 
     /**

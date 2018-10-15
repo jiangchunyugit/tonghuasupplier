@@ -57,10 +57,23 @@ public interface DictionaryService {
      */
     List<UserRoleSet> getRole();
 
+    /**
+     * 获取公司角色
+     * @return
+     */
+    List<UserRoleSet> getCompanyRole();
+
 //    /**
 //     * 查询可用权限
 //     * @return
 //     */
 //    List<SystemResource> listResource();
+
+    /**
+     * 根据省市编码查询公司信息
+     * @param cityCode
+     * @return
+     */
+    List<CompanyInfo> findCompanyByCode(Integer provinceCode, Integer cityCode);
 
 }

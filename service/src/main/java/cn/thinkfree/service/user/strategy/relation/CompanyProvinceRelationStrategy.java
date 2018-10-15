@@ -24,9 +24,9 @@ public class CompanyProvinceRelationStrategy implements RelationStrategy {
     public List<String> build(UserVO userVO) {
 
         CompanyInfo condition = new CompanyInfo();
-        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+//        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         condition.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
-        condition.setParentCompanyId(UserLevel.Company_Province.code+"");
+//        condition.setParentCompanyId(UserLevel.Company_Province.code+"");
         return companyInfoMapper.selectRelationMap(condition);
     }
 }

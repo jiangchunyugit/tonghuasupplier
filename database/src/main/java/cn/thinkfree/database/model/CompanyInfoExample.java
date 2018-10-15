@@ -1655,206 +1655,6 @@ public class CompanyInfoExample {
             return (Criteria) this;
         }
 
-        public Criteria andRootCompanyIdIsNull() {
-            addCriterion("root_company_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdIsNotNull() {
-            addCriterion("root_company_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdEqualTo(String value) {
-            addCriterion("root_company_id =", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdNotEqualTo(String value) {
-            addCriterion("root_company_id <>", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdGreaterThan(String value) {
-            addCriterion("root_company_id >", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdGreaterThanOrEqualTo(String value) {
-            addCriterion("root_company_id >=", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdLessThan(String value) {
-            addCriterion("root_company_id <", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdLessThanOrEqualTo(String value) {
-            addCriterion("root_company_id <=", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdLike(String value) {
-            addCriterion("root_company_id like", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdNotLike(String value) {
-            addCriterion("root_company_id not like", value, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdIn(List<String> values) {
-            addCriterion("root_company_id in", values, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdNotIn(List<String> values) {
-            addCriterion("root_company_id not in", values, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdBetween(String value1, String value2) {
-            addCriterion("root_company_id between", value1, value2, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andRootCompanyIdNotBetween(String value1, String value2) {
-            addCriterion("root_company_id not between", value1, value2, "rootCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdIsNull() {
-            addCriterion("parent_company_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdIsNotNull() {
-            addCriterion("parent_company_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdEqualTo(String value) {
-            addCriterion("parent_company_id =", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdNotEqualTo(String value) {
-            addCriterion("parent_company_id <>", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdGreaterThan(String value) {
-            addCriterion("parent_company_id >", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdGreaterThanOrEqualTo(String value) {
-            addCriterion("parent_company_id >=", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdLessThan(String value) {
-            addCriterion("parent_company_id <", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdLessThanOrEqualTo(String value) {
-            addCriterion("parent_company_id <=", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdLike(String value) {
-            addCriterion("parent_company_id like", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdNotLike(String value) {
-            addCriterion("parent_company_id not like", value, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdIn(List<String> values) {
-            addCriterion("parent_company_id in", values, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdNotIn(List<String> values) {
-            addCriterion("parent_company_id not in", values, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdBetween(String value1, String value2) {
-            addCriterion("parent_company_id between", value1, value2, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andParentCompanyIdNotBetween(String value1, String value2) {
-            addCriterion("parent_company_id not between", value1, value2, "parentCompanyId");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterIsNull() {
-            addCriterion("is_center is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterIsNotNull() {
-            addCriterion("is_center is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterEqualTo(Short value) {
-            addCriterion("is_center =", value, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterNotEqualTo(Short value) {
-            addCriterion("is_center <>", value, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterGreaterThan(Short value) {
-            addCriterion("is_center >", value, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterGreaterThanOrEqualTo(Short value) {
-            addCriterion("is_center >=", value, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterLessThan(Short value) {
-            addCriterion("is_center <", value, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterLessThanOrEqualTo(Short value) {
-            addCriterion("is_center <=", value, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterIn(List<Short> values) {
-            addCriterion("is_center in", values, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterNotIn(List<Short> values) {
-            addCriterion("is_center not in", values, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterBetween(Short value1, Short value2) {
-            addCriterion("is_center between", value1, value2, "isCenter");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsCenterNotBetween(Short value1, Short value2) {
-            addCriterion("is_center not between", value1, value2, "isCenter");
-            return (Criteria) this;
-        }
-
         public Criteria andTelephoneIsNull() {
             addCriterion("telephone is null");
             return (Criteria) this;
@@ -2332,6 +2132,386 @@ public class CompanyInfoExample {
 
         public Criteria andWorkCardIndateNotBetween(Date value1, Date value2) {
             addCriterion("work_card_indate not between", value1, value2, "workCardIndate");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNull() {
+            addCriterion("update_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIsNotNull() {
+            addCriterion("update_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeEqualTo(Date value) {
+            addCriterion("update_time =", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotEqualTo(Date value) {
+            addCriterion("update_time <>", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThan(Date value) {
+            addCriterion("update_time >", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("update_time >=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThan(Date value) {
+            addCriterion("update_time <", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("update_time <=", value, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeIn(List<Date> values) {
+            addCriterion("update_time in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotIn(List<Date> values) {
+            addCriterion("update_time not in", values, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeBetween(Date value1, Date value2) {
+            addCriterion("update_time between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeIsNull() {
+            addCriterion("work_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeIsNotNull() {
+            addCriterion("work_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeEqualTo(String value) {
+            addCriterion("work_code =", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotEqualTo(String value) {
+            addCriterion("work_code <>", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeGreaterThan(String value) {
+            addCriterion("work_code >", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("work_code >=", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeLessThan(String value) {
+            addCriterion("work_code <", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeLessThanOrEqualTo(String value) {
+            addCriterion("work_code <=", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeLike(String value) {
+            addCriterion("work_code like", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotLike(String value) {
+            addCriterion("work_code not like", value, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeIn(List<String> values) {
+            addCriterion("work_code in", values, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotIn(List<String> values) {
+            addCriterion("work_code not in", values, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeBetween(String value1, String value2) {
+            addCriterion("work_code between", value1, value2, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCodeNotBetween(String value1, String value2) {
+            addCriterion("work_code not between", value1, value2, "workCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyIsNull() {
+            addCriterion("company_classify is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyIsNotNull() {
+            addCriterion("company_classify is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyEqualTo(Short value) {
+            addCriterion("company_classify =", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyNotEqualTo(Short value) {
+            addCriterion("company_classify <>", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyGreaterThan(Short value) {
+            addCriterion("company_classify >", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyGreaterThanOrEqualTo(Short value) {
+            addCriterion("company_classify >=", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyLessThan(Short value) {
+            addCriterion("company_classify <", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyLessThanOrEqualTo(Short value) {
+            addCriterion("company_classify <=", value, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyIn(List<Short> values) {
+            addCriterion("company_classify in", values, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyNotIn(List<Short> values) {
+            addCriterion("company_classify not in", values, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyBetween(Short value1, Short value2) {
+            addCriterion("company_classify between", value1, value2, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyClassifyNotBetween(Short value1, Short value2) {
+            addCriterion("company_classify not between", value1, value2, "companyClassify");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdIsNull() {
+            addCriterion("site_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdIsNotNull() {
+            addCriterion("site_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdEqualTo(String value) {
+            addCriterion("site_company_id =", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdNotEqualTo(String value) {
+            addCriterion("site_company_id <>", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdGreaterThan(String value) {
+            addCriterion("site_company_id >", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("site_company_id >=", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdLessThan(String value) {
+            addCriterion("site_company_id <", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("site_company_id <=", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdLike(String value) {
+            addCriterion("site_company_id like", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdNotLike(String value) {
+            addCriterion("site_company_id not like", value, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdIn(List<String> values) {
+            addCriterion("site_company_id in", values, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdNotIn(List<String> values) {
+            addCriterion("site_company_id not in", values, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdBetween(String value1, String value2) {
+            addCriterion("site_company_id between", value1, value2, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSiteCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("site_company_id not between", value1, value2, "siteCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeIsNull() {
+            addCriterion("business_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeIsNotNull() {
+            addCriterion("business_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeEqualTo(Short value) {
+            addCriterion("business_type =", value, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeNotEqualTo(Short value) {
+            addCriterion("business_type <>", value, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeGreaterThan(Short value) {
+            addCriterion("business_type >", value, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("business_type >=", value, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeLessThan(Short value) {
+            addCriterion("business_type <", value, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeLessThanOrEqualTo(Short value) {
+            addCriterion("business_type <=", value, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeIn(List<Short> values) {
+            addCriterion("business_type in", values, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeNotIn(List<Short> values) {
+            addCriterion("business_type not in", values, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeBetween(Short value1, Short value2) {
+            addCriterion("business_type between", value1, value2, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessTypeNotBetween(Short value1, Short value2) {
+            addCriterion("business_type not between", value1, value2, "businessType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeIsNull() {
+            addCriterion("platform_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeIsNotNull() {
+            addCriterion("platform_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeEqualTo(Short value) {
+            addCriterion("platform_type =", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeNotEqualTo(Short value) {
+            addCriterion("platform_type <>", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeGreaterThan(Short value) {
+            addCriterion("platform_type >", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("platform_type >=", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeLessThan(Short value) {
+            addCriterion("platform_type <", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeLessThanOrEqualTo(Short value) {
+            addCriterion("platform_type <=", value, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeIn(List<Short> values) {
+            addCriterion("platform_type in", values, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeNotIn(List<Short> values) {
+            addCriterion("platform_type not in", values, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeBetween(Short value1, Short value2) {
+            addCriterion("platform_type between", value1, value2, "platformType");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlatformTypeNotBetween(Short value1, Short value2) {
+            addCriterion("platform_type not between", value1, value2, "platformType");
             return (Criteria) this;
         }
     }
