@@ -198,6 +198,13 @@ public class AppProjectController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS,constructionDataVo);
     }
 
+    @RequestMapping(value = "cancleOrder",method = RequestMethod.POST)
+    @ApiOperation(value = "取消订单")
+    public MyRespBundle cancleOrder(@ApiParam(name = "orderNo",value = "订单编号")String orderNo ){
+        String result = "取消成功";
+        return sendSuccessMessage(result);
+    }
+
 
 //    @RequestMapping(value = "",method = RequestMethod.POST)
 //    @ApiOperation(value = "")

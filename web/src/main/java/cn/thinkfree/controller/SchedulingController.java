@@ -4,6 +4,8 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.database.vo.ProjectSEO;
 import cn.thinkfree.database.vo.ProjectVO;
@@ -12,6 +14,8 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author gejiaming
@@ -48,5 +52,18 @@ public class SchedulingController extends AbsBaseController {
         String result = schedulingService.deleteProjectScheduling(projectBigSchedulingVO);
         return sendSuccessMessage(result);
     }
+
+    @ApiOperation(value = "获取排期信息")
+    @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
+    public MyRespBundle<List<ProjectBigSchedulingDetails>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+        List<ProjectBigSchedulingDetails> bigSchedulingDetailsVoList = schedulingService.getScheduling(projectNo);
+        return sendJsonData(ResultMessage.SUCCESS, bigSchedulingDetailsVoList);
+    }
+
+//    @ApiOperation(value = "获取甘特图")
+//    @RequestMapping(value = "gantt", method = RequestMethod.POST)
+//    public Meta<GanttDto> getGantt(@PathVariable(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+//        return iGanttService.getGantt(projectNo);
+//    }
 
 }
