@@ -17,7 +17,7 @@ public class MyExamplePlugin extends PluginAdapter {
     @Override
     public boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
 
-        topLevelClass.setSuperClass("cn.thinkfree.database.model.AbstractDataAuth");
+        topLevelClass.setSuperClass("cn.thinkfree.core.model.AbstractDataAuth");
         return super.modelExampleClassGenerated(topLevelClass, introspectedTable);
     }
 }
