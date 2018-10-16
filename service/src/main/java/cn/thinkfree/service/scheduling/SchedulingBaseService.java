@@ -1,6 +1,7 @@
 package cn.thinkfree.service.scheduling;
 
 import cn.thinkfree.database.model.ProjectSmallScheduling;
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.database.vo.SchedulingSeo;
 import com.github.pagehelper.PageInfo;
 
@@ -18,4 +19,12 @@ public interface SchedulingBaseService {
      * @return
      */
     PageInfo<ProjectSmallScheduling> listSmallScheduling(SchedulingSeo schedulingSeo);
+
+    /**
+     * 添加本地大排期
+     *
+     * @param projectBigSchedulingVO
+     * @return
+     */
+    String addBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO);
 }

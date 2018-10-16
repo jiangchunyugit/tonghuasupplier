@@ -7,6 +7,7 @@ public enum Scheduling {
     INSERT_FAILD(0,"操作失败"),
     BASE_STATUS(1,"正常状态"),
     INVALID_STATUS(0,"失效状态"),
+    VERSION(1,"版本号"),
     INSERT_SUCCESS(1,"操作成功");
 
     private Integer value;
