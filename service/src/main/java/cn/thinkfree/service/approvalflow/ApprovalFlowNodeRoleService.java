@@ -9,5 +9,8 @@ public interface ApprovalFlowNodeRoleService {
 
     void create(String nodeNum, List<ApprovalFlowNodeRole> nodeRoles);
 
-    List<ApprovalFlowNodeRole> findLastVersionByNodeNumAndProjectBigSchedulingId(String nodeNum, Long projectBigSchedulingId);
+    List<ApprovalFlowNodeRole> findByNodeNum(String nodeNum);
+
+    void deleteByNodeNums(List<String> nodeNums);
+
 }

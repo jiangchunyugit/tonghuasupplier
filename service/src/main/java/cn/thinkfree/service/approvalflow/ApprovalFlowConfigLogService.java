@@ -2,19 +2,20 @@ package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.ApprovalFlowConfig;
 import cn.thinkfree.database.model.ApprovalFlowConfigLog;
-import cn.thinkfree.database.vo.ApprovalFlowDetailVo;
-import cn.thinkfree.database.vo.ApprovalFlowNodeVo;
+import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
 
 import java.util.List;
 
 
 public interface ApprovalFlowConfigLogService {
 
-    ApprovalFlowDetailVo detail(String approvalFlowNum);
-
-    void create(ApprovalFlowConfig config, List<ApprovalFlowNodeVo> nodeVos);
+    void create(ApprovalFlowConfig config, List<ApprovalFlowNodeVO> nodeVos);
 
     void deleteByApprovalFlowNum(String approvalFlowNum);
 
+    ApprovalFlowConfigLog findByConfigNumAndVersion(String configNum, int version);
+
     ApprovalFlowConfigLog findLastVersionByApprovalFlowNum(String approvalFlowNum);
+
+    List<ApprovalFlowConfigLog> findByApprovalFlowNumOrderByVersionAsc(String approvalFlowNum);
 }

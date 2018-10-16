@@ -1,14 +1,20 @@
 package cn.thinkfree.service.scheduling;
 
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
+import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
+import cn.thinkfree.database.model.ProjectBigSchedulingExample;
+import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.Scheduling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 正常排期操作
@@ -20,6 +26,8 @@ import java.util.Date;
 public class SchedulingServiceImpl implements SchedulingService {
     @Autowired(required = false)
     private ProjectBigSchedulingMapper projectBigSchedulingMapper;
+    @Autowired
+    private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
 
     /**
      * 项目列表
@@ -72,5 +80,16 @@ public class SchedulingServiceImpl implements SchedulingService {
             return Scheduling.INSERT_FAILD.getDescription();
         }
         return Scheduling.INSERT_SUCCESS.getDescription();
+    }
+
+    /**
+     * 获取排期信息
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public List<ProjectBigSchedulingDetails> getScheduling(String projectNo) {
+        List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo,Scheduling.BASE_STATUS.getValue());
+        return bigList;
     }
 }

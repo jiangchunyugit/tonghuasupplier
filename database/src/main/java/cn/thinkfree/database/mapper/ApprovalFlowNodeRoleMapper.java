@@ -96,6 +96,4 @@ public interface ApprovalFlowNodeRoleMapper {
 
     List<ApprovalFlowNodeRole> findByNodeNum(String nodeNum);
 
-    List<ApprovalFlowNodeRole> findLastVersionByNodeNumAndProjectBigSchedulingId(@Param("nodeNum") String nodeNum, @Param("projectBigSchedulingId") Long projectBigSchedulingId);
-
 }
