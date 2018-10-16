@@ -46,6 +46,9 @@ public class DateUtils {
      * @return
      */
     public static String dateToStr(Date date,String format){
+        if(date == null){
+            return "未知";
+        }
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         return sdf.format(date);
     }
@@ -57,6 +60,9 @@ public class DateUtils {
      * @return
      */
     public static String dateToStr(Date date){
+        if(date == null){
+            return "未知";
+        }
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
     }

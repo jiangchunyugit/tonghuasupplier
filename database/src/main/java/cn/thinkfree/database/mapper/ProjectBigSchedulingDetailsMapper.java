@@ -93,12 +93,4 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectBigSchedulingDetails record);
-
-    /**
-     * 获取排期
-     * @param projectNo
-     * @param status
-     * @return
-     */
-    List<ProjectBigSchedulingDetails> selectByProjectNo(@Param("projectNo") String projectNo,@Param("status") Integer status);
 }

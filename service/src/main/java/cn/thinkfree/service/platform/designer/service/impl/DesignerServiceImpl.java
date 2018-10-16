@@ -123,9 +123,10 @@ public class DesignerServiceImpl implements DesignerService {
             msgVo.setLevelName(msg.getLevel() + "");
             msgVo.setSource(msg.getSource() + "");
             msgVo.setTag(msg.getTag() + "");
+            msgVo.setUserId(msg.getUserId());
             EmployeeMsg employeeMsg = employeeMsgMap.get(msg.getUserId());
             if (employeeMsg != null) {
-                msgVo.setAddress(employeeMsg.getProvince());
+                msgVo.setAddress(employeeMsg.getProvince() + "," + employeeMsg.getCity() + "," + employeeMsg.getArea());
                 msgVo.setAuthState(employeeMsg.getAuthState() + "");
                 msgVo.setCompanyName(employeeMsg.getCompanyId());
                 msgVo.setRegistrationTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
@@ -296,6 +297,7 @@ public class DesignerServiceImpl implements DesignerService {
         employeeMsg.setCity(city);
         employeeMsg.setArea(area);
         employeeMsg.setWorkingTime(Integer.parseInt(workingTime));
+        employeeMsg.setUserId(userId);
         //设计师编码
         employeeMsg.setRoleCode(DESIGNER_CODE);
         //未认证状态
@@ -305,7 +307,7 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsg.setVolumeRoomMoney(new BigDecimal(volumeRoomMoney));
         designerMsg.setDesignerMoneyLow(new BigDecimal(designerMoneyLow));
         designerMsg.setDesignerMoneyHigh(new BigDecimal(designerMoneyHigh));
-
+        designerMsg.setUserId(userId);
         //后台创建
         designerMsg.setSource(Short.parseShort("3"));
         //未审核

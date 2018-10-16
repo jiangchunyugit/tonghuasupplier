@@ -31,6 +31,8 @@ public class DesignerMsgListVo {
     private String companyName;
     @ApiModelProperty("设计师等级")
     private String levelName;
+    @ApiModelProperty("用户ID")
+    private String userId;
 
     public String getUserName() {
         return userName;
@@ -126,5 +128,13 @@ public class DesignerMsgListVo {
 
     public void setLevelName(String levelName) {
         this.levelName = levelName;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
