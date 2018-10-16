@@ -23,17 +23,17 @@ import com.github.pagehelper.PageInfo;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.mapper.PcContractTermsMapper;
+import cn.thinkfree.database.mapper.ContractTermsMapper;
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.ContractTerms;
+import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.model.PcContractTerms;
-import cn.thinkfree.database.model.PcContractTermsExample;
 import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
@@ -50,7 +50,7 @@ import cn.thinkfree.service.utils.WordUtil;
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
 
 	@Autowired
-	ContractInfoMapper contractInfoMapper;
+	MyContractInfoMapper contractInfoMapper;
 	
 	@Autowired
 	CompanyInfoMapper companyInfoMapper;
@@ -62,7 +62,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	PcCompanyFinancialMapper pcCompanyFinancialMapper;
 	
 	@Autowired
-	PcContractTermsMapper pcContractTermsMapper;
+	ContractTermsMapper pcContractTermsMapper;
 	
 	
 
@@ -351,7 +351,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		  Map.Entry<String, String> entry = entries.next(); 
 		  String key = entry.getKey();
 		  String value = entry.getValue();
-		  PcContractTerms terms = new PcContractTerms();
+		  ContractTerms terms = new ContractTerms();
 		  terms.setCompanyId(companyId);
 		  terms.setContractNumber(contractNumber);
 		  terms.setCreateTime(new Date());
@@ -359,7 +359,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		  terms.setContractDictCode(key);
 		  terms.setContractValue(value);
 		  //list.add(terms);
-		  PcContractTermsExample exp = new PcContractTermsExample();
+		  ContractTermsExample exp = new ContractTermsExample();
 		  exp.createCriteria().andCompanyIdEqualTo(companyId).andContractDictCodeEqualTo(key).andContractNumberEqualTo(contractNumber);
 		  pcContractTermsMapper.deleteByExample(exp);
 		  pcContractTermsMapper.insertSelective(terms);
@@ -383,16 +383,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		CompanyInfoVo companyInfo = companyInfoMapper.selectByCompanyId(companyId);
 		
 		// 合同详情
-		PcContractTermsExample exp = new PcContractTermsExample();
+	    ContractTermsExample exp = new ContractTermsExample();
 		//判断公司类型
 		exp.createCriteria().andCompanyIdEqualTo(companyId).
 		andContractNumberEqualTo(contractNumber);
 		
-		List<PcContractTerms> list = pcContractTermsMapper.selectByExample(exp);
+		List<ContractTerms> list = pcContractTermsMapper.selectByExample(exp);
 		
 		if(list.size() == 0 && companyInfo != null){
-			PcContractTerms term_0 = new PcContractTerms("01","居然设计家");
-			PcContractTerms term_1 = new PcContractTerms("02",companyInfo.getCompanyName());
+			ContractTerms term_0 = new ContractTerms("01","居然设计家");
+			ContractTerms term_1 = new ContractTerms("02",companyInfo.getCompanyName());
 			list.add(term_0);
 			list.add(term_1);
 		}

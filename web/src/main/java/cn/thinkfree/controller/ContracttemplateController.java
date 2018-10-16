@@ -27,7 +27,8 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.PcContractTemplate;
+import cn.thinkfree.database.model.ContractTemplate;
+import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.contractTemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -78,9 +79,9 @@ public class ContracttemplateController extends AbsBaseController{
     //@PostMapping("/list")
     @RequestMapping(value = "/list", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     @MyRespBody
-    public MyRespBundle<List<PcContractTemplate>> list(@RequestBody @ApiParam("合同类型") String type){
+    public MyRespBundle<List<ContractTemplate>> list(@RequestBody @ApiParam("合同类型") String type){
 
-    	List<PcContractTemplate> list = contractTemplateService.PcContractTemplateList(type);
+    	List<ContractTemplate> list = contractTemplateService.ContractTemplateList(type);
         
         return sendJsonData(ResultMessage.SUCCESS,list);
     }
@@ -111,7 +112,7 @@ public class ContracttemplateController extends AbsBaseController{
     @PostMapping("/update")
     @MyRespBody
     
-    public MyRespBundle<List<PcContractTemplate>> update(@RequestBody @ApiParam("合同类型") String type,@RequestBody @ApiParam("合同名称")String contractTpName,
+    public MyRespBundle<List<ContractTemplate>> update(@RequestBody @ApiParam("合同类型") String type,@RequestBody @ApiParam("合同名称")String contractTpName,
     		@ApiParam("合同备注") String contractTpRemark,@AppParameter @RequestParam("file") MultipartFile  file){
     	Map<String,String> resMap = contractTemplateService.updateContractTemplateInfo(type, contractTpName, contractTpRemark,file);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
@@ -192,7 +193,7 @@ public class ContracttemplateController extends AbsBaseController{
 
 	private String downloadFile(String type, HttpServletResponse response) {
 		//根据合同类型 查询合同url 然后下载
-    	 List<PcContractTemplate> list = contractTemplateService.PcContractTemplateList(type);
+    	 List<ContractTemplate> list = contractTemplateService.ContractTemplateList(type);
     	 String contractTemplateUrl =  "";
     	 if(list != null && list.size() > 0){
     		 contractTemplateUrl = list.get(0).getUploadUrl();

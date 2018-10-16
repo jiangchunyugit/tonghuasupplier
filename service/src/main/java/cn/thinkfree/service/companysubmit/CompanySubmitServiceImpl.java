@@ -22,7 +22,7 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
@@ -46,7 +46,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     CompanyInfoMapper companyInfoMapper;
     
     @Autowired
-	ContractInfoMapper contractInfoMapper;
+	MyContractInfoMapper contractInfoMapper;
 	
 	@Autowired
 	PcAuditInfoMapper pcAuditInfoMapper;
