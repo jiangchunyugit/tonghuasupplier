@@ -2,8 +2,9 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ProjectBigSchedulingDetailsMapper {
     /**
@@ -93,4 +94,13 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectBigSchedulingDetails record);
+
+    /**
+     * 获取排期
+     *
+     * @param projectNo
+     * @param status
+     * @return
+     */
+    List<ProjectBigSchedulingDetails> selectByProjectNo(@Param("projectNo") String projectNo, @Param("status") Integer status);
 }

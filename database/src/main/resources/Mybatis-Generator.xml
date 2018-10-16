@@ -4,10 +4,10 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <classPathEntry
-            location="src/main/resources/edb-jdbc16.jar" />
-    <context id="context1"  >
+            location="src/main/resources/edb-jdbc16.jar"/>
+    <context id="context1">
         <!-- 该死的注释 -->
-        <commentGenerator  >
+        <commentGenerator>
             <property name="addRemarkComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>
@@ -15,7 +15,7 @@
         <jdbcConnection driverClass="com.edb.Driver"
                         connectionURL="jdbc:edb://rm-2zea5t7it298uz8786o.ppas.rds.aliyuncs.com:3432/easy_home"
                         userId="think"
-                        password="Rexrobin@519" />
+                        password="Rexrobin@519"/>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
@@ -23,7 +23,7 @@
 
         <!-- Model-->
         <javaModelGenerator targetPackage="cn.thinkfree.database.model"
-                            targetProject="src/main/java/" >
+                            targetProject="src/main/java/">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
             <property name="useActualColumnNames" value="false"/>
@@ -32,14 +32,14 @@
         </javaModelGenerator>
         <!-- XML-->
         <sqlMapGenerator targetPackage="cn.thinkfree.database.mapper"
-                         targetProject="src/main/resources" >
+                         targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
         <javaClientGenerator
                 targetPackage="cn.thinkfree.database.mapper"
                 targetProject="src/main/java/"
-                type="XMLMAPPER" >
+                type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 表-->
@@ -73,8 +73,9 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--Scheduling start-->
-        <!--<table tableName="project_construction_sort" domainObjectName="ProjectBigScheduling"/>-->
-        <table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>
+        <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
+        <table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>
+        <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="approval_change_data" domainObjectName="ApprovalChangeData"/>-->

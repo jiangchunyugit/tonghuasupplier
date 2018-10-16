@@ -27,8 +27,6 @@
     <result column="is_need_check" jdbcType="SMALLINT" property="isNeedCheck" />
     <result column="is_adopt" jdbcType="SMALLINT" property="isAdopt" />
     <result column="version" jdbcType="INTEGER" property="version" />
-    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
-    <result column="satrt_time" jdbcType="TIMESTAMP" property="satrtTime" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -103,8 +101,7 @@
     -->
     id, company_id, project_no, big_sort, big_name, rename_big, plan_satrt_time, plan_end_time, 
     actual_satrt_time, actual_end_time, status, create_time, is_matching, is_completed, 
-    is_add, is_change, remark, submit_num, is_need_check, is_adopt, version, end_time, 
-    satrt_time
+    is_add, is_change, remark, submit_num, is_need_check, is_adopt, version
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample" resultMap="BaseResultMap">
     <!--
@@ -163,16 +160,16 @@
       actual_end_time, status, create_time, 
       is_matching, is_completed, is_add, 
       is_change, remark, submit_num, 
-      is_need_check, is_adopt, version, 
-      end_time, satrt_time)
+      is_need_check, is_adopt, version
+      )
     values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, 
       #{bigSort,jdbcType=INTEGER}, #{bigName,jdbcType=VARCHAR}, #{renameBig,jdbcType=VARCHAR}, 
       #{planSatrtTime,jdbcType=TIMESTAMP}, #{planEndTime,jdbcType=TIMESTAMP}, #{actualSatrtTime,jdbcType=TIMESTAMP}, 
       #{actualEndTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{isMatching,jdbcType=INTEGER}, #{isCompleted,jdbcType=INTEGER}, #{isAdd,jdbcType=INTEGER}, 
       #{isChange,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{submitNum,jdbcType=INTEGER}, 
-      #{isNeedCheck,jdbcType=SMALLINT}, #{isAdopt,jdbcType=SMALLINT}, #{version,jdbcType=INTEGER}, 
-      #{endTime,jdbcType=TIMESTAMP}, #{satrtTime,jdbcType=TIMESTAMP})
+      #{isNeedCheck,jdbcType=SMALLINT}, #{isAdopt,jdbcType=SMALLINT}, #{version,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ProjectBigSchedulingDetails">
     <!--
@@ -244,12 +241,6 @@
       <if test="version != null">
         version,
       </if>
-      <if test="endTime != null">
-        end_time,
-      </if>
-      <if test="satrtTime != null">
-        satrt_time,
-      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -314,12 +305,6 @@
       </if>
       <if test="version != null">
         #{version,jdbcType=INTEGER},
-      </if>
-      <if test="endTime != null">
-        #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="satrtTime != null">
-        #{satrtTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -403,12 +388,6 @@
       <if test="record.version != null">
         version = #{record.version,jdbcType=INTEGER},
       </if>
-      <if test="record.endTime != null">
-        end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="record.satrtTime != null">
-        satrt_time = #{record.satrtTime,jdbcType=TIMESTAMP},
-      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -440,9 +419,7 @@
       submit_num = #{record.submitNum,jdbcType=INTEGER},
       is_need_check = #{record.isNeedCheck,jdbcType=SMALLINT},
       is_adopt = #{record.isAdopt,jdbcType=SMALLINT},
-      version = #{record.version,jdbcType=INTEGER},
-      end_time = #{record.endTime,jdbcType=TIMESTAMP},
-      satrt_time = #{record.satrtTime,jdbcType=TIMESTAMP}
+      version = #{record.version,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -514,12 +491,6 @@
       <if test="version != null">
         version = #{version,jdbcType=INTEGER},
       </if>
-      <if test="endTime != null">
-        end_time = #{endTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="satrtTime != null">
-        satrt_time = #{satrtTime,jdbcType=TIMESTAMP},
-      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -548,9 +519,7 @@
       submit_num = #{submitNum,jdbcType=INTEGER},
       is_need_check = #{isNeedCheck,jdbcType=SMALLINT},
       is_adopt = #{isAdopt,jdbcType=SMALLINT},
-      version = #{version,jdbcType=INTEGER},
-      end_time = #{endTime,jdbcType=TIMESTAMP},
-      satrt_time = #{satrtTime,jdbcType=TIMESTAMP}
+      version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
