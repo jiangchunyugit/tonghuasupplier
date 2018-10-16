@@ -2,8 +2,11 @@ package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.ApprovalFlowConfig;
 import cn.thinkfree.database.model.ApprovalFlowConfigLog;
+import cn.thinkfree.database.model.ApprovalFlowConfigSuper;
 import cn.thinkfree.database.model.UserRoleSet;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.util.List;
 
@@ -11,6 +14,8 @@ import java.util.List;
  * 审批流详细信息
  * @author songchuanrang
  */
+@ApiModel("审批流详细信息")
+@Data
 public class ApprovalFlowConfigLogVO {
     /**
      * 审批流信息
@@ -31,35 +36,10 @@ public class ApprovalFlowConfigLogVO {
     @ApiModelProperty("角色信息集合")
     private List<UserRoleSet> roles;
 
-    public ApprovalFlowConfig getConfig() {
-        return config;
-    }
+    @ApiModelProperty("当前审批流依托关系")
+    private List<ApprovalFlowConfigSuper> configSupers;
 
-    public void setConfig(ApprovalFlowConfig config) {
-        this.config = config;
-    }
+    @ApiModelProperty("审批流信息集合")
+    private List<ApprovalFlowConfig> configs;
 
-    public List<ApprovalFlowNodeVO> getNodeVos() {
-        return nodeVos;
-    }
-
-    public void setNodeVos(List<ApprovalFlowNodeVO> nodeVos) {
-        this.nodeVos = nodeVos;
-    }
-
-    public List<ApprovalFlowConfigLog> getConfigLogs() {
-        return configLogs;
-    }
-
-    public void setConfigLogs(List<ApprovalFlowConfigLog> configLogs) {
-        this.configLogs = configLogs;
-    }
-
-    public List<UserRoleSet> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<UserRoleSet> roles) {
-        this.roles = roles;
-    }
 }
