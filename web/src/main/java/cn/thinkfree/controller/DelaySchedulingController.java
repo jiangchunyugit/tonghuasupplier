@@ -7,7 +7,6 @@ import cn.thinkfree.database.model.DesignOrder;
 import cn.thinkfree.database.model.LogInfo;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.model.PreProjectMaterial;
-import cn.thinkfree.database.vo.PreProjectGuideVO;
 import cn.thinkfree.database.vo.PreProjectMaterialVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.service.constants.Scheduling;
