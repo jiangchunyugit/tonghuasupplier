@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,7 @@ import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.database.mapper.ContractTermsMapper;
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.ContractTerms;
 import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.PcAuditInfo;
@@ -42,6 +44,7 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.event.AuditEvent;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.WordUtil;
@@ -64,7 +67,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
 	ContractTermsMapper pcContractTermsMapper;
 	
-	
+	@Autowired
+    private ApplicationContext applicationContext;
 
 	
 	
@@ -156,7 +160,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			map.put("code", "1");
 			map.put("msg", "审核状态为空");
 			return  map;
-		}if(!StringUtils.isEmpty(auditStatus) && auditCase.equals("1") && StringUtils.isEmpty(auditCase)){
+		}if((!StringUtils.isEmpty(auditCase) && auditStatus.equals("1"))){
 			map.put("code", "1");
 			map.put("msg", "清填写审核不通过原因");
 			return  map;
@@ -166,17 +170,19 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		ContractVo vo = new ContractVo();
 		vo.setCompanyId(companyId);
 		vo.setContractNumber(contractNumber);
-		if(auditCase.equals(AuditStatus.AuditPass.shortVal()) ){//
+		if(auditStatus.equals(AuditStatus.AuditPass.shortVal()) ){//
 			vo.setContractStatus(ContractStatus.AuditPass.shortVal());
 		}else{
 			vo.setContractStatus(ContractStatus.AuditDecline.shortVal());
 		}
-		
+//		ContractInfo ss = new ContractInfo();
+//		ss.setCompanyId("测试");
+		//applicationContext.publishEvent(new AuditEvent(ss));
 		//修改公司表 
 		int flag = contractInfoMapper.updateContractStatus(vo);
 		CompanyInfo companyInfo = new CompanyInfo();
 		companyInfo.setCompanyId(companyId);
-		if(auditCase.equals(AuditStatus.AuditPass.shortVal())){//财务审核通过
+		if(auditStatus.equals(AuditStatus.AuditPass.shortVal())){//财务审核通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSCHECK.stringVal());
 		}else{//财务审核不通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.FAILCHECK.stringVal());
