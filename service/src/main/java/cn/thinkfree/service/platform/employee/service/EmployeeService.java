@@ -14,8 +14,9 @@ public interface EmployeeService {
      *
      * @param userId    用户ID
      * @param authState 审核状态
+     * @param companyId 公司ID
      */
-    void reviewEmployee(String userId, int authState);
+    void reviewEmployee(String userId, int authState, String companyId);
 
     /**
      * 处理员工申请
@@ -57,8 +58,9 @@ public interface EmployeeService {
     /**
      * 设置用户角色
      *
-     * @param userId
-     * @param roleCode
+     * @param userId    用户ID
+     * @param roleCode  角色编码
+     * @param companyId 公司ID
      */
-    void setUserRole(String userId, String roleCode);
+    void setUserRole(String userId, String roleCode, String companyId);
 }

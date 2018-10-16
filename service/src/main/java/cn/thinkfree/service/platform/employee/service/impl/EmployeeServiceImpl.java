@@ -1,5 +1,6 @@
 package cn.thinkfree.service.platform.employee.service.impl;
 
+import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.EmployeeApplyLogMapper;
 import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.mapper.UserRoleSetMapper;
@@ -25,11 +26,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     private EmployeeApplyLogMapper applyLogMapper;
     @Autowired
     private UserRoleSetMapper roleSetMapper;
+    @Autowired
+    private CompanyInfoMapper companyInfoMapper;
 
     @Override
-    public void reviewEmployee(String userId, int authState) {
+    public void reviewEmployee(String userId, int authState, String companyId) {
+        checkCompanyExit(companyId);
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andUserIdEqualTo(userId);
+        msgExample.createCriteria().andUserIdEqualTo(userId).andCompanyIdEqualTo(companyId);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if(employeeMsgs.isEmpty()){
+            throw new RuntimeException("没有查询到该员工");
+        }
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setAuthState(authState);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, msgExample);
@@ -45,6 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(applyLog != null){
             throw new RuntimeException("有未处理的申请");
         }
+        checkCompanyExit(companyId);
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -58,7 +67,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         //设置3个小时后失效
         applyLog.setInvalidTime(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3));
         //1，已处理，2未处理，3已过期
-        applyLog.setDealState(1);
+        applyLog.setDealState(2);
         applyLog.setUserId(userId);
         applyLog.setCompanyId(companyId);
         res = applyLogMapper.insertSelective(applyLog);
@@ -72,10 +81,10 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     private EmployeeApplyLog queryApplyLog(String userId) {
         EmployeeApplyLogExample invalidExample = new EmployeeApplyLogExample();
-        invalidExample.createCriteria().andDealStateEqualTo(2).andInvalidTimeGreaterThanOrEqualTo(new Date());
+        invalidExample.createCriteria().andDealStateEqualTo(2).andInvalidTimeLessThanOrEqualTo(new Date());
         EmployeeApplyLog applyLog = new EmployeeApplyLog();
         applyLog.setDealState(3);
-        int res = applyLogMapper.insertSelective(applyLog);
+        int res = applyLogMapper.updateByExampleSelective(applyLog,invalidExample);
         logger.info("跟新申请信息为已过期：res={}", res);
         //查询改用户是否有未处理的申请
         EmployeeApplyLogExample applyLogExample = new EmployeeApplyLogExample();
@@ -96,6 +105,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(applyLog == null){
             throw new RuntimeException("没有查询到申请记录");
         }
+        if(!applyLog.getCompanyId().equals(companyId)){
+            throw new RuntimeException("公司信息异常");
+        }
+        checkCompanyExit(companyId);
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -123,7 +136,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         applyLog.setDealExplain(dealExplain);
         applyLog.setDealUserId(dealUserId);
         //1，已处理，2未处理，3已过期
-        applyLog.setDealState(2);
+        applyLog.setDealState(1);
         res = applyLogMapper.updateByExampleSelective(applyLog, employeeApplyLogExample);
         logger.info("更新申请记录：res={}", res);
     }
@@ -148,12 +161,32 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void setUserRole(String userId, String roleCode) {
+    public void setUserRole(String userId, String roleCode, String companyId) {
+        checkCompanyExit(companyId);
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdEqualTo(userId).andCompanyIdEqualTo(companyId);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if(employeeMsgs.isEmpty()){
+            throw new RuntimeException("没有查询到该员工");
+        }
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setRoleCode(roleCode);
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
         logger.info("保存用户角色：res={}", res);
+    }
+
+    /**
+     * 判断公司是否存在
+     * @param companyId 公司ID
+     */
+    private void checkCompanyExit(String companyId){
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2")).andAuditStatusEqualTo("7");
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        if(companyInfos.isEmpty()){
+            throw new RuntimeException("没有查询到该公司");
+        }
     }
 }
