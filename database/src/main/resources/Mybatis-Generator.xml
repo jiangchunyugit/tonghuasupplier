@@ -82,7 +82,7 @@
         <!--<table tableName="approval_check_data_log" domainObjectName="ApprovalCheckData"/>-->
         <!--<table tableName="approval_flow_config" domainObjectName="ApprovalFlowConfig"/>-->
         <!--<table tableName="approval_flow_config_log" domainObjectName="ApprovalFlowConfigLog"/>-->
-        <!--<table tableName="approval_flow_instance_log" domainObjectName="ApprovalFlowInstanceLog"/>-->
+        <!--<table tableName="approval_flow_instance" domainObjectName="ApprovalFlowInstance"/>-->
         <!--<table tableName="approval_flow_config_super" domainObjectName="ApprovalFlowConfigSuper"/>-->
         <!--<table tableName="approval_flow_node" domainObjectName="ApprovalFlowNode"/>-->
         <!--<table tableName="approval_flow_node_role" domainObjectName="ApprovalFlowNodeRole"/>-->
