@@ -1,11 +1,11 @@
-package cn.thinkfree.service.platform.designer.service.impl;
+package cn.thinkfree.service.platform.designer.impl;
 
 import cn.thinkfree.database.mapper.DesignerMsgMapper;
 import cn.thinkfree.database.mapper.DesignerStyleConfigMapper;
 import cn.thinkfree.database.mapper.DesignerStyleRelationMapper;
 import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.service.platform.designer.service.DesignerService;
+import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import cn.thinkfree.service.utils.DateUtils;

@@ -1,4 +1,4 @@
-package cn.thinkfree.service.platform.employee.service;
+package cn.thinkfree.service.platform.employee;
 
 import cn.thinkfree.database.model.UserRoleSet;
 

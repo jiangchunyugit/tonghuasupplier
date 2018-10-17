@@ -1,11 +1,11 @@
-package cn.thinkfree.service.platform.employee.service.impl;
+package cn.thinkfree.service.platform.employee.impl;
 
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.EmployeeApplyLogMapper;
 import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.mapper.UserRoleSetMapper;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.service.platform.employee.service.EmployeeService;
+import cn.thinkfree.service.platform.employee.EmployeeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,11 +182,11 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param companyId 公司ID
      */
     private void checkCompanyExit(String companyId){
-        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2")).andAuditStatusEqualTo("7");
-        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
-        if(companyInfos.isEmpty()){
-            throw new RuntimeException("没有查询到该公司");
-        }
+//        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+//        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2")).andAuditStatusEqualTo("7");
+//        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+//        if(companyInfos.isEmpty()){
+//            throw new RuntimeException("没有查询到该公司");
+//        }
     }
 }

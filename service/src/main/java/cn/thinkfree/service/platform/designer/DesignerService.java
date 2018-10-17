@@ -1,4 +1,4 @@
-package cn.thinkfree.service.platform.designer.service;
+package cn.thinkfree.service.platform.designer;
 
 import cn.thinkfree.database.model.DesignerMsg;
 import cn.thinkfree.database.model.DesignerStyleConfig;
