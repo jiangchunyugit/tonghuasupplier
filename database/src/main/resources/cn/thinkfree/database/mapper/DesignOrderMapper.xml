@@ -444,7 +444,9 @@
             LEFT JOIN user_info ms ON ms.user_id = o.user_id
             WHERE
         o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status} AND ur.role_id='CP'
-        limit  #{pageSize} offset #{pageNum}
+        <if test="pageSize != null">
+            limit  #{pageSize} offset #{pageNum}
+        </if>
   </select>
 
     <!--查询项目派单总条数-->
@@ -460,4 +462,5 @@
         LEFT JOIN designer_msg ms ON ms.user_id = o.user_id
         WHERE  o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status} AND ur.role_id='CP'
     </select>
+
 </mapper>
