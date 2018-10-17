@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.SystemResourceExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.account.SystemResourceTreeVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface SystemResourceMapper {
@@ -93,4 +95,11 @@ public interface SystemResourceMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SystemResource record);
+
+    /**
+     * 查询资源 -- 进行授权
+     * @param id
+     * @return
+     */
+    List<SystemResource> selectResourceForAuthorize(Integer id);
 }

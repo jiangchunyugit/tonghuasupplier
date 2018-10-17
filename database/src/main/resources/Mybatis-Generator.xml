@@ -44,7 +44,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 表-->
-        <table tableName="province" domainObjectName="Province" />
+        <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
         <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->
@@ -88,6 +88,7 @@
         <!--<table tableName="pc_system_role" domainObjectName="SystemRole"/>-->
         <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
+        <table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />
         <!-- 权限相关 E-->
     </context>
 </generatorConfiguration>

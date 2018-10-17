@@ -237,6 +237,7 @@
                 <configuration>
                     <!-- 报错算什么 -->
                     <testFailureIgnore>true</testFailureIgnore>
+                    <skipTests>true</skipTests>
                 </configuration>
             </plugin>
         </plugins>

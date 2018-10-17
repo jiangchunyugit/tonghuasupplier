@@ -93,4 +93,18 @@ public interface SystemRoleMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SystemRole record);
+
+    /**
+     * 查询角色
+     * @param systemRoleExample
+     * @return
+     */
+    List<SystemRole> selectSystemRoleVOByExample(SystemRoleExample systemRoleExample);
+
+    /**
+     * 角色详情
+     * @param id
+     * @return
+     */
+    SystemRole selectSystemRoleVOByID(Integer id);
 }

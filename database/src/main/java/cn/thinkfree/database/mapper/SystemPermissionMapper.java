@@ -3,7 +3,10 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.model.SystemPermissionExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.account.PermissionVO;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 public interface SystemPermissionMapper {
     /**
@@ -93,4 +96,25 @@ public interface SystemPermissionMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(SystemPermission record);
+
+    /**
+     * 自定义查询
+     * @param example
+     * @return
+     */
+    List<SystemPermission> selectPermissionVO(SystemPermissionExample example);
+
+    /**
+     * 根据主键查询权限信息
+     * @param id
+     * @return
+     */
+    SystemPermission selectPermissionVOByID(Integer id);
+
+    /**
+     * 为授权查询权限状况
+     * @param roleID
+     * @return
+     */
+    List<SystemPermission> selectPermissionForGrant(Integer roleID);
 }
