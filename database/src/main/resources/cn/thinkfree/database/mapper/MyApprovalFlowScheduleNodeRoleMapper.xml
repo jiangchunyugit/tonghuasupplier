@@ -10,6 +10,6 @@
       from approval_flow_schedule_node_role
       where node_name = #{nodeNum,jdbcType=VARCHAR}
       and schedule_sort = #{scheduleSort,jdbcType=INTEGER}
-    ) where version = max(version)
+    ) where schedule_version = max(schedule_version)
   </select>
 </mapper>
