@@ -119,7 +119,7 @@ public class PermissionServiceImpl extends AbsLogPrinter implements PermissionSe
 
         printInfoMes("权限状态,:{},{}",id,state);
         SystemPermission update = new SystemPermission();
-        update.setIsSys(state);
+        update.setIsEnable(state);
         SystemPermissionExample condition = new SystemPermissionExample();
         condition.createCriteria().andIdEqualTo(id);
         systemPermissionMapper.updateByExampleSelective(update,condition);
@@ -135,6 +135,25 @@ public class PermissionServiceImpl extends AbsLogPrinter implements PermissionSe
     @Override
     public List<SystemPermission> listPermissionByRoleID(Integer id) {
         return systemPermissionMapper.selectPermissionForGrant(id);
+    }
+
+    /**
+     * 删除权限
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public String updatePermissionForDel(Integer id) {
+        SystemPermission del = new SystemPermission();
+        del.setIsDel(SysConstants.YesOrNo.YES.shortVal());
+
+        SystemPermissionExample condition = new SystemPermissionExample();
+        condition.createCriteria().andIdEqualTo(id);
+
+        systemPermissionMapper.updateByExampleSelective(del,condition);
+
+        return "操作成功!";
     }
 
     /**

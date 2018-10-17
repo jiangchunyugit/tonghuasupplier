@@ -172,6 +172,21 @@ public class AccountController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,mes);
     }
 
+    /**
+     * 删除权限
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/permission/{id}")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除权限")
+    public MyRespBundle<String> deletePermission(@PathVariable Integer id){
+
+        String mes = permissionService.updatePermissionForDel(id);
+
+        return sendSuccessMessage(mes);
+    }
+
 
     /**
      * 新增角色
@@ -248,6 +263,12 @@ public class AccountController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,permissions);
     }
 
+    /**
+     * 角色授权
+     * @param id
+     * @param permissions
+     * @return
+     */
     @PostMapping("/role/{id}/permission")
     @MyRespBody
     @MySysLog(action = SysLogAction.GRANT,module = SysLogModule.PC_PERMISSION,desc = "授予权限")
@@ -257,6 +278,15 @@ public class AccountController extends AbsBaseController {
 
         return sendSuccessMessage(mes);
     }
+
+    @PostMapping("/role/{id}/disable")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "停用角色")
+    public MyRespBundle<String>  disableRole(@PathVariable Integer id){
+        String  mes = systemRoleService.updateRoleState(id, SysConstants.YesOrNo.YES.shortVal());
+        return sendSuccessMessage(mes);
+    }
+
 
 
 

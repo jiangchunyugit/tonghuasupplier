@@ -41,4 +41,12 @@ public interface SystemRoleService {
      * @return
      */
     String updateRoleByGrant(Integer id, Integer[] permissions);
+
+    /**
+     * 修改角色状态
+     * @param id
+     * @param state
+     * @return
+     */
+    String updateRoleState(Integer id, Short state);
 }

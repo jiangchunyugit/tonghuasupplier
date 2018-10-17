@@ -141,6 +141,27 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
 
     }
 
+    /**
+     * 修改角色状态
+     *
+     * @param id
+     * @param state
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updateRoleState(Integer id, Short state) {
+
+        SystemRole update = new SystemRole();
+        update.setIsEnable(state);
+        SystemRoleExample condition = new SystemRoleExample();
+        condition.createCriteria().andIdEqualTo(id);
+
+        systemRoleMapper.updateByExampleSelective(update,condition);
+
+        return "操作成功!";
+    }
+
     private SystemRole initRole(SystemRoleVO systemRoleVO, boolean isSave) {
         SystemRole systemRole = new SystemRoleVO();
         systemRole.setName(systemRoleVO.getName());

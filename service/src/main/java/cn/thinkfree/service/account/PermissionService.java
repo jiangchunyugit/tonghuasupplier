@@ -53,4 +53,11 @@ public interface PermissionService {
      * @return
      */
     List<SystemPermission> listPermissionByRoleID(Integer id);
+
+    /**
+     * 删除权限
+     * @param id
+     * @return
+     */
+    String updatePermissionForDel(Integer id);
 }
