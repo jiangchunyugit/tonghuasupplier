@@ -2,7 +2,12 @@ package cn.thinkfree.service.scheduling;
 
 import cn.thinkfree.database.mapper.DesignOrderMapper;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
+import cn.thinkfree.database.model.DesignOrder;
+import cn.thinkfree.database.model.DesignOrderExample;
+import cn.thinkfree.database.model.Project;
+import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
+import cn.thinkfree.service.constants.Scheduling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +49,23 @@ public class DelaySchedulingServiceImpl implements DelaySchedulingService {
     public Integer queryProjectOrderCount(ProjectOrderVO projectOrderVO) {
         projectOrderVO.setStatus(1);
         return designOrderMapper.selectProjectOrderCount(projectOrderVO);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 订单确认接口
+     * @Date
+     * @Param orderConfirmationVO
+     **/
+    @Override
+    public Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO) {
+        DesignOrder designOrder = new DesignOrder();
+        designOrder.setCompanyId(orderConfirmationVO.getCompanyId());
+        designOrder.setOrderStage(orderConfirmationVO.getOrderStage());
+
+        DesignOrderExample example = new DesignOrderExample();
+        example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
+        return designOrderMapper.updateByExampleSelective(designOrder, example);
     }
 }
