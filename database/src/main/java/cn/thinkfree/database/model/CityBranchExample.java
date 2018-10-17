@@ -1024,6 +1024,126 @@ public class CityBranchExample extends cn.thinkfree.core.model.AbstractDataAuth 
             addCriterion("branch_comp_id not between", value1, value2, "branchCompId");
             return (Criteria) this;
         }
+
+        public Criteria andProvinceCodeIsNull() {
+            addCriterion("province_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeIsNotNull() {
+            addCriterion("province_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeEqualTo(Short value) {
+            addCriterion("province_code =", value, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeNotEqualTo(Short value) {
+            addCriterion("province_code <>", value, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeGreaterThan(Short value) {
+            addCriterion("province_code >", value, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeGreaterThanOrEqualTo(Short value) {
+            addCriterion("province_code >=", value, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeLessThan(Short value) {
+            addCriterion("province_code <", value, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeLessThanOrEqualTo(Short value) {
+            addCriterion("province_code <=", value, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeIn(List<Short> values) {
+            addCriterion("province_code in", values, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeNotIn(List<Short> values) {
+            addCriterion("province_code not in", values, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeBetween(Short value1, Short value2) {
+            addCriterion("province_code between", value1, value2, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andProvinceCodeNotBetween(Short value1, Short value2) {
+            addCriterion("province_code not between", value1, value2, "provinceCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeIsNull() {
+            addCriterion("city_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeIsNotNull() {
+            addCriterion("city_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeEqualTo(Short value) {
+            addCriterion("city_code =", value, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeNotEqualTo(Short value) {
+            addCriterion("city_code <>", value, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeGreaterThan(Short value) {
+            addCriterion("city_code >", value, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeGreaterThanOrEqualTo(Short value) {
+            addCriterion("city_code >=", value, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeLessThan(Short value) {
+            addCriterion("city_code <", value, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeLessThanOrEqualTo(Short value) {
+            addCriterion("city_code <=", value, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeIn(List<Short> values) {
+            addCriterion("city_code in", values, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeNotIn(List<Short> values) {
+            addCriterion("city_code not in", values, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeBetween(Short value1, Short value2) {
+            addCriterion("city_code between", value1, value2, "cityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityCodeNotBetween(Short value1, Short value2) {
+            addCriterion("city_code not between", value1, value2, "cityCode");
+            return (Criteria) this;
+        }
     }
 
     /**
