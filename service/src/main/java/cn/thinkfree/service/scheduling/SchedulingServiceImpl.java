@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service(value = "schedulingService")
 public class SchedulingServiceImpl implements SchedulingService {
-    @Autowired(required = false)
+    @Autowired
     private ProjectBigSchedulingMapper projectBigSchedulingMapper;
     @Autowired
     private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
