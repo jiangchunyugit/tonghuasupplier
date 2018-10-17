@@ -10,7 +10,7 @@ import java.util.Map;
  * @author gejiaming
  */
 @Data
-@ApiModel(value = "ProjectVo",description = "项目详情")
+@ApiModel(value = "ProjectVo--aa",description = "项目详情")
 public class ProjectVo {
     @ApiModelProperty(name = "projectNo",value = "项目编号")
     private String projectNo;
@@ -32,6 +32,8 @@ public class ProjectVo {
     private Integer projectOrder;
     @ApiModelProperty(name = "projectData",value = "项目资料")
     private Integer projectData;
+    @ApiModelProperty(name = "owner",value = "业主实体")
+    private PersionVo owner;
     @ApiModelProperty(name = "modular",value = "订单模块集合")
     private Map<Integer,Object> modular;
 //    @ApiModelProperty(name = "constructionOrderVo",value = "施工订单详情")

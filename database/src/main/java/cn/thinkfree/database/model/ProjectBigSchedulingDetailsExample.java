@@ -1494,6 +1494,126 @@ public class ProjectBigSchedulingDetailsExample {
             addCriterion("version not between", value1, value2, "version");
             return (Criteria) this;
         }
+
+        public Criteria andEndTimeIsNull() {
+            addCriterion("end_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeIsNotNull() {
+            addCriterion("end_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeEqualTo(Date value) {
+            addCriterion("end_time =", value, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeNotEqualTo(Date value) {
+            addCriterion("end_time <>", value, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeGreaterThan(Date value) {
+            addCriterion("end_time >", value, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("end_time >=", value, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeLessThan(Date value) {
+            addCriterion("end_time <", value, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeLessThanOrEqualTo(Date value) {
+            addCriterion("end_time <=", value, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeIn(List<Date> values) {
+            addCriterion("end_time in", values, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeNotIn(List<Date> values) {
+            addCriterion("end_time not in", values, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeBetween(Date value1, Date value2) {
+            addCriterion("end_time between", value1, value2, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andEndTimeNotBetween(Date value1, Date value2) {
+            addCriterion("end_time not between", value1, value2, "endTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeIsNull() {
+            addCriterion("satrt_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeIsNotNull() {
+            addCriterion("satrt_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeEqualTo(Date value) {
+            addCriterion("satrt_time =", value, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeNotEqualTo(Date value) {
+            addCriterion("satrt_time <>", value, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeGreaterThan(Date value) {
+            addCriterion("satrt_time >", value, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("satrt_time >=", value, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeLessThan(Date value) {
+            addCriterion("satrt_time <", value, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeLessThanOrEqualTo(Date value) {
+            addCriterion("satrt_time <=", value, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeIn(List<Date> values) {
+            addCriterion("satrt_time in", values, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeNotIn(List<Date> values) {
+            addCriterion("satrt_time not in", values, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeBetween(Date value1, Date value2) {
+            addCriterion("satrt_time between", value1, value2, "satrtTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andSatrtTimeNotBetween(Date value1, Date value2) {
+            addCriterion("satrt_time not between", value1, value2, "satrtTime");
+            return (Criteria) this;
+        }
     }
 
     /**

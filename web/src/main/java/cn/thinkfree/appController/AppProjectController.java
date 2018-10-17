@@ -172,9 +172,9 @@ public class AppProjectController extends AbsBaseController{
         list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),1,true,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo2 = new DataDetailVo(list2,new Date(),2,false,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo3 = new DataDetailVo(list3,new Date(),3,true,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),"客厅施工图",1,true,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        DataDetailVo dataDetailVo2 = new DataDetailVo(list2,new Date(),"客厅施工图",1,false,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        DataDetailVo dataDetailVo3 = new DataDetailVo(list3,new Date(),"客厅施工图",1,true,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         dataDetailVoList.add(dataDetailVo1);
         dataDetailVoList.add(dataDetailVo2);
         dataDetailVoList.add(dataDetailVo3);
@@ -189,7 +189,7 @@ public class AppProjectController extends AbsBaseController{
         list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),4,null,null);
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),"客厅施工图",1,null,null);
         return sendJsonData(ResultMessage.SUCCESS,dataDetailVo1);
     }
 
@@ -200,7 +200,7 @@ public class AppProjectController extends AbsBaseController{
         list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),4,null,null);
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),"客厅施工图",1,null,null);
         return sendJsonData(ResultMessage.SUCCESS,dataDetailVo1);
     }
 

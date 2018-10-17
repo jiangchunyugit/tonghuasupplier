@@ -2,11 +2,11 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.model.ProjectBigSchedulingExample;
-import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 import java.util.TreeSet;
+
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProjectBigSchedulingMapper {
     /**
@@ -96,7 +96,6 @@ public interface ProjectBigSchedulingMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectBigScheduling record);
-
     /**
      * @return
      * @Author chengpunan

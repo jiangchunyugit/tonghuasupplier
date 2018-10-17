@@ -24,7 +24,11 @@ public class DataDetailVo {
     /**
      * 类型
      */
-    private Integer type;
+    private String type;
+    /**
+     * 展示类型(1,图片 2,PDF)
+     */
+    private Integer playType;
     /**
      * 是否确认
      */

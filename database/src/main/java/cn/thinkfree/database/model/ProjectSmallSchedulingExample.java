@@ -265,52 +265,62 @@ public class ProjectSmallSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdEqualTo(Integer value) {
+        public Criteria andCompanyIdEqualTo(String value) {
             addCriterion("company_id =", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotEqualTo(Integer value) {
+        public Criteria andCompanyIdNotEqualTo(String value) {
             addCriterion("company_id <>", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThan(Integer value) {
+        public Criteria andCompanyIdGreaterThan(String value) {
             addCriterion("company_id >", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
             addCriterion("company_id >=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThan(Integer value) {
+        public Criteria andCompanyIdLessThan(String value) {
             addCriterion("company_id <", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
             addCriterion("company_id <=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIn(List<Integer> values) {
+        public Criteria andCompanyIdLike(String value) {
+            addCriterion("company_id like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotLike(String value) {
+            addCriterion("company_id not like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIn(List<String> values) {
             addCriterion("company_id in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotIn(List<Integer> values) {
+        public Criteria andCompanyIdNotIn(List<String> values) {
             addCriterion("company_id not in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdBetween(String value1, String value2) {
             addCriterion("company_id between", value1, value2, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdNotBetween(String value1, String value2) {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
@@ -1292,6 +1302,66 @@ public class ProjectSmallSchedulingExample {
 
         public Criteria andVersionNotBetween(Integer value1, Integer value2) {
             addCriterion("version not between", value1, value2, "version");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortIsNull() {
+            addCriterion("predecessor_small_sort is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortIsNotNull() {
+            addCriterion("predecessor_small_sort is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortEqualTo(Integer value) {
+            addCriterion("predecessor_small_sort =", value, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortNotEqualTo(Integer value) {
+            addCriterion("predecessor_small_sort <>", value, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortGreaterThan(Integer value) {
+            addCriterion("predecessor_small_sort >", value, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortGreaterThanOrEqualTo(Integer value) {
+            addCriterion("predecessor_small_sort >=", value, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortLessThan(Integer value) {
+            addCriterion("predecessor_small_sort <", value, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortLessThanOrEqualTo(Integer value) {
+            addCriterion("predecessor_small_sort <=", value, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortIn(List<Integer> values) {
+            addCriterion("predecessor_small_sort in", values, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortNotIn(List<Integer> values) {
+            addCriterion("predecessor_small_sort not in", values, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortBetween(Integer value1, Integer value2) {
+            addCriterion("predecessor_small_sort between", value1, value2, "predecessorSmallSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andPredecessorSmallSortNotBetween(Integer value1, Integer value2) {
+            addCriterion("predecessor_small_sort not between", value1, value2, "predecessorSmallSort");
             return (Criteria) this;
         }
     }

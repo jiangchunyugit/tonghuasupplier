@@ -1,5 +1,6 @@
 package cn.thinkfree.service.scheduling;
 
+import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 
 import java.util.List;
@@ -28,4 +29,13 @@ public interface DelaySchedulingService {
      * @Param
      **/
     Integer queryProjectOrderCount(ProjectOrderVO projectOrderVO);
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 订单确认接口
+     * @Date
+     * @Param orderConfirmationVO
+     **/
+    Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO);
 }

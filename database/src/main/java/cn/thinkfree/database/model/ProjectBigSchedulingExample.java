@@ -1134,66 +1134,6 @@ public class ProjectBigSchedulingExample {
             addCriterion("room_num not between", value1, value2, "roomNum");
             return (Criteria) this;
         }
-
-        public Criteria andPredecessorSmallSortIsNull() {
-            addCriterion("predecessor_small_sort is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortIsNotNull() {
-            addCriterion("predecessor_small_sort is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortEqualTo(Integer value) {
-            addCriterion("predecessor_small_sort =", value, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortNotEqualTo(Integer value) {
-            addCriterion("predecessor_small_sort <>", value, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortGreaterThan(Integer value) {
-            addCriterion("predecessor_small_sort >", value, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortGreaterThanOrEqualTo(Integer value) {
-            addCriterion("predecessor_small_sort >=", value, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortLessThan(Integer value) {
-            addCriterion("predecessor_small_sort <", value, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortLessThanOrEqualTo(Integer value) {
-            addCriterion("predecessor_small_sort <=", value, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortIn(List<Integer> values) {
-            addCriterion("predecessor_small_sort in", values, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortNotIn(List<Integer> values) {
-            addCriterion("predecessor_small_sort not in", values, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortBetween(Integer value1, Integer value2) {
-            addCriterion("predecessor_small_sort between", value1, value2, "predecessorSmallSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andPredecessorSmallSortNotBetween(Integer value1, Integer value2) {
-            addCriterion("predecessor_small_sort not between", value1, value2, "predecessorSmallSort");
-            return (Criteria) this;
-        }
     }
 
     /**

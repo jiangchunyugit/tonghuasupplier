@@ -74,7 +74,7 @@
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
-        <table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>
+        <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
@@ -92,6 +92,12 @@
         <!--<table tableName="approval_flow_option" domainObjectName="ApprovalFlowOption"/>-->
         <!--<table tableName="approval_flow_push_msg" domainObjectName="ApprovalFlowPushMsg"/>-->
         <!--<table tableName="approval_flow_timeout_notice" domainObjectName="ApprovalFlowTimeoutNotice"/>-->
+        <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
+        <!--<table tableName="designer_style_config" domainObjectName="DesignerStyleConfig"/>-->
+        <!--<table tableName="designer_style_relation" domainObjectName="DesignerStyleRelation"/>-->
+        <!--<table tableName="employee_msg" domainObjectName="EmployeeMsg"/>-->
+        <!--<table tableName="employee_apply_log" domainObjectName="EmployeeApplyLog"/>-->
+        <!--<table tableName="option_log" domainObjectName="OptionLog"/>-->
         <!--approval flow end-->
     </context>
 </generatorConfiguration>
