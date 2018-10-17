@@ -2,9 +2,9 @@ package cn.thinkfree.controller;
 
 import java.util.Map;
 
-import cn.thinkfree.database.vo.CompanyListSEO;
-import cn.thinkfree.database.vo.CompanyListVo;
+import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +12,6 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.contractTemplate.ContractTemplateService;
@@ -39,6 +37,38 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 	ContractService contractService;
     @Autowired
     ContractTemplateService contractTemplateService;
+
+    /**
+     * 入驻公司资质变更回显
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/findCompanyInfo", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="入驻公司资质变更回显")
+    public MyRespBundle<CompanySubmitVo> findCompanyInfo(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
+        CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
+        return sendJsonData(success, "操作成功", companySubmitVo);
+    }
+
+    /**
+     * 入驻公司资质变更更新
+     * @param companyTemporaryVo
+     * @return
+     */
+    @RequestMapping(value = "/changeCompanyInfo", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="入驻公司资质变更更新")
+    public MyRespBundle<String> changeCompanyInfo(@ApiParam("变更的公司资质信息")CompanyTemporaryVo companyTemporaryVo){
+        boolean flag = companySubmitService.changeCompanyInfo(companyTemporaryVo);
+        if(flag){
+            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
+    }
+
+
+    //入驻公司资质变更审批
 
     @RequestMapping(value = "/upCompanyInfo", method = RequestMethod.POST)
     @MyRespBody

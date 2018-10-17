@@ -42,19 +42,19 @@ public enum CompanyAuditStatus {
 	
 	 /**
 	  * 8 910';
-     * 入驻成功
+     * 资质待审核中
      */
 	APTITUDEING(8,"资质待审核中"),
     
     
     /**
-     * 入驻成功
+     * 资质审核通过
      */
-	APTITUDETG(8,"资质审核通过 "),
+	APTITUDETG(9,"资质审核通过 "),
     
     
     /**
-     * 入驻成功
+     * 资质审核不通过
      */
     SUCCESSJOSB(10,"资质审核不通过");
 

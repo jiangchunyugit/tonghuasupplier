@@ -18,8 +18,11 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
     @ApiModelProperty(value = "公司名称，联系人姓名，手机号")
     private String param;
 
-    @ApiModelProperty(value = "申请时间")
-    private Date applyDate;
+    @ApiModelProperty(value = "开始时间")
+    private Date startDate;
+
+    @ApiModelProperty(value = "结束时间")
+    private Date endDate;
 
     @ApiModelProperty(value = "申请事项")
     private Short applyThingType;
@@ -36,20 +39,28 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
     @ApiModelProperty(value = "省")
     private Short provinceCode;
 
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
     public String getParam() {
         return param;
     }
 
     public void setParam(String param) {
         this.param = param;
-    }
-
-    public Date getApplyDate() {
-        return applyDate;
-    }
-
-    public void setApplyDate(Date applyDate) {
-        this.applyDate = applyDate;
     }
 
     public Short getApplyThingType() {
@@ -96,7 +107,8 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
     public String toString() {
         return "CompanyApplySEO{" +
                 "param='" + param + '\'' +
-                ", applyDate=" + applyDate +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 ", applyThingType=" + applyThingType +
                 ", companyRole='" + companyRole + '\'' +
                 ", cityCode=" + cityCode +

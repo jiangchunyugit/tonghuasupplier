@@ -3,6 +3,8 @@ package cn.thinkfree.service.companyapply;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
+import cn.thinkfree.core.utils.RandomNumUtils;
+import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.CompanyClassify;
 import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
@@ -11,6 +13,7 @@ import cn.thinkfree.database.mapper.UserRegisterMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.CompanyApply;
+import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
@@ -68,6 +71,22 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return false;
     }
 
+    @Override
+    public Long countApply(String role) {
+        PcApplyInfoExample example = new PcApplyInfoExample();
+        //查询未办理申请数量
+        example.createCriteria().andCompanyRoleLike(role).
+                andTransactTypeEqualTo(SysConstants.YesOrNo.NO.shortVal());
+        long line = pcApplyInfoMapper.countByExample(example);
+        return line;
+    }
+
+    @Override
+    public void sendMessage(String email) {
+        String activeCode = RandomNumUtils.random(4);
+        //TODO 发送邮件
+    }
+
     /**
      * a:添加账号---》返回公司id
      * @param roleId
@@ -105,6 +124,10 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
+        //公司平台类型：platform_type = 0
+        companyInfo.setPlatformType(CompanyConstants.PlatformType.NOTACTIVATION.shortVal());
+        //is_delete = 2
+        companyInfo.setIsDelete(SysConstants.YesOrNoSp.NO.shortVal());
         //公司级别：入驻公司为三级公司
         companyInfo.setCompanyClassify(CompanyClassify.TERTIARY_COMPANY.shortVal());
         int infoLine = companyInfoMapper.insertSelective(companyInfo);
@@ -135,6 +158,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             applyLine = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfoSEO, example);
         }
 
+        //TODO 插入注册表？？？
         //插入注册表
         /*UserRegister userRegister = new UserRegister();
         userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
@@ -143,12 +167,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         userRegister.setType(UserRegisterType.Enterprise.shortVal());
         MultipleMd5 md5 = new MultipleMd5();
         userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
-        //TODO 插入注册表phone 插什么？？？
+
         userRegister.setPhone(pcApplyInfoSEO.getContactPhone());
         userRegister.setUserId(pcApplyInfoSEO.getCompanyId());
         int registerLine = userRegisterMapper.insertSelective(userRegister);*/
 
-        //TODO：添加账号发送短信
+        //TODO：添加账号发送短信 and 发送邮件
 
         if(infoLine > 0 && expandLine > 0 && applyLine> 0){
             return true;
@@ -173,7 +197,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     /**
      * 添加申请记录：是否办理默认0；
-     * @param pcApplyInfo
+     * @param pcApplyInfoSEO
      * @return
      */
     @Override
@@ -181,8 +205,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     public boolean addApplyInfo(PcApplyInfoSEO pcApplyInfoSEO) {
         //TODO 校验验证码
 
-        PcApplyInfo pcApplyInfo = pcApplyInfoSEO;
+        PcApplyInfo pcApplyInfo = new PcApplyInfo();
 
+        SpringBeanUtil.copy(pcApplyInfoSEO,pcApplyInfo);
         Date date = new Date();
         pcApplyInfo.setApplyDate(date);
         //是否办理

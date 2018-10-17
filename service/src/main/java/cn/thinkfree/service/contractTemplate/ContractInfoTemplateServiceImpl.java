@@ -12,17 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.github.pagehelper.StringUtil;
-import com.mysql.fabric.xmlrpc.base.Data;
 
-import cn.thinkfree.core.bundle.MyRequBundle;
 import cn.thinkfree.core.utils.WebFileUtil;
-import cn.thinkfree.database.mapper.PcContractTemplateCategoryMapper;
-import cn.thinkfree.database.mapper.PcContractTemplateDictMapper;
-import cn.thinkfree.database.mapper.PcContractTemplateMapper;
-import cn.thinkfree.database.model.PcContractTemplate;
-import cn.thinkfree.database.model.PcContractTemplateCategory;
-import cn.thinkfree.database.model.PcContractTemplateDict;
-import cn.thinkfree.database.model.PcContractTemplateDictExample;
+import cn.thinkfree.database.mapper.ContractTemplateCategoryMapper;
+import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
+import cn.thinkfree.database.mapper.ContractTemplateMapper;
+import cn.thinkfree.database.model.ContractTemplate;
+import cn.thinkfree.database.model.ContractTemplateCategory;
+import cn.thinkfree.database.model.ContractTemplateDict;
+import cn.thinkfree.database.model.ContractTemplateDictExample;
 import cn.thinkfree.database.vo.MyContractTemplateDetails;
 
 @Service
@@ -30,26 +28,26 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 
 	
 	@Autowired
-    PcContractTemplateMapper pcContractTemplateMapper;
+    ContractTemplateMapper ContractTemplateMapper;
 	
 	@Autowired
-	PcContractTemplateCategoryMapper pcContractTemplateCategoryMapper;
+	ContractTemplateCategoryMapper ContractTemplateCategoryMapper;
 	
 	@Autowired
-	PcContractTemplateDictMapper pcContractTemplateDictMapper;
+	ContractTemplateDictMapper ContractTemplateDictMapper;
 	
 	@Override
-	public List<PcContractTemplate> PcContractTemplateList(String type) {
-		return pcContractTemplateMapper.queryListByType(type);
+	public List<ContractTemplate> ContractTemplateList(String type) {
+		return ContractTemplateMapper.queryListByType(type);
 	}
 
 	
 	@Override
 	public Map<String, String> getTemplateCategoryList(String type) {
 		Map<String,String> map = new HashMap<>();
-		PcContractTemplateCategory example = new  PcContractTemplateCategory();
+		ContractTemplateCategory example = new  ContractTemplateCategory();
 		example.setCompanyType(type);
-		List<PcContractTemplateCategory> list = pcContractTemplateCategoryMapper.selectPcContractTemplateCategoryByType(example);
+		List<ContractTemplateCategory> list = ContractTemplateCategoryMapper.selectContractTemplateCategoryByType(example);
 		for (int i = 0; i < list.size(); i++) {
 			map.put(list.get(i).getCategoryCode(),list.get(i).getCategoryName());
 		}
@@ -59,7 +57,7 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 	
 	
 	@Override
-	public Map<String, String> insertInfoContractTemplate(PcContractTemplate pcContractTemplate) {
+	public Map<String, String> insertInfoContractTemplate(ContractTemplate ContractTemplate) {
 		
 		return null;
 	}
@@ -82,14 +80,14 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 		}
 		
 		for (int i = 0; i < map.size(); i++) {
-			PcContractTemplateDict record = new PcContractTemplateDict();
+			ContractTemplateDict record = new ContractTemplateDict();
 			record.setCategoryCode(CategoryId);
 			Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator(); 
 			while (entries.hasNext()) { 
 			  Map.Entry<String, String> entry = entries.next(); 
 			  record.setCode(entry.getKey());
 			  record.setName(entry.getValue());
-			  pcContractTemplateDictMapper.insertSelective(record);
+			  ContractTemplateDictMapper.insertSelective(record);
 			}
 			
 		}
@@ -112,10 +110,10 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 			resMap.put("msg", "stauts is null");
 			return resMap;
 		}
-		PcContractTemplate tl = new PcContractTemplate();
+		ContractTemplate tl = new ContractTemplate();
 		tl.setContractStatus(stauts);
 		tl.setContractTpType(type);
-		int  flag = pcContractTemplateMapper.updatePcContractTemplateStatus(tl);
+		int  flag = ContractTemplateMapper.updateContractTemplateStatus(tl);
 		if(flag > 0){
 			resMap.put("code", "1");
 			resMap.put("msg", "操作成功");
@@ -131,7 +129,7 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 		
 		Map<String, String> map = new HashMap<>();
 		
-		PcContractTemplate con = new PcContractTemplate();
+		ContractTemplate con = new ContractTemplate();
 		
 		con.setContractTpName(contractTpName);
 		
@@ -148,20 +146,20 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 	@Override
 	public String getTemplatePdfUrl(String type) {
 		// TODO Auto-generated method stub
-		return pcContractTemplateMapper.queryListByType(type).get(0).getPdfUrl();
+		return ContractTemplateMapper.queryListByType(type).get(0).getPdfUrl();
 	}
 
 
 	@Override
 	public Map<String, String> queryContractDic(String type) {
-		PcContractTemplateDictExample example = new PcContractTemplateDictExample();
+		ContractTemplateDictExample example = new ContractTemplateDictExample();
 		if (type.equals("0")) {
 			example.createCriteria().andTypeEqualTo(type);
 		} else if (type.equals("1")) {
 			example.createCriteria().andTypeEqualTo(type);
 		}
 
-		List<PcContractTemplateDict> list = pcContractTemplateDictMapper.selectByExample(example);
+		List<ContractTemplateDict> list = ContractTemplateDictMapper.selectByExample(example);
 		Map<String,String> resMap = new HashMap<>();
 		for (int i = 0; i < list.size(); i++) {
 			resMap.put(list.get(i).getCode(), list.get(i).getName());

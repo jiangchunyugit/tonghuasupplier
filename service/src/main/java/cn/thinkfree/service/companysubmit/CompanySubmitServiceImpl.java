@@ -3,8 +3,12 @@ package cn.thinkfree.service.companysubmit;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.database.constants.UserLevel;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.constants.AuditStatus;
+import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import com.github.pagehelper.PageHelper;
@@ -18,15 +22,9 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
-import cn.thinkfree.database.model.CompanyInfoExpand;
-import cn.thinkfree.database.model.CompanyInfoExpandExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 
 import javax.servlet.http.HttpServletResponse;
@@ -48,11 +46,53 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     CompanyInfoMapper companyInfoMapper;
     
     @Autowired
-	ContractInfoMapper contractInfoMapper;
+	MyContractInfoMapper contractInfoMapper;
 	
 	@Autowired
 	PcAuditInfoMapper pcAuditInfoMapper;
 
+
+	@Override
+	public CompanySubmitVo findCompanyInfo(String companyId) {
+		CompanySubmitVo companySubmitVo = new CompanySubmitVo();
+
+		//查询companyInfo表：平台状态：platform_type=0;
+		// 删除状态：is_delete=2;    审核状态：is_check=1;    审批状态：audit_status=7
+		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
+				.andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+				.andIsCheckEqualTo(SysConstants.YesOrNo.YES.shortVal())
+				.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
+				.andPlatformTypeEqualTo(SysConstants.YesOrNo.NO.shortVal());
+
+		List<CompanyInfo> companyInfo = companyInfoMapper.selectByExample(companyInfoExample);
+		if(companyInfo.get(0) == null){
+			return null;
+		}
+		companySubmitVo.setCompanyInfo(companyInfo.get(0));
+
+		//查询companyInfoExpand表：
+		CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
+		companyInfoExpandExample.createCriteria().andCompanyIdEqualTo(companyId);
+		List<CompanyInfoExpand> companyInfoExpand = companyInfoExpandMapper.selectByExample(companyInfoExpandExample);
+		companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpand.get(0).getCompanyType().intValue()));
+		companySubmitVo.setCompanyInfoExpand(companyInfoExpand.get(0));
+
+
+//		对公账信息PcCompanyFinancial
+		PcCompanyFinancialExample pcCompanyFinancialExample = new PcCompanyFinancialExample();
+		pcCompanyFinancialExample.createCriteria().andCompanyIdEqualTo(companyId);
+		List<PcCompanyFinancial> companyFinancials = pcCompanyFinancialMapper.selectByExample(pcCompanyFinancialExample);
+		companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+
+		return companySubmitVo;
+	}
+
+	@Override
+	public boolean changeCompanyInfo(CompanyTemporaryVo companyTemporaryVo) {
+		//图片重新生成
+		return false;
+	}
 
 	/**
 	 * 公司列表

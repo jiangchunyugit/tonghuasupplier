@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,17 +24,18 @@ import com.github.pagehelper.PageInfo;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.mapper.PcContractTermsMapper;
+import cn.thinkfree.database.mapper.ContractTermsMapper;
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.ContractInfo;
+import cn.thinkfree.database.model.ContractTerms;
+import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.model.PcContractTerms;
-import cn.thinkfree.database.model.PcContractTermsExample;
 import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
@@ -42,6 +44,7 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.event.AuditEvent;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.WordUtil;
@@ -50,7 +53,7 @@ import cn.thinkfree.service.utils.WordUtil;
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
 
 	@Autowired
-	ContractInfoMapper contractInfoMapper;
+	MyContractInfoMapper contractInfoMapper;
 	
 	@Autowired
 	CompanyInfoMapper companyInfoMapper;
@@ -62,9 +65,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	PcCompanyFinancialMapper pcCompanyFinancialMapper;
 	
 	@Autowired
-	PcContractTermsMapper pcContractTermsMapper;
+	ContractTermsMapper pcContractTermsMapper;
 	
-	
+	@Autowired
+    private ApplicationContext applicationContext;
 
 	
 	
@@ -156,7 +160,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			map.put("code", "1");
 			map.put("msg", "审核状态为空");
 			return  map;
-		}if(!StringUtils.isEmpty(auditStatus) && auditCase.equals("1") && StringUtils.isEmpty(auditCase)){
+		}if((!StringUtils.isEmpty(auditCase) && auditStatus.equals("1"))){
 			map.put("code", "1");
 			map.put("msg", "清填写审核不通过原因");
 			return  map;
@@ -166,17 +170,19 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		ContractVo vo = new ContractVo();
 		vo.setCompanyId(companyId);
 		vo.setContractNumber(contractNumber);
-		if(auditCase.equals(AuditStatus.AuditPass.shortVal()) ){//
+		if(auditStatus.equals(AuditStatus.AuditPass.shortVal()) ){//
 			vo.setContractStatus(ContractStatus.AuditPass.shortVal());
 		}else{
 			vo.setContractStatus(ContractStatus.AuditDecline.shortVal());
 		}
-		
+//		ContractInfo ss = new ContractInfo();
+//		ss.setCompanyId("测试");
+		//applicationContext.publishEvent(new AuditEvent(ss));
 		//修改公司表 
 		int flag = contractInfoMapper.updateContractStatus(vo);
 		CompanyInfo companyInfo = new CompanyInfo();
 		companyInfo.setCompanyId(companyId);
-		if(auditCase.equals(AuditStatus.AuditPass.shortVal())){//财务审核通过
+		if(auditStatus.equals(AuditStatus.AuditPass.shortVal())){//财务审核通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSCHECK.stringVal());
 		}else{//财务审核不通过
 			companyInfo.setAuditStatus(CompanyAuditStatus.FAILCHECK.stringVal());
@@ -351,7 +357,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		  Map.Entry<String, String> entry = entries.next(); 
 		  String key = entry.getKey();
 		  String value = entry.getValue();
-		  PcContractTerms terms = new PcContractTerms();
+		  ContractTerms terms = new ContractTerms();
 		  terms.setCompanyId(companyId);
 		  terms.setContractNumber(contractNumber);
 		  terms.setCreateTime(new Date());
@@ -359,7 +365,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		  terms.setContractDictCode(key);
 		  terms.setContractValue(value);
 		  //list.add(terms);
-		  PcContractTermsExample exp = new PcContractTermsExample();
+		  ContractTermsExample exp = new ContractTermsExample();
 		  exp.createCriteria().andCompanyIdEqualTo(companyId).andContractDictCodeEqualTo(key).andContractNumberEqualTo(contractNumber);
 		  pcContractTermsMapper.deleteByExample(exp);
 		  pcContractTermsMapper.insertSelective(terms);
@@ -383,16 +389,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		CompanyInfoVo companyInfo = companyInfoMapper.selectByCompanyId(companyId);
 		
 		// 合同详情
-		PcContractTermsExample exp = new PcContractTermsExample();
+	    ContractTermsExample exp = new ContractTermsExample();
 		//判断公司类型
 		exp.createCriteria().andCompanyIdEqualTo(companyId).
 		andContractNumberEqualTo(contractNumber);
 		
-		List<PcContractTerms> list = pcContractTermsMapper.selectByExample(exp);
+		List<ContractTerms> list = pcContractTermsMapper.selectByExample(exp);
 		
 		if(list.size() == 0 && companyInfo != null){
-			PcContractTerms term_0 = new PcContractTerms("01","居然设计家");
-			PcContractTerms term_1 = new PcContractTerms("02",companyInfo.getCompanyName());
+			ContractTerms term_0 = new ContractTerms("01","居然设计家");
+			ContractTerms term_1 = new ContractTerms("02",companyInfo.getCompanyName());
 			list.add(term_0);
 			list.add(term_1);
 		}

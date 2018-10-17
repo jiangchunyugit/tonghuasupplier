@@ -5,10 +5,8 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import cn.thinkfree.core.bundle.MyRequBundle;
-import cn.thinkfree.database.model.PcContractTemplate;
+import cn.thinkfree.database.model.ContractTemplate;
 import cn.thinkfree.database.vo.MyContractTemplateDetails;
-import io.swagger.annotations.ApiParam;
 
 public interface ContractTemplateService {
 
@@ -18,7 +16,7 @@ public interface ContractTemplateService {
 	 * @param type
 	 * @return PcContractTemplatelist
 	 */
-    List<PcContractTemplate> PcContractTemplateList(String type);
+    List<ContractTemplate> ContractTemplateList(String type);
     
    
     /**
@@ -69,7 +67,7 @@ public interface ContractTemplateService {
     * code  和value 
     * @return true  false 
     */
-    Map<String,String>  insertInfoContractTemplate(PcContractTemplate pcContractTemplate);
+    Map<String,String>  insertInfoContractTemplate(ContractTemplate pcContractTemplate);
     
     
     /**
