@@ -1,9 +1,6 @@
 package cn.thinkfree.service.platform.employee.impl;
 
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.EmployeeApplyLogMapper;
-import cn.thinkfree.database.mapper.EmployeeMsgMapper;
-import cn.thinkfree.database.mapper.UserRoleSetMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import org.slf4j.Logger;

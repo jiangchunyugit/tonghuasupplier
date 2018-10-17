@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.service.platform.designer.vo.CardTypeVo;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,6 +29,17 @@ import java.util.List;
 public class EmployeeController extends AbsBaseController {
     @Autowired
     private EmployeeService employeeService;
+
+    @ApiOperation("证件类型")
+    @MyRespBody
+    @RequestMapping(value = "cardType", method = {RequestMethod.POST,RequestMethod.GET})
+    public MyRespBundle<List<CardTypeVo>> cardType(){
+        //暂时写死
+        List<CardTypeVo> cardTypeVos = new ArrayList<>();
+        cardTypeVos.add(new CardTypeVo(1,"身份证"));
+        cardTypeVos.add(new CardTypeVo(2,"护照"));
+        return sendJsonData(ResultMessage.SUCCESS,cardTypeVos);
+    }
 
     @ApiOperation("员工实名认证审核")
     @MyRespBody
@@ -48,7 +61,7 @@ public class EmployeeController extends AbsBaseController {
     @RequestMapping(value = "submitCardMsg", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle submitCardMsg(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "cardType", required = false, value = "证件类型，1身份证，2护照") @RequestParam(name = "cardType", required = false) int cardType,
+            @ApiParam(name = "cardType", required = false, value = "证件类型") @RequestParam(name = "cardType", required = false) int cardType,
             @ApiParam(name = "cardNo", required = false, value = "证件号码") @RequestParam(name = "cardNo", required = false) String cardNo,
             @ApiParam(name = "realName", required = false, value = "真实姓名") @RequestParam(name = "realName", required = false) String realName) {
         try{

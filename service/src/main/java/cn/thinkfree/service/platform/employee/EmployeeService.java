@@ -1,5 +1,8 @@
 package cn.thinkfree.service.platform.employee;
 
+import cn.thinkfree.database.model.Area;
+import cn.thinkfree.database.model.City;
+import cn.thinkfree.database.model.Province;
 import cn.thinkfree.database.model.UserRoleSet;
 
 import java.util.List;

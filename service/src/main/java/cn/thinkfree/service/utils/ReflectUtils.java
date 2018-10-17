@@ -199,4 +199,23 @@ public class ReflectUtils {
 		Map<String, Object> listMap = beanToMap(obj);
 		return listMap.get(key);
 	}
+
+	/**
+	 * 集合数据转换
+	 * @param bs
+	 * @param <A>
+	 * @param <B>
+	 * @return
+	 */
+	public static <A,B> List<A> listToList(List<B> bs){
+		List<A> as = new ArrayList<>();
+		for(B b : bs){
+			try{
+				as.add((A) b);
+			}catch (Exception e){
+				//强转失败
+			}
+		}
+		return as;
+	}
 }
