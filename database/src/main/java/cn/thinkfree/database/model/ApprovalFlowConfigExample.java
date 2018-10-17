@@ -1174,6 +1174,66 @@ public class ApprovalFlowConfigExample {
             addCriterion("alias not between", value1, value2, "alias");
             return (Criteria) this;
         }
+
+        public Criteria andIsBaseIsNull() {
+            addCriterion("is_base is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseIsNotNull() {
+            addCriterion("is_base is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseEqualTo(Short value) {
+            addCriterion("is_base =", value, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseNotEqualTo(Short value) {
+            addCriterion("is_base <>", value, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseGreaterThan(Short value) {
+            addCriterion("is_base >", value, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseGreaterThanOrEqualTo(Short value) {
+            addCriterion("is_base >=", value, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseLessThan(Short value) {
+            addCriterion("is_base <", value, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseLessThanOrEqualTo(Short value) {
+            addCriterion("is_base <=", value, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseIn(List<Short> values) {
+            addCriterion("is_base in", values, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseNotIn(List<Short> values) {
+            addCriterion("is_base not in", values, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseBetween(Short value1, Short value2) {
+            addCriterion("is_base between", value1, value2, "isBase");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsBaseNotBetween(Short value1, Short value2) {
+            addCriterion("is_base not between", value1, value2, "isBase");
+            return (Criteria) this;
+        }
     }
 
     /**

@@ -33,8 +33,10 @@ public class ApprovalFlowNoticeUrlServiceImpl implements ApprovalFlowNoticeUrlSe
 
     @Override
     public void deleteByNodeNums(List<String> nodeNums) {
-        ApprovalFlowNoticeUrlExample example = new ApprovalFlowNoticeUrlExample();
-        example.createCriteria().andNodeNumIn(nodeNums);
-        noticeUrlMapper.deleteByExample(example);
+        if (nodeNums != null && nodeNums.size() > 0 ){
+            ApprovalFlowNoticeUrlExample example = new ApprovalFlowNoticeUrlExample();
+            example.createCriteria().andNodeNumIn(nodeNums);
+            noticeUrlMapper.deleteByExample(example);
+        }
     }
 }

@@ -89,22 +89,24 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
      */
     @Override
     public void deleteByConfigLogNums(List<String> configLogNums) {
-        ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
-        nodeExample.createCriteria().andNumIn(configLogNums);
+        if (configLogNums != null && configLogNums.size() > 0) {
+            ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
+            nodeExample.createCriteria().andConfigLogNumIn(configLogNums);
 
-        List<ApprovalFlowNode> nodes = nodeMapper.selectByExample(nodeExample);
+            List<ApprovalFlowNode> nodes = nodeMapper.selectByExample(nodeExample);
 
-        if (nodes != null && nodes.size() > 0) {
-            List<String> nodeNums = new ArrayList<>(nodes.size());
-            for (ApprovalFlowNode node : nodes) {
-                nodeNums.add(node.getNum());
+            if (nodes != null && nodes.size() > 0) {
+                List<String> nodeNums = new ArrayList<>(nodes.size());
+                for (ApprovalFlowNode node : nodes) {
+                    nodeNums.add(node.getNum());
+                }
+                noticeUrlService.deleteByNodeNums(nodeNums);
+                optionService.deleteByNodeNums(nodeNums);
+                nodeRoleService.deleteByNodeNums(nodeNums);
+                timeoutNoticeService.deleteByNodeNums(nodeNums);
             }
-            noticeUrlService.deleteByNodeNums(nodeNums);
-            optionService.deleteByNodeNums(nodeNums);
-            nodeRoleService.deleteByNodeNums(nodeNums);
-            timeoutNoticeService.deleteByNodeNums(nodeNums);
-        }
 
-        nodeMapper.deleteByExample(nodeExample);
+            nodeMapper.deleteByExample(nodeExample);
+        }
     }
 }

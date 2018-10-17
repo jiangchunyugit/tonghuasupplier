@@ -6,10 +6,13 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.vo.ApprovalFlowConfigVO;
+import cn.thinkfree.database.vo.ApprovalFlowOrderVO;
 import cn.thinkfree.service.approvalflow.ApprovalFlowConfigService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -52,6 +55,21 @@ public class ApprovalFlowConfigController extends AbsBaseController{
     public MyRespBundle add(@RequestBody ApprovalFlowConfigVO configLogDTO){
         printInfoMes("configLogDTO:{}", JSONUtil.bean2JsonStr(configLogDTO));
         configService.add(configLogDTO);
+        return sendSuccessMessage(ResultMessage.SUCCESS.message);
+    }
+
+    @ApiOperation("审批流顺序")
+    @ResponseBody
+    @PostMapping(value = "order", produces = "application/json")
+    public MyRespBundle order(){
+        return sendJsonData(ResultMessage.SUCCESS, configService.order());
+    }
+
+    @ApiOperation("修改审批流顺序")
+    @ResponseBody
+    @PostMapping(value = "editOrder", produces = "application/json")
+    public MyRespBundle editOrder(@RequestBody List<ApprovalFlowOrderVO> orderVOs){
+        configService.editOrder(orderVOs);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 

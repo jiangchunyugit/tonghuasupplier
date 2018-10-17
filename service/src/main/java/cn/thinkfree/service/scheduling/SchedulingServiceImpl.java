@@ -52,7 +52,6 @@ public class SchedulingServiceImpl implements SchedulingService {
         ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
         projectBigScheduling.setCompanyId(projectBigSchedulingVO.getCompanyId());
         projectBigScheduling.setName(projectBigSchedulingVO.getName());
-        projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
         projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
         projectBigScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
         projectBigScheduling.setCreateTime(new Date());

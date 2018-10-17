@@ -33,8 +33,10 @@ public class ApprovalFlowOptionServiceImpl implements ApprovalFlowOptionService 
 
     @Override
     public void deleteByNodeNums(List<String> nodeNums) {
-        ApprovalFlowOptionExample example = new ApprovalFlowOptionExample();
-        example.createCriteria().andNodeNumIn(nodeNums);
-        optionMapper.deleteByExample(example);
+        if (nodeNums != null && nodeNums.size() > 0 ) {
+            ApprovalFlowOptionExample example = new ApprovalFlowOptionExample();
+            example.createCriteria().andNodeNumIn(nodeNums);
+            optionMapper.deleteByExample(example);
+        }
     }
 }

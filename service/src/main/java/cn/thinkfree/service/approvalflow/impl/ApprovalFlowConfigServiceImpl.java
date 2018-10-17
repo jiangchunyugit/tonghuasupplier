@@ -2,12 +2,9 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.constants.AFAlias;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
-import cn.thinkfree.database.vo.ApprovalFlowConfigVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.mapper.ApprovalFlowConfigMapper;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.ApprovalFlowConfigLogVO;
-import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
-import cn.thinkfree.database.vo.ScheduleApprovalFlowConfigVo;
 import cn.thinkfree.service.approvalflow.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -19,11 +16,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @ClassName ApprovalFlowConfigServiceImpl
- * @Description 审批流配置服务层
- * @Author song
- * @Data 2018/10/11 17:44
- * @Version 1.0
+ * 审批流配置服务层
+ * @author song
+ * @date 2018/10/11 17:44
+ * @version 1.0
  */
 @Service
 @Transactional(rollbackFor = {RuntimeException.class})
@@ -41,6 +37,8 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
     private ApprovalFlowScheduleNodeRoleService scheduleNodeRoleService;
     @Resource
     private ApprovalFlowNodeRoleService nodeRoleService;
+    @Resource
+    private ApprovalFlowConfigSuperService configSuperService;
 
     /**
      * 查询所有审批流，并以sort正序
@@ -65,13 +63,16 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         List<ApprovalFlowConfigLog> configLogs = configLogService.findByApprovalFlowNumOrderByVersionAsc(configNum);
         ApprovalFlowConfigLog configLog = configLogs.get(configLogs.size() - 1);
         List<ApprovalFlowNodeVO> nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
+        List<ApprovalFlowConfigSuper> configSupers = configSuperService.findByConfigAlias(config.getAlias());
         List<UserRoleSet> roles = roleService.findAll();
 
         ApprovalFlowConfigLogVO configVo = new ApprovalFlowConfigLogVO();
         configVo.setConfig(config);
         configVo.setConfigLogs(configLogs);
         configVo.setNodeVos(nodeVos);
+        configVo.setConfigSupers(configSupers);
         configVo.setRoles(roles);
+        configVo.setConfigs(list());
         return configVo;
     }
     /**
@@ -156,8 +157,45 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         config.setH5Resume(configVO.getH5Resume());
         config.setType(configVO.getType());
         config.setSort(configVO.getSort());
+        short isBase = 1;
+        config.setIsBase(isBase);
         create(config);
         configLogService.create(config, configVO.getNodeVos());
+    }
+
+    @Override
+    public List<ApprovalFlowOrderVO> order() {
+        List<ApprovalFlowConfig> configs = findAllBaseConfig();
+        List<ApprovalFlowConfigSuper> configSupers = configSuperService.findAllUsable();
+        List<ApprovalFlowOrderVO> orderVOs = new ArrayList<>(configs.size());
+        for (ApprovalFlowConfig config : configs){
+            ApprovalFlowOrderVO orderVO = new ApprovalFlowOrderVO();
+            orderVO.setConfig(config);
+            List<ApprovalFlowConfigSuper> configSuperList = new ArrayList<>();
+            orderVO.setConfigSupers(configSuperList);
+
+            if (configSupers != null) {
+                for (ApprovalFlowConfigSuper configSuper : configSupers) {
+                    if (config.getAlias().equals(configSuper.getConfigAlias())) {
+                        configSuperList.add(configSuper);
+                    }
+                }
+            }
+            orderVOs.add(orderVO);
+        }
+        return orderVOs;
+    }
+
+    @Override
+    public void editOrder(List<ApprovalFlowOrderVO> orderVOs) {
+        configSuperService.create(orderVOs);
+    }
+
+    public List<ApprovalFlowConfig> findAllBaseConfig(){
+        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
+        configExample.createCriteria().andIsBaseEqualTo(new Short("1"));
+        configExample.setOrderByClause("sort asc");
+        return configMapper.selectByExample(configExample);
     }
 
     /**
@@ -294,6 +332,8 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
             List<ApprovalFlowNodeVO> nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
 
             config.setCompanyNum(companyNum);
+            short isBase = 0;
+            config.setIsBase(isBase);
             create(config);
 
             configLogService.create(config, nodeVos);

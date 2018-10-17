@@ -2,9 +2,8 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.ProjectSmallScheduling;
 import cn.thinkfree.database.model.ProjectSmallSchedulingExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface ProjectSmallSchedulingMapper {
     /**

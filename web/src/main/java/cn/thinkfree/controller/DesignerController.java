@@ -7,7 +7,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.DesignerMsg;
 import cn.thinkfree.database.model.DesignerStyleConfig;
 import cn.thinkfree.database.model.EmployeeMsg;
-import cn.thinkfree.service.platform.designer.service.DesignerService;
+import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.designer.vo.DesignerMsgVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;

@@ -45,8 +45,10 @@ public class ApprovalFlowNodeRoleServiceImpl implements ApprovalFlowNodeRoleServ
 
     @Override
     public void deleteByNodeNums(List<String> nodeNums) {
-        ApprovalFlowNodeRoleExample example = new ApprovalFlowNodeRoleExample();
-        example.createCriteria().andNodeNumIn(nodeNums);
-        nodeRoleMapper.deleteByExample(example);
+        if (nodeNums != null && nodeNums.size() > 0 ) {
+            ApprovalFlowNodeRoleExample example = new ApprovalFlowNodeRoleExample();
+            example.createCriteria().andNodeNumIn(nodeNums);
+            nodeRoleMapper.deleteByExample(example);
+        }
     }
 }
