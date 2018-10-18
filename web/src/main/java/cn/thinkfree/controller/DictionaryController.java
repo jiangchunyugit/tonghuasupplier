@@ -1,20 +1,38 @@
 package cn.thinkfree.controller;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.*;
+import cn.thinkfree.core.resolver.MultiRequestBody;
+import cn.thinkfree.database.model.Area;
+import cn.thinkfree.database.model.City;
+import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.ConstructionBaseDic;
+import cn.thinkfree.database.model.HousingStatus;
+import cn.thinkfree.database.model.PreProjectHouseType;
+import cn.thinkfree.database.model.ProjectType;
+import cn.thinkfree.database.model.Province;
+import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.vo.MybaseDic;
+import cn.thinkfree.service.basedic.BaseDicService;
 import cn.thinkfree.service.dictionary.DictionaryService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @ApiOperation("字典相关接口")
 @RestController
@@ -24,6 +42,9 @@ public class DictionaryController extends AbsBaseController {
 
     @Autowired
     DictionaryService dictionaryService;
+    
+    @Autowired
+    BaseDicService baseDicService;
 
 
 
@@ -157,5 +178,124 @@ public class DictionaryController extends AbsBaseController {
 //        List<SystemResource> resources =dictionaryService.listResource();
 //        return sendJsonData(ResultMessage.SUCCESS,resources);
 //    }
+    
+    
+    /**
+     * 查询 字典列表信息
+     * @author lqd
+     * @return json 
+     */
+    @PostMapping("/getBaseDicList")
+    @MyRespBody
+    @ApiOperation(value = "平台字典关联列表", notes = "根据type查询---0户型结构字典 1 房屋类型字典 2房屋属性 3计费项目类型（设计）4计费项目设置（施工）5施工阶段设置 6项目阶段设置 ")
+    public MyRespBundle<List<MybaseDic>> getBaseDicList(@RequestParam(required = true) @ApiParam("字典类型") String type){
 
+    	List<MybaseDic> resDicList = baseDicService.getDicListByType(type);
+    	
+        return sendJsonData(ResultMessage.SUCCESS, resDicList);
+    }
+    
+    /**
+     * 新增字典列表信息
+     * @author lqd
+     * @return json 
+     * @RequestParam(required = false)
+     */
+    @PostMapping("/insertBaseDic")
+    @MyRespBody
+    @ApiOperation(value = "平台字典关联列表", notes = "根据type查询---0户型结构字典 1 房屋类型字典 2房屋属性 3计费项目类型（设计）4计费项目设置（施工）5施工阶段设置 6项目阶段设置 ")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType = "insert", dataType = "String", name = "type", value = "字典类型值", required = true) 
+    		,@ApiImplicitParam(paramType = "insert", dataType = "String", name = "dicValue", value = "字典value值", required = true),
+        @ApiImplicitParam(paramType = "insert", dataType = "String", name = "remarks", value = "备注", required = true)
+    }
+    )
+    public MyRespBundle<String>  insertBaseDic( @RequestParam(required = true)  String type,
+    		@RequestParam(required = true) String dicValue,@RequestParam(required = false) String remarks){
+	  boolean flag = baseDicService.insertDic(type, dicValue,remarks);
+      if(flag){
+          return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+      }
+      return sendJsonData(ResultMessage.FAIL, "操作失败");
+    }
+    
+    /**
+     * 新增字典列表信息
+     * @author lqd
+     * @return json 
+     */
+    @PostMapping("/updateBaseDic")
+    @MyRespBody
+    @ApiOperation(value = "修改平台字典名称", notes = "根据id修改名称 ")
+    @ApiImplicitParams({ @ApiImplicitParam(paramType = "update", dataType = "String", name = "dicCode", value = "字典类型值", required = true) 
+	,@ApiImplicitParam(paramType = "update", dataType = "String", name = "dicValue", value = "字典value值", required = true),
+	@ApiImplicitParam(paramType = "update", dataType = "String", name = "remarks", value = "备注", required = true)
+	})
+    public MyRespBundle<String>  updateBaseDic(  @RequestParam(required = true)  String dicCode,
+    		@RequestParam(required = true) String dicValue,@RequestParam(required = false) String remarks){
+
+	  boolean flag = baseDicService.updateDicName(dicCode, dicValue, remarks);
+      if(flag){
+          return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+      }
+      return sendJsonData(ResultMessage.FAIL, "操作失败");
+    }
+    
+    /**
+     * 查询 字典列表信息
+     * @author lqd
+     * @return json 
+     */
+    @PostMapping("/getConstructionBaseDicList")
+    @MyRespBody
+    @ApiOperation(value = "施工平台施工项目列表")
+    public MyRespBundle<List<ConstructionBaseDic>> getConstructionBaseDicList(){
+
+    	List<ConstructionBaseDic> resDicList = baseDicService.getConstructionDicList();
+    	
+        return sendJsonData(ResultMessage.SUCCESS, resDicList);
+    }
+    
+    
+    
+    /**
+    *  新增 字典列表信息
+    * @author lqd
+    * @return json 
+    */
+    @PostMapping("/inserConstructionBaseDicList")
+   @MyRespBody
+   @ApiOperation(value = "新增施工平台施工项目列表")
+   public MyRespBundle<String> inserConstructionBaseDicList(@ApiParam("施工平台施工项目vo实体")  ConstructionBaseDic vo){
+	   
+       boolean flag = baseDicService.insertConstructionBaseDic(vo);
+       
+       if(flag){
+           return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+       }
+       return sendJsonData(ResultMessage.FAIL, "操作失败");
+   }
+   
+   
+   
+   
+   /**
+    *  新增 字典列表信息
+    * @author lqd
+    * @return json 
+    */
+    @PostMapping("/updateConstructionBaseDicList")
+   @MyRespBody
+   @ApiOperation(value = "新增施工平台施工项目列表")
+   public MyRespBundle<String> updateConstructionBaseDicList(@ApiParam("施工平台施工项目vo实体") @RequestBody ConstructionBaseDic vo){
+	   
+       boolean flag = baseDicService.updateConstructionBaseDicName(vo);
+       
+       if(flag){
+           return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+       }
+       return sendJsonData(ResultMessage.FAIL, "操作失败");
+   }
+   
+   
+    
 }
