@@ -26,6 +26,12 @@ import java.util.List;
 @Controller
 @RequestMapping("designerOrder")
 public class DesignDispatchController extends AbsBaseController {
+    /**
+     * try{
+     * }catch (Exception e){
+     * return sendFailMessage(e.getMessage());
+     * }
+     */
     @Autowired
     private DesignDispatchService designDispatchService;
 
@@ -33,6 +39,7 @@ public class DesignDispatchController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "orderList", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<DesignOrderVo>>> queryDesignerOrder(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userMsg", required = false, value = "业主姓名或电话") @RequestParam(name = "userMsg", required = false) String userMsg,
             @ApiParam(name = "orderSource", required = false, value = "订单来源") @RequestParam(name = "orderSource", required = false) String orderSource,
@@ -48,7 +55,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionTimeEnd", required = false, value = "操作时间结束") @RequestParam(name = "optionTimeEnd", required = false) String optionTimeEnd,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
-        PageVo<List<DesignOrderVo>> pageVo = designDispatchService.queryDesignerOrder(projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+        PageVo<List<DesignOrderVo>> pageVo = designDispatchService.queryDesignerOrder(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                 money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, pageVo);
     }
@@ -59,9 +66,14 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle notDispatch(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "reason", required = false, value = "不派单原因") @RequestParam(name = "reason", required = false) String reason,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
-        designDispatchService.notDispatch(projectNo, reason, optionUserId, optionUserName);
+        try {
+            designDispatchService.notDispatch(projectNo, reason, companyId, optionUserId, optionUserName);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
         return sendSuccessMessage(null);
     }
 
@@ -73,7 +85,74 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
-        designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName);
+        try {
+            designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
         return sendSuccessMessage(null);
     }
+
+    @ApiOperation("根据项目编号查询设计订单详情")
+    @MyRespBody
+    @RequestMapping(value = "designDel", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<DesignOrderVo> queryDesignDel(
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo) {
+        try {
+            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.queryDesignOrderVoByProjectNo(projectNo));
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("设计公司拒绝接单")
+    @MyRespBody
+    @RequestMapping(value = "refuseOrder", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle refuseOrder(
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "reason", required = false, value = "拒绝原因") @RequestParam(name = "reason", required = false) String reason,
+            @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
+        try {
+            designDispatchService.refuseOrder(projectNo,companyId,reason,optionUserId,optionUserName);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
+    }
+
+    @ApiOperation("设计公司指派设计师")
+    @MyRespBody
+    @RequestMapping(value = "assignDesigner", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle assignDesigner(
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId,
+            @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName){
+        try {
+            designDispatchService.assignDesigner(projectNo,companyId,designerUserId,optionUserId,optionUserName);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
+    }
+
+    @ApiOperation("设计师拒绝接单")
+    @MyRespBody
+    @RequestMapping(value = "designerRefuse", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle designerRefuse(
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "reason", required = false, value = "拒绝原因") @RequestParam(name = "reason", required = false) String reason,
+            @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName){
+        try {
+            designDispatchService.designerRefuse(projectNo,reason,designerUserId,optionUserName);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
+    }
+
 }

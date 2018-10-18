@@ -55,7 +55,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Override
     public PageVo<List<DesignOrderVo>> queryDesignerOrder(
-            String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+            String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String money, String acreage, int designerOrderState, String companyState, String optionUserName,
             String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex) {
         //TODO 模糊查询用户信息
@@ -64,6 +64,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<String> companyIds = new ArrayList<>();
         ProjectExample projectExample = new ProjectExample();
         ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
+        if (StringUtils.isBlank(companyId)) {
+            throw new RuntimeException("公司缺失");
+        }
+        projectCriteria.andCompanyIdEqualTo(companyId);
         if (!userIds.isEmpty()) {
             projectCriteria.andOwnerIdIn(ReflectUtils.listToList(userIds));
         }
@@ -138,28 +142,165 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      *
      * @param projectNo      项目编号
      * @param reason         不派单原因
+     * @param companyId      公司ID
      * @param optionUserId   操作人ID
      * @param optionUserName 操作人姓名
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
+    public void notDispatch(String projectNo, String reason, String companyId, String optionUserId, String optionUserName) {
         Project project = queryProjectByNo(projectNo);
+        if (!project.getCompanyId().equals(companyId)) {
+            throw new RuntimeException("无权操作");
+        }
         DesignOrder designOrder = queryDesignOrder(projectNo);
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
         updateOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
-        designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //记录操作日志
+        saveOptionLog(designOrder.getOrderNo(), optionUserId, optionUserName, reason);
+    }
+
+    /**
+     * 指派
+     *
+     * @param projectNo      项目编号
+     * @param companyId      公司ID
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setCompanyId(companyId);
+        updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //记录操作日志
+        String remark = "指派订单给公司【" + companyId + "】";
+        saveOptionLog(designOrder.getOrderNo(), optionUserId, optionUserName, remark);
+    }
+
+    @Override
+    public DesignOrderVo queryDesignOrderVoByProjectNo(String projectNo) {
+        DesignOrderVo designOrderVo = new DesignOrderVo();
+        designOrderVo.setDesignOrder(queryDesignOrder(projectNo));
+        designOrderVo.setProject(queryProjectByNo(projectNo));
+        return designOrderVo;
+    }
+
+    /**
+     * 设计公司拒绝接单
+     *
+     * @param projectNo      项目编号
+     * @param companyId      设计公司ID
+     * @param reason         拒绝原因
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人名称
+     */
+    @Override
+    public void refuseOrder(String projectNo, String companyId, String reason, String optionUserId, String optionUserName) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getCompanyId().equals(companyId)) {
+            throw new RuntimeException("无权操作");
+        }
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setCompanyId("");
+        updateOrder.setOrderStage(DesignStateEnum.STATE_30.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //记录操作日志
+        String remark = "公司编号为【" + companyId + "】的公司拒绝接单，拒绝原因：" + reason;
+        saveOptionLog(designOrder.getOrderNo(), optionUserId, optionUserName, remark);
+    }
+
+    /**
+     * 设计公司指派设计师
+     *
+     * @param projectNo      项目编号
+     * @param companyId      公司ID
+     * @param designerUserId 设计师ID
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人名称
+     */
+    @Override
+    public void assignDesigner(String projectNo, String companyId, String designerUserId, String optionUserId, String optionUserName) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getCompanyId().equals(companyId)) {
+            throw new RuntimeException("无权操作");
+        }
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //设置设计师ID
+        updateOrder.setUserId(designerUserId);
+        updateOrder.setOrderStage(DesignStateEnum.STATE_40.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给设计师
+        //记录操作日志
+        String remark = "公司编号为【" + companyId + "】的公司指派设计师";
+        saveOptionLog(designOrder.getOrderNo(), optionUserId, optionUserName, remark);
+    }
+
+    /**
+     * 设计师拒绝接单
+     *
+     * @param projectNo      项目编号
+     * @param reason         拒绝原因
+     * @param designerUserId 设计师ID
+     * @param optionUserName 设计师名称
+     */
+    @Override
+    public void designerRefuse(String projectNo, String reason, String designerUserId, String optionUserName) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getUserId().equals(designerUserId)) {
+            throw new RuntimeException("无权操作");
+        }
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setUserId("");
+        updateOrder.setOrderStage(DesignStateEnum.STATE_50.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给设计师
+        //记录操作日志
+        String remark = "设计师【" + optionUserName + "】拒绝接单";
+        saveOptionLog(designOrder.getOrderNo(), designerUserId, optionUserName, remark);
+    }
+
+    /**
+     * 记录操作日志
+     *
+     * @param orderNo        记录订单编号
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     * @param remark         备注
+     */
+    private void saveOptionLog(String orderNo, String optionUserId, String optionUserName, String remark) {
         //记录操作日志
         OptionLog optionLog = new OptionLog();
-        optionLog.setLinkNo(designOrder.getOrderNo());
+        optionLog.setLinkNo(orderNo);
         optionLog.setOptionTime(new Date());
         optionLog.setOptionType("DO");
         optionLog.setOptionUserId(optionUserId);
         optionLog.setOptionUserName(optionUserName);
-        optionLog.setRemark(reason);
+        optionLog.setRemark(remark);
         optionLogMapper.insertSelective(optionLog);
     }
 
@@ -193,36 +334,5 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             throw new RuntimeException("没有查询到相关设计订单");
         }
         return designOrders.get(0);
-    }
-
-    /**
-     * 指派
-     *
-     * @param projectNo      项目编号
-     * @param companyId      公司ID
-     * @param optionUserId   操作人ID
-     * @param optionUserName 操作人姓名
-     */
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName) {
-        Project project = queryProjectByNo(projectNo);
-        DesignOrder designOrder = queryDesignOrder(projectNo);
-        //设置该设计订单所属公司
-        DesignOrder updateOrder = new DesignOrder();
-        updateOrder.setCompanyId(companyId);
-        updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
-        DesignOrderExample orderExample = new DesignOrderExample();
-        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
-        designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
-        //记录操作日志
-        OptionLog optionLog = new OptionLog();
-        optionLog.setLinkNo(designOrder.getOrderNo());
-        optionLog.setOptionTime(new Date());
-        optionLog.setOptionType("DO");
-        optionLog.setOptionUserId(optionUserId);
-        optionLog.setOptionUserName(optionUserName);
-        optionLog.setRemark("指派订单给公司【" + companyId + "】");
-        optionLogMapper.insertSelective(optionLog);
     }
 }
