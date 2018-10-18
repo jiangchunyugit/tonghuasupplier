@@ -15,11 +15,6 @@
     <bytecodeTargetLevel>
       <module name="base" target="1.8" />
       <module name="constants" target="1.8" />
-      <module name="core" target="1.8" />
-      <module name="database" target="1.8" />
-      <module name="designer_pc" target="1.8" />
-      <module name="service" target="1.8" />
-      <module name="web" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

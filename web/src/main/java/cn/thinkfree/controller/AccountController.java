@@ -9,6 +9,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
+import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.model.SystemPermissionResource;
 import cn.thinkfree.database.model.SystemResource;
@@ -154,7 +155,7 @@ public class AccountController extends AbsBaseController {
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用权限")
     public MyRespBundle<List> enablePermission(@PathVariable("id")Integer id ){
 
-        String mes = permissionService.updatePermissionState(id, SysConstants.YesOrNo.YES.shortVal());
+        String mes = permissionService.updatePermissionState(id, UserEnabled.Enabled_true.shortVal());
 
         return sendJsonData(ResultMessage.SUCCESS,mes);
     }
@@ -168,7 +169,7 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "禁用权限")
     public MyRespBundle<List> disablePermission(@PathVariable("id")Integer id ){
-        String mes = permissionService.updatePermissionState(id, SysConstants.YesOrNo.NO.shortVal());
+        String mes = permissionService.updatePermissionState(id, UserEnabled.Disable.shortVal());
         return sendJsonData(ResultMessage.SUCCESS,mes);
     }
 
@@ -279,15 +280,39 @@ public class AccountController extends AbsBaseController {
         return sendSuccessMessage(mes);
     }
 
+    /**
+     * 停用角色
+     * @param id
+     * @return
+     */
     @PostMapping("/role/{id}/disable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "停用角色")
     public MyRespBundle<String>  disableRole(@PathVariable Integer id){
-        String  mes = systemRoleService.updateRoleState(id, SysConstants.YesOrNo.YES.shortVal());
+        String  mes = systemRoleService.updateRoleState(id, UserEnabled.Disable.shortVal());
         return sendSuccessMessage(mes);
     }
 
+    /**
+     * 启用角色
+     * @param id
+     * @return
+     */
+    @PostMapping("/role/{id}/enable")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用角色")
+    public MyRespBundle<String>  enableRole(@PathVariable Integer id){
+        String  mes = systemRoleService.updateRoleState(id, UserEnabled.Enabled_true.shortVal());
+        return sendSuccessMessage(mes);
+    }
 
+    @DeleteMapping("/role/{id}")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除角色")
+    public MyRespBundle<String> delRole(@PathVariable Integer id){
+        String mes = systemRoleService.updateRoleForDel(id);
+        return sendSuccessMessage(mes);
+    }
 
 
 

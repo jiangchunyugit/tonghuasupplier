@@ -3,6 +3,7 @@ package cn.thinkfree.service.account;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.mapper.SystemPermissionMapper;
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.model.SystemPermissionExample;
@@ -145,14 +146,13 @@ public class PermissionServiceImpl extends AbsLogPrinter implements PermissionSe
      */
     @Override
     public String updatePermissionForDel(Integer id) {
+
+        printInfoMes("删除权限,ID:{}",id);
         SystemPermission del = new SystemPermission();
         del.setIsDel(SysConstants.YesOrNo.YES.shortVal());
-
         SystemPermissionExample condition = new SystemPermissionExample();
         condition.createCriteria().andIdEqualTo(id);
-
         systemPermissionMapper.updateByExampleSelective(del,condition);
-
         return "操作成功!";
     }
 
@@ -165,13 +165,12 @@ public class PermissionServiceImpl extends AbsLogPrinter implements PermissionSe
     private SystemPermission initPermission(PermissionVO permissionVO,Boolean isSave) {
 
         SystemPermission systemPermission = new SystemPermission();
-
         systemPermission.setName(permissionVO.getName());
         systemPermission.setDesc(permissionVO.getDesc());
         if(isSave){
             systemPermission.setCreateTime(new Date());
             systemPermission.setIsDel(SysConstants.YesOrNo.NO.shortVal());
-            systemPermission.setIsEnable(SysConstants.YesOrNo.NO.shortVal());
+            systemPermission.setIsEnable(UserEnabled.Enabled_false.shortVal());
             systemPermission.setIsSys(SysConstants.YesOrNo.NO.shortVal());
             UserVO user = (UserVO) SessionUserDetailsUtil.getUserDetails();
             systemPermission.setCreator(user.getUserRegister().getUserId());

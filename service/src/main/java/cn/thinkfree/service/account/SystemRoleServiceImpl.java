@@ -3,6 +3,7 @@ package cn.thinkfree.service.account;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.mapper.SystemRoleMapper;
 import cn.thinkfree.database.mapper.SystemRolePermissionMapper;
 import cn.thinkfree.database.model.SystemRole;
@@ -151,14 +152,31 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
     @Transactional
     @Override
     public String updateRoleState(Integer id, Short state) {
-
+        printInfoMes("角色状态,ID:{},STATE:{}",id,state);
         SystemRole update = new SystemRole();
         update.setIsEnable(state);
         SystemRoleExample condition = new SystemRoleExample();
         condition.createCriteria().andIdEqualTo(id);
-
         systemRoleMapper.updateByExampleSelective(update,condition);
+        return "操作成功!";
+    }
 
+    /**
+     * 删除角色
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updateRoleForDel(Integer id) {
+
+        printInfoMes("删除角色,ID:{}",id);
+        SystemRole del = new SystemRole();
+        del.setIsDel(SysConstants.YesOrNo.YES.shortVal());
+        SystemRoleExample condition = new SystemRoleExample();
+        condition.createCriteria().andIdEqualTo(id);
+        systemRoleMapper.updateByExampleSelective(del,condition);
         return "操作成功!";
     }
 
@@ -177,7 +195,7 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
             systemRole.setCreator(user.getUserRegister().getUserId());
             systemRole.setCreateTime(new Date());
             systemRole.setIsDel(SysConstants.YesOrNo.NO.shortVal());
-            systemRole.setIsEnable(SysConstants.YesOrNo.NO.shortVal());
+            systemRole.setIsEnable(UserEnabled.Enabled_false.shortVal());
             systemRole.setIsSys(SysConstants.YesOrNo.NO.shortVal());
         }
         return systemRole;

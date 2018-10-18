@@ -49,4 +49,11 @@ public interface SystemRoleService {
      * @return
      */
     String updateRoleState(Integer id, Short state);
+
+    /**
+     * 删除角色
+     * @param id
+     * @return
+     */
+    String updateRoleForDel(Integer id);
 }
