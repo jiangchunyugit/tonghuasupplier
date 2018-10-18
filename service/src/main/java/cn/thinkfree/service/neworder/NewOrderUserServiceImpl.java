@@ -1,4 +1,4 @@
-package cn.thinkfree.service.newscheduling;
+package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.database.mapper.OrderUserMapper;
 import cn.thinkfree.database.model.OrderUser;
@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
-public class OrderUserServiceImpl implements OrderUserService {
+public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     @Resource
     private OrderUserMapper orderUserMapper;

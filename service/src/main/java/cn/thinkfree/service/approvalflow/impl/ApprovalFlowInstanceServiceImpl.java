@@ -6,7 +6,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.project.ProjectService;
-import cn.thinkfree.service.scheduling.OrderUserService;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +45,9 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
     @Resource
     private RoleService roleService;
     @Resource
-    private OrderUserService orderUserService;
-    @Resource
     private ApprovalFlowNodeRoleService nodeRoleService;
+    @Resource
+    private NewOrderUserService orderUserService;
 
     @Override
     public ApprovalFlowInstanceDetailVO detail(String num, String configNum, String projectNo, String userId, Integer scheduleSort, Integer scheduleVersion) {

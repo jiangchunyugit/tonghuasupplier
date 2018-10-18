@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @author gejiaming
  */
-public interface DelaySchedulingService {
+public interface NewDelaySchedulingService {
 
     /**
      * @return

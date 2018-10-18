@@ -21,7 +21,7 @@ import java.util.List;
  * @author gejiaming
  */
 @Service
-public class DelaySchedulingServiceImpl implements DelaySchedulingService {
+public class NewDelaySchedulingServiceImpl implements NewDelaySchedulingService {
     @Autowired(required = false)
     private PreProjectGuideMapper preProjectGuideMapper;
     @Autowired(required = false)
