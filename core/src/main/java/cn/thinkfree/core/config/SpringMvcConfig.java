@@ -3,18 +3,22 @@ package cn.thinkfree.core.config;
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.convert.MySpringConvert;
 import cn.thinkfree.core.convert.MySpringProcessor;
+import cn.thinkfree.core.resolver.MultiRequestBodyArgumentResolver;
 import cn.thinkfree.core.utils.LogUtil;
 import com.google.common.collect.Lists;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,10 +55,31 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport {
         RequestMappingHandlerAdapter requestMappingHandlerAdapter = super.requestMappingHandlerAdapter();
         // 增加新的解析器
         List<HttpMessageConverter<?>> converters = Lists.newArrayList(new MySpringConvert());
-        List<HandlerMethodArgumentResolver> argumentResolvers = Lists.newArrayList(new MySpringProcessor(converters));
+        List<HandlerMethodArgumentResolver> argumentResolvers =Lists.newArrayList(new MySpringProcessor(converters));
+        argumentResolvers.add(new MultiRequestBodyArgumentResolver());
         requestMappingHandlerAdapter.setCustomArgumentResolvers(argumentResolvers);
         List<HandlerMethodReturnValueHandler> returnValueHandlers = Lists.newArrayList(new MySpringProcessor(converters));
         requestMappingHandlerAdapter.setCustomReturnValueHandlers(returnValueHandlers);
+        
         return requestMappingHandlerAdapter;
     }
+    
+    
+//    @Override
+//    protected void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+//    	 //添加json解析器 吕 2018-10-18
+//        argumentResolvers.add(new MultiRequestBodyArgumentResolver());
+//    }
+   
+    
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        super.configureMessageConverters(converters);
+        converters.add(responseBodyConverter());
+    }
+    @Bean
+    public HttpMessageConverter<String> responseBodyConverter() {
+        return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+    }
+
 }
