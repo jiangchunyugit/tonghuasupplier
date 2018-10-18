@@ -62,7 +62,8 @@ public class ApprovalFlowScheduleNodeRoleServiceImpl implements ApprovalFlowSche
         return existConfig ? scheduleNodeRoleList : null;
     }
 
-    private List<ApprovalFlowScheduleNodeRole> findByNodeNumAndScheduleSortAndVersion(String nodeNum, Integer scheduleSort, Integer scheduleVersion) {
+    @Override
+    public List<ApprovalFlowScheduleNodeRole> findByNodeNumAndScheduleSortAndVersion(String nodeNum, Integer scheduleSort, Integer scheduleVersion) {
         ApprovalFlowScheduleNodeRoleExample example = new ApprovalFlowScheduleNodeRoleExample();
         example.createCriteria().andNodeNumEqualTo(nodeNum).andScheduleSortEqualTo(scheduleSort).andScheduleVersionEqualTo(scheduleVersion);
         return scheduleNodeRoleMapper.selectByExample(example);

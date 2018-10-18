@@ -1,5 +1,7 @@
 package cn.thinkfree.service.approvalflow;
 
+import cn.thinkfree.database.model.ApprovalFlowApprovalLog;
+import cn.thinkfree.database.vo.ApprovalFlowApprovalVO;
 import cn.thinkfree.database.vo.ApprovalFlowInstanceDetailVO;
 
 /**
@@ -22,4 +24,9 @@ public interface ApprovalFlowInstanceService {
      */
     ApprovalFlowInstanceDetailVO detail(String num, String configNum, String projectNo, String userId, Integer scheduleSort, Integer scheduleVersion);
 
+    /**
+     * 执行审批操作
+     * @param approvalVO 审批信息
+     */
+    void approval(ApprovalFlowApprovalVO approvalVO);
 }

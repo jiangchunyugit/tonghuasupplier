@@ -93,7 +93,4 @@ public interface ApprovalFlowOptionMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ApprovalFlowOption record);
-
-    List<ApprovalFlowOption> findByNodeNum(String nodeNum);
-
 }

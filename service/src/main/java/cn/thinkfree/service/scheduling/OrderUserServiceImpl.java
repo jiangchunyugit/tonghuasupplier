@@ -29,4 +29,11 @@ public class OrderUserServiceImpl implements OrderUserService {
         example.createCriteria().andOrderNoEqualTo(orderNo);
         return orderUserMapper.selectByExample(example);
     }
+
+    @Override
+    public List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
+        return orderUserMapper.selectByExample(example);
+    }
 }

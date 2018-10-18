@@ -7,22 +7,27 @@ import java.util.UUID;
  * @author songchuanrang
  */
 public enum UniqueCodeGenerator {
+
     /**
-     * 创建审批记录编码
-     */
-    AFL("AFL_"),
-    /**
-     * 审批流编码
+     * 审批流配置编码前缀
      */
     AF_CONFIG("AF_CONFIG_"),
+    /**
+     * 审批流配置记录编码前缀
+     */
+    AF_CONFIG_LOG("AF_CONFIG_LOG_"),
+    /**
+     * 审批流实例编码前缀
+     */
+    AF_CONFIG_INSTANCE("AF_INSTANCE_"),
+    /**
+     * 审批流操作项编码前缀
+     */
+    AF_OPTION("AF_OPTION_"),
     /**
      * 审批流节点编码前缀
      */
     AF_NODE("AF_NODE_"),
-    /**
-     * 审批流配置记录log表前缀
-     */
-    AF_CONFIG_LOG("AF_CONFIG_LOG_"),
     /**
      * 审批流配置节点表单前缀
      */

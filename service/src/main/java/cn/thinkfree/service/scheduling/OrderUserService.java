@@ -19,4 +19,12 @@ public interface OrderUserService {
      * @return 项目用户关系
      */
     List<OrderUser> findByOrderNo(String orderNo);
+
+    /**
+     * 根据项目编号与用户编号查询项目用户关系
+     * @param orderNo 项目编号
+     * @param userId 用户编号
+     * @return 项目用户关系
+     */
+    List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId);
 }

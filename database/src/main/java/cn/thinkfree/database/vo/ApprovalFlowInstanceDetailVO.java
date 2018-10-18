@@ -36,52 +36,53 @@ public class ApprovalFlowInstanceDetailVO {
     @ApiModelProperty("当前审批流名称")
     private String approvalFlowName;
     /**
-     * 当前审批流节点注释
-     */
-    @ApiModelProperty("当前审批流节点注释")
-    private String configNodeDescribe;
-    /**
-     * 审批数据
-     */
-    @ApiModelProperty("审批数据")
-    private String data;
-    /**
      * 审批流实例编号
      */
     @ApiModelProperty("审批流实例编号")
     private String instanceNum;
-    /**
-     * 当前审批节点操作按钮信息
-     */
-    @ApiModelProperty("审批节点操作按钮信息")
-    private List<ApprovalFlowOption> options;
     /**
      * 审批人列表
      */
     @ApiModelProperty("审批人列表")
     private List<ApprovalFlowUserVO> userVOs;
     /**
+     * 审批流节点编号
+     */
+    @ApiModelProperty("审批流实例编号")
+    private String nodeNum;
+    /**
+     * 当前审批流节点注释
+     */
+    @ApiModelProperty("当前审批流节点注释")
+    private String nodeDescribe;
+    /**
+     * 当前审批节点操作按钮信息
+     */
+    @ApiModelProperty("审批节点操作按钮信息")
+    private List<ApprovalFlowOption> options;
+    /**
+     * 审批数据
+     */
+    @ApiModelProperty("审批数据")
+    private String data;
+    /**
      * 是否可操作表单
      */
     @ApiModelProperty("是否可操作表单")
     private Boolean editable;
-
-//    /** 抄送人 */
-//    @ApiModelProperty("抄送人")
-//    private String copyPersonId;
-//    /** 抄送人名称 */
-//    @ApiModelProperty("抄送人名称")
-//    private String copyPersonName;
-//    /** 抄送人头像 */
-//    @ApiModelProperty("抄送人头像")
-//    private String copyPersonIcon;
-//    /** 管家名称 */
-//    @ApiModelProperty("管家名称")
-//    private String housekeeper;
-//    /** 项目经理 */
-//    @ApiModelProperty("项目经理")
-//    private String projectManager;
-//    /** 工长名称 */
-//    @ApiModelProperty("工长名称")
-//    private String foreman;
+    /**
+     * 管家名称
+     */
+    @ApiModelProperty("管家名称")
+    private String housekeeper;
+    /**
+     * 项目经理
+     */
+    @ApiModelProperty("项目经理")
+    private String projectManager;
+    /**
+     * 工长名称
+     */
+    @ApiModelProperty("工长名称")
+    private String foreman;
 }

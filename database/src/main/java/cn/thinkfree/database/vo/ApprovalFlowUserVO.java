@@ -16,6 +16,8 @@ import java.util.Date;
 @Data
 @ApiModel("审批流审批用户信息")
 public class ApprovalFlowUserVO {
+    @ApiModelProperty("审批流节点编号")
+    private String nodeNum;
     @ApiModelProperty("用户Id")
     private String userId;
     @ApiModelProperty("用户姓名")
