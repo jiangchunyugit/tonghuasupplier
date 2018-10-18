@@ -42,6 +42,18 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         configLogExample.setOrderByClause("version asc");
         return configLogMapper.selectByExample(configLogExample);
     }
+    /**
+     * 根据审批流配置日志编号查询日志信息
+     * @param num 审批流配置日志编号
+     * @return 审批流配置日志信息
+     */
+    @Override
+    public ApprovalFlowConfigLog findByNum(String num){
+        ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
+        configLogExample.createCriteria().andNumEqualTo(num);
+        List<ApprovalFlowConfigLog> configLogs = configLogMapper.selectByExample(configLogExample);
+        return configLogs != null && configLogs.size() > 0 ? configLogs.get(0) : null;
+    }
 
     /**
      * 创建新的审批流配置记录

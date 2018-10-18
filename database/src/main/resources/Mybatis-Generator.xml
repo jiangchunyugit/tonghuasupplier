@@ -76,6 +76,7 @@
         <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
         <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
+        <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="approval_change_data" domainObjectName="ApprovalChangeData"/>-->
@@ -83,6 +84,7 @@
         <!--<table tableName="approval_flow_config" domainObjectName="ApprovalFlowConfig"/>-->
         <!--<table tableName="approval_flow_config_log" domainObjectName="ApprovalFlowConfigLog"/>-->
         <!--<table tableName="approval_flow_instance" domainObjectName="ApprovalFlowInstance"/>-->
+        <!--<table tableName="approval_flow_approval_log" domainObjectName="ApprovalFlowApprovalLog"/>-->
         <!--<table tableName="approval_flow_config_super" domainObjectName="ApprovalFlowConfigSuper"/>-->
         <!--<table tableName="approval_flow_node" domainObjectName="ApprovalFlowNode"/>-->
         <!--<table tableName="approval_flow_node_role" domainObjectName="ApprovalFlowNodeRole"/>-->

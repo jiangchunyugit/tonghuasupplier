@@ -454,63 +454,63 @@ public class ApprovalFlowScheduleNodeRoleExample {
             return (Criteria) this;
         }
 
-        public Criteria andVersionIsNull() {
-            addCriterion("version is null");
+        public Criteria andScheduleVersionIsNull() {
+            addCriterion("schedule_version is null");
             return (Criteria) this;
         }
 
-        public Criteria andVersionIsNotNull() {
-            addCriterion("version is not null");
+        public Criteria andScheduleVersionIsNotNull() {
+            addCriterion("schedule_version is not null");
             return (Criteria) this;
         }
 
-        public Criteria andVersionEqualTo(Integer value) {
-            addCriterion("version =", value, "version");
+        public Criteria andScheduleVersionEqualTo(Integer value) {
+            addCriterion("schedule_version =", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionNotEqualTo(Integer value) {
-            addCriterion("version <>", value, "version");
+        public Criteria andScheduleVersionNotEqualTo(Integer value) {
+            addCriterion("schedule_version <>", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionGreaterThan(Integer value) {
-            addCriterion("version >", value, "version");
+        public Criteria andScheduleVersionGreaterThan(Integer value) {
+            addCriterion("schedule_version >", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionGreaterThanOrEqualTo(Integer value) {
-            addCriterion("version >=", value, "version");
+        public Criteria andScheduleVersionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("schedule_version >=", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionLessThan(Integer value) {
-            addCriterion("version <", value, "version");
+        public Criteria andScheduleVersionLessThan(Integer value) {
+            addCriterion("schedule_version <", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionLessThanOrEqualTo(Integer value) {
-            addCriterion("version <=", value, "version");
+        public Criteria andScheduleVersionLessThanOrEqualTo(Integer value) {
+            addCriterion("schedule_version <=", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionIn(List<Integer> values) {
-            addCriterion("version in", values, "version");
+        public Criteria andScheduleVersionIn(List<Integer> values) {
+            addCriterion("schedule_version in", values, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionNotIn(List<Integer> values) {
-            addCriterion("version not in", values, "version");
+        public Criteria andScheduleVersionNotIn(List<Integer> values) {
+            addCriterion("schedule_version not in", values, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionBetween(Integer value1, Integer value2) {
-            addCriterion("version between", value1, value2, "version");
+        public Criteria andScheduleVersionBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_version between", value1, value2, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andVersionNotBetween(Integer value1, Integer value2) {
-            addCriterion("version not between", value1, value2, "version");
+        public Criteria andScheduleVersionNotBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_version not between", value1, value2, "scheduleVersion");
             return (Criteria) this;
         }
     }
