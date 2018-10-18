@@ -60,7 +60,6 @@ public class ApprovalFlowInstanceController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, instanceService.detail(num, configNum, projectNo, userId, scheduleSort, scheduleVersion));
     }
 
-
     /**
      * 执行审批操作
      * @param userId
@@ -69,9 +68,16 @@ public class ApprovalFlowInstanceController extends AbsBaseController {
     @ApiOperation("执行审批操作")
     @ResponseBody
     @PostMapping("approval")
-    public MyRespBundle approval(String userId) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "configNum", value = "审批流配置编号"),
+            @ApiImplicitParam(name = "num", value = "审批流实例编号"),
+            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
+            @ApiImplicitParam(name = "userId", value = "用户ID", required = true),
+            @ApiImplicitParam(name = "scheduleSort", value = "项目排期编号", required = true),
+            @ApiImplicitParam(name = "scheduleVersion", value = "项目排期版本", required = true)
+    })
+    public MyRespBundle approval(String configLogNum, String instanceNum, String projectNo, String scheduleSort, Integer scheduleVersion, String data, Integer optionSort, String userId) {
 
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
-
 }

@@ -49,14 +49,17 @@ public class ApprovalFlowScheduleNodeRoleServiceImpl implements ApprovalFlowSche
     @Override
     public List<List<ApprovalFlowScheduleNodeRole>> findByNodesAndScheduleSortAndVersion(List<? extends ApprovalFlowNode> nodes, Integer scheduleSort, Integer scheduleVersion) {
         List<List<ApprovalFlowScheduleNodeRole>> scheduleNodeRoleList = new ArrayList<>(nodes.size());
+        boolean existConfig = false;
         for (ApprovalFlowNode node : nodes) {
             List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = findByNodeNumAndScheduleSortAndVersion(node.getNum(), scheduleSort, scheduleVersion);
             if (scheduleNodeRoles == null) {
                 scheduleNodeRoles = new ArrayList<>();
+            } else if (scheduleNodeRoles.size() > 0) {
+                existConfig = true;
             }
             scheduleNodeRoleList.add(scheduleNodeRoles);
         }
-        return scheduleNodeRoleList;
+        return existConfig ? scheduleNodeRoleList : null;
     }
 
     private List<ApprovalFlowScheduleNodeRole> findByNodeNumAndScheduleSortAndVersion(String nodeNum, Integer scheduleSort, Integer scheduleVersion) {
