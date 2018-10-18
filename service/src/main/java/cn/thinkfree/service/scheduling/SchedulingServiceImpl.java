@@ -8,8 +8,10 @@ import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
 import cn.thinkfree.database.model.ProjectBigSchedulingExample;
 import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.Scheduling;
+import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ import java.util.List;
  */
 @Service(value = "schedulingService")
 public class SchedulingServiceImpl implements SchedulingService {
-    @Autowired(required = false)
+    @Autowired
     private ProjectBigSchedulingMapper projectBigSchedulingMapper;
     @Autowired
     private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
@@ -89,6 +91,9 @@ public class SchedulingServiceImpl implements SchedulingService {
     @Override
     public List<ProjectBigSchedulingDetails> getScheduling(String projectNo) {
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo,Scheduling.BASE_STATUS.getValue());
+
+//        List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo();
+
         return bigList;
     }
 }

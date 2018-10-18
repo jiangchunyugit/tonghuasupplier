@@ -2,15 +2,20 @@ package cn.thinkfree.database.appvo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 /**
  * @author gejiaming
  */
 @Data
-@ApiModel(value = "ProjectVo",description = "项目详情")
+@AllArgsConstructor
+@NoArgsConstructor
+@ApiModel(value = "ProjectVo--aa",description = "项目详情")
 public class ProjectVo {
     @ApiModelProperty(name = "projectNo",value = "项目编号")
     private String projectNo;
@@ -32,11 +37,10 @@ public class ProjectVo {
     private Integer projectOrder;
     @ApiModelProperty(name = "projectData",value = "项目资料")
     private Integer projectData;
-    @ApiModelProperty(name = "modular",value = "订单模块集合")
-    private Map<Integer,Object> modular;
-//    @ApiModelProperty(name = "constructionOrderVo",value = "施工订单详情")
-//    private ConstructionOrderVo constructionOrderVo;
-//    @ApiModelProperty(name = "",value = "")
+    @ApiModelProperty(name = "owner",value = "业主实体")
+    private PersionVo owner;
+    @ApiModelProperty(name = "projectOrderDetailVoList",value = "订单模块集合")
+    private List<ProjectOrderDetailVo> projectOrderDetailVoList;
 
 
 }

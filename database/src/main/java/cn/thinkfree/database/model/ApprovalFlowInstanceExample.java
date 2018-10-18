@@ -655,123 +655,123 @@ public class ApprovalFlowInstanceExample {
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortIsNull() {
-            addCriterion("project_node_sort is null");
+        public Criteria andScheduleSortIsNull() {
+            addCriterion("schedule_sort is null");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortIsNotNull() {
-            addCriterion("project_node_sort is not null");
+        public Criteria andScheduleSortIsNotNull() {
+            addCriterion("schedule_sort is not null");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortEqualTo(Integer value) {
-            addCriterion("project_node_sort =", value, "projectNodeSort");
+        public Criteria andScheduleSortEqualTo(Integer value) {
+            addCriterion("schedule_sort =", value, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortNotEqualTo(Integer value) {
-            addCriterion("project_node_sort <>", value, "projectNodeSort");
+        public Criteria andScheduleSortNotEqualTo(Integer value) {
+            addCriterion("schedule_sort <>", value, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortGreaterThan(Integer value) {
-            addCriterion("project_node_sort >", value, "projectNodeSort");
+        public Criteria andScheduleSortGreaterThan(Integer value) {
+            addCriterion("schedule_sort >", value, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortGreaterThanOrEqualTo(Integer value) {
-            addCriterion("project_node_sort >=", value, "projectNodeSort");
+        public Criteria andScheduleSortGreaterThanOrEqualTo(Integer value) {
+            addCriterion("schedule_sort >=", value, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortLessThan(Integer value) {
-            addCriterion("project_node_sort <", value, "projectNodeSort");
+        public Criteria andScheduleSortLessThan(Integer value) {
+            addCriterion("schedule_sort <", value, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortLessThanOrEqualTo(Integer value) {
-            addCriterion("project_node_sort <=", value, "projectNodeSort");
+        public Criteria andScheduleSortLessThanOrEqualTo(Integer value) {
+            addCriterion("schedule_sort <=", value, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortIn(List<Integer> values) {
-            addCriterion("project_node_sort in", values, "projectNodeSort");
+        public Criteria andScheduleSortIn(List<Integer> values) {
+            addCriterion("schedule_sort in", values, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortNotIn(List<Integer> values) {
-            addCriterion("project_node_sort not in", values, "projectNodeSort");
+        public Criteria andScheduleSortNotIn(List<Integer> values) {
+            addCriterion("schedule_sort not in", values, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortBetween(Integer value1, Integer value2) {
-            addCriterion("project_node_sort between", value1, value2, "projectNodeSort");
+        public Criteria andScheduleSortBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_sort between", value1, value2, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeSortNotBetween(Integer value1, Integer value2) {
-            addCriterion("project_node_sort not between", value1, value2, "projectNodeSort");
+        public Criteria andScheduleSortNotBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_sort not between", value1, value2, "scheduleSort");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionIsNull() {
-            addCriterion("project_node_version is null");
+        public Criteria andScheduleVersionIsNull() {
+            addCriterion("schedule_version is null");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionIsNotNull() {
-            addCriterion("project_node_version is not null");
+        public Criteria andScheduleVersionIsNotNull() {
+            addCriterion("schedule_version is not null");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionEqualTo(Integer value) {
-            addCriterion("project_node_version =", value, "projectNodeVersion");
+        public Criteria andScheduleVersionEqualTo(Integer value) {
+            addCriterion("schedule_version =", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionNotEqualTo(Integer value) {
-            addCriterion("project_node_version <>", value, "projectNodeVersion");
+        public Criteria andScheduleVersionNotEqualTo(Integer value) {
+            addCriterion("schedule_version <>", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionGreaterThan(Integer value) {
-            addCriterion("project_node_version >", value, "projectNodeVersion");
+        public Criteria andScheduleVersionGreaterThan(Integer value) {
+            addCriterion("schedule_version >", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionGreaterThanOrEqualTo(Integer value) {
-            addCriterion("project_node_version >=", value, "projectNodeVersion");
+        public Criteria andScheduleVersionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("schedule_version >=", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionLessThan(Integer value) {
-            addCriterion("project_node_version <", value, "projectNodeVersion");
+        public Criteria andScheduleVersionLessThan(Integer value) {
+            addCriterion("schedule_version <", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionLessThanOrEqualTo(Integer value) {
-            addCriterion("project_node_version <=", value, "projectNodeVersion");
+        public Criteria andScheduleVersionLessThanOrEqualTo(Integer value) {
+            addCriterion("schedule_version <=", value, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionIn(List<Integer> values) {
-            addCriterion("project_node_version in", values, "projectNodeVersion");
+        public Criteria andScheduleVersionIn(List<Integer> values) {
+            addCriterion("schedule_version in", values, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionNotIn(List<Integer> values) {
-            addCriterion("project_node_version not in", values, "projectNodeVersion");
+        public Criteria andScheduleVersionNotIn(List<Integer> values) {
+            addCriterion("schedule_version not in", values, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionBetween(Integer value1, Integer value2) {
-            addCriterion("project_node_version between", value1, value2, "projectNodeVersion");
+        public Criteria andScheduleVersionBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_version between", value1, value2, "scheduleVersion");
             return (Criteria) this;
         }
 
-        public Criteria andProjectNodeVersionNotBetween(Integer value1, Integer value2) {
-            addCriterion("project_node_version not between", value1, value2, "projectNodeVersion");
+        public Criteria andScheduleVersionNotBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_version not between", value1, value2, "scheduleVersion");
             return (Criteria) this;
         }
 

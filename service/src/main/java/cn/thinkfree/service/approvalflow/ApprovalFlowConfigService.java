@@ -50,6 +50,6 @@ public interface ApprovalFlowConfigService {
      * @param projectBigScheduleSort 项目节点
      * @param scheduleApprovalFlowConfigVo 审批流配置
      */
-    void saveScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo);
+    void saveScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort, Integer version, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo);
 
 }

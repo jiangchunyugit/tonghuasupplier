@@ -265,52 +265,62 @@ public class ProjectSmallSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdEqualTo(Integer value) {
+        public Criteria andCompanyIdEqualTo(String value) {
             addCriterion("company_id =", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotEqualTo(Integer value) {
+        public Criteria andCompanyIdNotEqualTo(String value) {
             addCriterion("company_id <>", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThan(Integer value) {
+        public Criteria andCompanyIdGreaterThan(String value) {
             addCriterion("company_id >", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
             addCriterion("company_id >=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThan(Integer value) {
+        public Criteria andCompanyIdLessThan(String value) {
             addCriterion("company_id <", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
             addCriterion("company_id <=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIn(List<Integer> values) {
+        public Criteria andCompanyIdLike(String value) {
+            addCriterion("company_id like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotLike(String value) {
+            addCriterion("company_id not like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIn(List<String> values) {
             addCriterion("company_id in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotIn(List<Integer> values) {
+        public Criteria andCompanyIdNotIn(List<String> values) {
             addCriterion("company_id not in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdBetween(String value1, String value2) {
             addCriterion("company_id between", value1, value2, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdNotBetween(String value1, String value2) {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }

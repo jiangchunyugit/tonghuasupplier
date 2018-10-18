@@ -50,7 +50,7 @@ public class ApprovalFlowConfigController extends AbsBaseController{
     }
 
     @ApiOperation("添加审批流")
-    @ResponseBody
+    @MyRespBody
     @PostMapping(value = "add", produces = "application/json")
     public MyRespBundle add(@RequestBody ApprovalFlowConfigVO configLogDTO){
         printInfoMes("configLogDTO:{}", JSONUtil.bean2JsonStr(configLogDTO));
@@ -59,14 +59,14 @@ public class ApprovalFlowConfigController extends AbsBaseController{
     }
 
     @ApiOperation("审批流顺序")
-    @ResponseBody
+    @MyRespBody
     @PostMapping(value = "order", produces = "application/json")
     public MyRespBundle order(){
         return sendJsonData(ResultMessage.SUCCESS, configService.order());
     }
 
     @ApiOperation("修改审批流顺序")
-    @ResponseBody
+    @MyRespBody
     @PostMapping(value = "editOrder", produces = "application/json")
     public MyRespBundle editOrder(@RequestBody List<ApprovalFlowOrderVO> orderVOs){
         configService.editOrder(orderVOs);
@@ -74,7 +74,7 @@ public class ApprovalFlowConfigController extends AbsBaseController{
     }
 
     @ApiOperation("删除审批流")
-    @ResponseBody
+    @MyRespBody
     @PostMapping(value = "delete")
     @ApiParam(name = "num" ,value = "审批流编号", required = true)
     public MyRespBundle delete(@RequestParam("num")String num){

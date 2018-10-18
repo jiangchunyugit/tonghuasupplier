@@ -3,16 +3,14 @@ package cn.thinkfree.service.approvalflow;
 import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowScheduleNodeRole;
 import cn.thinkfree.database.model.UserRoleSet;
-import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
 
 import java.util.List;
 
 /**
- * @ClassName ApprovalFlowScheduleNodeRoleService
- * @Description 项目节点与审批人员顺序
- * @Author song
- * @Data 2018/10/13 17:31
- * @Version 1.0
+ * 项目节点与审批人员顺序
+ * @author song
+ * @date 2018/10/13 17:31
+ * @version 1.0
  */
 public interface ApprovalFlowScheduleNodeRoleService {
 
@@ -24,20 +22,21 @@ public interface ApprovalFlowScheduleNodeRoleService {
      */
     List<ApprovalFlowScheduleNodeRole> findLastVersionByNodeNumAndScheduleSort(String nodeNum, Integer scheduleSort);
 
-    /**
+      /**
      * 创建审批顺序
      * @param nodes 节点顺序
      * @param roles 审批顺序
      * @param scheduleSort 项目节点编号
+     * @param scheduleVersion 项目节点版本号
      */
-    void create(List<? extends ApprovalFlowNode> nodes, List<List<UserRoleSet>> roles, Integer scheduleSort);
+    void create(List<? extends ApprovalFlowNode> nodes, List<List<UserRoleSet>> roles, Integer scheduleSort, Integer scheduleVersion);
 
     /**
-     * 更新审批顺序
-     * @param nodes 节点顺序
-     * @param roles 审批顺序
-     * @param scheduleSort 项目节点编号
+     * 根据审批流节点信息、项目排期节点编号与版本查询审批角色顺序
+     * @param nodes 审批流节点信息
+     * @param scheduleSort 项目排期节点编号
+     * @param scheduleVersion 项目排期节点版本
+     * @return 审批角色顺序
      */
-    void update(List<? extends ApprovalFlowNode> nodes, List<List<UserRoleSet>> roles, Integer scheduleSort);
-
+    List<List<ApprovalFlowScheduleNodeRole>> findByNodesAndScheduleSortAndVersion(List<? extends ApprovalFlowNode> nodes, Integer scheduleSort, Integer scheduleVersion);
 }

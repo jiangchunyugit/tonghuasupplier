@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
-@Api(tags ="项目相关" )
+@Api(tags = "项目相关")
 @RestController
 @RequestMapping(value = "project")
-public class AppProjectController extends AbsBaseController{
+public class AppProjectController extends AbsBaseController {
 
-    @RequestMapping(value = "getAllProject",method = RequestMethod.POST)
+    @RequestMapping(value = "getAllProject", method = RequestMethod.POST)
     @ApiOperation(value = "项目列表")
-    public MyRespBundle<PageInfo<ProjectVo>> getAllProject(@ApiParam(name = "appProjectSEO",value = "项目列表入参实体") AppProjectSEO appProjectSEO){
+    public MyRespBundle<PageInfo<ProjectVo>> getAllProject(@ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
         PageInfo<ProjectVo> page = new PageInfo<ProjectVo>();
         List<ProjectVo> projectVoList = new LinkedList<ProjectVo>();
         ProjectVo projectVo1 = new ProjectVo();
@@ -63,12 +63,12 @@ public class AppProjectController extends AbsBaseController{
         projectVo3.setProjectData(1);
         projectVoList.add(projectVo3);
         page.setList(projectVoList);
-        return sendJsonData(ResultMessage.SUCCESS,page);
+        return sendJsonData(ResultMessage.SUCCESS, page);
     }
 
-    @RequestMapping(value = "getProjectDetail",method = RequestMethod.POST)
+    @RequestMapping(value = "getProjectDetail", method = RequestMethod.POST)
     @ApiOperation(value = "获取项目详情接口")
-    public MyRespBundle<ProjectVo> getProjectDetail(@ApiParam(name = "projectNo",value = "项目编号")String projectNo ){
+    public MyRespBundle<ProjectVo> getProjectDetail(@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         ProjectVo projectVo1 = new ProjectVo();
         projectVo1.setProjectNo("1223098338391");
         projectVo1.setDesignProgress(50);
@@ -80,133 +80,128 @@ public class AppProjectController extends AbsBaseController{
         projectVo1.setProjectDynamic(0);
         projectVo1.setProjectOrder(0);
         projectVo1.setProjectData(1);
-        Map<Integer,Object> map = new HashMap<Integer,Object>();
+        List<ProjectOrderDetailVo> projectOrderDetailVoList = new ArrayList<>();
         //设计订单
-        DesignOrderVo designOrderVo = new DesignOrderVo();
-        designOrderVo.setOrderNo("2918308308303883");
-        designOrderVo.setType(1);
-        designOrderVo.setTaskStage(1);
-        List<DesignBaseVo> designList = new LinkedList<DesignBaseVo>();
-        DesignBaseVo designBaseVo1 = new DesignBaseVo(3,"量房费待支付");
-        DesignBaseVo designBaseVo2 = new DesignBaseVo(1,"派单中");
-        DesignBaseVo designBaseVo3 = new DesignBaseVo(5,"户型图待确认");
-        DesignBaseVo designBaseVo4 = new DesignBaseVo(2,"已接单");
-        DesignBaseVo designBaseVo5 = new DesignBaseVo(4,"户型图待交付");
+        ProjectOrderDetailVo projectOrderDetailVo = new ProjectOrderDetailVo();
+        List<OrderTaskSortVo> designList = new LinkedList<>();
+        OrderTaskSortVo designBaseVo1 = new OrderTaskSortVo(3, "量房费待支付");
+        OrderTaskSortVo designBaseVo2 = new OrderTaskSortVo(1, "派单中");
+        OrderTaskSortVo designBaseVo3 = new OrderTaskSortVo(5, "户型图待确认");
+        OrderTaskSortVo designBaseVo4 = new OrderTaskSortVo(2, "已接单");
+        OrderTaskSortVo designBaseVo5 = new OrderTaskSortVo(4, "户型图待交付");
         designList.add(designBaseVo1);
         designList.add(designBaseVo2);
         designList.add(designBaseVo3);
         designList.add(designBaseVo4);
         designList.add(designBaseVo5);
-        designOrderVo.setDesignTask(designList);
-        designOrderVo.setTaskStage(3);
+        projectOrderDetailVo.setOrderTaskSortVoList(designList);
+        projectOrderDetailVo.setTaskStage(1);
+        projectOrderDetailVo.setOrderNo("2918308308303883");
+        projectOrderDetailVo.setOrderType(1);
+        projectOrderDetailVo.setType(1);
+        projectOrderDetailVo.setCancle(false);
         //组合展示实体
-        DesignOrderPlayVo designOrderPlayVo = new DesignOrderPlayVo();
-        designOrderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
+        OrderPlayVo orderPlayVo = new OrderPlayVo();
+        orderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
         List<PersionVo> persionVoList = new LinkedList<PersionVo>();
-        PersionVo persionVo = new PersionVo("15666666666","马云",true,"CM");
+        PersionVo persionVo = new PersionVo("15666666666", "马云", true, "CM");
         persionVoList.add(persionVo);
-        designOrderPlayVo.setPersionList(persionVoList);
-        designOrderVo.setDesignOrderPlayVo(designOrderPlayVo);
-        designOrderVo.setCancle(false);
-        map.put(1,designOrderVo);
+        orderPlayVo.setPersionList(persionVoList);
+        orderPlayVo.setTaskNum(10);
+        orderPlayVo.setCost(100000);
+        orderPlayVo.setSchedule(20);
+        orderPlayVo.setDelay(2);
+        projectOrderDetailVo.setOrderPlayVo(orderPlayVo);
+        projectOrderDetailVoList.add(projectOrderDetailVo);
         //施工订单
-        ConstructionOrderVo constructionOrderVo = new ConstructionOrderVo();
-        constructionOrderVo.setOrderNo("2918308308303883");
-        constructionOrderVo.setType(1);
-        constructionOrderVo.setTaskStage(3);
-        List<SchedulingBaseBigVo> proList = new LinkedList<SchedulingBaseBigVo>();
-        SchedulingBaseBigVo pro1 = new SchedulingBaseBigVo();
-        pro1.setSort(2);
-        pro1.setName("水电暖阶段2");
-        proList.add(pro1);
-        SchedulingBaseBigVo pro2 = new SchedulingBaseBigVo();
-        pro2.setSort(4);
-        pro2.setName("水电暖阶段4");
-        proList.add(pro2);
-        SchedulingBaseBigVo pro3 = new SchedulingBaseBigVo();
-        pro3.setSort(5);
-        pro3.setName("水电暖阶段5");
-        proList.add(pro3);
-        SchedulingBaseBigVo pro4 = new SchedulingBaseBigVo();
-        pro4.setSort(1);
-        pro4.setName("水电暖阶段");
-        proList.add(pro4);
-        SchedulingBaseBigVo pro5 = new SchedulingBaseBigVo();
-        pro5.setSort(3);
-        pro5.setName("水电暖阶段3");
-        proList.add(pro5);
-        constructionOrderVo.setProjectBigSchedulingList(proList);
+        ProjectOrderDetailVo constructionOrderVo = new ProjectOrderDetailVo();
+        List<OrderTaskSortVo> constructionList = new LinkedList<>();
+        OrderTaskSortVo constructionBaseVo1 = new OrderTaskSortVo(3, "水电暖阶段3");
+        OrderTaskSortVo constructionBaseVo2 = new OrderTaskSortVo(1, "水电暖阶段");
+        OrderTaskSortVo constructionBaseVo3 = new OrderTaskSortVo(5, "水电暖阶段5");
+        OrderTaskSortVo constructionBaseVo4 = new OrderTaskSortVo(2, "水电暖阶段2");
+        OrderTaskSortVo constructionBaseVo5 = new OrderTaskSortVo(4, "水电暖阶段4");
+        constructionList.add(constructionBaseVo1);
+        constructionList.add(constructionBaseVo2);
+        constructionList.add(constructionBaseVo3);
+        constructionList.add(constructionBaseVo4);
+        constructionList.add(constructionBaseVo5);
+        constructionOrderVo.setOrderTaskSortVoList(constructionList);
         constructionOrderVo.setTaskStage(2);
-        //组合展示实体
-        ConstructionOrderPlayVo constructionOrderPlayVo = new ConstructionOrderPlayVo();
-        constructionOrderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
-        List<PersionVo> persionVoList1 = new LinkedList<PersionVo>();
-        PersionVo persionVo1 = new PersionVo("17888888888","刘强东",true,"CM");
-        persionVoList.add(persionVo1);
-        constructionOrderPlayVo.setPersionList(persionVoList1);
-        constructionOrderPlayVo.setTaskNum(11);
-        constructionOrderPlayVo.setCost(32000);
-        constructionOrderPlayVo.setSchedule(25);
-        constructionOrderPlayVo.setDelay(10);
-        constructionOrderVo.setConstructionOrderPlayVo(constructionOrderPlayVo);
+        constructionOrderVo.setOrderNo("2918308308303883");
+        constructionOrderVo.setOrderType(2);
+        constructionOrderVo.setType(1);
         constructionOrderVo.setCancle(true);
-        map.put(2,constructionOrderVo);
-        projectVo1.setModular(map);
-        return sendJsonData(ResultMessage.SUCCESS,projectVo1);
+        //组合展示实体
+        OrderPlayVo orderPlayVo1 = new OrderPlayVo();
+        orderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
+        List<PersionVo> persionVoList1 = new LinkedList<PersionVo>();
+        PersionVo persionVo1 = new PersionVo("17888888888", "刘强东", true, "CM");
+        persionVoList1.add(persionVo1);
+        orderPlayVo1.setPersionList(persionVoList1);
+        orderPlayVo1.setTaskNum(10);
+        orderPlayVo1.setCost(100000);
+        orderPlayVo1.setSchedule(20);
+        orderPlayVo1.setDelay(2);
+        constructionOrderVo.setOrderPlayVo(orderPlayVo1);
+        projectOrderDetailVoList.add(constructionOrderVo);
+        projectVo1.setProjectOrderDetailVoList(projectOrderDetailVoList);
+        return sendJsonData(ResultMessage.SUCCESS, projectVo1);
     }
 
-    @RequestMapping(value = "getDesignData",method = RequestMethod.POST)
+    @RequestMapping(value = "getDesignData", method = RequestMethod.POST)
     @ApiOperation(value = "获取设计资料")
-    public MyRespBundle<DataVo> getDesignData(@ApiParam(name = "projectNo",value = "项目编号")String projectNo){
+    public MyRespBundle<DataVo> getDesignData(@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         DataVo designDataVo = new DataVo();
         List<DataDetailVo> dataDetailVoList = new ArrayList<DataDetailVo>();
-        List<String> list1 = new ArrayList<String>();
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        List<String> list2 = new ArrayList<String>();
-        list2.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list2.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list2.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        List<String> list3 = new ArrayList<String>();
-        list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list3.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),1,true,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo2 = new DataDetailVo(list2,new Date(),2,false,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo3 = new DataDetailVo(list3,new Date(),3,true,"http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        List<UrlDetailVo> list1 = new ArrayList<>();
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        List<UrlDetailVo> list2 = new ArrayList<>();
+        list2.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        list2.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        list2.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        List<UrlDetailVo> list3 = new ArrayList<>();
+        list3.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        list3.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        list3.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaa"));
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1, "", new Date(), "客厅施工图", true, "http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        DataDetailVo dataDetailVo2 = new DataDetailVo(list2, "", new Date(), "客厅施工图", false, "http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
+        DataDetailVo dataDetailVo3 = new DataDetailVo(list3, "", new Date(), "客厅施工图", true, "http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
         dataDetailVoList.add(dataDetailVo1);
         dataDetailVoList.add(dataDetailVo2);
         dataDetailVoList.add(dataDetailVo3);
         designDataVo.setDataList(dataDetailVoList);
-        return sendJsonData(ResultMessage.SUCCESS,designDataVo);
+        return sendJsonData(ResultMessage.SUCCESS, designDataVo);
     }
 
-    @RequestMapping(value = "getConstructionData",method = RequestMethod.POST)
+    @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
     @ApiOperation(value = "获取施工资料")
-    public MyRespBundle<DataDetailVo> getConstructionData(@ApiParam(name = "projectNo",value = "项目编号")String projectNo){
-        List<String> list1 = new ArrayList<String>();
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),4,null,null);
-        return sendJsonData(ResultMessage.SUCCESS,dataDetailVo1);
+    public MyRespBundle<DataDetailVo> getConstructionData(@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+        List<UrlDetailVo> list1 = new ArrayList<>();
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaaa"));
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaaa"));
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaaa"));
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1, "", new Date(), "客厅施工图", false, null);
+        return sendJsonData(ResultMessage.SUCCESS, dataDetailVo1);
     }
 
-    @RequestMapping(value = "getQuotationData",method = RequestMethod.POST)
+    @RequestMapping(value = "getQuotationData", method = RequestMethod.POST)
     @ApiOperation(value = "获取报价单资料")
-    public MyRespBundle<DataDetailVo> getQuotationData(@ApiParam(name = "projectNo",value = "项目编号")String projectNo){
-        List<String> list1 = new ArrayList<String>();
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        list1.add("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202");
-        DataDetailVo dataDetailVo1 = new DataDetailVo(list1,new Date(),4,null,null);
-        return sendJsonData(ResultMessage.SUCCESS,dataDetailVo1);
+    public MyRespBundle<DataDetailVo> getQuotationData(@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+        List<UrlDetailVo> list1 = new ArrayList<>();
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaaa"));
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaaa"));
+        list1.add(new UrlDetailVo("http://www.fang668.com/fang668-gcxz/previewimg.asp?softid=76202",new Date(),"aaaa"));
+        DataDetailVo dataDetailVo1 = new DataDetailVo(list1, "", new Date(), "客厅施工图", false, null);
+        return sendJsonData(ResultMessage.SUCCESS, dataDetailVo1);
     }
 
-    @RequestMapping(value = "cancleOrder",method = RequestMethod.POST)
+    @RequestMapping(value = "cancleOrder", method = RequestMethod.POST)
     @ApiOperation(value = "取消订单")
-    public MyRespBundle cancleOrder(@ApiParam(name = "orderNo",value = "订单编号")String orderNo ){
+    public MyRespBundle cancleOrder(@ApiParam(name = "orderNo", value = "订单编号") String orderNo,
+                                    @ApiParam(name = "cancelReason", value = "取消原因") String cancelReason) {
         String result = "取消成功";
         return sendSuccessMessage(result);
     }
