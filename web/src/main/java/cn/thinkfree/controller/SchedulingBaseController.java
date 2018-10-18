@@ -4,11 +4,10 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ProjectBigScheduling;
-import cn.thinkfree.database.model.ProjectSmallScheduling;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.database.vo.ProjectSmallSchedulingVO;
 import cn.thinkfree.database.vo.SchedulingSeo;
-import cn.thinkfree.service.scheduling.SchedulingBaseService;
+import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "schedulingBase")
 public class SchedulingBaseController extends AbsBaseController {
     @Autowired
-    private SchedulingBaseService schedulingBaseService;
+    private NewSchedulingBaseService schedulingBaseService;
 
     @RequestMapping(value = "listSmallScheduling", method = RequestMethod.POST)
     @ApiOperation(value = "获取本地基础小排期信息")

@@ -1,29 +1,48 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.neworder;
 
-import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.mapper.DesignOrderMapper;
-import cn.thinkfree.database.mapper.PreProjectGuideMapper;
-import cn.thinkfree.database.mapper.ProjectMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.DesignOrder;
 import cn.thinkfree.database.model.DesignOrderExample;
-import cn.thinkfree.database.model.Project;
+import cn.thinkfree.database.model.OrderUser;
+import cn.thinkfree.database.model.OrderUserExample;
 import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
-import cn.thinkfree.service.constants.Scheduling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 延期相关
+ * 项目用户关系服务层
  *
- * @author gejiaming
+ * @author song
+ * @version 1.0
+ * @date 2018/10/18 11:37
  */
 @Service
-public class DelaySchedulingServiceImpl implements DelaySchedulingService {
+@Transactional(rollbackFor = RuntimeException.class)
+public class NewOrderUserServiceImpl implements NewOrderUserService {
+
+    @Resource
+    private OrderUserMapper orderUserMapper;
+
+    @Override
+    public List<OrderUser> findByOrderNo(String orderNo) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        return orderUserMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
+        return orderUserMapper.selectByExample(example);
+    }
     @Autowired(required = false)
     private PreProjectGuideMapper preProjectGuideMapper;
     @Autowired(required = false)

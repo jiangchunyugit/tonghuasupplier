@@ -1,17 +1,11 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
-import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
-import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
-import cn.thinkfree.database.model.ProjectBigSchedulingExample;
-import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
-import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.Scheduling;
-import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +19,7 @@ import java.util.List;
  * @Date 2018-09-30
  */
 @Service(value = "schedulingService")
-public class SchedulingServiceImpl implements SchedulingService {
+public class NewSchedulingServiceImpl implements NewSchedulingService {
     @Autowired
     private ProjectBigSchedulingMapper projectBigSchedulingMapper;
     @Autowired

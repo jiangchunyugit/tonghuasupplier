@@ -1054,6 +1054,76 @@ public class ApprovalFlowInstanceExample {
             addCriterion("data not between", value1, value2, "data");
             return (Criteria) this;
         }
+
+        public Criteria andCurrentNodeNumIsNull() {
+            addCriterion("current_node_num is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumIsNotNull() {
+            addCriterion("current_node_num is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumEqualTo(String value) {
+            addCriterion("current_node_num =", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumNotEqualTo(String value) {
+            addCriterion("current_node_num <>", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumGreaterThan(String value) {
+            addCriterion("current_node_num >", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumGreaterThanOrEqualTo(String value) {
+            addCriterion("current_node_num >=", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumLessThan(String value) {
+            addCriterion("current_node_num <", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumLessThanOrEqualTo(String value) {
+            addCriterion("current_node_num <=", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumLike(String value) {
+            addCriterion("current_node_num like", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumNotLike(String value) {
+            addCriterion("current_node_num not like", value, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumIn(List<String> values) {
+            addCriterion("current_node_num in", values, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumNotIn(List<String> values) {
+            addCriterion("current_node_num not in", values, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumBetween(String value1, String value2) {
+            addCriterion("current_node_num between", value1, value2, "currentNodeNum");
+            return (Criteria) this;
+        }
+
+        public Criteria andCurrentNodeNumNotBetween(String value1, String value2) {
+            addCriterion("current_node_num not between", value1, value2, "currentNodeNum");
+            return (Criteria) this;
+        }
     }
 
     /**

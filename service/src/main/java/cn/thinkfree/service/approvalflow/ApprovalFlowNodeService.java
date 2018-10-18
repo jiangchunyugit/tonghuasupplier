@@ -11,6 +11,8 @@ public interface ApprovalFlowNodeService {
 
     List<ApprovalFlowNodeVO> findVoByConfigLogNum(String configLogNum);
 
+    ApprovalFlowNode findByNum(String num);
+
     List<ApprovalFlowNode> findByConfigLogNum(String configLogNum);
 
     void create(String configLogNum, List<ApprovalFlowNodeVO> approvalFlowNodeVOs);

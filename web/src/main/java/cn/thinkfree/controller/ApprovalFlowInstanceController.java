@@ -3,6 +3,7 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.ApprovalFlowApprovalVO;
 import cn.thinkfree.service.approvalflow.ApprovalFlowInstanceService;
 import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
@@ -62,22 +63,14 @@ public class ApprovalFlowInstanceController extends AbsBaseController {
 
     /**
      * 执行审批操作
-     * @param userId
+     * @param approvalVO 审批信息
      * @return 成功信息
      */
     @ApiOperation("执行审批操作")
     @ResponseBody
     @PostMapping("approval")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "configNum", value = "审批流配置编号"),
-            @ApiImplicitParam(name = "num", value = "审批流实例编号"),
-            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
-            @ApiImplicitParam(name = "userId", value = "用户ID", required = true),
-            @ApiImplicitParam(name = "scheduleSort", value = "项目排期编号", required = true),
-            @ApiImplicitParam(name = "scheduleVersion", value = "项目排期版本", required = true)
-    })
-    public MyRespBundle approval(String configLogNum, String instanceNum, String projectNo, String scheduleSort, Integer scheduleVersion, String data, Integer optionSort, String userId) {
-
+    public MyRespBundle approval(@RequestBody ApprovalFlowApprovalVO approvalVO) {
+        instanceService.approval(approvalVO);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 }

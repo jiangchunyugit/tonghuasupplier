@@ -15,4 +15,11 @@ public interface ApprovalFlowOptionService {
     void create(String nodeNum, List<ApprovalFlowOption> options);
 
     void deleteByNodeNums(List<String> nodeNums);
+
+    /**
+     * 根据操作项编号查询操作项信息
+     * @param num 操作项编号
+     * @return 操作项信息
+     */
+    ApprovalFlowOption findByNum(String num);
 }

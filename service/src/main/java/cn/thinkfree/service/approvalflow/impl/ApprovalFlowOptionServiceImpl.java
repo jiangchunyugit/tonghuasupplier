@@ -1,5 +1,7 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.constants.AFAlias;
+import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.ApprovalFlowOptionMapper;
 import cn.thinkfree.database.model.ApprovalFlowNoticeUrl;
 import cn.thinkfree.database.model.ApprovalFlowOption;
@@ -26,6 +28,7 @@ public class ApprovalFlowOptionServiceImpl implements ApprovalFlowOptionService 
     public void create(String nodeNum, List<ApprovalFlowOption> options) {
         for (ApprovalFlowOption option : options) {
             option.setId(null);
+            option.setNum(UniqueCodeGenerator.AF_CONFIG.getCode());
             option.setNodeNum(nodeNum);
             optionMapper.insertSelective(option);
         }
@@ -38,5 +41,13 @@ public class ApprovalFlowOptionServiceImpl implements ApprovalFlowOptionService 
             example.createCriteria().andNodeNumIn(nodeNums);
             optionMapper.deleteByExample(example);
         }
+    }
+
+    @Override
+    public ApprovalFlowOption findByNum(String num) {
+        ApprovalFlowOptionExample example = new ApprovalFlowOptionExample();
+        example.createCriteria().andNumEqualTo(num);
+        List<ApprovalFlowOption> options = optionMapper.selectByExample(example);
+        return options != null && options.size() > 0 ? options.get(0) : null;
     }
 }

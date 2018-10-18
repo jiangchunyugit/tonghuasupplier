@@ -39,4 +39,14 @@ public interface ApprovalFlowScheduleNodeRoleService {
      * @return 审批角色顺序
      */
     List<List<ApprovalFlowScheduleNodeRole>> findByNodesAndScheduleSortAndVersion(List<? extends ApprovalFlowNode> nodes, Integer scheduleSort, Integer scheduleVersion);
+
+    /**
+     * 根据审批流节点信息、项目排期节点编号与版本查询审批角色顺序
+     * @param nodeNum 审批流节点信息
+     * @param scheduleSort 项目排期节点编号
+     * @param scheduleVersion 项目排期节点版本
+     * @return 审批角色顺序
+     */
+    List<ApprovalFlowScheduleNodeRole> findByNodeNumAndScheduleSortAndVersion(String nodeNum, Integer scheduleSort, Integer scheduleVersion);
+
 }

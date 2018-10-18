@@ -47,6 +47,15 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     public List<ApprovalFlowNodeVO> findVoByConfigLogNum(String configLogNum) {
         return nodeMapper.findByConfigLogNum(configLogNum);
     }
+
+    @Override
+    public ApprovalFlowNode findByNum(String num) {
+        ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
+        nodeExample.createCriteria().andNumEqualTo(num);
+        List<ApprovalFlowNode> nodes = nodeMapper.selectByExample(nodeExample);
+        return nodes != null && nodes.size() > 0 ? nodes.get(0) : null;
+    }
+
     /**
      * 根据节点编号查询节点信息
      * @param configLogNum 节点编号
@@ -55,7 +64,7 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     @Override
     public List<ApprovalFlowNode> findByConfigLogNum(String configLogNum) {
         ApprovalFlowNodeExample nodeExample = new ApprovalFlowNodeExample();
-        nodeExample.createCriteria().andNumEqualTo(configLogNum);
+        nodeExample.createCriteria().andConfigLogNumEqualTo(configLogNum);
         nodeExample.setOrderByClause("sort asc");
         return nodeMapper.selectByExample(nodeExample);
     }
