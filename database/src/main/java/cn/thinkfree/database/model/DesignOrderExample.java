@@ -265,52 +265,62 @@ public class DesignOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdEqualTo(Integer value) {
+        public Criteria andCompanyIdEqualTo(String value) {
             addCriterion("company_id =", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotEqualTo(Integer value) {
+        public Criteria andCompanyIdNotEqualTo(String value) {
             addCriterion("company_id <>", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThan(Integer value) {
+        public Criteria andCompanyIdGreaterThan(String value) {
             addCriterion("company_id >", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
             addCriterion("company_id >=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThan(Integer value) {
+        public Criteria andCompanyIdLessThan(String value) {
             addCriterion("company_id <", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
             addCriterion("company_id <=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIn(List<Integer> values) {
+        public Criteria andCompanyIdLike(String value) {
+            addCriterion("company_id like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotLike(String value) {
+            addCriterion("company_id not like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIn(List<String> values) {
             addCriterion("company_id in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotIn(List<Integer> values) {
+        public Criteria andCompanyIdNotIn(List<String> values) {
             addCriterion("company_id not in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdBetween(String value1, String value2) {
             addCriterion("company_id between", value1, value2, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdNotBetween(String value1, String value2) {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
@@ -585,52 +595,52 @@ public class DesignOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Short value) {
+        public Criteria andTypeEqualTo(Integer value) {
             addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Short value) {
+        public Criteria andTypeNotEqualTo(Integer value) {
             addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Short value) {
+        public Criteria andTypeGreaterThan(Integer value) {
             addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Short value) {
+        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Short value) {
+        public Criteria andTypeLessThan(Integer value) {
             addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Short value) {
+        public Criteria andTypeLessThanOrEqualTo(Integer value) {
             addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Short> values) {
+        public Criteria andTypeIn(List<Integer> values) {
             addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Short> values) {
+        public Criteria andTypeNotIn(List<Integer> values) {
             addCriterion("type not in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Short value1, Short value2) {
+        public Criteria andTypeBetween(Integer value1, Integer value2) {
             addCriterion("type between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Short value1, Short value2) {
+        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
@@ -645,52 +655,52 @@ public class DesignOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageEqualTo(Short value) {
+        public Criteria andOrderStageEqualTo(Integer value) {
             addCriterion("order_stage =", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageNotEqualTo(Short value) {
+        public Criteria andOrderStageNotEqualTo(Integer value) {
             addCriterion("order_stage <>", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageGreaterThan(Short value) {
+        public Criteria andOrderStageGreaterThan(Integer value) {
             addCriterion("order_stage >", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageGreaterThanOrEqualTo(Short value) {
+        public Criteria andOrderStageGreaterThanOrEqualTo(Integer value) {
             addCriterion("order_stage >=", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageLessThan(Short value) {
+        public Criteria andOrderStageLessThan(Integer value) {
             addCriterion("order_stage <", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageLessThanOrEqualTo(Short value) {
+        public Criteria andOrderStageLessThanOrEqualTo(Integer value) {
             addCriterion("order_stage <=", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageIn(List<Short> values) {
+        public Criteria andOrderStageIn(List<Integer> values) {
             addCriterion("order_stage in", values, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageNotIn(List<Short> values) {
+        public Criteria andOrderStageNotIn(List<Integer> values) {
             addCriterion("order_stage not in", values, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageBetween(Short value1, Short value2) {
+        public Criteria andOrderStageBetween(Integer value1, Integer value2) {
             addCriterion("order_stage between", value1, value2, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageNotBetween(Short value1, Short value2) {
+        public Criteria andOrderStageNotBetween(Integer value1, Integer value2) {
             addCriterion("order_stage not between", value1, value2, "orderStage");
             return (Criteria) this;
         }
@@ -1072,6 +1082,66 @@ public class DesignOrderExample {
 
         public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeIsNull() {
+            addCriterion("close_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeIsNotNull() {
+            addCriterion("close_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeEqualTo(Date value) {
+            addCriterion("close_time =", value, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeNotEqualTo(Date value) {
+            addCriterion("close_time <>", value, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeGreaterThan(Date value) {
+            addCriterion("close_time >", value, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("close_time >=", value, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeLessThan(Date value) {
+            addCriterion("close_time <", value, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeLessThanOrEqualTo(Date value) {
+            addCriterion("close_time <=", value, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeIn(List<Date> values) {
+            addCriterion("close_time in", values, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeNotIn(List<Date> values) {
+            addCriterion("close_time not in", values, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeBetween(Date value1, Date value2) {
+            addCriterion("close_time between", value1, value2, "closeTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCloseTimeNotBetween(Date value1, Date value2) {
+            addCriterion("close_time not between", value1, value2, "closeTime");
             return (Criteria) this;
         }
     }

@@ -105,7 +105,7 @@ public class DesignerServiceImpl implements DesignerService {
             criteria.andIdentityEqualTo(Long.parseLong(identity));
         }
         if (!StringUtils.isEmpty(source)) {
-            criteria.andSourceEqualTo(Short.parseShort(source));
+            criteria.andSourceEqualTo(Integer.parseInt(source));
         }
         if (!StringUtils.isEmpty(tag)) {
             criteria.andTagEqualTo(Long.parseLong(tag));
@@ -309,9 +309,9 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsg.setDesignerMoneyHigh(new BigDecimal(designerMoneyHigh));
         designerMsg.setUserId(userId);
         //后台创建
-        designerMsg.setSource(Short.parseShort("3"));
+        designerMsg.setSource(3);
         //未审核
-        designerMsg.setReviewState(Short.parseShort("1"));
+        designerMsg.setReviewState(1);
         designerMsgMapper.insertSelective(designerMsg);
         String[] styleCodes = masterStyle.split(",");
         for (String styleCode : styleCodes) {

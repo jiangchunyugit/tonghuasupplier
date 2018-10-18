@@ -2,15 +2,11 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.database.mapper.ApprovalFlowInstanceMapper;
-import cn.thinkfree.database.mapper.PreProjectHouseTypeMapper;
-import cn.thinkfree.database.mapper.UserRegisterMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.scheduling.OrderUserService;
-import javafx.scene.Scene;
-import jxl.biff.BaseCellFeatures;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -180,7 +176,6 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
                     for (ApprovalFlowNodeRole nodeRole : nodeVO.getNodeRoles()) {
                         ApprovalFlowUserVO userVO = new ApprovalFlowUserVO();
                         userVO.setRoleId(nodeRole.getRoleId());
-                        userVO.setNodeNum(nodeVO.getNum());
                         userVOs.add(userVO);
                     }
                 }
@@ -226,7 +221,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         projectVO.setProjectNo(projectNo);
         projectVO.setHouseType(houseType);
         projectVO.setAddress(project.getAddress() + project.getAddressDetail());
-        projectVO.setOwnerId(project.getOwnerId());
+        projectVO.setOwnerId(Long.parseLong(project.getOwnerId()));
         return projectVO;
     }
 

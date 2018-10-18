@@ -23,16 +23,16 @@ public class CloudServiceImpl implements CloudService {
     String sendSmsUrl;
     @Value("${custom.cloud.sendNotice}")
     String sendNotice;
-
     @Value("${custom.cloud.noticeShowUrl}")
     String noticeShowUrl;
+    @Value("${shanghai.smallSchedulingUrl}")
+    String smallSchedulingUrl;
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
 
 
-
-    private RemoteResult buildFailResult(){
+    private RemoteResult buildFailResult() {
         RemoteResult remoteResult = new RemoteResult();
         remoteResult.setIsComplete(Boolean.FALSE);
         return remoteResult;
@@ -44,7 +44,7 @@ public class CloudServiceImpl implements CloudService {
 
         MultiValueMap<String, Object> param = initParam();
         param.add("projectNo", projectNo);
-        param.add("state",status);
+        param.add("state", status);
 
 
         RemoteResult<String> result = null;
@@ -54,7 +54,7 @@ public class CloudServiceImpl implements CloudService {
             System.out.println(result);
             result.setIsComplete(SuccessCode.equals(result.getCode()));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -73,13 +73,13 @@ public class CloudServiceImpl implements CloudService {
 
         MultiValueMap<String, Object> param = initParam();
         param.add("phone", phone);
-        param.add("activationCode",activeCode);
+        param.add("activationCode", activeCode);
 
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendSmsUrl,param);
+            result = invokeRemoteMethod(sendSmsUrl, param);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -87,13 +87,13 @@ public class CloudServiceImpl implements CloudService {
     }
 
     private RemoteResult<String> invokeRemoteMethod(String url, MultiValueMap<String, Object> param) {
-        RemoteResult<String> result  = restTemplate.postForObject(url, param, RemoteResult.class);
+        RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
 
     private RemoteResult<String> invokeRemoteMethod(String url, HttpEntity<MultiValueMap> param) {
-        RemoteResult<String> result  = restTemplate.postForObject(url, param, RemoteResult.class);
+        RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
@@ -105,23 +105,43 @@ public class CloudServiceImpl implements CloudService {
 
     /**
      * 发送公告
+     *
      * @param systemMessage 公告主键
-     * @param receive  接收人
+     * @param receive       接收人
      * @return
      */
     @Override
     public RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive) {
         MultiValueMap<String, Object> param = initParam();
         param.add("content", systemMessage.getContent());
-        param.add("skipUrl",noticeShowUrl+systemMessage.getId());
-        param.add("title",systemMessage.getTitle());
-        param.add("companyNo",systemMessage.getCompanyId());
-        param.add("senderNo",systemMessage.getSendUserId());
-        param.add("userNo",receive);
+        param.add("skipUrl", noticeShowUrl + systemMessage.getId());
+        param.add("title", systemMessage.getTitle());
+        param.add("companyNo", systemMessage.getCompanyId());
+        param.add("senderNo", systemMessage.getSendUserId());
+        param.add("userNo", receive);
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendNotice,param);
-        }catch (Exception e){
+            result = invokeRemoteMethod(sendNotice, param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+    }
+
+    /**
+     * 与上海同步小排期
+     *
+     * @return
+     */
+    @Override
+    public RemoteResult<String> getBaseScheduling() {
+        MultiValueMap<String, Object> param = initParam();
+//        param.add("content", );
+        RemoteResult<String> result = null;
+        try {
+            result = invokeRemoteMethod(sendNotice, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }

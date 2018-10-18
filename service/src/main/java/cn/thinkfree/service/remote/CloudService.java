@@ -30,4 +30,11 @@ public interface CloudService {
      */
       RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 
+    /**
+     * 与上海同步小排期
+     *
+     * @return
+     */
+     RemoteResult<String> getBaseScheduling();
+
 }

@@ -1,14 +1,19 @@
 package cn.thinkfree.database.appvo;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 /**
  * @author gejiaming
  */
 @Data
-public class ConstructionOrderPlayVo {
+@AllArgsConstructor
+@NoArgsConstructor
+public class OrderPlayVo {
     @ApiModelProperty(name = "constructionCompany",value = "承接公司")
     private String constructionCompany;
     @ApiModelProperty(name = "persionList",value = "人员集合")

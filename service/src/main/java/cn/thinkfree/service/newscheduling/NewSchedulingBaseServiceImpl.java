@@ -1,4 +1,4 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.mapper.ProjectSmallSchedulingMapper;
@@ -29,7 +29,7 @@ import java.util.List;
  * @author gejiaming
  */
 @Service
-public class SchedulingBaseServiceImpl implements SchedulingBaseService {
+public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Autowired
     CloudService cloudService;
     @Autowired
@@ -56,7 +56,7 @@ public class SchedulingBaseServiceImpl implements SchedulingBaseService {
         List<ProjectSmallScheduling> list = projectSmallSchedulingMapper.selectByExample(projectSmallSchedulingExample);
         List<ProjectSmallSchedulingVO> voList = new ArrayList<>();
         try {
-            voList = BaseToVoUtils.getListVo(list,ProjectSmallSchedulingVO.class,BaseToVoUtils.getSmallMap());
+            voList = BaseToVoUtils.getListVo(list,ProjectSmallSchedulingVO.class,BaseToVoUtils.getBaseSmallMap());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,5 +136,15 @@ public class SchedulingBaseServiceImpl implements SchedulingBaseService {
             return "操作失败!";
         }
         return "操作成功";
+    }
+
+    /**
+     * 同步上海基础小排期
+     * @return
+     */
+    @Override
+    public String listShangHai() {
+        cloudService.getBaseScheduling();
+        return null;
     }
 }

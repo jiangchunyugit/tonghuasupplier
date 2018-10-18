@@ -11,7 +11,7 @@ public class OrderConfirmationVO {
     @ApiModelProperty("项目编号")
     private String projectNo;
     @ApiModelProperty("公司编号")
-    private Integer companyId;
+    private String companyId;
     @ApiModelProperty("订单状态")
     private Short orderStage;
 
@@ -23,11 +23,11 @@ public class OrderConfirmationVO {
         this.projectNo = projectNo;
     }
 
-    public Integer getCompanyId() {
+    public String getCompanyId() {
         return companyId;
     }
 
-    public void setCompanyId(Integer companyId) {
+    public void setCompanyId(String companyId) {
         this.companyId = companyId;
     }
 
@@ -36,12 +36,6 @@ public class OrderConfirmationVO {
     }
 
     public void setOrderStage(Short orderStage) {
-        this.orderStage = orderStage;
-    }
-
-    public OrderConfirmationVO(String projectNo, Integer companyId, Short orderStage) {
-        this.projectNo = projectNo;
-        this.companyId = companyId;
         this.orderStage = orderStage;
     }
 }

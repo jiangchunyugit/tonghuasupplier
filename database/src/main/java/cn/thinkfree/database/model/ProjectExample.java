@@ -265,52 +265,62 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdEqualTo(Integer value) {
+        public Criteria andCompanyIdEqualTo(String value) {
             addCriterion("company_id =", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotEqualTo(Integer value) {
+        public Criteria andCompanyIdNotEqualTo(String value) {
             addCriterion("company_id <>", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThan(Integer value) {
+        public Criteria andCompanyIdGreaterThan(String value) {
             addCriterion("company_id >", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
             addCriterion("company_id >=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThan(Integer value) {
+        public Criteria andCompanyIdLessThan(String value) {
             addCriterion("company_id <", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
             addCriterion("company_id <=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIn(List<Integer> values) {
+        public Criteria andCompanyIdLike(String value) {
+            addCriterion("company_id like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotLike(String value) {
+            addCriterion("company_id not like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIn(List<String> values) {
             addCriterion("company_id in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotIn(List<Integer> values) {
+        public Criteria andCompanyIdNotIn(List<String> values) {
             addCriterion("company_id not in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdBetween(String value1, String value2) {
             addCriterion("company_id between", value1, value2, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdNotBetween(String value1, String value2) {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
@@ -395,52 +405,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andStatusEqualTo(Short value) {
+        public Criteria andStatusEqualTo(Integer value) {
             addCriterion("status =", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotEqualTo(Short value) {
+        public Criteria andStatusNotEqualTo(Integer value) {
             addCriterion("status <>", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThan(Short value) {
+        public Criteria andStatusGreaterThan(Integer value) {
             addCriterion("status >", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusGreaterThanOrEqualTo(Short value) {
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
             addCriterion("status >=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThan(Short value) {
+        public Criteria andStatusLessThan(Integer value) {
             addCriterion("status <", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusLessThanOrEqualTo(Short value) {
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
             addCriterion("status <=", value, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusIn(List<Short> values) {
+        public Criteria andStatusIn(List<Integer> values) {
             addCriterion("status in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotIn(List<Short> values) {
+        public Criteria andStatusNotIn(List<Integer> values) {
             addCriterion("status not in", values, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusBetween(Short value1, Short value2) {
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
             addCriterion("status between", value1, value2, "status");
             return (Criteria) this;
         }
 
-        public Criteria andStatusNotBetween(Short value1, Short value2) {
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
@@ -455,52 +465,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andStageEqualTo(Short value) {
+        public Criteria andStageEqualTo(Integer value) {
             addCriterion("stage =", value, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageNotEqualTo(Short value) {
+        public Criteria andStageNotEqualTo(Integer value) {
             addCriterion("stage <>", value, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageGreaterThan(Short value) {
+        public Criteria andStageGreaterThan(Integer value) {
             addCriterion("stage >", value, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageGreaterThanOrEqualTo(Short value) {
+        public Criteria andStageGreaterThanOrEqualTo(Integer value) {
             addCriterion("stage >=", value, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageLessThan(Short value) {
+        public Criteria andStageLessThan(Integer value) {
             addCriterion("stage <", value, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageLessThanOrEqualTo(Short value) {
+        public Criteria andStageLessThanOrEqualTo(Integer value) {
             addCriterion("stage <=", value, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageIn(List<Short> values) {
+        public Criteria andStageIn(List<Integer> values) {
             addCriterion("stage in", values, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageNotIn(List<Short> values) {
+        public Criteria andStageNotIn(List<Integer> values) {
             addCriterion("stage not in", values, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageBetween(Short value1, Short value2) {
+        public Criteria andStageBetween(Integer value1, Integer value2) {
             addCriterion("stage between", value1, value2, "stage");
             return (Criteria) this;
         }
 
-        public Criteria andStageNotBetween(Short value1, Short value2) {
+        public Criteria andStageNotBetween(Integer value1, Integer value2) {
             addCriterion("stage not between", value1, value2, "stage");
             return (Criteria) this;
         }
@@ -635,52 +645,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceEqualTo(Short value) {
+        public Criteria andOrderSourceEqualTo(Integer value) {
             addCriterion("order_source =", value, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceNotEqualTo(Short value) {
+        public Criteria andOrderSourceNotEqualTo(Integer value) {
             addCriterion("order_source <>", value, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceGreaterThan(Short value) {
+        public Criteria andOrderSourceGreaterThan(Integer value) {
             addCriterion("order_source >", value, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceGreaterThanOrEqualTo(Short value) {
+        public Criteria andOrderSourceGreaterThanOrEqualTo(Integer value) {
             addCriterion("order_source >=", value, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceLessThan(Short value) {
+        public Criteria andOrderSourceLessThan(Integer value) {
             addCriterion("order_source <", value, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceLessThanOrEqualTo(Short value) {
+        public Criteria andOrderSourceLessThanOrEqualTo(Integer value) {
             addCriterion("order_source <=", value, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceIn(List<Short> values) {
+        public Criteria andOrderSourceIn(List<Integer> values) {
             addCriterion("order_source in", values, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceNotIn(List<Short> values) {
+        public Criteria andOrderSourceNotIn(List<Integer> values) {
             addCriterion("order_source not in", values, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceBetween(Short value1, Short value2) {
+        public Criteria andOrderSourceBetween(Integer value1, Integer value2) {
             addCriterion("order_source between", value1, value2, "orderSource");
             return (Criteria) this;
         }
 
-        public Criteria andOrderSourceNotBetween(Short value1, Short value2) {
+        public Criteria andOrderSourceNotBetween(Integer value1, Integer value2) {
             addCriterion("order_source not between", value1, value2, "orderSource");
             return (Criteria) this;
         }
@@ -695,52 +705,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingEqualTo(Short value) {
+        public Criteria andHouseHuxingEqualTo(Integer value) {
             addCriterion("house_huxing =", value, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingNotEqualTo(Short value) {
+        public Criteria andHouseHuxingNotEqualTo(Integer value) {
             addCriterion("house_huxing <>", value, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingGreaterThan(Short value) {
+        public Criteria andHouseHuxingGreaterThan(Integer value) {
             addCriterion("house_huxing >", value, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingGreaterThanOrEqualTo(Short value) {
+        public Criteria andHouseHuxingGreaterThanOrEqualTo(Integer value) {
             addCriterion("house_huxing >=", value, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingLessThan(Short value) {
+        public Criteria andHouseHuxingLessThan(Integer value) {
             addCriterion("house_huxing <", value, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingLessThanOrEqualTo(Short value) {
+        public Criteria andHouseHuxingLessThanOrEqualTo(Integer value) {
             addCriterion("house_huxing <=", value, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingIn(List<Short> values) {
+        public Criteria andHouseHuxingIn(List<Integer> values) {
             addCriterion("house_huxing in", values, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingNotIn(List<Short> values) {
+        public Criteria andHouseHuxingNotIn(List<Integer> values) {
             addCriterion("house_huxing not in", values, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingBetween(Short value1, Short value2) {
+        public Criteria andHouseHuxingBetween(Integer value1, Integer value2) {
             addCriterion("house_huxing between", value1, value2, "houseHuxing");
             return (Criteria) this;
         }
 
-        public Criteria andHouseHuxingNotBetween(Short value1, Short value2) {
+        public Criteria andHouseHuxingNotBetween(Integer value1, Integer value2) {
             addCriterion("house_huxing not between", value1, value2, "houseHuxing");
             return (Criteria) this;
         }
@@ -755,52 +765,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomEqualTo(Short value) {
+        public Criteria andHouseRoomEqualTo(Integer value) {
             addCriterion("house_room =", value, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomNotEqualTo(Short value) {
+        public Criteria andHouseRoomNotEqualTo(Integer value) {
             addCriterion("house_room <>", value, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomGreaterThan(Short value) {
+        public Criteria andHouseRoomGreaterThan(Integer value) {
             addCriterion("house_room >", value, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomGreaterThanOrEqualTo(Short value) {
+        public Criteria andHouseRoomGreaterThanOrEqualTo(Integer value) {
             addCriterion("house_room >=", value, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomLessThan(Short value) {
+        public Criteria andHouseRoomLessThan(Integer value) {
             addCriterion("house_room <", value, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomLessThanOrEqualTo(Short value) {
+        public Criteria andHouseRoomLessThanOrEqualTo(Integer value) {
             addCriterion("house_room <=", value, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomIn(List<Short> values) {
+        public Criteria andHouseRoomIn(List<Integer> values) {
             addCriterion("house_room in", values, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomNotIn(List<Short> values) {
+        public Criteria andHouseRoomNotIn(List<Integer> values) {
             addCriterion("house_room not in", values, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomBetween(Short value1, Short value2) {
+        public Criteria andHouseRoomBetween(Integer value1, Integer value2) {
             addCriterion("house_room between", value1, value2, "houseRoom");
             return (Criteria) this;
         }
 
-        public Criteria andHouseRoomNotBetween(Short value1, Short value2) {
+        public Criteria andHouseRoomNotBetween(Integer value1, Integer value2) {
             addCriterion("house_room not between", value1, value2, "houseRoom");
             return (Criteria) this;
         }
@@ -815,52 +825,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeEqualTo(Short value) {
+        public Criteria andHouseOfficeEqualTo(Integer value) {
             addCriterion("house_office =", value, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeNotEqualTo(Short value) {
+        public Criteria andHouseOfficeNotEqualTo(Integer value) {
             addCriterion("house_office <>", value, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeGreaterThan(Short value) {
+        public Criteria andHouseOfficeGreaterThan(Integer value) {
             addCriterion("house_office >", value, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeGreaterThanOrEqualTo(Short value) {
+        public Criteria andHouseOfficeGreaterThanOrEqualTo(Integer value) {
             addCriterion("house_office >=", value, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeLessThan(Short value) {
+        public Criteria andHouseOfficeLessThan(Integer value) {
             addCriterion("house_office <", value, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeLessThanOrEqualTo(Short value) {
+        public Criteria andHouseOfficeLessThanOrEqualTo(Integer value) {
             addCriterion("house_office <=", value, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeIn(List<Short> values) {
+        public Criteria andHouseOfficeIn(List<Integer> values) {
             addCriterion("house_office in", values, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeNotIn(List<Short> values) {
+        public Criteria andHouseOfficeNotIn(List<Integer> values) {
             addCriterion("house_office not in", values, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeBetween(Short value1, Short value2) {
+        public Criteria andHouseOfficeBetween(Integer value1, Integer value2) {
             addCriterion("house_office between", value1, value2, "houseOffice");
             return (Criteria) this;
         }
 
-        public Criteria andHouseOfficeNotBetween(Short value1, Short value2) {
+        public Criteria andHouseOfficeNotBetween(Integer value1, Integer value2) {
             addCriterion("house_office not between", value1, value2, "houseOffice");
             return (Criteria) this;
         }
@@ -875,52 +885,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletEqualTo(Short value) {
+        public Criteria andHouseToiletEqualTo(Integer value) {
             addCriterion("house_toilet =", value, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletNotEqualTo(Short value) {
+        public Criteria andHouseToiletNotEqualTo(Integer value) {
             addCriterion("house_toilet <>", value, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletGreaterThan(Short value) {
+        public Criteria andHouseToiletGreaterThan(Integer value) {
             addCriterion("house_toilet >", value, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletGreaterThanOrEqualTo(Short value) {
+        public Criteria andHouseToiletGreaterThanOrEqualTo(Integer value) {
             addCriterion("house_toilet >=", value, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletLessThan(Short value) {
+        public Criteria andHouseToiletLessThan(Integer value) {
             addCriterion("house_toilet <", value, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletLessThanOrEqualTo(Short value) {
+        public Criteria andHouseToiletLessThanOrEqualTo(Integer value) {
             addCriterion("house_toilet <=", value, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletIn(List<Short> values) {
+        public Criteria andHouseToiletIn(List<Integer> values) {
             addCriterion("house_toilet in", values, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletNotIn(List<Short> values) {
+        public Criteria andHouseToiletNotIn(List<Integer> values) {
             addCriterion("house_toilet not in", values, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletBetween(Short value1, Short value2) {
+        public Criteria andHouseToiletBetween(Integer value1, Integer value2) {
             addCriterion("house_toilet between", value1, value2, "houseToilet");
             return (Criteria) this;
         }
 
-        public Criteria andHouseToiletNotBetween(Short value1, Short value2) {
+        public Criteria andHouseToiletNotBetween(Integer value1, Integer value2) {
             addCriterion("house_toilet not between", value1, value2, "houseToilet");
             return (Criteria) this;
         }
@@ -1075,52 +1085,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andStyleEqualTo(Short value) {
+        public Criteria andStyleEqualTo(Integer value) {
             addCriterion("style =", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleNotEqualTo(Short value) {
+        public Criteria andStyleNotEqualTo(Integer value) {
             addCriterion("style <>", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleGreaterThan(Short value) {
+        public Criteria andStyleGreaterThan(Integer value) {
             addCriterion("style >", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleGreaterThanOrEqualTo(Short value) {
+        public Criteria andStyleGreaterThanOrEqualTo(Integer value) {
             addCriterion("style >=", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleLessThan(Short value) {
+        public Criteria andStyleLessThan(Integer value) {
             addCriterion("style <", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleLessThanOrEqualTo(Short value) {
+        public Criteria andStyleLessThanOrEqualTo(Integer value) {
             addCriterion("style <=", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleIn(List<Short> values) {
+        public Criteria andStyleIn(List<Integer> values) {
             addCriterion("style in", values, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleNotIn(List<Short> values) {
+        public Criteria andStyleNotIn(List<Integer> values) {
             addCriterion("style not in", values, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleBetween(Short value1, Short value2) {
+        public Criteria andStyleBetween(Integer value1, Integer value2) {
             addCriterion("style between", value1, value2, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleNotBetween(Short value1, Short value2) {
+        public Criteria andStyleNotBetween(Integer value1, Integer value2) {
             addCriterion("style not between", value1, value2, "style");
             return (Criteria) this;
         }
@@ -1195,52 +1205,52 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeEqualTo(Short value) {
+        public Criteria andHouseTypeEqualTo(Integer value) {
             addCriterion("house_type =", value, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeNotEqualTo(Short value) {
+        public Criteria andHouseTypeNotEqualTo(Integer value) {
             addCriterion("house_type <>", value, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeGreaterThan(Short value) {
+        public Criteria andHouseTypeGreaterThan(Integer value) {
             addCriterion("house_type >", value, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeGreaterThanOrEqualTo(Short value) {
+        public Criteria andHouseTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("house_type >=", value, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeLessThan(Short value) {
+        public Criteria andHouseTypeLessThan(Integer value) {
             addCriterion("house_type <", value, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeLessThanOrEqualTo(Short value) {
+        public Criteria andHouseTypeLessThanOrEqualTo(Integer value) {
             addCriterion("house_type <=", value, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeIn(List<Short> values) {
+        public Criteria andHouseTypeIn(List<Integer> values) {
             addCriterion("house_type in", values, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeNotIn(List<Short> values) {
+        public Criteria andHouseTypeNotIn(List<Integer> values) {
             addCriterion("house_type not in", values, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeBetween(Short value1, Short value2) {
+        public Criteria andHouseTypeBetween(Integer value1, Integer value2) {
             addCriterion("house_type between", value1, value2, "houseType");
             return (Criteria) this;
         }
 
-        public Criteria andHouseTypeNotBetween(Short value1, Short value2) {
+        public Criteria andHouseTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("house_type not between", value1, value2, "houseType");
             return (Criteria) this;
         }
@@ -1495,53 +1505,183 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdEqualTo(Long value) {
+        public Criteria andOwnerIdEqualTo(String value) {
             addCriterion("owner_id =", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdNotEqualTo(Long value) {
+        public Criteria andOwnerIdNotEqualTo(String value) {
             addCriterion("owner_id <>", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdGreaterThan(Long value) {
+        public Criteria andOwnerIdGreaterThan(String value) {
             addCriterion("owner_id >", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andOwnerIdGreaterThanOrEqualTo(String value) {
             addCriterion("owner_id >=", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdLessThan(Long value) {
+        public Criteria andOwnerIdLessThan(String value) {
             addCriterion("owner_id <", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdLessThanOrEqualTo(Long value) {
+        public Criteria andOwnerIdLessThanOrEqualTo(String value) {
             addCriterion("owner_id <=", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdIn(List<Long> values) {
+        public Criteria andOwnerIdLike(String value) {
+            addCriterion("owner_id like", value, "ownerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerIdNotLike(String value) {
+            addCriterion("owner_id not like", value, "ownerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerIdIn(List<String> values) {
             addCriterion("owner_id in", values, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdNotIn(List<Long> values) {
+        public Criteria andOwnerIdNotIn(List<String> values) {
             addCriterion("owner_id not in", values, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdBetween(Long value1, Long value2) {
+        public Criteria andOwnerIdBetween(String value1, String value2) {
             addCriterion("owner_id between", value1, value2, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdNotBetween(Long value1, Long value2) {
+        public Criteria andOwnerIdNotBetween(String value1, String value2) {
             addCriterion("owner_id not between", value1, value2, "ownerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyIsNull() {
+            addCriterion("balcony is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyIsNotNull() {
+            addCriterion("balcony is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyEqualTo(Integer value) {
+            addCriterion("balcony =", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyNotEqualTo(Integer value) {
+            addCriterion("balcony <>", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyGreaterThan(Integer value) {
+            addCriterion("balcony >", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyGreaterThanOrEqualTo(Integer value) {
+            addCriterion("balcony >=", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyLessThan(Integer value) {
+            addCriterion("balcony <", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyLessThanOrEqualTo(Integer value) {
+            addCriterion("balcony <=", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyIn(List<Integer> values) {
+            addCriterion("balcony in", values, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyNotIn(List<Integer> values) {
+            addCriterion("balcony not in", values, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyBetween(Integer value1, Integer value2) {
+            addCriterion("balcony between", value1, value2, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyNotBetween(Integer value1, Integer value2) {
+            addCriterion("balcony not between", value1, value2, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIsNull() {
+            addCriterion("reference_scheme is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIsNotNull() {
+            addCriterion("reference_scheme is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeEqualTo(Integer value) {
+            addCriterion("reference_scheme =", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotEqualTo(Integer value) {
+            addCriterion("reference_scheme <>", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeGreaterThan(Integer value) {
+            addCriterion("reference_scheme >", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("reference_scheme >=", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeLessThan(Integer value) {
+            addCriterion("reference_scheme <", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeLessThanOrEqualTo(Integer value) {
+            addCriterion("reference_scheme <=", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIn(List<Integer> values) {
+            addCriterion("reference_scheme in", values, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotIn(List<Integer> values) {
+            addCriterion("reference_scheme not in", values, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeBetween(Integer value1, Integer value2) {
+            addCriterion("reference_scheme between", value1, value2, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotBetween(Integer value1, Integer value2) {
+            addCriterion("reference_scheme not between", value1, value2, "referenceScheme");
             return (Criteria) this;
         }
     }

@@ -4,9 +4,12 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.DesignOrder;
+import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.vo.OrderConfirmationVO;
+import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
-import cn.thinkfree.service.scheduling.DelaySchedulingService;
+import cn.thinkfree.database.vo.StageDetailsVO;
+import cn.thinkfree.service.newscheduling.DelaySchedulingService;
 import cn.thinkfree.service.utils.ExcelUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -88,7 +91,7 @@ public class DelaySchedulingController extends AbsBaseController {
     /**
      * @return
      * @Author jiang
-     * @Description
+     * @Description 导出派单列表
      * @Date
      * @Param
      **/
@@ -141,6 +144,47 @@ public class DelaySchedulingController extends AbsBaseController {
         }
         return sendJsonData(ResultMessage.SUCCESS, "导出成功");
     }
+
+
+    /**
+     * @Author jiang
+     * @Description 查看订单详情
+     * @Date
+     * @Param
+     * @return
+     **/
+    @RequestMapping(value = "findOrderDetails", method = RequestMethod.POST)
+    @ApiOperation(value = "查看订单详情", notes = "")
+    public MyRespBundle<Project> findOrderDetails(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo){
+        if (null == projectNo || "".equals(projectNo)) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        OrderDetailsVO orderDetailsVO = delaySchedulingService.selectOrderDetails(projectNo);
+        return sendJsonData(ResultMessage.SUCCESS, orderDetailsVO);
+    }
+
+
+    /**
+     * @Author jiang
+     * @Description 阶段展示
+     * @Date
+     * @Param
+     * @return
+     **/
+    @RequestMapping(value = "stageDetailsList", method = RequestMethod.POST)
+    @ApiOperation(value = "查看阶段详情", notes = "")
+    public MyRespBundle<Project> stageDetailsList(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo){
+        if (null == projectNo || "".equals(projectNo)) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        List<StageDetailsVO> stageDetailsList = delaySchedulingService.selectStageDetailsList(projectNo);
+        return sendJsonData(ResultMessage.SUCCESS, stageDetailsList);
+    }
+
+
+
+
+
 
 
 }

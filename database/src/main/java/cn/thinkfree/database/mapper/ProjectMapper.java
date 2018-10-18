@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.model.ProjectExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.OrderDetailsVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectMapper {
@@ -93,4 +95,12 @@ public interface ProjectMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(Project record);
+    /**
+     * @Author jiang
+     * @Description 查看订单详情
+     * @Date
+     * @Param
+     * @return
+     **/
+    OrderDetailsVO selectOrderDetails(@Param("projectNo") String projectNo, @Param("status") Integer status);
 }

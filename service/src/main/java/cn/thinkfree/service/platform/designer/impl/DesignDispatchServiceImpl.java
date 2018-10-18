@@ -1,5 +1,6 @@
 package cn.thinkfree.service.platform.designer.impl;
 
+import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.mapper.DesignOrderMapper;
 import cn.thinkfree.database.mapper.OptionLogMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
@@ -13,8 +14,10 @@ import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +34,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private ProjectMapper projectMapper;
     @Autowired
     private DesignOrderMapper designOrderMapper;
+
     /**
      * 查询设计订单，主表为design_order,附表为project
+     *
      * @param projectNo          订单编号（project.project_no）
      * @param userMsg            业主姓名或电话（调用用户中心查询获取userId）
      * @param orderSource        订单来源（project.order_source）
@@ -59,62 +64,62 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<String> companyIds = new ArrayList<>();
         ProjectExample projectExample = new ProjectExample();
         ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
-        if(!userIds.isEmpty()){
+        if (!userIds.isEmpty()) {
             projectCriteria.andOwnerIdIn(ReflectUtils.listToList(userIds));
         }
-        if(!companyIds.isEmpty()){
+        if (!companyIds.isEmpty()) {
             projectCriteria.andCompanyIdIn(ReflectUtils.listToList(companyIds));
         }
-        if(StringUtils.isNotBlank(orderSource)){
-            projectCriteria.andOrderSourceEqualTo(Short.parseShort(orderSource));
+        if (StringUtils.isNotBlank(orderSource)) {
+            projectCriteria.andOrderSourceEqualTo(Integer.parseInt(orderSource));
         }
-        if(StringUtils.isNotBlank(projectNo)){
+        if (StringUtils.isNotBlank(projectNo)) {
             projectCriteria.andProjectNoLike(projectNo);
         }
-        if(StringUtils.isNotBlank(money)){
+        if (StringUtils.isNotBlank(money)) {
             projectCriteria.andDecorationBudgetEqualTo(Integer.parseInt(money));
         }
         List<Project> projects = projectMapper.selectByExample(projectExample);
-        Map<String,Project> projectMap = ReflectUtils.listToMap(projects,"projectNo");
-        List<String> projectNos = ReflectUtils.getList(projects,"projectNo");
+        Map<String, Project> projectMap = ReflectUtils.listToMap(projects, "projectNo");
+        List<String> projectNos = ReflectUtils.getList(projects, "projectNo");
         OptionLogExample optionLogExample = new OptionLogExample();
         OptionLogExample.Criteria logExampleCriteria = optionLogExample.createCriteria();
-        if(StringUtils.isNotBlank(optionUserName)){
+        if (StringUtils.isNotBlank(optionUserName)) {
             logExampleCriteria.andOptionUserNameLike(optionUserName);
         }
-        if(StringUtils.isNotBlank(optionTimeStart)){
+        if (StringUtils.isNotBlank(optionTimeStart)) {
             logExampleCriteria.andOptionTimeGreaterThanOrEqualTo(DateUtils.strToDate(optionTimeStart));
         }
-        if(StringUtils.isNotBlank(optionTimeEnd)){
+        if (StringUtils.isNotBlank(optionTimeEnd)) {
             logExampleCriteria.andOptionTimeLessThanOrEqualTo(DateUtils.strToDate(optionTimeEnd));
         }
         List<OptionLog> optionLogs = optionLogMapper.selectByExample(optionLogExample);
-        List<String> orderNos = ReflectUtils.getList(optionLogs,"linkNo");
+        List<String> orderNos = ReflectUtils.getList(optionLogs, "linkNo");
         DesignOrderExample orderExample = new DesignOrderExample();
         DesignOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
-        if(StringUtils.isNotBlank(createTimeStart)){
+        if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
         }
-        if(StringUtils.isNotBlank(createTimeEnd)){
+        if (StringUtils.isNotBlank(createTimeEnd)) {
             orderExampleCriteria.andCreateTimeLessThanOrEqualTo(DateUtils.strToDate(createTimeEnd));
         }
-        if(StringUtils.isNotBlank(styleCode)){
-            orderExampleCriteria.andTypeEqualTo(Short.parseShort(styleCode));
+        if (StringUtils.isNotBlank(styleCode)) {
+            orderExampleCriteria.andTypeEqualTo(Integer.parseInt(styleCode));
         }
-        if(designerOrderState < 0){
-            orderExampleCriteria.andOrderStageEqualTo(Short.parseShort(designerOrderState + ""));
+        if (designerOrderState < 0) {
+            orderExampleCriteria.andOrderStageEqualTo(designerOrderState);
         }
-        if(!projectNos.isEmpty()){
+        if (!projectNos.isEmpty()) {
             orderExampleCriteria.andProjectNoIn(projectNos);
         }
-        if(!orderNos.isEmpty()){
+        if (!orderNos.isEmpty()) {
             orderExampleCriteria.andOrderNoIn(orderNos);
         }
         long total = designOrderMapper.countByExample(orderExample);
         PageHelper.startPage(pageIndex - 1, pageSize);
         List<DesignOrder> designOrders = designOrderMapper.selectByExample(orderExample);
         List<DesignOrderVo> designOrderVos = new ArrayList<>();
-        for (DesignOrder designOrder : designOrders){
+        for (DesignOrder designOrder : designOrders) {
             DesignOrderVo designOrderVo = new DesignOrderVo();
             Project project = projectMap.get(designOrder.getProjectNo());
             designOrderVo.setProject(project);
@@ -126,5 +131,98 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setTotal(total);
         pageVo.setData(designOrderVos);
         return pageVo;
+    }
+
+    /**
+     * 不指派
+     *
+     * @param projectNo      项目编号
+     * @param reason         不派单原因
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
+        //记录操作日志
+        OptionLog optionLog = new OptionLog();
+        optionLog.setLinkNo(designOrder.getOrderNo());
+        optionLog.setOptionTime(new Date());
+        optionLog.setOptionType("DO");
+        optionLog.setOptionUserId(optionUserId);
+        optionLog.setOptionUserName(optionUserName);
+        optionLog.setRemark(reason);
+        optionLogMapper.insertSelective(optionLog);
+    }
+
+    /**
+     * 根据项目编号查询项目信息
+     *
+     * @param projectNo 项目编号
+     * @return
+     */
+    private Project queryProjectByNo(String projectNo) {
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        if (projects.isEmpty()) {
+            throw new RuntimeException("没有查询到该项目");
+        }
+        return projects.get(0);
+    }
+
+    /**
+     * 根据项目编号查询设计订单
+     *
+     * @param projectNo 项目编号
+     * @return
+     */
+    private DesignOrder queryDesignOrder(String projectNo) {
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        List<DesignOrder> designOrders = designOrderMapper.selectByExample(orderExample);
+        if (designOrders.isEmpty()) {
+            throw new RuntimeException("没有查询到相关设计订单");
+        }
+        return designOrders.get(0);
+    }
+
+    /**
+     * 指派
+     *
+     * @param projectNo      项目编号
+     * @param companyId      公司ID
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setCompanyId(companyId);
+        updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
+        //记录操作日志
+        OptionLog optionLog = new OptionLog();
+        optionLog.setLinkNo(designOrder.getOrderNo());
+        optionLog.setOptionTime(new Date());
+        optionLog.setOptionType("DO");
+        optionLog.setOptionUserId(optionUserId);
+        optionLog.setOptionUserName(optionUserName);
+        optionLog.setRemark("指派订单给公司【" + companyId + "】");
+        optionLogMapper.insertSelective(optionLog);
     }
 }

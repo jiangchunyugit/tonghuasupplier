@@ -1,7 +1,6 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
-import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
  * @author gejiaming
  * @Date 2018-09-30
  */
-public interface SchedulingService {
+public interface NewSchedulingService {
     /**
      * 项目列表
      *
