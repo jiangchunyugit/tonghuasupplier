@@ -110,9 +110,9 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
     @Override
     public String getHouseType(Project project) {
-        short room = project.getHouseRoom();
-        short office = project.getHouseOffice();
-        short toilet = project.getHouseToilet();
+        int room = project.getHouseRoom();
+        int office = project.getHouseOffice();
+        int toilet = project.getHouseToilet();
         return room + "室" + office + "厅" + toilet + "卫";
     }
 
