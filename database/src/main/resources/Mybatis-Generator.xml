@@ -97,6 +97,7 @@
         <!--<table tableName="employee_msg" domainObjectName="EmployeeMsg"/>-->
         <!--<table tableName="employee_apply_log" domainObjectName="EmployeeApplyLog"/>-->
         <!--<table tableName="option_log" domainObjectName="OptionLog"/>-->
+        <table tableName="order_state_dictionary" domainObjectName="OrderStateDictionary"/>
         <!--approval flow end-->
     </context>
 </generatorConfiguration>
