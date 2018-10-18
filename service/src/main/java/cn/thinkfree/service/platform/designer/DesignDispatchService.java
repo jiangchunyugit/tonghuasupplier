@@ -33,4 +33,24 @@ public interface DesignDispatchService {
     PageVo<List<DesignOrderVo>> queryDesignerOrder(
             String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd, String styleCode, String money,
             String acreage, int designerOrderState, String companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex);
+
+    /**
+     * 订单不派单
+     *
+     * @param projectNo      项目编号
+     * @param reason         不派单原因
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName);
+
+    /**
+     * 订单派单
+     *
+     * @param projectNo      项目编号
+     * @param companyId      公司ID
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName);
 }

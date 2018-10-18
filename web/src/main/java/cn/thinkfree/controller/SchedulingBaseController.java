@@ -53,5 +53,11 @@ public class SchedulingBaseController extends AbsBaseController {
         return sendSuccessMessage(result);
     }
 
+    @RequestMapping(value = "listShangHai",method = RequestMethod.POST)
+    @ApiOperation(value = "同步上海基础小排期")
+    public MyRespBundle<String> listShangHai(){
+        String result = schedulingBaseService.listShangHai();
+        return sendSuccessMessage(result);
+    }
 
 }

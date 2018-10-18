@@ -96,9 +96,9 @@
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
         <!--<table tableName="designer_style_config" domainObjectName="DesignerStyleConfig"/>-->
         <!--<table tableName="designer_style_relation" domainObjectName="DesignerStyleRelation"/>-->
-        <table tableName="construction_order" domainObjectName="ConstructionOrder"/>
-        <table tableName="design_order" domainObjectName="DesignOrder"/>
-        <table tableName="project" domainObjectName="Project"/>
+        <!--<table tableName="employee_msg" domainObjectName="EmployeeMsg"/>-->
+        <!--<table tableName="employee_apply_log" domainObjectName="EmployeeApplyLog"/>-->
+        <!--<table tableName="option_log" domainObjectName="OptionLog"/>-->
         <!--approval flow end-->
     </context>
 </generatorConfiguration>

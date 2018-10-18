@@ -43,4 +43,10 @@ public interface SchedulingBaseService {
      * @return
      */
     String updateSmallScheduling(ProjectSmallSchedulingVO projectSmallSchedulingVO);
+
+    /**
+     * 同步上海基础小排期
+     * @return
+     */
+    String listShangHai();
 }
