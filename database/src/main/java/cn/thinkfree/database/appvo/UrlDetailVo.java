@@ -4,27 +4,26 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
+ * 资料详情
  * @author gejiaming
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersionVo {
+public class UrlDetailVo {
     /**
-     * 电话
+     * 地址
      */
-    private String phone;
+    private String url;
     /**
-     * 姓名
+     * 上传时间
+     */
+    private Date uploadTime;
+    /**
+     * 名字
      */
     private String name;
-    /**
-     * 是否展示
-     */
-    private Boolean display;
-    /**
-     * 角色
-     */
-    private String role;
 }

@@ -55,13 +55,25 @@ public class BaseToVoUtils {
         return newlist;
     }
 
+    /**
+     * map.key     为model的属性
+     * map.value   为VO的属性
+     */
     public static Map<String, String> getBigMap() {
         Map<String, String> map = new HashMap<>();
+        map.put("", "");
+        map.put("", "");
+        map.put("", "");
+        map.put("", "");
+        map.put("", "");
+        map.put("", "");
+        map.put("", "");
+        map.put("", "");
         map.put("", "");
         return map;
     }
 
-    public static Map<String, String> getSmallMap() {
+    public static Map<String, String> getBaseSmallMap() {
         Map<String, String> map = new HashMap<>();
         map.put("sort", "sort");
         map.put("category", "category");
@@ -79,5 +91,6 @@ public class BaseToVoUtils {
         map.put("createTime", "createTime");
         return map;
     }
+
 
 }
