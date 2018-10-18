@@ -71,7 +71,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             projectCriteria.andCompanyIdIn(ReflectUtils.listToList(companyIds));
         }
         if (StringUtils.isNotBlank(orderSource)) {
-            projectCriteria.andOrderSourceEqualTo(Short.parseShort(orderSource));
+            projectCriteria.andOrderSourceEqualTo(Integer.parseInt(orderSource));
         }
         if (StringUtils.isNotBlank(projectNo)) {
             projectCriteria.andProjectNoLike(projectNo);
@@ -104,10 +104,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             orderExampleCriteria.andCreateTimeLessThanOrEqualTo(DateUtils.strToDate(createTimeEnd));
         }
         if (StringUtils.isNotBlank(styleCode)) {
-            orderExampleCriteria.andTypeEqualTo(Short.parseShort(styleCode));
+            orderExampleCriteria.andTypeEqualTo(Integer.parseInt(styleCode));
         }
         if (designerOrderState < 0) {
-            orderExampleCriteria.andOrderStageEqualTo(Short.parseShort(designerOrderState + ""));
+            orderExampleCriteria.andOrderStageEqualTo(designerOrderState);
         }
         if (!projectNos.isEmpty()) {
             orderExampleCriteria.andProjectNoIn(projectNos);
@@ -148,7 +148,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignOrder designOrder = queryDesignOrder(projectNo);
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
-        updateOrder.setOrderStage(Short.parseShort(DesignStateEnum.STATE_20.getState() + ""));
+        updateOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
         designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
@@ -211,7 +211,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
         updateOrder.setCompanyId(companyId);
-        updateOrder.setOrderStage(Short.parseShort(DesignStateEnum.STATE_10.getState() + ""));
+        updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
         designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
