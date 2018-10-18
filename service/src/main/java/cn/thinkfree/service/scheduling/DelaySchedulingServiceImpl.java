@@ -70,7 +70,7 @@ public class DelaySchedulingServiceImpl implements DelaySchedulingService {
     public Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO) {
         DesignOrder designOrder = new DesignOrder();
         designOrder.setCompanyId(orderConfirmationVO.getCompanyId());
-        designOrder.setOrderStage(orderConfirmationVO.getOrderStage());
+        designOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
 
         DesignOrderExample example = new DesignOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
