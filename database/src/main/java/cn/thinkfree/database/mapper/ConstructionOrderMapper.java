@@ -97,7 +97,6 @@ public interface ConstructionOrderMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ConstructionOrder record);
-    int updateByPrimaryKey(DesignOrder record);
     /**
      * @return
      * @Author jiang
@@ -121,5 +120,5 @@ public interface ConstructionOrderMapper {
      * @Param
      * @return
      **/
-    List<StageDetailsVO> selectStageDetailsList(@Param("projectNo") String projectNo,@Param("type") Integer type);
+    List<StageDetailsVO> selectStageDetailsList(@Param("projectNo") String projectNo, @Param("type") Integer type);
 }

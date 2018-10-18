@@ -53,7 +53,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short status;
+    private Integer status;
 
     /**
      * Database Column Remarks:
@@ -64,7 +64,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short stage;
+    private Integer stage;
 
     /**
      * Database Column Remarks:
@@ -97,7 +97,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short orderSource;
+    private Integer orderSource;
 
     /**
      * Database Column Remarks:
@@ -108,7 +108,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short houseHuxing;
+    private Integer houseHuxing;
 
     /**
      * Database Column Remarks:
@@ -119,7 +119,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short houseRoom;
+    private Integer houseRoom;
 
     /**
      * Database Column Remarks:
@@ -130,7 +130,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short houseOffice;
+    private Integer houseOffice;
 
     /**
      * Database Column Remarks:
@@ -141,7 +141,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short houseToilet;
+    private Integer houseToilet;
 
     /**
      * Database Column Remarks:
@@ -174,7 +174,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short style;
+    private Integer style;
 
     /**
      * Database Column Remarks:
@@ -196,7 +196,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short houseType;
+    private Integer houseType;
 
     /**
      * Database Column Remarks:
@@ -262,7 +262,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short balcony;
+    private Integer balcony;
 
     /**
      * Database Column Remarks:
@@ -355,7 +355,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -367,7 +367,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setStatus(Short status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -379,7 +379,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getStage() {
+    public Integer getStage() {
         return stage;
     }
 
@@ -391,7 +391,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setStage(Short stage) {
+    public void setStage(Integer stage) {
         this.stage = stage;
     }
 
@@ -451,7 +451,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getOrderSource() {
+    public Integer getOrderSource() {
         return orderSource;
     }
 
@@ -463,7 +463,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setOrderSource(Short orderSource) {
+    public void setOrderSource(Integer orderSource) {
         this.orderSource = orderSource;
     }
 
@@ -475,7 +475,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getHouseHuxing() {
+    public Integer getHouseHuxing() {
         return houseHuxing;
     }
 
@@ -487,7 +487,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setHouseHuxing(Short houseHuxing) {
+    public void setHouseHuxing(Integer houseHuxing) {
         this.houseHuxing = houseHuxing;
     }
 
@@ -499,7 +499,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getHouseRoom() {
+    public Integer getHouseRoom() {
         return houseRoom;
     }
 
@@ -511,7 +511,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setHouseRoom(Short houseRoom) {
+    public void setHouseRoom(Integer houseRoom) {
         this.houseRoom = houseRoom;
     }
 
@@ -523,7 +523,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getHouseOffice() {
+    public Integer getHouseOffice() {
         return houseOffice;
     }
 
@@ -535,7 +535,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setHouseOffice(Short houseOffice) {
+    public void setHouseOffice(Integer houseOffice) {
         this.houseOffice = houseOffice;
     }
 
@@ -547,7 +547,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getHouseToilet() {
+    public Integer getHouseToilet() {
         return houseToilet;
     }
 
@@ -559,7 +559,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setHouseToilet(Short houseToilet) {
+    public void setHouseToilet(Integer houseToilet) {
         this.houseToilet = houseToilet;
     }
 
@@ -619,7 +619,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getStyle() {
+    public Integer getStyle() {
         return style;
     }
 
@@ -631,7 +631,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setStyle(Short style) {
+    public void setStyle(Integer style) {
         this.style = style;
     }
 
@@ -667,7 +667,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getHouseType() {
+    public Integer getHouseType() {
         return houseType;
     }
 
@@ -679,7 +679,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setHouseType(Short houseType) {
+    public void setHouseType(Integer houseType) {
         this.houseType = houseType;
     }
 
@@ -811,7 +811,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getBalcony() {
+    public Integer getBalcony() {
         return balcony;
     }
 
@@ -823,7 +823,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setBalcony(Short balcony) {
+    public void setBalcony(Integer balcony) {
         this.balcony = balcony;
     }
 

@@ -535,52 +535,52 @@ public class ConstructionOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andTypeEqualTo(Short value) {
+        public Criteria andTypeEqualTo(Integer value) {
             addCriterion("type =", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotEqualTo(Short value) {
+        public Criteria andTypeNotEqualTo(Integer value) {
             addCriterion("type <>", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThan(Short value) {
+        public Criteria andTypeGreaterThan(Integer value) {
             addCriterion("type >", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeGreaterThanOrEqualTo(Short value) {
+        public Criteria andTypeGreaterThanOrEqualTo(Integer value) {
             addCriterion("type >=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThan(Short value) {
+        public Criteria andTypeLessThan(Integer value) {
             addCriterion("type <", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeLessThanOrEqualTo(Short value) {
+        public Criteria andTypeLessThanOrEqualTo(Integer value) {
             addCriterion("type <=", value, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeIn(List<Short> values) {
+        public Criteria andTypeIn(List<Integer> values) {
             addCriterion("type in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotIn(List<Short> values) {
+        public Criteria andTypeNotIn(List<Integer> values) {
             addCriterion("type not in", values, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeBetween(Short value1, Short value2) {
+        public Criteria andTypeBetween(Integer value1, Integer value2) {
             addCriterion("type between", value1, value2, "type");
             return (Criteria) this;
         }
 
-        public Criteria andTypeNotBetween(Short value1, Short value2) {
+        public Criteria andTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("type not between", value1, value2, "type");
             return (Criteria) this;
         }
@@ -595,52 +595,52 @@ public class ConstructionOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageEqualTo(Short value) {
+        public Criteria andOrderStageEqualTo(Integer value) {
             addCriterion("order_stage =", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageNotEqualTo(Short value) {
+        public Criteria andOrderStageNotEqualTo(Integer value) {
             addCriterion("order_stage <>", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageGreaterThan(Short value) {
+        public Criteria andOrderStageGreaterThan(Integer value) {
             addCriterion("order_stage >", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageGreaterThanOrEqualTo(Short value) {
+        public Criteria andOrderStageGreaterThanOrEqualTo(Integer value) {
             addCriterion("order_stage >=", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageLessThan(Short value) {
+        public Criteria andOrderStageLessThan(Integer value) {
             addCriterion("order_stage <", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageLessThanOrEqualTo(Short value) {
+        public Criteria andOrderStageLessThanOrEqualTo(Integer value) {
             addCriterion("order_stage <=", value, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageIn(List<Short> values) {
+        public Criteria andOrderStageIn(List<Integer> values) {
             addCriterion("order_stage in", values, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageNotIn(List<Short> values) {
+        public Criteria andOrderStageNotIn(List<Integer> values) {
             addCriterion("order_stage not in", values, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageBetween(Short value1, Short value2) {
+        public Criteria andOrderStageBetween(Integer value1, Integer value2) {
             addCriterion("order_stage between", value1, value2, "orderStage");
             return (Criteria) this;
         }
 
-        public Criteria andOrderStageNotBetween(Short value1, Short value2) {
+        public Criteria andOrderStageNotBetween(Integer value1, Integer value2) {
             addCriterion("order_stage not between", value1, value2, "orderStage");
             return (Criteria) this;
         }
@@ -655,52 +655,52 @@ public class ConstructionOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageEqualTo(Short value) {
+        public Criteria andConstructionStageEqualTo(Integer value) {
             addCriterion("construction_stage =", value, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageNotEqualTo(Short value) {
+        public Criteria andConstructionStageNotEqualTo(Integer value) {
             addCriterion("construction_stage <>", value, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageGreaterThan(Short value) {
+        public Criteria andConstructionStageGreaterThan(Integer value) {
             addCriterion("construction_stage >", value, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageGreaterThanOrEqualTo(Short value) {
+        public Criteria andConstructionStageGreaterThanOrEqualTo(Integer value) {
             addCriterion("construction_stage >=", value, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageLessThan(Short value) {
+        public Criteria andConstructionStageLessThan(Integer value) {
             addCriterion("construction_stage <", value, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageLessThanOrEqualTo(Short value) {
+        public Criteria andConstructionStageLessThanOrEqualTo(Integer value) {
             addCriterion("construction_stage <=", value, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageIn(List<Short> values) {
+        public Criteria andConstructionStageIn(List<Integer> values) {
             addCriterion("construction_stage in", values, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageNotIn(List<Short> values) {
+        public Criteria andConstructionStageNotIn(List<Integer> values) {
             addCriterion("construction_stage not in", values, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageBetween(Short value1, Short value2) {
+        public Criteria andConstructionStageBetween(Integer value1, Integer value2) {
             addCriterion("construction_stage between", value1, value2, "constructionStage");
             return (Criteria) this;
         }
 
-        public Criteria andConstructionStageNotBetween(Short value1, Short value2) {
+        public Criteria andConstructionStageNotBetween(Integer value1, Integer value2) {
             addCriterion("construction_stage not between", value1, value2, "constructionStage");
             return (Criteria) this;
         }
