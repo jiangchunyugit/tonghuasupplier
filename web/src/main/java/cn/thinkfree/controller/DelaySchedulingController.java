@@ -9,6 +9,7 @@ import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewDelaySchedulingService;
 import cn.thinkfree.service.utils.ExcelUtil;
 import io.swagger.annotations.Api;
@@ -36,7 +37,7 @@ import java.util.logging.Logger;
 @RequestMapping(value = "delayScheduling")
 public class DelaySchedulingController extends AbsBaseController {
     @Autowired
-    private NewDelaySchedulingService delaySchedulingService;
+    private NewOrderUserService newOrderUserService;
 
 
     /**
@@ -57,11 +58,11 @@ public class DelaySchedulingController extends AbsBaseController {
         }
         Map<String, Object> params = new HashMap<>();
         List<ProjectOrderVO> preProjectGuideList = new ArrayList<>();
-        preProjectGuideList = delaySchedulingService.queryProjectOrderByPage(projectOrderVO, (pageNum - 1) * pageSize, pageSize);
+        preProjectGuideList = newOrderUserService.queryProjectOrderByPage(projectOrderVO, (pageNum - 1) * pageSize, pageSize);
         //这里查询的是所有的数据
         params.put("list", preProjectGuideList);
         //这里查询的是总页数
-        params.put("totalPage", delaySchedulingService.queryProjectOrderCount(projectOrderVO));
+        params.put("totalPage", newOrderUserService.queryProjectOrderCount(projectOrderVO));
         params.put("pageSize", pageSize);
         params.put("pageNum", pageNum);
         return sendJsonData(ResultMessage.SUCCESS, params);
@@ -81,7 +82,7 @@ public class DelaySchedulingController extends AbsBaseController {
         if (null == orderConfirmationVO.getProjectNo() || "".equals(orderConfirmationVO.getProjectNo())) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
-        Integer result = delaySchedulingService.updateorderConfirmation(orderConfirmationVO);
+        Integer result = newOrderUserService.updateorderConfirmation(orderConfirmationVO);
         if (result == 0) {
             return sendJsonData(ResultMessage.ERROR, "确认失败");
         }
@@ -105,7 +106,7 @@ public class DelaySchedulingController extends AbsBaseController {
         }
         Map<String, Object> params = new HashMap<>();
         List<ProjectOrderVO> projectList = new ArrayList<>();
-        projectList = delaySchedulingService.queryProjectOrderByPage(projectOrderVO, pageNum, pageSize);
+        projectList = newOrderUserService.queryProjectOrderByPage(projectOrderVO, pageNum, pageSize);
         //这里查询的是所有的数据
         params.put("list", projectList);
         //这里查询的是总页数
@@ -159,7 +160,7 @@ public class DelaySchedulingController extends AbsBaseController {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
-        OrderDetailsVO orderDetailsVO = delaySchedulingService.selectOrderDetails(projectNo);
+        OrderDetailsVO orderDetailsVO = newOrderUserService.selectOrderDetails(projectNo);
         return sendJsonData(ResultMessage.SUCCESS, orderDetailsVO);
     }
 
@@ -177,7 +178,7 @@ public class DelaySchedulingController extends AbsBaseController {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
-        List<StageDetailsVO> stageDetailsList = delaySchedulingService.selectStageDetailsList(projectNo);
+        List<StageDetailsVO> stageDetailsList = newOrderUserService.selectStageDetailsList(projectNo);
         return sendJsonData(ResultMessage.SUCCESS, stageDetailsList);
     }
 
