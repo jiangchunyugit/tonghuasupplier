@@ -86,7 +86,7 @@ public class DesignOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short type;
+    private Integer type;
 
     /**
      * Database Column Remarks:
@@ -97,7 +97,7 @@ public class DesignOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short orderStage;
+    private Integer orderStage;
 
     /**
      * Database Column Remarks:
@@ -328,7 +328,7 @@ public class DesignOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -340,7 +340,7 @@ public class DesignOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setType(Short type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -352,7 +352,7 @@ public class DesignOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getOrderStage() {
+    public Integer getOrderStage() {
         return orderStage;
     }
 
@@ -364,7 +364,7 @@ public class DesignOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setOrderStage(Short orderStage) {
+    public void setOrderStage(Integer orderStage) {
         this.orderStage = orderStage;
     }
 

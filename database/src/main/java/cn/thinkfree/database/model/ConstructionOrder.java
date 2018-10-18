@@ -75,7 +75,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short type;
+    private Integer type;
 
     /**
      * Database Column Remarks:
@@ -86,7 +86,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short orderStage;
+    private Integer orderStage;
 
     /**
      * Database Column Remarks:
@@ -97,7 +97,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short constructionStage;
+    private Integer constructionStage;
 
     /**
      * Database Column Remarks:
@@ -271,7 +271,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -283,7 +283,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setType(Short type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -295,7 +295,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getOrderStage() {
+    public Integer getOrderStage() {
         return orderStage;
     }
 
@@ -307,7 +307,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setOrderStage(Short orderStage) {
+    public void setOrderStage(Integer orderStage) {
         this.orderStage = orderStage;
     }
 
@@ -319,7 +319,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getConstructionStage() {
+    public Integer getConstructionStage() {
         return constructionStage;
     }
 
@@ -331,7 +331,7 @@ public class ConstructionOrder extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setConstructionStage(Short constructionStage) {
+    public void setConstructionStage(Integer constructionStage) {
         this.constructionStage = constructionStage;
     }
 

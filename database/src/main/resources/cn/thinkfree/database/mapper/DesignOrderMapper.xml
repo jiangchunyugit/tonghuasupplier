@@ -12,8 +12,8 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="appointment_time" jdbcType="TIMESTAMP" property="appointmentTime" />
     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
-    <result column="type" jdbcType="SMALLINT" property="type" />
-    <result column="order_stage" jdbcType="SMALLINT" property="orderStage" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="order_stage" jdbcType="INTEGER" property="orderStage" />
     <result column="volume_room_time" jdbcType="TIMESTAMP" property="volumeRoomTime" />
     <result column="volume_room_money" jdbcType="BIGINT" property="volumeRoomMoney" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
@@ -155,7 +155,7 @@
       )
     values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{appointmentTime,jdbcType=TIMESTAMP}, #{orderNo,jdbcType=VARCHAR}, 
-      #{type,jdbcType=SMALLINT}, #{orderStage,jdbcType=SMALLINT}, #{volumeRoomTime,jdbcType=TIMESTAMP}, 
+      #{type,jdbcType=INTEGER}, #{orderStage,jdbcType=INTEGER}, #{volumeRoomTime,jdbcType=TIMESTAMP}, 
       #{volumeRoomMoney,jdbcType=BIGINT}, #{userId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{actualPayMoney,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{closeTime,jdbcType=TIMESTAMP}
       )
@@ -233,10 +233,10 @@
         #{orderNo,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
-        #{type,jdbcType=SMALLINT},
+        #{type,jdbcType=INTEGER},
       </if>
       <if test="orderStage != null">
-        #{orderStage,jdbcType=SMALLINT},
+        #{orderStage,jdbcType=INTEGER},
       </if>
       <if test="volumeRoomTime != null">
         #{volumeRoomTime,jdbcType=TIMESTAMP},
@@ -297,10 +297,10 @@
         order_no = #{record.orderNo,jdbcType=VARCHAR},
       </if>
       <if test="record.type != null">
-        type = #{record.type,jdbcType=SMALLINT},
+        type = #{record.type,jdbcType=INTEGER},
       </if>
       <if test="record.orderStage != null">
-        order_stage = #{record.orderStage,jdbcType=SMALLINT},
+        order_stage = #{record.orderStage,jdbcType=INTEGER},
       </if>
       <if test="record.volumeRoomTime != null">
         volume_room_time = #{record.volumeRoomTime,jdbcType=TIMESTAMP},
@@ -340,8 +340,8 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       appointment_time = #{record.appointmentTime,jdbcType=TIMESTAMP},
       order_no = #{record.orderNo,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=SMALLINT},
-      order_stage = #{record.orderStage,jdbcType=SMALLINT},
+      type = #{record.type,jdbcType=INTEGER},
+      order_stage = #{record.orderStage,jdbcType=INTEGER},
       volume_room_time = #{record.volumeRoomTime,jdbcType=TIMESTAMP},
       volume_room_money = #{record.volumeRoomMoney,jdbcType=BIGINT},
       user_id = #{record.userId,jdbcType=VARCHAR},
@@ -376,10 +376,10 @@
         order_no = #{orderNo,jdbcType=VARCHAR},
       </if>
       <if test="type != null">
-        type = #{type,jdbcType=SMALLINT},
+        type = #{type,jdbcType=INTEGER},
       </if>
       <if test="orderStage != null">
-        order_stage = #{orderStage,jdbcType=SMALLINT},
+        order_stage = #{orderStage,jdbcType=INTEGER},
       </if>
       <if test="volumeRoomTime != null">
         volume_room_time = #{volumeRoomTime,jdbcType=TIMESTAMP},
@@ -416,8 +416,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       appointment_time = #{appointmentTime,jdbcType=TIMESTAMP},
       order_no = #{orderNo,jdbcType=VARCHAR},
-      type = #{type,jdbcType=SMALLINT},
-      order_stage = #{orderStage,jdbcType=SMALLINT},
+      type = #{type,jdbcType=INTEGER},
+      order_stage = #{orderStage,jdbcType=INTEGER},
       volume_room_time = #{volumeRoomTime,jdbcType=TIMESTAMP},
       volume_room_money = #{volumeRoomMoney,jdbcType=BIGINT},
       user_id = #{userId,jdbcType=VARCHAR},

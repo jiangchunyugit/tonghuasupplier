@@ -9,26 +9,26 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="company_id" jdbcType="VARCHAR" property="companyId" />
     <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
-    <result column="status" jdbcType="SMALLINT" property="status" />
-    <result column="stage" jdbcType="SMALLINT" property="stage" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="stage" jdbcType="INTEGER" property="stage" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="release_time" jdbcType="TIMESTAMP" property="releaseTime" />
-    <result column="order_source" jdbcType="SMALLINT" property="orderSource" />
-    <result column="house_huxing" jdbcType="SMALLINT" property="houseHuxing" />
-    <result column="house_room" jdbcType="SMALLINT" property="houseRoom" />
-    <result column="house_office" jdbcType="SMALLINT" property="houseOffice" />
-    <result column="house_toilet" jdbcType="SMALLINT" property="houseToilet" />
+    <result column="order_source" jdbcType="INTEGER" property="orderSource" />
+    <result column="house_huxing" jdbcType="INTEGER" property="houseHuxing" />
+    <result column="house_room" jdbcType="INTEGER" property="houseRoom" />
+    <result column="house_office" jdbcType="INTEGER" property="houseOffice" />
+    <result column="house_toilet" jdbcType="INTEGER" property="houseToilet" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="address_detail" jdbcType="VARCHAR" property="addressDetail" />
-    <result column="style" jdbcType="SMALLINT" property="style" />
+    <result column="style" jdbcType="INTEGER" property="style" />
     <result column="area" jdbcType="INTEGER" property="area" />
-    <result column="house_type" jdbcType="SMALLINT" property="houseType" />
+    <result column="house_type" jdbcType="INTEGER" property="houseType" />
     <result column="people_no" jdbcType="INTEGER" property="peopleNo" />
     <result column="plan_start_time" jdbcType="TIMESTAMP" property="planStartTime" />
     <result column="plan_end_time" jdbcType="TIMESTAMP" property="planEndTime" />
     <result column="decoration_budget" jdbcType="INTEGER" property="decorationBudget" />
     <result column="owner_id" jdbcType="VARCHAR" property="ownerId" />
-    <result column="balcony" jdbcType="SMALLINT" property="balcony" />
+    <result column="balcony" jdbcType="INTEGER" property="balcony" />
     <result column="reference_scheme" jdbcType="INTEGER" property="referenceScheme" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -168,13 +168,13 @@
       owner_id, balcony, reference_scheme
       )
     values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
-      #{status,jdbcType=SMALLINT}, #{stage,jdbcType=SMALLINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{releaseTime,jdbcType=TIMESTAMP}, #{orderSource,jdbcType=SMALLINT}, #{houseHuxing,jdbcType=SMALLINT}, 
-      #{houseRoom,jdbcType=SMALLINT}, #{houseOffice,jdbcType=SMALLINT}, #{houseToilet,jdbcType=SMALLINT}, 
-      #{address,jdbcType=VARCHAR}, #{addressDetail,jdbcType=VARCHAR}, #{style,jdbcType=SMALLINT}, 
-      #{area,jdbcType=INTEGER}, #{houseType,jdbcType=SMALLINT}, #{peopleNo,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{stage,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{releaseTime,jdbcType=TIMESTAMP}, #{orderSource,jdbcType=INTEGER}, #{houseHuxing,jdbcType=INTEGER}, 
+      #{houseRoom,jdbcType=INTEGER}, #{houseOffice,jdbcType=INTEGER}, #{houseToilet,jdbcType=INTEGER}, 
+      #{address,jdbcType=VARCHAR}, #{addressDetail,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER}, 
+      #{area,jdbcType=INTEGER}, #{houseType,jdbcType=INTEGER}, #{peopleNo,jdbcType=INTEGER}, 
       #{planStartTime,jdbcType=TIMESTAMP}, #{planEndTime,jdbcType=TIMESTAMP}, #{decorationBudget,jdbcType=INTEGER}, 
-      #{ownerId,jdbcType=VARCHAR}, #{balcony,jdbcType=SMALLINT}, #{referenceScheme,jdbcType=INTEGER}
+      #{ownerId,jdbcType=VARCHAR}, #{balcony,jdbcType=INTEGER}, #{referenceScheme,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.Project">
@@ -268,10 +268,10 @@
         #{projectNo,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        #{status,jdbcType=SMALLINT},
+        #{status,jdbcType=INTEGER},
       </if>
       <if test="stage != null">
-        #{stage,jdbcType=SMALLINT},
+        #{stage,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -280,19 +280,19 @@
         #{releaseTime,jdbcType=TIMESTAMP},
       </if>
       <if test="orderSource != null">
-        #{orderSource,jdbcType=SMALLINT},
+        #{orderSource,jdbcType=INTEGER},
       </if>
       <if test="houseHuxing != null">
-        #{houseHuxing,jdbcType=SMALLINT},
+        #{houseHuxing,jdbcType=INTEGER},
       </if>
       <if test="houseRoom != null">
-        #{houseRoom,jdbcType=SMALLINT},
+        #{houseRoom,jdbcType=INTEGER},
       </if>
       <if test="houseOffice != null">
-        #{houseOffice,jdbcType=SMALLINT},
+        #{houseOffice,jdbcType=INTEGER},
       </if>
       <if test="houseToilet != null">
-        #{houseToilet,jdbcType=SMALLINT},
+        #{houseToilet,jdbcType=INTEGER},
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
@@ -301,13 +301,13 @@
         #{addressDetail,jdbcType=VARCHAR},
       </if>
       <if test="style != null">
-        #{style,jdbcType=SMALLINT},
+        #{style,jdbcType=INTEGER},
       </if>
       <if test="area != null">
         #{area,jdbcType=INTEGER},
       </if>
       <if test="houseType != null">
-        #{houseType,jdbcType=SMALLINT},
+        #{houseType,jdbcType=INTEGER},
       </if>
       <if test="peopleNo != null">
         #{peopleNo,jdbcType=INTEGER},
@@ -325,7 +325,7 @@
         #{ownerId,jdbcType=VARCHAR},
       </if>
       <if test="balcony != null">
-        #{balcony,jdbcType=SMALLINT},
+        #{balcony,jdbcType=INTEGER},
       </if>
       <if test="referenceScheme != null">
         #{referenceScheme,jdbcType=INTEGER},
@@ -359,10 +359,10 @@
         project_no = #{record.projectNo,jdbcType=VARCHAR},
       </if>
       <if test="record.status != null">
-        status = #{record.status,jdbcType=SMALLINT},
+        status = #{record.status,jdbcType=INTEGER},
       </if>
       <if test="record.stage != null">
-        stage = #{record.stage,jdbcType=SMALLINT},
+        stage = #{record.stage,jdbcType=INTEGER},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -371,19 +371,19 @@
         release_time = #{record.releaseTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.orderSource != null">
-        order_source = #{record.orderSource,jdbcType=SMALLINT},
+        order_source = #{record.orderSource,jdbcType=INTEGER},
       </if>
       <if test="record.houseHuxing != null">
-        house_huxing = #{record.houseHuxing,jdbcType=SMALLINT},
+        house_huxing = #{record.houseHuxing,jdbcType=INTEGER},
       </if>
       <if test="record.houseRoom != null">
-        house_room = #{record.houseRoom,jdbcType=SMALLINT},
+        house_room = #{record.houseRoom,jdbcType=INTEGER},
       </if>
       <if test="record.houseOffice != null">
-        house_office = #{record.houseOffice,jdbcType=SMALLINT},
+        house_office = #{record.houseOffice,jdbcType=INTEGER},
       </if>
       <if test="record.houseToilet != null">
-        house_toilet = #{record.houseToilet,jdbcType=SMALLINT},
+        house_toilet = #{record.houseToilet,jdbcType=INTEGER},
       </if>
       <if test="record.address != null">
         address = #{record.address,jdbcType=VARCHAR},
@@ -392,13 +392,13 @@
         address_detail = #{record.addressDetail,jdbcType=VARCHAR},
       </if>
       <if test="record.style != null">
-        style = #{record.style,jdbcType=SMALLINT},
+        style = #{record.style,jdbcType=INTEGER},
       </if>
       <if test="record.area != null">
         area = #{record.area,jdbcType=INTEGER},
       </if>
       <if test="record.houseType != null">
-        house_type = #{record.houseType,jdbcType=SMALLINT},
+        house_type = #{record.houseType,jdbcType=INTEGER},
       </if>
       <if test="record.peopleNo != null">
         people_no = #{record.peopleNo,jdbcType=INTEGER},
@@ -416,7 +416,7 @@
         owner_id = #{record.ownerId,jdbcType=VARCHAR},
       </if>
       <if test="record.balcony != null">
-        balcony = #{record.balcony,jdbcType=SMALLINT},
+        balcony = #{record.balcony,jdbcType=INTEGER},
       </if>
       <if test="record.referenceScheme != null">
         reference_scheme = #{record.referenceScheme,jdbcType=INTEGER},
@@ -435,26 +435,26 @@
     set id = #{record.id,jdbcType=BIGINT},
       company_id = #{record.companyId,jdbcType=VARCHAR},
       project_no = #{record.projectNo,jdbcType=VARCHAR},
-      status = #{record.status,jdbcType=SMALLINT},
-      stage = #{record.stage,jdbcType=SMALLINT},
+      status = #{record.status,jdbcType=INTEGER},
+      stage = #{record.stage,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       release_time = #{record.releaseTime,jdbcType=TIMESTAMP},
-      order_source = #{record.orderSource,jdbcType=SMALLINT},
-      house_huxing = #{record.houseHuxing,jdbcType=SMALLINT},
-      house_room = #{record.houseRoom,jdbcType=SMALLINT},
-      house_office = #{record.houseOffice,jdbcType=SMALLINT},
-      house_toilet = #{record.houseToilet,jdbcType=SMALLINT},
+      order_source = #{record.orderSource,jdbcType=INTEGER},
+      house_huxing = #{record.houseHuxing,jdbcType=INTEGER},
+      house_room = #{record.houseRoom,jdbcType=INTEGER},
+      house_office = #{record.houseOffice,jdbcType=INTEGER},
+      house_toilet = #{record.houseToilet,jdbcType=INTEGER},
       address = #{record.address,jdbcType=VARCHAR},
       address_detail = #{record.addressDetail,jdbcType=VARCHAR},
-      style = #{record.style,jdbcType=SMALLINT},
+      style = #{record.style,jdbcType=INTEGER},
       area = #{record.area,jdbcType=INTEGER},
-      house_type = #{record.houseType,jdbcType=SMALLINT},
+      house_type = #{record.houseType,jdbcType=INTEGER},
       people_no = #{record.peopleNo,jdbcType=INTEGER},
       plan_start_time = #{record.planStartTime,jdbcType=TIMESTAMP},
       plan_end_time = #{record.planEndTime,jdbcType=TIMESTAMP},
       decoration_budget = #{record.decorationBudget,jdbcType=INTEGER},
       owner_id = #{record.ownerId,jdbcType=VARCHAR},
-      balcony = #{record.balcony,jdbcType=SMALLINT},
+      balcony = #{record.balcony,jdbcType=INTEGER},
       reference_scheme = #{record.referenceScheme,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -474,10 +474,10 @@
         project_no = #{projectNo,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        status = #{status,jdbcType=SMALLINT},
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="stage != null">
-        stage = #{stage,jdbcType=SMALLINT},
+        stage = #{stage,jdbcType=INTEGER},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -486,19 +486,19 @@
         release_time = #{releaseTime,jdbcType=TIMESTAMP},
       </if>
       <if test="orderSource != null">
-        order_source = #{orderSource,jdbcType=SMALLINT},
+        order_source = #{orderSource,jdbcType=INTEGER},
       </if>
       <if test="houseHuxing != null">
-        house_huxing = #{houseHuxing,jdbcType=SMALLINT},
+        house_huxing = #{houseHuxing,jdbcType=INTEGER},
       </if>
       <if test="houseRoom != null">
-        house_room = #{houseRoom,jdbcType=SMALLINT},
+        house_room = #{houseRoom,jdbcType=INTEGER},
       </if>
       <if test="houseOffice != null">
-        house_office = #{houseOffice,jdbcType=SMALLINT},
+        house_office = #{houseOffice,jdbcType=INTEGER},
       </if>
       <if test="houseToilet != null">
-        house_toilet = #{houseToilet,jdbcType=SMALLINT},
+        house_toilet = #{houseToilet,jdbcType=INTEGER},
       </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
@@ -507,13 +507,13 @@
         address_detail = #{addressDetail,jdbcType=VARCHAR},
       </if>
       <if test="style != null">
-        style = #{style,jdbcType=SMALLINT},
+        style = #{style,jdbcType=INTEGER},
       </if>
       <if test="area != null">
         area = #{area,jdbcType=INTEGER},
       </if>
       <if test="houseType != null">
-        house_type = #{houseType,jdbcType=SMALLINT},
+        house_type = #{houseType,jdbcType=INTEGER},
       </if>
       <if test="peopleNo != null">
         people_no = #{peopleNo,jdbcType=INTEGER},
@@ -531,7 +531,7 @@
         owner_id = #{ownerId,jdbcType=VARCHAR},
       </if>
       <if test="balcony != null">
-        balcony = #{balcony,jdbcType=SMALLINT},
+        balcony = #{balcony,jdbcType=INTEGER},
       </if>
       <if test="referenceScheme != null">
         reference_scheme = #{referenceScheme,jdbcType=INTEGER},
@@ -547,26 +547,26 @@
     update project
     set company_id = #{companyId,jdbcType=VARCHAR},
       project_no = #{projectNo,jdbcType=VARCHAR},
-      status = #{status,jdbcType=SMALLINT},
-      stage = #{stage,jdbcType=SMALLINT},
+      status = #{status,jdbcType=INTEGER},
+      stage = #{stage,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       release_time = #{releaseTime,jdbcType=TIMESTAMP},
-      order_source = #{orderSource,jdbcType=SMALLINT},
-      house_huxing = #{houseHuxing,jdbcType=SMALLINT},
-      house_room = #{houseRoom,jdbcType=SMALLINT},
-      house_office = #{houseOffice,jdbcType=SMALLINT},
-      house_toilet = #{houseToilet,jdbcType=SMALLINT},
+      order_source = #{orderSource,jdbcType=INTEGER},
+      house_huxing = #{houseHuxing,jdbcType=INTEGER},
+      house_room = #{houseRoom,jdbcType=INTEGER},
+      house_office = #{houseOffice,jdbcType=INTEGER},
+      house_toilet = #{houseToilet,jdbcType=INTEGER},
       address = #{address,jdbcType=VARCHAR},
       address_detail = #{addressDetail,jdbcType=VARCHAR},
-      style = #{style,jdbcType=SMALLINT},
+      style = #{style,jdbcType=INTEGER},
       area = #{area,jdbcType=INTEGER},
-      house_type = #{houseType,jdbcType=SMALLINT},
+      house_type = #{houseType,jdbcType=INTEGER},
       people_no = #{peopleNo,jdbcType=INTEGER},
       plan_start_time = #{planStartTime,jdbcType=TIMESTAMP},
       plan_end_time = #{planEndTime,jdbcType=TIMESTAMP},
       decoration_budget = #{decorationBudget,jdbcType=INTEGER},
       owner_id = #{ownerId,jdbcType=VARCHAR},
-      balcony = #{balcony,jdbcType=SMALLINT},
+      balcony = #{balcony,jdbcType=INTEGER},
       reference_scheme = #{referenceScheme,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
