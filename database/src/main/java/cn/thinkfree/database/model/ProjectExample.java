@@ -265,52 +265,62 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdEqualTo(Integer value) {
+        public Criteria andCompanyIdEqualTo(String value) {
             addCriterion("company_id =", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotEqualTo(Integer value) {
+        public Criteria andCompanyIdNotEqualTo(String value) {
             addCriterion("company_id <>", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThan(Integer value) {
+        public Criteria andCompanyIdGreaterThan(String value) {
             addCriterion("company_id >", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
             addCriterion("company_id >=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThan(Integer value) {
+        public Criteria andCompanyIdLessThan(String value) {
             addCriterion("company_id <", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThanOrEqualTo(Integer value) {
+        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
             addCriterion("company_id <=", value, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIn(List<Integer> values) {
+        public Criteria andCompanyIdLike(String value) {
+            addCriterion("company_id like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotLike(String value) {
+            addCriterion("company_id not like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIn(List<String> values) {
             addCriterion("company_id in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotIn(List<Integer> values) {
+        public Criteria andCompanyIdNotIn(List<String> values) {
             addCriterion("company_id not in", values, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdBetween(String value1, String value2) {
             addCriterion("company_id between", value1, value2, "companyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andCompanyIdNotBetween(String value1, String value2) {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
@@ -1495,53 +1505,183 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdEqualTo(Long value) {
+        public Criteria andOwnerIdEqualTo(String value) {
             addCriterion("owner_id =", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdNotEqualTo(Long value) {
+        public Criteria andOwnerIdNotEqualTo(String value) {
             addCriterion("owner_id <>", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdGreaterThan(Long value) {
+        public Criteria andOwnerIdGreaterThan(String value) {
             addCriterion("owner_id >", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andOwnerIdGreaterThanOrEqualTo(String value) {
             addCriterion("owner_id >=", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdLessThan(Long value) {
+        public Criteria andOwnerIdLessThan(String value) {
             addCriterion("owner_id <", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdLessThanOrEqualTo(Long value) {
+        public Criteria andOwnerIdLessThanOrEqualTo(String value) {
             addCriterion("owner_id <=", value, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdIn(List<Long> values) {
+        public Criteria andOwnerIdLike(String value) {
+            addCriterion("owner_id like", value, "ownerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerIdNotLike(String value) {
+            addCriterion("owner_id not like", value, "ownerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andOwnerIdIn(List<String> values) {
             addCriterion("owner_id in", values, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdNotIn(List<Long> values) {
+        public Criteria andOwnerIdNotIn(List<String> values) {
             addCriterion("owner_id not in", values, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdBetween(Long value1, Long value2) {
+        public Criteria andOwnerIdBetween(String value1, String value2) {
             addCriterion("owner_id between", value1, value2, "ownerId");
             return (Criteria) this;
         }
 
-        public Criteria andOwnerIdNotBetween(Long value1, Long value2) {
+        public Criteria andOwnerIdNotBetween(String value1, String value2) {
             addCriterion("owner_id not between", value1, value2, "ownerId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyIsNull() {
+            addCriterion("balcony is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyIsNotNull() {
+            addCriterion("balcony is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyEqualTo(Short value) {
+            addCriterion("balcony =", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyNotEqualTo(Short value) {
+            addCriterion("balcony <>", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyGreaterThan(Short value) {
+            addCriterion("balcony >", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyGreaterThanOrEqualTo(Short value) {
+            addCriterion("balcony >=", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyLessThan(Short value) {
+            addCriterion("balcony <", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyLessThanOrEqualTo(Short value) {
+            addCriterion("balcony <=", value, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyIn(List<Short> values) {
+            addCriterion("balcony in", values, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyNotIn(List<Short> values) {
+            addCriterion("balcony not in", values, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyBetween(Short value1, Short value2) {
+            addCriterion("balcony between", value1, value2, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andBalconyNotBetween(Short value1, Short value2) {
+            addCriterion("balcony not between", value1, value2, "balcony");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIsNull() {
+            addCriterion("reference_scheme is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIsNotNull() {
+            addCriterion("reference_scheme is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeEqualTo(Integer value) {
+            addCriterion("reference_scheme =", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotEqualTo(Integer value) {
+            addCriterion("reference_scheme <>", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeGreaterThan(Integer value) {
+            addCriterion("reference_scheme >", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("reference_scheme >=", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeLessThan(Integer value) {
+            addCriterion("reference_scheme <", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeLessThanOrEqualTo(Integer value) {
+            addCriterion("reference_scheme <=", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIn(List<Integer> values) {
+            addCriterion("reference_scheme in", values, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotIn(List<Integer> values) {
+            addCriterion("reference_scheme not in", values, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeBetween(Integer value1, Integer value2) {
+            addCriterion("reference_scheme between", value1, value2, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotBetween(Integer value1, Integer value2) {
+            addCriterion("reference_scheme not between", value1, value2, "referenceScheme");
             return (Criteria) this;
         }
     }

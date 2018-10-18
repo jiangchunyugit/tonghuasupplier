@@ -1,7 +1,9 @@
 package cn.thinkfree.service.scheduling;
 
 import cn.thinkfree.database.vo.OrderConfirmationVO;
+import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
+import cn.thinkfree.database.vo.StageDetailsVO;
 
 import java.util.List;
 
@@ -38,4 +40,21 @@ public interface DelaySchedulingService {
      * @Param orderConfirmationVO
      **/
     Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO);
+
+    /**
+     * @Author jiang
+     * @Description 查看订单详情
+     * @Date
+     * @Param
+     * @return
+     **/
+    OrderDetailsVO selectOrderDetails(String projectNo);
+    /**
+     * @Author jiang
+     * @Description 阶段展示
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<StageDetailsVO> selectStageDetailsList(String projectNo);
 }
