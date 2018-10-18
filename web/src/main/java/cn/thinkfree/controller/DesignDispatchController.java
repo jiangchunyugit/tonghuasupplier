@@ -59,8 +59,9 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle notDispatch(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "reason", required = false, value = "不派单原因") @RequestParam(name = "reason", required = false) String reason,
-            @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId) {
-        designDispatchService.notDispatch(projectNo, reason, optionUserId);
+            @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
+        designDispatchService.notDispatch(projectNo, reason, optionUserId, optionUserName);
         return sendSuccessMessage(null);
     }
 
@@ -70,8 +71,9 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle dispatch(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
-            @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId) {
-        designDispatchService.dispatch(projectNo, companyId, optionUserId);
+            @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
+        designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName);
         return sendSuccessMessage(null);
     }
 }

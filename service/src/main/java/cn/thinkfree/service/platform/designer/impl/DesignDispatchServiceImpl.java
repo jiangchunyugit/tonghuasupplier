@@ -1,5 +1,6 @@
 package cn.thinkfree.service.platform.designer.impl;
 
+import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.mapper.DesignOrderMapper;
 import cn.thinkfree.database.mapper.OptionLogMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
@@ -145,6 +146,13 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
         Project project = queryProjectByNo(projectNo);
         DesignOrder designOrder = queryDesignOrder(projectNo);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setOrderStage(Short.parseShort(DesignStateEnum.STATE_20.getState() + ""));
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
+        //记录操作日志
         OptionLog optionLog = new OptionLog();
         optionLog.setLinkNo(designOrder.getOrderNo());
         optionLog.setOptionTime(new Date());
@@ -200,8 +208,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName) {
         Project project = queryProjectByNo(projectNo);
         DesignOrder designOrder = queryDesignOrder(projectNo);
+        //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
-//        updateOrder.setCompanyId();
+        updateOrder.setCompanyId(companyId);
+        updateOrder.setOrderStage(Short.parseShort(DesignStateEnum.STATE_10.getState() + ""));
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder,orderExample);
+        //记录操作日志
         OptionLog optionLog = new OptionLog();
         optionLog.setLinkNo(designOrder.getOrderNo());
         optionLog.setOptionTime(new Date());

@@ -275,52 +275,52 @@ public class DesignerMsgExample {
             return (Criteria) this;
         }
 
-        public Criteria andSourceEqualTo(Short value) {
+        public Criteria andSourceEqualTo(Integer value) {
             addCriterion("source =", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceNotEqualTo(Short value) {
+        public Criteria andSourceNotEqualTo(Integer value) {
             addCriterion("source <>", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceGreaterThan(Short value) {
+        public Criteria andSourceGreaterThan(Integer value) {
             addCriterion("source >", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceGreaterThanOrEqualTo(Short value) {
+        public Criteria andSourceGreaterThanOrEqualTo(Integer value) {
             addCriterion("source >=", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceLessThan(Short value) {
+        public Criteria andSourceLessThan(Integer value) {
             addCriterion("source <", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceLessThanOrEqualTo(Short value) {
+        public Criteria andSourceLessThanOrEqualTo(Integer value) {
             addCriterion("source <=", value, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceIn(List<Short> values) {
+        public Criteria andSourceIn(List<Integer> values) {
             addCriterion("source in", values, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceNotIn(List<Short> values) {
+        public Criteria andSourceNotIn(List<Integer> values) {
             addCriterion("source not in", values, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceBetween(Short value1, Short value2) {
+        public Criteria andSourceBetween(Integer value1, Integer value2) {
             addCriterion("source between", value1, value2, "source");
             return (Criteria) this;
         }
 
-        public Criteria andSourceNotBetween(Short value1, Short value2) {
+        public Criteria andSourceNotBetween(Integer value1, Integer value2) {
             addCriterion("source not between", value1, value2, "source");
             return (Criteria) this;
         }
@@ -575,52 +575,52 @@ public class DesignerMsgExample {
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateEqualTo(Short value) {
+        public Criteria andReviewStateEqualTo(Integer value) {
             addCriterion("review_state =", value, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateNotEqualTo(Short value) {
+        public Criteria andReviewStateNotEqualTo(Integer value) {
             addCriterion("review_state <>", value, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateGreaterThan(Short value) {
+        public Criteria andReviewStateGreaterThan(Integer value) {
             addCriterion("review_state >", value, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateGreaterThanOrEqualTo(Short value) {
+        public Criteria andReviewStateGreaterThanOrEqualTo(Integer value) {
             addCriterion("review_state >=", value, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateLessThan(Short value) {
+        public Criteria andReviewStateLessThan(Integer value) {
             addCriterion("review_state <", value, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateLessThanOrEqualTo(Short value) {
+        public Criteria andReviewStateLessThanOrEqualTo(Integer value) {
             addCriterion("review_state <=", value, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateIn(List<Short> values) {
+        public Criteria andReviewStateIn(List<Integer> values) {
             addCriterion("review_state in", values, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateNotIn(List<Short> values) {
+        public Criteria andReviewStateNotIn(List<Integer> values) {
             addCriterion("review_state not in", values, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateBetween(Short value1, Short value2) {
+        public Criteria andReviewStateBetween(Integer value1, Integer value2) {
             addCriterion("review_state between", value1, value2, "reviewState");
             return (Criteria) this;
         }
 
-        public Criteria andReviewStateNotBetween(Short value1, Short value2) {
+        public Criteria andReviewStateNotBetween(Integer value1, Integer value2) {
             addCriterion("review_state not between", value1, value2, "reviewState");
             return (Criteria) this;
         }

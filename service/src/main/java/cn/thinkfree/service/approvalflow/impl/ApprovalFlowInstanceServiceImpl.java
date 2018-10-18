@@ -174,7 +174,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         projectVO.setProjectNo(projectNo);
         projectVO.setHouseType(houseType);
         projectVO.setAddress(project.getAddress() + project.getAddressDetail());
-        projectVO.setOwnerId(project.getOwnerId());
+        projectVO.setOwnerId(Long.parseLong(project.getOwnerId()));
         return projectVO;
     }
 

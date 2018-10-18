@@ -344,52 +344,52 @@ public class DesignerStyleConfigExample {
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortEqualTo(Long value) {
+        public Criteria andStyleSortEqualTo(Integer value) {
             addCriterion("style_sort =", value, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortNotEqualTo(Long value) {
+        public Criteria andStyleSortNotEqualTo(Integer value) {
             addCriterion("style_sort <>", value, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortGreaterThan(Long value) {
+        public Criteria andStyleSortGreaterThan(Integer value) {
             addCriterion("style_sort >", value, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortGreaterThanOrEqualTo(Long value) {
+        public Criteria andStyleSortGreaterThanOrEqualTo(Integer value) {
             addCriterion("style_sort >=", value, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortLessThan(Long value) {
+        public Criteria andStyleSortLessThan(Integer value) {
             addCriterion("style_sort <", value, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortLessThanOrEqualTo(Long value) {
+        public Criteria andStyleSortLessThanOrEqualTo(Integer value) {
             addCriterion("style_sort <=", value, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortIn(List<Long> values) {
+        public Criteria andStyleSortIn(List<Integer> values) {
             addCriterion("style_sort in", values, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortNotIn(List<Long> values) {
+        public Criteria andStyleSortNotIn(List<Integer> values) {
             addCriterion("style_sort not in", values, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortBetween(Long value1, Long value2) {
+        public Criteria andStyleSortBetween(Integer value1, Integer value2) {
             addCriterion("style_sort between", value1, value2, "styleSort");
             return (Criteria) this;
         }
 
-        public Criteria andStyleSortNotBetween(Long value1, Long value2) {
+        public Criteria andStyleSortNotBetween(Integer value1, Integer value2) {
             addCriterion("style_sort not between", value1, value2, "styleSort");
             return (Criteria) this;
         }

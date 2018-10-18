@@ -8,7 +8,7 @@
     -->
     <result column="style_code" jdbcType="VARCHAR" property="styleCode" />
     <result column="style_name" jdbcType="VARCHAR" property="styleName" />
-    <result column="style_sort" jdbcType="BIGINT" property="styleSort" />
+    <result column="style_sort" jdbcType="INTEGER" property="styleSort" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -118,7 +118,7 @@
     -->
     insert into designer_style_config (style_code, style_name, style_sort
       )
-    values (#{styleCode,jdbcType=VARCHAR}, #{styleName,jdbcType=VARCHAR}, #{styleSort,jdbcType=BIGINT}
+    values (#{styleCode,jdbcType=VARCHAR}, #{styleName,jdbcType=VARCHAR}, #{styleSort,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.DesignerStyleConfig">
@@ -146,7 +146,7 @@
         #{styleName,jdbcType=VARCHAR},
       </if>
       <if test="styleSort != null">
-        #{styleSort,jdbcType=BIGINT},
+        #{styleSort,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -174,7 +174,7 @@
         style_name = #{record.styleName,jdbcType=VARCHAR},
       </if>
       <if test="record.styleSort != null">
-        style_sort = #{record.styleSort,jdbcType=BIGINT},
+        style_sort = #{record.styleSort,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -189,7 +189,7 @@
     update designer_style_config
     set style_code = #{record.styleCode,jdbcType=VARCHAR},
       style_name = #{record.styleName,jdbcType=VARCHAR},
-      style_sort = #{record.styleSort,jdbcType=BIGINT}
+      style_sort = #{record.styleSort,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

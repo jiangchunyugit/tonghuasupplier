@@ -31,7 +31,7 @@ public class DesignerMsg extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short source;
+    private Integer source;
 
     /**
      * Database Column Remarks:
@@ -86,7 +86,7 @@ public class DesignerMsg extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short reviewState;
+    private Integer reviewState;
 
     /**
      * Database Column Remarks:
@@ -153,7 +153,7 @@ public class DesignerMsg extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getSource() {
+    public Integer getSource() {
         return source;
     }
 
@@ -165,7 +165,7 @@ public class DesignerMsg extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setSource(Short source) {
+    public void setSource(Integer source) {
         this.source = source;
     }
 
@@ -273,7 +273,7 @@ public class DesignerMsg extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getReviewState() {
+    public Integer getReviewState() {
         return reviewState;
     }
 
@@ -285,7 +285,7 @@ public class DesignerMsg extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setReviewState(Short reviewState) {
+    public void setReviewState(Integer reviewState) {
         this.reviewState = reviewState;
     }
 
