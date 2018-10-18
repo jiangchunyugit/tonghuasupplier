@@ -1,4 +1,4 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.mapper.ProjectSmallSchedulingMapper;
@@ -29,7 +29,7 @@ import java.util.List;
  * @author gejiaming
  */
 @Service
-public class SchedulingBaseServiceImpl implements SchedulingBaseService {
+public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Autowired
     CloudService cloudService;
     @Autowired

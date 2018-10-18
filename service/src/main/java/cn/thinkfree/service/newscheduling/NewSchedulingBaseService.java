@@ -1,7 +1,6 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.model.ProjectBigScheduling;
-import cn.thinkfree.database.model.ProjectSmallScheduling;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.database.vo.ProjectSmallSchedulingVO;
 import cn.thinkfree.database.vo.SchedulingSeo;
@@ -12,7 +11,7 @@ import com.github.pagehelper.PageInfo;
  *
  * @author gejiaming
  */
-public interface SchedulingBaseService {
+public interface NewSchedulingBaseService {
 
     /**
      * 获取本地基础小排期信息

@@ -1,14 +1,11 @@
 package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.database.mapper.ApprovalFlowInstanceMapper;
-import cn.thinkfree.database.mapper.PreProjectHouseTypeMapper;
-import cn.thinkfree.database.mapper.UserRegisterMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.project.ProjectService;
-import cn.thinkfree.service.scheduling.OrderUserService;
-import javafx.scene.Scene;
+import cn.thinkfree.service.newscheduling.OrderUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

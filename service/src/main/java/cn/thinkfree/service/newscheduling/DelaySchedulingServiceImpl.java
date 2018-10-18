@@ -1,4 +1,4 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.mapper.DesignOrderMapper;
@@ -6,12 +6,10 @@ import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.model.DesignOrder;
 import cn.thinkfree.database.model.DesignOrderExample;
-import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
-import cn.thinkfree.service.constants.Scheduling;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

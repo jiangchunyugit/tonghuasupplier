@@ -1,4 +1,4 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;

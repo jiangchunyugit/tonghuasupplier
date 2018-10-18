@@ -1,13 +1,15 @@
-package cn.thinkfree.appController;
+package cn.thinkfree.appcontroller;
 
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.*;
+import cn.thinkfree.service.newproject.NewProjectService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,10 +20,13 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "project")
 public class AppProjectController extends AbsBaseController {
+    @Autowired
+    private NewProjectService newProjectService;
 
     @RequestMapping(value = "getAllProject", method = RequestMethod.POST)
     @ApiOperation(value = "项目列表")
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(@ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
+        PageInfo<ProjectVo> page1 = newProjectService.getAllProject(appProjectSEO);
         PageInfo<ProjectVo> page = new PageInfo<ProjectVo>();
         List<ProjectVo> projectVoList = new LinkedList<ProjectVo>();
         ProjectVo projectVo1 = new ProjectVo();

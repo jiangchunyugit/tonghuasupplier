@@ -1,4 +1,4 @@
-package cn.thinkfree.appController;
+package cn.thinkfree.appcontroller;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.RequestMapping;

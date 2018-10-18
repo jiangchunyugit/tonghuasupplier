@@ -5,12 +5,8 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
-import cn.thinkfree.database.vo.BigSchedulingDetailsVo;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
-import cn.thinkfree.database.vo.ProjectSEO;
-import cn.thinkfree.database.vo.ProjectVO;
-import cn.thinkfree.service.scheduling.SchedulingService;
-import com.github.pagehelper.PageInfo;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +22,7 @@ import java.util.List;
 public class SchedulingController extends AbsBaseController {
 
     @Autowired
-    private SchedulingService schedulingService;
+    private NewSchedulingService schedulingService;
 
     @ApiOperation(value = "施工配置列表", notes = "")
     @PostMapping("/list")

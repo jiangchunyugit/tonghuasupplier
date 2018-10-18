@@ -1,4 +1,4 @@
-package cn.thinkfree.service.scheduling;
+package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.mapper.OrderUserMapper;
 import cn.thinkfree.database.model.OrderUser;
