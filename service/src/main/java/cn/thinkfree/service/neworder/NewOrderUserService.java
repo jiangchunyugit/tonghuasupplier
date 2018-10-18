@@ -1,4 +1,4 @@
-package cn.thinkfree.service.newscheduling;
+package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.database.model.OrderUser;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @version 1.0
  * @date 2018/10/18 11:37
  */
-public interface OrderUserService {
+public interface NewOrderUserService {
 
     /**
      * 根据项目编号查询项目用户关系

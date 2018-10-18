@@ -9,7 +9,7 @@ import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
-import cn.thinkfree.service.newscheduling.DelaySchedulingService;
+import cn.thinkfree.service.newscheduling.NewDelaySchedulingService;
 import cn.thinkfree.service.utils.ExcelUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +36,7 @@ import java.util.logging.Logger;
 @RequestMapping(value = "delayScheduling")
 public class DelaySchedulingController extends AbsBaseController {
     @Autowired
-    private DelaySchedulingService delaySchedulingService;
+    private NewDelaySchedulingService delaySchedulingService;
 
 
     /**
