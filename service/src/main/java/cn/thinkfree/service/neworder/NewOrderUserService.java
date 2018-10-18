@@ -1,6 +1,10 @@
 package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.database.model.OrderUser;
+import cn.thinkfree.database.vo.OrderConfirmationVO;
+import cn.thinkfree.database.vo.OrderDetailsVO;
+import cn.thinkfree.database.vo.ProjectOrderVO;
+import cn.thinkfree.database.vo.StageDetailsVO;
 
 import java.util.List;
 
