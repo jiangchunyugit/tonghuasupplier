@@ -283,7 +283,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
 
         List<List<ApprovalFlowNodeRole>> nodeRoleList = new ArrayList<>(nodes.size());
         for (ApprovalFlowNode node : nodes) {
-            List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findByNodeNum(node.getNum());
+            List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findSendRoleByNodeNum(node.getNum());
             nodeRoleList.add(nodeRoles);
         }
 

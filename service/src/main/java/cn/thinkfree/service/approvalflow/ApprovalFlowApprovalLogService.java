@@ -19,4 +19,24 @@ public interface ApprovalFlowApprovalLogService {
      * @return 审批流日志
      */
     List<ApprovalFlowApprovalLog> findByInstanceNum(String instanceNum);
+
+    /**
+     * 创建审批日志
+     * @param instanceNum 审批流实例编号
+     * @param nodeNum 审批流配置节点编号
+     * @param userId 审批人
+     * @param roleId 审批人角色
+     * @param optionNum 操作项编号
+     * @param optionMsg 操作项描述
+     * @param remark 审批提交备注
+     * @return 审批流日志
+     */
+    ApprovalFlowApprovalLog create(String instanceNum, String nodeNum, String userId, String roleId, String optionNum, String optionMsg, String remark);
+
+    /**
+     * 更新数据是否有效
+     * @param instanceNum 审批流实例编码
+     * @param nodeNums 审批节点编号
+     */
+    void updateIsInvalidByInstanceNumAndNodeNums(String instanceNum, List<String> nodeNums);
 }

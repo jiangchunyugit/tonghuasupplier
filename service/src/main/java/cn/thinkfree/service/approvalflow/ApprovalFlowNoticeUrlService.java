@@ -23,4 +23,11 @@ public interface ApprovalFlowNoticeUrlService {
      * @param nodeNums
      */
     void deleteByNodeNums(List<String> nodeNums);
+
+    /**
+     * 根据审批流节点编号查询订阅消息
+     * @param nodeNum 审批流节点编号
+     * @return 订阅消息
+     */
+    List<ApprovalFlowNoticeUrl> findByNodeNum(String nodeNum);
 }

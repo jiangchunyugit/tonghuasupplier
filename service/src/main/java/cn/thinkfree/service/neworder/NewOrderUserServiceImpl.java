@@ -29,6 +29,14 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     @Resource
     private OrderUserMapper orderUserMapper;
+    @Autowired(required = false)
+    private PreProjectGuideMapper preProjectGuideMapper;
+    @Autowired(required = false)
+    private DesignOrderMapper designOrderMapper;
+    @Autowired
+    private ProjectMapper projectMapper;
+    @Autowired
+    private ConstructionOrderMapper constructionOrderMapper;
 
     @Override
     public List<OrderUser> findByOrderNo(String orderNo) {
@@ -43,14 +51,6 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
         return orderUserMapper.selectByExample(example);
     }
-    @Autowired(required = false)
-    private PreProjectGuideMapper preProjectGuideMapper;
-    @Autowired(required = false)
-    private DesignOrderMapper designOrderMapper;
-    @Autowired
-    private ProjectMapper projectMapper;
-    @Autowired
-    private ConstructionOrderMapper constructionOrderMapper;
 
     /**
      * @return
@@ -124,5 +124,13 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         stageDetailsVO.setType(3);//查询的是项目阶段 (1,设计订单 2,施工订单 3,项目)
 
         return constructionOrderMapper.selectStageDetailsList(projectNo,stageDetailsVO.getType());
+    }
+
+    @Override
+    public OrderUser findByOrderNoAndRoleId(String projectNo, String roleId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andOrderNoEqualTo(projectNo).andRoleIdEqualTo(roleId);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
+        return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
     }
 }

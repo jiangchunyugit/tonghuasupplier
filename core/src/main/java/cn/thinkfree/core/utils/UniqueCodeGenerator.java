@@ -19,7 +19,11 @@ public enum UniqueCodeGenerator {
     /**
      * 审批流实例编码前缀
      */
-    AF_CONFIG_INSTANCE("AF_INSTANCE_"),
+    AF_INSTANCE("AF_INSTANCE_"),
+    /**
+     * 审批流审批日志编码前缀
+     */
+    AF_APPROVAL_LOG("AF_APPROVAL_LOG_"),
     /**
      * 审批流操作项编码前缀
      */

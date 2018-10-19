@@ -75,4 +75,12 @@ public interface NewOrderUserService {
      * @return
      **/
     List<StageDetailsVO> selectStageDetailsList(String projectNo);
+
+    /**
+     *  根据项目编号与角色编号查询项目、角色、用户关系
+     * @param projectNo 项目编号
+     * @param roleId 角色编号
+     * @return 项目、角色、用户关系
+     */
+    OrderUser findByOrderNoAndRoleId(String projectNo, String roleId);
 }
