@@ -9,6 +9,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyConstants;
+import cn.thinkfree.service.utils.ContractNum;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import com.github.pagehelper.PageHelper;
@@ -117,18 +118,18 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		//添加表头
 		String[] titleArrays = {"公司编号","公司类型","公司性质","所属站点","公司名称",
 				"入驻日期","截至时间","签约时间","法人","联系人","联系电话","保证金","状态"};
-		List<String> titles = new ArrayList();
+		List<String> titles = new ArrayList<>();
 		for(String title: titleArrays){
 			titles.add(title);
 		}
 		data.setTitles(titles);
 		//添加列
-		List<List<Object>> rows = new ArrayList();
+		List<List<Object>> rows = new ArrayList<>();
 		List<Object> row = null;
 		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
 
 		for(CompanyListVo vo: companyListVoList){
-			row=new ArrayList();
+			row=new ArrayList<>();
 			row.add(vo.getCompanyId());
 			row.add(vo.getRoleName());
 			row.add(vo.getComapnyNature());
@@ -237,15 +238,15 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			map.put("code", "1");
 			map.put("msg", "审核状态为空");
 			return  map;
-		}if(!StringUtils.isEmpty(auditStatus) && auditCase.equals("1") && StringUtils.isEmpty(auditCase)){
+		}if(!StringUtils.isEmpty(auditCase) && auditStatus.equals("1")){
 			map.put("code", "1");
 			map.put("msg", "清填写审核不通过原因");
 			return  map;
 		}
 		if(auditCase.equals("0")){
 	        //运营审核通过生成合同编号
-			String contractNumber = String.valueOf(UUID.randomUUID());
-			
+			//从登陆信息中获取公司类型
+			String contractNumber =ContractNum.getInstance().GenerateOrder("DB");
 			//修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝
 			ContractVo vo = new ContractVo();
 			vo.setCompanyId(companyId);
