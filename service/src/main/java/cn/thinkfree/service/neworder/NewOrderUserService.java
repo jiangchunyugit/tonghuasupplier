@@ -1,10 +1,7 @@
 package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.database.model.OrderUser;
-import cn.thinkfree.database.vo.OrderConfirmationVO;
-import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.database.vo.ProjectOrderVO;
-import cn.thinkfree.database.vo.StageDetailsVO;
+import cn.thinkfree.database.vo.*;
 
 import java.util.List;
 
@@ -83,4 +80,29 @@ public interface NewOrderUserService {
      * @return 项目、角色、用户关系
      */
     OrderUser findByOrderNoAndRoleId(String projectNo, String roleId);
+    /**
+     * @Author jiang
+     * @Description 修改订单状态
+     * @Date
+     * @Param
+     * @return
+     **/
+    Integer modifyOrder(OrderConfirmationVO orderConfirmationVO);
+
+    /**
+     * @Author jiang
+     * @Description 分页查询施工工地
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<ConstructionSiteVO> querySiteDetailsByPage(ConstructionSiteVO constructionSiteVO, Integer pageNum, Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 查询施工工地总条数
+     * @Date
+     * @Param
+     * @return
+     **/
+    Integer querySiteDetailsCount(ConstructionSiteVO constructionSiteVO);
 }

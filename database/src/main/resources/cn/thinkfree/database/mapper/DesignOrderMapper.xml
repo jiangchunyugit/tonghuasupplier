@@ -443,12 +443,12 @@
                 b.big_name AS constructionProgress,
                 b.is_adopt AS checkCondition,
                 d.delay_time AS delayDays,
-                ur.user_name AS projectManager,
+                ur.name AS projectManager,
 	            ms.name AS designerName
             FROM
                 design_order o
             LEFT JOIN construction_order co ON co.project_no = o.project_no
-            LEFT JOIN pre_project_user_role ur ON ur.project_no = o.project_no
+            LEFT JOIN user_info ur ON ur.company_id = o.company_id
             LEFT JOIN project_delay d ON d.project_no = o.project_no
             LEFT JOIN project_big_scheduling_details b ON b.project_no = o.project_no
             LEFT JOIN company_info i ON i.company_id = o.company_id

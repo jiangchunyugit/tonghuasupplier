@@ -5,10 +5,7 @@ import cn.thinkfree.database.model.DesignOrder;
 import cn.thinkfree.database.model.DesignOrderExample;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.model.OrderUserExample;
-import cn.thinkfree.database.vo.OrderConfirmationVO;
-import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.database.vo.ProjectOrderVO;
-import cn.thinkfree.database.vo.StageDetailsVO;
+import cn.thinkfree.database.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +48,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
         return orderUserMapper.selectByExample(example);
     }
+
 
     /**
      * @return
@@ -109,21 +107,22 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         orderDetailsVO.setProjectNo(projectNo);
         orderDetailsVO.setStatus(1);
 
-        return projectMapper.selectOrderDetails(projectNo,orderDetailsVO.getStatus());
+        return projectMapper.selectOrderDetails(projectNo, orderDetailsVO.getStatus());
     }
+
     /**
+     * @return
      * @Author jiang
      * @Description 阶段展示
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public List<StageDetailsVO> selectStageDetailsList(String projectNo) {
         StageDetailsVO stageDetailsVO = new StageDetailsVO();
         stageDetailsVO.setType(3);//查询的是项目阶段 (1,设计订单 2,施工订单 3,项目)
 
-        return constructionOrderMapper.selectStageDetailsList(projectNo,stageDetailsVO.getType());
+        return constructionOrderMapper.selectStageDetailsList(projectNo, stageDetailsVO.getType());
     }
 
     @Override
@@ -133,4 +132,48 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
         return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
     }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 修改订单状态
+     * @Date
+     * @Param
+     **/
+    @Override
+    public Integer modifyOrder(OrderConfirmationVO orderConfirmationVO) {
+        DesignOrder designOrder = new DesignOrder();
+        designOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
+        DesignOrderExample example = new DesignOrderExample();
+        example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
+        return designOrderMapper.updateByExampleSelective(designOrder, example);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 分页查询施工工地
+     * @Date
+     * @Param
+     **/
+    @Override
+    public List<ConstructionSiteVO> querySiteDetailsByPage(ConstructionSiteVO constructionSiteVO, Integer pageNum, Integer pageSize) {
+        constructionSiteVO.setStatus(1);
+        return projectMapper.selectSiteDetailsByPage(constructionSiteVO, pageNum, pageSize);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询施工工地总条数
+     * @Date
+     * @Param
+     **/
+    @Override
+    public Integer querySiteDetailsCount(ConstructionSiteVO constructionSiteVO) {
+        constructionSiteVO.setStatus(1);
+        return projectMapper.selectSiteDetailsCount(constructionSiteVO);
+    }
+
+
 }
