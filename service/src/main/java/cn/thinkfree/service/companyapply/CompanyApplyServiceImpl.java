@@ -125,7 +125,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
         //公司平台类型：platform_type = 0
-        companyInfo.setPlatformType(CompanyConstants.PlatformType.NOTACTIVATION.shortVal());
+        companyInfo.setPlatformType(CompanyConstants.PlatformType.NORMAL.shortVal());
         //is_delete = 2
         companyInfo.setIsDelete(SysConstants.YesOrNoSp.NO.shortVal());
         //公司级别：入驻公司为三级公司

@@ -57,6 +57,18 @@
     <result column="is_taxpayer" jdbcType="SMALLINT" property="isTaxpayer" />
     <result column="comapny_nature" jdbcType="SMALLINT" property="comapnyNature" />
     <result column="change_status" jdbcType="SMALLINT" property="changeStatus" />
+    <result column="change_date" jdbcType="TIMESTAMP" property="changeDate" />
+    <result column="account_province" jdbcType="VARCHAR" property="accountProvince" />
+    <result column="account_city" jdbcType="VARCHAR" property="accountCity" />
+    <result column="account_district" jdbcType="VARCHAR" property="accountDistrict" />
+    <result column="account_name" jdbcType="VARCHAR" property="accountName" />
+    <result column="card_name" jdbcType="VARCHAR" property="cardName" />
+    <result column="account_branch_name" jdbcType="VARCHAR" property="accountBranchName" />
+    <result column="account_number" jdbcType="INTEGER" property="accountNumber" />
+    <result column="license_url" jdbcType="VARCHAR" property="licenseUrl" />
+    <result column="account_area" jdbcType="VARCHAR" property="accountArea" />
+    <result column="account_type" jdbcType="SMALLINT" property="accountType" />
+    <result column="taxpayer_registration_number" jdbcType="VARCHAR" property="taxpayerRegistrationNumber" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -137,7 +149,9 @@
     business_type, platform_type, register_province_code, register_city_code, register_area_code, 
     register_address, postcode, email, company_type, unify_social_credit_code, official_seal_url, 
     is_three_to_one, tax_code_photo_url, contact_name, contact_phone, is_taxpayer, comapny_nature, 
-    change_status
+    change_status, change_date, account_province, account_city, account_district, account_name, 
+    card_name, account_branch_name, account_number, license_url, account_area, account_type, 
+    taxpayer_registration_number
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfoExample" resultMap="BaseResultMap">
     <!--
@@ -189,7 +203,11 @@
       unify_social_credit_code, official_seal_url, 
       is_three_to_one, tax_code_photo_url, contact_name, 
       contact_phone, is_taxpayer, comapny_nature, 
-      change_status)
+      change_status, change_date, account_province, 
+      account_city, account_district, account_name, 
+      card_name, account_branch_name, account_number, 
+      license_url, account_area, account_type, 
+      taxpayer_registration_number)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -207,7 +225,11 @@
       #{unifySocialCreditCode,jdbcType=VARCHAR}, #{officialSealUrl,jdbcType=VARCHAR}, 
       #{isThreeToOne,jdbcType=SMALLINT}, #{taxCodePhotoUrl,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, 
       #{contactPhone,jdbcType=VARCHAR}, #{isTaxpayer,jdbcType=SMALLINT}, #{comapnyNature,jdbcType=SMALLINT}, 
-      #{changeStatus,jdbcType=SMALLINT})
+      #{changeStatus,jdbcType=SMALLINT}, #{changeDate,jdbcType=TIMESTAMP}, #{accountProvince,jdbcType=VARCHAR}, 
+      #{accountCity,jdbcType=VARCHAR}, #{accountDistrict,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, 
+      #{cardName,jdbcType=VARCHAR}, #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=INTEGER}, 
+      #{licenseUrl,jdbcType=VARCHAR}, #{accountArea,jdbcType=VARCHAR}, #{accountType,jdbcType=SMALLINT}, 
+      #{taxpayerRegistrationNumber,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfo">
     <!--
@@ -369,6 +391,42 @@
       <if test="changeStatus != null">
         change_status,
       </if>
+      <if test="changeDate != null">
+        change_date,
+      </if>
+      <if test="accountProvince != null">
+        account_province,
+      </if>
+      <if test="accountCity != null">
+        account_city,
+      </if>
+      <if test="accountDistrict != null">
+        account_district,
+      </if>
+      <if test="accountName != null">
+        account_name,
+      </if>
+      <if test="cardName != null">
+        card_name,
+      </if>
+      <if test="accountBranchName != null">
+        account_branch_name,
+      </if>
+      <if test="accountNumber != null">
+        account_number,
+      </if>
+      <if test="licenseUrl != null">
+        license_url,
+      </if>
+      <if test="accountArea != null">
+        account_area,
+      </if>
+      <if test="accountType != null">
+        account_type,
+      </if>
+      <if test="taxpayerRegistrationNumber != null">
+        taxpayer_registration_number,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -523,6 +581,42 @@
       </if>
       <if test="changeStatus != null">
         #{changeStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="changeDate != null">
+        #{changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="accountProvince != null">
+        #{accountProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="accountCity != null">
+        #{accountCity,jdbcType=VARCHAR},
+      </if>
+      <if test="accountDistrict != null">
+        #{accountDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="accountName != null">
+        #{accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="cardName != null">
+        #{cardName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountBranchName != null">
+        #{accountBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="accountNumber != null">
+        #{accountNumber,jdbcType=INTEGER},
+      </if>
+      <if test="licenseUrl != null">
+        #{licenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="accountArea != null">
+        #{accountArea,jdbcType=VARCHAR},
+      </if>
+      <if test="accountType != null">
+        #{accountType,jdbcType=SMALLINT},
+      </if>
+      <if test="taxpayerRegistrationNumber != null">
+        #{taxpayerRegistrationNumber,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -696,6 +790,42 @@
       <if test="record.changeStatus != null">
         change_status = #{record.changeStatus,jdbcType=SMALLINT},
       </if>
+      <if test="record.changeDate != null">
+        change_date = #{record.changeDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.accountProvince != null">
+        account_province = #{record.accountProvince,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountCity != null">
+        account_city = #{record.accountCity,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountDistrict != null">
+        account_district = #{record.accountDistrict,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountName != null">
+        account_name = #{record.accountName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cardName != null">
+        card_name = #{record.cardName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountBranchName != null">
+        account_branch_name = #{record.accountBranchName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountNumber != null">
+        account_number = #{record.accountNumber,jdbcType=INTEGER},
+      </if>
+      <if test="record.licenseUrl != null">
+        license_url = #{record.licenseUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountArea != null">
+        account_area = #{record.accountArea,jdbcType=VARCHAR},
+      </if>
+      <if test="record.accountType != null">
+        account_type = #{record.accountType,jdbcType=SMALLINT},
+      </if>
+      <if test="record.taxpayerRegistrationNumber != null">
+        taxpayer_registration_number = #{record.taxpayerRegistrationNumber,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -757,7 +887,19 @@
       contact_phone = #{record.contactPhone,jdbcType=VARCHAR},
       is_taxpayer = #{record.isTaxpayer,jdbcType=SMALLINT},
       comapny_nature = #{record.comapnyNature,jdbcType=SMALLINT},
-      change_status = #{record.changeStatus,jdbcType=SMALLINT}
+      change_status = #{record.changeStatus,jdbcType=SMALLINT},
+      change_date = #{record.changeDate,jdbcType=TIMESTAMP},
+      account_province = #{record.accountProvince,jdbcType=VARCHAR},
+      account_city = #{record.accountCity,jdbcType=VARCHAR},
+      account_district = #{record.accountDistrict,jdbcType=VARCHAR},
+      account_name = #{record.accountName,jdbcType=VARCHAR},
+      card_name = #{record.cardName,jdbcType=VARCHAR},
+      account_branch_name = #{record.accountBranchName,jdbcType=VARCHAR},
+      account_number = #{record.accountNumber,jdbcType=INTEGER},
+      license_url = #{record.licenseUrl,jdbcType=VARCHAR},
+      account_area = #{record.accountArea,jdbcType=VARCHAR},
+      account_type = #{record.accountType,jdbcType=SMALLINT},
+      taxpayer_registration_number = #{record.taxpayerRegistrationNumber,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

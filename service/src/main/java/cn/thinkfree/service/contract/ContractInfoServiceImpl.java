@@ -44,7 +44,6 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
-import cn.thinkfree.service.event.AuditEvent;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.WordUtil;

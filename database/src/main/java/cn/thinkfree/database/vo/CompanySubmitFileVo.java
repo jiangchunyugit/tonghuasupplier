@@ -1,40 +1,49 @@
 package cn.thinkfree.database.vo;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author ying007
  * 公司资质上传文件信息
  */
+@Api(value = "公司资质图片")
 public class CompanySubmitFileVo {
     /**
      * 营业执照
      */
+    @ApiModelProperty("营业执照")
     private MultipartFile businessPhotoUrl;
 
     /**
      * 企业税务登记证
      */
+    @ApiModelProperty("企业税务登记证")
     private MultipartFile taxCodePhotoUrl;
 
     /**
      * 装修施工资质证书
      */
+    @ApiModelProperty("装修施工资质证书")
     private MultipartFile workPhotoUrl;
 
     /**
      * 法人身份证正面
      */
+    @ApiModelProperty("法人身份证正面")
     private MultipartFile lefalCardUpUrl;
 
     /**
      * 法人身份证背面
      */
+    @ApiModelProperty("法人身份证背面")
     private MultipartFile lefalCardDownUrl;
 
     /**
      * 开户许可证
      */
+    @ApiModelProperty("开户许可证")
     private MultipartFile licenseUrl;
 
     public MultipartFile getBusinessPhotoUrl() {

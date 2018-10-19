@@ -61,4 +61,11 @@ public interface PcAuditTemporaryInfoMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") PcAuditTemporaryInfo record, @Param("example") PcAuditTemporaryInfoExample example);
+
+    /**
+     * 根据companyId查询最新时间的入驻公司资质变更信息
+     * @param companyId
+     * @return
+     */
+    PcAuditTemporaryInfo findCompanyTemporaryInfo(@Param("companyId")String companyId);
 }

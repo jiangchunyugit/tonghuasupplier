@@ -50,7 +50,7 @@ public enum CompanyAuditStatus {
     /**
      * 资质审核通过
      */
-	APTITUDETG(9,"资质审核通过 "),
+	APTITUDETG(9,"资质审核通过"),
     
     
     /**
