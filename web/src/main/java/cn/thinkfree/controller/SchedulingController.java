@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import io.swagger.annotations.*;
@@ -51,8 +52,8 @@ public class SchedulingController extends AbsBaseController {
 
     @ApiOperation(value = "获取排期信息")
     @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
-    public MyRespBundle<List<ProjectBigSchedulingDetails>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
-        List<ProjectBigSchedulingDetails> bigSchedulingDetailsVoList = schedulingService.getScheduling(projectNo);
+    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+        List<ProjectBigSchedulingDetailsVO> bigSchedulingDetailsVoList = schedulingService.getScheduling(projectNo);
         return sendJsonData(ResultMessage.SUCCESS, bigSchedulingDetailsVoList);
     }
 

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 
 import java.util.List;
@@ -42,5 +43,5 @@ public interface NewSchedulingService {
      * @param projectNo
      * @return
      */
-    List<ProjectBigSchedulingDetails> getScheduling(String projectNo);
+    List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo);
 }

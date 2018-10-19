@@ -4,11 +4,14 @@ import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.Scheduling;
+import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,7 +41,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     }
 
     /**
-     *添加公司施工节点
+     * 添加公司施工节点
      *
      * @param projectBigSchedulingVO
      * @return
@@ -52,7 +55,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         projectBigScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
         projectBigScheduling.setCreateTime(new Date());
         int result = projectBigSchedulingMapper.insertSelective(projectBigScheduling);
-        if(result != Scheduling.INSERT_SUCCESS.getValue()){
+        if (result != Scheduling.INSERT_SUCCESS.getValue()) {
             return Scheduling.INSERT_FAILD.getDescription();
         }
         return Scheduling.INSERT_SUCCESS.getDescription();
@@ -71,7 +74,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
         projectBigScheduling.setStatus(Scheduling.INVALID_STATUS.getValue());
         int result = projectBigSchedulingMapper.updateByProjectBigScheduling(projectBigScheduling);
-        if(result != Scheduling.INSERT_SUCCESS.getValue()){
+        if (result != Scheduling.INSERT_SUCCESS.getValue()) {
             return Scheduling.INSERT_FAILD.getDescription();
         }
         return Scheduling.INSERT_SUCCESS.getDescription();
@@ -79,15 +82,19 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
 
     /**
      * 获取排期信息
+     *
      * @param projectNo
      * @return
      */
     @Override
-    public List<ProjectBigSchedulingDetails> getScheduling(String projectNo) {
-        List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo,Scheduling.BASE_STATUS.getValue());
-
-//        List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo();
-
-        return bigList;
+    public List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo) {
+        List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo, Scheduling.BASE_STATUS.getValue());
+        List<ProjectBigSchedulingDetailsVO> playBigList = new ArrayList<>();
+        try {
+            playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return playBigList;
     }
 }
