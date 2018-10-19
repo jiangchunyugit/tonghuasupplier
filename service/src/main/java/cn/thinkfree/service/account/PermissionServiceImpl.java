@@ -7,6 +7,7 @@ import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.mapper.SystemPermissionMapper;
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.model.SystemPermissionExample;
+import cn.thinkfree.database.model.SystemRole;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.account.PermissionSEO;
 import cn.thinkfree.database.vo.account.PermissionVO;
@@ -155,6 +156,8 @@ public class PermissionServiceImpl extends AbsLogPrinter implements PermissionSe
         systemPermissionMapper.updateByExampleSelective(del,condition);
         return "操作成功!";
     }
+
+
 
     /**
      * 初始化权限信息

@@ -30,6 +30,18 @@ public class SystemRoleVO extends SystemRole {
      */
     private Integer city = 0;
 
+    /**
+     * 是否授权
+     */
+    private String isGrant;
+
+    public String getIsGrant() {
+        return isGrant;
+    }
+
+    public void setIsGrant(String isGrant) {
+        this.isGrant = isGrant;
+    }
 
     public String getCreatorName() {
         return creatorName;

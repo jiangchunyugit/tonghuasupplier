@@ -5,6 +5,9 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.account.PermissionVO;
+import cn.thinkfree.service.account.PermissionService;
+import cn.thinkfree.service.account.SystemRoleService;
 import cn.thinkfree.service.dictionary.DictionaryService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -24,6 +27,12 @@ public class DictionaryController extends AbsBaseController {
 
     @Autowired
     DictionaryService dictionaryService;
+
+    @Autowired
+    PermissionService permissionService;
+
+    @Autowired
+    SystemRoleService systemRoleService;
 
 
 
@@ -157,5 +166,18 @@ public class DictionaryController extends AbsBaseController {
 //        List<SystemResource> resources =dictionaryService.listResource();
 //        return sendJsonData(ResultMessage.SUCCESS,resources);
 //    }
+
+
+    /**
+     * 根据适用范围获取可用角色
+     * @param scope
+     * @return
+     */
+    @GetMapping("/account/roles")
+    @MyRespBody
+    public MyRespBundle<List<SystemRole>> roles(Integer scope){
+        List<SystemRole> permissions = systemRoleService.listRoleByScope(scope);
+        return sendJsonData(ResultMessage.SUCCESS,permissions);
+    }
 
 }

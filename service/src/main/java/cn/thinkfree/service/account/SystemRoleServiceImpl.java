@@ -3,6 +3,7 @@ package cn.thinkfree.service.account;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.RoleScope;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.mapper.SystemRoleMapper;
 import cn.thinkfree.database.mapper.SystemRolePermissionMapper;
@@ -15,6 +16,7 @@ import cn.thinkfree.database.vo.account.SystemRoleSEO;
 import cn.thinkfree.database.vo.account.SystemRoleVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -178,6 +180,22 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
         condition.createCriteria().andIdEqualTo(id);
         systemRoleMapper.updateByExampleSelective(del,condition);
         return "操作成功!";
+    }
+
+    /**
+     * 根据适用范围查询角色名称
+     *
+     * @param scope
+     * @return
+     */
+    @Override
+    public List<SystemRole> listRoleByScope(Integer scope) {
+        SystemRoleExample systemRoleExample = new SystemRoleExample();
+        systemRoleExample.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal())
+                .andIsEnableEqualTo(UserEnabled.Enabled_true.shortVal())
+                .andScopeIn(Lists.newArrayList(RoleScope.COMMON.code,scope));
+        return systemRoleMapper.selectByExample(systemRoleExample);
+
     }
 
     private SystemRole initRole(SystemRoleVO systemRoleVO, boolean isSave) {

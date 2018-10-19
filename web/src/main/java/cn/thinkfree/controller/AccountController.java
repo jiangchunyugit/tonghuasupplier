@@ -306,12 +306,27 @@ public class AccountController extends AbsBaseController {
         return sendSuccessMessage(mes);
     }
 
+    /**
+     * 删除角色
+     * @param id
+     * @return
+     */
     @DeleteMapping("/role/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除角色")
     public MyRespBundle<String> delRole(@PathVariable Integer id){
         String mes = systemRoleService.updateRoleForDel(id);
         return sendSuccessMessage(mes);
+    }
+
+
+
+
+    @PostMapping("/info")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新建账号")
+    public MyRespBundle<String> account(){
+        return null;
     }
 
 

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.account;
 
 import cn.thinkfree.database.model.SystemPermission;
+import cn.thinkfree.database.model.SystemRole;
 import cn.thinkfree.database.vo.account.PermissionSEO;
 import cn.thinkfree.database.vo.account.PermissionVO;
 import com.github.pagehelper.PageInfo;
@@ -60,4 +61,6 @@ public interface PermissionService {
      * @return
      */
     String updatePermissionForDel(Integer id);
+
+
 }

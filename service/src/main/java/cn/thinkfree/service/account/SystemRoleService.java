@@ -5,6 +5,8 @@ import cn.thinkfree.database.vo.account.SystemRoleSEO;
 import cn.thinkfree.database.vo.account.SystemRoleVO;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 public interface SystemRoleService {
     /**
      * 新增角色
@@ -56,4 +58,11 @@ public interface SystemRoleService {
      * @return
      */
     String updateRoleForDel(Integer id);
+
+    /**
+     * 根据适用范围查询角色名称
+     * @param scope
+     * @return
+     */
+    List<SystemRole> listRoleByScope(Integer scope);
 }
