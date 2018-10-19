@@ -3,6 +3,10 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.model.CityBranchExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.CityBranchSEO;
+import cn.thinkfree.database.vo.CityBranchVO;
+import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface CityBranchMapper {
@@ -93,4 +97,11 @@ public interface CityBranchMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(CityBranch record);
+
+    CityBranchVO selectBranchDetails(Integer id);
+
+    List<CityBranch> selectCityBranchByParam(CityBranchSEO cityBranchSEO);
+
+    List<CityBranchWtihProCitVO> selectCityBranchWithProCit(Integer id);
+
 }

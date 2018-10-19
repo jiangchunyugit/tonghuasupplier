@@ -3,6 +3,9 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.BranchCompany;
 import cn.thinkfree.database.model.BranchCompanyExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.BranchCompanySEO;
+import cn.thinkfree.database.vo.BranchCompanyVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface BranchCompanyMapper {
@@ -93,4 +96,8 @@ public interface BranchCompanyMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(BranchCompany record);
+
+    BranchCompanyVO selectBranchCompanyWithPro(Integer id);
+
+    List<BranchCompanyVO> selectBranchCompanyByParam(BranchCompanySEO branchCompanySEO);
 }
