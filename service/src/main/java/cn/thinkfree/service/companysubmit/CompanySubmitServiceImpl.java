@@ -333,8 +333,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
         CompanyInfoExpand companyInfoExpand = companySubmitVo.getCompanyInfoExpand();
         companyInfoExpand.setUpdateTime(date);
-        //企业税务登记证
-        companyInfoExpand.setTaxCodePhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getTaxCodePhotoUrl()));
+		//企业税务登记证
+		if(companySubmitFileVo.getTaxCodePhotoUrl() != null) {
+			companyInfoExpand.setTaxCodePhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getTaxCodePhotoUrl()));
+		}
         CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
         companyInfoExpandExample.createCriteria()
 				.andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
@@ -349,8 +351,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
         pcCompanyFinancial.setCreateTime(date);
         pcCompanyFinancial.setUpdateTime(date);
-        //开户行许可证
-        pcCompanyFinancial.setLicenseUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLicenseUrl()));
+		//开户行许可证
+		if(companySubmitFileVo.getLicenseUrl() != null) {
+			pcCompanyFinancial.setLicenseUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLicenseUrl()));
+		}
         return pcCompanyFinancialMapper.insertSelective(pcCompanyFinancial);
     }
 
@@ -363,14 +367,22 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         companyInfo.setUpdateTime(date);
         //资质上传成功后审批状态改为已激活
         companyInfo.setAuditStatus(CompanyAuditStatus.ACTIVATION.stringVal());
-        //营业执照
-        companyInfo.setBusinessPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getBusinessPhotoUrl()));
-        //装修施工资质证书
-        companyInfo.setWorkPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getWorkPhotoUrl()));
-        //法人身份证正面
-        companyInfo.setLefalCardUpUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardUpUrl()));
-        //法人身份证反面
-        companyInfo.setLefalCardDownUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardDownUrl()));
+		//营业执照
+		if(companySubmitFileVo.getBusinessPhotoUrl() != null){
+			companyInfo.setBusinessPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getBusinessPhotoUrl()));
+		}
+		//装修施工资质证书
+		if(companySubmitFileVo.getWorkPhotoUrl() != null) {
+			companyInfo.setWorkPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getWorkPhotoUrl()));
+		}
+		//法人身份证正面
+		if(companySubmitFileVo.getLefalCardUpUrl() != null) {
+			companyInfo.setLefalCardUpUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardUpUrl()));
+		}
+		//法人身份证反面
+		if(companySubmitFileVo.getLefalCardDownUrl() != null) {
+			companyInfo.setLefalCardDownUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardDownUrl()));
+		}
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
         return companyInfoMapper.updateByExampleSelective(companyInfo,companyInfoExample);
