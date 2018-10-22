@@ -1,10 +1,7 @@
 package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.database.mapper.*;
-import cn.thinkfree.database.model.DesignOrder;
-import cn.thinkfree.database.model.DesignOrderExample;
-import cn.thinkfree.database.model.OrderUser;
-import cn.thinkfree.database.model.OrderUserExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +31,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private ProjectMapper projectMapper;
     @Autowired
     private ConstructionOrderMapper constructionOrderMapper;
+    @Autowired
+    private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
 
     @Override
     public List<OrderUser> findByOrderNo(String orderNo) {
@@ -95,11 +94,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     /**
+     * @return
      * @Author jiang
      * @Description 查看订单详情
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public OrderDetailsVO selectOrderDetails(String projectNo) {
@@ -173,6 +172,58 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     public Integer querySiteDetailsCount(ConstructionSiteVO constructionSiteVO) {
         constructionSiteVO.setStatus(1);
         return projectMapper.selectSiteDetailsCount(constructionSiteVO);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 分页查询工地详情
+     * @Date
+     * @Param
+     **/
+    @Override
+    public List<SiteDetailsVO> querySiteByPage(SiteDetailsVO siteDetailsVO, Integer pageNum, Integer pageSize) {
+        siteDetailsVO.setStage(1);
+        return projectMapper.selectSiteByPage(siteDetailsVO, pageNum, pageSize);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询工地详情总条数
+     * @Date
+     * @Param
+     **/
+    @Override
+    public Integer querySiteCount(SiteDetailsVO siteDetailsVO) {
+        siteDetailsVO.setStage(1);
+        return projectMapper.selectSiteCount(siteDetailsVO);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 分页查询施工计划
+     * @Date
+     * @Param
+     **/
+    @Override
+    public List<ConstructionPlanVO> queryConstructionPlanByPage(ConstructionPlanVO constructionPlanVO, Integer pageNum, Integer pageSize) {
+        constructionPlanVO.setStatus(1);
+        return projectBigSchedulingDetailsMapper.selectConstructionPlanByPage(constructionPlanVO, pageNum, pageSize);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询施工计划总条数
+     * @Date
+     * @Param
+     **/
+    @Override
+    public Integer queryConstructionPlanCount(ConstructionPlanVO constructionPlanVO) {
+        constructionPlanVO.setStatus(1);
+        return projectBigSchedulingDetailsMapper.selectConstructionPlanCount(constructionPlanVO);
     }
 
 

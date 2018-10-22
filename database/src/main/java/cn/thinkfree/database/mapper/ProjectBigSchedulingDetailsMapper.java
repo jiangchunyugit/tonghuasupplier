@@ -3,6 +3,7 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
 import java.util.List;
+import cn.thinkfree.database.vo.ConstructionPlanVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectBigSchedulingDetailsMapper {
@@ -101,4 +102,8 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @return
      */
     List<ProjectBigSchedulingDetails> selectByProjectNo(@Param("projectNo") String projectNo, @Param("status") Integer status);
+
+    List<ConstructionPlanVO> selectConstructionPlanByPage(@Param("constructionPlanVO") ConstructionPlanVO constructionPlanVO, @Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+
+    Integer selectConstructionPlanCount(@Param("constructionPlanVO") ConstructionPlanVO constructionPlanVO);
 }
