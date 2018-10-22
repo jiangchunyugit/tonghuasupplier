@@ -96,22 +96,6 @@ public interface ProjectBigSchedulingMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectBigScheduling record);
-    /**
-     * @return
-     * @Author chengpunan
-     * @Description 根据公司编号查找大排期基础信息
-     * @Date
-     * @Param
-     **/
-    ProjectBigSchedulingVO selectProjectBigSchedulingByCompanyId(@Param("companyId") String companyId);
-
-    /**
-     * 修改
-     *
-     * @param record
-     * @return
-     */
-    int updateByProjectBigScheduling(@Param("record") ProjectBigScheduling record);
 
     /**
      * 查询已有基础大排期

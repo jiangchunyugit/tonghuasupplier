@@ -26,48 +26,48 @@ public class AppProjectController extends AbsBaseController {
     @RequestMapping(value = "getAllProject", method = RequestMethod.POST)
     @ApiOperation(value = "项目列表")
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(@ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
-        PageInfo<ProjectVo> page1 = newProjectService.getAllProject(appProjectSEO);
-        PageInfo<ProjectVo> page = new PageInfo<ProjectVo>();
-        List<ProjectVo> projectVoList = new LinkedList<ProjectVo>();
-        ProjectVo projectVo1 = new ProjectVo();
-        projectVo1.setProjectNo("1223098338391");
-        projectVo1.setDesignProgress(50);
-        projectVo1.setConstructionProgress(80);
-        projectVo1.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
-        projectVo1.setReleaseTime(new Date());
-        projectVo1.setImgUrl("http://www.photophoto.cn/show/11674265.html");
-        projectVo1.setView3d(true);
-        projectVo1.setProjectDynamic(0);
-        projectVo1.setProjectOrder(0);
-        projectVo1.setProjectData(1);
-
-        projectVoList.add(projectVo1);
-        ProjectVo projectVo2 = new ProjectVo();
-        projectVo2.setProjectNo("1223098338392");
-        projectVo2.setDesignProgress(60);
-        projectVo2.setConstructionProgress(70);
-        projectVo2.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
-        projectVo2.setReleaseTime(new Date());
-        projectVo2.setImgUrl("http://www.photophoto.cn/show/11674265.html");
-        projectVo2.setView3d(true);
-        projectVo2.setProjectDynamic(0);
-        projectVo2.setProjectOrder(0);
-        projectVo2.setProjectData(1);
-
-        projectVoList.add(projectVo2);
-        ProjectVo projectVo3 = new ProjectVo();
-        projectVo3.setProjectNo("1223098338393");
-        projectVo3.setDesignProgress(70);
-        projectVo3.setConstructionProgress(90);
-        projectVo3.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
-        projectVo3.setReleaseTime(new Date());
-        projectVo3.setImgUrl("http://www.photophoto.cn/show/11674265.html");
-        projectVo3.setView3d(true);
-        projectVo3.setProjectDynamic(0);
-        projectVo3.setProjectOrder(0);
-        projectVo3.setProjectData(1);
-        projectVoList.add(projectVo3);
-        page.setList(projectVoList);
+        PageInfo<ProjectVo> page = newProjectService.getAllProject(appProjectSEO);
+//        PageInfo<ProjectVo> page = new PageInfo<ProjectVo>();
+//        List<ProjectVo> projectVoList = new LinkedList<ProjectVo>();
+//        ProjectVo projectVo1 = new ProjectVo();
+//        projectVo1.setProjectNo("1223098338391");
+//        projectVo1.setDesignProgress(50);
+//        projectVo1.setConstructionProgress(80);
+//        projectVo1.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
+//        projectVo1.setReleaseTime(new Date());
+//        projectVo1.setImgUrl("http://www.photophoto.cn/show/11674265.html");
+//        projectVo1.setThirdView(true);
+//        projectVo1.setProjectDynamic(0);
+//        projectVo1.setProjectOrder(0);
+//        projectVo1.setProjectData(1);
+//
+//        projectVoList.add(projectVo1);
+//        ProjectVo projectVo2 = new ProjectVo();
+//        projectVo2.setProjectNo("1223098338392");
+//        projectVo2.setDesignProgress(60);
+//        projectVo2.setConstructionProgress(70);
+//        projectVo2.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
+//        projectVo2.setReleaseTime(new Date());
+//        projectVo2.setImgUrl("http://www.photophoto.cn/show/11674265.html");
+//        projectVo2.setThirdView(true);
+//        projectVo2.setProjectDynamic(0);
+//        projectVo2.setProjectOrder(0);
+//        projectVo2.setProjectData(1);
+//
+//        projectVoList.add(projectVo2);
+//        ProjectVo projectVo3 = new ProjectVo();
+//        projectVo3.setProjectNo("1223098338393");
+//        projectVo3.setDesignProgress(70);
+//        projectVo3.setConstructionProgress(90);
+//        projectVo3.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
+//        projectVo3.setReleaseTime(new Date());
+//        projectVo3.setImgUrl("http://www.photophoto.cn/show/11674265.html");
+//        projectVo3.setThirdView(true);
+//        projectVo3.setProjectDynamic(0);
+//        projectVo3.setProjectOrder(0);
+//        projectVo3.setProjectData(1);
+//        projectVoList.add(projectVo3);
+//        page.setList(projectVoList);
         return sendJsonData(ResultMessage.SUCCESS, page);
     }
 
@@ -76,12 +76,11 @@ public class AppProjectController extends AbsBaseController {
     public MyRespBundle<ProjectVo> getProjectDetail(@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         ProjectVo projectVo1 = new ProjectVo();
         projectVo1.setProjectNo("1223098338391");
-        projectVo1.setDesignProgress(50);
         projectVo1.setConstructionProgress(80);
         projectVo1.setAddress("北京市昌平区立汤路天通苑小区20号楼01单元1010室");
         projectVo1.setReleaseTime(new Date());
         projectVo1.setImgUrl("http://www.photophoto.cn/show/11674265.html");
-        projectVo1.setView3d(true);
+        projectVo1.setThirdView(true);
         projectVo1.setProjectDynamic(0);
         projectVo1.setProjectOrder(0);
         projectVo1.setProjectData(1);
@@ -109,7 +108,7 @@ public class AppProjectController extends AbsBaseController {
         OrderPlayVo orderPlayVo = new OrderPlayVo();
         orderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
         List<PersionVo> persionVoList = new LinkedList<PersionVo>();
-        PersionVo persionVo = new PersionVo("15666666666", "马云", true, "CM");
+        PersionVo persionVo = new PersionVo("15666666666", "马云", true, "CM","");
         persionVoList.add(persionVo);
         orderPlayVo.setPersionList(persionVoList);
         orderPlayVo.setTaskNum(10);
@@ -141,7 +140,7 @@ public class AppProjectController extends AbsBaseController {
         OrderPlayVo orderPlayVo1 = new OrderPlayVo();
         orderPlayVo.setConstructionCompany("北京居然设计家装饰有限公司");
         List<PersionVo> persionVoList1 = new LinkedList<PersionVo>();
-        PersionVo persionVo1 = new PersionVo("17888888888", "刘强东", true, "CM");
+        PersionVo persionVo1 = new PersionVo("17888888888", "刘强东", true, "CM","");
         persionVoList1.add(persionVo1);
         orderPlayVo1.setPersionList(persionVoList1);
         orderPlayVo1.setTaskNum(10);

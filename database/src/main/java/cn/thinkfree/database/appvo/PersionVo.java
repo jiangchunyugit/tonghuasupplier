@@ -27,4 +27,8 @@ public class PersionVo {
      * 角色
      */
     private String role;
+    /**
+     * 个人主页地址
+     */
+    private String personalHomeUrl;
 }

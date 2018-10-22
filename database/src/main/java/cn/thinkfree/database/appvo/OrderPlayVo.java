@@ -16,6 +16,8 @@ import java.util.List;
 public class OrderPlayVo {
     @ApiModelProperty(name = "constructionCompany",value = "承接公司")
     private String constructionCompany;
+    @ApiModelProperty(name = "companyUrl",value = "公司个人主页地址")
+    private String companyUrl;
     @ApiModelProperty(name = "persionList",value = "人员集合")
     private List<PersionVo> persionList;
     @ApiModelProperty(name = "taskNum",value = "任务数")

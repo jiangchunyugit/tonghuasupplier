@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import io.swagger.annotations.ApiModel;
+import lombok.Data;
 
 import java.util.Date;
 
@@ -8,7 +9,13 @@ import java.util.Date;
  * @author gejiaming
  */
 @ApiModel(value = "ProjectBigSchedulingDetailsVO,大排期详情实体")
+@Data
 public class ProjectBigSchedulingDetailsVO {
+
+    /**
+     * 项目编号
+     */
+    private String projectNo;
 
     /**
      *   大排期序号
@@ -93,9 +100,9 @@ public class ProjectBigSchedulingDetailsVO {
      *   版本号
      */
     private Integer version;
-
-
-
-
+    /**
+     * 完成度
+     */
+    private Integer percentage;
 
 }

@@ -112,6 +112,21 @@ public class BaseToVoUtils {
         return map;
     }
 
+    /**
+     * map.key     为model的属性
+     * map.value   为VO的属性
+     */
+    public static Map<String, String> getProjectMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("projectNo", "projectNo");
+        map.put("stage", "stage");
+        map.put("address", "address");
+        map.put("releaseTime", "releaseTime");
+        map.put("imgUrl", "imgUrl");
+        map.put("thirdView", "thirdView");
+        return map;
+    }
+
     public static Map<String, String> getBaseSmallMap() {
         Map<String, String> map = new HashMap<>();
         map.put("sort", "sort");

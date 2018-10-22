@@ -10,6 +10,7 @@ import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,37 +26,36 @@ public class SchedulingController extends AbsBaseController {
     @Autowired
     private NewSchedulingService schedulingService;
 
-    @ApiOperation(value = "施工配置列表", notes = "")
-    @PostMapping("/list")
-    @MyRespBody
-    public MyRespBundle<ProjectBigSchedulingVO> list(@RequestParam(name = "companyId") @ApiParam(value = "公司编号", name = "companyId") String companyId) {
-        if ("".equals(companyId) || null == companyId) {
-            return sendJsonData(ResultMessage.ERROR, "公司编号为空");
-        }
-        ProjectBigSchedulingVO projectBigSchedulingVO = schedulingService.selectProjectBigSchedulingByCompanyId(companyId);
-        return sendJsonData(ResultMessage.SUCCESS, projectBigSchedulingVO);
-    }
-
-    @RequestMapping(value = "saveProjectScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "添加公司施工节点")
-    public MyRespBundle saveProjectScheduling(@ApiParam(value = "施工节点信息") ProjectBigSchedulingVO projectBigSchedulingVO) {
-        String result = schedulingService.saveProjectScheduling(projectBigSchedulingVO);
-        return sendSuccessMessage(result);
-    }
-
-    @RequestMapping(value = "deleteProjectScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "删除公司施工节点")
-    public MyRespBundle deleteProjectScheduling(@ApiParam(value = "施工节点信息") ProjectBigSchedulingVO projectBigSchedulingVO) {
-        String result = schedulingService.deleteProjectScheduling(projectBigSchedulingVO);
-        return sendSuccessMessage(result);
-    }
-
     @ApiOperation(value = "获取排期信息")
     @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         List<ProjectBigSchedulingDetailsVO> bigSchedulingDetailsVoList = schedulingService.getScheduling(projectNo);
         return sendJsonData(ResultMessage.SUCCESS, bigSchedulingDetailsVoList);
     }
+
+    @RequestMapping(value = "saveProjectScheduling", method = RequestMethod.POST)
+    @ApiOperation(value = "添加大排期")
+    public MyRespBundle saveProjectScheduling(@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
+        String result = schedulingService.saveProjectScheduling(projectBigSchedulingDetailsVO);
+        return sendSuccessMessage(result);
+    }
+
+    @RequestMapping(value = "deleteProjectScheduling", method = RequestMethod.POST)
+    @ApiOperation(value = "删除大排期")
+    public MyRespBundle deleteProjectScheduling(@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
+        String result = schedulingService.deleteProjectScheduling(projectBigSchedulingDetailsVO);
+        return sendSuccessMessage(result);
+    }
+
+    @RequestMapping(value = "updateProjectScheduling",method = RequestMethod.POST)
+    @ApiOperation(value = "")
+    public MyRespBundle updateProjectScheduling(@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO){
+//        String result = schedulingService.updateProjectScheduling(projectBigSchedulingDetailsVO);
+//        return sendSuccessMessage(result);
+        return sendSuccessMessage("");
+    }
+
+
 
 //    @ApiOperation(value = "获取甘特图")
 //    @RequestMapping(value = "gantt", method = RequestMethod.POST)
