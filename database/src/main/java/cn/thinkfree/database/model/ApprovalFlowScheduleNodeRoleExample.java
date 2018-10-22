@@ -513,6 +513,76 @@ public class ApprovalFlowScheduleNodeRoleExample {
             addCriterion("schedule_version not between", value1, value2, "scheduleVersion");
             return (Criteria) this;
         }
+
+        public Criteria andCompanyNoIsNull() {
+            addCriterion("company_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoIsNotNull() {
+            addCriterion("company_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoEqualTo(String value) {
+            addCriterion("company_no =", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoNotEqualTo(String value) {
+            addCriterion("company_no <>", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoGreaterThan(String value) {
+            addCriterion("company_no >", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoGreaterThanOrEqualTo(String value) {
+            addCriterion("company_no >=", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoLessThan(String value) {
+            addCriterion("company_no <", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoLessThanOrEqualTo(String value) {
+            addCriterion("company_no <=", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoLike(String value) {
+            addCriterion("company_no like", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoNotLike(String value) {
+            addCriterion("company_no not like", value, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoIn(List<String> values) {
+            addCriterion("company_no in", values, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoNotIn(List<String> values) {
+            addCriterion("company_no not in", values, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoBetween(String value1, String value2) {
+            addCriterion("company_no between", value1, value2, "companyNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyNoNotBetween(String value1, String value2) {
+            addCriterion("company_no not between", value1, value2, "companyNo");
+            return (Criteria) this;
+        }
     }
 
     /**
