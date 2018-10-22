@@ -60,7 +60,7 @@ public class ApprovalFlowMessageLog extends BaseModel {
      *
      * @mbg.generated
      */
-    private String readState;
+    private Integer readState;
 
     /**
      * Database Column Remarks:
@@ -243,7 +243,7 @@ public class ApprovalFlowMessageLog extends BaseModel {
      *
      * @mbg.generated
      */
-    public String getReadState() {
+    public Integer getReadState() {
         return readState;
     }
 
@@ -255,8 +255,8 @@ public class ApprovalFlowMessageLog extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setReadState(String readState) {
-        this.readState = readState == null ? null : readState.trim();
+    public void setReadState(Integer readState) {
+        this.readState = readState;
     }
 
     /**

@@ -21,9 +21,9 @@ public class ApprovalFlowInstanceDetailVO {
     @ApiModelProperty("项目信息")
     private ApprovalFlowProjectVO project;
     /**
-     * 客户姓名
+     * 业主姓名
      */
-    @ApiModelProperty("客户姓名")
+    @ApiModelProperty("业主姓名")
     private String customerName;
     /**
      * 审批流配置记录编号

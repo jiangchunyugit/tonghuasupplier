@@ -33,5 +33,5 @@ public class ApprovalFlowProjectVO {
      * 业主Id
      */
     @ApiModelProperty("业主Id")
-    private Long ownerId;
+    private String ownerId;
 }

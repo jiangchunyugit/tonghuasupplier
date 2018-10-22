@@ -10,7 +10,7 @@
     <result column="instance_num" jdbcType="VARCHAR" property="instanceNum" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
-    <result column="read_state" jdbcType="VARCHAR" property="readState" />
+    <result column="read_state" jdbcType="INTEGER" property="readState" />
     <result column="read_time" jdbcType="TIMESTAMP" property="readTime" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="role_id" jdbcType="VARCHAR" property="roleId" />
@@ -150,7 +150,7 @@
       send_role_id, schedule_sort, message
       )
     values (#{id,jdbcType=INTEGER}, #{instanceNum,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{projectNo,jdbcType=VARCHAR}, #{readState,jdbcType=VARCHAR}, #{readTime,jdbcType=TIMESTAMP}, 
+      #{projectNo,jdbcType=VARCHAR}, #{readState,jdbcType=INTEGER}, #{readTime,jdbcType=TIMESTAMP}, 
       #{userId,jdbcType=VARCHAR}, #{roleId,jdbcType=VARCHAR}, #{sendUserId,jdbcType=VARCHAR}, 
       #{sendRoleId,jdbcType=VARCHAR}, #{scheduleSort,jdbcType=INTEGER}, #{message,jdbcType=VARCHAR}
       )
@@ -213,7 +213,7 @@
         #{projectNo,jdbcType=VARCHAR},
       </if>
       <if test="readState != null">
-        #{readState,jdbcType=VARCHAR},
+        #{readState,jdbcType=INTEGER},
       </if>
       <if test="readTime != null">
         #{readTime,jdbcType=TIMESTAMP},
@@ -268,7 +268,7 @@
         project_no = #{record.projectNo,jdbcType=VARCHAR},
       </if>
       <if test="record.readState != null">
-        read_state = #{record.readState,jdbcType=VARCHAR},
+        read_state = #{record.readState,jdbcType=INTEGER},
       </if>
       <if test="record.readTime != null">
         read_time = #{record.readTime,jdbcType=TIMESTAMP},
@@ -306,7 +306,7 @@
       instance_num = #{record.instanceNum,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       project_no = #{record.projectNo,jdbcType=VARCHAR},
-      read_state = #{record.readState,jdbcType=VARCHAR},
+      read_state = #{record.readState,jdbcType=INTEGER},
       read_time = #{record.readTime,jdbcType=TIMESTAMP},
       user_id = #{record.userId,jdbcType=VARCHAR},
       role_id = #{record.roleId,jdbcType=VARCHAR},
@@ -335,7 +335,7 @@
         project_no = #{projectNo,jdbcType=VARCHAR},
       </if>
       <if test="readState != null">
-        read_state = #{readState,jdbcType=VARCHAR},
+        read_state = #{readState,jdbcType=INTEGER},
       </if>
       <if test="readTime != null">
         read_time = #{readTime,jdbcType=TIMESTAMP},
@@ -370,7 +370,7 @@
     set instance_num = #{instanceNum,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       project_no = #{projectNo,jdbcType=VARCHAR},
-      read_state = #{readState,jdbcType=VARCHAR},
+      read_state = #{readState,jdbcType=INTEGER},
       read_time = #{readTime,jdbcType=TIMESTAMP},
       user_id = #{userId,jdbcType=VARCHAR},
       role_id = #{roleId,jdbcType=VARCHAR},

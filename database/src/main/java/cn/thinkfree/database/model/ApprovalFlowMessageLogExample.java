@@ -465,62 +465,52 @@ public class ApprovalFlowMessageLogExample {
             return (Criteria) this;
         }
 
-        public Criteria andReadStateEqualTo(String value) {
+        public Criteria andReadStateEqualTo(Integer value) {
             addCriterion("read_state =", value, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateNotEqualTo(String value) {
+        public Criteria andReadStateNotEqualTo(Integer value) {
             addCriterion("read_state <>", value, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateGreaterThan(String value) {
+        public Criteria andReadStateGreaterThan(Integer value) {
             addCriterion("read_state >", value, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateGreaterThanOrEqualTo(String value) {
+        public Criteria andReadStateGreaterThanOrEqualTo(Integer value) {
             addCriterion("read_state >=", value, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateLessThan(String value) {
+        public Criteria andReadStateLessThan(Integer value) {
             addCriterion("read_state <", value, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateLessThanOrEqualTo(String value) {
+        public Criteria andReadStateLessThanOrEqualTo(Integer value) {
             addCriterion("read_state <=", value, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateLike(String value) {
-            addCriterion("read_state like", value, "readState");
-            return (Criteria) this;
-        }
-
-        public Criteria andReadStateNotLike(String value) {
-            addCriterion("read_state not like", value, "readState");
-            return (Criteria) this;
-        }
-
-        public Criteria andReadStateIn(List<String> values) {
+        public Criteria andReadStateIn(List<Integer> values) {
             addCriterion("read_state in", values, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateNotIn(List<String> values) {
+        public Criteria andReadStateNotIn(List<Integer> values) {
             addCriterion("read_state not in", values, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateBetween(String value1, String value2) {
+        public Criteria andReadStateBetween(Integer value1, Integer value2) {
             addCriterion("read_state between", value1, value2, "readState");
             return (Criteria) this;
         }
 
-        public Criteria andReadStateNotBetween(String value1, String value2) {
+        public Criteria andReadStateNotBetween(Integer value1, Integer value2) {
             addCriterion("read_state not between", value1, value2, "readState");
             return (Criteria) this;
         }
