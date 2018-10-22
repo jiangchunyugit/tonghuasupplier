@@ -3,7 +3,6 @@ package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
-import cn.thinkfree.database.vo.NodeRoleSequenceVo;
 
 import java.util.List;
 

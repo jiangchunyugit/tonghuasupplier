@@ -5,7 +5,7 @@
   <select id="findByNodeNum" parameterType="java.lang.String"  resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from approval_flow_notice_url
+    from af_notice_url
     where node_num = #{nodeNum,jdbcType=VARCHAR}
   </select>
 </mapper>

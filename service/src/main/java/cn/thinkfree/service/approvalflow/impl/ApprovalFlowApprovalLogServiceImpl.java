@@ -35,7 +35,7 @@ public class ApprovalFlowApprovalLogServiceImpl implements ApprovalFlowApprovalL
     }
 
     @Override
-    public ApprovalFlowApprovalLog create(String instanceNum, String nodeNum, String userId, String roleId, String optionNum, String optionMsg, String remark) {
+    public ApprovalFlowApprovalLog create(String instanceNum, String nodeNum, String userId, String roleId, String optionNum, String remark) {
         ApprovalFlowApprovalLog approvalLog = new ApprovalFlowApprovalLog();
         approvalLog.setCreateTime(new Date());
         approvalLog.setInstanceNum(instanceNum);
@@ -43,7 +43,6 @@ public class ApprovalFlowApprovalLogServiceImpl implements ApprovalFlowApprovalL
         approvalLog.setNodeNum(nodeNum);
         approvalLog.setNum(UniqueCodeGenerator.AF_APPROVAL_LOG.getCode());
         approvalLog.setOptionNum(optionNum);
-        approvalLog.setOptionMsg(optionMsg);
         approvalLog.setRemark(remark);
         approvalLog.setRoleId(roleId);
         approvalLog.setUserId(userId);

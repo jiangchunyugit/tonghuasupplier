@@ -47,23 +47,24 @@ public class ApprovalFlowScheduleNodeRoleServiceImpl implements ApprovalFlowSche
     }
 
     @Override
-    public List<List<ApprovalFlowScheduleNodeRole>> findByNodesAndScheduleSortAndVersion(List<? extends ApprovalFlowNode> nodes, Integer scheduleSort, Integer scheduleVersion) {
-        List<List<ApprovalFlowScheduleNodeRole>> scheduleNodeRoleList = new ArrayList<>(nodes.size());
-        boolean existConfig = false;
-        for (ApprovalFlowNode node : nodes) {
-            List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = findByNodeNumAndScheduleSortAndVersion(node.getNum(), scheduleSort, scheduleVersion);
-            if (scheduleNodeRoles == null) {
-                scheduleNodeRoles = new ArrayList<>();
-            } else if (scheduleNodeRoles.size() > 0) {
-                existConfig = true;
+    public List<ApprovalFlowScheduleNodeRole> findByNodesAndCompanyNoAndScheduleSortAndVersion(List<? extends ApprovalFlowNode> nodes, String companyNo, Integer scheduleSort, Integer scheduleVersion) {
+        if (nodes != null && nodes.size() > 0) {
+            List<ApprovalFlowScheduleNodeRole> scheduleNodeRoleList = new ArrayList<>(nodes.size());
+            List<String> nodeNums = new ArrayList<>(nodes.size());
+            for (ApprovalFlowNode node : nodes) {
+                nodeNums.add(node.getNum());
             }
-            scheduleNodeRoleList.add(scheduleNodeRoles);
+            if (nodeNums.size() > 0) {
+                ApprovalFlowScheduleNodeRoleExample example = new ApprovalFlowScheduleNodeRoleExample();
+                example.createCriteria().andCompanyNoEqualTo(companyNo).andNodeNumIn(nodeNums).andScheduleSortEqualTo(scheduleSort).andScheduleVersionEqualTo(scheduleVersion);
+                return scheduleNodeRoleMapper.selectByExample(example);
+            }
         }
-        return existConfig ? scheduleNodeRoleList : null;
+        return null;
     }
 
     @Override
-    public List<ApprovalFlowScheduleNodeRole> findByNodeNumAndScheduleSortAndVersion(String nodeNum, Integer scheduleSort, Integer scheduleVersion) {
+    public List<ApprovalFlowScheduleNodeRole> findByNodeNumAndCompanyNoAndScheduleSortAndVersion(String nodeNum, String companyNo, Integer scheduleSort, Integer scheduleVersion) {
         ApprovalFlowScheduleNodeRoleExample example = new ApprovalFlowScheduleNodeRoleExample();
         example.createCriteria().andNodeNumEqualTo(nodeNum).andScheduleSortEqualTo(scheduleSort).andScheduleVersionEqualTo(scheduleVersion);
         return scheduleNodeRoleMapper.selectByExample(example);

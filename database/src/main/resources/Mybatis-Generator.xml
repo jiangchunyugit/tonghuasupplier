@@ -83,20 +83,17 @@
         <table tableName="project_data" domainObjectName="ProjectData"/>
         <!--Scheduling end-->
         <!--approval flow start-->
-        <!--<table tableName="approval_change_data" domainObjectName="ApprovalChangeData"/>-->
-        <!--<table tableName="approval_check_data_log" domainObjectName="ApprovalCheckData"/>-->
-        <!--<table tableName="approval_flow_config" domainObjectName="ApprovalFlowConfig"/>-->
-        <!--<table tableName="approval_flow_config_log" domainObjectName="ApprovalFlowConfigLog"/>-->
-        <!--<table tableName="approval_flow_instance" domainObjectName="ApprovalFlowInstance"/>-->
-        <!--<table tableName="approval_flow_approval_log" domainObjectName="ApprovalFlowApprovalLog"/>-->
-        <!--<table tableName="approval_flow_config_super" domainObjectName="ApprovalFlowConfigSuper"/>-->
-        <!--<table tableName="approval_flow_node" domainObjectName="ApprovalFlowNode"/>-->
-        <!--<table tableName="approval_flow_node_role" domainObjectName="ApprovalFlowNodeRole"/>-->
-        <!--<table tableName="approval_flow_schedule_node_role" domainObjectName="ApprovalFlowScheduleNodeRole"/>-->
-        <!--<table tableName="approval_flow_notice_url" domainObjectName="ApprovalFlowNoticeUrl"/>-->
-        <!--<table tableName="approval_flow_option" domainObjectName="ApprovalFlowOption"/>-->
-        <!--<table tableName="approval_flow_push_msg" domainObjectName="ApprovalFlowPushMsg"/>-->
-        <!--<table tableName="approval_flow_timeout_notice" domainObjectName="ApprovalFlowTimeoutNotice"/>-->
+        <!--<table tableName="af_config" domainObjectName="ApprovalFlowConfig"/>-->
+        <!--<table tableName="af_config_log" domainObjectName="ApprovalFlowConfigLog"/>-->
+        <!--<table tableName="af_instance" domainObjectName="ApprovalFlowInstance"/>-->
+        <!--<table tableName="af_approval_log" domainObjectName="ApprovalFlowApprovalLog"/>-->
+        <!--<table tableName="af_config_super" domainObjectName="ApprovalFlowConfigSuper"/>-->
+        <!--<table tableName="af_node" domainObjectName="ApprovalFlowNode"/>-->
+        <!--<table tableName="af_node_role" domainObjectName="ApprovalFlowNodeRole"/>-->
+        <!--<table tableName="af_schedule_node_role" domainObjectName="ApprovalFlowScheduleNodeRole"/>-->
+        <!--<table tableName="af_notice_url" domainObjectName="ApprovalFlowNoticeUrl"/>-->
+        <!--<table tableName="af_option" domainObjectName="ApprovalFlowOption"/>-->
+        <!--<table tableName="af_message_log" domainObjectName="ApprovalFlowMessageLog"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
         <!--<table tableName="designer_style_config" domainObjectName="DesignerStyleConfig"/>-->
         <!--<table tableName="designer_style_relation" domainObjectName="DesignerStyleRelation"/>-->

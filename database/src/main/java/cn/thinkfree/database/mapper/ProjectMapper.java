@@ -6,6 +6,7 @@ import java.util.List;
 
 import cn.thinkfree.database.vo.ConstructionSiteVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
+import cn.thinkfree.database.vo.SiteDetailsVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectMapper {
@@ -121,5 +122,20 @@ public interface ProjectMapper {
      * @return
      **/
     List<ConstructionSiteVO> selectSiteDetailsByPage(@Param("constructionSiteVO") ConstructionSiteVO constructionSiteVO,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
-
+    /**
+     * @Author jiang
+     * @Description 分页查询工地详情
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<SiteDetailsVO> selectSiteByPage(@Param("siteDetailsVO") SiteDetailsVO siteDetailsVO,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 查询工地详情总条数
+     * @Date
+     * @Param
+     * @return
+     **/
+    Integer selectSiteCount(@Param("siteDetailsVO") SiteDetailsVO siteDetailsVO);
 }

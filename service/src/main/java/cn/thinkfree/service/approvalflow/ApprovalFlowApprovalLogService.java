@@ -27,11 +27,10 @@ public interface ApprovalFlowApprovalLogService {
      * @param userId 审批人
      * @param roleId 审批人角色
      * @param optionNum 操作项编号
-     * @param optionMsg 操作项描述
      * @param remark 审批提交备注
      * @return 审批流日志
      */
-    ApprovalFlowApprovalLog create(String instanceNum, String nodeNum, String userId, String roleId, String optionNum, String optionMsg, String remark);
+    ApprovalFlowApprovalLog create(String instanceNum, String nodeNum, String userId, String roleId, String optionNum, String remark);
 
     /**
      * 更新数据是否有效

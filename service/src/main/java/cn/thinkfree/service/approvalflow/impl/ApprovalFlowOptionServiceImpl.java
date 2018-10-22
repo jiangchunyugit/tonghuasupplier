@@ -50,4 +50,11 @@ public class ApprovalFlowOptionServiceImpl implements ApprovalFlowOptionService 
         List<ApprovalFlowOption> options = optionMapper.selectByExample(example);
         return options != null && options.size() > 0 ? options.get(0) : null;
     }
+
+    @Override
+    public List<ApprovalFlowOption> findByNodeNum(String nodeNum) {
+        ApprovalFlowOptionExample example = new ApprovalFlowOptionExample();
+        example.createCriteria().andNodeNumEqualTo(nodeNum);
+        return optionMapper.selectByExample(example);
+    }
 }
