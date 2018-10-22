@@ -285,5 +285,63 @@ public class DelaySchedulingController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, "导出成功");
     }
 
+    /**
+     * @return
+     * @Author jiang
+     * @Description 工地详情
+     * @Date
+     * @Param
+     **/
+
+    @RequestMapping(value = "siteList", method = RequestMethod.POST)
+    @ApiOperation(value = "工地详情", notes = "")
+    public MyRespBundle<DesignOrder> siteList(@RequestBody SiteDetailsVO siteDetailsVO,
+                                              @RequestParam(defaultValue = "1") Integer pageNum,
+                                              @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        if (null == siteDetailsVO.getProjectNo() || "".equals(siteDetailsVO.getProjectNo())) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        Map<String, Object> params = new HashMap<>();
+        List<SiteDetailsVO> siteDetailsList = new ArrayList<>();
+        siteDetailsList = newOrderUserService.querySiteByPage(siteDetailsVO, (pageNum - 1) * pageSize, pageSize);
+        //这里查询的是所有的数据
+        params.put("list", siteDetailsList);
+        //这里查询的是总页数
+        params.put("totalPage", newOrderUserService.querySiteCount(siteDetailsVO));
+        params.put("pageSize", pageSize);
+        params.put("pageNum", pageNum);
+        return sendJsonData(ResultMessage.SUCCESS, params);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 施工计划
+     * @Date
+     * @Param
+     **/
+
+    @RequestMapping(value = "constructionPlanList", method = RequestMethod.POST)
+    @ApiOperation(value = "施工计划", notes = "")
+    public MyRespBundle<DesignOrder> constructionPlanList(@RequestBody ConstructionPlanVO constructionPlanVO,
+                                                          @RequestParam(defaultValue = "1") Integer pageNum,
+                                                          @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        if (null == constructionPlanVO.getProjectNo() || "".equals(constructionPlanVO.getProjectNo())) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        Map<String, Object> params = new HashMap<>();
+        List<ConstructionPlanVO> siteDetailsList = new ArrayList<>();
+        siteDetailsList = newOrderUserService.queryConstructionPlanByPage(constructionPlanVO, (pageNum - 1) * pageSize, pageSize);
+        //这里查询的是所有的数据
+        params.put("list", siteDetailsList);
+        //这里查询的是总页数
+        params.put("totalPage", newOrderUserService.queryConstructionPlanCount(constructionPlanVO));
+        params.put("pageSize", pageSize);
+        params.put("pageNum", pageNum);
+        return sendJsonData(ResultMessage.SUCCESS, params);
+    }
+
 
 }

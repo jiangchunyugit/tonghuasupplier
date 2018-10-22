@@ -16,6 +16,7 @@ public interface NewOrderUserService {
 
     /**
      * 根据项目编号查询项目用户关系
+     *
      * @param orderNo 项目编号
      * @return 项目用户关系
      */
@@ -23,8 +24,9 @@ public interface NewOrderUserService {
 
     /**
      * 根据项目编号与用户编号查询项目用户关系
+     *
      * @param orderNo 项目编号
-     * @param userId 用户编号
+     * @param userId  用户编号
      * @return 项目用户关系
      */
     List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId);
@@ -57,52 +59,92 @@ public interface NewOrderUserService {
     Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO);
 
     /**
+     * @return
      * @Author jiang
      * @Description 查看订单详情
      * @Date
      * @Param
-     * @return
      **/
     OrderDetailsVO selectOrderDetails(String projectNo);
+
     /**
+     * @return
      * @Author jiang
      * @Description 阶段展示
      * @Date
      * @Param
-     * @return
      **/
     List<StageDetailsVO> selectStageDetailsList(String projectNo);
 
     /**
-     *  根据项目编号与角色编号查询项目、角色、用户关系
+     * 根据项目编号与角色编号查询项目、角色、用户关系
+     *
      * @param projectNo 项目编号
-     * @param roleId 角色编号
+     * @param roleId    角色编号
      * @return 项目、角色、用户关系
      */
     OrderUser findByOrderNoAndRoleId(String projectNo, String roleId);
+
     /**
+     * @return
      * @Author jiang
      * @Description 修改订单状态
      * @Date
      * @Param
-     * @return
      **/
     Integer modifyOrder(OrderConfirmationVO orderConfirmationVO);
 
     /**
+     * @return
      * @Author jiang
      * @Description 分页查询施工工地
      * @Date
      * @Param
-     * @return
      **/
     List<ConstructionSiteVO> querySiteDetailsByPage(ConstructionSiteVO constructionSiteVO, Integer pageNum, Integer pageSize);
+
     /**
+     * @return
      * @Author jiang
      * @Description 查询施工工地总条数
      * @Date
      * @Param
-     * @return
      **/
     Integer querySiteDetailsCount(ConstructionSiteVO constructionSiteVO);
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 分页查询工地详情
+     * @Date
+     * @Param
+     **/
+    List<SiteDetailsVO> querySiteByPage(SiteDetailsVO siteDetailsVO, Integer pageNum, Integer pageSize);
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询工地详情总条数
+     * @Date
+     * @Param
+     **/
+    Integer querySiteCount(SiteDetailsVO siteDetailsVO);
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 分页查询施工计划
+     * @Date
+     * @Param
+     **/
+    List<ConstructionPlanVO> queryConstructionPlanByPage(ConstructionPlanVO constructionPlanVO, Integer pageNum, Integer pageSize);
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询施工计划总条数
+     * @Date
+     * @Param
+     **/
+    Integer queryConstructionPlanCount(ConstructionPlanVO constructionPlanVO);
 }
