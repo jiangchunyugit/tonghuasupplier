@@ -116,7 +116,6 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         config.setUpdateUserId(configVO.getCreateUserId());
         config.setUpdateTime(new Date());
         config.setName(configVO.getName());
-        config.setCompanyNum(configVO.getCompanyNum());
         config.setH5Link(configVO.getH5Link());
         config.setH5Resume(configVO.getH5Resume());
         config.setType(configVO.getType());
@@ -152,19 +151,17 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         config.setCreateUserId(configVO.getCreateUserId());
         config.setUpdateUserId(configVO.getCreateUserId());
         config.setName(configVO.getName());
-        config.setCompanyNum(configVO.getCompanyNum());
         config.setH5Link(configVO.getH5Link());
         config.setH5Resume(configVO.getH5Resume());
         config.setType(configVO.getType());
         config.setSort(configVO.getSort());
-        config.setIsBase((short) 1);
         create(config);
         configLogService.create(config, configVO.getNodeVos());
     }
 
     @Override
     public List<ApprovalFlowOrderVO> order() {
-        List<ApprovalFlowConfig> configs = findAllBaseConfig();
+        List<ApprovalFlowConfig> configs = list();
         List<ApprovalFlowConfigSuper> configSupers = configSuperService.findAllUsable();
         List<ApprovalFlowOrderVO> orderVOs = new ArrayList<>(configs.size());
         for (ApprovalFlowConfig config : configs){
@@ -188,13 +185,6 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
     @Override
     public void editOrder(List<ApprovalFlowOrderVO> orderVOs) {
         configSuperService.create(orderVOs);
-    }
-
-    public List<ApprovalFlowConfig> findAllBaseConfig(){
-        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andIsBaseEqualTo(new Short("1"));
-        configExample.setOrderByClause("sort asc");
-        return configMapper.selectByExample(configExample);
     }
 
     /**
@@ -245,7 +235,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
 
         List<ApprovalFlowNode> nodes;
         // 首先根据公司编号查询公司是否有单独配置，如果没有，走默认配置
-        ApprovalFlowConfig config = findByAliasAndCompanyNum(AFAlias.CHECK_APPLICATION.name, companyNum);
+        ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
         if (config != null) {
             ApprovalFlowConfigLog configLog = configLogService.findByConfigNumAndVersion(config.getNum(), config.getVersion());
             nodes = nodeService.findByConfigLogNum(configLog.getNum());
@@ -276,7 +266,7 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
             }
         } else {
             // 审批流统一配置，公司编号为null
-            config = findByAliasAndCompanyNum(AFAlias.CHECK_APPLICATION.name, null);
+            config = findByAlias(AFAlias.CHECK_APPLICATION.name);
             ApprovalFlowConfigLog configLog = configLogService.findByConfigNumAndVersion(config.getNum(), config.getVersion());
             nodes = nodeService.findByConfigLogNum(configLog.getNum());
         }
@@ -305,20 +295,6 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         return scheduleApprovalFlowConfigVo;
     }
 
-    private ApprovalFlowConfig findByAliasAndCompanyNum(String alias, String companyNum) {
-        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andAliasEqualTo(alias).andCompanyNumEqualTo(companyNum);
-        List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
-        return configs != null && configs.size() > 0 ? configs.get(0) : null;
-    }
-
-    private ApprovalFlowConfig findBaseConfigByAlias(String alias) {
-        ApprovalFlowConfigExample configExample = new ApprovalFlowConfigExample();
-        configExample.createCriteria().andAliasEqualTo(alias).andIsBaseEqualTo((short) 1);
-        List<ApprovalFlowConfig> configs = configMapper.selectByExample(configExample);
-        return configs != null && configs.size() > 0 ? configs.get(0) : null;
-    }
-
     /**
      * 保存公司id、项目节点、审批流配置
      * @param companyNum 公司id
@@ -327,21 +303,15 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
      */
     @Override
     public void saveScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort, Integer scheduleVersion, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo) {
-        ApprovalFlowConfig config = findByAliasAndCompanyNum(AFAlias.CHECK_APPLICATION.name, companyNum);
+        ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
         // 首先判断公司是否配置过自己单独的配置,如果没有则创建
         List<ApprovalFlowNodeVO> nodeVos;
         if (config == null) {
-            config = findBaseConfigByAlias(AFAlias.CHECK_APPLICATION.name);
+            config = findByAlias(AFAlias.CHECK_APPLICATION.name);
 
             ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getNum());
             nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
-
-            config.setCompanyNum(companyNum);
-            config.setIsBase((short) 0);
             create(config);
-
-            configLogService.create(config, nodeVos);
-
         } else {
             ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getNum());
             nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());

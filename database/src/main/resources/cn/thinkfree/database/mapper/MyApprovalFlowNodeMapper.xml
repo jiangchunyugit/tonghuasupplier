@@ -11,14 +11,11 @@
       <collection property="nodeRoles" column="num"
                   ofType="cn.thinkfree.database.model.ApprovalFlowNodeRole"
                   select="cn.thinkfree.database.mapper.ApprovalFlowNodeRoleMapper.findByNodeNum"/>
-      <collection property="timeoutNotices" column="num"
-                  ofType="cn.thinkfree.database.model.ApprovalFlowTimeoutNotice"
-                  select="cn.thinkfree.database.mapper.ApprovalFlowTimeoutNoticeMapper.findByNodeNum"/>
   </resultMap>
     <select id="findByConfigLogNum" parameterType="java.lang.String" resultMap="ApprovalFlowNodeVo">
         select
         <include refid="Base_Column_List" />
-        from approval_flow_node
+        from af_node
         where config_log_num = #{configLogNum,jdbcType=VARCHAR}
         order by sort asc
     </select>

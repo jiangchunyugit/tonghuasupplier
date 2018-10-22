@@ -38,7 +38,7 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
     @Override
     public List<ApprovalFlowConfigLog> findByApprovalFlowNumOrderByVersionAsc(String approvalFlowNum){
         ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
-        configLogExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+        configLogExample.createCriteria().andConfigNumEqualTo(approvalFlowNum);
         configLogExample.setOrderByClause("version asc");
         return configLogMapper.selectByExample(configLogExample);
     }
@@ -63,7 +63,7 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
     @Override
     public void create(ApprovalFlowConfig config, List<ApprovalFlowNodeVO> approvalFlowNodeVOs) {
         ApprovalFlowConfigLog configLog = new ApprovalFlowConfigLog();
-        configLog.setApprovalFlowNum(config.getNum());
+        configLog.setConfigNum(config.getNum());
         configLog.setCreateTime(new Date());
         configLog.setCreateUserId(config.getCreateUserId());
         configLog.setNum(UniqueCodeGenerator.AF_CONFIG_LOG.getCode());
@@ -71,7 +71,6 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
         configLog.setH5Link(config.getH5Link());
         configLog.setH5Resume(config.getH5Resume());
         configLog.setType(config.getType());
-        configLog.setCompanyNum(config.getCompanyNum());
         insert(configLog);
         nodeService.create(configLog.getNum(), approvalFlowNodeVOs);
     }
@@ -91,7 +90,7 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
     @Override
     public void deleteByApprovalFlowNum(String approvalFlowNum) {
         ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
-        configLogExample.createCriteria().andApprovalFlowNumEqualTo(approvalFlowNum);
+        configLogExample.createCriteria().andConfigNumEqualTo(approvalFlowNum);
 
         List<ApprovalFlowConfigLog> configLogs = configLogMapper.selectByExample(configLogExample);
         if (configLogs != null) {
@@ -114,7 +113,7 @@ public class ApprovalFlowConfigLogServiceImpl implements ApprovalFlowConfigLogSe
     @Override
     public ApprovalFlowConfigLog findByConfigNumAndVersion(String configNum, int version) {
         ApprovalFlowConfigLogExample configLogExample = new ApprovalFlowConfigLogExample();
-        configLogExample.createCriteria().andApprovalFlowNumEqualTo(configNum).andVersionEqualTo(version);
+        configLogExample.createCriteria().andConfigNumEqualTo(configNum).andVersionEqualTo(version);
         List<ApprovalFlowConfigLog> configLogs = configLogMapper.selectByExample(configLogExample);
         return configLogs != null && configLogs.size() > 0 ? configLogs.get(0) : null;
     }
