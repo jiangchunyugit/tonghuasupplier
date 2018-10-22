@@ -344,4 +344,53 @@ public class DelaySchedulingController extends AbsBaseController {
     }
 
 
+    /**
+     * @return
+     * @Author jiang
+     * @Description 导出施工计划
+     * @Date
+     * @Param
+     **/
+
+    @RequestMapping(value = "constructionPlanExcel", method = RequestMethod.POST)
+    @ApiOperation(value = "导出施工计划", notes = "")
+    public MyRespBundle<DesignOrder> constructionPlanExcel(@RequestBody ConstructionPlanVO constructionPlanVO,
+                                                           Integer pageNum,
+                                                           Integer pageSize
+    ) {
+        if (null == constructionPlanVO.getProjectNo() || "".equals(constructionPlanVO.getProjectNo())) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        Map<String, Object> params = new HashMap<>();
+        List<ConstructionPlanVO> siteDetailsList = new ArrayList<>();
+        siteDetailsList = newOrderUserService.queryConstructionPlanByPage(constructionPlanVO, pageNum, pageSize);
+        //这里查询的是所有的数据
+        params.put("list", siteDetailsList);
+        String sheetTitle = "施工计划";
+        String[] title = {"施工阶段", "施工项目", "计划开始时间", "计划结束时间", "实际开始时间", "实际结束时间"};
+        List<Object> list = new ArrayList<Object>();
+        ConstructionPlanVO vo = new ConstructionPlanVO();
+        siteDetailsList.forEach((project) ->
+                {
+                    vo.setStage(project.getStage());
+                    vo.setConstructionProject(project.getConstructionProject());
+                    vo.setPlanSatrtTime(project.getPlanEndTime());
+                    vo.setPlanEndTime(project.getPlanEndTime());
+                    vo.setActualSatrtTime(project.getActualSatrtTime());
+                    vo.setActualEndTime(project.getActualEndTime());
+                    list.add(vo);
+                }
+        );
+        byte b[] = ExcelUtil.export(sheetTitle, title, list);
+
+        File f = new File("D:\\tmp\\" + sheetTitle + ".xls");
+        try {
+            FileUtils.writeByteArrayToFile(f, b, true);
+        } catch (IOException ex) {
+            Logger.getLogger(ResolverUtil.Test.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return sendJsonData(ResultMessage.SUCCESS, "导出成功");
+    }
+
+
 }
