@@ -45,7 +45,8 @@ public interface NewSchedulingBaseService {
 
     /**
      * 同步上海基础小排期
+     * @param schedulingSeo
      * @return
      */
-    String listShangHai();
+    String listShangHai(SchedulingSeo schedulingSeo);
 }

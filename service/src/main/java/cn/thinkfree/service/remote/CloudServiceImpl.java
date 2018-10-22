@@ -92,6 +92,11 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
+    private String invokeRemoteJuRanMethod(String url, Integer status,Integer limit) {
+        String result = restTemplate.getForObject(url,String.class ,status,limit);
+        return result;
+    }
+
     private RemoteResult<String> invokeRemoteMethod(String url, HttpEntity<MultiValueMap> param) {
         RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
@@ -131,19 +136,18 @@ public class CloudServiceImpl implements CloudService {
 
     /**
      * 与上海同步小排期
-     *
+     * @param status
+     * @param limit
      * @return
      */
     @Override
-    public RemoteResult<String> getBaseScheduling() {
-        MultiValueMap<String, Object> param = initParam();
-//        param.add("content", );
-        RemoteResult<String> result = null;
+    public String getBaseScheduling(Integer status,Integer limit) {
+        String result = null;
         try {
-            result = invokeRemoteMethod(sendNotice, param);
+            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status,limit);
         } catch (Exception e) {
             e.printStackTrace();
-            return buildFailResult();
+            return "";
         }
         return result;
     }

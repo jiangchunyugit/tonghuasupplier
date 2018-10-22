@@ -93,4 +93,11 @@ public interface ProjectSmallSchedulingMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectSmallScheduling record);
+
+    /**
+     * 根据状态查询本地小排期信息
+     * @param value
+     * @return
+     */
+    List<ProjectSmallScheduling> selectByStatus(Integer value);
 }

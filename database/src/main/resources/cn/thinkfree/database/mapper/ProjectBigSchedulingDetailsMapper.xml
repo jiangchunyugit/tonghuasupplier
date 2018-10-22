@@ -24,8 +24,8 @@
     <result column="is_change" jdbcType="INTEGER" property="isChange" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="submit_num" jdbcType="INTEGER" property="submitNum" />
-    <result column="is_need_check" jdbcType="SMALLINT" property="isNeedCheck" />
-    <result column="is_adopt" jdbcType="SMALLINT" property="isAdopt" />
+    <result column="is_need_check" jdbcType="INTEGER" property="isNeedCheck" />
+    <result column="is_adopt" jdbcType="INTEGER" property="isAdopt" />
     <result column="version" jdbcType="INTEGER" property="version" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -168,7 +168,7 @@
       #{actualEndTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{isMatching,jdbcType=INTEGER}, #{isCompleted,jdbcType=INTEGER}, #{isAdd,jdbcType=INTEGER}, 
       #{isChange,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{submitNum,jdbcType=INTEGER}, 
-      #{isNeedCheck,jdbcType=SMALLINT}, #{isAdopt,jdbcType=SMALLINT}, #{version,jdbcType=INTEGER}
+      #{isNeedCheck,jdbcType=INTEGER}, #{isAdopt,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ProjectBigSchedulingDetails">
@@ -298,10 +298,10 @@
         #{submitNum,jdbcType=INTEGER},
       </if>
       <if test="isNeedCheck != null">
-        #{isNeedCheck,jdbcType=SMALLINT},
+        #{isNeedCheck,jdbcType=INTEGER},
       </if>
       <if test="isAdopt != null">
-        #{isAdopt,jdbcType=SMALLINT},
+        #{isAdopt,jdbcType=INTEGER},
       </if>
       <if test="version != null">
         #{version,jdbcType=INTEGER},
@@ -380,10 +380,10 @@
         submit_num = #{record.submitNum,jdbcType=INTEGER},
       </if>
       <if test="record.isNeedCheck != null">
-        is_need_check = #{record.isNeedCheck,jdbcType=SMALLINT},
+        is_need_check = #{record.isNeedCheck,jdbcType=INTEGER},
       </if>
       <if test="record.isAdopt != null">
-        is_adopt = #{record.isAdopt,jdbcType=SMALLINT},
+        is_adopt = #{record.isAdopt,jdbcType=INTEGER},
       </if>
       <if test="record.version != null">
         version = #{record.version,jdbcType=INTEGER},
@@ -417,8 +417,8 @@
       is_change = #{record.isChange,jdbcType=INTEGER},
       remark = #{record.remark,jdbcType=VARCHAR},
       submit_num = #{record.submitNum,jdbcType=INTEGER},
-      is_need_check = #{record.isNeedCheck,jdbcType=SMALLINT},
-      is_adopt = #{record.isAdopt,jdbcType=SMALLINT},
+      is_need_check = #{record.isNeedCheck,jdbcType=INTEGER},
+      is_adopt = #{record.isAdopt,jdbcType=INTEGER},
       version = #{record.version,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -483,10 +483,10 @@
         submit_num = #{submitNum,jdbcType=INTEGER},
       </if>
       <if test="isNeedCheck != null">
-        is_need_check = #{isNeedCheck,jdbcType=SMALLINT},
+        is_need_check = #{isNeedCheck,jdbcType=INTEGER},
       </if>
       <if test="isAdopt != null">
-        is_adopt = #{isAdopt,jdbcType=SMALLINT},
+        is_adopt = #{isAdopt,jdbcType=INTEGER},
       </if>
       <if test="version != null">
         version = #{version,jdbcType=INTEGER},
@@ -517,8 +517,8 @@
       is_change = #{isChange,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
       submit_num = #{submitNum,jdbcType=INTEGER},
-      is_need_check = #{isNeedCheck,jdbcType=SMALLINT},
-      is_adopt = #{isAdopt,jdbcType=SMALLINT},
+      is_need_check = #{isNeedCheck,jdbcType=INTEGER},
+      is_adopt = #{isAdopt,jdbcType=INTEGER},
       version = #{version,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>

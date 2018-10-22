@@ -13,7 +13,7 @@ import java.util.*;
 public class BaseToVoUtils {
 
     /**
-     * object1转为object2
+     * object1转为object2(属性名相同)
      *
      * @param object1
      * @param t
@@ -37,7 +37,28 @@ public class BaseToVoUtils {
     }
 
     /**
-     * List实体替换
+     * object1转为object2(属性名不同)
+     * @param object1
+     * @param t
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> T getVo(Object object1, Class<T> t) throws Exception {
+        T object2 = t.newInstance();
+        Field[] declaredFields = t.getDeclaredFields();
+        for (int i= 0;i<declaredFields.length;i++){
+            Field field = declaredFields[i];
+            field.setAccessible(true);
+            Field field1 = object1.getClass().getDeclaredField(field.getName());
+            field1.setAccessible(true);
+            field.set(object2,field1.get(object1));
+        }
+        return object2;
+    }
+
+    /**
+     * List实体替换(两个实体属性名不同)
      *
      * @param list
      * @param t
@@ -50,6 +71,24 @@ public class BaseToVoUtils {
         List<T> newlist = new ArrayList<>();
         for (Object object1 : list) {
             T t1 = getVo(object1, t, map);
+            newlist.add(t1);
+        }
+        return newlist;
+    }
+
+
+    /**
+     * List实体替换(两个实体属性名相同)
+     * @param list
+     * @param t
+     * @param <T>
+     * @return
+     * @throws Exception
+     */
+    public static <T> List<T> getListVo(List list, Class<T> t) throws Exception {
+        List<T> newlist = new ArrayList<>();
+        for (Object object1 : list) {
+            T t1 = getVo(object1, t);
             newlist.add(t1);
         }
         return newlist;
@@ -70,6 +109,21 @@ public class BaseToVoUtils {
         map.put("", "");
         map.put("", "");
         map.put("", "");
+        return map;
+    }
+
+    /**
+     * map.key     为model的属性
+     * map.value   为VO的属性
+     */
+    public static Map<String, String> getProjectMap() {
+        Map<String, String> map = new HashMap<>();
+        map.put("projectNo", "projectNo");
+        map.put("stage", "stage");
+        map.put("address", "address");
+        map.put("releaseTime", "releaseTime");
+        map.put("imgUrl", "imgUrl");
+        map.put("thirdView", "thirdView");
         return map;
     }
 

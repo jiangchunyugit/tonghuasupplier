@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.model.OrderUserExample;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface OrderUserMapper {
@@ -93,4 +95,11 @@ public interface OrderUserMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(OrderUser record);
+
+    /**
+     * 根据用户id查询项目编号
+     * @param userId
+     * @return
+     */
+    List<String> selectByUserId(@Param("userId") String userId);
 }

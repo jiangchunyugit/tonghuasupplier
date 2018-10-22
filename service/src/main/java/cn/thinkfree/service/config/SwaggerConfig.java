@@ -29,7 +29,7 @@ public class SwaggerConfig {
                 .select()
 //                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
 //                .apis(RequestHandlerSelectors.basePackage("cn.thinkfree.controller,cn.thinkfree.appController"))
-                .apis(SwaggerConfig.basePackage("cn.thinkfree.controller,cn.thinkfree.appController"))
+                .apis(SwaggerConfig.basePackage("cn.thinkfree.controller,cn.thinkfree.appcontroller"))
                 .paths(PathSelectors.any())
                 .build();
     }
