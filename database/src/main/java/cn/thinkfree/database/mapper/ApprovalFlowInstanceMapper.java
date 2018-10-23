@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.model.ApprovalFlowConfig;
 import cn.thinkfree.database.model.ApprovalFlowInstance;
 import cn.thinkfree.database.model.ApprovalFlowInstanceExample;
 import java.util.List;
@@ -93,4 +94,11 @@ public interface ApprovalFlowInstanceMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ApprovalFlowInstance record);
+
+    /**
+     * 根据审批流实例编号查询审批流配置
+     * @param instanceNum 审批流实例编号
+     * @return 审批流配置
+     */
+    String findConfigNameByInstanceNum(@Param("instanceNum") String instanceNum);
 }

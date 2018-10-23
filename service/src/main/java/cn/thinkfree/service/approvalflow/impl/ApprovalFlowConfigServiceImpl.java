@@ -318,4 +318,9 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         }
         scheduleNodeRoleService.create(nodeVos, scheduleApprovalFlowConfigVo.getNodeRoleSequence(), projectBigScheduleSort, scheduleVersion);
     }
+
+    @Override
+    public void clearConfig() {
+
+    }
 }

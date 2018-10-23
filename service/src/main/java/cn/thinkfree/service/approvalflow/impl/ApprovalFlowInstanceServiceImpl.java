@@ -223,12 +223,19 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
      * @param num 编号
      * @return 审批流实例
      */
-    private ApprovalFlowInstance findByNum(String num) {
+    @Override
+    public ApprovalFlowInstance findByNum(String num) {
         ApprovalFlowInstanceExample example = new ApprovalFlowInstanceExample();
         example.createCriteria().andNumEqualTo(num);
         List<ApprovalFlowInstance> instances = instanceMapper.selectByExample(example);
         return instances != null && instances.size() > 0 ? instances.get(0) : null;
     }
+
+    @Override
+    public String findConfigNameByInstanceNum(String instanceNum) {
+        return instanceMapper.findConfigNameByInstanceNum(instanceNum);
+    }
+
     /**
      * 获取项目信息
      * @param projectNo 项目编号
@@ -252,27 +259,21 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
     }
 
     /**
-     * 首次审批：项目编号、审批流配置日志编号、操作项编号、数据、备注、用户编号、排期编号、排期版本
-     * 非首次审批：审批流实例编号、操作项编号、”数据“、备注、用户编号
-     *
-     * 校验当前用户是否有审批权限、判断操作项是否属于当前节点
-     *
-     * 首次审批
-     *   创建审批实例记录
-     *   创建审批记录
-     *
-     * 非首次审批
-     *   创建审批记录
-     *
-     * 判断下一步执行节点，记录下一步节点编号
      * @param approvalVO 审批信息
-     */
-    /**
-     // TODO 检查该该操作是否必须填写原因
      */
     @Override
     public void approval(ApprovalFlowApprovalVO approvalVO) {
         ApprovalFlowInstance instance;
+
+        ApprovalFlowOption option = optionService.findByNum(approvalVO.getOptionNum());
+        if (option == null) {
+            LOGGER.error("未查询到编号为[{}]的操作项", approvalVO.getOptionNum());
+            throw new RuntimeException();
+        }
+        if (option.getIsNeedRemark() == 1 && StringUtils.isEmpty(approvalVO.getRemark())) {
+            LOGGER.error("该操作项需要添加备注");
+            throw new RuntimeException();
+        }
         if (StringUtils.isNotEmpty(approvalVO.getInstanceNum())) {
             instance = findByNum(approvalVO.getInstanceNum());
             if (instance == null) {
@@ -291,7 +292,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
 
         List<OrderUser> orderUsers = orderUserService.findByOrderNo(approvalVO.getProjectNo());
         // 获取当前用户的角色，并校验是否有审批权限
-        String roleId = getRoleIdOfCurrentUser(orderUsers, approvalVO);
+        String roleId = getRoleIdOfCurrentUser(orderUsers, approvalVO, approvalVO.getNodeNum());
 
         List<ApprovalFlowNode> nodes = nodeService.findByConfigLogNum(approvalVO.getConfigLogNum());
         ApprovalFlowNode currentNode = getCurrentNode(nodes, approvalVO.getNodeNum());
@@ -309,11 +310,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
             }
         }
         // 保存审批记录
-        ApprovalFlowOption option = optionService.findByNum(approvalVO.getOptionNum());
-        if (option == null) {
-            LOGGER.error("未查询到编号为[{}]的操作项", approvalVO.getOptionNum());
-            throw new RuntimeException();
-        }
+
         ApprovalFlowApprovalLog approvalLog = approvalLogService.create(approvalVO.getInstanceNum(), approvalVO.getNodeNum(), approvalVO.getUserId(), roleId, approvalVO.getOptionNum(), approvalVO.getRemark());
 
         sendNotice(approvalVO, approvalLog.getNum());
@@ -347,36 +344,24 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         if (noticeUrls != null) {
             for (ApprovalFlowNoticeUrl noticeUrl : noticeUrls) {
                 LOGGER.info("发送通知给：{},发送内容为：{}", JSONObject.toJSONString(noticeUrl), approvalVO.getData());
-                sendHttp(approvalVO.getInstanceNum(), approvalVO.getProjectNo(), approvalLogNum, noticeUrl, approvalVO.getData(), approvalVO.getUserId());
-            }
-        }
-    }
 
-    /**
-     * 执行http请求，发送通知，无论发送成功或者失败，都不抛出异常信息
-     * @param instanceNum 审批流实例编码
-     * @param projectNo 项目编码
-     * @param approvalLogNum 审批记录编码
-     * @param noticeUrl  推送地址
-     * @param dataJson 发送数据
-     * @param userId 用户ID
-     */
-    private void sendHttp(String instanceNum, String projectNo, String approvalLogNum, ApprovalFlowNoticeUrl noticeUrl, String dataJson, String userId) {
-        String nodeNum = noticeUrl.getNodeNum();
-        Map<String, String> requestMap = new HashMap<>(16);
-        requestMap.put("instanceNum", instanceNum);
-        requestMap.put("nodeNum", nodeNum);
-        requestMap.put("projectNo", projectNo);
-        requestMap.put("approvalLogNum", approvalLogNum);
-        requestMap.put("userId", userId);
-        requestMap.put("dataJson", dataJson);
-        try {
-            ThreadManager.getThreadPollProxy().execute(() -> {
-                HttpUtils.HttpRespMsg respMsg = HttpUtils.post(noticeUrl.getNoticeUrl(), requestMap);
-                LOGGER.info("发送通知成功：url:{},requestMap:{},resp:{}", noticeUrl.getNoticeUrl(), JSONObject.toJSONString(requestMap), JSONObject.toJSONString(respMsg));
-            });
-        } catch (Exception e) {
-            LOGGER.error("发送通知失败：url:{},requestMap:{}", noticeUrl.getNoticeUrl(), JSONObject.toJSONString(requestMap));
+                String nodeNum = noticeUrl.getNodeNum();
+                Map<String, String> requestMap = new HashMap<>(16);
+                requestMap.put("instanceNum", approvalVO.getInstanceNum());
+                requestMap.put("nodeNum", nodeNum);
+                requestMap.put("projectNo", approvalVO.getProjectNo());
+                requestMap.put("approvalLogNum", approvalLogNum);
+                requestMap.put("userId", approvalVO.getUserId());
+                requestMap.put("dataJson", approvalVO.getData());
+                try {
+                    ThreadManager.getThreadPollProxy().execute(() -> {
+                        HttpUtils.HttpRespMsg respMsg = HttpUtils.post(noticeUrl.getNoticeUrl(), requestMap);
+                        LOGGER.info("发送通知成功：url:{},requestMap:{},resp:{}", noticeUrl.getNoticeUrl(), JSONObject.toJSONString(requestMap), JSONObject.toJSONString(respMsg));
+                    });
+                } catch (Exception e) {
+                    LOGGER.error("发送通知失败：url:{},requestMap:{}", noticeUrl.getNoticeUrl(), JSONObject.toJSONString(requestMap));
+                }
+            }
         }
     }
 
@@ -395,7 +380,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
                     }
                 }
                 if (userId != null) {
-                    saveAndSendApprovalMessage(approvalLogNum, approvalVO, userId, approvalVO.getUserId(), remark);
+                    saveAndSendApprovalMessage(approvalLogNum, approvalVO, userId, approvalVO.getUserId(), remark, orderUsers);
                 } else {
                     LOGGER.error("在项目:[{}]中未查询到角色id为：[{}]的用户", approvalVO.getProjectNo(), nodeRole.getRoleId());
                     throw new RuntimeException("");
@@ -412,7 +397,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
      * @param sendUserId               提交审批人ID
      * @param result                   审批结果
      */
-    private void saveAndSendApprovalMessage(String approvalLogNum, ApprovalFlowApprovalVO approvalVO, String userId, String sendUserId, String result) {
+    private void saveAndSendApprovalMessage(String approvalLogNum, ApprovalFlowApprovalVO approvalVO, String userId, String sendUserId, String result, List<OrderUser> orderUsers) {
         ApprovalFlowMessageLog messageLog = new ApprovalFlowMessageLog();
         messageLog.setInstanceNum(approvalVO.getInstanceNum());
         messageLog.setMessage(result);
@@ -420,7 +405,14 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         messageLog.setUserId(userId);
         messageLog.setSendUserId(sendUserId);
         messageLog.setScheduleSort(approvalVO.getScheduleSort());
-
+        for (OrderUser orderUser : orderUsers) {
+            if (userId.equals(orderUser.getUserId())) {
+                messageLog.setRoleId(orderUser.getRoleId());
+            }
+            if (sendUserId.equals(orderUser.getUserId())) {
+                messageLog.setRoleId(orderUser.getRoleId());
+            }
+        }
         messageLogService.create(messageLog);
 
         ThreadManager.getThreadPollProxy().execute(() -> {
@@ -441,20 +433,31 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         });
     }
 
-
     /**
      * 更新当前要审批的节点编号
-     * @param instanceNum 审批流实例编号
-     * @param nodeNum 审批流节点编号
+     * @param orderUsers 项目角色用户信息
+     * @param approvalVO 审批信息
+     * @param nodeNum 节点编号
      */
-    private void updateCurrentNodeNum(String instanceNum, String nodeNum) {
-        ApprovalFlowInstance instance = new ApprovalFlowInstance();
-        instance.setCurrentNodeNum(nodeNum);
+    private void updateCurrentNodeNumAndUserId(List<OrderUser> orderUsers, ApprovalFlowApprovalVO approvalVO, String nodeNum) {
+        List<UserRoleDTO> userRoles = findApprovalUserRole(orderUsers, approvalVO, nodeNum);
+        String userId = null;
+        if (userRoles != null && userRoles.size() > 0) {
+            userId = userRoles.get(0).getUserId();
+        }
+        if (userId != null) {
 
-        ApprovalFlowInstanceExample example = new ApprovalFlowInstanceExample();
-        example.createCriteria().andNumEqualTo(instanceNum);
+            ApprovalFlowInstance instance = new ApprovalFlowInstance();
+            instance.setCurrentNodeNum(nodeNum);
+            instance.setCreateUserId(userId);
 
-        instanceMapper.updateByExampleSelective(instance, example);
+            ApprovalFlowInstanceExample example = new ApprovalFlowInstanceExample();
+            example.createCriteria().andNumEqualTo(approvalVO.getInstanceNum());
+
+            instanceMapper.updateByExampleSelective(instance, example);
+        } else {
+            throw new RuntimeException();
+        }
     }
 
     private ApprovalFlowNode getNextNode(String instanceNum, List<ApprovalFlowNode> nodes, ApprovalFlowNode currentNode, ApprovalFlowOption option) {
@@ -487,11 +490,11 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
 
     private void remindNextNode(ApprovalFlowApprovalVO approvalVO, String approvalLogNum, ApprovalFlowNode currentNode, ApprovalFlowNode nextNode, List<OrderUser> orderUsers){
         if (currentNode.getIsPushMsg() == 1 && nextNode != null) {
-            List<UserRoleDTO> userRoles = findApprovalUserRole(orderUsers, approvalVO);
+            List<UserRoleDTO> userRoles = findApprovalUserRole(orderUsers, approvalVO, nextNode.getNum());
             if (null != userRoles) {
                 String message = StringUtils.isEmpty(approvalVO.getRemark()) ? approvalVO.getRemark() : currentNode.getMessage();
                 for (UserRoleDTO userRole : userRoles) {
-                    saveAndSendApprovalMessage(approvalLogNum, approvalVO, userRole.getUserId(), approvalVO.getUserId(), message);
+                    saveAndSendApprovalMessage(approvalLogNum, approvalVO, userRole.getUserId(), approvalVO.getUserId(), message, orderUsers);
                 }
             }
         }
@@ -519,7 +522,7 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
                 }
                 executeNextNode(approvalVO, approvalLog.getNum(), nodes, nextNode, nextNodeOption, orderUsers);
             } else {
-                updateCurrentNodeNum(approvalVO.getInstanceNum(), currentNode.getNum());
+                updateCurrentNodeNumAndUserId(orderUsers, approvalVO, nextNode.getNum());
             }
         } else {
             finishApproval(approvalVO.getInstanceNum());
@@ -548,8 +551,8 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
      * @param approvalVO 审批流信息
      * @return 用户角色ID
      */
-    private String getRoleIdOfCurrentUser(List<OrderUser> orderUsers, ApprovalFlowApprovalVO approvalVO) {
-        List<UserRoleDTO> userRoles = findApprovalUserRole(orderUsers, approvalVO);
+    private String getRoleIdOfCurrentUser(List<OrderUser> orderUsers, ApprovalFlowApprovalVO approvalVO, String nodeNum) {
+        List<UserRoleDTO> userRoles = findApprovalUserRole(orderUsers, approvalVO, nodeNum);
         String roleId = null;
         for (UserRoleDTO userRole : userRoles) {
             if (userRole.getUserId().equals(approvalVO.getUserId())) {
@@ -563,15 +566,15 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         return roleId;
     }
 
-    private List<UserRoleDTO> findApprovalUserRole(List<OrderUser> orderUsers, ApprovalFlowApprovalVO approvalVO){
+    private List<UserRoleDTO> findApprovalUserRole(List<OrderUser> orderUsers, ApprovalFlowApprovalVO approvalVO, String nodeNum){
         List<String> roleIds = new ArrayList<>();
-        List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = scheduleNodeRoleService.findByNodeNumAndCompanyNoAndScheduleSortAndVersion(approvalVO.getNodeNum(), approvalVO.getCompanyNo(), approvalVO.getScheduleSort(), approvalVO.getScheduleVersion());
+        List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = scheduleNodeRoleService.findByNodeNumAndCompanyNoAndScheduleSortAndVersion(nodeNum, approvalVO.getCompanyNo(), approvalVO.getScheduleSort(), approvalVO.getScheduleVersion());
         if (scheduleNodeRoles != null && scheduleNodeRoles.size() > 0) {
             for (ApprovalFlowScheduleNodeRole scheduleNodeRole : scheduleNodeRoles) {
                 roleIds.add(scheduleNodeRole.getRoleId());
             }
         } else {
-            List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findSendRoleByNodeNum(approvalVO.getNodeNum());
+            List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findSendRoleByNodeNum(nodeNum);
             for (ApprovalFlowNodeRole nodeRole : nodeRoles) {
                 roleIds.add(nodeRole.getRoleId());
             }
@@ -622,4 +625,8 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
         instanceMapper.insertSelective(instance);
     }
 
+    @Override
+    public void clearApprovalLog() {
+
+    }
 }

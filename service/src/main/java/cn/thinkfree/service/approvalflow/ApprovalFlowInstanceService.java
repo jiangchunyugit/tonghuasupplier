@@ -1,6 +1,7 @@
 package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.ApprovalFlowApprovalLog;
+import cn.thinkfree.database.model.ApprovalFlowInstance;
 import cn.thinkfree.database.vo.ApprovalFlowApprovalVO;
 import cn.thinkfree.database.vo.ApprovalFlowInstanceDetailVO;
 
@@ -30,4 +31,23 @@ public interface ApprovalFlowInstanceService {
      * @param approvalVO 审批信息
      */
     void approval(ApprovalFlowApprovalVO approvalVO);
+
+    /**
+     * 根据审批流实例编号查询审批流实例
+     * @param num 审批流实例
+     * @return 审批流实例
+     */
+    ApprovalFlowInstance findByNum(String num);
+
+    /**
+     * 根据审批流实例编号查询审批流配置名称
+     * @param instanceNum 审批流实例编号
+     * @return 审批流配置名称
+     */
+    String findConfigNameByInstanceNum(String instanceNum);
+
+    /**
+     * 清除审批记录（测试用）
+     */
+    void clearApprovalLog();
 }
