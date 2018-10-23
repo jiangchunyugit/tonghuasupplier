@@ -48,10 +48,17 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(AppProjectSEO appProjectSEO) {
+        OrderUserExample example1 = new OrderUserExample();
+        OrderUserExample.Criteria criteria1 = example1.createCriteria();
+        criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
         PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
         PageInfo<ProjectVo> pageInfo = new PageInfo<>();
         //查询此人名下所有项目
-        List<String> list = orderUserMapper.selectByUserId(appProjectSEO.getUserId());
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
+        List<String> list = new ArrayList<>();
+        for (OrderUser orderUser : orderUsers){
+            list.add(orderUser.getProjectNo());
+        }
         //根据项目编号查询项目信息
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
