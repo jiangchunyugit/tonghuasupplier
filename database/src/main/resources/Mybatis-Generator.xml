@@ -37,14 +37,14 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <javaClientGenerator
+        <!--<javaClientGenerator
                 targetPackage="cn.thinkfree.database.mapper"
                 targetProject="src/main/java/"
                 type="XMLMAPPER" >
             <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>
+        </javaClientGenerator>-->
         <!-- 表-->
-        <table tableName="province" domainObjectName="Province" />
+        <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
         <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->
@@ -75,6 +75,7 @@
         <!--<table tableName="pc_contract_template_dict" domainObjectName="PcContractTemplateDict"/>-->
         <!--<table tableName="pc_contract_terms" domainObjectName="PcContractTerms"/>-->
         <!--<table tableName="pc_contract_info" domainObjectName="PcContractInfo"/>-->
+        <!--<table tableName="pc_audit_temporary_info" domainObjectName="PcAuditTemporaryInfo"/>-->
         <!-- 权限相关 S-->
         <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
         <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
@@ -88,6 +89,10 @@
         <!--<table tableName="pc_system_role" domainObjectName="SystemRole"/>-->
         <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
+        <table tableName="pc_company_role" domainObjectName="CompanyRole"/>
+        <table tableName="pc_company_role_resource" domainObjectName="CompanyRoleResource"/>
+        <table tableName="pc_company_user" domainObjectName="CompanyUser"/>
+        <table tableName="pc_company_user_role" domainObjectName="CompanyUserRole"/>
         <!-- 权限相关 E-->
     </context>
 </generatorConfiguration>
