@@ -584,6 +584,76 @@ public class CompanyRoleExample extends cn.thinkfree.core.model.AbstractDataAuth
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
+
+        public Criteria andRemakeIsNull() {
+            addCriterion("remake is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeIsNotNull() {
+            addCriterion("remake is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeEqualTo(String value) {
+            addCriterion("remake =", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeNotEqualTo(String value) {
+            addCriterion("remake <>", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeGreaterThan(String value) {
+            addCriterion("remake >", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeGreaterThanOrEqualTo(String value) {
+            addCriterion("remake >=", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeLessThan(String value) {
+            addCriterion("remake <", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeLessThanOrEqualTo(String value) {
+            addCriterion("remake <=", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeLike(String value) {
+            addCriterion("remake like", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeNotLike(String value) {
+            addCriterion("remake not like", value, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeIn(List<String> values) {
+            addCriterion("remake in", values, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeNotIn(List<String> values) {
+            addCriterion("remake not in", values, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeBetween(String value1, String value2) {
+            addCriterion("remake between", value1, value2, "remake");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemakeNotBetween(String value1, String value2) {
+            addCriterion("remake not between", value1, value2, "remake");
+            return (Criteria) this;
+        }
     }
 
     /**
