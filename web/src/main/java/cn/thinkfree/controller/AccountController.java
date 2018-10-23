@@ -15,14 +15,12 @@ import cn.thinkfree.database.model.SystemPermissionResource;
 import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.SystemRole;
 import cn.thinkfree.database.utils.BeanValidator;
-import cn.thinkfree.database.vo.account.PermissionSEO;
-import cn.thinkfree.database.vo.account.PermissionVO;
-import cn.thinkfree.database.vo.account.SystemRoleSEO;
-import cn.thinkfree.database.vo.account.SystemRoleVO;
+import cn.thinkfree.database.vo.account.*;
 import cn.thinkfree.service.account.PermissionResourceService;
 import cn.thinkfree.service.account.PermissionService;
 import cn.thinkfree.service.account.SystemResourceService;
 import cn.thinkfree.service.account.SystemRoleService;
+import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.userResource.PcSystemResourceService;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -48,9 +46,12 @@ public class AccountController extends AbsBaseController {
 
     @Autowired
     PermissionResourceService permissionResourceService;
+
     @Autowired
     SystemRoleService systemRoleService;
 
+    @Autowired
+    PcUserInfoService pcUserInfoService;
 
     /**
      * 创建权限
@@ -325,7 +326,10 @@ public class AccountController extends AbsBaseController {
     @PostMapping("/info")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新建账号")
-    public MyRespBundle<String> account(){
+    public MyRespBundle<AccountVO> account(AccountVO accountVO){
+
+
+         AccountVO  result=pcUserInfoService.saveUserAccount(accountVO);
         return null;
     }
 

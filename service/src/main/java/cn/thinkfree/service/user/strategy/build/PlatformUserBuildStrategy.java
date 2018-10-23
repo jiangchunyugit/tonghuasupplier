@@ -102,7 +102,8 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
 
 
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdEqualTo(userVO.getPcUserInfo().getCompanyId());
+        // TODO 公司信息
+//        companyInfoExample.createCriteria().andCompanyIdEqualTo(userVO.getPcUserInfo().getCompanyId());
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
         if(companyInfos.isEmpty() || companyInfos.size() >1){
             throw  new UsernameNotFoundException("用户企业信息异常");

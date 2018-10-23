@@ -37,12 +37,12 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <javaClientGenerator
-                targetPackage="cn.thinkfree.database.mapper"
-                targetProject="src/main/java/"
-                type="XMLMAPPER" >
-            <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>
+        <!--<javaClientGenerator-->
+                <!--targetPackage="cn.thinkfree.database.mapper"-->
+                <!--targetProject="src/main/java/"-->
+                <!--type="XMLMAPPER" >-->
+            <!--<property name="enableSubPackages" value="false"/>-->
+        <!--</javaClientGenerator>-->
         <!-- 表-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
@@ -79,7 +79,7 @@
         <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
         <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
         <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
-        <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
+        <table tableName="pc_user_info" domainObjectName="PcUserInfo"/>
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
         <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
         <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
@@ -88,7 +88,7 @@
         <!--<table tableName="pc_system_role" domainObjectName="SystemRole"/>-->
         <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
-        <table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />
+        <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
         <!-- 权限相关 E-->
     </context>
 </generatorConfiguration>

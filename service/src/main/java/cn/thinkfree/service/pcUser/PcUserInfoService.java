@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.UserRegister;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.account.AccountVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -26,4 +27,10 @@ public interface PcUserInfoService {
      */
     String canEnabled(String id, Integer enabled);
 
+    /**
+     * 新增用户账号
+     * @param accountVO
+     * @return
+     */
+    AccountVO saveUserAccount(AccountVO accountVO);
 }

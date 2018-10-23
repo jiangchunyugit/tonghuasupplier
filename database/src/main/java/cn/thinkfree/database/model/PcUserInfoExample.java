@@ -725,73 +725,73 @@ public class PcUserInfoExample extends cn.thinkfree.core.model.AbstractDataAuth 
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIsNull() {
-            addCriterion("company_id is null");
+        public Criteria andCityBranchCompanyIdIsNull() {
+            addCriterion("city_branch_company_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIsNotNull() {
-            addCriterion("company_id is not null");
+        public Criteria andCityBranchCompanyIdIsNotNull() {
+            addCriterion("city_branch_company_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdEqualTo(String value) {
-            addCriterion("company_id =", value, "companyId");
+        public Criteria andCityBranchCompanyIdEqualTo(String value) {
+            addCriterion("city_branch_company_id =", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotEqualTo(String value) {
-            addCriterion("company_id <>", value, "companyId");
+        public Criteria andCityBranchCompanyIdNotEqualTo(String value) {
+            addCriterion("city_branch_company_id <>", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThan(String value) {
-            addCriterion("company_id >", value, "companyId");
+        public Criteria andCityBranchCompanyIdGreaterThan(String value) {
+            addCriterion("city_branch_company_id >", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
-            addCriterion("company_id >=", value, "companyId");
+        public Criteria andCityBranchCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("city_branch_company_id >=", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThan(String value) {
-            addCriterion("company_id <", value, "companyId");
+        public Criteria andCityBranchCompanyIdLessThan(String value) {
+            addCriterion("city_branch_company_id <", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
-            addCriterion("company_id <=", value, "companyId");
+        public Criteria andCityBranchCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("city_branch_company_id <=", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdLike(String value) {
-            addCriterion("company_id like", value, "companyId");
+        public Criteria andCityBranchCompanyIdLike(String value) {
+            addCriterion("city_branch_company_id like", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotLike(String value) {
-            addCriterion("company_id not like", value, "companyId");
+        public Criteria andCityBranchCompanyIdNotLike(String value) {
+            addCriterion("city_branch_company_id not like", value, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdIn(List<String> values) {
-            addCriterion("company_id in", values, "companyId");
+        public Criteria andCityBranchCompanyIdIn(List<String> values) {
+            addCriterion("city_branch_company_id in", values, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotIn(List<String> values) {
-            addCriterion("company_id not in", values, "companyId");
+        public Criteria andCityBranchCompanyIdNotIn(List<String> values) {
+            addCriterion("city_branch_company_id not in", values, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdBetween(String value1, String value2) {
-            addCriterion("company_id between", value1, value2, "companyId");
+        public Criteria andCityBranchCompanyIdBetween(String value1, String value2) {
+            addCriterion("city_branch_company_id between", value1, value2, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andCompanyIdNotBetween(String value1, String value2) {
-            addCriterion("company_id not between", value1, value2, "companyId");
+        public Criteria andCityBranchCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("city_branch_company_id not between", value1, value2, "cityBranchCompanyId");
             return (Criteria) this;
         }
 
@@ -865,73 +865,73 @@ public class PcUserInfoExample extends cn.thinkfree.core.model.AbstractDataAuth 
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdIsNull() {
-            addCriterion("parent_company_id is null");
+        public Criteria andBranchCompanyIdIsNull() {
+            addCriterion("branch_company_id is null");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdIsNotNull() {
-            addCriterion("parent_company_id is not null");
+        public Criteria andBranchCompanyIdIsNotNull() {
+            addCriterion("branch_company_id is not null");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdEqualTo(String value) {
-            addCriterion("parent_company_id =", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdEqualTo(String value) {
+            addCriterion("branch_company_id =", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdNotEqualTo(String value) {
-            addCriterion("parent_company_id <>", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdNotEqualTo(String value) {
+            addCriterion("branch_company_id <>", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdGreaterThan(String value) {
-            addCriterion("parent_company_id >", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdGreaterThan(String value) {
+            addCriterion("branch_company_id >", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdGreaterThanOrEqualTo(String value) {
-            addCriterion("parent_company_id >=", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("branch_company_id >=", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdLessThan(String value) {
-            addCriterion("parent_company_id <", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdLessThan(String value) {
+            addCriterion("branch_company_id <", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdLessThanOrEqualTo(String value) {
-            addCriterion("parent_company_id <=", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("branch_company_id <=", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdLike(String value) {
-            addCriterion("parent_company_id like", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdLike(String value) {
+            addCriterion("branch_company_id like", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdNotLike(String value) {
-            addCriterion("parent_company_id not like", value, "parentCompanyId");
+        public Criteria andBranchCompanyIdNotLike(String value) {
+            addCriterion("branch_company_id not like", value, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdIn(List<String> values) {
-            addCriterion("parent_company_id in", values, "parentCompanyId");
+        public Criteria andBranchCompanyIdIn(List<String> values) {
+            addCriterion("branch_company_id in", values, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdNotIn(List<String> values) {
-            addCriterion("parent_company_id not in", values, "parentCompanyId");
+        public Criteria andBranchCompanyIdNotIn(List<String> values) {
+            addCriterion("branch_company_id not in", values, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdBetween(String value1, String value2) {
-            addCriterion("parent_company_id between", value1, value2, "parentCompanyId");
+        public Criteria andBranchCompanyIdBetween(String value1, String value2) {
+            addCriterion("branch_company_id between", value1, value2, "branchCompanyId");
             return (Criteria) this;
         }
 
-        public Criteria andParentCompanyIdNotBetween(String value1, String value2) {
-            addCriterion("parent_company_id not between", value1, value2, "parentCompanyId");
+        public Criteria andBranchCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("branch_company_id not between", value1, value2, "branchCompanyId");
             return (Criteria) this;
         }
 
@@ -1202,6 +1202,146 @@ public class PcUserInfoExample extends cn.thinkfree.core.model.AbstractDataAuth 
 
         public Criteria andAreaNotBetween(String value1, String value2) {
             addCriterion("area not between", value1, value2, "area");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIsNull() {
+            addCriterion("email is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIsNotNull() {
+            addCriterion("email is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailEqualTo(String value) {
+            addCriterion("email =", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotEqualTo(String value) {
+            addCriterion("email <>", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailGreaterThan(String value) {
+            addCriterion("email >", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailGreaterThanOrEqualTo(String value) {
+            addCriterion("email >=", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLessThan(String value) {
+            addCriterion("email <", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLessThanOrEqualTo(String value) {
+            addCriterion("email <=", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailLike(String value) {
+            addCriterion("email like", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotLike(String value) {
+            addCriterion("email not like", value, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailIn(List<String> values) {
+            addCriterion("email in", values, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotIn(List<String> values) {
+            addCriterion("email not in", values, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailBetween(String value1, String value2) {
+            addCriterion("email between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andEmailNotBetween(String value1, String value2) {
+            addCriterion("email not between", value1, value2, "email");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdIsNull() {
+            addCriterion("third_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdIsNotNull() {
+            addCriterion("third_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdEqualTo(String value) {
+            addCriterion("third_id =", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotEqualTo(String value) {
+            addCriterion("third_id <>", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdGreaterThan(String value) {
+            addCriterion("third_id >", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdGreaterThanOrEqualTo(String value) {
+            addCriterion("third_id >=", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdLessThan(String value) {
+            addCriterion("third_id <", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdLessThanOrEqualTo(String value) {
+            addCriterion("third_id <=", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdLike(String value) {
+            addCriterion("third_id like", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotLike(String value) {
+            addCriterion("third_id not like", value, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdIn(List<String> values) {
+            addCriterion("third_id in", values, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotIn(List<String> values) {
+            addCriterion("third_id not in", values, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdBetween(String value1, String value2) {
+            addCriterion("third_id between", value1, value2, "thirdId");
+            return (Criteria) this;
+        }
+
+        public Criteria andThirdIdNotBetween(String value1, String value2) {
+            addCriterion("third_id not between", value1, value2, "thirdId");
             return (Criteria) this;
         }
     }

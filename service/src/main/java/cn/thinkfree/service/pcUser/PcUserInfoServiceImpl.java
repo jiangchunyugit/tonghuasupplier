@@ -1,6 +1,7 @@
 package cn.thinkfree.service.pcUser;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.database.constants.UserEnabled;
@@ -12,6 +13,8 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.account.AccountVO;
+import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
@@ -116,6 +119,8 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         //临时启用
         pcUserInfoVo.setEnabled(UserEnabled.Enabled_true.shortVal());
         //根据新增公司id和登录用户公司id 是否相等判断level
+        /* TODO 用户信息改造 公司部分
+
         if(userVO.getCompanyID().equals(pcUserInfoVo.getCompanyId())){
             pcUserInfoVo.setLevel(userVO.getPcUserInfo().getLevel());
         }else{
@@ -129,6 +134,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             pcUserInfoVo.setProvince(companyInfo.getProvinceCode().toString());
             pcUserInfoVo.setArea(companyInfo.getAreaCode().toString());
         }
+         */
 
         //注册表
         UserRegister userRegister = new UserRegister();
@@ -241,6 +247,87 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             return "操作成功";
         }
         return "操作失败";
+    }
+
+    /**
+     * 新增用户账号
+     *
+     * @param accountVO
+     * @return
+     */
+    @Override
+    public AccountVO saveUserAccount(AccountVO accountVO) {
+
+        if(isExists(accountVO)){
+            throw  new MyException("已存在的用户");
+        }
+
+
+        String userCode = getUserCode(UserRegisterType.Platform);
+
+        UserRegister account = getUserRegister(accountVO);
+
+        List<SystemRole> roles = accountVO.getRoles();
+
+        PcUserInfo userInfo = getUserInfo(accountVO);
+
+
+        return null;
+    }
+
+    /**
+     * 获取用户标识
+     * @param type
+     * @return
+     */
+    private String getUserCode(UserRegisterType type) {
+
+
+
+        return null;
+    }
+
+    /**
+     * 检查是否存在账号
+     * @param accountVO
+     * @return
+     */
+    private boolean isExists(AccountVO accountVO) {
+
+        String account = accountVO.getThirdId();
+
+        PcUserInfoExample condition = new PcUserInfoExample();
+        condition.createCriteria().andThirdIdEqualTo(account).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+
+        List<PcUserInfo> result = pcUserInfoMapper.selectByExample(condition);
+        return !result.isEmpty();
+    }
+
+    private PcUserInfo getUserInfo(AccountVO accountVO) {
+
+        PcUserInfo  userInfo = accountVO.getPcUserInfo();
+        userInfo.setEnabled(SysConstants.YesOrNo.NO.shortVal());
+        userInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userInfo.setCreateTime(new Date());
+
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        userInfo.setCreator(userVO.getUsername());
+        userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        // 处理用户级别
+        if(StringUtils.equals(userVO.getPcUserInfo().getRootCompanyId(),userInfo.getBranchCompanyId())){
+            userInfo.setLevel(UserLevel.Company_Admin.shortVal());
+        }else if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isBlank(userInfo.getCityBranchCompanyId())){
+            userInfo.setLevel(UserLevel.Company_Province.shortVal());
+        }else if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isNotBlank(userInfo.getCityBranchCompanyId())){
+            userInfo.setLevel(UserLevel.Company_City.shortVal());
+        }
+        return userInfo;
+    }
+
+
+    private UserRegister getUserRegister(AccountVO accountVO) {
+
+        return null;
     }
 
     public short getLevel(Short level){
