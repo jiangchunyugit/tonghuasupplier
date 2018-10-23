@@ -28,21 +28,20 @@ public class ApprovalFlowScheduleNodeRoleServiceImpl implements ApprovalFlowSche
     private ApprovalFlowScheduleNodeRoleMapper scheduleNodeRoleMapper;
 
     @Override
-    public List<ApprovalFlowScheduleNodeRole> findLastVersionByNodeNumAndScheduleSort(String nodeNum, Integer scheduleSort) {
-        return scheduleNodeRoleMapper.findLastVersionByNodeNumAndScheduleSort(nodeNum, scheduleSort);
+    public List<ApprovalFlowScheduleNodeRole> findLastVersionByNodeNumAndCompanyNoAndScheduleSort(String nodeNum, String companyNo, Integer scheduleSort) {
+        return scheduleNodeRoleMapper.findLastVersionByNodeNumAndCompanyNoAndScheduleSort(nodeNum, companyNo, scheduleSort);
     }
 
     @Override
-    public void create(List<? extends ApprovalFlowNode> nodes, List<List<UserRoleSet>> roleList, Integer scheduleSort, Integer scheduleVersion) {
+    public void create(List<? extends ApprovalFlowNode> nodes, List<UserRoleSet> roles, String companyNo, Integer scheduleSort, Integer scheduleVersion) {
         for (int index = 0; index < nodes.size(); index++) {
-            for (UserRoleSet role : roleList.get(index)) {
-                ApprovalFlowScheduleNodeRole scheduleNodeRole = new ApprovalFlowScheduleNodeRole();
-                scheduleNodeRole.setNodeNum(nodes.get(index).getNum());
-                scheduleNodeRole.setRoleId(role.getRoleCode());
-                scheduleNodeRole.setScheduleSort(scheduleSort);
-                scheduleNodeRole.setScheduleVersion(scheduleVersion);
-                scheduleNodeRoleMapper.insertSelective(scheduleNodeRole);
-            }
+            ApprovalFlowScheduleNodeRole scheduleNodeRole = new ApprovalFlowScheduleNodeRole();
+            scheduleNodeRole.setNodeNum(nodes.get(index).getNum());
+            scheduleNodeRole.setRoleId(roles.get(index).getRoleCode());
+            scheduleNodeRole.setCompanyNo(companyNo);
+            scheduleNodeRole.setScheduleSort(scheduleSort);
+            scheduleNodeRole.setScheduleVersion(scheduleVersion);
+            scheduleNodeRoleMapper.insertSelective(scheduleNodeRole);
         }
     }
 

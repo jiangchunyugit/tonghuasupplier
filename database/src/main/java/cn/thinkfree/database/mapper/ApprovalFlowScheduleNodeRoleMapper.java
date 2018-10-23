@@ -94,5 +94,5 @@ public interface ApprovalFlowScheduleNodeRoleMapper {
      */
     int updateByPrimaryKey(ApprovalFlowScheduleNodeRole record);
 
-    List<ApprovalFlowScheduleNodeRole> findLastVersionByNodeNumAndScheduleSort(@Param("nodeNum") String nodeNum, @Param("scheduleSort") Integer scheduleSort);
+    List<ApprovalFlowScheduleNodeRole> findLastVersionByNodeNumAndCompanyNoAndScheduleSort(@Param("nodeNum") String nodeNum, @Param("companyNo") String companyNo, @Param("scheduleSort") Integer scheduleSort);
 }

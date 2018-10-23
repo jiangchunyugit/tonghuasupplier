@@ -12,7 +12,7 @@ import java.util.List;
 public class ScheduleApprovalFlowConfigVo {
 
     @ApiModelProperty("审批角色顺序")
-    private List<List<UserRoleSet>> nodeRoleSequence;
+    private List<UserRoleSet> nodeRoleSequence;
     @ApiModelProperty("所有角色信息")
     private List<UserRoleSet> roles;
 }
