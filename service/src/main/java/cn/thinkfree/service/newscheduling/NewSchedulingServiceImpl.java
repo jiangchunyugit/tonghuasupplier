@@ -37,11 +37,9 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     @Override
     public List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo) {
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo, Scheduling.BASE_STATUS.getValue());
-        List<ProjectBigSchedulingDetailsVO> playBigList = new ArrayList<>();
-        try {
-            playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<ProjectBigSchedulingDetailsVO>  playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
+        if(playBigList == null){
+            System.out.println("工具类转换失败!!");
         }
         return playBigList;
     }
@@ -54,11 +52,10 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      */
     @Override
     public String saveProjectScheduling(ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
-        ProjectBigSchedulingDetails projectBigSchedulingDetails = null;
-        try {
-            projectBigSchedulingDetails = BaseToVoUtils.getVo(projectBigSchedulingDetailsVO, ProjectBigSchedulingDetails.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+        ProjectBigSchedulingDetails projectBigSchedulingDetails = BaseToVoUtils.getVo(projectBigSchedulingDetailsVO, ProjectBigSchedulingDetails.class);
+        if (projectBigSchedulingDetails == null){
+            System.out.println("工具类转换失败!!");
+            return "工具类转换失败!!";
         }
         projectBigSchedulingDetails.setStatus(Scheduling.BASE_STATUS.getValue());
         projectBigSchedulingDetails.setCreateTime(new Date());
@@ -77,11 +74,10 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      */
     @Override
     public String deleteProjectScheduling(ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
-        ProjectBigSchedulingDetails projectBigSchedulingDetails = null;
-        try {
-            projectBigSchedulingDetails = BaseToVoUtils.getVo(projectBigSchedulingDetailsVO, ProjectBigSchedulingDetails.class);
-        } catch (Exception e) {
-            e.printStackTrace();
+        ProjectBigSchedulingDetails  projectBigSchedulingDetails = BaseToVoUtils.getVo(projectBigSchedulingDetailsVO, ProjectBigSchedulingDetails.class);
+        if (projectBigSchedulingDetails == null){
+            System.out.println("工具类转换失败!!");
+            return "工具类转换失败!!";
         }
         projectBigSchedulingDetails.setStatus(Scheduling.INVALID_STATUS.getValue());
         ProjectBigSchedulingDetailsExample example = new ProjectBigSchedulingDetailsExample();

@@ -425,8 +425,8 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
 //                messageDTO.setReportId(approvalNum);
 //                //发送人ID
 //                messageDTO.setSenderId(sendUserId);
-//                Meta<String> meta = uAppServiceClient.sendApprovalMsg(messageDTO);
-//                logger.info("发送推送消息结果：{}", JSONObject.toJSONString(meta));
+//                Meta<String> myRespBundle = uAppServiceClient.sendApprovalMsg(messageDTO);
+//                logger.info("发送推送消息结果：{}", JSONObject.toJSONString(myRespBundle));
 //            } catch (Exception e) {
 //                logger.error("调用推送服务失败", e);
 //            }

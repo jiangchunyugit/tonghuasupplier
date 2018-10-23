@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.model.DesignOrder;
 import cn.thinkfree.database.model.DesignOrderExample;
 import java.util.List;
@@ -110,4 +111,11 @@ public interface DesignOrderMapper {
      * @Param
      **/
     Integer selectProjectOrderCount(@Param("projectOrderVO") ProjectOrderVO projectOrderVO);
+
+    /**
+     * 根据项目编号查询订单信息
+     * @param projectNo
+     * @return
+     */
+    ProjectOrderDetailVo selectByProjectNo(@Param("projectNo") String projectNo);
 }
