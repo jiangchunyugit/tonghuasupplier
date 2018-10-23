@@ -444,6 +444,146 @@ public class CompanyRoleExample extends cn.thinkfree.core.model.AbstractDataAuth
             addCriterion("create_time not between", value1, value2, "createTime");
             return (Criteria) this;
         }
+
+        public Criteria andRoleTypeIsNull() {
+            addCriterion("role_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeIsNotNull() {
+            addCriterion("role_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeEqualTo(String value) {
+            addCriterion("role_type =", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeNotEqualTo(String value) {
+            addCriterion("role_type <>", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeGreaterThan(String value) {
+            addCriterion("role_type >", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("role_type >=", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeLessThan(String value) {
+            addCriterion("role_type <", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeLessThanOrEqualTo(String value) {
+            addCriterion("role_type <=", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeLike(String value) {
+            addCriterion("role_type like", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeNotLike(String value) {
+            addCriterion("role_type not like", value, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeIn(List<String> values) {
+            addCriterion("role_type in", values, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeNotIn(List<String> values) {
+            addCriterion("role_type not in", values, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeBetween(String value1, String value2) {
+            addCriterion("role_type between", value1, value2, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoleTypeNotBetween(String value1, String value2) {
+            addCriterion("role_type not between", value1, value2, "roleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIsNull() {
+            addCriterion("company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIsNotNull() {
+            addCriterion("company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdEqualTo(String value) {
+            addCriterion("company_id =", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotEqualTo(String value) {
+            addCriterion("company_id <>", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdGreaterThan(String value) {
+            addCriterion("company_id >", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("company_id >=", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdLessThan(String value) {
+            addCriterion("company_id <", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("company_id <=", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdLike(String value) {
+            addCriterion("company_id like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotLike(String value) {
+            addCriterion("company_id not like", value, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdIn(List<String> values) {
+            addCriterion("company_id in", values, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotIn(List<String> values) {
+            addCriterion("company_id not in", values, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdBetween(String value1, String value2) {
+            addCriterion("company_id between", value1, value2, "companyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("company_id not between", value1, value2, "companyId");
+            return (Criteria) this;
+        }
     }
 
     /**

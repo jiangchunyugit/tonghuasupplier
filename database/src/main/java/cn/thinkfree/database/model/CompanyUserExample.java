@@ -1064,6 +1064,76 @@ public class CompanyUserExample extends cn.thinkfree.core.model.AbstractDataAuth
             addCriterion("status not between", value1, value2, "status");
             return (Criteria) this;
         }
+
+        public Criteria andPhotoUrlIsNull() {
+            addCriterion("photo_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlIsNotNull() {
+            addCriterion("photo_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlEqualTo(String value) {
+            addCriterion("photo_url =", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlNotEqualTo(String value) {
+            addCriterion("photo_url <>", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlGreaterThan(String value) {
+            addCriterion("photo_url >", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("photo_url >=", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlLessThan(String value) {
+            addCriterion("photo_url <", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlLessThanOrEqualTo(String value) {
+            addCriterion("photo_url <=", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlLike(String value) {
+            addCriterion("photo_url like", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlNotLike(String value) {
+            addCriterion("photo_url not like", value, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlIn(List<String> values) {
+            addCriterion("photo_url in", values, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlNotIn(List<String> values) {
+            addCriterion("photo_url not in", values, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlBetween(String value1, String value2) {
+            addCriterion("photo_url between", value1, value2, "photoUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoUrlNotBetween(String value1, String value2) {
+            addCriterion("photo_url not between", value1, value2, "photoUrl");
+            return (Criteria) this;
+        }
     }
 
     /**
