@@ -17,6 +17,7 @@ import cn.thinkfree.database.vo.account.AccountVO;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.utils.UserNoUtils;
+import cn.thinkfree.service.utils.UserNumberHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -282,9 +283,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      */
     private String getUserCode(UserRegisterType type) {
 
-
-
-        return null;
+        return UserNumberHelper.createUserNo("");
     }
 
     /**

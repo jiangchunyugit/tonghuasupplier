@@ -3,29 +3,26 @@ package cn.thinkfree.service.utils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.time.Instant;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * TODO 长度不对
  * 用户账号辅助类
- * 用户账号按25位定制
+ * 用户账号按30位定制
  *  标识位 2位
  *  混淆位 1位
- *  留空位 2位
+ *  留空位 4位
  *  时间戳 13位
  *  随机位 5位
  *  流水位 5位
  *  如下
- *      PA 0 00 1540196572 X21P6 00001
- *      PC 0 00 1540196583 AQCV0 EF62Q
+ *      PA 0 0000 1540196572 X21P6 00001
+ *      PC b 0000 1540196583 AQCV0 00004
  */
 public class UserNumberHelper {
 
-    private static Integer length = 25;
+    private static Integer length = 30;
 
     private static Long MAX_SEQUENCE = 99999L;
 
@@ -61,20 +58,21 @@ public class UserNumberHelper {
      * @return
      */
     public static String createUserNo(String prefix,Boolean isSalt){
-        StringBuffer userNo = new StringBuffer(25);
+        StringBuffer userNo = new StringBuffer(length);
         userNo.append(prefix);
         if(!isSalt){
             // 不加盐
             userNo.append(BigInteger.ZERO);
-            userNo.append(Instant.now().toEpochMilli());
-            userNo.append(getSequence());
+            userNo.append(StringUtils.leftPad("0",4,"0"));
+            userNo.append(System.currentTimeMillis());
         }else{
             String salt = random(1);
-            userNo.append(salt);
-            userNo.append(salt(Integer.valueOf(salt),Instant.now().toEpochMilli()));
-            userNo.append(getSequence());
+            userNo.append(Long.toHexString(Integer.valueOf(salt)).toUpperCase());
+            userNo.append(StringUtils.leftPad("0",4,"0"));
+            userNo.append(salt(Integer.valueOf(salt),System.currentTimeMillis()));
         }
         userNo.append(randomCode(5));
+        userNo.append(getSequence());
 
         return userNo.toString();
     }
@@ -112,7 +110,14 @@ public class UserNumberHelper {
      */
     private static String random(int size){
         StringBuffer sb = new StringBuffer(size);
-        SecureRandom random = new SecureRandom();
+        SecureRandom random = null;
+        try {
+            random = SecureRandom.getInstanceStrong();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            random = new SecureRandom();
+        }
+
         for(int i = 0;i< size;i++){
             sb.append(random.nextInt(16));
         }
@@ -129,32 +134,5 @@ public class UserNumberHelper {
         return String.valueOf(salt ^ target);
     }
 
-    public static void main(String[] args) {
-        ExecutorService ex = Executors.newFixedThreadPool(5);
-        ex.execute(()->{
-            for (int i =0;i<50;i++){
-                System.out.println( UserNumberHelper.createUserNo("PC",true));
-            }
-        });
-        ex.execute(()->{
-            for (int i =0;i<50;i++){
-                System.out.println( UserNumberHelper.createUserNo("PA",true));
-            }
-        });
-//        ex.execute(()->{
-//            for (int i =0;i<100;i++){
-//                System.out.println( UserNumberHelper.createUserNo("PB",false));
-//            }
-//        }); ex.execute(()->{
-//            for (int i =0;i<100;i++){
-//                System.out.println( UserNumberHelper.createUserNo("PD",true));
-//            }
-//        }); ex.execute(()->{
-//            for (int i =0;i<100;i++){
-//                System.out.println( UserNumberHelper.createUserNo("PE",true));
-//            }
-//        });
-
-    }
 
 }
