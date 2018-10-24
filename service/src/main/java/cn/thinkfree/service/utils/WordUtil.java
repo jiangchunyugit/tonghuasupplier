@@ -7,14 +7,20 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import freemarker.template.Configuration;
+
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import freemarker.template.Template;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+
+
 @Component
 public class WordUtil {
-	
+
+
 	/**
      * 文件上传路径
      */
@@ -42,22 +48,24 @@ public class WordUtil {
      * @param fileName 生成的文件名称，例如：test.doc
      */
     @SuppressWarnings("unchecked")
-    public static void createWord(Map dataMap,String templateName,String filePath,String fileName){
+    public static void createWord(FreeMarkerConfigurer configurer,Map dataMap,String templateName,String filePath,String fileName){
         try {
-            //创建配置实例
+            /*//创建配置实例
             Configuration configuration = new Configuration();
  
             //设置编码
             configuration.setDefaultEncoding("UTF-8");
  
             //ftl模板文件
-            configuration.setClassForTemplateLoading(WordUtil.class,"/");
- 
+            //configuration.setClassForTemplateLoading(WordUtil.class,"/templates/");
+            configuration.setClassForTemplateLoading(WordUtil.class, "/template/");
             //获取模板
-            Template template = configuration.getTemplate(templateName);
- 
+            Template template = configuration.getTemplate(templateName);*/
+
+            Template template = configurer.getConfiguration().getTemplate(templateName);
+            FreeMarkerTemplateUtils.processTemplateIntoString(template, dataMap);
             //输出文件
-            File outFile = new File("D:/11/"+File.separator+fileName);
+            File outFile = new File("/usr/local/data/"+File.separator+fileName);
  
             //如果输出目标文件夹不存在，则创建
             if (!outFile.getParentFile().exists()){

@@ -47,6 +47,7 @@ import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.WordUtil;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
 @Service
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
@@ -69,6 +70,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
     private ApplicationContext applicationContext;
 
+	//发送邮件的模板引擎
+	@Autowired
+	private FreeMarkerConfigurer configurer;
 	
 	
 	@Override
@@ -328,13 +332,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				//自定义魔板中的信息
 		        reportresult.add(rep);
 		        root.put("reportresult", reportresult);
-				WordUtil.createWord(root, "sj_ftl.xml", "", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
+				WordUtil.createWord(configurer,root, "/sj_ftl.xml", "", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
 				
 			}else if(companyInfo.getRoleId().equals("SJ")){//设计公司
 				//自定义魔板中的信息
 		        reportresult.add(rep);
 		        root.put("reportresult", reportresult);
-				WordUtil.createWord(root, "sj_ftl.xml", "http://localhost:7181/static/", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
+				WordUtil.createWord(configurer,root, "/sj_ftl.xml", "http://localhost:7181/static/", secondCompanyName+"_"+sdf.format(new Date())+"入住合作合同.doc");
 			}
 			
 		}else{

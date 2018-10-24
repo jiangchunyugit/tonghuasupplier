@@ -15,7 +15,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.contract.ContractService;
-import cn.thinkfree.service.contractTemplate.ContractTemplateService;
+import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -225,6 +225,5 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     	 }else{//成功的情况
     		 return sendSuccessMessage(mes);
     	 }
-       
     }
 }

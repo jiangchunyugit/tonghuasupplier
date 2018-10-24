@@ -58,6 +58,8 @@ public class UserNoUtils {
 	public static String getNonceStr() {
 		return getRandomString(16);
 	}
+	
+	
 
 	/**
 	 * 获取指定位数的随机字符串(包含小写字母、大写字母、数字,0<length)
