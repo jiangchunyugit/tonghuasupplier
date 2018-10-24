@@ -79,4 +79,20 @@ public class AccountVO  {
     public void setPcUserInfo(PcUserInfo pcUserInfo) {
         this.pcUserInfo = pcUserInfo;
     }
+
+    public BranchCompany getBranchCompany() {
+        return branchCompany;
+    }
+
+    public void setBranchCompany(BranchCompany branchCompany) {
+        this.branchCompany = branchCompany;
+    }
+
+    public CityBranch getCityBranch() {
+        return cityBranch;
+    }
+
+    public void setCityBranch(CityBranch cityBranch) {
+        this.cityBranch = cityBranch;
+    }
 }
