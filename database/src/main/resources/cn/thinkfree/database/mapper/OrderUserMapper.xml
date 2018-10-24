@@ -352,4 +352,19 @@
   <select id="selectByUserId" resultType="java.lang.String">
     SELECT project_no FROM order_user WHERE user_id=#{userId}
   </select>
+
+  <select id="getProjectUsers" resultType="cn.thinkfree.database.appvo.UserVo">
+    SELECT
+      ou.user_id  userId,
+      em.real_name realName,
+      em.role_code as roleCode
+    FROM
+      order_user ou
+    LEFT JOIN employee_msg em ON ou.user_id = em.user_id
+    WHERE
+	  ou.project_no = #{projectNo}
+	  and is_transfer = #{isTransfer}
+	  AND employee_state = #{employeeState}
+
+  </select>
 </mapper>

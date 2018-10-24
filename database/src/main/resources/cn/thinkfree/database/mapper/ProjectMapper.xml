@@ -606,6 +606,7 @@
     <!--订单详情-->
     <select id="selectOrderDetails" resultType="cn.thinkfree.database.vo.OrderDetailsVO">
           SELECT
+              p.stage,
               p.address,
               i.company_name,
               c.order_no,
@@ -614,7 +615,6 @@
               c.order_stage,
               p.order_source,
               u.name,
-
               p.address_detail,
               u.phone,
               p.house_type,

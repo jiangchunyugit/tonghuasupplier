@@ -5,6 +5,7 @@ import cn.thinkfree.database.appvo.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目相关
@@ -52,4 +53,25 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<ProjectVo> getProjectDetail(String projectNo);
+
+    /**
+     * 批量获取人员信息
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<List<UserVo>> getProjectUsers(String projectNo);
+
+    /**
+     * 获取项目阶段
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<Integer> getProjectStatus(String projectNo);
+
+    /**
+     * 批量获取员工的信息
+     * @param userIds
+     * @return
+     */
+    MyRespBundle<Map<String,UserVo>> getListUserByUserIds(List<String> userIds);
 }
