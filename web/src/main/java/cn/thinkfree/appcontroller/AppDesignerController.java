@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author gejiaming
+ */
 @Api("B-设计师端接口")
 @RestController
 @RequestMapping(value = "designer")

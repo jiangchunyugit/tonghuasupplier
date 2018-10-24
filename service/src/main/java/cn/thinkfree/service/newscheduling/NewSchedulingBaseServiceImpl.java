@@ -1,5 +1,7 @@
 package cn.thinkfree.service.newscheduling;
 
+import cn.thinkfree.core.base.RespData;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.mapper.ProjectSmallSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
@@ -72,7 +74,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String addBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
         ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
         projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
@@ -86,7 +88,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         projectBigScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
         projectBigScheduling.setCreateTime(new Date());
         projectBigScheduling.setVersion(Scheduling.VERSION.getValue());
-        projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue().shortValue());
+        projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue());
         int result = projectBigSchedulingMapper.insertSelective(projectBigScheduling);
         if (result != Scheduling.INSERT_SUCCESS.getValue()) {
             return "操作失败!";
@@ -122,7 +124,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateSmallScheduling(ProjectSmallSchedulingVO projectSmallSchedulingVO) {
         if (projectSmallSchedulingVO.getSort() == null || projectSmallSchedulingVO.getParentSort() == null) {
             return "请选择施工阶段!!";
@@ -146,7 +148,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String listShangHai(SchedulingSeo schedulingSeo) {
         //获取上海基础小排期信息
         String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(),Scheduling.LIMIT.getValue());
@@ -188,5 +190,27 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
             return "无更新!";
         }
         return "操作成功";
+    }
+
+    /**
+     * 修改基础大排期
+     * @param projectBigSchedulingVO
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
+        ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+        projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getCheck());
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
+        criteria.andCompanyIdEqualTo(projectBigSchedulingVO.getCompanyId());
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
+        int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
+        if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+            return RespData.error("操作失败!");
+        }
+        return RespData.success();
     }
 }

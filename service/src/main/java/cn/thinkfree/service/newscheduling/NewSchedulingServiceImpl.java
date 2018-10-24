@@ -1,5 +1,7 @@
 package cn.thinkfree.service.newscheduling;
 
+import cn.thinkfree.core.base.RespData;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
@@ -91,5 +93,22 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         return Scheduling.INSERT_SUCCESS.getDescription();
     }
 
-
+    /**
+     * 获取验收阶段
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(String projectNo) {
+        ProjectBigSchedulingDetailsExample example = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
+        List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
+        List<ProjectBigSchedulingDetailsVO>  playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
+        if(playBigList == null){
+            System.out.println("工具类转换失败!!");
+        }
+        return RespData.success(playBigList);
+    }
 }

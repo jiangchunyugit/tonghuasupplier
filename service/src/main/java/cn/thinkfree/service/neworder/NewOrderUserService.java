@@ -32,39 +32,36 @@ public interface NewOrderUserService {
     List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId);
 
     /**
+     * 分页查询项目派单
+     * @param projectOrderVO
+     * @param pageNum
+     * @param pageSize
      * @return
-     * @Author jiang
-     * @Description 分页查询项目派单
-     * @Date
-     * @Param
-     **/
+     */
     List<ProjectOrderVO> queryProjectOrderByPage(ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize);
 
     /**
-     * @return
      * @Author jiang
      * @Description 查询项目派单总条数
-     * @Date
-     * @Param
-     **/
+     * @param projectOrderVO
+     * @return
+     */
     Integer queryProjectOrderCount(ProjectOrderVO projectOrderVO);
 
     /**
-     * @return
      * @Author jiang
      * @Description 订单确认接口
-     * @Date
-     * @Param orderConfirmationVO
-     **/
+     * @param orderConfirmationVO
+     * @return
+     */
     Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO);
 
     /**
-     * @return
      * @Author jiang
      * @Description 查看订单详情
-     * @Date
-     * @Param
-     **/
+     * @param projectNo
+     * @return
+     */
     OrderDetailsVO selectOrderDetails(String projectNo);
 
     /**

@@ -1,5 +1,6 @@
 package cn.thinkfree.service.newscheduling;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
@@ -37,5 +38,10 @@ public interface NewSchedulingService {
      */
     String deleteProjectScheduling(ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO);
 
-
+    /**
+     * 获取验收阶段
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(String projectNo);
 }

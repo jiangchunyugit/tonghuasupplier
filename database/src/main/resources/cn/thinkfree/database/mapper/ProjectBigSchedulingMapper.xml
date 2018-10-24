@@ -18,8 +18,8 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="version" jdbcType="INTEGER" property="version" />
-    <result column="is_need_check" jdbcType="SMALLINT" property="isNeedCheck" />
-    <result column="is_new" jdbcType="SMALLINT" property="isNew" />
+    <result column="is_need_check" jdbcType="INTEGER" property="isNeedCheck" />
+    <result column="is_new" jdbcType="INTEGER" property="isNew" />
     <result column="room_num" jdbcType="INTEGER" property="roomNum" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -157,7 +157,7 @@
       #{name,jdbcType=VARCHAR}, #{rename,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
       #{squareMetreStart,jdbcType=INTEGER}, #{squareMetreEnd,jdbcType=INTEGER}, #{workload,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}, 
-      #{isNeedCheck,jdbcType=SMALLINT}, #{isNew,jdbcType=SMALLINT}, #{roomNum,jdbcType=INTEGER}
+      #{isNeedCheck,jdbcType=INTEGER}, #{isNew,jdbcType=INTEGER}, #{roomNum,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ProjectBigScheduling">
@@ -251,10 +251,10 @@
         #{version,jdbcType=INTEGER},
       </if>
       <if test="isNeedCheck != null">
-        #{isNeedCheck,jdbcType=SMALLINT},
+        #{isNeedCheck,jdbcType=INTEGER},
       </if>
       <if test="isNew != null">
-        #{isNew,jdbcType=SMALLINT},
+        #{isNew,jdbcType=INTEGER},
       </if>
       <if test="roomNum != null">
         #{roomNum,jdbcType=INTEGER},
@@ -315,10 +315,10 @@
         version = #{record.version,jdbcType=INTEGER},
       </if>
       <if test="record.isNeedCheck != null">
-        is_need_check = #{record.isNeedCheck,jdbcType=SMALLINT},
+        is_need_check = #{record.isNeedCheck,jdbcType=INTEGER},
       </if>
       <if test="record.isNew != null">
-        is_new = #{record.isNew,jdbcType=SMALLINT},
+        is_new = #{record.isNew,jdbcType=INTEGER},
       </if>
       <if test="record.roomNum != null">
         room_num = #{record.roomNum,jdbcType=INTEGER},
@@ -346,8 +346,8 @@
       status = #{record.status,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       version = #{record.version,jdbcType=INTEGER},
-      is_need_check = #{record.isNeedCheck,jdbcType=SMALLINT},
-      is_new = #{record.isNew,jdbcType=SMALLINT},
+      is_need_check = #{record.isNeedCheck,jdbcType=INTEGER},
+      is_new = #{record.isNew,jdbcType=INTEGER},
       room_num = #{record.roomNum,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -394,10 +394,10 @@
         version = #{version,jdbcType=INTEGER},
       </if>
       <if test="isNeedCheck != null">
-        is_need_check = #{isNeedCheck,jdbcType=SMALLINT},
+        is_need_check = #{isNeedCheck,jdbcType=INTEGER},
       </if>
       <if test="isNew != null">
-        is_new = #{isNew,jdbcType=SMALLINT},
+        is_new = #{isNew,jdbcType=INTEGER},
       </if>
       <if test="roomNum != null">
         room_num = #{roomNum,jdbcType=INTEGER},
@@ -422,8 +422,8 @@
       status = #{status,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       version = #{version,jdbcType=INTEGER},
-      is_need_check = #{isNeedCheck,jdbcType=SMALLINT},
-      is_new = #{isNew,jdbcType=SMALLINT},
+      is_need_check = #{isNeedCheck,jdbcType=INTEGER},
+      is_new = #{isNew,jdbcType=INTEGER},
       room_num = #{roomNum,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>

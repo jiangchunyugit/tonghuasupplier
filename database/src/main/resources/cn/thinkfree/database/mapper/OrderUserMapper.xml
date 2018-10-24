@@ -357,10 +357,12 @@
     SELECT
       ou.user_id  userId,
       em.real_name realName,
-      em.role_code as roleCode
+      em.role_code as roleCode,
+      us.role_name as roleName
     FROM
       order_user ou
     LEFT JOIN employee_msg em ON ou.user_id = em.user_id
+    LEFT JOIN user_role_set us ON em.role_code=us.role_code
     WHERE
 	  ou.project_no = #{projectNo}
 	  and is_transfer = #{isTransfer}
