@@ -1,5 +1,7 @@
 package cn.thinkfree.database.vo.account;
 
+import cn.thinkfree.database.model.BranchCompany;
+import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemRole;
 
@@ -27,6 +29,16 @@ public class AccountVO  {
     private String thirdId;
 
     private PcUserInfo pcUserInfo;
+
+    /**
+     * 省分公司信息
+     */
+    private BranchCompany branchCompany;
+
+    /**
+     * 市分公司信息
+     */
+    private CityBranch cityBranch;
 
     public String getScope() {
         return scope;

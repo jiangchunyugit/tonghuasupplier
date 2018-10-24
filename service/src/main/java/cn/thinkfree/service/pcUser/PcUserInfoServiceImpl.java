@@ -1,23 +1,22 @@
 package cn.thinkfree.service.pcUser;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
+import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.PcUserInfoMapper;
-import cn.thinkfree.database.mapper.UserRegisterMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.account.AccountVO;
-import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.utils.UserNoUtils;
-import cn.thinkfree.service.utils.UserNumberHelper;
+import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +32,8 @@ import java.util.Map;
 @Service
 public class PcUserInfoServiceImpl implements PcUserInfoService {
 
+    private static MyLogger logger = LogUtil.getLogger(PcUserInfoServiceImpl.class);
+
     @Autowired
     PcUserInfoMapper pcUserInfoMapper;
 
@@ -41,6 +42,16 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     @Autowired
     CompanyInfoMapper companyInfoMapper;
+
+    @Autowired
+    SystemUserRoleMapper systemUserRoleMapper;
+
+    @Autowired
+    CityBranchMapper cityBranchMapper;
+
+    @Autowired
+    BranchCompanyMapper branchCompanyMapper;
+
 
     @Override
     public List<PcUserInfo> selectByParam(UserVO userVO) {
@@ -252,27 +263,45 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     /**
      * 新增用户账号
-     *
+     * 1.判断是否存在
+     * 2.处理账号表
+     * 3.处理用户信息表
+     * 4.处理用户权限表
+     * 5.发送用户新建事件
      * @param accountVO
      * @return
      */
+    @Transactional
     @Override
     public AccountVO saveUserAccount(AccountVO accountVO) {
 
         if(isExists(accountVO)){
+            logger.error("已存在用户:{}",accountVO);
             throw  new MyException("已存在的用户");
         }
 
-
         String userCode = getUserCode(UserRegisterType.Platform);
+        logger.info("创建账号 => 获取用户编号:{}",userCode);
 
         UserRegister account = getUserRegister(accountVO);
+        account.setUserId(userCode);
+        logger.info("创建账号 => 初始化账号信息,准备处理密码");
 
-        List<SystemRole> roles = accountVO.getRoles();
+        String password = AccountHelper.createUserPassWord();
+        account.setPassword(new MultipleMd5().encode(password));
 
         PcUserInfo userInfo = getUserInfo(accountVO);
+        userInfo.setId(userCode);
 
 
+        List<SystemRole> roles = accountVO.getRoles();
+        if(roles != null ){
+            roles.forEach(r->{
+
+            });
+        }
+
+        // TODO 发送事件
         return null;
     }
 
@@ -282,8 +311,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     private String getUserCode(UserRegisterType type) {
-
-        return UserNumberHelper.createUserNo("");
+        return AccountHelper.createUserNo(AccountHelper.UserType.PC.prefix);
     }
 
     /**
@@ -305,29 +333,47 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     private PcUserInfo getUserInfo(AccountVO accountVO) {
 
         PcUserInfo  userInfo = accountVO.getPcUserInfo();
+        // 初始默认值
         userInfo.setEnabled(SysConstants.YesOrNo.NO.shortVal());
         userInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
         userInfo.setCreateTime(new Date());
+
 
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         userInfo.setCreator(userVO.getUsername());
         userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         // 处理用户级别
-        if(StringUtils.equals(userVO.getPcUserInfo().getRootCompanyId(),userInfo.getBranchCompanyId())){
-            userInfo.setLevel(UserLevel.Company_Admin.shortVal());
+        if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isNotBlank(userInfo.getCityBranchCompanyId())){
+            userInfo.setLevel(UserLevel.Company_City.shortVal());
         }else if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isBlank(userInfo.getCityBranchCompanyId())){
             userInfo.setLevel(UserLevel.Company_Province.shortVal());
-        }else if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isNotBlank(userInfo.getCityBranchCompanyId())){
-            userInfo.setLevel(UserLevel.Company_City.shortVal());
+        }else if(StringUtils.equals(userVO.getPcUserInfo().getRootCompanyId(),userInfo.getBranchCompanyId())){
+            userInfo.setLevel(UserLevel.Company_Admin.shortVal());
         }
+        // 处理设置信息
+        userInfo.setMemo(accountVO.getPcUserInfo().getMemo());
+        userInfo.setEmail(accountVO.getThirdAccount().getEmail());
+        userInfo.setPhone(accountVO.getThirdAccount().getPhone());
+        userInfo.setName(accountVO.getThirdAccount().getName());
+        userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         return userInfo;
     }
 
 
+    /**
+     * 抽取账号信息
+     * @param accountVO
+     * @return
+     */
     private UserRegister getUserRegister(AccountVO accountVO) {
-
-        return null;
+        UserRegister userRegister = new UserRegister();
+        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userRegister.setType(UserRegisterType.Platform.shortVal());
+        userRegister.setPhone(accountVO.getThirdAccount().getWorkNumber());
+        userRegister.setRegisterTime(new Date());
+        return userRegister;
     }
+
 
     public short getLevel(Short level){
         if(UserLevel.Creator.shortVal() == level){

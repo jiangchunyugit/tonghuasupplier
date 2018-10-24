@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * 用户账号按30位定制
  *  标识位 2位
  *  混淆位 1位
- *  留空位 4位
+ *  预留位 4位
  *  时间戳 13位
  *  随机位 5位
  *  流水位 5位
@@ -20,15 +20,68 @@ import java.util.concurrent.atomic.AtomicLong;
  *      PA 0 0000 1540196572 X21P6 00001
  *      PC b 0000 1540196583 AQCV0 00004
  */
-public class UserNumberHelper {
+public class AccountHelper {
 
-    private static Integer length = 30;
+    /**
+     * 用户类型
+     */
+    public enum UserType{
+        /**
+         * 后台用户
+         */
+        PC(1,"PC"),
+        /**
+         * APP用户
+         */
+        APP(2,"AP");
+        public Integer code;
+        public String prefix;
+        UserType(Integer code,String prefix){
+            this.code = code;
+            this.prefix = prefix;
+        }
+    }
 
-    private static Long MAX_SEQUENCE = 99999L;
 
+    /**
+     * 编号长度
+     */
+    private final static Integer NO_LENGTH = 30;
+
+    /**
+     * 序列最大值
+     */
+    private final static Long MAX_SEQUENCE = 99999L;
+
+
+    /**
+     * 可用字符列表
+     */
     private static String[] CHAR_TABLE = new String[62];
 
+    /**
+     * 序列
+     */
     private static AtomicLong SEQUENCE = new AtomicLong(0);
+    /**
+     * 预留位长度
+     */
+    private final static Integer PRESET_LENGTH = 4;
+
+    /**
+     * 随机位长度
+     */
+    private final static Integer RANDOM_LENGTH =5;
+
+    /**
+     * 填充物
+     */
+    private final static String FILLER = "0";
+
+    /**
+     * 默认密码长度
+     */
+    private final static Integer DEFAULT_PASSWORD_SIZE = 8;
 
     static {
         // 初始化可用字符
@@ -52,26 +105,34 @@ public class UserNumberHelper {
     }
 
     /**
+     * 创建用户密码
+     * @return
+     */
+    public static String createUserPassWord(){
+        return randomCode(DEFAULT_PASSWORD_SIZE);
+    }
+
+    /**
      * 创建用户编号
      * @param prefix  前戳
      * @param isSalt  是否加盐
      * @return
      */
     public static String createUserNo(String prefix,Boolean isSalt){
-        StringBuffer userNo = new StringBuffer(length);
+        StringBuffer userNo = new StringBuffer(NO_LENGTH);
         userNo.append(prefix);
         if(!isSalt){
             // 不加盐
             userNo.append(BigInteger.ZERO);
-            userNo.append(StringUtils.leftPad("0",4,"0"));
+            userNo.append(StringUtils.leftPad("0",PRESET_LENGTH,FILLER));
             userNo.append(System.currentTimeMillis());
         }else{
             String salt = random(1);
             userNo.append(Long.toHexString(Integer.valueOf(salt)).toUpperCase());
-            userNo.append(StringUtils.leftPad("0",4,"0"));
+            userNo.append(StringUtils.leftPad("0",PRESET_LENGTH,FILLER));
             userNo.append(salt(Integer.valueOf(salt),System.currentTimeMillis()));
         }
-        userNo.append(randomCode(5));
+        userNo.append(randomCode(RANDOM_LENGTH));
         userNo.append(getSequence());
 
         return userNo.toString();
@@ -86,7 +147,7 @@ public class UserNumberHelper {
         if(MAX_SEQUENCE == now){
             now = 0;
         }
-        return StringUtils.leftPad(String.valueOf(now),5,"0");
+        return StringUtils.leftPad(String.valueOf(now),5,FILLER);
     }
 
     /**
@@ -98,7 +159,7 @@ public class UserNumberHelper {
         SecureRandom random = new SecureRandom();
         StringBuffer sb = new StringBuffer(size);
         for(int i=0;i< size;i++){
-            sb.append(CHAR_TABLE[random.nextInt(32)]);
+            sb.append(CHAR_TABLE[random.nextInt(62)]);
         }
         return sb.toString();
     }
