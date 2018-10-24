@@ -147,4 +147,12 @@ public interface NewOrderUserService {
      * @Param
      **/
     Integer queryConstructionPlanCount(ConstructionPlanVO constructionPlanVO);
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询员工信息
+     * @Date
+     * @Param
+     **/
+    EmployeeInfoVO selectemployeeInfoList(String projectNo);
 }

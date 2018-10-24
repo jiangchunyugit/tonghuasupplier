@@ -91,7 +91,7 @@ public class OrderDetailsVO {
 
 
     //施工信息
-    @ApiModelProperty("方案图")
+    @ApiModelProperty("装饰类型")
     private Integer decorationType;
     @ApiModelProperty("施工周期开始时间")
     private Date startDate;
