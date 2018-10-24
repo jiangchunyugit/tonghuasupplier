@@ -105,8 +105,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         OrderDetailsVO orderDetailsVO = new OrderDetailsVO();
         orderDetailsVO.setProjectNo(projectNo);
         orderDetailsVO.setStatus(1);
-
-        return projectMapper.selectOrderDetails(projectNo, orderDetailsVO.getStatus());
+        return projectMapper.selectOrderDetails(projectNo, orderDetailsVO.getStatus()).get(0);
     }
 
     /**

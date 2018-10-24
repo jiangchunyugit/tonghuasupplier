@@ -18,7 +18,7 @@ import java.util.*;
 @Api(tags = "项目相关")
 @RestController
 @RequestMapping(value = "project")
-public class AppProjectController{
+public class AppProjectController {
     @Autowired
     private NewProjectService newProjectService;
 
@@ -31,28 +31,28 @@ public class AppProjectController{
 
     @RequestMapping(value = "getProjectDetail", method = RequestMethod.POST)
     @ApiOperation(value = "获取项目详情接口")
-    public MyRespBundle<ProjectVo> getProjectDetail(@RequestParam(name = "projectNo")@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+    public MyRespBundle<ProjectVo> getProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         MyRespBundle<ProjectVo> projectVo = newProjectService.getProjectDetail(projectNo);
         return projectVo;
     }
 
     @RequestMapping(value = "getDesignData", method = RequestMethod.POST)
     @ApiOperation(value = "获取设计资料")
-    public MyRespBundle<DataVo> getDesignData(@RequestParam(name = "projectNo")@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+    public MyRespBundle<DataVo> getDesignData(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         MyRespBundle<DataVo> dataVo = newProjectService.getDesignData(projectNo);
         return dataVo;
     }
 
     @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
     @ApiOperation(value = "获取施工资料")
-    public MyRespBundle<List<UrlDetailVo>> getConstructionData(@RequestParam(name = "projectNo")@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+    public MyRespBundle<List<UrlDetailVo>> getConstructionData(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         MyRespBundle<List<UrlDetailVo>> dataDetailVo = newProjectService.getConstructionData(projectNo);
         return dataDetailVo;
     }
 
     @RequestMapping(value = "getQuotationData", method = RequestMethod.POST)
     @ApiOperation(value = "获取报价单资料")
-    public MyRespBundle<List<UrlDetailVo>> getQuotationData(@RequestParam(name = "projectNo")@ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+    public MyRespBundle<List<UrlDetailVo>> getQuotationData(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
         MyRespBundle<List<UrlDetailVo>> dataDetailVo = newProjectService.getQuotationData(projectNo);
         return dataDetailVo;
     }
@@ -69,6 +69,24 @@ public class AppProjectController{
     public MyRespBundle<String> confirmVolumeRoomData(@ApiParam(name = "dataDetailVo", value = "资料详情") DataDetailVo dataDetailVo) {
         MyRespBundle<String> result = newProjectService.confirmVolumeRoomData(dataDetailVo);
         return result;
+    }
+
+    @RequestMapping(value = "getProjectUsers", method = RequestMethod.POST)
+    @ApiOperation("批量获取人员信息")
+    public MyRespBundle<List<UserVo>> getProjectUsers(@RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 1223098338391") String projectNo) {
+        return newProjectService.getProjectUsers(projectNo);
+    }
+
+    @RequestMapping(value = "getProjectStatus", method = RequestMethod.POST)
+    @ApiOperation(value = "获取项目阶段")
+    public MyRespBundle<Integer> getProjectStatus(@RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 1223098338391") String projectNo) {
+        return newProjectService.getProjectStatus(projectNo);
+    }
+
+    @RequestMapping(value = "getListUserByUserIds", method = RequestMethod.POST)
+    @ApiOperation(value = "批量获取员工的信息")
+    public MyRespBundle<Map<String, UserVo>> getListUserByUserIds(@RequestBody @ApiParam(name = "userIds", value = "用户id集合,测试用 123567和123456") List<String> userIds) {
+        return newProjectService.getListUserByUserIds(userIds);
     }
 
 

@@ -5,8 +5,11 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.constants.Scheduling;
+import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.utils.BaseToVoUtils;
@@ -16,6 +19,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -38,6 +42,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     DesignOrderMapper designOrderMapper;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
+    @Autowired
+    EmployeeMsgMapper employeeMsgMapper;
 
 
     /**
@@ -56,7 +62,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         List<String> list = new ArrayList<>();
-        for (OrderUser orderUser : orderUsers){
+        for (OrderUser orderUser : orderUsers) {
             list.add(orderUser.getProjectNo());
         }
         //根据项目编号查询项目信息
@@ -81,6 +87,7 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 获取项目详情接口
+     *
      * @param projectNo
      * @return
      */
@@ -91,7 +98,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         List<Project> projects = projectMapper.selectByExample(example);
-        if(projects.size()==0){
+        if (projects.size() == 0) {
             return RespData.error("项目不存在!!");
         }
         ProjectVo projectVo = BaseToVoUtils.getVo(projects.get(0), ProjectVo.class, BaseToVoUtils.getProjectMap());
@@ -160,6 +167,7 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 获取施工资料
+     *
      * @param projectNo
      * @return
      */
@@ -184,6 +192,7 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 获取报价单资料
+     *
      * @param projectNo
      * @return
      */
@@ -213,11 +222,58 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
+    @Transactional
     public MyRespBundle<String> confirmVolumeRoomData(DataDetailVo dataDetailVo) {
         ProjectData projectData = BaseToVoUtils.getVo(dataDetailVo, ProjectData.class);
-//        ProjectDataExample example = new ProjectDataExample();
-//        ProjectDataExample.Criteria criteria = example.createCriteria();
-//        criteria.andProjectNoEqualTo(dataDetailVo.get)
+        projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
+        projectData.setConfirmTime(new Date());
+        ProjectDataExample example = new ProjectDataExample();
+        ProjectDataExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        int i = projectDataMapper.updateByExample(projectData, example);
+        if(i!=ProjectDataStatus.BASE_STATUS.getValue()){
+            return RespData.error("确认失败!");
+        }
         return RespData.success();
+    }
+
+    /**
+     * 根据项目编号批量获取人员信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<List<UserVo>> getProjectUsers(String projectNo) {
+        List<UserVo> userVoList = orderUserMapper.getProjectUsers(projectNo, UserStatus.NO_TRANSFER.getValue(),UserStatus.ON_JOB.getValue());
+        return RespData.success(userVoList);
+    }
+
+    /**
+     * 获取项目阶段
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<Integer> getProjectStatus(String projectNo) {
+        List<OrderDetailsVO> orderDetailsVO = projectMapper.selectOrderDetails(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        return RespData.success(orderDetailsVO.get(0).getStage());
+    }
+
+    /**
+     * 批量获取员工的信息
+     * @param userIds
+     * @return
+     */
+    @Override
+    public MyRespBundle<Map<String, UserVo>> getListUserByUserIds(List<String> userIds) {
+        Map<String, UserVo> map = new HashMap<>();
+        for (String string : userIds){
+            EmployeeMsg employeeMsg = employeeMsgMapper.selectByUserId(string);
+            UserVo vo = BaseToVoUtils.getVo(employeeMsg, UserVo.class);
+            map.put(string,vo);
+        }
+        return RespData.success(map);
     }
 }

@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.UserVo;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.model.OrderUserExample;
 import java.util.List;
@@ -102,4 +103,11 @@ public interface OrderUserMapper {
      * @return
      */
     List<String> selectByUserId(@Param("userId") String userId);
+
+    /**
+     * 批量获取人员信息
+     * @param projectNo
+     * @return
+     */
+    List<UserVo> getProjectUsers(@Param("projectNo") String projectNo,@Param("isTransfer")Integer isTransfer,@Param("employeeState")Integer employeeState);
 }

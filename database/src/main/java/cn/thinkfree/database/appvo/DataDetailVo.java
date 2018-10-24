@@ -43,4 +43,8 @@ public class DataDetailVo {
      * 3D图URL
      */
     private String thirdUrl;
+    /**
+     * 项目编号
+     */
+    private String projectNo;
 }

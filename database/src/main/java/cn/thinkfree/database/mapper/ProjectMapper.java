@@ -113,7 +113,7 @@ public interface ProjectMapper {
      * @Param
      * @return
      **/
-    OrderDetailsVO selectOrderDetails(@Param("projectNo") String projectNo, @Param("status") Integer status);
+    List<OrderDetailsVO> selectOrderDetails(@Param("projectNo") String projectNo, @Param("status") Integer status);
     /**
      * @Author jiang
      * @Description 分页查询施工工地

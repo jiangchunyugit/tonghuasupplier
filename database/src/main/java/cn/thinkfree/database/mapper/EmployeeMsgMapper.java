@@ -61,4 +61,10 @@ public interface EmployeeMsgMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") EmployeeMsg record, @Param("example") EmployeeMsgExample example);
+
+    /**
+     * 根据人员id查询员信息
+     * @param userId
+     */
+    EmployeeMsg selectByUserId(@Param("userId") String userId);
 }
