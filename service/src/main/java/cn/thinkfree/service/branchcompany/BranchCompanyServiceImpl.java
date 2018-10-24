@@ -29,9 +29,9 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
         branchCompany.setCreateTime(new Date());
         branchCompany.setIsDel(OneTrue.YesOrNo.NO.shortVal());
         branchCompany.setIsEnable(UserEnabled.Enabled_false.shortVal());
-        // todo 埃森哲获取省份信息
-        short a = 11;
-        branchCompany.setProvinceCode(a);
+        // todo 埃森哲获取省份信息(moke 跟ebsid一致)
+        branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
+
         return branchCompanyMapper.insertSelective(branchCompany);
     }
 
@@ -39,6 +39,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     public int updateBranchCompany(BranchCompany branchCompany) {
 
         // todo 更新埃森哲省份信息
+        branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
         return branchCompanyMapper.updateByPrimaryKeySelective(branchCompany);
     }
 

@@ -905,66 +905,6 @@ public class CityBranchExample extends cn.thinkfree.core.model.AbstractDataAuth 
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdIsNull() {
-            addCriterion("city_branch_id is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdIsNotNull() {
-            addCriterion("city_branch_id is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdEqualTo(Integer value) {
-            addCriterion("city_branch_id =", value, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdNotEqualTo(Integer value) {
-            addCriterion("city_branch_id <>", value, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdGreaterThan(Integer value) {
-            addCriterion("city_branch_id >", value, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("city_branch_id >=", value, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdLessThan(Integer value) {
-            addCriterion("city_branch_id <", value, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdLessThanOrEqualTo(Integer value) {
-            addCriterion("city_branch_id <=", value, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdIn(List<Integer> values) {
-            addCriterion("city_branch_id in", values, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdNotIn(List<Integer> values) {
-            addCriterion("city_branch_id not in", values, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdBetween(Integer value1, Integer value2) {
-            addCriterion("city_branch_id between", value1, value2, "cityBranchId");
-            return (Criteria) this;
-        }
-
-        public Criteria andCityBranchIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("city_branch_id not between", value1, value2, "cityBranchId");
-            return (Criteria) this;
-        }
-
         public Criteria andBranchCompIdIsNull() {
             addCriterion("branch_comp_id is null");
             return (Criteria) this;

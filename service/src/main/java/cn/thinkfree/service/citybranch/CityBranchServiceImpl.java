@@ -54,13 +54,13 @@ public class CityBranchServiceImpl implements CityBranchService {
         BusinessEntity businessEntity = new BusinessEntity();
         businessEntity.setBranchCompId(cityBranch.getBranchCompId());
         businessEntity.setCityBranchId(cityBranch.getId());
-        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
-        BusinessEntityExample.Criteria criteria= businessEntityExample.createCriteria();
         cityBranchVO.getStoreInfoVOList().forEach(e->{
-            criteria.andIdEqualTo(e.getBusinessEntityId());
-            businessEntityMapper.updateByExampleSelective(businessEntity,businessEntityExample);
+            businessEntity.setId(e.getBusinessEntityId());
+            businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
             e.setCityBranchId(cityBranch.getId());
-            storeInfoMapper.insert(e);
+            StoreInfo storeInfo = new StoreInfo();
+            SpringBeanUtil.copy(e,storeInfo);
+            storeInfoMapper.insertSelective(storeInfo);
         });
         return result;
     }
@@ -71,7 +71,7 @@ public class CityBranchServiceImpl implements CityBranchService {
         CityBranch cityBranch = new CityBranch();
         SpringBeanUtil.copy(cityBranchVO,cityBranch);
 
-        int result = cityBranchMapper.updateByPrimaryKey(cityBranch);
+        int result = cityBranchMapper.updateByPrimaryKeySelective(cityBranch);
         cityBranchVO.getStoreInfoVOList().forEach(e->{
 
             e.setCityBranchId(cityBranch.getId());
@@ -86,7 +86,7 @@ public class CityBranchServiceImpl implements CityBranchService {
     }
 
     @Override
-    public PageInfo<CityBranch> cityBranchList(CityBranchSEO cityBranchSEO) {
+    public PageInfo<CityBranchVO> cityBranchList(CityBranchSEO cityBranchSEO) {
 
         CityBranchExample cityBranchExample = new CityBranchExample();
         CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
@@ -97,7 +97,7 @@ public class CityBranchServiceImpl implements CityBranchService {
             cityBranchSEO.setLegalName(condition);
         }
         PageHelper.startPage(cityBranchSEO.getPage(),cityBranchSEO.getRows());
-        List<CityBranch> cityBranchList = cityBranchMapper.selectCityBranchByParam(cityBranchSEO);
+        List<CityBranchVO> cityBranchList = cityBranchMapper.selectBranchCompanyByParam(cityBranchSEO);
         return new PageInfo<>(cityBranchList);
     }
 

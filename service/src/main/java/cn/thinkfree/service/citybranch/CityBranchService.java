@@ -25,7 +25,7 @@ public interface CityBranchService {
     /**
      * 查询城市分站信息
      */
-    PageInfo<CityBranch> cityBranchList(CityBranchSEO cityBranchSEO);
+    PageInfo<CityBranchVO> cityBranchList(CityBranchSEO cityBranchSEO);
 
     /**
      * 根据城市分站id查询详情(带有店面信息)

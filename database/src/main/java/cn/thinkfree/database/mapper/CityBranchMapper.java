@@ -100,7 +100,7 @@ public interface CityBranchMapper {
 
     CityBranchVO selectBranchDetails(Integer id);
 
-    List<CityBranch> selectCityBranchByParam(CityBranchSEO cityBranchSEO);
+    List<CityBranchVO> selectBranchCompanyByParam(CityBranchSEO cityBranchSEO);
 
     List<CityBranchWtihProCitVO> selectCityBranchWithProCit(Integer id);
 
