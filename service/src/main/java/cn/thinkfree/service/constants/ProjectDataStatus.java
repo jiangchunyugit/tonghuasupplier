@@ -14,7 +14,8 @@ public enum ProjectDataStatus {
     QUOTATION_STATUS(3,"报价单type"),
     FILE_PNG(1,"png 文件"),
     FILE_PDF(2,"PDF 文件"),
-    FILE_THIRD(3,"3D云 文件");
+    FILE_THIRD(3,"3D云 文件"),
+    CONFIRM(1,"已确认");
 
     private Integer value;
     private String description;

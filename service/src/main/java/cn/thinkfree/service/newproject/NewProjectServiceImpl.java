@@ -7,6 +7,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
@@ -18,6 +19,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -220,11 +222,19 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
+    @Transactional
     public MyRespBundle<String> confirmVolumeRoomData(DataDetailVo dataDetailVo) {
         ProjectData projectData = BaseToVoUtils.getVo(dataDetailVo, ProjectData.class);
-//        ProjectDataExample example = new ProjectDataExample();
-//        ProjectDataExample.Criteria criteria = example.createCriteria();
-//        criteria.andProjectNoEqualTo(dataDetailVo.get)
+        projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
+        projectData.setConfirmTime(new Date());
+        ProjectDataExample example = new ProjectDataExample();
+        ProjectDataExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        int i = projectDataMapper.updateByExample(projectData, example);
+        if(i!=ProjectDataStatus.BASE_STATUS.getValue()){
+            return RespData.error("确认失败!");
+        }
         return RespData.success();
     }
 
