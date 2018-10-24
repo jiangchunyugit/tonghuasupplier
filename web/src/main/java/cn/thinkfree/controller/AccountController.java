@@ -321,15 +321,23 @@ public class AccountController extends AbsBaseController {
     }
 
 
-
-
+    /**
+     * 创建账号
+     * @param accountVO
+     * @return
+     */
     @PostMapping("/info")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新建账号")
     public MyRespBundle<AccountVO> account(AccountVO accountVO){
+        AccountVO result = pcUserInfoService.saveUserAccount(accountVO);
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
 
+    @GetMapping("/info/{id}")
+    @MyRespBody
+    public MyRespBundle<AccountVO> details(@PathVariable Integer id){
 
-         AccountVO  result=pcUserInfoService.saveUserAccount(accountVO);
         return null;
     }
 

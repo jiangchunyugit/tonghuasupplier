@@ -8,6 +8,7 @@ import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
+import cn.thinkfree.database.event.AccountCreate;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MyPageHelper;
@@ -297,12 +298,17 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         List<SystemRole> roles = accountVO.getRoles();
         if(roles != null ){
             roles.forEach(r->{
-
+                SystemUserRole saveObj = new SystemUserRole();
+                saveObj.setRoleId(r.getId());
+                saveObj.setUserId(userCode);
+                systemUserRoleMapper.insertSelective(saveObj);
             });
         }
 
         // TODO 发送事件
-        return null;
+        AccountCreate accountCreate = new AccountCreate();
+
+        return accountVO;
     }
 
     /**
