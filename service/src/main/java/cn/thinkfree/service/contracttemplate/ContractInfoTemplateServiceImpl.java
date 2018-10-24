@@ -1,4 +1,4 @@
-package cn.thinkfree.service.contractTemplate;
+package cn.thinkfree.service.contracttemplate;
 
 import java.util.Date;
 import java.util.HashMap;

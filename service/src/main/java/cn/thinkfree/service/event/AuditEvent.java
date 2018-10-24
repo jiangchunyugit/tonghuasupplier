@@ -4,7 +4,9 @@ import cn.thinkfree.database.model.ContractInfo;
 
 public class AuditEvent extends BaseEvent<ContractInfo> {
     
-    public AuditEvent(ContractInfo user) {
+	private static final long serialVersionUID = 1L;
+
+	public AuditEvent(ContractInfo user) {
         super(user);
     }
 

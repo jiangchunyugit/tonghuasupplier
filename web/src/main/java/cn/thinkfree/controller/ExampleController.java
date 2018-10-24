@@ -42,9 +42,12 @@ import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
+import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.event.AuditEvent;
+import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.user.UserService;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
@@ -59,7 +62,8 @@ public class ExampleController extends AbsBaseController {
     RestTemplate restTemplate;
 
 
-
+   @Autowired
+   CustomListenerServie customListenerServie;
 
 
     @PostMapping("/file")
@@ -112,7 +116,9 @@ public class ExampleController extends AbsBaseController {
 
 	@Autowired
 	ContractService contractService;
-
+	
+	@Autowired
+    private ApplicationContext applicationContext;
     /**
      * 测试创建合同
      * @return
@@ -120,7 +126,16 @@ public class ExampleController extends AbsBaseController {
     @MyRespBody
     @GetMapping("/createContract")
     public String createContract(){
-    	contractService.createContractDoc("HT2018080710405900001");
+    	try {
+    		ContractInfo s = new ContractInfo();
+        	s.setContractStatus("1");
+        	//applicationContext.publishEvent(new AuditEvent(s));
+        	customListenerServie.publish(s);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+    	//contractService.createContractDoc("HT2018080710405900001");
+    
         return "成功";
     }
     @ExceptionHandler(value=Exception.class)
