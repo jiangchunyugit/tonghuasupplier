@@ -6,6 +6,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.vo.ApprovalFlowApprovalVO;
 import cn.thinkfree.service.approvalflow.ApprovalFlowInstanceService;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,39 +27,52 @@ public class ApprovalFlowInstanceController extends AbsBaseController {
 
     /**
      * 获取审批流实例详情
-     * @param num 审批流实例编号
+     * @param instanceNum 审批流实例编号
+     * @param configNum 审批流配置编号
+     * @param companyNo 公司编号
      * @param projectNo 项目编号
-     * @param userId 用户ID
+     * @param userId 用户Id
+     * @param scheduleSort 排期编号
+     * @param scheduleVersion 排期版本
      * @return 审批流实例详情
      */
     @ApiOperation("获取审批流实例详情")
     @ResponseBody
     @PostMapping("detail")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "num", value = "审批流实例编号"),
+            @ApiImplicitParam(name = "instanceNum", value = "审批流实例编号"),
             @ApiImplicitParam(name = "configNum", value = "审批流配置编号"),
+            @ApiImplicitParam(name = "companyNo", value = "项目编号", required = true),
             @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
             @ApiImplicitParam(name = "userId", value = "用户ID", required = true),
-            @ApiImplicitParam(name = "scheduleSort", value = "项目排期编号", required = true),
-            @ApiImplicitParam(name = "scheduleVersion", value = "项目排期版本", required = true)
+            @ApiImplicitParam(name = "scheduleSort", value = "项目排期编号"),
+            @ApiImplicitParam(name = "scheduleVersion", value = "项目排期版本")
             })
-    public MyRespBundle detail(@RequestParam(name = "num", required = false) String num,
+    public MyRespBundle detail(@RequestParam(name = "instanceNum", required = false) String instanceNum,
                                @RequestParam(name = "configNum", required = false) String configNum,
+                               @RequestParam(name = "companyNo") String companyNo,
                                @RequestParam(name = "projectNo") String projectNo,
                                @RequestParam(name = "userId") String userId,
-                               @RequestParam(name = "scheduleSort") Integer scheduleSort,
-                               @RequestParam(name = "scheduleVersion") Integer scheduleVersion
-    ) {
-//        if(StringUtils.isEmpty(approvalNum)){
-//            throw new RuntimeException(1901,"审批流编号不能为空");
-//        }
-//        if(StringUtils.isEmpty(projectNo)){
-//            throw new CommonException(1901,"项目编号不能为空");
-//        }
-//        if(StringUtils.isEmpty(userId)){
-//            throw new CommonException(1901,"用户ID不能为空");
-//        }
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.detail(num, configNum, projectNo, userId, scheduleSort, scheduleVersion));
+                               @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort,
+                               @RequestParam(name = "scheduleVersion", required = false) Integer scheduleVersion) {
+        if(StringUtils.isEmpty(instanceNum)){
+            if (StringUtils.isEmpty(configNum)) {
+                throw new RuntimeException("审批流配置编号不能为空！");
+            }
+            if (StringUtils.isEmpty(companyNo)) {
+                throw new RuntimeException("公司编号不能为空！");
+            }
+            if (StringUtils.isEmpty(projectNo)) {
+                throw new RuntimeException("项目编号不能为空！");
+            }
+            if (null == scheduleSort) {
+                throw new RuntimeException("排期编号不能为空！");
+            }
+        }
+        if (StringUtils.isEmpty(userId)) {
+            throw new RuntimeException("用户ID不能为空！");
+        }
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.detail(instanceNum, configNum, companyNo, projectNo, userId, scheduleSort, scheduleVersion));
     }
 
     /**

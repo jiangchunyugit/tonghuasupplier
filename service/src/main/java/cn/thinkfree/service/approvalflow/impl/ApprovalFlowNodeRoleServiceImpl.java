@@ -1,6 +1,8 @@
 package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.database.mapper.ApprovalFlowNodeRoleMapper;
+import cn.thinkfree.database.model.ApprovalFlowNode;
+import cn.thinkfree.database.model.ApprovalFlowNodeExample;
 import cn.thinkfree.database.model.ApprovalFlowNodeRole;
 import cn.thinkfree.database.model.ApprovalFlowNodeRoleExample;
 import cn.thinkfree.service.approvalflow.ApprovalFlowNodeRoleService;
@@ -37,10 +39,8 @@ public class ApprovalFlowNodeRoleServiceImpl implements ApprovalFlowNodeRoleServ
     }
 
     @Override
-    public List<ApprovalFlowNodeRole> findByNodeNum(String nodeNum) {
-        ApprovalFlowNodeRoleExample example = new ApprovalFlowNodeRoleExample();
-        example.createCriteria().andNodeNumEqualTo(nodeNum);
-        return nodeRoleMapper.selectByExample(example);
+    public List<ApprovalFlowNodeRole> findSendRoleByNodeNum(String nodeNum) {
+        return findByNodeNumAndType(nodeNum, 0);
     }
 
     @Override
@@ -50,5 +50,16 @@ public class ApprovalFlowNodeRoleServiceImpl implements ApprovalFlowNodeRoleServ
             example.createCriteria().andNodeNumIn(nodeNums);
             nodeRoleMapper.deleteByExample(example);
         }
+    }
+
+    @Override
+    public List<ApprovalFlowNodeRole> findReceiveRoleByNodeNum(String nodeNum) {
+        return findByNodeNumAndType(nodeNum, 1);
+    }
+
+    private List<ApprovalFlowNodeRole> findByNodeNumAndType(String nodeNum, Integer type) {
+        ApprovalFlowNodeRoleExample example = new ApprovalFlowNodeRoleExample();
+        example.createCriteria().andNodeNumEqualTo(nodeNum).andTypeEqualTo(type);
+        return nodeRoleMapper.selectByExample(example);
     }
 }

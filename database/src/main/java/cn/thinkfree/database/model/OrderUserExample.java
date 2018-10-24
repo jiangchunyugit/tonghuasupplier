@@ -774,6 +774,76 @@ public class OrderUserExample {
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andProjectNoIsNull() {
+            addCriterion("project_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoIsNotNull() {
+            addCriterion("project_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoEqualTo(String value) {
+            addCriterion("project_no =", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotEqualTo(String value) {
+            addCriterion("project_no <>", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoGreaterThan(String value) {
+            addCriterion("project_no >", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoGreaterThanOrEqualTo(String value) {
+            addCriterion("project_no >=", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoLessThan(String value) {
+            addCriterion("project_no <", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoLessThanOrEqualTo(String value) {
+            addCriterion("project_no <=", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoLike(String value) {
+            addCriterion("project_no like", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotLike(String value) {
+            addCriterion("project_no not like", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoIn(List<String> values) {
+            addCriterion("project_no in", values, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotIn(List<String> values) {
+            addCriterion("project_no not in", values, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoBetween(String value1, String value2) {
+            addCriterion("project_no between", value1, value2, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotBetween(String value1, String value2) {
+            addCriterion("project_no not between", value1, value2, "projectNo");
+            return (Criteria) this;
+        }
     }
 
     /**

@@ -390,4 +390,16 @@
             LEFT JOIN project_stage_log s ON s.order_no=c.order_no
             WHERE c.project_no=#{projectNo} AND s.type =#{type}
   </select>
+
+  <!--根据项目编号查询订单信息-->
+  <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
+    SELECT
+      order_stage as taskStage,
+      order_no as orderNo,
+      type as type
+    FROM
+      construction_order
+    WHERE
+      project_no = #{projectNo}
+  </select>
 </mapper>

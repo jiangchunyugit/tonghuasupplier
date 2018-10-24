@@ -26,4 +26,8 @@ public class UrlDetailVo {
      * 名字
      */
     private String name;
+    /**
+     * 文件类型
+     */
+    private Integer fileType;
 }

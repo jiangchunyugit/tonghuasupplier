@@ -28,7 +28,7 @@ public class ProjectBigSchedulingVO {
 //    @ApiModelProperty("前置施工阶段")
 //    private String predecessor;
     @ApiModelProperty("新旧")
-    private Short isNew;
+    private Integer isNew;
     @ApiModelProperty("下限平米")
     private Integer squareMetreStart;
     @ApiModelProperty("上限平米")
@@ -38,5 +38,5 @@ public class ProjectBigSchedulingVO {
     @ApiModelProperty("工程量")
     private Integer workload;
     @ApiModelProperty("是否需要验收")
-    private boolean check;
+    private Integer check;
 }

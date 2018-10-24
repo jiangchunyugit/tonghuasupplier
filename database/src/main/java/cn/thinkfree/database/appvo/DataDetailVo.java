@@ -20,6 +20,10 @@ public class DataDetailVo {
      */
     private List<UrlDetailVo> urlList;
     /**
+     * 设计资料集合(不符合开发,为了照顾APP端)
+     */
+    private List<String> urlStringList;
+    /**
      * pdf地址
      */
     private String pdfUrl;
@@ -28,15 +32,19 @@ public class DataDetailVo {
      */
     private Date uploadTime;
     /**
-     * 类型
+     * 资料类别(客厅施工图,开工报告)
      */
-    private String type;
+    private Integer category;
     /**
      * 是否确认
      */
-    private Boolean confirm;
+    private Integer confirm;
     /**
      * 3D图URL
      */
     private String thirdUrl;
+    /**
+     * 项目编号
+     */
+    private String projectNo;
 }

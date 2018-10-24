@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface RoleService {
     List<UserRoleSet> findAll();
+
+    UserRoleSet findById(String roleId);
 }

@@ -39,4 +39,11 @@ public class ApprovalFlowNoticeUrlServiceImpl implements ApprovalFlowNoticeUrlSe
             noticeUrlMapper.deleteByExample(example);
         }
     }
+
+    @Override
+    public List<ApprovalFlowNoticeUrl> findByNodeNum(String nodeNum) {
+        ApprovalFlowNoticeUrlExample example = new ApprovalFlowNoticeUrlExample();
+        example.createCriteria().andNodeNumEqualTo(nodeNum);
+        return noticeUrlMapper.selectByExample(example);
+    }
 }

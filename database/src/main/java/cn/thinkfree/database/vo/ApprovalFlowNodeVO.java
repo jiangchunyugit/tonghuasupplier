@@ -16,9 +16,6 @@ public class ApprovalFlowNodeVO extends ApprovalFlowNode {
     @ApiModelProperty("审批流角色信息表")
     private List<ApprovalFlowNodeRole> nodeRoles;
 
-    @ApiModelProperty("审批超时通知")
-    private List<ApprovalFlowTimeoutNotice> timeoutNotices;
-
     public List<ApprovalFlowOption> getOptions() {
         return options;
     }
@@ -41,14 +38,6 @@ public class ApprovalFlowNodeVO extends ApprovalFlowNode {
 
     public void setNodeRoles(List<ApprovalFlowNodeRole> nodeRoles) {
         this.nodeRoles = nodeRoles;
-    }
-
-    public List<ApprovalFlowTimeoutNotice> getTimeoutNotices() {
-        return timeoutNotices;
-    }
-
-    public void setTimeoutNotices(List<ApprovalFlowTimeoutNotice> timeoutNotices) {
-        this.timeoutNotices = timeoutNotices;
     }
 
 }

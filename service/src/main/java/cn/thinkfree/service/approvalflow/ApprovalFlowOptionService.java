@@ -22,4 +22,11 @@ public interface ApprovalFlowOptionService {
      * @return 操作项信息
      */
     ApprovalFlowOption findByNum(String num);
+
+    /**
+     * 根据节点编号查询操作项
+     * @param nodeNum 节点编号
+     * @return 操作项
+     */
+    List<ApprovalFlowOption> findByNodeNum(String nodeNum);
 }

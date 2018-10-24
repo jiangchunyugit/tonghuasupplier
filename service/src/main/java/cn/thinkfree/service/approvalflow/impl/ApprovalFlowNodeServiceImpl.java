@@ -4,10 +4,7 @@ import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.ApprovalFlowNodeMapper;
 import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowNodeExample;
-import cn.thinkfree.database.model.ApprovalFlowNodeRole;
-import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.vo.ApprovalFlowNodeVO;
-import cn.thinkfree.database.vo.NodeRoleSequenceVo;
 import cn.thinkfree.service.approvalflow.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +28,6 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
     private ApprovalFlowOptionService optionService;
     @Resource
     private ApprovalFlowNodeRoleService nodeRoleService;
-    @Resource
-    private ApprovalFlowTimeoutNoticeService timeoutNoticeService;
     @Resource
     private ApprovalFlowConfigLogService configLogService;
     @Resource
@@ -85,7 +80,6 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
                 noticeUrlService.create(nodeVo.getNum(),  nodeVo.getNoticeUrls());
                 optionService.create(nodeVo.getNum(), nodeVo.getOptions());
                 nodeRoleService.create(nodeVo.getNum(), nodeVo.getNodeRoles());
-                timeoutNoticeService.create(nodeVo.getNum(), nodeVo.getTimeoutNotices());
 
                 nodeMapper.insertSelective(nodeVo);
             }
@@ -112,7 +106,6 @@ public class ApprovalFlowNodeServiceImpl implements ApprovalFlowNodeService {
                 noticeUrlService.deleteByNodeNums(nodeNums);
                 optionService.deleteByNodeNums(nodeNums);
                 nodeRoleService.deleteByNodeNums(nodeNums);
-                timeoutNoticeService.deleteByNodeNums(nodeNums);
             }
 
             nodeMapper.deleteByExample(nodeExample);

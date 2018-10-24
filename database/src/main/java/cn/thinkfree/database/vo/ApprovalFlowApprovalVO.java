@@ -19,6 +19,8 @@ public class ApprovalFlowApprovalVO {
     private String userId;
     @ApiModelProperty("项目编号")
     private String projectNo;
+    @ApiModelProperty("公司编号")
+    private String companyNo;
     @ApiModelProperty("审批流配置记录编号")
     private String configLogNum;
     @ApiModelProperty("审批流实例编号")

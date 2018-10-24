@@ -1,7 +1,9 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
+
 import java.util.List;
 
 import cn.thinkfree.database.model.DesignOrder;
@@ -97,6 +99,7 @@ public interface ConstructionOrderMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ConstructionOrder record);
+
     /**
      * @return
      * @Author jiang
@@ -105,6 +108,7 @@ public interface ConstructionOrderMapper {
      * @Param
      **/
     List<ProjectOrderVO> selectProjectOrderByPage(@Param("projectOrderVO") ProjectOrderVO projectOrderVO, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
+
     /**
      * @return
      * @Author jiang
@@ -113,12 +117,21 @@ public interface ConstructionOrderMapper {
      * @Param
      **/
     Integer selectProjectOrderCount(@Param("projectOrderVO") ProjectOrderVO projectOrderVO);
+
     /**
+     * @return
      * @Author jiang
      * @Description 阶段展示
      * @Date
      * @Param
-     * @return
      **/
     List<StageDetailsVO> selectStageDetailsList(@Param("projectNo") String projectNo, @Param("type") Integer type);
+
+    /**
+     * 根据项目编号查询订单信息
+     *
+     * @param projectNo
+     * @return
+     */
+    ProjectOrderDetailVo selectByProjectNo(String projectNo);
 }

@@ -1,5 +1,7 @@
 package cn.thinkfree.service.newscheduling;
 
+import cn.thinkfree.core.base.RespData;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.mapper.ProjectSmallSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigScheduling;
@@ -12,6 +14,9 @@ import cn.thinkfree.database.vo.SchedulingSeo;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 排期基础信息
@@ -46,7 +52,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Override
     public PageInfo<ProjectSmallSchedulingVO> listSmallScheduling(SchedulingSeo schedulingSeo) {
         ProjectSmallSchedulingExample projectSmallSchedulingExample = new ProjectSmallSchedulingExample();
-        projectSmallSchedulingExample.setOrderByClause("create_time desc");
+        projectSmallSchedulingExample.setOrderByClause("create_time");
         ProjectSmallSchedulingExample.Criteria criteria = projectSmallSchedulingExample.createCriteria();
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         if (StringUtils.isNotBlank(schedulingSeo.getCompanyId())) {
@@ -54,11 +60,9 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         }
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectSmallScheduling> list = projectSmallSchedulingMapper.selectByExample(projectSmallSchedulingExample);
-        List<ProjectSmallSchedulingVO> voList = new ArrayList<>();
-        try {
-            voList = BaseToVoUtils.getListVo(list,ProjectSmallSchedulingVO.class,BaseToVoUtils.getBaseSmallMap());
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<ProjectSmallSchedulingVO> voList = BaseToVoUtils.getListVo(list, ProjectSmallSchedulingVO.class, BaseToVoUtils.getBaseSmallMap());
+        if(voList == null){
+            System.out.println("工具类转换失败!!");
         }
         return new PageInfo<>(voList);
     }
@@ -70,7 +74,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String addBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
         ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
         projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
@@ -84,7 +88,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         projectBigScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
         projectBigScheduling.setCreateTime(new Date());
         projectBigScheduling.setVersion(Scheduling.VERSION.getValue());
-        projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue().shortValue());
+        projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue());
         int result = projectBigSchedulingMapper.insertSelective(projectBigScheduling);
         if (result != Scheduling.INSERT_SUCCESS.getValue()) {
             return "操作失败!";
@@ -120,7 +124,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public String updateSmallScheduling(ProjectSmallSchedulingVO projectSmallSchedulingVO) {
         if (projectSmallSchedulingVO.getSort() == null || projectSmallSchedulingVO.getParentSort() == null) {
             return "请选择施工阶段!!";
@@ -140,11 +144,73 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
 
     /**
      * 同步上海基础小排期
+     *
      * @return
      */
     @Override
-    public String listShangHai() {
-        cloudService.getBaseScheduling();
-        return null;
+    @Transactional(rollbackFor = Exception.class)
+    public String listShangHai(SchedulingSeo schedulingSeo) {
+        //获取上海基础小排期信息
+        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(),Scheduling.LIMIT.getValue());
+        JSONObject jsonObject = JSON.parseObject(result);
+        JSONArray json = jsonObject.getJSONArray("data");
+        String jsonString = JSONObject.toJSONString(json);
+        List<ProjectSmallScheduling> smallList = JSONObject.parseArray(jsonString, ProjectSmallScheduling.class);
+        if (smallList.size() == Scheduling.INSERT_FAILD.getValue()) {
+            return "操作失败!";
+        }
+        //获取本地已存在的小排期信息
+        List<ProjectSmallScheduling> oldList = projectSmallSchedulingMapper.selectByStatus(Scheduling.BASE_STATUS.getValue());
+        if (smallList.size() != oldList.size()) {
+            Integer oldVersion = 0;
+            if (oldList.size() > 0) {
+                for (ProjectSmallScheduling old : oldList) {
+                    oldVersion = old.getVersion();
+                    ProjectSmallSchedulingExample example = new ProjectSmallSchedulingExample();
+                    ProjectSmallSchedulingExample.Criteria criteria = example.createCriteria();
+                    criteria.andConstructCodeEqualTo(old.getConstructCode());
+                    criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+                    criteria.andVersionEqualTo(oldVersion);
+                    old.setStatus(Scheduling.INVALID_STATUS.getValue());
+                    int i = projectSmallSchedulingMapper.updateByExampleSelective(old, example);
+                    if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+                        return "操作失败!";
+                    }
+                }
+            }
+            for (ProjectSmallScheduling small : smallList) {
+                //添加版本
+                small.setVersion(oldVersion + 1);
+                int i = projectSmallSchedulingMapper.insertSelective(small);
+                if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+                    return "操作失败!";
+                }
+            }
+        } else {
+            return "无更新!";
+        }
+        return "操作成功";
+    }
+
+    /**
+     * 修改基础大排期
+     * @param projectBigSchedulingVO
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
+        ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+        projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getCheck());
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
+        criteria.andCompanyIdEqualTo(projectBigSchedulingVO.getCompanyId());
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
+        int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
+        if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+            return RespData.error("操作失败!");
+        }
+        return RespData.success();
     }
 }

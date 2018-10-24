@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author gejiaming
+ */
 @Api(tags = "排期基础信息操作")
 @RestController
 @RequestMapping(value = "schedulingBase")
@@ -54,9 +57,17 @@ public class SchedulingBaseController extends AbsBaseController {
 
     @RequestMapping(value = "listShangHai",method = RequestMethod.POST)
     @ApiOperation(value = "同步上海基础小排期")
-    public MyRespBundle<String> listShangHai(){
-        String result = schedulingBaseService.listShangHai();
+    public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listShangHai(@ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo){
+//        PageInfo<ProjectSmallSchedulingVO> pageInfo = schedulingBaseService.listShangHai(schedulingSeo);
+//        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
+        String result = schedulingBaseService.listShangHai(schedulingSeo);
         return sendSuccessMessage(result);
+    }
+
+    @RequestMapping(value = "",method = RequestMethod.POST)
+    @ApiOperation(value = "修改基础大排期")
+    public MyRespBundle<String> updateBigScheduling(@ApiParam(name = "projectBigSchedulingVO",value = "基础大排期信息")ProjectBigSchedulingVO projectBigSchedulingVO){
+        return schedulingBaseService.updateBigScheduling(projectBigSchedulingVO);
     }
 
 }

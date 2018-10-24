@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ApprovalFlowScheduleNodeRoleMapper">
-  <select id="findLastVersionByNodeNum" resultMap="BaseResultMap">
+  <select id="findLastVersionByNodeNumAndCompanyNoAndScheduleSort" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from (
       select
       <include refid="Base_Column_List"/>
-      from approval_flow_schedule_node_role
+      from af_schedule_node_role
       where node_name = #{nodeNum,jdbcType=VARCHAR}
+      and company_no = #{companyNo,jdbcType=VARCHAR}
       and schedule_sort = #{scheduleSort,jdbcType=INTEGER}
     ) where schedule_version = max(schedule_version)
   </select>
