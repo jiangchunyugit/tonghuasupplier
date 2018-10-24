@@ -1,10 +1,12 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.database.mapper.ApprovalFlowScheduleNodeRoleMapper;
 import cn.thinkfree.database.model.ApprovalFlowNode;
 import cn.thinkfree.database.model.ApprovalFlowScheduleNodeRole;
 import cn.thinkfree.database.model.ApprovalFlowScheduleNodeRoleExample;
 import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.vo.ApprovalFlowNodeRoleVO;
 import cn.thinkfree.service.approvalflow.ApprovalFlowScheduleNodeRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,8 @@ import java.util.List;
 @Transactional(rollbackFor = RuntimeException.class)
 public class ApprovalFlowScheduleNodeRoleServiceImpl implements ApprovalFlowScheduleNodeRoleService {
 
+    private static final MyLogger LOGGER = new MyLogger(ApprovalFlowScheduleNodeRoleService.class);
+
     @Resource
     private ApprovalFlowScheduleNodeRoleMapper scheduleNodeRoleMapper;
 
@@ -33,11 +37,21 @@ public class ApprovalFlowScheduleNodeRoleServiceImpl implements ApprovalFlowSche
     }
 
     @Override
-    public void create(List<? extends ApprovalFlowNode> nodes, List<UserRoleSet> roles, String companyNo, Integer scheduleSort, Integer scheduleVersion) {
+    public void create(List<ApprovalFlowNode> nodes, List<ApprovalFlowNodeRoleVO> nodeRoles, String companyNo, Integer scheduleSort, Integer scheduleVersion) {
+        if (nodes.size() != nodeRoles.size()) {
+            LOGGER.error("审批顺序集合大小不匹配");
+            throw new RuntimeException();
+        }
         for (int index = 0; index < nodes.size(); index++) {
+            ApprovalFlowNode node = nodes.get(index);
+            ApprovalFlowNodeRoleVO nodeRoleVO = nodeRoles.get(index);
+            if (!node.getNum().equals(nodeRoleVO.getNodeNum())) {
+                LOGGER.error("审批顺序节点编号顺序不正确，nodeNum:({}:{})", node.getNum(), nodeRoleVO.getNodeNum());
+                throw new RuntimeException();
+            }
             ApprovalFlowScheduleNodeRole scheduleNodeRole = new ApprovalFlowScheduleNodeRole();
-            scheduleNodeRole.setNodeNum(nodes.get(index).getNum());
-            scheduleNodeRole.setRoleId(roles.get(index).getRoleCode());
+            scheduleNodeRole.setNodeNum(node.getNum());
+            scheduleNodeRole.setRoleId(nodeRoleVO.getRole().getRoleCode());
             scheduleNodeRole.setCompanyNo(companyNo);
             scheduleNodeRole.setScheduleSort(scheduleSort);
             scheduleNodeRole.setScheduleVersion(scheduleVersion);

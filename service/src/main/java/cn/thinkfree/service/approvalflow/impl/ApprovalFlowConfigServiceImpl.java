@@ -223,18 +223,11 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
         configLogService.deleteByApprovalFlowNum(approvalFlowNum);
     }
 
-
-    /**
-     * 根据公司编号与项目节点序号查询审批配置信息
-     * @param companyNo 公司编号
-     * @param projectBigScheduleSort 项目节点序号
-     * @return 审批配置信息
-     */
     @Override
-    public ApprovalSequenceVO findApprovalSequence(String companyNo, Integer projectBigScheduleSort) {
-        ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo = new ScheduleApprovalFlowConfigVo();
+    public ApprovalSequenceVO findApprovalSequence(String companyNo, Integer scheduleSort) {
+        ApprovalSequenceVO approvalSequence = new ApprovalSequenceVO();
         List<UserRoleSet> roles = roleService.findAll();
-        scheduleApprovalFlowConfigVo.setRoles(roles);
+        approvalSequence.setRoles(roles);
 
         ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
         if (config != null) {
@@ -242,22 +235,18 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
             List<ApprovalFlowNode> nodes = nodeService.findByConfigLogNum(configLog.getNum());
             List<ApprovalFlowScheduleNodeRole> scheduleNodeRoleList= new ArrayList<>();
             for (ApprovalFlowNode node : nodes) {
-                List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = scheduleNodeRoleService.findLastVersionByNodeNumAndCompanyNoAndScheduleSort(node.getNum(), companyNo, projectBigScheduleSort);
+                List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = scheduleNodeRoleService.findLastVersionByNodeNumAndCompanyNoAndScheduleSort(node.getNum(), companyNo, scheduleSort);
                 if (scheduleNodeRoles != null && scheduleNodeRoles.size() > 0) {
                     scheduleNodeRoleList.addAll(scheduleNodeRoles);
                 }
             }
             // 判断公司是否对当前项目节点配置过，如果没有，走相应公司默认配置
-            List<UserRoleSet> roleList;
+            List<ApprovalFlowNodeRoleVO> nodeRoleVOs;
             if (scheduleNodeRoleList.size() > 0){
-                roleList = new ArrayList<>(scheduleNodeRoleList.size());
+                nodeRoleVOs = new ArrayList<>(scheduleNodeRoleList.size());
                 for (ApprovalFlowScheduleNodeRole scheduleNodeRole : scheduleNodeRoleList) {
-                    for (UserRoleSet role : roles) {
-                        if (scheduleNodeRole.getRoleId().equals(role.getRoleCode())){
-                            roleList.add(role);
-                            break;
-                        }
-                    }
+                    ApprovalFlowNodeRoleVO nodeRoleVO = getNodeRole(roles, scheduleNodeRole.getRoleId(), scheduleNodeRole.getNodeNum());
+                    nodeRoleVOs.add(nodeRoleVO);
                 }
             } else {
                 List<ApprovalFlowNodeRole> nodeRoleList = new ArrayList<>(nodes.size());
@@ -265,43 +254,56 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
                     List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findSendRoleByNodeNum(node.getNum());
                     nodeRoleList.addAll(nodeRoles);
                 }
-                roleList = new ArrayList<>(nodeRoleList.size());
+                nodeRoleVOs = new ArrayList<>(nodeRoleList.size());
                 for (ApprovalFlowNodeRole nodeRole : nodeRoleList) {
-                    for (UserRoleSet role : roles) {
-                        if (nodeRole.getRoleId().equals(role.getRoleCode())) {
-                            roleList.add(role);
-                            break;
-                        }
-                    }
+                    ApprovalFlowNodeRoleVO nodeRoleVO = getNodeRole(roles, nodeRole.getRoleId(), nodeRole.getNodeNum());
+                    nodeRoleVOs.add(nodeRoleVO);
                 }
             }
-            scheduleApprovalFlowConfigVo.setNodeRoleSequence(roleList);
+            approvalSequence.setNodeRoles(nodeRoleVOs);
+        } else {
+            LOGGER.error("未查询到审批申请审批流，configAlias:{}", AFAlias.CHECK_APPLICATION.name);
+            throw new RuntimeException();
+        }
+
+        return approvalSequence;
+    }
+
+    /**
+     * 根据角色Id遍历所有角色信息，使用遍历到的角色与节点编号填充节点角色信息
+     * @param roles 所有角色信息
+     * @param roleId 角色Id
+     * @param nodeNum 节点编号
+     * @return 节点角色信息
+     */
+    private ApprovalFlowNodeRoleVO getNodeRole(List<UserRoleSet> roles, String roleId, String nodeNum) {
+        ApprovalFlowNodeRoleVO nodeRoleVO = new ApprovalFlowNodeRoleVO();
+        nodeRoleVO.setNodeNum(nodeNum);
+        for (UserRoleSet role : roles) {
+            if (roleId.equals(role.getRoleCode())) {
+                nodeRoleVO.setRole(role);
+                break;
+            }
+        }
+        if (nodeRoleVO.getRole() == null) {
+            LOGGER.error("未查询到角色信息roleId：{}", roleId);
+            throw new RuntimeException();
+        }
+        return nodeRoleVO;
+    }
+
+    @Override
+    public void saveApprovalSequence(String companyNo, Integer scheduleSort, Integer scheduleVersion, ApprovalSequenceVO approvalSequence) {
+        ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
+        List<ApprovalFlowNode> nodes;
+        if (config != null) {
+            ApprovalFlowConfigLog configLog = configLogService.findByConfigNumAndVersion(config.getNum(), config.getVersion());
+            nodes = nodeService.findByConfigLogNum(configLog.getNum());
+            scheduleNodeRoleService.create(nodes, approvalSequence.getNodeRoles(), companyNo, scheduleSort, scheduleVersion);
         } else {
             LOGGER.error("未查询到审批申请审批流");
             throw new RuntimeException();
         }
-
-        return null;
-    }
-
-    /**
-     * 保存公司id、项目节点、审批流配置
-     * @param companyNo 公司id
-     * @param projectBigScheduleSort 项目节点
-     * @param ApprovalSequence 审批流配置
-     */
-    @Override
-    public void saveApprovalSequence(String companyNo, Integer projectBigScheduleSort, Integer scheduleVersion, ApprovalSequenceVO ApprovalSequence) {
-//        ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
-//        List<ApprovalFlowNodeVO> nodeVos;
-//        if (config != null) {
-//            ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getNum());
-//            nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
-//            scheduleNodeRoleService.create(nodeVos, scheduleApprovalFlowConfigVo.getNodeRoleSequence(), companyNo, projectBigScheduleSort, scheduleVersion);
-//        } else {
-//            LOGGER.error("未查询到审批申请审批流");
-//            throw new RuntimeException();
-//        }
     }
 
     @Override
