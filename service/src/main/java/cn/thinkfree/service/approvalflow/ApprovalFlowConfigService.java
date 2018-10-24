@@ -52,4 +52,8 @@ public interface ApprovalFlowConfigService {
      */
     void saveScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort, Integer version, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo);
 
+    /**
+     * 清除多余配置（测试用）
+     */
+    void clearConfig();
 }

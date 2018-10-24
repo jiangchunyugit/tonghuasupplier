@@ -1,5 +1,6 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.AFAlias;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.vo.*;
@@ -24,6 +25,8 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = {RuntimeException.class})
 public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService {
+
+    private static final MyLogger LOGGER = new MyLogger(ApprovalFlowConfigService.class);
 
     @Resource
     private ApprovalFlowConfigMapper configMapper;
@@ -223,99 +226,86 @@ public class ApprovalFlowConfigServiceImpl implements ApprovalFlowConfigService 
 
     /**
      * 根据公司编号与项目节点序号查询审批配置信息
-     * @param companyNum 公司编号
+     * @param companyNo 公司编号
      * @param projectBigScheduleSort 项目节点序号
      * @return 审批配置信息
      */
     @Override
-    public ScheduleApprovalFlowConfigVo findScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort) {
+    public ScheduleApprovalFlowConfigVo findScheduleApprovalFlowConfigVo(String companyNo, Integer projectBigScheduleSort) {
         ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo = new ScheduleApprovalFlowConfigVo();
         List<UserRoleSet> roles = roleService.findAll();
         scheduleApprovalFlowConfigVo.setRoles(roles);
 
-        List<ApprovalFlowNode> nodes;
-        // 首先根据公司编号查询公司是否有单独配置，如果没有，走默认配置
         ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
         if (config != null) {
             ApprovalFlowConfigLog configLog = configLogService.findByConfigNumAndVersion(config.getNum(), config.getVersion());
-            nodes = nodeService.findByConfigLogNum(configLog.getNum());
-            List<List<ApprovalFlowScheduleNodeRole>> scheduleNodeRoleList= new ArrayList<>();
+            List<ApprovalFlowNode> nodes = nodeService.findByConfigLogNum(configLog.getNum());
+            List<ApprovalFlowScheduleNodeRole> scheduleNodeRoleList= new ArrayList<>();
             for (ApprovalFlowNode node : nodes) {
-                List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = scheduleNodeRoleService.findLastVersionByNodeNumAndScheduleSort(node.getNum(), projectBigScheduleSort);
+                List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles = scheduleNodeRoleService.findLastVersionByNodeNumAndCompanyNoAndScheduleSort(node.getNum(), companyNo, projectBigScheduleSort);
                 if (scheduleNodeRoles != null && scheduleNodeRoles.size() > 0) {
-                    scheduleNodeRoleList.add(scheduleNodeRoles);
+                    scheduleNodeRoleList.addAll(scheduleNodeRoles);
                 }
             }
             // 判断公司是否对当前项目节点配置过，如果没有，走相应公司默认配置
+            List<UserRoleSet> roleList;
             if (scheduleNodeRoleList.size() > 0){
-                List<List<UserRoleSet>> roleList = new ArrayList<>(scheduleNodeRoleList.size());
-                for (List<ApprovalFlowScheduleNodeRole> scheduleNodeRoles : scheduleNodeRoleList) {
-                    List<UserRoleSet> userRoleSets = new ArrayList<>(scheduleNodeRoles.size());
-                    for (ApprovalFlowScheduleNodeRole scheduleNodeRole : scheduleNodeRoles) {
-                        for (UserRoleSet role : roles) {
-                            if (scheduleNodeRole.getRoleId().equals(role.getRoleCode())){
-                                userRoleSets.add(role);
-                                break;
-                            }
+                roleList = new ArrayList<>(scheduleNodeRoleList.size());
+                for (ApprovalFlowScheduleNodeRole scheduleNodeRole : scheduleNodeRoleList) {
+                    for (UserRoleSet role : roles) {
+                        if (scheduleNodeRole.getRoleId().equals(role.getRoleCode())){
+                            roleList.add(role);
+                            break;
                         }
                     }
-                    roleList.add(userRoleSets);
                 }
-                scheduleApprovalFlowConfigVo.setNodeRoleSequence(roleList);
-                return scheduleApprovalFlowConfigVo;
-            }
-        } else {
-            // 审批流统一配置，公司编号为null
-            config = findByAlias(AFAlias.CHECK_APPLICATION.name);
-            ApprovalFlowConfigLog configLog = configLogService.findByConfigNumAndVersion(config.getNum(), config.getVersion());
-            nodes = nodeService.findByConfigLogNum(configLog.getNum());
-        }
-
-        List<List<ApprovalFlowNodeRole>> nodeRoleList = new ArrayList<>(nodes.size());
-        for (ApprovalFlowNode node : nodes) {
-            List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findSendRoleByNodeNum(node.getNum());
-            nodeRoleList.add(nodeRoles);
-        }
-
-        List<List<UserRoleSet>> roleList = new ArrayList<>(nodeRoleList.size());
-        for (List<ApprovalFlowNodeRole> nodeRoles : nodeRoleList) {
-            List<UserRoleSet> userRoleSets = new ArrayList<>(nodeRoles.size());
-            for (ApprovalFlowNodeRole nodeRole : nodeRoles) {
-                for (UserRoleSet role : roles) {
-                    if (nodeRole.getRoleId().equals(role.getRoleCode())) {
-                        userRoleSets.add(role);
-                        break;
+            } else {
+                List<ApprovalFlowNodeRole> nodeRoleList = new ArrayList<>(nodes.size());
+                for (ApprovalFlowNode node : nodes) {
+                    List<ApprovalFlowNodeRole> nodeRoles = nodeRoleService.findSendRoleByNodeNum(node.getNum());
+                    nodeRoleList.addAll(nodeRoles);
+                }
+                roleList = new ArrayList<>(nodeRoleList.size());
+                for (ApprovalFlowNodeRole nodeRole : nodeRoleList) {
+                    for (UserRoleSet role : roles) {
+                        if (nodeRole.getRoleId().equals(role.getRoleCode())) {
+                            roleList.add(role);
+                            break;
+                        }
                     }
                 }
             }
-            roleList.add(userRoleSets);
+            scheduleApprovalFlowConfigVo.setNodeRoleSequence(roleList);
+        } else {
+            LOGGER.error("未查询到审批申请审批流");
+            throw new RuntimeException();
         }
-        scheduleApprovalFlowConfigVo.setNodeRoleSequence(roleList);
 
         return scheduleApprovalFlowConfigVo;
     }
 
     /**
      * 保存公司id、项目节点、审批流配置
-     * @param companyNum 公司id
+     * @param companyNo 公司id
      * @param projectBigScheduleSort 项目节点
      * @param scheduleApprovalFlowConfigVo 审批流配置
      */
     @Override
-    public void saveScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort, Integer scheduleVersion, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo) {
+    public void saveScheduleApprovalFlowConfigVo(String companyNo, Integer projectBigScheduleSort, Integer scheduleVersion, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo) {
         ApprovalFlowConfig config = findByAlias(AFAlias.CHECK_APPLICATION.name);
-        // 首先判断公司是否配置过自己单独的配置,如果没有则创建
         List<ApprovalFlowNodeVO> nodeVos;
-        if (config == null) {
-            config = findByAlias(AFAlias.CHECK_APPLICATION.name);
-
+        if (config != null) {
             ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getNum());
             nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
-            create(config);
+            scheduleNodeRoleService.create(nodeVos, scheduleApprovalFlowConfigVo.getNodeRoleSequence(), companyNo, projectBigScheduleSort, scheduleVersion);
         } else {
-            ApprovalFlowConfigLog configLog = configLogService.findLastVersionByApprovalFlowNum(config.getNum());
-            nodeVos = nodeService.findVoByConfigLogNum(configLog.getNum());
+            LOGGER.error("未查询到审批申请审批流");
+            throw new RuntimeException();
         }
-        scheduleNodeRoleService.create(nodeVos, scheduleApprovalFlowConfigVo.getNodeRoleSequence(), projectBigScheduleSort, scheduleVersion);
+    }
+
+    @Override
+    public void clearConfig() {
+
     }
 }
