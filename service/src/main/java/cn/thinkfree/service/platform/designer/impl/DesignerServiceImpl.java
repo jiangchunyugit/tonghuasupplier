@@ -1,21 +1,22 @@
 package cn.thinkfree.service.platform.designer.impl;
 
-import cn.thinkfree.database.mapper.DesignerMsgMapper;
-import cn.thinkfree.database.mapper.DesignerStyleConfigMapper;
-import cn.thinkfree.database.mapper.DesignerStyleRelationMapper;
-import cn.thinkfree.database.mapper.EmployeeMsgMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.ExcelToListMap;
 import cn.thinkfree.service.utils.ReflectUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,12 @@ public class DesignerServiceImpl implements DesignerService {
     private DesignerStyleConfigMapper styleConfigMapper;
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    private ProvinceMapper provinceMapper;
+    @Autowired
+    private CityMapper cityMapper;
+    @Autowired
+    private AreaMapper areaMapper;
 
     /**
      * @param designerName          设计师用户名
@@ -320,5 +327,66 @@ public class DesignerServiceImpl implements DesignerService {
             styleRelation.setStyleCode(styleCode);
             relationMapper.insertSelective(styleRelation);
         }
+    }
+
+    /**
+     * 导入设计师excel
+     * @param designerFile excel文件
+     * @param optionId     操作人ID
+     * @param companyId    操作人所属公司
+     */
+    @Override
+    public void importDesign(MultipartFile designerFile, String optionId, String companyId) {
+        try{
+            InputStream inputStream1 = designerFile.getInputStream();
+            List<ExcelToListMap.TableTitle> tableTitles = new ArrayList<>();
+            tableTitles.add(new ExcelToListMap.TableTitle("用户名","userName"));
+            tableTitles.add(new ExcelToListMap.TableTitle("手机号","userPhone"));
+            tableTitles.add(new ExcelToListMap.TableTitle("性别","sex",new String[]{"男:1","女:2"}));
+            tableTitles.add(new ExcelToListMap.TableTitle("省","provide",provinces()));
+            tableTitles.add(new ExcelToListMap.TableTitle("市","city", cites()));
+            tableTitles.add(new ExcelToListMap.TableTitle("县/地区","area",areas()));
+            tableTitles.add(new ExcelToListMap.TableTitle("量房费","money"));
+            tableTitles.add(new ExcelToListMap.TableTitle("设计费","designMoney"));
+            List<Map<String,String>> listMap = ExcelToListMap.analysis(inputStream1,tableTitles);
+            //TODO 批量注册接口
+            System.out.println(JSONObject.toJSONString(listMap));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException("excel解析失败:" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取省份
+     * @return
+     */
+    private Map<String,String> provinces(){
+        ProvinceExample provinceExample = new ProvinceExample();
+        provinceExample.createCriteria();
+        List<Province> provinces = provinceMapper.selectByExample(provinceExample);
+        return ReflectUtils.listToMap(provinces,"provinceName","provinceCode");
+    }
+
+    /**
+     * 获取城市
+     * @return
+     */
+    private Map<String,String> cites(){
+        CityExample cityExample = new CityExample();
+        cityExample.createCriteria();
+        List<City> cities = cityMapper.selectByExample(cityExample);
+        return ReflectUtils.listToMap(cities,"cityName","cityCode");
+    }
+
+    /**
+     * 获取地区
+     * @return
+     */
+    private Map<String,String> areas(){
+        AreaExample areaExample = new AreaExample();
+        areaExample.createCriteria();
+        List<Area> areas = areaMapper.selectByExample(areaExample);
+        return ReflectUtils.listToMap(areas,"areaName","areaCode");
     }
 }

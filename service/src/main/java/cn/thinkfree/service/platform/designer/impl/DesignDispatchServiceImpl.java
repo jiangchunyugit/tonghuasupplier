@@ -1,9 +1,7 @@
 package cn.thinkfree.service.platform.designer.impl;
 
 import cn.thinkfree.core.constants.DesignStateEnum;
-import cn.thinkfree.database.mapper.DesignOrderMapper;
-import cn.thinkfree.database.mapper.OptionLogMapper;
-import cn.thinkfree.database.mapper.ProjectMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
@@ -34,6 +32,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private ProjectMapper projectMapper;
     @Autowired
     private DesignOrderMapper designOrderMapper;
+    @Autowired
+    private DesignerMsgMapper designerMsgMapper;
+    @Autowired
+    private EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    private RemindOwnerLogMapper remindOwnerLogMapper;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -51,13 +55,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param optionUserName     操作人姓名（option_log.option_user_name）
      * @param optionTimeStart    操作时间开始（option_log.option_time）
      * @param optionTimeEnd      操作时间结束（option_log.option_time）
+     * @param stateType          状态类型
      * @return
      */
     @Override
     public PageVo<List<DesignOrderVo>> queryDesignerOrder(
             String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String money, String acreage, int designerOrderState, String companyState, String optionUserName,
-            String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex) {
+            String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
         //TODO 模糊查询用户信息
         List<String> userIds = new ArrayList<>();
         //TODO 根据公司状态查询公司ID
@@ -110,8 +115,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (StringUtils.isNotBlank(styleCode)) {
             orderExampleCriteria.andTypeEqualTo(Integer.parseInt(styleCode));
         }
-        if (designerOrderState < 0) {
-            orderExampleCriteria.andOrderStageEqualTo(designerOrderState);
+        if (designerOrderState > 0) {
+            orderExampleCriteria.andOrderStageIn(DesignStateEnum.queryStatesByState(designerOrderState, stateType));
         }
         if (!projectNos.isEmpty()) {
             orderExampleCriteria.andProjectNoIn(projectNos);
@@ -142,21 +147,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      *
      * @param projectNo      项目编号
      * @param reason         不派单原因
-     * @param companyId      公司ID
      * @param optionUserId   操作人ID
      * @param optionUserName 操作人姓名
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void notDispatch(String projectNo, String reason, String companyId, String optionUserId, String optionUserName) {
+    public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
         Project project = queryProjectByNo(projectNo);
-        if (!project.getCompanyId().equals(companyId)) {
-            throw new RuntimeException("无权操作");
-        }
         DesignOrder designOrder = queryDesignOrder(projectNo);
+        checkOrderState(designOrder, DesignStateEnum.STATE_999);
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
-        updateOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
+        updateOrder.setOrderStage(DesignStateEnum.STATE_999.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
         designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -178,6 +180,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Project project = queryProjectByNo(projectNo);
         DesignOrder designOrder = queryDesignOrder(projectNo);
         //设置该设计订单所属公司
+        checkOrderState(designOrder, DesignStateEnum.STATE_10);
         DesignOrder updateOrder = new DesignOrder();
         updateOrder.setCompanyId(companyId);
         updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
@@ -213,10 +216,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (!designOrder.getCompanyId().equals(companyId)) {
             throw new RuntimeException("无权操作");
         }
+        checkOrderState(designOrder, DesignStateEnum.STATE_1);
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
         updateOrder.setCompanyId("");
-        updateOrder.setOrderStage(DesignStateEnum.STATE_30.getState());
+        updateOrder.setOrderStage(DesignStateEnum.STATE_1.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
         designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -241,11 +245,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (!designOrder.getCompanyId().equals(companyId)) {
             throw new RuntimeException("无权操作");
         }
+        checkOrderState(designOrder, DesignStateEnum.STATE_20);
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
         //设置设计师ID
         updateOrder.setUserId(designerUserId);
-        updateOrder.setOrderStage(DesignStateEnum.STATE_40.getState());
+        updateOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
         designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -261,20 +266,23 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param projectNo      项目编号
      * @param reason         拒绝原因
      * @param designerUserId 设计师ID
-     * @param optionUserName 设计师名称
      */
     @Override
-    public void designerRefuse(String projectNo, String reason, String designerUserId, String optionUserName) {
+    public void designerRefuse(String projectNo, String reason, String designerUserId) {
         Project project = queryProjectByNo(projectNo);
         DesignOrder designOrder = queryDesignOrder(projectNo);
         if (!designOrder.getUserId().equals(designerUserId)) {
             throw new RuntimeException("无权操作");
         }
+        checkOrderState(designOrder, DesignStateEnum.STATE_10);
+        queryDesignerMsg(designerUserId);
+        EmployeeMsg employeeMsg = queryEmployeeMsg(designerUserId);
+        String optionUserName = employeeMsg.getRealName();
         //设置该设计订单所属公司
         DesignOrder updateOrder = new DesignOrder();
         //清空设计师ID
         updateOrder.setUserId("");
-        updateOrder.setOrderStage(DesignStateEnum.STATE_50.getState());
+        updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
         designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -282,6 +290,297 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //记录操作日志
         String remark = "设计师【" + optionUserName + "】拒绝接单";
         saveOptionLog(designOrder.getOrderNo(), designerUserId, optionUserName, remark);
+    }
+
+    /**
+     * 设计师接单
+     *
+     * @param projectNo      项目编号
+     * @param designerUserId 设计师ID
+     */
+    @Override
+    public void designerReceipt(String projectNo, String designerUserId) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getUserId().equals(designerUserId)) {
+            throw new RuntimeException("无权操作");
+        }
+        checkOrderState(designOrder, DesignStateEnum.STATE_30);
+        queryDesignerMsg(designerUserId);
+        EmployeeMsg employeeMsg = queryEmployeeMsg(designerUserId);
+        String optionUserName = employeeMsg.getRealName();
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setOrderStage(DesignStateEnum.STATE_30.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给设计师
+        //记录操作日志
+        String remark = "设计师【" + optionUserName + "】已接单";
+        saveOptionLog(designOrder.getOrderNo(), designerUserId, optionUserName, remark);
+    }
+
+    /**
+     * 设计师发起量房预约
+     *
+     * @param projectNo      项目编号
+     * @param designerUserId 设计师ID
+     */
+    @Override
+    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getUserId().equals(designerUserId)) {
+            throw new RuntimeException("无权操作");
+        }
+        checkOrderState(designOrder, DesignStateEnum.STATE_40);
+        queryDesignerMsg(designerUserId);
+        EmployeeMsg employeeMsg = queryEmployeeMsg(designerUserId);
+        String optionUserName = employeeMsg.getRealName();
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setOrderStage(DesignStateEnum.STATE_40.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给业主
+        //记录操作日志
+        String remark = "设计师【" + optionUserName + "】发起量房预约";
+        saveOptionLog(designOrder.getOrderNo(), designerUserId, optionUserName, remark);
+    }
+
+    @Override
+    public void remindOwner(String projectNo, String designerUserId) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getUserId().equals(designerUserId)) {
+            throw new RuntimeException("无权操作");
+        }
+        RemindOwnerLogExample logExample = new RemindOwnerLogExample();
+        //24小时内只能提示一次
+        logExample.createCriteria().andDesignOrderNoEqualTo(designOrder.getOrderNo())
+                .andRemindTimeGreaterThanOrEqualTo(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
+        List<RemindOwnerLog> remindOwnerLogs = remindOwnerLogMapper.selectByExample(logExample);
+        if (!remindOwnerLogs.isEmpty()) {
+            throw new RuntimeException("每24小时能只能提示一次~");
+        }
+        RemindOwnerLog remindOwnerLog = new RemindOwnerLog();
+        remindOwnerLog.setDesignOrderNo(designOrder.getOrderNo());
+        remindOwnerLog.setOwnerId(project.getOwnerId());
+        remindOwnerLog.setRemindTime(new Date());
+        remindOwnerLogMapper.insertSelective(remindOwnerLog);
+    }
+
+    @Override
+    public void updateOrderState(String projectNo, int orderState, String optionId, String optionName) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        DesignStateEnum stateEnum = DesignStateEnum.queryByState(orderState);
+        checkOrderState(designOrder, stateEnum);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setOrderStage(orderState);
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给业主
+        //记录操作日志
+        String remark = stateEnum.getLogText();
+        saveOptionLog(designOrder.getOrderNo(), optionId, optionName, remark);
+    }
+
+    @Override
+    public void updateOrderState(String projectNo, int orderState, String optionId, String optionName, String reason) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        DesignStateEnum stateEnum = DesignStateEnum.queryByState(orderState);
+        checkOrderState(designOrder, stateEnum);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setOrderStage(orderState);
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给业主
+        //记录操作日志
+        saveOptionLog(designOrder.getOrderNo(), optionId, optionName, reason);
+    }
+
+    @Override
+    public void confirmedDeliveries(String projectNo, String optionId) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        checkOrderState(designOrder, DesignStateEnum.STATE_70);
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setOrderStage(DesignStateEnum.STATE_70.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给业主
+        //记录操作日志
+        String remark = DesignStateEnum.STATE_70.getLogText();
+        saveOptionLog(designOrder.getOrderNo(), optionId, "业主", remark);
+    }
+
+    /**
+     * 查询合同类型
+     *
+     * @param projectNo 项目编号
+     * @param type      类型，1设计合同，2施工合同
+     * @return 1全款合同，2分期合同
+     */
+    @Override
+    public int contractType(String projectNo, int type) {
+        //TODO 待查询合同类型的实现
+        return 2;
+    }
+
+
+    @Override
+    public void paySuccess(String orderNo) {
+        //设计师接单
+        DesignOrder designOrder = queryDesignOrderByOrderNo(orderNo);
+        DesignStateEnum designStateEnum = DesignStateEnum.queryByState(designOrder.getOrderStage());
+        //设置该设计订单所属公司
+        DesignOrder updateOrder = new DesignOrder();
+        DesignStateEnum stateEnum = null;
+        switch (designStateEnum) {
+            case STATE_40:
+                stateEnum = DesignStateEnum.STATE_50;
+                break;
+            case STATE_140:
+                stateEnum = DesignStateEnum.STATE_150;
+                break;
+            case STATE_170:
+                stateEnum = DesignStateEnum.STATE_180;
+                break;
+            case STATE_200:
+                stateEnum = DesignStateEnum.STATE_210;
+                break;
+            case STATE_220:
+                stateEnum = DesignStateEnum.STATE_230;
+                break;
+            default:
+                throw new RuntimeException("无效的状态");
+        }
+        updateOrder.setOrderStage(stateEnum.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给业主
+        //记录操作日志
+        String remark = stateEnum.getLogText();
+        saveOptionLog(designOrder.getOrderNo(), "system", "system", remark);
+    }
+
+
+    @Override
+    public void payTimeOut(String projectNo) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        DesignStateEnum designStateEnum = DesignStateEnum.queryByState(designOrder.getOrderStage());
+        DesignStateEnum timeOutState = null;
+        switch (designStateEnum) {
+            case STATE_40:
+                timeOutState = DesignStateEnum.STATE_80;
+                break;
+            case STATE_140:
+            case STATE_170:
+            case STATE_220:
+                timeOutState = DesignStateEnum.STATE_280;
+                break;
+            default:
+                throw new RuntimeException("无效的订单状态");
+        }
+        updateOrderState(projectNo,timeOutState.getState(),"system","system");
+    }
+
+    /**
+     * 业主发起终止订单操作
+     * @param projectNo 项目编号
+     * @param userId    用户Id
+     * @param reason    终止合同原因
+     */
+    @Override
+    public void endOrder(String projectNo, String userId, String reason) {
+        //设计师接单
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!project.getOwnerId().equals(userId)){
+            throw new RuntimeException("无权操作");
+        }
+        checkOrderState(designOrder, DesignStateEnum.STATE_330);
+        DesignOrder updateOrder = new DesignOrder();
+        //清空设计师ID
+        updateOrder.setOrderStage(DesignStateEnum.STATE_330.getState());
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrder.getOrderNo());
+        designOrderMapper.updateByExampleSelective(updateOrder, orderExample);
+        //TODO 需要发出通知给业主
+        //记录操作日志
+        String remark = DesignStateEnum.STATE_330.getLogText();
+        saveOptionLog(designOrder.getOrderNo(), userId, "业主", remark);
+    }
+
+    /**
+     * 检查设计订单状态
+     *
+     * @param designOrder     设计订单
+     * @param designStateEnum 目标状态
+     */
+    @Override
+    public void checkOrderState(DesignOrder designOrder, DesignStateEnum designStateEnum) {
+        int orderState = designOrder.getOrderStage();
+        DesignStateEnum currentState = DesignStateEnum.queryByState(orderState);
+        if (!currentState.getNextStates().contains(designStateEnum)) {
+            throw new RuntimeException("不能进行该操作");
+        }
+    }
+
+    /**
+     * 根据设计师ID查询设计师信息,1审核通过的
+     *
+     * @param designerUserId 设计师ID
+     * @return
+     */
+    private DesignerMsg queryDesignerMsg(String designerUserId) {
+        DesignerMsgExample msgExample = new DesignerMsgExample();
+        msgExample.createCriteria().andUserIdEqualTo(designerUserId).andReviewStateEqualTo(2);
+        List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
+        if (designerMsgs.isEmpty()) {
+            throw new RuntimeException("没有查询到该设计师");
+        }
+        return designerMsgs.get(0);
+    }
+
+    /**
+     * 根据设计师ID查询员工信息，1已实名认证，2在职
+     *
+     * @param employeeMsgId 员工ID
+     * @return
+     */
+    private EmployeeMsg queryEmployeeMsg(String employeeMsgId) {
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdEqualTo(employeeMsgId).andEmployeeStateEqualTo(1).andAuthStateEqualTo(2);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if (employeeMsgs.isEmpty()) {
+            throw new RuntimeException("没有查询到员工");
+        }
+        return employeeMsgs.get(0);
     }
 
     /**
@@ -310,7 +609,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param projectNo 项目编号
      * @return
      */
-    private Project queryProjectByNo(String projectNo) {
+    @Override
+    public Project queryProjectByNo(String projectNo) {
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<Project> projects = projectMapper.selectByExample(projectExample);
@@ -326,9 +626,27 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param projectNo 项目编号
      * @return
      */
-    private DesignOrder queryDesignOrder(String projectNo) {
+    @Override
+    public DesignOrder queryDesignOrder(String projectNo) {
         DesignOrderExample orderExample = new DesignOrderExample();
         orderExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        List<DesignOrder> designOrders = designOrderMapper.selectByExample(orderExample);
+        if (designOrders.isEmpty()) {
+            throw new RuntimeException("没有查询到相关设计订单");
+        }
+        return designOrders.get(0);
+    }
+
+    /**
+     * 根据项目编号查询设计订单
+     *
+     * @param orderNo 设计订单编号
+     * @return
+     */
+    @Override
+    public DesignOrder queryDesignOrderByOrderNo(String orderNo) {
+        DesignOrderExample orderExample = new DesignOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(orderNo).andStatusEqualTo(1);
         List<DesignOrder> designOrders = designOrderMapper.selectByExample(orderExample);
         if (designOrders.isEmpty()) {
             throw new RuntimeException("没有查询到相关设计订单");
