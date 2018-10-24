@@ -1,6 +1,6 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.UserRole;
+import cn.thinkfree.database.model.UserRoleSet;
 import lombok.Data;
 
 import java.util.List;
@@ -15,5 +15,5 @@ import java.util.List;
 @Data
 public class ApprovalSequenceVO {
     private List<ApprovalFlowNodeRoleVO> nodeRoles;
-    private List<UserRole> allUserRoles;
+    private List<UserRoleSet> roles;
 }
