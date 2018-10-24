@@ -1,5 +1,6 @@
 package cn.thinkfree.service.newscheduling;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.database.vo.ProjectSmallSchedulingVO;
@@ -49,4 +50,11 @@ public interface NewSchedulingBaseService {
      * @return
      */
     String listShangHai(SchedulingSeo schedulingSeo);
+
+    /**
+     * 修改基础大排期
+     * @param projectBigSchedulingVO
+     * @return
+     */
+    MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO);
 }

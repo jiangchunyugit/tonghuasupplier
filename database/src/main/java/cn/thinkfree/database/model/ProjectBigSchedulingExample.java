@@ -965,52 +965,52 @@ public class ProjectBigSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckEqualTo(Short value) {
+        public Criteria andIsNeedCheckEqualTo(Integer value) {
             addCriterion("is_need_check =", value, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckNotEqualTo(Short value) {
+        public Criteria andIsNeedCheckNotEqualTo(Integer value) {
             addCriterion("is_need_check <>", value, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckGreaterThan(Short value) {
+        public Criteria andIsNeedCheckGreaterThan(Integer value) {
             addCriterion("is_need_check >", value, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckGreaterThanOrEqualTo(Short value) {
+        public Criteria andIsNeedCheckGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_need_check >=", value, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckLessThan(Short value) {
+        public Criteria andIsNeedCheckLessThan(Integer value) {
             addCriterion("is_need_check <", value, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckLessThanOrEqualTo(Short value) {
+        public Criteria andIsNeedCheckLessThanOrEqualTo(Integer value) {
             addCriterion("is_need_check <=", value, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckIn(List<Short> values) {
+        public Criteria andIsNeedCheckIn(List<Integer> values) {
             addCriterion("is_need_check in", values, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckNotIn(List<Short> values) {
+        public Criteria andIsNeedCheckNotIn(List<Integer> values) {
             addCriterion("is_need_check not in", values, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckBetween(Short value1, Short value2) {
+        public Criteria andIsNeedCheckBetween(Integer value1, Integer value2) {
             addCriterion("is_need_check between", value1, value2, "isNeedCheck");
             return (Criteria) this;
         }
 
-        public Criteria andIsNeedCheckNotBetween(Short value1, Short value2) {
+        public Criteria andIsNeedCheckNotBetween(Integer value1, Integer value2) {
             addCriterion("is_need_check not between", value1, value2, "isNeedCheck");
             return (Criteria) this;
         }
@@ -1025,52 +1025,52 @@ public class ProjectBigSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsNewEqualTo(Short value) {
+        public Criteria andIsNewEqualTo(Integer value) {
             addCriterion("is_new =", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewNotEqualTo(Short value) {
+        public Criteria andIsNewNotEqualTo(Integer value) {
             addCriterion("is_new <>", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewGreaterThan(Short value) {
+        public Criteria andIsNewGreaterThan(Integer value) {
             addCriterion("is_new >", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewGreaterThanOrEqualTo(Short value) {
+        public Criteria andIsNewGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_new >=", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewLessThan(Short value) {
+        public Criteria andIsNewLessThan(Integer value) {
             addCriterion("is_new <", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewLessThanOrEqualTo(Short value) {
+        public Criteria andIsNewLessThanOrEqualTo(Integer value) {
             addCriterion("is_new <=", value, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewIn(List<Short> values) {
+        public Criteria andIsNewIn(List<Integer> values) {
             addCriterion("is_new in", values, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewNotIn(List<Short> values) {
+        public Criteria andIsNewNotIn(List<Integer> values) {
             addCriterion("is_new not in", values, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewBetween(Short value1, Short value2) {
+        public Criteria andIsNewBetween(Integer value1, Integer value2) {
             addCriterion("is_new between", value1, value2, "isNew");
             return (Criteria) this;
         }
 
-        public Criteria andIsNewNotBetween(Short value1, Short value2) {
+        public Criteria andIsNewNotBetween(Integer value1, Integer value2) {
             addCriterion("is_new not between", value1, value2, "isNew");
             return (Criteria) this;
         }

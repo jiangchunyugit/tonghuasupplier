@@ -76,11 +76,11 @@
         <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="design_order" domainObjectName="DesignOrder"/>-->
         <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
-        <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
+        <table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>
         <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
-        <table tableName="project_data" domainObjectName="ProjectData"/>
+        <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="af_config" domainObjectName="ApprovalFlowConfig"/>-->

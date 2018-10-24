@@ -21,8 +21,6 @@ public class ProjectVo {
     private String projectNo;
     @ApiModelProperty(name = "stage",value = "项目阶段(预约/量房/设计/施工)")
     private Integer stage;
-//    @ApiModelProperty(name = "designProgress",value = "设计进度")
-//    private Integer designProgress;
     @ApiModelProperty(name = "constructionProgress",value = "施工进度")
     private Integer constructionProgress;
     @ApiModelProperty(name = "address",value = "装修地址")
