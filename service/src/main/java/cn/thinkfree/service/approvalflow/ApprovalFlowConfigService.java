@@ -1,10 +1,7 @@
 package cn.thinkfree.service.approvalflow;
 
-import cn.thinkfree.database.vo.ApprovalFlowConfigVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.model.ApprovalFlowConfig;
-import cn.thinkfree.database.vo.ApprovalFlowConfigLogVO;
-import cn.thinkfree.database.vo.ApprovalFlowOrderVO;
-import cn.thinkfree.database.vo.ScheduleApprovalFlowConfigVo;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -38,19 +35,19 @@ public interface ApprovalFlowConfigService {
 
     /**
      * 根据公司id与节点编号获取审批流配置
-     * @param companyNum 公司id
+     * @param companyNo 公司id
      * @param projectBigScheduleSort 节点编号
      * @return 审批流配置
      */
-    ScheduleApprovalFlowConfigVo findScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort);
+    ApprovalSequenceVO findApprovalSequence(String companyNo, Integer projectBigScheduleSort);
 
     /**
      * 保存公司id、项目节点、审批流配置
-     * @param companyNum 公司id
+     * @param companyNo 公司id
      * @param projectBigScheduleSort 项目节点
-     * @param scheduleApprovalFlowConfigVo 审批流配置
+     * @param approvalSequence 审批流配置
      */
-    void saveScheduleApprovalFlowConfigVo(String companyNum, Integer projectBigScheduleSort, Integer version, ScheduleApprovalFlowConfigVo scheduleApprovalFlowConfigVo);
+    void saveApprovalSequence(String companyNo, Integer projectBigScheduleSort, Integer version, ApprovalSequenceVO approvalSequence);
 
     /**
      * 清除多余配置（测试用）
