@@ -62,7 +62,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         // businessEntityVO
         BusinessEntityVO businessEntityVO = new BusinessEntityVO();
         businessEntityVO.setStoreNm(storeList);
-        SpringBeanUtil.copy(businessEntityVO,businessEntity);
+        SpringBeanUtil.copy(businessEntity,businessEntityVO);
 
         return businessEntityVO;
     }
