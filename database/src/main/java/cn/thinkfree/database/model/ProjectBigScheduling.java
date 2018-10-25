@@ -150,7 +150,7 @@ public class ProjectBigScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short isNeedCheck;
+    private Integer isNeedCheck;
 
     /**
      * Database Column Remarks:
@@ -161,7 +161,7 @@ public class ProjectBigScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    private Short isNew;
+    private Integer isNew;
 
     /**
      * Database Column Remarks:
@@ -470,7 +470,7 @@ public class ProjectBigScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getIsNeedCheck() {
+    public Integer getIsNeedCheck() {
         return isNeedCheck;
     }
 
@@ -482,7 +482,7 @@ public class ProjectBigScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setIsNeedCheck(Short isNeedCheck) {
+    public void setIsNeedCheck(Integer isNeedCheck) {
         this.isNeedCheck = isNeedCheck;
     }
 
@@ -494,7 +494,7 @@ public class ProjectBigScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public Short getIsNew() {
+    public Integer getIsNew() {
         return isNew;
     }
 
@@ -506,7 +506,7 @@ public class ProjectBigScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setIsNew(Short isNew) {
+    public void setIsNew(Integer isNew) {
         this.isNew = isNew;
     }
 

@@ -3,7 +3,10 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.mapper.OrderUserMapper;
 import cn.thinkfree.database.model.DesignOrder;
+import cn.thinkfree.database.model.OrderUser;
+import cn.thinkfree.database.model.OrderUserExample;
 import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -157,6 +160,7 @@ public class DelaySchedulingController extends AbsBaseController {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+
         OrderDetailsVO orderDetailsVO = newOrderUserService.selectOrderDetails(projectNo);
         return sendJsonData(ResultMessage.SUCCESS, orderDetailsVO);
     }
@@ -390,6 +394,24 @@ public class DelaySchedulingController extends AbsBaseController {
             Logger.getLogger(ResolverUtil.Test.class.getName()).log(Level.SEVERE, null, ex);
         }
         return sendJsonData(ResultMessage.SUCCESS, "导出成功");
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 获取员工信息
+     * @Date
+     * @Param
+     **/
+
+    @RequestMapping(value = "getEmployeeInfo", method = RequestMethod.POST)
+    @ApiOperation(value = "获取员工信息", notes = "")
+    public MyRespBundle<Project> getEmployeeInfo(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo) {
+        if (null == projectNo || "".equals(projectNo)) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        EmployeeInfoVO employeeInfoList = newOrderUserService.selectemployeeInfoList(projectNo);
+        return sendJsonData(ResultMessage.SUCCESS, employeeInfoList);
     }
 
 

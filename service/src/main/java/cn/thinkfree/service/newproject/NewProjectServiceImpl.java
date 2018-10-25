@@ -6,10 +6,7 @@ import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.service.constants.ProjectDataStatus;
-import cn.thinkfree.service.constants.ProjectStatus;
-import cn.thinkfree.service.constants.Scheduling;
-import cn.thinkfree.service.constants.UserStatus;
+import cn.thinkfree.service.constants.*;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.utils.BaseToVoUtils;
@@ -222,7 +219,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomData(DataDetailVo dataDetailVo) {
         ProjectData projectData = BaseToVoUtils.getVo(dataDetailVo, ProjectData.class);
         projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
@@ -271,7 +268,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         Map<String, UserVo> map = new HashMap<>();
         for (String string : userIds){
             EmployeeMsg employeeMsg = employeeMsgMapper.selectByUserId(string);
-            UserVo vo = BaseToVoUtils.getVo(employeeMsg, UserVo.class);
+            UserVo vo = new UserVo();
+            vo.setRealName(employeeMsg.getRealName());
+            vo.setRoleCode(employeeMsg.getRoleCode());
+            vo.setUserId(employeeMsg.getUserId());
+            vo.setRoleName(UserJobs.findByCodeStr(vo.getRoleCode()).mes);
             map.put(string,vo);
         }
         return RespData.success(map);

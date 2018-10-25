@@ -73,14 +73,12 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--Scheduling start-->
-        <!--<table tableName="project" domainObjectName="Project"/>-->
+<!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="design_order" domainObjectName="DesignOrder"/>-->
-        <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
-        <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
-        <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
+        <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->        <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
-        <table tableName="project_data" domainObjectName="ProjectData"/>
+        <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="af_config" domainObjectName="ApprovalFlowConfig"/>-->
@@ -100,6 +98,10 @@
         <!--<table tableName="employee_msg" domainObjectName="EmployeeMsg"/>-->
         <!--<table tableName="employee_apply_log" domainObjectName="EmployeeApplyLog"/>-->
         <!--<table tableName="option_log" domainObjectName="OptionLog"/>-->
+        <!--<table tableName="remind_owner_log" domainObjectName="RemindOwnerLog"/>-->
+        <!--<table tableName="apply_refund_log" domainObjectName="ApplyRefundLog"/>-->
+        <!--<table tableName="apply_refund_option_log" domainObjectName="ApplyRefundOptionLog"/>-->
+        <table tableName="reserve_project" domainObjectName="ReserveProject"/>
         <!--approval flow end-->
     </context>
 </generatorConfiguration>

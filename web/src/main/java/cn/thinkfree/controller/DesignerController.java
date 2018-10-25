@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -133,5 +134,20 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "masterStyle", required = false, value = "擅长风格") @RequestParam(name = "masterStyle", required = false) String masterStyle){
         designerService.createDesigner(phone,email,province,city,area,workingTime,masterStyle,volumeRoomMoney,designerMoneyLow,designerMoneyHigh);
         return sendJsonData(ResultMessage.SUCCESS, null);
+    }
+
+    @ApiOperation("导入设计师")
+    @MyRespBody
+    @RequestMapping(value = "importDesign", method = {RequestMethod.POST})
+    public MyRespBundle importDesign(
+            @ApiParam(value = "设计师excel", required = true) @RequestParam(name = "designerFile", required = false) MultipartFile designerFile,
+            @ApiParam(value = "操作人Id", required = true) @RequestParam(name = "optionId", required = false) String optionId,
+            @ApiParam(value = "所属公司Id", required = true) @RequestParam(name = "companyId", required = false) String companyId){
+        try {
+            designerService.importDesign(designerFile,optionId,companyId);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 }

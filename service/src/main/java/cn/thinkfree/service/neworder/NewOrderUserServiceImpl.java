@@ -1,14 +1,20 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.constants.HttpLinks;
+import cn.thinkfree.service.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目用户关系服务层
@@ -33,6 +39,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
+    @Autowired
+    private EmployeeMsgMapper employeeMsgMapper;
 
     @Override
     public List<OrderUser> findByOrderNo(String orderNo) {
@@ -102,10 +110,27 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public OrderDetailsVO selectOrderDetails(String projectNo) {
-        OrderDetailsVO orderDetailsVO = new OrderDetailsVO();
-        orderDetailsVO.setProjectNo(projectNo);
-        orderDetailsVO.setStatus(1);
-        return projectMapper.selectOrderDetails(projectNo, orderDetailsVO.getStatus()).get(0);
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        Map result = getUserName(projects.get(0).getOwnerId(), "CC");
+        String phone = (String) result.get("phone");
+        //昵称先用着
+        String nickName = (String) result.get("nickName");
+        OrderDetailsVO orderDetailsVO = projectMapper.selectOrderDetails(projectNo, 1).get(0);
+        orderDetailsVO.setPhone(phone);
+        orderDetailsVO.setConsumerName(nickName);
+        orderDetailsVO.setUserName(nickName);
+        return orderDetailsVO;
+    }
+
+    private Map getUserName(String userId, String roleId) {
+        Map<String, String> requestMap = new HashMap<>(2);
+        requestMap.put("userId", userId);
+        requestMap.put("roleId", roleId);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(HttpLinks.USER_CENTER_GETUSERMSG, requestMap);
+        Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
+        return (Map) responseMap.get("data");
     }
 
     /**
@@ -223,6 +248,43 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     public Integer queryConstructionPlanCount(ConstructionPlanVO constructionPlanVO) {
         constructionPlanVO.setStatus(1);
         return projectBigSchedulingDetailsMapper.selectConstructionPlanCount(constructionPlanVO);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 查询员工详情
+     * @Date
+     * @Param
+     **/
+    @Override
+    public EmployeeInfoVO selectemployeeInfoList(String projectNo) {
+        EmployeeInfoVO employeeInfoVO = new EmployeeInfoVO();
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        List<EmployeeInfoVO> list = new ArrayList<>();
+        orderUsers.forEach((user) ->
+                {
+                    EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+                    employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
+                    List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+                    employeeMsgs.forEach(employeeMsg -> {
+                        if (employeeMsg.getRoleCode().equals("CP")) {
+                            employeeInfoVO.setProjectManager(employeeMsg.getRealName());
+                        } else if (employeeMsg.getRoleCode().equals("CM")) {
+                            employeeInfoVO.setForeman(employeeMsg.getRealName());
+                        }else if (employeeMsg.getRoleCode().equals("CS")) {
+                            employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
+                        }else if(employeeMsg.getRoleCode().equals("CQ")) {
+                            employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
+                        }
+                    });
+                }
+
+        );
+
+        return employeeInfoVO;
     }
 
 

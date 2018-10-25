@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.DesignerStyleConfig;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.designer.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -46,6 +47,7 @@ public interface DesignerService {
      * @return
      */
     DesignerMsg queryDesignerByUserId(String userId);
+
     /**
      * 根据用户ID查询员工信息
      *
@@ -56,6 +58,7 @@ public interface DesignerService {
 
     /**
      * 根据公司ID查询该公司得设计师信息
+     *
      * @param companyId 公司ID
      * @return
      */
@@ -117,4 +120,14 @@ public interface DesignerService {
     void createDesigner(
             String phone, String email, String province, String city, String area, String workingTime,
             String masterStyle, String volumeRoomMoney, String designerMoneyLow, String designerMoneyHigh);
+
+    /**
+     * 导入设计师
+     *
+     * @param designerFile excel文件
+     * @param optionId     操作人ID
+     * @param companyId    操作人所属公司
+     */
+    void importDesign(MultipartFile designerFile, String optionId, String companyId);
+
 }
