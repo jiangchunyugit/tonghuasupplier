@@ -167,17 +167,19 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     /**
-     * 指派
+     * 指派设计公司
      *
      * @param projectNo      项目编号
      * @param companyId      公司ID
      * @param optionUserId   操作人ID
      * @param optionUserName 操作人姓名
+     * @param contractType   承包类型，1小包，2大包
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName) {
+    public void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName, int contractType) {
         Project project = queryProjectByNo(projectNo);
+        project.setContractType(contractType);
         DesignOrder designOrder = queryDesignOrder(projectNo);
         //设置该设计订单所属公司
         checkOrderState(designOrder, DesignStateEnum.STATE_10);
@@ -506,11 +508,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             default:
                 throw new RuntimeException("无效的订单状态");
         }
-        updateOrderState(projectNo,timeOutState.getState(),"system","system");
+        updateOrderState(projectNo, timeOutState.getState(), "system", "system");
     }
 
     /**
      * 业主发起终止订单操作
+     *
      * @param projectNo 项目编号
      * @param userId    用户Id
      * @param reason    终止合同原因
@@ -520,7 +523,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //设计师接单
         Project project = queryProjectByNo(projectNo);
         DesignOrder designOrder = queryDesignOrder(projectNo);
-        if (!project.getOwnerId().equals(userId)){
+        if (!project.getOwnerId().equals(userId)) {
             throw new RuntimeException("无权操作");
         }
         checkOrderState(designOrder, DesignStateEnum.STATE_330);

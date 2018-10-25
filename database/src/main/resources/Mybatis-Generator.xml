@@ -101,7 +101,7 @@
         <!--<table tableName="remind_owner_log" domainObjectName="RemindOwnerLog"/>-->
         <!--<table tableName="apply_refund_log" domainObjectName="ApplyRefundLog"/>-->
         <!--<table tableName="apply_refund_option_log" domainObjectName="ApplyRefundOptionLog"/>-->
-        <table tableName="reserve_project" domainObjectName="ReserveProject"/>
+        <!--<table tableName="reserve_project" domainObjectName="ReserveProject"/>-->
         <!--approval flow end-->
     </context>
 </generatorConfiguration>

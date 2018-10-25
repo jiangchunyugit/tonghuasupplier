@@ -102,10 +102,11 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle dispatch(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "contractType", required = false, value = "承包类型，1小包，2大包") @RequestParam(name = "contractType", required = false, defaultValue = "1") int contractType,
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
-            designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName);
+            designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName, contractType);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
