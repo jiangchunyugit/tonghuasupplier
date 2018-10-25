@@ -629,4 +629,9 @@ public class ApprovalFlowInstanceServiceImpl implements ApprovalFlowInstanceServ
     public void clearApprovalLog() {
 
     }
+
+    @Override
+    public List<ApprovalFlowInstance> getApprovalList(String userId, String projectNo, String companyNo, Integer scheduleSort) {
+        return null;
+    }
 }

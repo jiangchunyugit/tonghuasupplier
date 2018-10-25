@@ -5,6 +5,8 @@ import cn.thinkfree.database.model.ApprovalFlowInstance;
 import cn.thinkfree.database.vo.ApprovalFlowApprovalVO;
 import cn.thinkfree.database.vo.ApprovalFlowInstanceDetailVO;
 
+import java.util.List;
+
 /**
  * 审批流实例服务层
  * @author song
@@ -50,4 +52,14 @@ public interface ApprovalFlowInstanceService {
      * 清除审批记录（测试用）
      */
     void clearApprovalLog();
+
+    /**
+     * 获取审批列表
+     * @param userId 用户Id
+     * @param projectNo 项目编号
+     * @param companyNo 公司编号
+     * @param scheduleSort 排期编号
+     * @return 审批列表
+     */
+    List<ApprovalFlowInstance> getApprovalList(String userId, String projectNo, String companyNo, Integer scheduleSort);
 }

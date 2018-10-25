@@ -87,4 +87,28 @@ public class ApprovalFlowInstanceController extends AbsBaseController {
         instanceService.approval(approvalVO);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
+
+    /**
+     * 获取审批列表
+     * @param userId 用户Id
+     * @param projectNo 项目编号
+     * @param companyNo 公司编号
+     * @param scheduleSort 排期编号
+     * @return 审批列表
+     */
+    @ApiOperation("获取审批列表")
+    @ResponseBody
+    @PostMapping("getApprovalList")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户Id", required = true),
+            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
+            @ApiImplicitParam(name = "companyNo", value = "公司编号", required = true),
+            @ApiImplicitParam(name = "scheduleSort", value = "排期编号", required = true)
+    })
+    public MyRespBundle getApprovalList(@RequestParam(name = "userId") String userId,
+                                     @RequestParam(name = "projectNo") String projectNo,
+                                     @RequestParam(name = "companyNo") String companyNo,
+                                     @RequestParam(name = "scheduleSort") Integer scheduleSort) {
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.getApprovalList(userId, projectNo, companyNo, scheduleSort));
+    }
 }

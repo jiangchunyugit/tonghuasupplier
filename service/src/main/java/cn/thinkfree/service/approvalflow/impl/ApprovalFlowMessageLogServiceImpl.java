@@ -6,13 +6,13 @@ import cn.thinkfree.database.mapper.ApprovalFlowMessageLogMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ApprovalFlowMessageLogVO;
 import cn.thinkfree.service.approvalflow.*;
+import cn.thinkfree.service.config.UserCenterConfig;
 import cn.thinkfree.service.constants.HttpLinks;
 import cn.thinkfree.service.utils.HttpUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -34,6 +34,8 @@ public class ApprovalFlowMessageLogServiceImpl implements ApprovalFlowMessageLog
     private ApprovalFlowInstanceService instanceService;
     @Resource
     private RoleService roleService;
+    @Resource
+    private UserCenterConfig userCenterConfig;
 
     @Override
     public void create(ApprovalFlowMessageLog messageLog) {
@@ -80,7 +82,7 @@ public class ApprovalFlowMessageLogServiceImpl implements ApprovalFlowMessageLog
         Map<String, String> requestMap = new HashMap<>(2);
         requestMap.put("userId", userId);
         requestMap.put("roleId", roleId);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(HttpLinks.USER_CENTER_GETUSERMSG, requestMap);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(userCenterConfig.getGetUserMsgUrl(), requestMap);
         Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
         return (Map) responseMap.get("data");
     }
