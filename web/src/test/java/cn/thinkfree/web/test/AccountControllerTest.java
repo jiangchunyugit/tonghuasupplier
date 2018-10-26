@@ -21,6 +21,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -272,12 +273,12 @@ public class AccountControllerTest extends AbsControllerTest {
 
         String rs = mvc.perform(post("/account/info")
                 .with(user(userVO))
-//                .param("thirdId","1")
-                .param("scope","2")
                 .param("pcUserInfo.memo","备注")
-                .param("branchCompany.id","1")
-                .param("branchCompany.provinceCode","")
-                .param("cityBranch.id","1")
+//                .param("branchCompany.id","1")
+//                .param("branchCompany.provinceCode","37")
+//                .param("cityBranch.id","1")
+//                .param("cityBranch.provinceCode","37")
+//                .param("cityBranch.cityCode","3701")
                 .param("roles[0].id","1")
                 .param("roles[1].id","2")
                 .param("roles[2].id","3")
@@ -288,13 +289,65 @@ public class AccountControllerTest extends AbsControllerTest {
                 .param("thirdAccount.account","3569812")
                 .param("thirdAccount.phone","15565561616")
                 .param("thirdAccount.email","email")
-                .param("thirdAccount.id","1")
+                .param("thirdAccount.id","4")
         )
                 .andExpect(status().isOk())
                 .andDo(print())         //打印出请求和相应的内容
                 .andReturn().getResponse().getContentAsString();
 
         MyRespBundle<AccountVO> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<AccountVO>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"操作成功!");
+    }
+
+    @Test
+    public void findAccount() throws Exception {
+
+        String rs = mvc.perform(get("/account/info/PC000001540521613203oRBCy00000")
+                .with(user(userVO))
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<AccountVO> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<AccountVO>>() {}.getType());
+        Assert.assertEquals(rsb.getData().getPcUserInfo().getId(),"PC000001540521613203oRBCy00000");
+    }
+
+    @Test
+    public void editAccount() throws Exception {
+
+        String rs = mvc.perform(post("/account/info/PC000001540521613203oRBCy00000")
+                .with(user(userVO))
+                        .param("pcUserInfo.memo","备注")
+                .param("branchCompany.id","40")
+                .param("branchCompany.provinceCode","37")
+                .param("cityBranch.id","45")
+                .param("cityBranch.provinceCode","37")
+                .param("cityBranch.cityCode","3701")
+                .param("roles[0].id","1")
+                .param("roles[1].id","2")
+                .param("roles[2].id","3")
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<String> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<String>>() {}.getType());
+        Assert.assertEquals(rsb.getData() ,"操作成功!");
+    }
+
+
+    @Test
+    public void delAccount() throws Exception {
+
+        String rs = mvc.perform(delete("/account/info/PC000001540519228894yLDL800000")
+                        .with(user(userVO))
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<String> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<String>>() {}.getType());
         Assert.assertEquals(rsb.getData(),"操作成功!");
     }
 

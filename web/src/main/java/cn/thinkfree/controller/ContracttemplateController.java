@@ -29,7 +29,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ContractTemplate;
 import cn.thinkfree.service.constants.CompanyType;
-import cn.thinkfree.service.contractTemplate.ContractTemplateService;
+import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

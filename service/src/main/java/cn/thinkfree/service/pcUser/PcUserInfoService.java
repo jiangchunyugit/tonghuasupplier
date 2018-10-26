@@ -39,5 +39,35 @@ public interface PcUserInfoService {
      * @param id
      * @return
      */
-    AccountVO findAccountVOByID(Integer id);
+    AccountVO findAccountVOByID(String id);
+
+    /**
+     * 删除账号信息
+     * @param id
+     * @return
+     */
+    String delAccountByID(String id);
+
+    /**
+     * 更新账号信息
+     * @param id
+     * @param accountVO
+     * @return
+     */
+    String updateAccountVO(String id, AccountVO accountVO);
+
+    /**
+     * 重置密码
+     * @param id
+     * @return
+     */
+    String updateForResetPassWord(String id);
+
+    /**
+     * 账号启停
+     * @param id
+     * @param state
+     * @return
+     */
+    String updateAccountState(String id, Integer state);
 }

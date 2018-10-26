@@ -4,6 +4,7 @@
   <resultMap id="SystemRoleVO" type="cn.thinkfree.database.vo.account.SystemRoleVO" extends="BaseResultMap">
     <result column="creatorName"  property="creatorName" />
     <result column="permissions"  property="permissions" />
+    <result column="isGrant"  property="isGrant" />
   </resultMap>
 
   <sql id="MyColumnList" >
@@ -98,6 +99,23 @@
     where pc_system_role.id = #{id,jdbcType=INTEGER}
   </select>
 
-
+  <select id="selectSystemRoleVOForGrant"   resultMap="SystemRoleVO">
+    select
+    decode(pc_system_user_role.id,null,0,1) as isGrant,
+    <include refid="MyColumnList">
+      <property name="alias" value="pc_system_role"/>
+    </include>
+    from pc_system_role pc_system_role
+    LEFT JOIN pc_system_user_role pc_system_user_role on pc_system_user_role.role_id = pc_system_role."id"
+    and pc_system_user_role.user_id = #{id}
+    and
+     pc_system_role.is_del = 0
+    and pc_system_role.is_enable = 1
+    and (pc_system_role."scope" ='7'
+    <if test="scope != null and scope != ''">
+      or pc_system_role."scope" = #{scope}
+    </if>
+    )
+  </select>
 
 </mapper>

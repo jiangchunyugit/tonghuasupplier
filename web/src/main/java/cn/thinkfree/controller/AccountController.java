@@ -341,11 +341,77 @@ public class AccountController extends AbsBaseController {
      */
     @GetMapping("/info/{id}")
     @MyRespBody
-    public MyRespBundle<AccountVO> details(@PathVariable Integer id){
+    public MyRespBundle<AccountVO> details(@PathVariable String id){
         AccountVO result = pcUserInfoService.findAccountVOByID(id);
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
+    /**
+     * 修改账号信息
+     * @param id
+     * @param accountVO
+     * @return
+     */
+    @PostMapping("/info/{id}")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "修改账号信息")
+    public MyRespBundle<String> editInfo(@PathVariable String id, AccountVO accountVO){
+        String mes = pcUserInfoService.updateAccountVO(id,accountVO);
+        return sendSuccessMessage(mes);
+    }
 
+    /**
+     * 重置密码
+     * @param id
+     * @return
+     */
+    @PostMapping("/info/{id}/reset")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "重置密码")
+    public MyRespBundle<String> resetPassWord(@PathVariable String id){
+        String mes = pcUserInfoService.updateForResetPassWord(id);
+        return sendSuccessMessage(mes);
+    }
+
+
+    /**
+     * 删除账号
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/info/{id}")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除账号")
+    public MyRespBundle<String> delAccount(@PathVariable String id){
+        String mes = pcUserInfoService.delAccountByID(id);
+        return sendSuccessMessage(mes);
+    }
+
+
+    /**
+     * 启用账号
+     * @param id
+     * @return
+     */
+    @PostMapping("/info/{id}/enable")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用账号")
+    public MyRespBundle<String> enableAccount(@PathVariable String id){
+        String mes = pcUserInfoService.updateAccountState(id,UserEnabled.Enabled_true.code);
+        return sendSuccessMessage(SUCCESS.message);
+    }
+
+    /**
+     * 禁用账号
+     * @param id
+     * @return
+     */
+    @PostMapping("/info/{id}/disable")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "停用账号")
+    public MyRespBundle<String> disableAccount(@PathVariable String id){
+        String mes = pcUserInfoService.updateAccountState(id,UserEnabled.Disable.code);
+        return sendSuccessMessage(SUCCESS.message);
+    }
 
 }

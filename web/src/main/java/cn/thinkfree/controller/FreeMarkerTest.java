@@ -65,7 +65,7 @@ public class FreeMarkerTest {
 	        rep.put("test5", "10");
 	        reportresult.add(rep);
 	        root.put("reportresult", reportresult);
-		WordUtil.createWord(root, "NewFile.xml", "d://11", "s2.doc");
+//		WordUtil.createWord(root, "NewFile.xml", "d://11", "s2.doc");
 	}
 	
 }

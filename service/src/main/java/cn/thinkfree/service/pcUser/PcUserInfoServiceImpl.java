@@ -6,6 +6,7 @@ import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
+import cn.thinkfree.database.constants.RoleScope;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.event.AccountCreate;
@@ -15,9 +16,10 @@ import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.account.AccountVO;
+import cn.thinkfree.database.vo.account.ThirdAccountVO;
 import cn.thinkfree.service.constants.UserRegisterType;
-import cn.thinkfree.service.utils.UserNoUtils;
 import cn.thinkfree.service.utils.AccountHelper;
+import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -53,6 +55,9 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     @Autowired
     BranchCompanyMapper branchCompanyMapper;
+
+    @Autowired
+    SystemRoleMapper systemRoleMapper;
 
 
     @Override
@@ -157,10 +162,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         userRegister.setType(UserRegisterType.Staff.shortVal());
         userRegister.setUpdateTime(date);
         MultipleMd5 md5 = new MultipleMd5();
-        //加密
-        /*if(null == pcUserInfoVo.getPassword() || "".equals(pcUserInfoVo.getPassword())){
-            pcUserInfoVo.setPassword("123456");
-        }*/
+
         userRegister.setPassword(md5.encode(pcUserInfoVo.getPassword()));
         userRegister.setPhone(pcUserInfoVo.getRegPhone());
         userRegister.setUserId(userId);
@@ -191,11 +193,6 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean updateUserInfo(PcUserInfoVo pcUserInfoVo) {
-        /*PcUserInfo pcUserInfo = new PcUserInfo();
-        pcUserInfo.setId(pcUserInfoVo.getId());
-        pcUserInfo.setMemo(pcUserInfoVo.getMemo());
-        pcUserInfo.setPhone(pcUserInfoVo.getPhone());
-        pcUserInfo.setName(pcUserInfoVo.getName());*/
 
         UserRegister userRegister = new UserRegister();
         userRegister.setUserId(pcUserInfoVo.getId());
@@ -284,6 +281,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         PasswordEncoder passwordEncoder = new MultipleMd5();
         String userCode = getUserCode(UserRegisterType.Platform);
         String password = AccountHelper.createUserPassWord();
+
         logger.info("创建账号 => 获取用户编号:{}",userCode);
 
         UserRegister account = getUserRegister(accountVO);
@@ -300,20 +298,15 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         pcUserInfoMapper.insertSelective(userInfo);
 
         List<SystemRole> roles = accountVO.getRoles();
-        if(roles != null ){
-            roles.forEach(r->{
-                SystemUserRole saveObj = new SystemUserRole();
-                saveObj.setRoleId(r.getId());
-                saveObj.setUserId(userCode);
-                systemUserRoleMapper.insertSelective(saveObj);
-            });
-        }
+        saveUserRole(userCode,roles);
 
         // TODO 发送事件
         AccountCreate accountCreate = new AccountCreate();
 
         return accountVO;
     }
+
+
 
     /**
      * 查询账号详情
@@ -322,9 +315,152 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      * @return
      */
     @Override
-    public AccountVO findAccountVOByID(Integer id) {
-        AccountVO accountVO = pcUserInfoMapper.selectAccountVOByID(id);
+    public AccountVO findAccountVOByID(String id) {
+
+        AccountVO accountVO = new AccountVO();
+
+        PcUserInfo pcUserInfo = pcUserInfoMapper.selectByPrimaryKey(id);
+        accountVO.setPcUserInfo(pcUserInfo);
+
+        if(StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())){
+            BranchCompany branchCompany = branchCompanyMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getBranchCompanyId()));
+            accountVO.setBranchCompany(branchCompany);
+        }
+        if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
+            CityBranch cityBranch = cityBranchMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getCityBranchCompanyId()));
+            accountVO.setCityBranch(cityBranch);
+        }
+
+        ThirdAccountVO thirdAccountVO = new ThirdAccountVO();
+        accountVO.setThirdAccount(thirdAccountVO);
+
+        List<SystemRole> roles = systemRoleMapper.selectSystemRoleVOForGrant(id,convertScope(pcUserInfo));
+        accountVO.setRoles(roles);
+
         return accountVO;
+    }
+
+    /**
+     * 更新账号信息
+     *
+     * @param id
+     * @param accountVO
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updateAccountVO(String id, AccountVO accountVO) {
+
+        PcUserInfo update = pcUserInfoMapper.selectByPrimaryKey(id);
+        if(accountVO.getPcUserInfo()!= null ){
+            update.setMemo(accountVO.getPcUserInfo().getMemo());
+        }
+        logger.info("编辑账号,补充个人所属信息:{}",accountVO);
+        makeUpOwnScope(update,accountVO);
+        pcUserInfoMapper.updateByPrimaryKey(update);
+
+        refreshSystemRole(id,accountVO);
+
+        return "操作成功!";
+    }
+
+    /**
+     * 刷新系统权限
+     * @param id
+     * @param accountVO
+     */
+    private void refreshSystemRole(String id, AccountVO accountVO) {
+        SystemUserRoleExample systemUserRoleExample = new SystemUserRoleExample();
+        systemUserRoleExample.createCriteria().andUserIdEqualTo(id);
+        systemUserRoleMapper.deleteByExample(systemUserRoleExample);
+
+        saveUserRole(id,accountVO.getRoles());
+    }
+
+    /**
+     * 账号启停
+     *
+     * @param id
+     * @param state
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updateAccountState(String id, Integer state) {
+        PcUserInfo update = new PcUserInfo();
+        update.setId(id);
+        update.setEnabled(state.shortValue());
+        pcUserInfoMapper.updateByPrimaryKeySelective(update);
+        return "操作成功!";
+    }
+
+    /**
+     * 插入系统角色信息
+     * @param userCode
+     * @param roles
+     */
+    private void saveUserRole(String userCode, List<SystemRole> roles) {
+        if(roles != null ){
+            roles.forEach(r->{
+                SystemUserRole saveObj = new SystemUserRole();
+                saveObj.setRoleId(r.getId());
+                saveObj.setUserId(userCode);
+                systemUserRoleMapper.insertSelective(saveObj);
+            });
+        }
+    }
+    /**
+     * 转换权限范围
+     * @param pcUserInfo
+     * @return
+     */
+    private String convertScope(PcUserInfo pcUserInfo) {
+        if (pcUserInfo == null){
+            throw  new MyException("数据状态异常");
+        }
+        if(UserLevel.Company_Admin.shortVal().equals(pcUserInfo.getLevel())){
+            return RoleScope.ROOT.code.toString();
+        }else if(UserLevel.Company_Province.shortVal().equals(pcUserInfo.getLevel())){
+            return RoleScope.PROVINCE.code.toString();
+        }else {
+            return RoleScope.CITY.code.toString();
+        }
+
+    }
+
+    /**
+     * 删除账号信息
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    @Override
+    public String delAccountByID(String id) {
+
+        PcUserInfo pcUserInfo = pcUserInfoMapper.selectByPrimaryKey(id);
+
+        if(!UserEnabled.Enabled_false.shortVal().equals(pcUserInfo.getEnabled())){
+            PcUserInfo delObj = new PcUserInfo();
+            delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+            delObj.setId(id);
+            pcUserInfoMapper.updateByPrimaryKeySelective(delObj);
+        }else{
+            throw new MyException("数据状态不可删除");
+        }
+//        pcUserInfoMapper.deleteByPrimaryKey(id);
+        UserRegisterExample userRegisterExample = new UserRegisterExample();
+        userRegisterExample.createCriteria().andUserIdEqualTo(id);
+        UserRegister delObj = new UserRegister();
+        delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
+        userRegisterMapper.updateByExampleSelective(delObj,userRegisterExample);
+//        userRegisterMapper.deleteByExample(userRegisterExample);
+
+//        SystemUserRoleExample systemUserRoleExample = new SystemUserRoleExample();
+//        systemUserRoleExample.createCriteria().andUserIdEqualTo(id);
+//        systemUserRoleMapper.deleteByExample(systemUserRoleExample);
+
+        return "操作成功";
     }
 
     /**
@@ -352,9 +488,12 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         return !result.isEmpty();
     }
 
+    /**
+     * 获取用户信息
+     * @param accountVO
+     * @return
+     */
     private PcUserInfo getUserInfo(AccountVO accountVO) {
-
-//        PcUserInfo  userInfo = accountVO.getPcUserInfo();
         PcUserInfo  userInfo = new PcUserInfo();
         // 初始默认值
         userInfo.setEnabled(SysConstants.YesOrNo.NO.shortVal());
@@ -365,17 +504,9 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         userInfo.setCreator(userVO.getUsername());
         userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        // 处理用户级别
-        if(accountVO.getBranchCompany() != null  && accountVO.getCityBranch() != null){
-            userInfo.setLevel(UserLevel.Company_City.shortVal());
-            userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getId().toString());
-            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getId().toString());
-//            userInfo.setProvince(accountVO.getCityBranch().get);
-        }else if(accountVO.getBranchCompany() != null &&  accountVO.getCityBranch() == null){
-            userInfo.setLevel(UserLevel.Company_Province.shortVal());
-        }else if(accountVO.getBranchCompany() != null && StringUtils.equals(userVO.getPcUserInfo().getRootCompanyId(),accountVO.getBranchCompany().getId().toString())){
-            userInfo.setLevel(UserLevel.Company_Admin.shortVal());
-        }
+
+        makeUpOwnScope(userInfo,accountVO);
+
         // 处理设置信息
         if(accountVO.getPcUserInfo() != null){
             userInfo.setMemo(accountVO.getPcUserInfo().getMemo());
@@ -389,6 +520,53 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         return userInfo;
     }
 
+    /**
+     * 补全所属信息
+     * @param userInfo
+     * @param accountVO
+     */
+    private void makeUpOwnScope(PcUserInfo userInfo, AccountVO accountVO) {
+        // 处理用户级别
+        if(accountVO.getBranchCompany() != null  && accountVO.getCityBranch() != null){
+            userInfo.setLevel(UserLevel.Company_City.shortVal());
+            userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getId().toString());
+            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getId().toString());
+            userInfo.setProvince(accountVO.getCityBranch().getProvinceCode().toString());
+            userInfo.setCity(accountVO.getCityBranch().getCityCode().toString());
+        }else if(accountVO.getBranchCompany() != null &&  accountVO.getCityBranch() == null){
+            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getId().toString());
+            userInfo.setProvince(accountVO.getBranchCompany().getProvinceCode().toString());
+            userInfo.setLevel(UserLevel.Company_Province.shortVal());
+            userInfo.setCityBranchCompanyId(null);
+            userInfo.setCity(null);
+        }else if( accountVO.getBranchCompany() == null  && accountVO.getCityBranch() == null){
+            userInfo.setLevel(UserLevel.Company_Admin.shortVal());
+            userInfo.setProvince(null);
+            userInfo.setCity(null);
+            userInfo.setCityBranchCompanyId(null);
+            userInfo.setBranchCompanyId(null);
+        }
+    }
+
+    /**
+     * 重置密码
+     *
+     * @param id
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updateForResetPassWord(String id) {
+        UserRegister update = new UserRegister();
+        update.setPassword(new MultipleMd5().encode(AccountHelper.createUserPassWord()));
+        UserRegisterExample condition = new UserRegisterExample();
+        condition.createCriteria().andUserIdEqualTo(id);
+        userRegisterMapper.updateByExampleSelective(update,condition);
+
+        // TODO 发送密码重置事件
+
+        return "操作成功";
+    }
 
     /**
      * 抽取账号信息

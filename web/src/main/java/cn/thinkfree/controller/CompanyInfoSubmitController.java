@@ -2,6 +2,7 @@ package cn.thinkfree.controller;
 
 import java.util.Map;
 
+import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 import org.checkerframework.checker.units.qual.A;
@@ -14,7 +15,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.contract.ContractService;
-import cn.thinkfree.service.contractTemplate.ContractTemplateService;
+import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,6 +38,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 	ContractService contractService;
     @Autowired
     ContractTemplateService contractTemplateService;
+
 
     /**
      * 入驻公司资质变更回显
@@ -67,8 +69,39 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
+    /**
+     * 入驻公司资质变更审批回显
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/findCompanyTemporaryInfo", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="入驻公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口")
+    public MyRespBundle<PcAuditTemporaryInfo> findCompanyTemporaryInfo(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
+        PcAuditTemporaryInfo pcAuditTemporaryInfo = companySubmitService.findCompanyTemporaryInfo(companyId);
+        return sendJsonData(success, "操作成功", pcAuditTemporaryInfo);
+    }
 
-    //入驻公司资质变更审批
+
+    /**
+     * 入驻公司资质变更审批
+     * @param companyId
+     * @param auditStatus
+     * @param auditCase
+     * @return
+     */
+    @ApiOperation(value = "入驻公司资质变更审批。注：申请列表的申请事项如果是资质变更，则使用此接口", notes = "运营审核")
+    @PostMapping("/auditChangeCompany")
+    @MyRespBody
+    public MyRespBundle<String> auditChangeCompany(
+            @ApiParam("公司编号")@RequestParam String companyId,
+            @ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
+            @ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
+        String msg = companySubmitService.auditChangeCompany(companyId,auditStatus,auditCase);
+        return sendJsonData(ResultMessage.SUCCESS, msg);
+
+    }
+
 
     @RequestMapping(value = "/upCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
@@ -177,7 +210,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
     public MyRespBundle<String> auditCompany(
-    		@ApiParam("公司编号")@RequestParam String companyId,
+    		@ApiParam("公司编号")@RequestParam() String companyId,
     		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
     		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
         
@@ -192,6 +225,5 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     	 }else{//成功的情况
     		 return sendSuccessMessage(mes);
     	 }
-       
     }
 }

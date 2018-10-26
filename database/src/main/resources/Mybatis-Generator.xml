@@ -45,6 +45,7 @@
         <!--</javaClientGenerator>-->
         <!-- 表-->
         <!--<table tableName="province" domainObjectName="Province" />-->
+        <table tableName="pc_city_branch" domainObjectName="CityBranch" />
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
         <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->

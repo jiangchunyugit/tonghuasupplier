@@ -2,6 +2,7 @@ package cn.thinkfree.service.companysubmit;
 
 import java.util.Map;
 
+import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.CompanyListSEO;
 import cn.thinkfree.database.vo.CompanyListVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
@@ -57,4 +58,20 @@ public interface CompanySubmitService {
      * @return
      */
     boolean changeCompanyInfo(CompanyTemporaryVo companyTemporaryVo);
+
+    /**
+     * 入驻公司资质变更审批
+     * @param companyId
+     * @param auditStatus
+     * @param auditCase
+     * @return
+     */
+    String auditChangeCompany(String companyId,String auditStatus, String auditCase);
+
+    /**
+     * 入驻公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口
+     * @param companyId
+     * @return
+     */
+    PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId);
 }
