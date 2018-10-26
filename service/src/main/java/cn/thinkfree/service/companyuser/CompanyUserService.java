@@ -23,6 +23,13 @@ public interface CompanyUserService {
      * @author lvqidong
      */
     boolean  inserOrUpdateCompanyUser(CompanyUserVo companyUser);
+
+
+    /**
+     * 添加或者修改入驻公司用户
+     * @author lvqidong
+     */
+    boolean  updateUserStatus(String userId,String status);
     
     
     /**

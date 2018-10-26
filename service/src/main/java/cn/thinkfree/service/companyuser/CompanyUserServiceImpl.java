@@ -101,6 +101,18 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 	}
 
 	@Override
+	public boolean updateUserStatus(String userId,String stauts) {
+		CompanyUser user = new CompanyUser();
+		user.setEmpNumber(userId);
+		user.setStatus(stauts);
+		int  falg = companyUserMapper.updateByExampleSelective(user, new CompanyUserExample());
+		if(falg > 0 ){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public CompanyUser getCompanyUserInfo(String empNumber) {
 		CompanyUserExample example = new CompanyUserExample();
 		example.createCriteria().andEmpNumberEqualTo(empNumber);

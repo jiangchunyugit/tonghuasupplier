@@ -48,21 +48,37 @@ public class CompanyUserController extends AbsBaseController{
     }
 
     /**
-     * 查询入驻公司员工
+     * 新增入驻公司员工
      * @author lqd
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "新增或者添加公司信息", notes = "根据一定条件获取分页入驻公司员工（通过id是否有值来区分）")
+    @ApiOperation(value = "新增或者添加公司信息", notes = "新增入驻公司员工")
     @PostMapping("/insertInfo")
     @MyRespBody
-    public MyRespBundle<PageInfo<CompanyUser>> insertInfo(@ApiParam("添加/修改用户信息")CompanyUserVo companyUser){
+    public MyRespBundle<String> insertInfo(@ApiParam("添加/修改用户信息")CompanyUserVo companyUser){
 
         boolean  falg = companyInfoService.inserOrUpdateCompanyUser(companyUser);
 
         return sendJsonData(ResultMessage.SUCCESS,falg);
     }
-  
+
+    /**
+     * 停用/启用
+     * @author lqd
+     * @param ContractSEO
+     * @return pageList
+     */
+    @ApiOperation(value = "停用/启用公司员工", notes = "1 代表启用  0代表停用")
+    @PostMapping("/updateUserStatus")
+    @MyRespBody
+    public MyRespBundle<String> updateUserStatus(@ApiParam("用户编号")String userId,@ApiParam("状态")String status){
+
+        boolean  falg = companyInfoService.updateUserStatus(userId, status);
+
+        return sendJsonData(ResultMessage.SUCCESS,falg);
+    }
+
     /**
      * 根据用户编号查询
      * @author lqd
