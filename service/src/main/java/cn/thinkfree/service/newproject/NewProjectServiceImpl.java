@@ -103,8 +103,29 @@ public class NewProjectServiceImpl implements NewProjectService {
             System.out.println("工具类转换失败!!");
             return RespData.error("工具类转换失败!!");
         }
+        //添加灵活数据
+        List<FlexibleOrderPlayVo> flexibleOrderPlayVos1 = new ArrayList<>();
+        List<FlexibleOrderPlayVo> flexibleOrderPlayVos2 = new ArrayList<>();
+        //组合设计订单数据
+        FlexibleOrderPlayVo base1 = new FlexibleOrderPlayVo("业务编号", "1223098338391");
+        FlexibleOrderPlayVo base2 = new FlexibleOrderPlayVo("风格类型", "个性化");
+        FlexibleOrderPlayVo base3 = new FlexibleOrderPlayVo("承接公司", "北京市原创艺墅设计", "http://123.56.0.102/zentao/project-task-8-assignedtome.html", true);
+        flexibleOrderPlayVos1.add(base1);
+        flexibleOrderPlayVos1.add(base2);
+        flexibleOrderPlayVos1.add(base3);
+        //组合施工订单数据
+        FlexibleOrderPlayVo base4 = new FlexibleOrderPlayVo("业务编号", "1223098338391");
+        FlexibleOrderPlayVo base5 = new FlexibleOrderPlayVo("风格类型", "个性化");
+        FlexibleOrderPlayVo base6 = new FlexibleOrderPlayVo("承接公司", "北京市原创艺墅设计", "http://123.56.0.102/zentao/project-task-8-assignedtome.html", true);
+        FlexibleOrderPlayVo base7 = new FlexibleOrderPlayVo("工长", "黄蓉蓉", "15666666666", true);
+        flexibleOrderPlayVos2.add(base4);
+        flexibleOrderPlayVos2.add(base5);
+        flexibleOrderPlayVos2.add(base6);
+        flexibleOrderPlayVos2.add(base7);
         ProjectOrderDetailVo designOrderDetailVo = designOrderMapper.selectByProjectNo(projectNo);
+        designOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos1);
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
+        constructionOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos2);
         projectOrderDetailVoList.add(designOrderDetailVo);
         projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
@@ -229,7 +250,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         int i = projectDataMapper.updateByExample(projectData, example);
-        if(i!=ProjectDataStatus.BASE_STATUS.getValue()){
+        if (i != ProjectDataStatus.BASE_STATUS.getValue()) {
             return RespData.error("确认失败!");
         }
         return RespData.success();
@@ -243,12 +264,13 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<List<UserVo>> getProjectUsers(String projectNo) {
-        List<UserVo> userVoList = orderUserMapper.getProjectUsers(projectNo, UserStatus.NO_TRANSFER.getValue(),UserStatus.ON_JOB.getValue());
+        List<UserVo> userVoList = orderUserMapper.getProjectUsers(projectNo, UserStatus.NO_TRANSFER.getValue(), UserStatus.ON_JOB.getValue());
         return RespData.success(userVoList);
     }
 
     /**
      * 获取项目阶段
+     *
      * @param projectNo
      * @return
      */
@@ -260,20 +282,21 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 批量获取员工的信息
+     *
      * @param userIds
      * @return
      */
     @Override
     public MyRespBundle<Map<String, UserVo>> getListUserByUserIds(List<String> userIds) {
         Map<String, UserVo> map = new HashMap<>();
-        for (String string : userIds){
+        for (String string : userIds) {
             EmployeeMsg employeeMsg = employeeMsgMapper.selectByUserId(string);
             UserVo vo = new UserVo();
             vo.setRealName(employeeMsg.getRealName());
             vo.setRoleCode(employeeMsg.getRoleCode());
             vo.setUserId(employeeMsg.getUserId());
             vo.setRoleName(UserJobs.findByCodeStr(vo.getRoleCode()).mes);
-            map.put(string,vo);
+            map.put(string, vo);
         }
         return RespData.success(map);
     }
