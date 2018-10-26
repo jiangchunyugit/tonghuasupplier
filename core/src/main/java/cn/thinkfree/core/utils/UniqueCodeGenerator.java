@@ -29,6 +29,10 @@ public enum UniqueCodeGenerator {
      */
     AF_OPTION("AF_OPTION_"),
     /**
+     * 审批流审批顺序方案
+     */
+    AF_PLAN("AF_PLAN_"),
+    /**
      * 审批流节点编码前缀
      */
     AF_NODE("AF_NODE_"),

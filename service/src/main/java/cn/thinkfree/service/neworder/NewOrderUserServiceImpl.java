@@ -50,10 +50,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     @Override
-    public List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId) {
+    public String findUserIdByOrderNoAndRoleId(String orderNo, String roleId) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
-        return orderUserMapper.selectByExample(example);
+        example.createCriteria().andOrderNoEqualTo(orderNo).andRoleIdEqualTo(roleId);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
+        return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0).getUserId() : null;
     }
 
 
@@ -67,7 +68,50 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public List<ProjectOrderVO> queryProjectOrderByPage(ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize) {
         projectOrderVO.setStatus(1);
-        return designOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
+        //获取业主  项目经理 设计师
+        EmployeeInfoVO employeeInfoVO = new EmployeeInfoVO();
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoEqualTo(projectOrderVO.getProjectNo());
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        List<EmployeeInfoVO> list = new ArrayList<>();
+        orderUsers.forEach((user) ->
+                {
+                    EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+                    employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
+                    List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+                    employeeMsgs.forEach(employeeMsg -> {
+                        if (employeeMsg.getRoleCode().equals("CP")) {
+                            employeeInfoVO.setProjectManager(employeeMsg.getRealName());
+                        } else if (employeeMsg.getRoleCode().equals("CM")) {
+                            employeeInfoVO.setForeman(employeeMsg.getRealName());
+                        }else if (employeeMsg.getRoleCode().equals("CS")) {
+                            employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
+                        }else if(employeeMsg.getRoleCode().equals("CQ")) {
+                            employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
+                        }else if(employeeMsg.getRoleCode().equals("CD")) {
+                            employeeInfoVO.setDesigner(employeeMsg.getRealName());
+                        }
+                    });
+                }
+
+        );
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(projectOrderVO.getProjectNo());
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+      /*  Map result = getUserName(projects.get(0).getOwnerId(), "CC");
+        //昵称先用着
+        String nickName = (String) result.get("nickName");
+        String phone = (String) result.get("phone");
+        */
+        List<ProjectOrderVO> projectOrderList = designOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
+        projectOrderList.forEach((projectOrder)->{
+            projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
+            projectOrder.setDesignerName(employeeInfoVO.getDesigner());
+           /* projectOrder.setOwner(nickName);
+           projectOrder.setPhone(phone);*/
+        });
+
+        return projectOrderList;
     }
 
     /**
