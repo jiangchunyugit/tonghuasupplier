@@ -18,6 +18,8 @@ public class EmployeeInfoVO {
     private String housekeeper;
     @ApiModelProperty("质检")
     private String qualityInspection;
+    @ApiModelProperty("设计师")
+    private String designer;
 
     public String getProjectManager() {
         return projectManager;
@@ -49,5 +51,13 @@ public class EmployeeInfoVO {
 
     public void setQualityInspection(String qualityInspection) {
         this.qualityInspection = qualityInspection;
+    }
+
+    public String getDesigner() {
+        return designer;
+    }
+
+    public void setDesigner(String designer) {
+        this.designer = designer;
     }
 }
