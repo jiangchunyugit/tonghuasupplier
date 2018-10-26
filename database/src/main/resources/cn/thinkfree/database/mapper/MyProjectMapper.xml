@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ProjectMapper">
+
     <!--订单详情-->
     <select id="selectOrderDetails" resultType="cn.thinkfree.database.vo.OrderDetailsVO">
           SELECT
-              p.stage AS stage,
-              p.address AS address,
-              i.company_name AS companyName,
-              c.order_no AS orderNo,
-              c.close_time AS closingTime,
-              c.construction_stage AS orderPhase,
-              c.order_stage AS orderStage,
-              p.order_source AS orderSource,
+              p.address,
+              i.company_name,
+              c.order_no,
+              c.close_time,
+              c.construction_stage,
+              c.order_stage,
+              p.order_source,
+              u.name,
 
-              p.address_detail AS projectAddress,
-
-              p.house_type AS houseType,
-              p.decoration_budget AS decorationBudget,
-              p.house_room AS houseRoom,
-              p.house_office AS houseOffice,
-              p.house_toilet AS houseToilet,
-              p.balcony AS houseBalcony,
-              p.area AS area,
-              p.style AS style,
-              p.reference_scheme AS referencePlan,
-              o.remark AS remark,
-              o.type AS decorationType,
-              p.plan_start_time AS startDate,
-              p.plan_end_time AS endDate,
-              c.construction_stage AS constructionStage,
-              c.money AS contractAmount
+              p.address_detail,
+              u.phone,
+              p.house_type,
+              p.decoration_budget,
+              p.house_room,
+              p.house_office,
+              p.house_toilet,
+              p.balcony,
+              p.area,
+              p.style,
+              p.reference_scheme,
+              o.remark,
+              o.type,
+              p.plan_start_time,
+              p.plan_end_time,
+              c.construction_stage,
+              c.money
 
               FROM   project p
               LEFT JOIN design_order o ON o.project_no=p.project_no
               LEFT JOIN construction_order c ON c.project_no=p.project_no
               LEFT JOIN company_info i ON i.company_id = p.company_id
-
+              LEFT JOIN  pc_user_info  u ON  u.id=p.owner_id
           WHERE p.project_no=#{projectNo} AND p.status=#{status}
 
   </select>

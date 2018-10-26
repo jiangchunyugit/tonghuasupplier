@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.ConstructionOrderMapper">
+
+  <!--阶段详情展示-->
+  <select id="selectStageDetailsList" resultType="cn.thinkfree.database.vo.StageDetailsVO">
+            SELECT
+            s.stage AS stage,
+            s.create_time AS createTime
+            FROM construction_order c
+            LEFT JOIN project_stage_log s ON s.order_no=c.order_no
+            WHERE c.project_no=#{projectNo} AND s.type =#{type}
+  </select>
+
+  <!--根据项目编号查询订单信息-->
+  <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
+    SELECT
+      order_stage as taskStage,
+      order_no as orderNo,
+      type as type
+    FROM
+      construction_order
+    WHERE
+      project_no = #{projectNo}
+  </select>
+</mapper>
