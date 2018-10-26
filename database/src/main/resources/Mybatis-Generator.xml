@@ -109,7 +109,8 @@
         <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
         <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
         <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
-        <!--<table tableName="a_f_pub_role" domainObjectName="AfPubRole"/>-->
+        <!--<table tableName="a_f_plan" domainObjectName="AfPlan"/>-->
+        <!--<table tableName="a_f_config_start" domainObjectName="AfConfigStart"/>-->
         <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->
         <!--<table tableName="a_f_sub_url" domainObjectName="AfSubUrl"/>-->
         <!-- new approval flow end -->

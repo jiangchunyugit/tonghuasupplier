@@ -4,6 +4,7 @@ import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfConfigMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.AfConfigVO;
+import cn.thinkfree.database.vo.AfPlanVO;
 import cn.thinkfree.service.approvalflow.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +30,6 @@ public class AfConfigServiceImpl implements AfConfigService {
     @Resource
     private AfApprovalRoleService approvalRoleService;
     @Resource
-    private AfPubRoleService pubRoleService;
-    @Resource
     private AfSubRoleService subRoleService;
     @Resource
     private AfSubUrlService subUrlService;
@@ -38,6 +37,8 @@ public class AfConfigServiceImpl implements AfConfigService {
     private RoleService roleService;
     @Resource
     private AfConfigLogService configLogService;
+    @Resource
+    private AfPlanService planService;
 
     @Override
     public List<AfConfigVO> list() {
@@ -46,17 +47,12 @@ public class AfConfigServiceImpl implements AfConfigService {
         if (configs != null) {
             List<UserRoleSet> roles = roleService.findAll();
             for (AfConfig config : configs) {
-                List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
-                List<UserRoleSet> pubRoles = pubRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
                 List<UserRoleSet> subRoles = subRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
-                List<AfSubUrl> subUrls = subUrlService.findByConfigLogNo(config.getConfigLogNo());
-
+                List<AfPlanVO> plans = planService.findByConfigLogNo(config.getConfigLogNo(), roles);
                 AfConfigVO configVO = new AfConfigVO();
                 configVO.setConfig(config);
-                configVO.setApprovalRoles(approvalRoles);
-                configVO.setPubRoles(pubRoles);
                 configVO.setSubRoles(subRoles);
-                configVO.setSubUrls(subUrls);
+                configVO.setPlans(plans);
 
                 configVOs.add(configVO);
             }
@@ -88,17 +84,13 @@ public class AfConfigServiceImpl implements AfConfigService {
     }
 
     private AfConfigVO detail(AfConfig config, List<UserRoleSet> roles) {
-        List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
-        List<UserRoleSet> pubRoles = pubRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
+        List<AfPlanVO> plans = planService.findByConfigLogNo(config.getConfigNo(), roles);
         List<UserRoleSet> subRoles = subRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
-        List<AfSubUrl> subUrls = subUrlService.findByConfigLogNo(config.getConfigLogNo());
 
         AfConfigVO configVO = new AfConfigVO();
         configVO.setConfig(config);
-        configVO.setApprovalRoles(approvalRoles);
-        configVO.setPubRoles(pubRoles);
+        configVO.setPlans(plans);
         configVO.setSubRoles(subRoles);
-        configVO.setSubUrls(subUrls);
         return configVO;
     }
 
@@ -116,10 +108,8 @@ public class AfConfigServiceImpl implements AfConfigService {
         save(record);
 
         configLogService.create(record, configLogNo);
-        approvalRoleService.create(configLogNo, configVO.getApprovalRoles());
-        pubRoleService.create(configLogNo, configVO.getPubRoles());
+        planService.create(configLogNo, configVO.getPlans());
         subRoleService.create(configLogNo, configVO.getSubRoles());
-        subUrlService.create(configLogNo, configVO.getSubUrls());
     }
 
     private void save(AfConfig config) {
