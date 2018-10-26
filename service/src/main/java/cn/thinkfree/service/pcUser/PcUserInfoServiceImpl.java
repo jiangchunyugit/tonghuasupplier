@@ -22,6 +22,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -280,20 +281,23 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             logger.error("已存在用户:{}",accountVO);
             throw  new MyException("已存在的用户");
         }
-
+        PasswordEncoder passwordEncoder = new MultipleMd5();
         String userCode = getUserCode(UserRegisterType.Platform);
+        String password = AccountHelper.createUserPassWord();
         logger.info("创建账号 => 获取用户编号:{}",userCode);
 
         UserRegister account = getUserRegister(accountVO);
         account.setUserId(userCode);
+        account.setPassword(passwordEncoder.encode(password));
+        userRegisterMapper.insertSelective(account);
+
         logger.info("创建账号 => 初始化账号信息,准备处理密码");
 
-        String password = AccountHelper.createUserPassWord();
-        account.setPassword(new MultipleMd5().encode(password));
+
 
         PcUserInfo userInfo = getUserInfo(accountVO);
         userInfo.setId(userCode);
-
+        pcUserInfoMapper.insertSelective(userInfo);
 
         List<SystemRole> roles = accountVO.getRoles();
         if(roles != null ){
@@ -308,6 +312,18 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         // TODO 发送事件
         AccountCreate accountCreate = new AccountCreate();
 
+        return accountVO;
+    }
+
+    /**
+     * 查询账号详情
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public AccountVO findAccountVOByID(Integer id) {
+        AccountVO accountVO = pcUserInfoMapper.selectAccountVOByID(id);
         return accountVO;
     }
 
@@ -327,7 +343,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
      */
     private boolean isExists(AccountVO accountVO) {
 
-        String account = accountVO.getThirdId();
+        String account = accountVO.getThirdAccount().getId();
 
         PcUserInfoExample condition = new PcUserInfoExample();
         condition.createCriteria().andThirdIdEqualTo(account).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
@@ -338,7 +354,8 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     private PcUserInfo getUserInfo(AccountVO accountVO) {
 
-        PcUserInfo  userInfo = accountVO.getPcUserInfo();
+//        PcUserInfo  userInfo = accountVO.getPcUserInfo();
+        PcUserInfo  userInfo = new PcUserInfo();
         // 初始默认值
         userInfo.setEnabled(SysConstants.YesOrNo.NO.shortVal());
         userInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
@@ -349,19 +366,26 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         userInfo.setCreator(userVO.getUsername());
         userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         // 处理用户级别
-        if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isNotBlank(userInfo.getCityBranchCompanyId())){
+        if(accountVO.getBranchCompany() != null  && accountVO.getCityBranch() != null){
             userInfo.setLevel(UserLevel.Company_City.shortVal());
-        }else if(StringUtils.isNotBlank(userInfo.getBranchCompanyId()) && StringUtils.isBlank(userInfo.getCityBranchCompanyId())){
+            userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getId().toString());
+            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getId().toString());
+//            userInfo.setProvince(accountVO.getCityBranch().get);
+        }else if(accountVO.getBranchCompany() != null &&  accountVO.getCityBranch() == null){
             userInfo.setLevel(UserLevel.Company_Province.shortVal());
-        }else if(StringUtils.equals(userVO.getPcUserInfo().getRootCompanyId(),userInfo.getBranchCompanyId())){
+        }else if(accountVO.getBranchCompany() != null && StringUtils.equals(userVO.getPcUserInfo().getRootCompanyId(),accountVO.getBranchCompany().getId().toString())){
             userInfo.setLevel(UserLevel.Company_Admin.shortVal());
         }
         // 处理设置信息
-        userInfo.setMemo(accountVO.getPcUserInfo().getMemo());
+        if(accountVO.getPcUserInfo() != null){
+            userInfo.setMemo(accountVO.getPcUserInfo().getMemo());
+        }
         userInfo.setEmail(accountVO.getThirdAccount().getEmail());
         userInfo.setPhone(accountVO.getThirdAccount().getPhone());
         userInfo.setName(accountVO.getThirdAccount().getName());
         userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
+        userInfo.setThirdId(accountVO.getThirdAccount().getId());
+
         return userInfo;
     }
 

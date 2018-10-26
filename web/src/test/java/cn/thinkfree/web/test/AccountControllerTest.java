@@ -3,6 +3,7 @@ package cn.thinkfree.web.test;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.SystemRole;
+import cn.thinkfree.database.vo.account.AccountVO;
 import cn.thinkfree.database.vo.account.PermissionVO;
 import cn.thinkfree.database.vo.account.SystemResourceTreeVO;
 import cn.thinkfree.database.vo.account.SystemRoleVO;
@@ -263,6 +264,39 @@ public class AccountControllerTest extends AbsControllerTest {
 
     }
 
+    @Test
+    public void saveAccount() throws Exception {
+        AccountVO save = new AccountVO();
+
+
+
+        String rs = mvc.perform(post("/account/info")
+                .with(user(userVO))
+//                .param("thirdId","1")
+                .param("scope","2")
+                .param("pcUserInfo.memo","备注")
+                .param("branchCompany.id","1")
+                .param("branchCompany.provinceCode","")
+                .param("cityBranch.id","1")
+                .param("roles[0].id","1")
+                .param("roles[1].id","2")
+                .param("roles[2].id","3")
+                .param("thirdAccount.dept","临时部门")
+                .param("thirdAccount.group","临时组")
+                .param("thirdAccount.name","临时姓名")
+                .param("thirdAccount.workNumber","20182001")
+                .param("thirdAccount.account","3569812")
+                .param("thirdAccount.phone","15565561616")
+                .param("thirdAccount.email","email")
+                .param("thirdAccount.id","1")
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<AccountVO> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<AccountVO>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"操作成功!");
+    }
 
 
 }

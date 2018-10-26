@@ -334,11 +334,16 @@ public class AccountController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
+    /**
+     * 查询账号详情
+     * @param id
+     * @return
+     */
     @GetMapping("/info/{id}")
     @MyRespBody
     public MyRespBundle<AccountVO> details(@PathVariable Integer id){
-
-        return null;
+        AccountVO result = pcUserInfoService.findAccountVOByID(id);
+        return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
 

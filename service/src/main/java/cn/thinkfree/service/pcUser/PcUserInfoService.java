@@ -33,4 +33,11 @@ public interface PcUserInfoService {
      * @return
      */
     AccountVO saveUserAccount(AccountVO accountVO);
+
+    /**
+     * 查询账号详情
+     * @param id
+     * @return
+     */
+    AccountVO findAccountVOByID(Integer id);
 }

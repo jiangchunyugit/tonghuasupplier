@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.thinkfree.database.vo.PcUserInfoVo;
+import cn.thinkfree.database.vo.account.AccountVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PcUserInfoMapper {
@@ -122,4 +123,11 @@ public interface PcUserInfoMapper {
     int updateById(PcUserInfoVo pcUserInfoVo);
 
     int insertUserInfoVo(PcUserInfoVo pcUserInfoVo);
+
+    /**
+     * 查询账号详情 -- 根据用户主键
+     * @param id
+     * @return
+     */
+    AccountVO selectAccountVOByID(Integer id);
 }
