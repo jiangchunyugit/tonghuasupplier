@@ -59,8 +59,9 @@ public interface DesignDispatchService {
      * @param companyId      公司ID
      * @param optionUserId   操作人ID
      * @param optionUserName 操作人姓名
+     * @param contractType    承包类型，1小包，2大包
      */
-    void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName);
+    void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName, int contractType);
 
     /**
      * 根据项目编号查询订单详情
