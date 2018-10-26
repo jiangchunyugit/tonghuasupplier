@@ -152,4 +152,20 @@ public interface NewOrderUserService {
      * @Param
      **/
     EmployeeInfoVO selectemployeeInfoList(String projectNo);
+    /**
+     * @Author jiang
+     * @Description 分页查询验收结果
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<AcceptanceResultsVO> queryAcceptanceResultsByPage(String projectNo, Integer pageNum, Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 验收结果总条数
+     * @Date
+     * @Param
+     * @return
+     **/
+    Integer queryAcceptanceResultsCount(String projectNo);
 }

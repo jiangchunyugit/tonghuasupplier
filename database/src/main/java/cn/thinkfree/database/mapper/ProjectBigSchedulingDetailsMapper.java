@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.AcceptanceResultsVO;
 import cn.thinkfree.database.vo.ConstructionPlanVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -102,8 +104,36 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @return
      */
     List<ProjectBigSchedulingDetails> selectByProjectNo(@Param("projectNo") String projectNo, @Param("status") Integer status);
-
+    /**
+     * @Author jiang
+     * @Description 分页查询施工计划
+     * @Date
+     * @Param
+     * @return
+     **/
     List<ConstructionPlanVO> selectConstructionPlanByPage(@Param("constructionPlanVO") ConstructionPlanVO constructionPlanVO, @Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
-
+    /**
+     * @Author jiang
+     * @Description 查询施工计划总条数
+     * @Date
+     * @Param
+     * @return
+     **/
     Integer selectConstructionPlanCount(@Param("constructionPlanVO") ConstructionPlanVO constructionPlanVO);
+    /**
+     * @Author jiang
+     * @Description 分页查询验收
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<AcceptanceResultsVO> selectAcceptanceResultsByPage(@Param("projectNo") String projectNo,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 查询验收总条数
+     * @Date
+     * @Param
+     * @return
+     **/
+    Integer selectAcceptanceResultsCount(@Param("projectNo") String projectNo);
 }
