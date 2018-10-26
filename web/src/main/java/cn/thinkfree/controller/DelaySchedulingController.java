@@ -414,5 +414,35 @@ public class DelaySchedulingController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, employeeInfoList);
     }
 
+    /**
+     * @return
+     * @Author jiang
+     * @Description 验收结果
+     * @Date
+     * @Param
+     **/
+
+    @RequestMapping(value = "acceptanceResults", method = RequestMethod.POST)
+    @ApiOperation(value = "验收结果", notes = "")
+    public MyRespBundle<DesignOrder> acceptanceResults(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
+                                                          @RequestParam(defaultValue = "1") Integer pageNum,
+                                                          @RequestParam(defaultValue = "10") Integer pageSize
+    ) {
+        if (null == projectNo || "".equals(projectNo)) {
+            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
+        }
+        Map<String, Object> params = new HashMap<>();
+        List<AcceptanceResultsVO> acceptanceResultsList = new ArrayList<>();
+        acceptanceResultsList = newOrderUserService.queryAcceptanceResultsByPage(projectNo, (pageNum - 1) * pageSize, pageSize);
+        //这里查询的是所有的数据
+        params.put("list", acceptanceResultsList);
+        //这里查询的是总页数
+        params.put("totalPage", newOrderUserService.queryAcceptanceResultsCount(projectNo));
+        params.put("pageSize", pageSize);
+        params.put("pageNum", pageNum);
+        return sendJsonData(ResultMessage.SUCCESS, params);
+    }
+
+
 
 }

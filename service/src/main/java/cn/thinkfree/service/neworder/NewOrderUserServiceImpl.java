@@ -287,5 +287,30 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         return employeeInfoVO;
     }
 
+    /**
+     * @Author jiang
+     * @Description 分页查询验收结果
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public List<AcceptanceResultsVO> queryAcceptanceResultsByPage(String projectNo, Integer pageNum, Integer pageSize) {
+
+        return projectBigSchedulingDetailsMapper.selectAcceptanceResultsByPage( projectNo,  pageNum,  pageSize);
+    }
+
+    /**
+     * @Author jiang
+     * @Description 查询验收结果总条数
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public Integer queryAcceptanceResultsCount(String projectNo) {
+        return projectBigSchedulingDetailsMapper.selectAcceptanceResultsCount(projectNo);
+    }
+
 
 }

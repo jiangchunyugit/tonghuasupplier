@@ -562,4 +562,24 @@
     LEFT JOIN project p ON b.project_no = b.project_no
     WHERE b.project_no=#{constructionPlanVO.projectNo} AND b.status=#{constructionPlanVO.status}
   </select>
+
+    <!--分页查询验收-->
+    <select id="selectAcceptanceResultsByPage" resultType="cn.thinkfree.database.vo.AcceptanceResultsVO">
+        SELECT
+        b.big_name AS acceptancePhase
+        FROM
+        project_big_scheduling_details b
+        WHERE b.project_no=#{projectNo}
+        <if test="pageSize != null">
+            limit #{pageSize} offset #{pageNum}
+        </if>
+    </select>
+    <!--查询验收总条数-->
+    <select id="selectAcceptanceResultsCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        project_big_scheduling_details b
+        WHERE b.project_no=#{projectNo}
+    </select>
 </mapper>
