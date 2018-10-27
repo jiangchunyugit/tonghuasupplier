@@ -38,14 +38,28 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
     StrategyFactory strategyFactory;
 
 
+    /**
+     * 运营平台人员登录
+     * 1.查询账号信息
+     * 2.查询用户信息
+     * 3.查询所属分店信息
+     * 4.查询角色权限信息
+     * 5.构建公司关系图
+     * @param userID
+     * @return
+     */
     @Override
     public SecurityUser build(String userID) {
          UserVO userVO = new UserVO();
          UserRegister userRegister = (UserRegister) ThreadLocalHolder.get();
          userVO.setUserRegister(userRegister);
+
          completionDetailInfo(userVO,userID);
+
          completionUserRole(userVO,userID);
+
          completionThirdUserInfo(userVO,userID);
+
          ThreadLocalHolder.clear();
          return userVO;
     }

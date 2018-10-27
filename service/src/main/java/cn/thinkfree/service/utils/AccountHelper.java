@@ -5,6 +5,8 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -51,7 +53,8 @@ public class AccountHelper {
     /**
      * 序列最大值
      */
-    private final static Long MAX_SEQUENCE = 99999L;
+//    private final static Long MAX_SEQUENCE = 99000L;
+    private final static Long MAX_SEQUENCE = 9L;
 
 
     /**
@@ -145,7 +148,7 @@ public class AccountHelper {
     private static String getSequence() {
         long now = SEQUENCE.getAndIncrement();
         if(MAX_SEQUENCE == now){
-            now = 0;
+            SEQUENCE.set(0);
         }
         return StringUtils.leftPad(String.valueOf(now),5,FILLER);
     }
@@ -194,6 +197,7 @@ public class AccountHelper {
     private static String salt(Integer salt,Long target){
         return String.valueOf(salt ^ target);
     }
+
 
 
 }
