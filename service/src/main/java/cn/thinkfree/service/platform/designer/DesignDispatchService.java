@@ -8,6 +8,8 @@ import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -218,5 +220,12 @@ public interface DesignDispatchService {
      * @param reason    终止合同原因
      */
     void endOrder(String projectNo, String userId, String reason);
+
+    /**
+     * 设计订单派单导出
+     * @param request
+     * @param response
+     */
+    void exportDesignOrder(HttpServletRequest request, HttpServletResponse response);
 
 }

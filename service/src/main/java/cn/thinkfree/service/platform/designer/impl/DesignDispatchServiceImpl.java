@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -140,6 +142,13 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setTotal(total);
         pageVo.setData(designOrderVos);
         return pageVo;
+    }
+
+    @Override
+    public void exportDesignOrder(HttpServletRequest request, HttpServletResponse response) {
+
+//        PageVo<List<DesignOrderVo>> pageVo = queryDesignerOrder(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+//                money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
     }
 
     /**
