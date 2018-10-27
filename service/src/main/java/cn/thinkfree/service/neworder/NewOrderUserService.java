@@ -23,13 +23,13 @@ public interface NewOrderUserService {
     List<OrderUser> findByOrderNo(String orderNo);
 
     /**
-     * 根据项目编号与用户编号查询项目用户关系
+     * 根据项目编号与角色编号查询用户ID
      *
      * @param orderNo 项目编号
-     * @param userId  用户编号
-     * @return 项目用户关系
+     * @param roleId  角色编号
+     * @return 用户ID
      */
-    List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId);
+    String findUserIdByOrderNoAndRoleId(String orderNo, String roleId);
 
     /**
      * 分页查询项目派单
@@ -152,4 +152,20 @@ public interface NewOrderUserService {
      * @Param
      **/
     EmployeeInfoVO selectemployeeInfoList(String projectNo);
+    /**
+     * @Author jiang
+     * @Description 分页查询验收结果
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<AcceptanceResultsVO> queryAcceptanceResultsByPage(String projectNo, Integer pageNum, Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 验收结果总条数
+     * @Date
+     * @Param
+     * @return
+     **/
+    Integer queryAcceptanceResultsCount(String projectNo);
 }
