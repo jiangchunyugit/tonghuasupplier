@@ -1144,6 +1144,136 @@ public class DesignOrderExample {
             addCriterion("close_time not between", value1, value2, "closeTime");
             return (Criteria) this;
         }
+
+        public Criteria andDesignIdIsNull() {
+            addCriterion("design_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdIsNotNull() {
+            addCriterion("design_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdEqualTo(String value) {
+            addCriterion("design_id =", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdNotEqualTo(String value) {
+            addCriterion("design_id <>", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdGreaterThan(String value) {
+            addCriterion("design_id >", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdGreaterThanOrEqualTo(String value) {
+            addCriterion("design_id >=", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdLessThan(String value) {
+            addCriterion("design_id <", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdLessThanOrEqualTo(String value) {
+            addCriterion("design_id <=", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdLike(String value) {
+            addCriterion("design_id like", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdNotLike(String value) {
+            addCriterion("design_id not like", value, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdIn(List<String> values) {
+            addCriterion("design_id in", values, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdNotIn(List<String> values) {
+            addCriterion("design_id not in", values, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdBetween(String value1, String value2) {
+            addCriterion("design_id between", value1, value2, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignIdNotBetween(String value1, String value2) {
+            addCriterion("design_id not between", value1, value2, "designId");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeIsNull() {
+            addCriterion("contract_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeIsNotNull() {
+            addCriterion("contract_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeEqualTo(Integer value) {
+            addCriterion("contract_type =", value, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeNotEqualTo(Integer value) {
+            addCriterion("contract_type <>", value, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeGreaterThan(Integer value) {
+            addCriterion("contract_type >", value, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeGreaterThanOrEqualTo(Integer value) {
+            addCriterion("contract_type >=", value, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeLessThan(Integer value) {
+            addCriterion("contract_type <", value, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeLessThanOrEqualTo(Integer value) {
+            addCriterion("contract_type <=", value, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeIn(List<Integer> values) {
+            addCriterion("contract_type in", values, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeNotIn(List<Integer> values) {
+            addCriterion("contract_type not in", values, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeBetween(Integer value1, Integer value2) {
+            addCriterion("contract_type between", value1, value2, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andContractTypeNotBetween(Integer value1, Integer value2) {
+            addCriterion("contract_type not between", value1, value2, "contractType");
+            return (Criteria) this;
+        }
     }
 
     /**

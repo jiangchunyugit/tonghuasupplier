@@ -61,7 +61,7 @@ public interface DesignDispatchService {
      * @param companyId      公司ID
      * @param optionUserId   操作人ID
      * @param optionUserName 操作人姓名
-     * @param contractType    承包类型，1小包，2大包
+     * @param contractType   承包类型，1小包，2大包
      */
     void dispatch(String projectNo, String companyId, String optionUserId, String optionUserName, int contractType);
 
@@ -150,21 +150,23 @@ public interface DesignDispatchService {
     void updateOrderState(String projectNo, int orderState, String optionId, String optionName, String reason);
 
     /**
+     * 合同审核通过
+     *
+     * @param projectNo    项目编号
+     * @param contractType 合同类型，1全款合同，2分期合同
+     * @param companyId    公司ID
+     * @param optionId     操作人ID
+     * @param optionName   操作人名称
+     */
+    void reviewPass(String projectNo, int contractType, String companyId, String optionId, String optionName);
+
+    /**
      * 业主确认交付物
      *
      * @param projectNo 项目编号
      * @param optionId  操作人Id
      */
     void confirmedDeliveries(String projectNo, String optionId);
-
-    /**
-     * 查询设计合同类型
-     *
-     * @param type      类型，1设计合同，2施工合同
-     * @param projectNo 项目编号
-     * @return 1全款合同，2分期合同
-     */
-    int contractType(String projectNo, int type);
 
     /**
      * 支付成功
@@ -223,9 +225,27 @@ public interface DesignDispatchService {
 
     /**
      * 设计订单派单导出
-     * @param request
+     *
+     * @param excelContent
+     * @param fileName
      * @param response
+     * @return
      */
-    void exportDesignOrder(HttpServletRequest request, HttpServletResponse response);
+    void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response);
 
+    /**
+     * 设计师关联案例Id
+     *
+     * @param projectNo  项目编号
+     * @param designId   案例Id
+     * @param designerId 设计师ID
+     */
+    void setDesignId(String projectNo, String designId, String designerId);
+
+    /**
+     * 创建施工订单
+     *
+     * @param projectNo
+     */
+    void createConstructionOrder(String projectNo);
 }

@@ -7,19 +7,35 @@ import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.ExcelUtil;
+import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author xusonghui
@@ -40,6 +56,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private EmployeeMsgMapper employeeMsgMapper;
     @Autowired
     private RemindOwnerLogMapper remindOwnerLogMapper;
+    @Autowired
+    private ConstructionOrderMapper constructionOrderMapper;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -145,10 +163,103 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     @Override
-    public void exportDesignOrder(HttpServletRequest request, HttpServletResponse response) {
+    public void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response) {
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName + ".xls", "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setHeader("Connection", "close");
+        response.setHeader("Content-Type", "application/vnd.ms-excel;charset=utf-8");
+        //创建excel表
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("sheet1");
+        //设置默认行宽
+        sheet.setDefaultColumnWidth(20);
+        sheet.setDefaultRowHeight(Short.valueOf("20"));
+        OutputStream out = null;
+        try {
+            for(int i = 0 ; i < excelContent.size() ; i ++){
+                HSSFRow rowBody = sheet.createRow(i);
+                rowBody.setHeightInPoints(20);
+                List<String> rows = excelContent.get(i);
+                for(int j = 0 ; j < rows.size() ; j ++){
+                    HSSFCell hssfCell = rowBody.createCell(j);
+                    hssfCell.setCellValue(rows.get(j));
+                }
+            }
+            out = response.getOutputStream();
+            wb.write(out);
+        } catch (Exception ex) {
+            Logger.getLogger(ExcelUtil.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                if(null != out){
+                    out.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ExcelUtil.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
-//        PageVo<List<DesignOrderVo>> pageVo = queryDesignerOrder(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-//                money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
+    @Override
+    public void reviewPass(String projectNo, int contractType, String companyId, String optionId, String optionName) {
+        if(contractType != 1 && contractType != 2){
+            throw new RuntimeException("必须声明合同类型");
+        }
+        DesignStateEnum stateEnum = DesignStateEnum.STATE_220;
+        if (contractType == 2) {
+            stateEnum = DesignStateEnum.STATE_140;
+        }
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if (!designOrder.getCompanyId().equals(companyId)) {
+            throw new RuntimeException("无权操作");
+        }
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setId(designOrder.getId());
+        updateOrder.setContractType(contractType);
+        updateOrder.setOrderStage(stateEnum.getState());
+        designOrderMapper.updateByPrimaryKeySelective(updateOrder);
+        //记录操作日志
+        saveOptionLog(designOrder.getOrderNo(), optionId, optionName, "合同审核通过");
+    }
+
+    @Override
+    public void setDesignId(String projectNo, String designId, String designerId) {
+        Project project = queryProjectByNo(projectNo);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        if(!designerId.equals(designOrder.getUserId())){
+            throw new RuntimeException("无权操作");
+        }
+        DesignOrder updateOrder = new DesignOrder();
+        updateOrder.setDesignId(designId);
+        updateOrder.setId(designOrder.getId());
+        designOrderMapper.updateByPrimaryKeySelective(updateOrder);
+    }
+
+    /**
+     * 创建施工订单
+     * @param projectNo
+     */
+    @Override
+    public void createConstructionOrder(String projectNo) {
+        Project project = queryProjectByNo(projectNo);
+        ConstructionOrder constructionOrder = new ConstructionOrder();
+        constructionOrder.setOrderNo(OrderNoUtils.getNo("CO"));
+        constructionOrder.setCreateTime(new Date());
+        constructionOrder.setProjectNo(projectNo);
+        constructionOrder.setStatus(1);
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        constructionOrder.setType(designOrder.getType());
+        // 1小包，2大包
+        if(project.getContractType() == 2){
+            String companyId = designOrder.getCompanyId();
+            constructionOrder.setCompanyId(companyId);
+            //TODO 待添加状态
+        }
+
+        //constructionOrderMapper.insertSelective(constructionOrder);
     }
 
     /**
@@ -444,19 +555,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //记录操作日志
         String remark = DesignStateEnum.STATE_70.getLogText();
         saveOptionLog(designOrder.getOrderNo(), optionId, "业主", remark);
-    }
-
-    /**
-     * 查询合同类型
-     *
-     * @param projectNo 项目编号
-     * @param type      类型，1设计合同，2施工合同
-     * @return 1全款合同，2分期合同
-     */
-    @Override
-    public int contractType(String projectNo, int type) {
-        //TODO 待查询合同类型的实现
-        return 2;
     }
 
 
