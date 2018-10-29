@@ -276,6 +276,21 @@ public enum DesignStateEnum {
         return designStateEnums;
     }
 
+    public String getStateName(int type){
+        switch (type) {
+            case 1:
+                return statePlatform;
+            case 2:
+                return stateCompany;
+            case 3:
+                return stateDesigner;
+            case 4:
+                return stateOwner;
+            default:
+                throw new RuntimeException("无效的类型");
+        }
+    }
+
     /**
      * 根据类型获取订单状态类型列表
      *

@@ -1,8 +1,7 @@
 package cn.thinkfree.service.utils;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Field;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,6 +17,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @作者 yan
@@ -148,7 +149,45 @@ public class ExcelUtil {
 
         return result;
     }
-
+    public void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response) {
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName + ".xls", "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        response.setHeader("Connection", "close");
+        response.setHeader("Content-Type", "application/vnd.ms-excel;charset=utf-8");
+        //创建excel表
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("sheet1");
+        //设置默认行宽
+        sheet.setDefaultColumnWidth(20);
+        sheet.setDefaultRowHeight(Short.valueOf("20"));
+        OutputStream out = null;
+        try {
+            for(int i = 0 ; i < excelContent.size() ; i ++){
+                HSSFRow rowBody = sheet.createRow(i);
+                rowBody.setHeightInPoints(20);
+                List<String> rows = excelContent.get(i);
+                for(int j = 0 ; j < rows.size() ; j ++){
+                    HSSFCell hssfCell = rowBody.createCell(j);
+                    hssfCell.setCellValue(rows.get(j));
+                }
+            }
+            out = response.getOutputStream();
+            wb.write(out);
+        } catch (Exception ex) {
+            Logger.getLogger(ExcelUtil.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                if(null != out){
+                    out.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(ExcelUtil.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
  /*   public static void main(String[] args) {
         String sheetTitle = "用户信息";
         String[] title = {"姓名", "年龄"};

@@ -1,36 +1,25 @@
 package cn.thinkfree.service.platform.designer.impl;
 
 import cn.thinkfree.core.constants.DesignStateEnum;
+import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.designer.UserService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import cn.thinkfree.service.utils.DateUtils;
-import cn.thinkfree.service.utils.ExcelUtil;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -52,7 +41,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Autowired
     private RemindOwnerLogMapper remindOwnerLogMapper;
     @Autowired
-    private ConstructionOrderMapper constructionOrderMapper;
+    private DesignerStyleConfigMapper designerStyleConfigMapper;
+    @Autowired
+    private UserService userService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -62,7 +53,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param orderSource        订单来源（project.order_source）
      * @param createTimeStart    创建时间开始（design_order.create_time）
      * @param createTimeEnd      创建时间结束（design_order.create_time）
-     * @param styleCode          装饰风格（design_order.type）
+     * @param styleCode          装饰风格（design_order.style_type）
      * @param money              装修预算（project.decoration_budget）
      * @param acreage            建筑面积（project.area）
      * @param designerOrderState 订单状态（design_order.order_stage）
@@ -128,7 +119,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             orderExampleCriteria.andCreateTimeLessThanOrEqualTo(DateUtils.strToDate(createTimeEnd));
         }
         if (StringUtils.isNotBlank(styleCode)) {
-            orderExampleCriteria.andTypeEqualTo(Integer.parseInt(styleCode));
+            orderExampleCriteria.andStyleTypeEqualTo(styleCode);
         }
         if (designerOrderState > 0) {
             orderExampleCriteria.andOrderStageIn(DesignStateEnum.queryStatesByState(designerOrderState, stateType));
@@ -143,11 +134,15 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         PageHelper.startPage(pageIndex - 1, pageSize);
         List<DesignOrder> designOrders = designOrderMapper.selectByExample(orderExample);
         List<DesignOrderVo> designOrderVos = new ArrayList<>();
+        Map<String, DesignerStyleConfig> designerStyleConfigMap = queryDesignerStyleConfig();
+//        List<String> userIds = new ArrayList<>();
         for (DesignOrder designOrder : designOrders) {
-            DesignOrderVo designOrderVo = new DesignOrderVo();
             Project project = projectMap.get(designOrder.getProjectNo());
-            designOrderVo.setProject(project);
-            designOrderVo.setDesignOrder(designOrder);
+
+        }
+        for (DesignOrder designOrder : designOrders) {
+            Project project = projectMap.get(designOrder.getProjectNo());
+            DesignOrderVo designOrderVo = getDesignOrderVo(stateType, designerStyleConfigMap, designOrder, project);
             designOrderVos.add(designOrderVo);
         }
         PageVo<List<DesignOrderVo>> pageVo = new PageVo<>();
@@ -157,50 +152,72 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return pageVo;
     }
 
-    @Override
-    public void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response) {
-        try {
-            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName + ".xls", "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+    /**
+     * 返回一个设计订单详情
+     *
+     * @param stateType              1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
+     * @param designerStyleConfigMap
+     * @param designOrder            设计订单信息
+     * @param project                项目信息
+     * @return
+     */
+    @NotNull
+    private DesignOrderVo getDesignOrderVo(int stateType, Map<String, DesignerStyleConfig> designerStyleConfigMap, DesignOrder designOrder, Project project) {
+        DesignOrderVo designOrderVo = new DesignOrderVo();
+        designOrderVo.setProjectNo(project.getProjectNo());
+        designOrderVo.setDesignOrderNo(designOrder.getOrderNo());
+        designOrderVo.setOwnerName("--");
+        designOrderVo.setOwnerPhone("--");
+        designOrderVo.setAddress(project.getAddress());
+        designOrderVo.setOrderSource(ProjectSource.queryByState(project.getOrderSource()).getSourceName());
+        designOrderVo.setCreateTime(DateUtils.dateToStr(project.getCreateTime()));
+        DesignerStyleConfig designerStyleConfig = designerStyleConfigMap.get(designOrder.getStyleType());
+        if (designerStyleConfig != null) {
+            designOrderVo.setStyleName(designerStyleConfig.getStyleName());
         }
-        response.setHeader("Connection", "close");
-        response.setHeader("Content-Type", "application/vnd.ms-excel;charset=utf-8");
-        //创建excel表
-        HSSFWorkbook wb = new HSSFWorkbook();
-        HSSFSheet sheet = wb.createSheet("sheet1");
-        //设置默认行宽
-        sheet.setDefaultColumnWidth(20);
-        sheet.setDefaultRowHeight(Short.valueOf("20"));
-        OutputStream out = null;
-        try {
-            for(int i = 0 ; i < excelContent.size() ; i ++){
-                HSSFRow rowBody = sheet.createRow(i);
-                rowBody.setHeightInPoints(20);
-                List<String> rows = excelContent.get(i);
-                for(int j = 0 ; j < rows.size() ; j ++){
-                    HSSFCell hssfCell = rowBody.createCell(j);
-                    hssfCell.setCellValue(rows.get(j));
-                }
-            }
-            out = response.getOutputStream();
-            wb.write(out);
-        } catch (Exception ex) {
-            Logger.getLogger(ExcelUtil.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            try {
-                if(null != out){
-                    out.close();
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(ExcelUtil.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        designOrderVo.setBudget(project.getDecorationBudget() + "");
+        designOrderVo.setArea(project.getArea() + "");
+        designOrderVo.setCompanyName("--");
+        designOrderVo.setCompanyState("--");
+        designOrderVo.setDesignerName(designOrder.getDesignId());
+        designOrderVo.setOrderStateName(DesignStateEnum.queryByState(designOrder.getOrderStage()).getStateName(stateType));
+        designOrderVo.setOptionUserName("----");
+        designOrderVo.setOptionTime("----");
+        return designOrderVo;
+    }
+
+    /**
+     * 查询设计风格
+     *
+     * @return
+     */
+    private Map<String, DesignerStyleConfig> queryDesignerStyleConfig() {
+        DesignerStyleConfigExample designerStyleConfigExample = new DesignerStyleConfigExample();
+        designerStyleConfigExample.createCriteria();
+        List<DesignerStyleConfig> styleConfigs = designerStyleConfigMapper.selectByExample(designerStyleConfigExample);
+        return ReflectUtils.listToMap(styleConfigs, "styleCode");
     }
 
     @Override
+    public void designOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+                                 String styleCode, String money, String acreage, int designerOrderState, String companyState, String optionUserName,
+                                 String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response) {
+        PageVo<List<DesignOrderVo>> pageVo = queryDesignerOrder(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+                money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType);
+
+        List<List<String>> lists = new ArrayList<>();
+        lists.add(Arrays.asList("序号", "订单编号", "订单子编号", "业主姓名", "业主电话", "所在地", "订单来源", "创建时间", "装饰风格", "建筑面积", "建筑预算", "归属设计公司", "公司状态", "归属设计师"
+                , "订单状态", "操作人", "操作时间"));
+        List<DesignOrderVo> designOrderVos = pageVo.getData();
+        for (DesignOrderVo designOrderVo : designOrderVos) {
+
+        }
+    }
+
+
+    @Override
     public void reviewPass(String projectNo, int contractType, String companyId, String optionId, String optionName) {
-        if(contractType != 1 && contractType != 2){
+        if (contractType != 1 && contractType != 2) {
             throw new RuntimeException("必须声明合同类型");
         }
         DesignStateEnum stateEnum = DesignStateEnum.STATE_220;
@@ -224,7 +241,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public void setDesignId(String projectNo, String designId, String designerId) {
         Project project = queryProjectByNo(projectNo);
         DesignOrder designOrder = queryDesignOrder(projectNo);
-        if(!designerId.equals(designOrder.getUserId())){
+        if (!designerId.equals(designOrder.getUserId())) {
             throw new RuntimeException("无权操作");
         }
         DesignOrder updateOrder = new DesignOrder();
@@ -235,6 +252,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * 创建施工订单
+     *
      * @param projectNo
      */
     @Override
@@ -246,9 +264,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         constructionOrder.setProjectNo(projectNo);
         constructionOrder.setStatus(1);
         DesignOrder designOrder = queryDesignOrder(projectNo);
-        constructionOrder.setType(designOrder.getType());
         // 1小包，2大包
-        if(project.getContractType() == 2){
+        if (project.getContractType() == 2) {
             String companyId = designOrder.getCompanyId();
             constructionOrder.setCompanyId(companyId);
             //TODO 待添加状态
@@ -310,10 +327,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     @Override
-    public DesignOrderVo queryDesignOrderVoByProjectNo(String projectNo) {
-        DesignOrderVo designOrderVo = new DesignOrderVo();
-        designOrderVo.setDesignOrder(queryDesignOrder(projectNo));
-        designOrderVo.setProject(queryProjectByNo(projectNo));
+    public DesignOrderVo queryDesignOrderVoByProjectNo(String projectNo, int stateType) {
+        Map<String, DesignerStyleConfig> designerStyleConfigMap = queryDesignerStyleConfig();
+        DesignOrder designOrder = queryDesignOrder(projectNo);
+        Project project = queryProjectByNo(projectNo);
+        DesignOrderVo designOrderVo = getDesignOrderVo(stateType, designerStyleConfigMap, designOrder, project);
         return designOrderVo;
     }
 

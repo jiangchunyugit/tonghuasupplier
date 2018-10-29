@@ -71,7 +71,7 @@ public interface DesignDispatchService {
      * @param projectNo
      * @return
      */
-    DesignOrderVo queryDesignOrderVoByProjectNo(String projectNo);
+    DesignOrderVo queryDesignOrderVoByProjectNo(String projectNo, int stateType);
 
     /**
      * 设计公司拒绝接单
@@ -226,12 +226,27 @@ public interface DesignDispatchService {
     /**
      * 设计订单派单导出
      *
-     * @param excelContent
-     * @param fileName
-     * @param response
-     * @return
+     * @param companyId          公司ID
+     * @param projectNo          项目编号
+     * @param userMsg            用户信息
+     * @param orderSource        订单来源
+     * @param createTimeStart    创建时间开始
+     * @param createTimeEnd      创建时间结束
+     * @param styleCode          装修风格
+     * @param money              装修预算
+     * @param acreage            建筑面积
+     * @param designerOrderState 设计订单状态
+     * @param companyState       公司状态
+     * @param optionUserName     操作人
+     * @param optionTimeStart    操作时间开始
+     * @param optionTimeEnd      操作时间结束
+     * @param stateType          状态文案展示，1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
+     * @param fileName           excel文件名
+     * @param response           返回数据对象
      */
-    void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response);
+    void designOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+                          String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
+                          String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 
     /**
      * 设计师关联案例Id
