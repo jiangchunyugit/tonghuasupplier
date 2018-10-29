@@ -9,7 +9,7 @@ import java.util.Map;
  * @author xusonghui
  * 获取用户信息服务即可
  */
-public interface UserService {
+public interface UserCenterService {
     /**
      * 根据用户ID查询用户信息
      *

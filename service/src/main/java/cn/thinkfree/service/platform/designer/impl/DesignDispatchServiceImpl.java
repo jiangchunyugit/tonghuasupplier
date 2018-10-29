@@ -5,7 +5,7 @@ import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
-import cn.thinkfree.service.platform.designer.UserService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
@@ -44,7 +44,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Autowired
     private DesignerStyleConfigMapper designerStyleConfigMapper;
     @Autowired
-    private UserService userService;
+    private UserCenterService userService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project

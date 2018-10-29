@@ -3,7 +3,7 @@ package cn.thinkfree.service.platform.designer.impl;
 import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.EmployeeMsgExample;
-import cn.thinkfree.service.platform.designer.UserService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
 import cn.thinkfree.service.utils.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.util.Map;
  * @author xusonghui
  */
 @Service
-public class UserServiceImpl implements UserService {
+public class UserCenterServiceImpl implements UserCenterService {
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
 
