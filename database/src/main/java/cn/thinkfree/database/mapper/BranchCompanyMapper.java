@@ -6,6 +6,7 @@ import java.util.List;
 
 import cn.thinkfree.database.vo.BranchCompanySEO;
 import cn.thinkfree.database.vo.BranchCompanyVO;
+import cn.thinkfree.database.vo.CompanyRelationVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface BranchCompanyMapper {
@@ -100,4 +101,6 @@ public interface BranchCompanyMapper {
     BranchCompanyVO selectBranchCompanyWithPro(Integer id);
 
     List<BranchCompanyVO> selectBranchCompanyByParam(BranchCompanySEO branchCompanySEO);
+
+    List<CompanyRelationVO> selectCompanyRelation();
 }

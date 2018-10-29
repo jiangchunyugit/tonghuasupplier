@@ -3,6 +3,7 @@ package cn.thinkfree.service.branchcompany;
 import cn.thinkfree.database.model.BranchCompany;
 import cn.thinkfree.database.vo.BranchCompanySEO;
 import cn.thinkfree.database.vo.BranchCompanyVO;
+import cn.thinkfree.database.vo.CompanyRelationVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -44,4 +45,10 @@ public interface BranchCompanyService {
      * @return
      */
     BranchCompany branchCompanyById(Integer id);
+
+    /**
+     * 分公司和其所属城市分站信息
+     * @return
+     */
+    List<CompanyRelationVO> companyRelationList();
 }

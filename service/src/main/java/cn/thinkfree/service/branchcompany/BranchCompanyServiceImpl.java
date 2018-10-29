@@ -86,4 +86,9 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     public BranchCompany branchCompanyById(Integer id) {
         return branchCompanyMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public List<CompanyRelationVO> companyRelationList() {
+        return branchCompanyMapper.selectCompanyRelation();
+    }
 }
