@@ -97,12 +97,25 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanys", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司管理：分公司信息")
+    @ApiOperation(value="分公司管理：分公司全部信息")
     public MyRespBundle<List<BranchCompany>> branchCompanys(){
 
         List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys();
 
         return sendJsonData(ResultMessage.SUCCESS, branchCompanys);
+    }
+
+    /**
+     * 分公司
+     */
+    @RequestMapping(value = "/companyRelations", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="分公司管理：分公司全部信息和所属期城市分站信息")
+    public MyRespBundle<List<CompanyRelationVO>> companyRelations(){
+
+        List<CompanyRelationVO> companyRelationVOList = branchCompanyService.companyRelationList();
+
+        return sendJsonData(ResultMessage.SUCCESS, companyRelationVOList);
     }
 
     /**
