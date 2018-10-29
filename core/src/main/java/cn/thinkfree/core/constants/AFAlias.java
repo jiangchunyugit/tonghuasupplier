@@ -17,11 +17,11 @@ public enum AFAlias {
     RECTIFICATION_SUCCESS("RECTIFICATION_SUCCESS", "整改完成");
 
 
-    public final String num;
+    public final String alias;
     public final String name;
 
-    AFAlias(String num, String name){
-        this.num = num;
+    AFAlias(String alias, String name){
+        this.alias = alias;
         this.name = name;
     }
 }

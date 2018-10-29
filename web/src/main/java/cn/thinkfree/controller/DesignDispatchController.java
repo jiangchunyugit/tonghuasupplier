@@ -10,16 +10,22 @@ import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
+import cn.thinkfree.service.utils.ExcelUtil;
+import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -69,6 +75,21 @@ public class DesignDispatchController extends AbsBaseController {
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
+        }
+    }
+    // TODO 需要修改该方法
+    @ApiOperation("创建excel")
+    @MyRespBody
+    @RequestMapping(value = "loadExcel", method = {RequestMethod.POST, RequestMethod.GET})
+    public void loadExcel(
+            @ApiParam(name = "excelData", required = false, value = "excel内容") @RequestParam(name = "excelData", required = false) String excelData,
+            @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response) {
+        try {
+            List<List<String>> excelContent = JSONObject.parseObject(excelData, new TypeReference<List<List<String>>>() {
+            }.getType());
+            designDispatchService.loadExcel(excelContent, fileName, response);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -228,6 +249,21 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
+    @ApiOperation("设置项目关联的案例Id")
+    @MyRespBody
+    @RequestMapping(value = "setDesignId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle setDesignId(
+            @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "designId", required = false, value = "案例Id") @RequestParam(name = "designId", required = false) String designId,
+            @ApiParam(name = "designerId", required = false, value = "设计师Id") @RequestParam(name = "designerId", required = false) String designerId){
+        try {
+            designDispatchService.setDesignId(projectNo, designId, designerId);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
+    }
+
     @ApiOperation("业主确认交付物")
     @MyRespBody
     @RequestMapping(value = "confirmedDeliveries", method = {RequestMethod.POST, RequestMethod.GET})
@@ -261,7 +297,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "reason", required = false, value = "审核不通过原因") @RequestParam(name = "reason", required = false) String reason) {
         try {
-            designDispatchService.updateOrderState(projectNo, DesignStateEnum.STATE_131.getState(), "system", "system");
+            designDispatchService.updateOrderState(projectNo, DesignStateEnum.STATE_131.getState(), "system", "system", reason);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -272,13 +308,13 @@ public class DesignDispatchController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "reviewPass", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewPass(
-            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo) {
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "contractType", required = false, value = "合同类型，1全款合同，2分期款合同") @RequestParam(name = "contractType", required = false, defaultValue = "-1") int contractType,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "optionId", required = false, value = "操作人Id") @RequestParam(name = "optionId", required = false) String optionId,
+            @ApiParam(name = "optionName", required = false, value = "操作人名称") @RequestParam(name = "optionName", required = false) String optionName) {
         try {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_220;
-            if (designDispatchService.contractType(projectNo, 1) == 2) {
-                stateEnum = DesignStateEnum.STATE_140;
-            }
-            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+            designDispatchService.reviewPass(projectNo, contractType, companyId, optionId, optionName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -306,7 +342,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_240;
             //1全款合同，2分期合同
-            if (designDispatchService.contractType(projectNo, 1) == 2) {
+            if (designDispatchService.queryDesignOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_160;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
@@ -324,7 +360,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
             //1全款合同，2分期合同
-            if (designDispatchService.contractType(projectNo, 1) == 2) {
+            if (designDispatchService.queryDesignOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_170;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
@@ -342,7 +378,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
             //1全款合同，2分期合同
-            if (designDispatchService.contractType(projectNo, 1) == 2) {
+            if (designDispatchService.queryDesignOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_190;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
@@ -360,7 +396,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
             //1全款合同，2分期合同
-            if (designDispatchService.contractType(projectNo, 1) == 2) {
+            if (designDispatchService.queryDesignOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_200;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");

@@ -50,12 +50,24 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     @Override
-    public List<OrderUser> findByOrderNoAndUserId(String orderNo, String userId) {
-        OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
-        return orderUserMapper.selectByExample(example);
+    public String findUserIdByOrderNoAndRoleId(String orderNo, String roleId) {
+        OrderUser orderUser = findByOrderNoAndRoleId(orderNo, roleId);
+        return orderUser != null ? orderUser.getUserId() : null;
     }
 
+    @Override
+    public String findRoleIdByOrderNoAndUserId(String orderNo, String userId) {
+        OrderUser orderUser = findByOrderNoAndUserId(orderNo, userId);
+        return orderUser != null ? orderUser.getRoleId() : null;
+    }
+
+    @Override
+    public OrderUser findByOrderNoAndUserId(String orderNo, String userId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
+        return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
+    }
 
     /**
      * @return

@@ -40,8 +40,8 @@ public class ExcelToListMap {
     private static Map<Integer, TableTitle> getIntegerStringMap(List<TableTitle> tableTitles, Sheet sheet) {
         Map<Integer, TableTitle> titleIndexMap = new HashMap<>();
         Map<String, TableTitle> tableTitleMap = new HashMap<>();
-        for(TableTitle tableTitle : tableTitles){
-            tableTitleMap.put(tableTitle.excelTitle,tableTitle);
+        for (TableTitle tableTitle : tableTitles) {
+            tableTitleMap.put(tableTitle.excelTitle, tableTitle);
         }
         Row row = sheet.getRow(0);
         for (int i = 0; i < row.getLastCellNum(); i++) {
@@ -77,9 +77,9 @@ public class ExcelToListMap {
                 continue;
             }
             String key = tableTitle.getToTitle();
-            try{
+            try {
                 map.put(key, tableTitle.getVal(content));
-            }catch (Exception e){
+            } catch (Exception e) {
                 throw new RuntimeException("在第【" + (row.getRowNum() + 1) + "】行，第【" + (i + 1) + "】列," + e.getMessage());
             }
         }
@@ -95,10 +95,11 @@ public class ExcelToListMap {
             this.excelTitle = excelTitle;
             this.toTitle = toTitle;
             this.translation = new HashMap<>();
-            for(String keyVal : keyVals){
-                translation.put(keyVal.split(":")[0],keyVal.split(":")[1]);
+            for (String keyVal : keyVals) {
+                translation.put(keyVal.split(":")[0], keyVal.split(":")[1]);
             }
         }
+
         public TableTitle(String excelTitle, String toTitle, Map<String, String> translation) {
             this.excelTitle = excelTitle;
             this.toTitle = toTitle;

@@ -73,9 +73,10 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--Scheduling start-->
-<!--<table tableName="project" domainObjectName="Project"/>-->
+        <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="design_order" domainObjectName="DesignOrder"/>-->
-        <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->        <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
+        <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
+        <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
         <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
@@ -103,5 +104,17 @@
         <!--<table tableName="apply_refund_option_log" domainObjectName="ApplyRefundOptionLog"/>-->
         <!--<table tableName="reserve_project" domainObjectName="ReserveProject"/>-->
         <!--approval flow end-->
+        <!-- new approval flow start -->
+        <table tableName="a_f_config" domainObjectName="AfConfig"/>
+        <table tableName="a_f_config_log" domainObjectName="AfConfigLog"/>
+        <table tableName="a_f_instance" domainObjectName="AfInstance"/>
+        <table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>
+        <table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>
+        <table tableName="a_f_plan" domainObjectName="AfPlan"/>
+        <table tableName="a_f_config_start" domainObjectName="AfConfigStart"/>
+        <table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>
+        <table tableName="a_f_sub_url" domainObjectName="AfSubUrl"/>
+        <table tableName="a_f_company_plan" domainObjectName="AfCompanyPlan"/>
+        <!-- new approval flow end -->
     </context>
 </generatorConfiguration>

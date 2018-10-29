@@ -30,9 +30,6 @@ public class ProjectOrderDetailVo {
     private Boolean cancle;
     @ApiModelProperty(name = "orderPlayVo",value = "展示信息")
     private OrderPlayVo orderPlayVo;
-
-
-
-
+    private List<FlexibleOrderPlayVo> flexibleOrderPlayVos;
 
 }
