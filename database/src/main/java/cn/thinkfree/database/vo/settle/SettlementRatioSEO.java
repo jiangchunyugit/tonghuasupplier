@@ -1,6 +1,7 @@
-package cn.thinkfree.database.vo;
+package cn.thinkfree.database.vo.settle;
 
 
+import cn.thinkfree.database.vo.AbsPageSearchCriteria;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -10,7 +11,7 @@ import io.swagger.annotations.ApiModelProperty;
  *
  */
 @ApiModel(description = "计算比例分页查询")
-public class BranchCompanySEO extends AbsPageSearchCriteria  {
+public class SettlementRatioSEO extends AbsPageSearchCriteria  {
 
     @ApiModelProperty("结算比例编号")
     private String ratioNumber;
@@ -32,15 +33,6 @@ public class BranchCompanySEO extends AbsPageSearchCriteria  {
     
     @ApiModelProperty("审核状态")
     private String auditStatus;
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 
