@@ -153,17 +153,18 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public OrderDetailsVO selectOrderDetails(String projectNo) {
-        ProjectExample projectExample = new ProjectExample();
+  /*      ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<Project> projects = projectMapper.selectByExample(projectExample);
         Map result = getUserName(projects.get(0).getOwnerId(), "CC");
         String phone = (String) result.get("phone");
         //昵称先用着
-        String nickName = (String) result.get("nickName");
+        String nickName = (String) result.get("nickName");*/
         OrderDetailsVO orderDetailsVO = projectMapper.selectOrderDetails(projectNo, 1).get(0);
-        orderDetailsVO.setPhone(phone);
+    /*  orderDetailsVO.setPhone(phone);
         orderDetailsVO.setConsumerName(nickName);
-        orderDetailsVO.setUserName(nickName);
+        orderDetailsVO.setUserName(nickName);*/
+        orderDetailsVO.setProjectNo(projectNo);
         return orderDetailsVO;
     }
 
