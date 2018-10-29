@@ -32,4 +32,32 @@ public class AfApprovalLogServiceImpl implements AfApprovalLogService {
         List<AfApprovalLog> approvalLogs = approvalLogMapper.selectByExample(example);
         return approvalLogs != null && approvalLogs.size() > 0 ? approvalLogs.get(0) : null;
     }
+
+    @Override
+    public List<AfApprovalLog> findByInstanceNo(String instanceNo) {
+        AfApprovalLogExample example = new AfApprovalLogExample();
+        example.createCriteria().andInstanceNoEqualTo(instanceNo);
+        example.setOrderByClause("sort asc");
+        return approvalLogMapper.selectByExample(example);
+    }
+
+    @Override
+    public AfApprovalLog findByInstanceNoAndSort(String instanceNo, Integer sort) {
+        AfApprovalLogExample example = new AfApprovalLogExample();
+        example.createCriteria().andInstanceNoEqualTo(instanceNo).andSortEqualTo(sort);
+        List<AfApprovalLog> approvalLogs = approvalLogMapper.selectByExample(example);
+        return approvalLogs != null && approvalLogs.size() > 0 ? approvalLogs.get(0) : null;
+    }
+
+    @Override
+    public void updateByPrimaryKey(AfApprovalLog approvalLog) {
+        approvalLogMapper.updateByPrimaryKey(approvalLog);
+    }
+
+    @Override
+    public List<AfApprovalLog> findByUserId(String userId) {
+        AfApprovalLogExample example = new AfApprovalLogExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return approvalLogMapper.selectByExample(example);
+    }
 }

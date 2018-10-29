@@ -463,6 +463,146 @@ public class AfPlanExample {
             addCriterion("plan_name not between", value1, value2, "planName");
             return (Criteria) this;
         }
+
+        public Criteria andConfigNoIsNull() {
+            addCriterion("config_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIsNotNull() {
+            addCriterion("config_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoEqualTo(String value) {
+            addCriterion("config_no =", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotEqualTo(String value) {
+            addCriterion("config_no <>", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoGreaterThan(String value) {
+            addCriterion("config_no >", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoGreaterThanOrEqualTo(String value) {
+            addCriterion("config_no >=", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLessThan(String value) {
+            addCriterion("config_no <", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLessThanOrEqualTo(String value) {
+            addCriterion("config_no <=", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLike(String value) {
+            addCriterion("config_no like", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotLike(String value) {
+            addCriterion("config_no not like", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIn(List<String> values) {
+            addCriterion("config_no in", values, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotIn(List<String> values) {
+            addCriterion("config_no not in", values, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoBetween(String value1, String value2) {
+            addCriterion("config_no between", value1, value2, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotBetween(String value1, String value2) {
+            addCriterion("config_no not between", value1, value2, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdIsNull() {
+            addCriterion("first_role_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdIsNotNull() {
+            addCriterion("first_role_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdEqualTo(String value) {
+            addCriterion("first_role_id =", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotEqualTo(String value) {
+            addCriterion("first_role_id <>", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdGreaterThan(String value) {
+            addCriterion("first_role_id >", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdGreaterThanOrEqualTo(String value) {
+            addCriterion("first_role_id >=", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdLessThan(String value) {
+            addCriterion("first_role_id <", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdLessThanOrEqualTo(String value) {
+            addCriterion("first_role_id <=", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdLike(String value) {
+            addCriterion("first_role_id like", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotLike(String value) {
+            addCriterion("first_role_id not like", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdIn(List<String> values) {
+            addCriterion("first_role_id in", values, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotIn(List<String> values) {
+            addCriterion("first_role_id not in", values, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdBetween(String value1, String value2) {
+            addCriterion("first_role_id between", value1, value2, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotBetween(String value1, String value2) {
+            addCriterion("first_role_id not between", value1, value2, "firstRoleId");
+            return (Criteria) this;
+        }
     }
 
     /**

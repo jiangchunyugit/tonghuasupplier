@@ -51,12 +51,23 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     @Override
     public String findUserIdByOrderNoAndRoleId(String orderNo, String roleId) {
-        OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo).andRoleIdEqualTo(roleId);
-        List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
-        return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0).getUserId() : null;
+        OrderUser orderUser = findByOrderNoAndRoleId(orderNo, roleId);
+        return orderUser != null ? orderUser.getUserId() : null;
     }
 
+    @Override
+    public String findRoleIdByOrderNoAndUserId(String orderNo, String userId) {
+        OrderUser orderUser = findByOrderNoAndUserId(orderNo, userId);
+        return orderUser != null ? orderUser.getRoleId() : null;
+    }
+
+    @Override
+    public OrderUser findByOrderNoAndUserId(String orderNo, String userId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
+        return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
+    }
 
     /**
      * @return
@@ -154,17 +165,18 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public OrderDetailsVO selectOrderDetails(String projectNo) {
-        ProjectExample projectExample = new ProjectExample();
+  /*      ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<Project> projects = projectMapper.selectByExample(projectExample);
         Map result = getUserName(projects.get(0).getOwnerId(), "CC");
         String phone = (String) result.get("phone");
         //昵称先用着
-        String nickName = (String) result.get("nickName");
+        String nickName = (String) result.get("nickName");*/
         OrderDetailsVO orderDetailsVO = projectMapper.selectOrderDetails(projectNo, 1).get(0);
-        orderDetailsVO.setPhone(phone);
+    /*  orderDetailsVO.setPhone(phone);
         orderDetailsVO.setConsumerName(nickName);
-        orderDetailsVO.setUserName(nickName);
+        orderDetailsVO.setUserName(nickName);*/
+        orderDetailsVO.setProjectNo(projectNo);
         return orderDetailsVO;
     }
 

@@ -385,66 +385,6 @@ public class AfInstanceExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsEndIsNull() {
-            addCriterion("is_end is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndIsNotNull() {
-            addCriterion("is_end is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndEqualTo(Integer value) {
-            addCriterion("is_end =", value, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndNotEqualTo(Integer value) {
-            addCriterion("is_end <>", value, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndGreaterThan(Integer value) {
-            addCriterion("is_end >", value, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_end >=", value, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndLessThan(Integer value) {
-            addCriterion("is_end <", value, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndLessThanOrEqualTo(Integer value) {
-            addCriterion("is_end <=", value, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndIn(List<Integer> values) {
-            addCriterion("is_end in", values, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndNotIn(List<Integer> values) {
-            addCriterion("is_end not in", values, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndBetween(Integer value1, Integer value2) {
-            addCriterion("is_end between", value1, value2, "isEnd");
-            return (Criteria) this;
-        }
-
-        public Criteria andIsEndNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_end not between", value1, value2, "isEnd");
-            return (Criteria) this;
-        }
-
         public Criteria andProjectNoIsNull() {
             addCriterion("project_no is null");
             return (Criteria) this;
@@ -712,66 +652,6 @@ public class AfInstanceExample {
 
         public Criteria andScheduleSortNotBetween(Integer value1, Integer value2) {
             addCriterion("schedule_sort not between", value1, value2, "scheduleSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionIsNull() {
-            addCriterion("schedule_version is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionIsNotNull() {
-            addCriterion("schedule_version is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionEqualTo(Integer value) {
-            addCriterion("schedule_version =", value, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionNotEqualTo(Integer value) {
-            addCriterion("schedule_version <>", value, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionGreaterThan(Integer value) {
-            addCriterion("schedule_version >", value, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionGreaterThanOrEqualTo(Integer value) {
-            addCriterion("schedule_version >=", value, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionLessThan(Integer value) {
-            addCriterion("schedule_version <", value, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionLessThanOrEqualTo(Integer value) {
-            addCriterion("schedule_version <=", value, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionIn(List<Integer> values) {
-            addCriterion("schedule_version in", values, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionNotIn(List<Integer> values) {
-            addCriterion("schedule_version not in", values, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionBetween(Integer value1, Integer value2) {
-            addCriterion("schedule_version between", value1, value2, "scheduleVersion");
-            return (Criteria) this;
-        }
-
-        public Criteria andScheduleVersionNotBetween(Integer value1, Integer value2) {
-            addCriterion("schedule_version not between", value1, value2, "scheduleVersion");
             return (Criteria) this;
         }
 
@@ -1055,63 +935,203 @@ public class AfInstanceExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessIsNull() {
-            addCriterion("is_success is null");
+        public Criteria andPlanNoIsNull() {
+            addCriterion("plan_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessIsNotNull() {
-            addCriterion("is_success is not null");
+        public Criteria andPlanNoIsNotNull() {
+            addCriterion("plan_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessEqualTo(Integer value) {
-            addCriterion("is_success =", value, "isSuccess");
+        public Criteria andPlanNoEqualTo(String value) {
+            addCriterion("plan_no =", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessNotEqualTo(Integer value) {
-            addCriterion("is_success <>", value, "isSuccess");
+        public Criteria andPlanNoNotEqualTo(String value) {
+            addCriterion("plan_no <>", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessGreaterThan(Integer value) {
-            addCriterion("is_success >", value, "isSuccess");
+        public Criteria andPlanNoGreaterThan(String value) {
+            addCriterion("plan_no >", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessGreaterThanOrEqualTo(Integer value) {
-            addCriterion("is_success >=", value, "isSuccess");
+        public Criteria andPlanNoGreaterThanOrEqualTo(String value) {
+            addCriterion("plan_no >=", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessLessThan(Integer value) {
-            addCriterion("is_success <", value, "isSuccess");
+        public Criteria andPlanNoLessThan(String value) {
+            addCriterion("plan_no <", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessLessThanOrEqualTo(Integer value) {
-            addCriterion("is_success <=", value, "isSuccess");
+        public Criteria andPlanNoLessThanOrEqualTo(String value) {
+            addCriterion("plan_no <=", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessIn(List<Integer> values) {
-            addCriterion("is_success in", values, "isSuccess");
+        public Criteria andPlanNoLike(String value) {
+            addCriterion("plan_no like", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessNotIn(List<Integer> values) {
-            addCriterion("is_success not in", values, "isSuccess");
+        public Criteria andPlanNoNotLike(String value) {
+            addCriterion("plan_no not like", value, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessBetween(Integer value1, Integer value2) {
-            addCriterion("is_success between", value1, value2, "isSuccess");
+        public Criteria andPlanNoIn(List<String> values) {
+            addCriterion("plan_no in", values, "planNo");
             return (Criteria) this;
         }
 
-        public Criteria andIsSuccessNotBetween(Integer value1, Integer value2) {
-            addCriterion("is_success not between", value1, value2, "isSuccess");
+        public Criteria andPlanNoNotIn(List<String> values) {
+            addCriterion("plan_no not in", values, "planNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanNoBetween(String value1, String value2) {
+            addCriterion("plan_no between", value1, value2, "planNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andPlanNoNotBetween(String value1, String value2) {
+            addCriterion("plan_no not between", value1, value2, "planNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNull() {
+            addCriterion("status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIsNotNull() {
+            addCriterion("status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusEqualTo(Integer value) {
+            addCriterion("status =", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotEqualTo(Integer value) {
+            addCriterion("status <>", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThan(Integer value) {
+            addCriterion("status >", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("status >=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThan(Integer value) {
+            addCriterion("status <", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("status <=", value, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusIn(List<Integer> values) {
+            addCriterion("status in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotIn(List<Integer> values) {
+            addCriterion("status not in", values, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusBetween(Integer value1, Integer value2) {
+            addCriterion("status between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("status not between", value1, value2, "status");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIsNull() {
+            addCriterion("config_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIsNotNull() {
+            addCriterion("config_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoEqualTo(String value) {
+            addCriterion("config_no =", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotEqualTo(String value) {
+            addCriterion("config_no <>", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoGreaterThan(String value) {
+            addCriterion("config_no >", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoGreaterThanOrEqualTo(String value) {
+            addCriterion("config_no >=", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLessThan(String value) {
+            addCriterion("config_no <", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLessThanOrEqualTo(String value) {
+            addCriterion("config_no <=", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLike(String value) {
+            addCriterion("config_no like", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotLike(String value) {
+            addCriterion("config_no not like", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIn(List<String> values) {
+            addCriterion("config_no in", values, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotIn(List<String> values) {
+            addCriterion("config_no not in", values, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoBetween(String value1, String value2) {
+            addCriterion("config_no between", value1, value2, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotBetween(String value1, String value2) {
+            addCriterion("config_no not between", value1, value2, "configNo");
             return (Criteria) this;
         }
     }

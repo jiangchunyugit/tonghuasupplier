@@ -31,10 +31,24 @@ public class AfInstanceController extends AbsBaseController {
 
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="查询所有审批流")
-    public MyRespBundle start(){
-        instanceService.start();
+    @ApiOperation(value="访问审批开始页面")
+    public MyRespBundle start(String projectNo, String userId, String configNo){
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.start(projectNo, userId, configNo));
+    }
+
+    @RequestMapping(value = "/submitStart", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="发起审批")
+    public MyRespBundle submitStart(String projectNo, String userId, String planNo, Integer scheduleSort, String data, String remark){
+        instanceService.submitStart(projectNo, userId, planNo, scheduleSort, data, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
+    }
+
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="查询所有审批流")
+    public MyRespBundle detail(String instanceNo, String userId){
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.detail(instanceNo, userId));
     }
 
     @RequestMapping(value = "/approval", method = RequestMethod.POST)
@@ -43,11 +57,28 @@ public class AfInstanceController extends AbsBaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "instanceNo", value = "审批流实例编码", required = true),
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true),
-            @ApiImplicitParam(name = "option", value = "用户选择", required = true)
+            @ApiImplicitParam(name = "option", value = "用户选择", required = true),
+            @ApiImplicitParam(name = "remark", value = "备注")
     })
-    @ApiParam(name = "num", value= "审批流编号", required = true)
-    public MyRespBundle approval(@RequestParam(name = "instanceNo") String instanceNo, @RequestParam(name = "userId") String userId, @RequestParam(name = "option") Integer option){
-        instanceService.approval(instanceNo, userId, option);
+    public MyRespBundle approval(@RequestParam(name = "instanceNo") String instanceNo,
+                                 @RequestParam(name = "userId") String userId,
+                                 @RequestParam(name = "option") Integer option,
+                                 @RequestParam(name = "remark", required = false) String remark){
+        instanceService.approval(instanceNo, userId, option, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="审批记录信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户编码", required = true),
+            @ApiImplicitParam(name = "projectNo", value = "用户选择", required = true),
+            @ApiImplicitParam(name = "scheduleSort", value = "scheduleSort", required = true)
+    })
+    public MyRespBundle list(@RequestParam(name = "userId") String userId,
+                                 @RequestParam(name = "projectNo") String projectNo,
+                                 @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.list(userId, projectNo, scheduleSort));
     }
 }

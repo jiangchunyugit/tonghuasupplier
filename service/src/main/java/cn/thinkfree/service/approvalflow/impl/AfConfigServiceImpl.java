@@ -115,4 +115,20 @@ public class AfConfigServiceImpl implements AfConfigService {
     private void save(AfConfig config) {
         configMapper.updateByPrimaryKey(config);
     }
+
+    @Override
+    public AfConfig findByConfigNo(String configNo) {
+        AfConfigExample example = new AfConfigExample();
+        example.createCriteria().andConfigNoEqualTo(configNo);
+        List<AfConfig> configs = configMapper.selectByExample(example);
+        return configs != null && configs.size() > 0 ? configs.get(0) : null;
+    }
+
+    @Override
+    public AfConfig findByAlias(String alias) {
+        AfConfigExample example = new AfConfigExample();
+        example.createCriteria().andAliasNotEqualTo(alias);
+        List<AfConfig> configs = configMapper.selectByExample(example);
+        return configs != null && configs.size() > 0 ? configs.get(0) : null;
+    }
 }
