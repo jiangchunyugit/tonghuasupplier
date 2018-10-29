@@ -1,4 +1,4 @@
-package cn.thinkfree.service.settlerule.ratio;
+package cn.thinkfree.service.settle.ratio;
 
 import com.github.pagehelper.PageInfo;
 

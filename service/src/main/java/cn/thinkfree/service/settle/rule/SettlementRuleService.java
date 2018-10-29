@@ -1,4 +1,4 @@
-package cn.thinkfree.service.settlerule.rule;
+package cn.thinkfree.service.settle.rule;
 
 import com.github.pagehelper.PageInfo;
 
