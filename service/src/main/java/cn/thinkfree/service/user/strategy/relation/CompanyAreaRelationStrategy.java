@@ -1,6 +1,5 @@
 package cn.thinkfree.service.user.strategy.relation;
 
-import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.vo.UserVO;
@@ -12,8 +11,13 @@ import java.util.List;
 @Component
 public class CompanyAreaRelationStrategy implements RelationStrategy {
 
-    @Autowired
+    final
     CompanyInfoMapper companyInfoMapper;
+
+    @Autowired
+    public CompanyAreaRelationStrategy(CompanyInfoMapper companyInfoMapper) {
+        this.companyInfoMapper = companyInfoMapper;
+    }
 
     /**
      * 构建关系图

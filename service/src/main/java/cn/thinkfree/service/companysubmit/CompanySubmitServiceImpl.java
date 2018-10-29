@@ -435,9 +435,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
 					companyId, auditCase, contractNumber);
 			
-			int flagi = pcAuditInfoMapper.insertSelective(record);
+			int flagon = pcAuditInfoMapper.insertSelective(record);
 		    
-			if(flag > 0 && flagT > 0 &&  flagi  > 0 ){
+			if(flag > 0 && flagT > 0 &&  flagon  > 0 ){
 				
 				map.put("code", "0");
 				map.put("msg", "审核成功");
