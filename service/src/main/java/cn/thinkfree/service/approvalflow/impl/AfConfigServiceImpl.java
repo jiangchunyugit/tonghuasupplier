@@ -131,4 +131,10 @@ public class AfConfigServiceImpl implements AfConfigService {
         List<AfConfig> configs = configMapper.selectByExample(example);
         return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }
+
+    @Override
+    public String findConfigNoByAlias(String alias) {
+        AfConfig config = findByAlias(alias);
+        return config != null ? config.getConfigNo() : null;
+    }
 }
