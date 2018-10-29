@@ -14,6 +14,8 @@ public class UserMsgVo {
 
     private String userType;
 
+    private String realName;
+
     public UserMsgVo() {
     }
 
@@ -22,6 +24,22 @@ public class UserMsgVo {
         this.userName = userName;
         this.userPhone = userPhone;
         this.userType = userType;
+    }
+
+    public UserMsgVo(String userId, String userName, String userPhone, String userType, String realName) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.userType = userType;
+        this.realName = realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
+    }
+
+    public String getRealName() {
+        return realName;
     }
 
     public String getUserId() {

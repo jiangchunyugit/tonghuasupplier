@@ -8,6 +8,7 @@ import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserService;
 import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
+import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
@@ -135,14 +136,20 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<DesignOrder> designOrders = designOrderMapper.selectByExample(orderExample);
         List<DesignOrderVo> designOrderVos = new ArrayList<>();
         Map<String, DesignerStyleConfig> designerStyleConfigMap = queryDesignerStyleConfig();
-//        List<String> userIds = new ArrayList<>();
+        userIds = new ArrayList<>();
         for (DesignOrder designOrder : designOrders) {
             Project project = projectMap.get(designOrder.getProjectNo());
-
+            if (!userIds.contains(designOrder.getUserId())) {
+                userIds.add(designOrder.getUserId());
+            }
+            if (!userIds.contains(project.getOwnerId())) {
+                userIds.add(project.getOwnerId());
+            }
         }
+        Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         for (DesignOrder designOrder : designOrders) {
             Project project = projectMap.get(designOrder.getProjectNo());
-            DesignOrderVo designOrderVo = getDesignOrderVo(stateType, designerStyleConfigMap, designOrder, project);
+            DesignOrderVo designOrderVo = getDesignOrderVo(stateType, designerStyleConfigMap, designOrder, project, msgVoMap);
             designOrderVos.add(designOrderVo);
         }
         PageVo<List<DesignOrderVo>> pageVo = new PageVo<>();
@@ -159,15 +166,20 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param designerStyleConfigMap
      * @param designOrder            设计订单信息
      * @param project                项目信息
+     * @param msgVoMap               用户信息
      * @return
      */
     @NotNull
-    private DesignOrderVo getDesignOrderVo(int stateType, Map<String, DesignerStyleConfig> designerStyleConfigMap, DesignOrder designOrder, Project project) {
+    private DesignOrderVo getDesignOrderVo(int stateType, Map<String, DesignerStyleConfig> designerStyleConfigMap, DesignOrder designOrder,
+                                           Project project, Map<String, UserMsgVo> msgVoMap) {
         DesignOrderVo designOrderVo = new DesignOrderVo();
         designOrderVo.setProjectNo(project.getProjectNo());
         designOrderVo.setDesignOrderNo(designOrder.getOrderNo());
-        designOrderVo.setOwnerName("--");
-        designOrderVo.setOwnerPhone("--");
+        UserMsgVo ownerMsg = msgVoMap.get(project.getOwnerId());
+        if(ownerMsg != null){
+            designOrderVo.setOwnerName(ownerMsg.getUserName());
+            designOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
+        }
         designOrderVo.setAddress(project.getAddress());
         designOrderVo.setOrderSource(ProjectSource.queryByState(project.getOrderSource()).getSourceName());
         designOrderVo.setCreateTime(DateUtils.dateToStr(project.getCreateTime()));
@@ -179,7 +191,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         designOrderVo.setArea(project.getArea() + "");
         designOrderVo.setCompanyName("--");
         designOrderVo.setCompanyState("--");
-        designOrderVo.setDesignerName(designOrder.getDesignId());
+        UserMsgVo designMsg = msgVoMap.get(project.getOwnerId());
+        if(designMsg != null){
+            designOrderVo.setDesignerName(designMsg.getRealName());
+        }
         designOrderVo.setOrderStateName(DesignStateEnum.queryByState(designOrder.getOrderStage()).getStateName(stateType));
         designOrderVo.setOptionUserName("----");
         designOrderVo.setOptionTime("----");
@@ -331,7 +346,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String, DesignerStyleConfig> designerStyleConfigMap = queryDesignerStyleConfig();
         DesignOrder designOrder = queryDesignOrder(projectNo);
         Project project = queryProjectByNo(projectNo);
-        DesignOrderVo designOrderVo = getDesignOrderVo(stateType, designerStyleConfigMap, designOrder, project);
+        List<String> userIds = new ArrayList<>();
+        userIds.add(designOrder.getUserId());
+        userIds.add(project.getOwnerId());
+        Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
+        DesignOrderVo designOrderVo = getDesignOrderVo(stateType, designerStyleConfigMap, designOrder, project, msgVoMap);
         return designOrderVo;
     }
 
