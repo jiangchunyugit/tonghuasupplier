@@ -221,11 +221,23 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType);
 
         List<List<String>> lists = new ArrayList<>();
-        lists.add(Arrays.asList("序号", "订单编号", "订单子编号", "业主姓名", "业主电话", "所在地", "订单来源", "创建时间", "装饰风格", "建筑面积", "建筑预算", "归属设计公司", "公司状态", "归属设计师"
-                , "订单状态", "操作人", "操作时间"));
+        lists.add(Arrays.asList("序号", "订单编号", "订单子编号", "业主姓名", "业主电话", "所在地", "订单来源", "创建时间",
+                "装饰风格", "建筑面积", "建筑预算", "归属设计公司", "公司状态", "归属设计师", "订单状态", "操作人", "操作时间"));
         List<DesignOrderVo> designOrderVos = pageVo.getData();
+        int index = 1;
         for (DesignOrderVo designOrderVo : designOrderVos) {
-
+            List<String> excelContent = new ArrayList<>();
+            excelContent.add(index + "");
+            excelContent.add(designOrderVo.getProjectNo());
+            excelContent.add(designOrderVo.getDesignOrderNo());
+            excelContent.add(designOrderVo.getOwnerName());
+            excelContent.add(designOrderVo.getOwnerPhone());
+            excelContent.add(designOrderVo.getAddress());
+            excelContent.add(designOrderVo.getOrderSource());
+            excelContent.add(index + "");
+            excelContent.add(index + "");
+            lists.add(excelContent);
+            index ++;
         }
     }
 

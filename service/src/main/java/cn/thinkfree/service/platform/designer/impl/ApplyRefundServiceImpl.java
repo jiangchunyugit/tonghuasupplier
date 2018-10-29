@@ -152,35 +152,35 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
             case STATE_110:
             case STATE_120:
                 return DesignStateEnum.STATE_50;
-            case STATE_1501:
-            case STATE_1502:
-            case STATE_1503:
-            case STATE_1504:
+            case STATE_151:
+            case STATE_152:
+            case STATE_153:
+            case STATE_154:
                 return DesignStateEnum.STATE_150;
-            case STATE_1601:
-            case STATE_1602:
-            case STATE_1603:
-            case STATE_1604:
+            case STATE_161:
+            case STATE_162:
+            case STATE_163:
+            case STATE_164:
                 return DesignStateEnum.STATE_160;
-            case STATE_1801:
-            case STATE_1802:
-            case STATE_1803:
-            case STATE_1804:
+            case STATE_181:
+            case STATE_182:
+            case STATE_183:
+            case STATE_184:
                 return DesignStateEnum.STATE_180;
-            case STATE_1901:
-            case STATE_1902:
-            case STATE_1903:
-            case STATE_1904:
+            case STATE_191:
+            case STATE_192:
+            case STATE_193:
+            case STATE_194:
                 return DesignStateEnum.STATE_190;
-            case STATE_2301:
-            case STATE_2302:
-            case STATE_2303:
-            case STATE_2304:
+            case STATE_231:
+            case STATE_232:
+            case STATE_233:
+            case STATE_234:
                 return DesignStateEnum.STATE_230;
-            case STATE_2401:
-            case STATE_2402:
-            case STATE_2403:
-            case STATE_2404:
+            case STATE_241:
+            case STATE_242:
+            case STATE_243:
+            case STATE_244:
                 return DesignStateEnum.STATE_240;
             default:
                 throw new RuntimeException("无效的订单状态");
@@ -208,58 +208,58 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
                 return DesignStateEnum.STATE_120;
             //首期款退款状态
             case STATE_150:
-                return DesignStateEnum.STATE_1501;
-            case STATE_1501:
-                return DesignStateEnum.STATE_1502;
-            case STATE_1502:
-                return DesignStateEnum.STATE_1503;
-            case STATE_1503:
-                return DesignStateEnum.STATE_1504;
+                return DesignStateEnum.STATE_151;
+            case STATE_151:
+                return DesignStateEnum.STATE_152;
+            case STATE_152:
+                return DesignStateEnum.STATE_153;
+            case STATE_153:
+                return DesignStateEnum.STATE_154;
             //首期款退款状态
             case STATE_160:
-                return DesignStateEnum.STATE_1601;
-            case STATE_1601:
-                return DesignStateEnum.STATE_1602;
-            case STATE_1602:
-                return DesignStateEnum.STATE_1603;
-            case STATE_1603:
-                return DesignStateEnum.STATE_1604;
+                return DesignStateEnum.STATE_161;
+            case STATE_161:
+                return DesignStateEnum.STATE_162;
+            case STATE_162:
+                return DesignStateEnum.STATE_163;
+            case STATE_163:
+                return DesignStateEnum.STATE_164;
             //中期款退款状态
             case STATE_180:
-                return DesignStateEnum.STATE_1801;
-            case STATE_1801:
-                return DesignStateEnum.STATE_1802;
-            case STATE_1802:
-                return DesignStateEnum.STATE_1803;
-            case STATE_1803:
-                return DesignStateEnum.STATE_1804;
+                return DesignStateEnum.STATE_181;
+            case STATE_181:
+                return DesignStateEnum.STATE_182;
+            case STATE_182:
+                return DesignStateEnum.STATE_183;
+            case STATE_183:
+                return DesignStateEnum.STATE_184;
             //中期款退款状态
             case STATE_190:
-                return DesignStateEnum.STATE_1901;
-            case STATE_1901:
-                return DesignStateEnum.STATE_1902;
-            case STATE_1902:
-                return DesignStateEnum.STATE_1903;
-            case STATE_1903:
-                return DesignStateEnum.STATE_1904;
+                return DesignStateEnum.STATE_191;
+            case STATE_191:
+                return DesignStateEnum.STATE_192;
+            case STATE_192:
+                return DesignStateEnum.STATE_193;
+            case STATE_193:
+                return DesignStateEnum.STATE_194;
             //全款退款状态
             case STATE_230:
-                return DesignStateEnum.STATE_2301;
-            case STATE_2301:
-                return DesignStateEnum.STATE_2302;
-            case STATE_2302:
-                return DesignStateEnum.STATE_2303;
-            case STATE_2303:
-                return DesignStateEnum.STATE_2304;
+                return DesignStateEnum.STATE_231;
+            case STATE_231:
+                return DesignStateEnum.STATE_232;
+            case STATE_232:
+                return DesignStateEnum.STATE_233;
+            case STATE_233:
+                return DesignStateEnum.STATE_234;
             //全款退款状态
             case STATE_240:
-                return DesignStateEnum.STATE_2401;
-            case STATE_2401:
-                return DesignStateEnum.STATE_2402;
-            case STATE_2402:
-                return DesignStateEnum.STATE_2403;
-            case STATE_2403:
-                return DesignStateEnum.STATE_2404;
+                return DesignStateEnum.STATE_241;
+            case STATE_241:
+                return DesignStateEnum.STATE_242;
+            case STATE_242:
+                return DesignStateEnum.STATE_243;
+            case STATE_243:
+                return DesignStateEnum.STATE_244;
             default:
                 throw new RuntimeException("无效的订单状态");
         }
