@@ -73,7 +73,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	//发送邮件的模板引擎
 	@Autowired
 	private FreeMarkerConfigurer configurer;
-	
+
 	
 	@Override
 	public PageInfo<ContractVo> pageContractBySEO(ContractSEO contractSEO) {

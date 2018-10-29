@@ -16,6 +16,10 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.account.PermissionVO;
+import cn.thinkfree.service.account.PermissionService;
+import cn.thinkfree.service.account.SystemRoleService;
 import cn.thinkfree.core.resolver.MultiRequestBody;
 import cn.thinkfree.database.model.Area;
 import cn.thinkfree.database.model.City;
@@ -42,9 +46,15 @@ public class DictionaryController extends AbsBaseController {
 
     @Autowired
     DictionaryService dictionaryService;
-    
+
     @Autowired
     BaseDicService baseDicService;
+
+    @Autowired
+    PermissionService permissionService;
+
+    @Autowired
+    SystemRoleService systemRoleService;
 
 
 
@@ -178,12 +188,12 @@ public class DictionaryController extends AbsBaseController {
 //        List<SystemResource> resources =dictionaryService.listResource();
 //        return sendJsonData(ResultMessage.SUCCESS,resources);
 //    }
-    
-    
+
+
     /**
      * 查询 字典列表信息
      * @author lqd
-     * @return json 
+     * @return json
      */
     @PostMapping("/getBaseDicList")
     @MyRespBody
@@ -191,20 +201,20 @@ public class DictionaryController extends AbsBaseController {
     public MyRespBundle<List<MybaseDic>> getBaseDicList(@RequestParam(required = true) @ApiParam("字典类型") String type){
 
     	List<MybaseDic> resDicList = baseDicService.getDicListByType(type);
-    	
+
         return sendJsonData(ResultMessage.SUCCESS, resDicList);
     }
-    
+
     /**
      * 新增字典列表信息
      * @author lqd
-     * @return json 
+     * @return json
      * @RequestParam(required = false)
      */
     @PostMapping("/insertBaseDic")
     @MyRespBody
     @ApiOperation(value = "平台字典关联列表", notes = "根据type查询---0户型结构字典 1 房屋类型字典 2房屋属性 3计费项目类型（设计）4计费项目设置（施工）5施工阶段设置 6项目阶段设置 ")
-    @ApiImplicitParams({ @ApiImplicitParam(paramType = "insert", dataType = "String", name = "type", value = "字典类型值", required = true) 
+    @ApiImplicitParams({ @ApiImplicitParam(paramType = "insert", dataType = "String", name = "type", value = "字典类型值", required = true)
     		,@ApiImplicitParam(paramType = "insert", dataType = "String", name = "dicValue", value = "字典value值", required = true),
         @ApiImplicitParam(paramType = "insert", dataType = "String", name = "remarks", value = "备注", required = true)
     }
@@ -217,16 +227,16 @@ public class DictionaryController extends AbsBaseController {
       }
       return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
-    
+
     /**
      * 新增字典列表信息
      * @author lqd
-     * @return json 
+     * @return json
      */
     @PostMapping("/updateBaseDic")
     @MyRespBody
     @ApiOperation(value = "修改平台字典名称", notes = "根据id修改名称 ")
-    @ApiImplicitParams({ @ApiImplicitParam(paramType = "update", dataType = "String", name = "dicCode", value = "字典类型值", required = true) 
+    @ApiImplicitParams({ @ApiImplicitParam(paramType = "update", dataType = "String", name = "dicCode", value = "字典类型值", required = true)
 	,@ApiImplicitParam(paramType = "update", dataType = "String", name = "dicValue", value = "字典value值", required = true),
 	@ApiImplicitParam(paramType = "update", dataType = "String", name = "remarks", value = "备注", required = true)
 	})
@@ -239,11 +249,11 @@ public class DictionaryController extends AbsBaseController {
       }
       return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
-    
+
     /**
      * 查询 字典列表信息
      * @author lqd
-     * @return json 
+     * @return json
      */
     @PostMapping("/getConstructionBaseDicList")
     @MyRespBody
@@ -251,51 +261,65 @@ public class DictionaryController extends AbsBaseController {
     public MyRespBundle<List<ConstructionBaseDic>> getConstructionBaseDicList(){
 
     	List<ConstructionBaseDic> resDicList = baseDicService.getConstructionDicList();
-    	
+
         return sendJsonData(ResultMessage.SUCCESS, resDicList);
     }
-    
-    
-    
+
+
+
     /**
     *  新增 字典列表信息
     * @author lqd
-    * @return json 
+    * @return json
     */
     @PostMapping("/inserConstructionBaseDicList")
    @MyRespBody
    @ApiOperation(value = "新增施工平台施工项目列表")
    public MyRespBundle<String> inserConstructionBaseDicList(@ApiParam("施工平台施工项目vo实体")  ConstructionBaseDic vo){
-	   
+
        boolean flag = baseDicService.insertConstructionBaseDic(vo);
-       
+
        if(flag){
            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
        }
        return sendJsonData(ResultMessage.FAIL, "操作失败");
    }
-   
-   
-   
-   
+
+
+
+
    /**
     *  新增 字典列表信息
     * @author lqd
-    * @return json 
+    * @return json
     */
     @PostMapping("/updateConstructionBaseDicList")
    @MyRespBody
    @ApiOperation(value = "新增施工平台施工项目列表")
    public MyRespBundle<String> updateConstructionBaseDicList(@ApiParam("施工平台施工项目vo实体") @RequestBody ConstructionBaseDic vo){
-	   
+
        boolean flag = baseDicService.updateConstructionBaseDicName(vo);
-       
+
        if(flag){
            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
        }
        return sendJsonData(ResultMessage.FAIL, "操作失败");
    }
-   
-   
-    
+
+
+
+
+
+    /**
+     * 根据适用范围获取可用角色
+     * @param scope
+     * @return
+     */
+    @GetMapping("/account/roles")
+    @MyRespBody
+    public MyRespBundle<List<SystemRole>> roles(Integer scope){
+        List<SystemRole> permissions = systemRoleService.listRoleByScope(scope);
+        return sendJsonData(ResultMessage.SUCCESS,permissions);
+    }
+
 }

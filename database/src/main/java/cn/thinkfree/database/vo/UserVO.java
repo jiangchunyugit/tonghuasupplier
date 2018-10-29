@@ -125,8 +125,10 @@ public class UserVO extends SecurityUser {
     }
 
     public String getCompanyID(){
+        // TODO 公司编码
         if(companyInfo == null && pcUserInfo != null){
-            return pcUserInfo.getCompanyId();
+//            return pcUserInfo.getCompanyId();
+            return  null;
         }else{
             return companyInfo.getCompanyId();
 

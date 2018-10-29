@@ -204,4 +204,9 @@
             </if>
         </trim>
     </insert>
+
+    <!-- 查询账号详情  -->
+    <select id="selectAccountVOByID">
+
+    </select>
 </mapper>
