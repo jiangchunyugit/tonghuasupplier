@@ -149,7 +149,7 @@ public class ExcelUtil {
 
         return result;
     }
-    public void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response) {
+    public static void loadExcel(List<List<String>> excelContent, String fileName, HttpServletResponse response) {
         try {
             response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(fileName + ".xls", "UTF-8"));
         } catch (UnsupportedEncodingException e) {

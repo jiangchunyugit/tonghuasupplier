@@ -10,6 +10,7 @@ import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.designer.vo.PageVo;
 import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.ExcelUtil;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
@@ -176,7 +177,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         designOrderVo.setProjectNo(project.getProjectNo());
         designOrderVo.setDesignOrderNo(designOrder.getOrderNo());
         UserMsgVo ownerMsg = msgVoMap.get(project.getOwnerId());
-        if(ownerMsg != null){
+        if (ownerMsg != null) {
             designOrderVo.setOwnerName(ownerMsg.getUserName());
             designOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
@@ -192,7 +193,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         designOrderVo.setCompanyName("--");
         designOrderVo.setCompanyState("--");
         UserMsgVo designMsg = msgVoMap.get(project.getOwnerId());
-        if(designMsg != null){
+        if (designMsg != null) {
             designOrderVo.setDesignerName(designMsg.getRealName());
         }
         designOrderVo.setOrderStateName(DesignStateEnum.queryByState(designOrder.getOrderStage()).getStateName(stateType));
@@ -234,11 +235,20 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             excelContent.add(designOrderVo.getOwnerPhone());
             excelContent.add(designOrderVo.getAddress());
             excelContent.add(designOrderVo.getOrderSource());
-            excelContent.add(index + "");
-            excelContent.add(index + "");
+            excelContent.add(designOrderVo.getCreateTime());
+            excelContent.add(designOrderVo.getStyleName());
+            excelContent.add(designOrderVo.getArea());
+            excelContent.add(designOrderVo.getBudget());
+            excelContent.add(designOrderVo.getCompanyName());
+            excelContent.add(designOrderVo.getCompanyState());
+            excelContent.add(designOrderVo.getDesignerName());
+            excelContent.add(designOrderVo.getOrderStateName());
+            excelContent.add(designOrderVo.getOptionUserName());
+            excelContent.add(designOrderVo.getOptionTime());
             lists.add(excelContent);
-            index ++;
+            index++;
         }
+        ExcelUtil.loadExcel(lists, fileName, response);
     }
 
 
