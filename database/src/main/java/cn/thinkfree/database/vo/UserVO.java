@@ -2,10 +2,9 @@ package cn.thinkfree.database.vo;
 
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.model.SecurityUser;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.PcUserInfo;
-import cn.thinkfree.database.model.SystemResource;
-import cn.thinkfree.database.model.UserRegister;
+import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.constants.UserLevel;
+import cn.thinkfree.database.model.*;
 import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -35,6 +34,17 @@ public class UserVO extends SecurityUser {
      * 公司关系图
      */
     private List<String> relationMap;
+
+    /**
+     * 分公司
+     */
+    private BranchCompany branchCompany;
+
+    /**
+     * 市公司
+     */
+    private CityBranch cityBranch;
+
 
     /**
      * 是否根公司
@@ -121,7 +131,20 @@ public class UserVO extends SecurityUser {
 
     @Override
     public boolean isEnabled() {
-        return pcUserInfo == null ? false : SysConstants.YesOrNo.YES.shortVal().equals(pcUserInfo.getEnabled());
+         if(pcUserInfo == null || SysConstants.YesOrNo.NO.shortVal().equals(pcUserInfo.getEnabled())){
+             return false;
+         }
+         if(UserLevel.Company_Province.shortVal().equals(pcUserInfo.getLevel())
+                 && (branchCompany == null ||
+                         !UserEnabled.Enabled_true.shortVal().equals(branchCompany.getIsEnable()))){
+             return false;
+         }
+         if(UserLevel.Company_City.shortVal().equals(pcUserInfo.getLevel())
+                 &&  (cityBranch == null ||
+                         !UserEnabled.Enabled_true.shortVal().equals(cityBranch.getIsEnable()))){
+             return false;
+         }
+        return true;
     }
 
     public String getCompanyID(){
@@ -154,5 +177,21 @@ public class UserVO extends SecurityUser {
     @Override
     public Date getCreateTime() {
         return pcUserInfo.getCreateTime();
+    }
+
+    public BranchCompany getBranchCompany() {
+        return branchCompany;
+    }
+
+    public void setBranchCompany(BranchCompany branchCompany) {
+        this.branchCompany = branchCompany;
+    }
+
+    public CityBranch getCityBranch() {
+        return cityBranch;
+    }
+
+    public void setCityBranch(CityBranch cityBranch) {
+        this.cityBranch = cityBranch;
     }
 }

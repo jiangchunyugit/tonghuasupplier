@@ -104,4 +104,12 @@ public interface SystemRoleMapper {
      * @return
      */
     List<SystemRole> selectSystemRoleVOForGrant(@Param("id") String id,@Param("scope") String scope );
+
+
+    /**
+     * 查询有效的角色
+     * @param userID
+     * @return
+     */
+    List<SystemRole> selectEffectiveRoleByUserID(String userID);
 }

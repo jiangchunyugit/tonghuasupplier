@@ -2,8 +2,9 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.SystemUserRole;
 import cn.thinkfree.database.model.SystemUserRoleExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SystemUserRoleMapper {
     /**
@@ -82,4 +83,5 @@ public interface SystemUserRoleMapper {
 
      */
     int updateByPrimaryKey(SystemUserRole record);
+
 }

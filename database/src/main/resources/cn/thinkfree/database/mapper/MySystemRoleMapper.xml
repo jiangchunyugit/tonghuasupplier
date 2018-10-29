@@ -118,4 +118,19 @@
     )
   </select>
 
+
+  <select id="selectEffectiveRoleByUserID"     resultMap="BaseResultMap">
+   select
+    <include refid="MyColumnList">
+      <property name="alias" value="pc_system_role"/>
+    </include>
+    FROM
+      pc_system_role pc_system_role
+    join pc_system_user_role pc_system_user_role on pc_system_role.id= pc_system_user_role.role_id
+    where pc_system_user_role.user_id = #{userID}
+    and pc_system_role.is_del = 0
+    and pc_system_role.is_enable = 1
+  </select>
+
+
 </mapper>

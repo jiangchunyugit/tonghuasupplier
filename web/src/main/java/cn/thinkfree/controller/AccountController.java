@@ -10,16 +10,11 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.constants.UserEnabled;
-import cn.thinkfree.database.model.SystemPermission;
-import cn.thinkfree.database.model.SystemPermissionResource;
-import cn.thinkfree.database.model.SystemResource;
-import cn.thinkfree.database.model.SystemRole;
+import cn.thinkfree.database.mapper.UserRoleSetMapper;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.account.*;
-import cn.thinkfree.service.account.PermissionResourceService;
-import cn.thinkfree.service.account.PermissionService;
-import cn.thinkfree.service.account.SystemResourceService;
-import cn.thinkfree.service.account.SystemRoleService;
+import cn.thinkfree.service.account.*;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.userResource.PcSystemResourceService;
 import com.github.pagehelper.PageInfo;
@@ -52,6 +47,9 @@ public class AccountController extends AbsBaseController {
 
     @Autowired
     PcUserInfoService pcUserInfoService;
+
+    @Autowired
+    UserRoleSetService userRoleSetService;
 
     /**
      * 创建权限
@@ -413,5 +411,20 @@ public class AccountController extends AbsBaseController {
         String mes = pcUserInfoService.updateAccountState(id,UserEnabled.Disable.code);
         return sendSuccessMessage(SUCCESS.message);
     }
+
+
+    /**
+     * 创建企业角色类型
+     * @param userRoleSet
+     * @return
+     */
+    @PostMapping("/enterprise/role")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "创建企业角色")
+    public MyRespBundle<String> enterpriseRole(UserRoleSet userRoleSet){
+        String mes = userRoleSetService.saveEnterPriseRole(userRoleSet);
+        return sendJsonData(ResultMessage.SUCCESS,mes);
+    }
+
 
 }

@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 入驻平台
+ *
  */
 @Component
 public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {

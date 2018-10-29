@@ -2,11 +2,9 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.model.SystemPermissionExample;
-import java.util.List;
-
-import cn.thinkfree.database.vo.account.PermissionVO;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 public interface SystemPermissionMapper {
     /**
@@ -106,4 +104,11 @@ public interface SystemPermissionMapper {
      * @return
      */
     List<SystemPermission> selectPermissionForGrant(Integer roleID);
+
+    /**
+     * 查询有效的权限
+     * @param collect
+     * @return
+     */
+    List<SystemPermission> selectEffectivePermission(List<Integer> collect);
 }

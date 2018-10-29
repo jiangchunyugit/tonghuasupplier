@@ -43,5 +43,17 @@ public class SysConstants {
         }
     }
 
+    /**
+     * 平台类型
+     */
+    public enum PlatformType {
+        Enterprise(0),
+        Platform(1);
+        public Integer code ;
+        PlatformType(Integer val){
+            this.code  = val;
+        }
+    }
+
 
 }
