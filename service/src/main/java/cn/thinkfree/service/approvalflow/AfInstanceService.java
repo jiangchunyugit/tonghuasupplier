@@ -1,5 +1,8 @@
 package cn.thinkfree.service.approvalflow;
 
+import cn.thinkfree.database.vo.AfInstanceDetailVO;
+import cn.thinkfree.database.vo.AfInstanceListVO;
+
 /**
  * TODO
  *
@@ -9,7 +12,13 @@ package cn.thinkfree.service.approvalflow;
  */
 public interface AfInstanceService {
 
-    void start();
+    AfInstanceDetailVO start(String projectNo, String userId, String configNo);
 
-    void approval(String instanceNo, String userId, Integer option);
+    void submitStart(String projectNo, String userId, String planNo, Integer scheduleSort, String data, String remark);
+
+    AfInstanceDetailVO detail(String instanceNo, String userId);
+
+    void approval(String instanceNo, String userId, Integer option, String remark);
+
+    AfInstanceListVO list(String userId, String projectNo, Integer scheduleSort);
 }

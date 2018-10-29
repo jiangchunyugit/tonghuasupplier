@@ -32,6 +32,24 @@ public interface NewOrderUserService {
     String findUserIdByOrderNoAndRoleId(String orderNo, String roleId);
 
     /**
+     * 根据项目编号与用户编号查询角色ID
+     *
+     * @param orderNo 项目编号
+     * @param userId  用户编号
+     * @return 角色ID
+     */
+    String findRoleIdByOrderNoAndUserId(String orderNo, String userId);
+
+    /**
+     * 根据项目编号与用户编号查询项目角色用户关系
+     *
+     * @param orderNo 项目编号
+     * @param userId  用户编号
+     * @return 项目角色用户关系
+     */
+    OrderUser findByOrderNoAndUserId(String orderNo, String userId);
+
+    /**
      * 分页查询项目派单
      * @param projectOrderVO
      * @param pageNum

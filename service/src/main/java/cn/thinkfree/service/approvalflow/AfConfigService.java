@@ -1,5 +1,6 @@
 package cn.thinkfree.service.approvalflow;
 
+import cn.thinkfree.database.model.AfConfig;
 import cn.thinkfree.database.vo.AfConfigVO;
 
 import java.util.List;
@@ -17,4 +18,8 @@ public interface AfConfigService {
     AfConfigVO detail(String configNo);
 
     void update(AfConfigVO configVO);
+
+    AfConfig findByConfigNo(String configNo);
+
+    AfConfig findByAlias(String alias);
 }
