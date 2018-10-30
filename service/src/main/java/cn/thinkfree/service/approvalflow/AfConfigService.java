@@ -22,4 +22,6 @@ public interface AfConfigService {
     AfConfig findByConfigNo(String configNo);
 
     AfConfig findByAlias(String alias);
+
+    String findConfigNoByAlias(String alias);
 }

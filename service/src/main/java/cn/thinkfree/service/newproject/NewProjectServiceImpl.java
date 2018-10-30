@@ -289,14 +289,16 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     public MyRespBundle<Map<String, UserVo>> getListUserByUserIds(List<String> userIds) {
         Map<String, UserVo> map = new HashMap<>();
-        for (String string : userIds) {
-            EmployeeMsg employeeMsg = employeeMsgMapper.selectByUserId(string);
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdIn(userIds);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        for (EmployeeMsg employeeMsg : employeeMsgs) {
             UserVo vo = new UserVo();
             vo.setRealName(employeeMsg.getRealName());
             vo.setRoleCode(employeeMsg.getRoleCode());
             vo.setUserId(employeeMsg.getUserId());
             vo.setRoleName(UserJobs.findByCodeStr(vo.getRoleCode()).mes);
-            map.put(string, vo);
+            map.put(employeeMsg.getUserId(), vo);
         }
         return RespData.success(map);
     }

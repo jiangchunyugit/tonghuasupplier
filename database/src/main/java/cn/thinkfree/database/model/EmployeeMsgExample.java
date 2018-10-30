@@ -1364,6 +1364,216 @@ public class EmployeeMsgExample {
             addCriterion("employee_apply_state not between", value1, value2, "employeeApplyState");
             return (Criteria) this;
         }
+
+        public Criteria andCertificatePhotoUrl1IsNull() {
+            addCriterion("certificate_photo_url1 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1IsNotNull() {
+            addCriterion("certificate_photo_url1 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1EqualTo(String value) {
+            addCriterion("certificate_photo_url1 =", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1NotEqualTo(String value) {
+            addCriterion("certificate_photo_url1 <>", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1GreaterThan(String value) {
+            addCriterion("certificate_photo_url1 >", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1GreaterThanOrEqualTo(String value) {
+            addCriterion("certificate_photo_url1 >=", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1LessThan(String value) {
+            addCriterion("certificate_photo_url1 <", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1LessThanOrEqualTo(String value) {
+            addCriterion("certificate_photo_url1 <=", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1Like(String value) {
+            addCriterion("certificate_photo_url1 like", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1NotLike(String value) {
+            addCriterion("certificate_photo_url1 not like", value, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1In(List<String> values) {
+            addCriterion("certificate_photo_url1 in", values, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1NotIn(List<String> values) {
+            addCriterion("certificate_photo_url1 not in", values, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1Between(String value1, String value2) {
+            addCriterion("certificate_photo_url1 between", value1, value2, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl1NotBetween(String value1, String value2) {
+            addCriterion("certificate_photo_url1 not between", value1, value2, "certificatePhotoUrl1");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2IsNull() {
+            addCriterion("certificate_photo_url2 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2IsNotNull() {
+            addCriterion("certificate_photo_url2 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2EqualTo(String value) {
+            addCriterion("certificate_photo_url2 =", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2NotEqualTo(String value) {
+            addCriterion("certificate_photo_url2 <>", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2GreaterThan(String value) {
+            addCriterion("certificate_photo_url2 >", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2GreaterThanOrEqualTo(String value) {
+            addCriterion("certificate_photo_url2 >=", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2LessThan(String value) {
+            addCriterion("certificate_photo_url2 <", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2LessThanOrEqualTo(String value) {
+            addCriterion("certificate_photo_url2 <=", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2Like(String value) {
+            addCriterion("certificate_photo_url2 like", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2NotLike(String value) {
+            addCriterion("certificate_photo_url2 not like", value, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2In(List<String> values) {
+            addCriterion("certificate_photo_url2 in", values, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2NotIn(List<String> values) {
+            addCriterion("certificate_photo_url2 not in", values, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2Between(String value1, String value2) {
+            addCriterion("certificate_photo_url2 between", value1, value2, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl2NotBetween(String value1, String value2) {
+            addCriterion("certificate_photo_url2 not between", value1, value2, "certificatePhotoUrl2");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3IsNull() {
+            addCriterion("certificate_photo_url3 is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3IsNotNull() {
+            addCriterion("certificate_photo_url3 is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3EqualTo(String value) {
+            addCriterion("certificate_photo_url3 =", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3NotEqualTo(String value) {
+            addCriterion("certificate_photo_url3 <>", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3GreaterThan(String value) {
+            addCriterion("certificate_photo_url3 >", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3GreaterThanOrEqualTo(String value) {
+            addCriterion("certificate_photo_url3 >=", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3LessThan(String value) {
+            addCriterion("certificate_photo_url3 <", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3LessThanOrEqualTo(String value) {
+            addCriterion("certificate_photo_url3 <=", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3Like(String value) {
+            addCriterion("certificate_photo_url3 like", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3NotLike(String value) {
+            addCriterion("certificate_photo_url3 not like", value, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3In(List<String> values) {
+            addCriterion("certificate_photo_url3 in", values, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3NotIn(List<String> values) {
+            addCriterion("certificate_photo_url3 not in", values, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3Between(String value1, String value2) {
+            addCriterion("certificate_photo_url3 between", value1, value2, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePhotoUrl3NotBetween(String value1, String value2) {
+            addCriterion("certificate_photo_url3 not between", value1, value2, "certificatePhotoUrl3");
+            return (Criteria) this;
+        }
     }
 
     /**

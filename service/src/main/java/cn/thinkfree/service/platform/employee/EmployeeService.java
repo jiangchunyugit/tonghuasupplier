@@ -48,8 +48,11 @@ public interface EmployeeService {
      * @param cardType 证件类型
      * @param cardNo   证件号码
      * @param realName 真实姓名
+     * @param photo1   证件-正面
+     * @param photo2   证件-反面
+     * @param photo3   手持证件
      */
-    void submitCardMsg(String userId, int cardType, String cardNo, String realName);
+    void submitCardMsg(String userId, int cardType, String cardNo, String realName, String photo1, String photo2, String photo3);
 
     /**
      * 查询角色信息
