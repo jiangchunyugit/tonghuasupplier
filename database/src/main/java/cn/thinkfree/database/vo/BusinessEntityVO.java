@@ -1,10 +1,15 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.BusinessEntity;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
+/**
+ * @author jiangchunyu 经营主体信息
+ */
+@ApiModel("经营主体信息")
 public class BusinessEntityVO extends BusinessEntity {
 
     @ApiModelProperty("分公司名称")

@@ -1,10 +1,16 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.BranchCompany;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
+/**
+ * 分公司信息
+ * @author jiangchunyu
+ */
+@ApiModel("分公司信息")
 public class BranchCompanyVO extends BranchCompany {
 
     /**
