@@ -65,9 +65,9 @@ public class BusinessEntityController extends AbsBaseController{
     @GetMapping(value = "/businessEntitylist")
     @MyRespBody
     @ApiOperation(value="经营主体管理：经营主体分页查询")
-    public MyRespBundle<PageInfo<BusinessEntity>> businessEntitylist(@ApiParam("查询经营主体参数")BusinessEntitySEO businessEntitySEO){
+    public MyRespBundle<PageInfo<BusinessEntityVO>> businessEntitylist(@ApiParam("查询经营主体参数")BusinessEntitySEO businessEntitySEO){
 
-        PageInfo<BusinessEntity> pageInfo = businessEntityService.businessEntityList(businessEntitySEO);
+        PageInfo<BusinessEntityVO> pageInfo = businessEntityService.businessEntityList(businessEntitySEO);
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }

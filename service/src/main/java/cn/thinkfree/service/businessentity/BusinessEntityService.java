@@ -25,7 +25,7 @@ public interface BusinessEntityService {
     /**
      * 查询经营主体信息
      */
-    PageInfo<BusinessEntity> businessEntityList(BusinessEntitySEO businessEntitySEO);
+    PageInfo<BusinessEntityVO> businessEntityList(BusinessEntitySEO businessEntitySEO);
 
     /**
      * 根据经营主体id查询详情(带有店面信息)

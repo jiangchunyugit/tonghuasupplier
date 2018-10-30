@@ -5,44 +5,52 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * 计算比例 分页查询
- * @author lvqidong
- *
+ * 子公司管理查询条件  继承分页
  */
-@ApiModel(description = "计算比例分页查询")
+@ApiModel(description = "子公司管理条件")
 public class BranchCompanySEO extends AbsPageSearchCriteria  {
 
-    @ApiModelProperty("结算比例编号")
-    private String ratioNumber;
-    
-    @ApiModelProperty("结算状态")
-    private String ratioStatus;
-    
-    @ApiModelProperty("结算比例名称")
-    private String ratioName;
-    
-    @ApiModelProperty("创建人")
-    private String createUser;
-    
-    @ApiModelProperty("开始时间")
-    private String startTime;
-    
-    @ApiModelProperty("结束时间")
-    private String endTime;
-    
-    @ApiModelProperty("审核状态")
-    private String auditStatus;
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    @ApiModelProperty("分站状态")
+    private Integer isEnable;
 
-    
+    @ApiModelProperty("法人名称")
+    private String legalName;
+
+    @ApiModelProperty("法人电话号码")
+    private String legalPhone;
+
+    @ApiModelProperty("分公司名称")
+    private String branchCompanyName;
+
+    public String getLegalName() {
+        return legalName;
+    }
+
+    public void setLegalName(String legalName) {
+        this.legalName = legalName;
+    }
+
+    public String getLegalPhone() {
+        return legalPhone;
+    }
+
+    public void setLegalPhone(String legalPhone) {
+        this.legalPhone = legalPhone;
+    }
+
+    public Integer getIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(Integer isEnable) {
+        this.isEnable = isEnable;
+    }
+
+    public String getBranchCompanyName() {
+        return branchCompanyName;
+    }
+
+    public void setBranchCompanyName(String branchCompanyName) {
+        this.branchCompanyName = branchCompanyName;
+    }
 }
