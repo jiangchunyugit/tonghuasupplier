@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 子公司管理查询条件  继承分页
- * @author jiangchunyu
  */
 @ApiModel(description = "子公司管理条件")
 public class BranchCompanySEO extends AbsPageSearchCriteria  {
