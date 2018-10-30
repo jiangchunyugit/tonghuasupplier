@@ -1,6 +1,6 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.AfPlan;
+import cn.thinkfree.database.model.AfApprovalOrder;
 import cn.thinkfree.database.model.UserRoleSet;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -17,9 +17,9 @@ import java.util.List;
  */
 @Data
 @ApiModel("审批顺序方案")
-public class AfPlanVO {
+public class AfApprovalOrderVO {
     @ApiModelProperty("审批顺序方案")
-    private AfPlan plan;
+    private AfApprovalOrder approvalOrder;
     @ApiModelProperty("审批角色顺序")
     List<UserRoleSet> roles;
 }

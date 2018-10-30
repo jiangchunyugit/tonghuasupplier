@@ -17,6 +17,10 @@ public enum UniqueCodeGenerator {
      */
     AF_CONFIG_LOG("AF_CONFIG_LOG_"),
     /**
+     * 审批流配置记录编码前缀
+     */
+    AF_CONFIG_PLAN("AF_CONFIG_LOG_"),
+    /**
      * 审批流实例编码前缀
      */
     AF_INSTANCE("AF_INSTANCE_"),

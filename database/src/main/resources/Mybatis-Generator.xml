@@ -107,15 +107,12 @@
         <!--approval flow end-->
         <!-- new approval flow start -->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
-        <!--<table tableName="a_f_config_log" domainObjectName="AfConfigLog"/>-->
+        <!--<table tableName="a_f_config_plan" domainObjectName="AfConfigPlan"/>-->
         <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
         <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
         <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
-        <!--<table tableName="a_f_plan" domainObjectName="AfPlan"/>-->
-        <!--<table tableName="a_f_config_start" domainObjectName="AfConfigStart"/>-->
+        <!--<table tableName="a_f_approval_order" domainObjectName="AfApprovalOrder"/>-->
         <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->
-        <!--<table tableName="a_f_sub_url" domainObjectName="AfSubUrl"/>-->
-        <!--<table tableName="a_f_company_plan" domainObjectName="AfCompanyPlan"/>-->
         <!-- new approval flow end -->
     </context>
 </generatorConfiguration>

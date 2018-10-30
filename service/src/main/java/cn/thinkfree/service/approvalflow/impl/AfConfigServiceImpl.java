@@ -2,16 +2,19 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfConfigMapper;
-import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.model.AfConfig;
+import cn.thinkfree.database.model.AfConfigExample;
+import cn.thinkfree.database.model.AfConfigPlan;
+import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigVO;
-import cn.thinkfree.database.vo.AfPlanVO;
 import cn.thinkfree.service.approvalflow.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,25 +35,42 @@ public class AfConfigServiceImpl implements AfConfigService {
     @Resource
     private RoleService roleService;
     @Resource
-    private AfConfigLogService configLogService;
+    private AfApprovalOrderService approvalOrderService;
     @Resource
-    private AfPlanService planService;
+    private AfConfigPlanService configPlanService;
 
     @Override
-    public List<AfConfigVO> list() {
+    public List<AfConfigVO> list(String planNo) {
         List<AfConfigVO> configVOs = new ArrayList<>();
+        List<UserRoleSet> roles = roleService.findAll();
         List<AfConfig> configs = findAll();
         if (configs != null) {
-            List<UserRoleSet> roles = roleService.findAll();
-            for (AfConfig config : configs) {
-                List<UserRoleSet> subRoles = subRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
-                List<AfPlanVO> plans = planService.findByConfigLogNo(config.getConfigLogNo(), roles);
-                AfConfigVO configVO = new AfConfigVO();
-                configVO.setConfig(config);
-                configVO.setSubRoles(subRoles);
-                configVO.setPlans(plans);
+            if (StringUtils.isNotEmpty(planNo)) {
+                List<AfConfigPlan> configPlans = configPlanService.findByPlanNo(planNo);
+                if (configPlans != null) {
+                    for (AfConfigPlan configPlan : configPlans) {
 
-                configVOs.add(configVO);
+                        List<List<UserRoleSet>> approvalOrders = approvalOrderService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
+                        List<UserRoleSet> subRoles = subRoleService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
+
+                        AfConfig record = null;
+                        for (AfConfig config : configs) {
+                            if (config.getConfigNo().equals(configPlan.getConfigNo())) {
+                                record = config;
+                                break;
+                            }
+                        }
+                        if (record == null) {
+                            // TODO
+                        }
+                        AfConfigVO configVO = new AfConfigVO();
+                        configVO.setConfigNo(record.getConfigNo());
+                        configVO.setSubRoles(subRoles);
+                        configVO.setApprovalOrders(approvalOrders);
+
+                        configVOs.add(configVO);
+                    }
+                }
             }
         }
         return configVOs;
@@ -59,107 +79,53 @@ public class AfConfigServiceImpl implements AfConfigService {
 
     private List<AfConfig> findAll() {
         AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andUsableEqualTo(1);
         return configMapper.selectByExample(example);
     }
 
     @Override
     public AfConfig findByNo(String configNo) {
         AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andConfigNoEqualTo(configNo).andUsableEqualTo(1);
+        example.createCriteria().andConfigNoEqualTo(configNo);
         List<AfConfig> configs = configMapper.selectByExample(example);
         return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }
 
     @Override
-    public AfConfigVO detail(String configNo) {
+    public AfConfigVO detail(String configNo, String planNo) {
+        AfConfigVO configVO = new AfConfigVO();
+
         AfConfig config = findByNo(configNo);
         if (config == null) {
             // TODO
             throw new RuntimeException();
         }
-        List<UserRoleSet> roles = roleService.findAll();
-        List<AfPlanVO> plans = planService.findByConfigLogNo(config.getConfigNo(), roles);
-        List<UserRoleSet> subRoles = subRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
+        AfConfigPlan configPlan = configPlanService.findByConfigNoAndPlanNo(configNo, planNo);
 
-        AfConfigVO configVO = new AfConfigVO();
-        configVO.setConfig(config);
-        configVO.setPlans(plans);
-        configVO.setSubRoles(subRoles);
+        if (configPlan != null) {
+            List<UserRoleSet> roles = roleService.findAll();
+            List<List<UserRoleSet>> approvalOrders = approvalOrderService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
+            List<UserRoleSet> subRoles = subRoleService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
+            configVO.setApprovalOrders(approvalOrders);
+            configVO.setSubRoles(subRoles);
+            configVO.setDescribe(configPlan.getDescribe());
+        }
+
+        configVO.setConfigNo(config.getConfigNo());
+        configVO.setName(config.getName());
         return configVO;
     }
 
     @Override
-    public void add(AfConfigVO configVO) {
-        AfConfig config = configVO.getConfig();
-        String configLogNo = UniqueCodeGenerator.AF_CONFIG_LOG.getCode();
-        config.setConfigLogNo(configLogNo);
-        config.setVersion(1);
-        config.setCreateTime(new Date());
-        config.setConfigNo(UniqueCodeGenerator.AF_CONFIG.getCode());
-        config.setUsable(1);
-
-        insert(config);
-
-        configLogService.create(config, configLogNo, config.getCreateUserId());
-        planService.create(configLogNo, configVO.getPlans());
-        subRoleService.create(configLogNo, configVO.getSubRoles());
-    }
-
-    private void insert(AfConfig config) {
-        configMapper.insertSelective(config);
-    }
-
-    @Override
-    public void edit(AfConfigVO configVO) {
-        AfConfig config = configVO.getConfig();
-        AfConfig record = findByNo(config.getConfigNo());
-        if (record == null) {
-            // TODO
-            throw new RuntimeException();
-        }
-
-        String configLogNo = UniqueCodeGenerator.AF_CONFIG_LOG.getCode();
-        record.setAlias(config.getAlias());
-        record.setName(config.getName());
-        record.setUpdateTime(new Date());
-        record.setUpdateUserId("");
-        record.setConfigLogNo(configLogNo);
-        record.setVersion(record.getVersion() + 1);
-
-        AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andConfigNoEqualTo(config.getConfigNo());
-
-        configMapper.updateByPrimaryKey(record);
-
-        configLogService.create(record, configLogNo, config.getUpdateUserId());
-        planService.create(configLogNo, configVO.getPlans());
-        subRoleService.create(configLogNo, configVO.getSubRoles());
-    }
-
-    @Override
-    public void delete(String configNo) {
-        AfConfig config = new AfConfig();
-        config.setUsable(0);
-        AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andConfigNoEqualTo(configNo);
-        int row = configMapper.updateByExampleSelective(config, example);
-        if (row != 1) {
+    public void edit(AfConfigEditVO configEditVO) {
+        List<AfConfigVO> configVOs = configEditVO.getConfigVOs();
+        if (configVOs == null || configVOs.size() != 10) {
             // TODO
         }
-    }
-
-    @Override
-    public AfConfig findByAlias(String alias) {
-        AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andAliasNotEqualTo(alias).andUsableEqualTo(1);
-        List<AfConfig> configs = configMapper.selectByExample(example);
-        return configs != null && configs.size() > 0 ? configs.get(0) : null;
-    }
-
-    @Override
-    public String findConfigNoByAlias(String alias) {
-        AfConfig config = findByAlias(alias);
-        return config != null ? config.getConfigNo() : null;
+        for (AfConfigVO configVO : configVOs) {
+            String configPlanNo = UniqueCodeGenerator.AF_CONFIG_PLAN.getCode();
+            configPlanService.create(configPlanNo, configVO.getConfigNo(), configEditVO.getPlanNo(),configVO.getDescribe(), configEditVO.getUserId());
+            approvalOrderService.create(configPlanNo, configVO.getConfigNo(), configVO.getApprovalOrders());
+            subRoleService.create(configPlanNo, configVO.getSubRoles());
+        }
     }
 }

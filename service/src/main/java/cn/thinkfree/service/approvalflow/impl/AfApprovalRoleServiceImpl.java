@@ -27,16 +27,16 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
     private AfApprovalRoleMapper approvalRoleMapper;
 
     @Override
-    public List<AfApprovalRole> findByPlanNo(String planNo) {
+    public List<AfApprovalRole> findByApprovalOrderNo(String approvalOrderNo) {
         AfApprovalRoleExample example = new AfApprovalRoleExample();
-        example.createCriteria().andPlanNoEqualTo(planNo);
+        example.createCriteria().andApprovalOrderNoEqualTo(approvalOrderNo);
         example.setOrderByClause("sort asc");
         return approvalRoleMapper.selectByExample(example);
     }
 
     @Override
-    public List<UserRoleSet> findByPlanNo(String planNo, List<UserRoleSet> allRoles) {
-        List<AfApprovalRole> approvalRoles = findByPlanNo(planNo);
+    public List<UserRoleSet> findByApprovalOrderNo(String approvalOrderNo, List<UserRoleSet> allRoles) {
+        List<AfApprovalRole> approvalRoles = findByApprovalOrderNo(approvalOrderNo);
         return getRoles(approvalRoles, allRoles);
     }
 
@@ -63,12 +63,12 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
     }
 
     @Override
-    public void create(String planNo, List<UserRoleSet> roles) {
+    public void create(String approvalOrderNo, List<UserRoleSet> roles) {
         if (roles != null) {
             AfApprovalRole approvalRole;
             for (int index = 0; index < roles.size(); index++){
                 approvalRole = new AfApprovalRole();
-                approvalRole.setPlanNo(planNo);
+                approvalRole.setApprovalOrderNo(approvalOrderNo);
                 approvalRole.setRoleId(roles.get(index).getRoleCode());
                 approvalRole.setSort(index);
                 insert(approvalRole);
