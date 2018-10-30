@@ -68,7 +68,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     }
 
     @Override
-    public PageInfo<BusinessEntity> businessEntityList(BusinessEntitySEO businessEntitySEO) {
+    public PageInfo<BusinessEntityVO> businessEntityList(BusinessEntitySEO businessEntitySEO) {
 
         BusinessEntityExample businessEntityExample = new BusinessEntityExample();
         BusinessEntityExample.Criteria criteria = businessEntityExample.createCriteria();
@@ -93,8 +93,8 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         }
 
         PageHelper.startPage(businessEntitySEO.getPage(),businessEntitySEO.getRows());
-        List<BusinessEntity> branchCompanies = businessEntityMapper.selectByExample(businessEntityExample);
-        return new PageInfo<>(branchCompanies);
+        List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntityExample);
+        return new PageInfo<>(businessEntityVOS);
     }
 
     @Override

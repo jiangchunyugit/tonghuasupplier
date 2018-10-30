@@ -4,6 +4,7 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.EbsMokeBranchCompany;
 import cn.thinkfree.database.vo.ebsmokevo.EbsCityBranch;
 import cn.thinkfree.database.vo.ebsmokevo.StoreBusinessEntity;
 import cn.thinkfree.service.ebsmoke.EbsService;
@@ -30,7 +31,7 @@ public class EbsMokeController extends AbsBaseController{
     @GetMapping(value = "/ebsBranchCompany")
     @MyRespBody
     @ApiOperation(value="埃森哲管理：埃森哲分公司查询")
-    public MyRespBundle<Map> ebsBranchCompany(){
+    public MyRespBundle<List<EbsMokeBranchCompany>> ebsBranchCompany(){
 
         return sendJsonData(ResultMessage.SUCCESS, ebsService.ebsBranchCompanyList());
     }

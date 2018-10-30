@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.BranchCompany;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -9,11 +10,13 @@ public class BranchCompanyVO extends BranchCompany {
     /**
      * 省份名称
      */
+    @ApiModelProperty("省份名称")
     private String provinceNm;
 
     /**
      * 城市分站list
      */
+    @ApiModelProperty("分公司城市分站")
     private List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS;
 
     public List<CityBranchWtihProCitVO> getCityBranchWtihProCitVOS() {

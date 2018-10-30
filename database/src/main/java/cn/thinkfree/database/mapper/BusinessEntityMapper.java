@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.BusinessEntity;
 import cn.thinkfree.database.model.BusinessEntityExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.BusinessEntityVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface BusinessEntityMapper {
@@ -82,4 +84,6 @@ public interface BusinessEntityMapper {
 
      */
     int updateByPrimaryKey(BusinessEntity record);
+
+    List<BusinessEntityVO> selectWithCompany(BusinessEntityExample example);
 }
