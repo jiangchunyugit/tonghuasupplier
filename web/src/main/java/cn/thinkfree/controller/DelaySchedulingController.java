@@ -4,7 +4,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.OrderUserMapper;
-import cn.thinkfree.database.model.DesignOrder;
+import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.model.OrderUserExample;
 import cn.thinkfree.database.model.Project;
@@ -49,7 +49,7 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
     @RequestMapping(value = "projectOrderList", method = RequestMethod.POST)
     @ApiOperation(value = "项目派单列表", notes = "")
-    public MyRespBundle<DesignOrder> projectOrderList(@RequestBody ProjectOrderVO projectOrderVO,
+    public MyRespBundle<DesignerOrder> projectOrderList(@RequestBody ProjectOrderVO projectOrderVO,
                                                       @RequestParam(defaultValue = "1") Integer pageNum,
                                                       @RequestParam(defaultValue = "10") Integer pageSize
     ) {
@@ -98,7 +98,7 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
     @RequestMapping(value = "orderListExcel", method = RequestMethod.POST)
     @ApiOperation(value = "导出派单列表", notes = "")
-    public MyRespBundle<DesignOrder> orderListExcel(@RequestBody ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize
+    public MyRespBundle<DesignerOrder> orderListExcel(@RequestBody ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize
 
     ) {
         if (null == projectOrderVO.getProjectNo() || "".equals(projectOrderVO.getProjectNo())) {
@@ -213,7 +213,7 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
     @RequestMapping(value = "siteDetailsList", method = RequestMethod.POST)
     @ApiOperation(value = "施工工地详情", notes = "")
-    public MyRespBundle<DesignOrder> siteDetailsList(@RequestBody ConstructionSiteVO constructionSiteVO,
+    public MyRespBundle<DesignerOrder> siteDetailsList(@RequestBody ConstructionSiteVO constructionSiteVO,
                                                      @RequestParam(defaultValue = "1") Integer pageNum,
                                                      @RequestParam(defaultValue = "10") Integer pageSize
     ) {
@@ -242,7 +242,7 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
     @RequestMapping(value = "siteDetailsListExcel", method = RequestMethod.POST)
     @ApiOperation(value = "导出施工工地详情", notes = "")
-    public MyRespBundle<DesignOrder> siteDetailsListExcel(@RequestBody ConstructionSiteVO constructionSiteVO,
+    public MyRespBundle<DesignerOrder> siteDetailsListExcel(@RequestBody ConstructionSiteVO constructionSiteVO,
                                                           Integer pageNum,
                                                           Integer pageSize
     ) {
@@ -299,7 +299,7 @@ public class DelaySchedulingController extends AbsBaseController {
 
     @RequestMapping(value = "siteList", method = RequestMethod.POST)
     @ApiOperation(value = "工地详情", notes = "")
-    public MyRespBundle<DesignOrder> siteList(@RequestBody SiteDetailsVO siteDetailsVO,
+    public MyRespBundle<DesignerOrder> siteList(@RequestBody SiteDetailsVO siteDetailsVO,
                                               @RequestParam(defaultValue = "1") Integer pageNum,
                                               @RequestParam(defaultValue = "10") Integer pageSize
     ) {
@@ -328,7 +328,7 @@ public class DelaySchedulingController extends AbsBaseController {
 
     @RequestMapping(value = "constructionPlanList", method = RequestMethod.POST)
     @ApiOperation(value = "施工计划", notes = "")
-    public MyRespBundle<DesignOrder> constructionPlanList(@RequestBody ConstructionPlanVO constructionPlanVO,
+    public MyRespBundle<DesignerOrder> constructionPlanList(@RequestBody ConstructionPlanVO constructionPlanVO,
                                                           @RequestParam(defaultValue = "1") Integer pageNum,
                                                           @RequestParam(defaultValue = "10") Integer pageSize
     ) {
@@ -358,7 +358,7 @@ public class DelaySchedulingController extends AbsBaseController {
 
     @RequestMapping(value = "constructionPlanExcel", method = RequestMethod.POST)
     @ApiOperation(value = "导出施工计划", notes = "")
-    public MyRespBundle<DesignOrder> constructionPlanExcel(@RequestBody ConstructionPlanVO constructionPlanVO,
+    public MyRespBundle<DesignerOrder> constructionPlanExcel(@RequestBody ConstructionPlanVO constructionPlanVO,
                                                            Integer pageNum,
                                                            Integer pageSize
     ) {
@@ -424,7 +424,7 @@ public class DelaySchedulingController extends AbsBaseController {
 
     @RequestMapping(value = "acceptanceResults", method = RequestMethod.POST)
     @ApiOperation(value = "验收结果", notes = "")
-    public MyRespBundle<DesignOrder> acceptanceResults(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
+    public MyRespBundle<DesignerOrder> acceptanceResults(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
                                                           @RequestParam(defaultValue = "1") Integer pageNum,
                                                           @RequestParam(defaultValue = "10") Integer pageSize
     ) {

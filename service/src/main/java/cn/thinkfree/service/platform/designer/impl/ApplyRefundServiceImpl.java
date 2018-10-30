@@ -31,17 +31,17 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void applyRefund(String orderNo, String userId, String reason, String money, String title, String flowNumber) {
-        DesignOrder designOrder = designDispatchService.queryDesignOrderByOrderNo(orderNo);
-        Project project = designDispatchService.queryProjectByNo(designOrder.getProjectNo());
+        DesignerOrder DesignerOrder = designDispatchService.queryDesignerOrderByOrderNo(orderNo);
+        Project project = designDispatchService.queryProjectByNo(DesignerOrder.getProjectNo());
         if (userId == null || !userId.equals(project.getOwnerId())) {
             throw new RuntimeException("无权操作");
         }
-        DesignStateEnum stateEnum = getRefundNextState(designOrder);
-        designDispatchService.updateOrderState(designOrder.getProjectNo(), stateEnum.getState(), project.getOwnerId(), "业主");
+        DesignStateEnum stateEnum = getRefundNextState(DesignerOrder);
+        designDispatchService.updateOrderState(DesignerOrder.getProjectNo(), stateEnum.getState(), project.getOwnerId(), "业主");
         // TODO 记录退款申请
         ApplyRefundLog refundLog = new ApplyRefundLog();
         refundLog.setApplyTime(new Date());
-        refundLog.setCompanyId(designOrder.getCompanyId());
+        refundLog.setCompanyId(DesignerOrder.getCompanyId());
         refundLog.setFlownumber(flowNumber);
         refundLog.setMoney(money);
         refundLog.setReason(reason);
@@ -91,9 +91,9 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
     private void refundReject(String refundNo, String optionId, String reason, String optionName) {
         ApplyRefundLog applyRefundLog = checkRefundApply(refundNo);
         saveRefundOptionLog(optionId, refundNo, reason);
-        DesignOrder designOrder = designDispatchService.queryDesignOrderByOrderNo(applyRefundLog.getOrderNo());
-        DesignStateEnum stateEnum = getRejectState(designOrder);
-        designDispatchService.updateOrderState(designOrder.getProjectNo(), stateEnum.getState(), optionId, optionName, reason);
+        DesignerOrder DesignerOrder = designDispatchService.queryDesignerOrderByOrderNo(applyRefundLog.getOrderNo());
+        DesignStateEnum stateEnum = getRejectState(DesignerOrder);
+        designDispatchService.updateOrderState(DesignerOrder.getProjectNo(), stateEnum.getState(), optionId, optionName, reason);
     }
 
     /**
@@ -107,9 +107,9 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
     private void refundAgree(String refundNo, String optionId, String optionName, String reason) {
         ApplyRefundLog applyRefundLog = checkRefundApply(refundNo);
         saveRefundOptionLog(optionId, refundNo, reason);
-        DesignOrder designOrder = designDispatchService.queryDesignOrderByOrderNo(applyRefundLog.getOrderNo());
-        DesignStateEnum stateEnum = getRefundNextState(designOrder);
-        designDispatchService.updateOrderState(designOrder.getProjectNo(), stateEnum.getState(), optionId, optionName);
+        DesignerOrder DesignerOrder = designDispatchService.queryDesignerOrderByOrderNo(applyRefundLog.getOrderNo());
+        DesignStateEnum stateEnum = getRefundNextState(DesignerOrder);
+        designDispatchService.updateOrderState(DesignerOrder.getProjectNo(), stateEnum.getState(), optionId, optionName);
     }
 
     /**
@@ -140,11 +140,11 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
     /**
      * 根据订单状态查询退款回退状态
      *
-     * @param designOrder 订单信息
+     * @param DesignerOrder 订单信息
      * @return
      */
-    private DesignStateEnum getRejectState(DesignOrder designOrder) {
-        int orderState = designOrder.getOrderStage();
+    private DesignStateEnum getRejectState(DesignerOrder DesignerOrder) {
+        int orderState = DesignerOrder.getOrderStage();
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(orderState);
         switch (stateEnum) {
             case STATE_90:
@@ -190,11 +190,11 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
     /**
      * 根据当前订单，查询退款状态
      *
-     * @param designOrder
+     * @param DesignerOrder
      * @return
      */
-    private DesignStateEnum getRefundNextState(DesignOrder designOrder) {
-        int orderState = designOrder.getOrderStage();
+    private DesignStateEnum getRefundNextState(DesignerOrder DesignerOrder) {
+        int orderState = DesignerOrder.getOrderStage();
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(orderState);
         switch (stateEnum) {
             //量房退款状态

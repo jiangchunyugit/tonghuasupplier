@@ -14,9 +14,9 @@ import java.util.List;
  */
 public interface AfApprovalRoleService {
 
-    List<UserRoleSet> findByPlanNo(String planNo, List<UserRoleSet> allRoles);
+    List<UserRoleSet> findByApprovalOrderNo(String approvalOrderNo, List<UserRoleSet> allRoles);
 
     void create(String planNo, List<UserRoleSet> roles);
 
-    List<AfApprovalRole> findByPlanNo(String planNo);
+    List<AfApprovalRole> findByApprovalOrderNo(String approvalOrderNo);
 }

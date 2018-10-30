@@ -1,8 +1,11 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.model.ProjectQuotationLog;
 import cn.thinkfree.database.model.ProjectQuotationLogExample;
 import java.util.List;
+import java.util.Set;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectQuotationLogMapper {
@@ -93,4 +96,11 @@ public interface ProjectQuotationLogMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectQuotationLog record);
+
+    /**
+     * 获取排期基础数据
+     * @param projectNo
+     * @return
+     */
+    Set<Integer> selectByProjectNo(String projectNo);
 }
