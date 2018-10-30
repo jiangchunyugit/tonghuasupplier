@@ -4,7 +4,7 @@ import cn.thinkfree.database.mapper.BusinessEntityMapper;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.ProvinceMapper;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.EbsMokeBranchCompany;
+import cn.thinkfree.database.vo.ebsmokevo.EbsMokeBranchCompany;
 import cn.thinkfree.database.vo.ebsmokevo.EbsCityBranch;
 import cn.thinkfree.database.vo.ebsmokevo.StoreBusinessEntity;
 import org.springframework.beans.factory.annotation.Autowired;

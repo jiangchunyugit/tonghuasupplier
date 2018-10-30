@@ -4,7 +4,7 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.vo.EbsMokeBranchCompany;
+import cn.thinkfree.database.vo.ebsmokevo.EbsMokeBranchCompany;
 import cn.thinkfree.database.vo.ebsmokevo.EbsCityBranch;
 import cn.thinkfree.database.vo.ebsmokevo.StoreBusinessEntity;
 import cn.thinkfree.service.ebsmoke.EbsService;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/ebsMoke")

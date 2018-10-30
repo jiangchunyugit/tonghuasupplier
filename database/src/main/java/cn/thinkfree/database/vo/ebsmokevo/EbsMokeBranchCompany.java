@@ -1,11 +1,18 @@
-package cn.thinkfree.database.vo;
+package cn.thinkfree.database.vo.ebsmokevo;
 
-import io.swagger.models.auth.In;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
+/**
+ * @author jiangchunyu 埃森哲分公司信息
+ */
+@ApiModel("埃森哲分公司信息")
 public class EbsMokeBranchCompany {
 
+    @ApiModelProperty("id")
     private Integer id;
 
+    @ApiModelProperty("名称")
     private String nm;
 
     public Integer getId() {
