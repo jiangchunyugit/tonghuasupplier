@@ -1,5 +1,7 @@
 package cn.thinkfree.service.settle.ratio;
 
+import java.util.Map;
+
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.SettlementRatioInfo;
@@ -13,17 +15,52 @@ public interface SettlementRatioService {
 	 * @param ContractSEO
 	 * @return pageList
 	 */
-    PageInfo<SettlementRatioInfo> pageContractBySEO(SettlementRatioSEO settlementRatioSEO);
+    PageInfo<SettlementRatioInfo> pageSettlementRatioBySEO(SettlementRatioSEO settlementRatioSEO);
     
     
     /**
 	 * 
-	 * 创建 结算比例
+	 * 创建/修改 结算比例
 	 * @param ContractSEO
-	 * @return pageList
+	 * @return boolean
 	 */
-    boolean insertSettlementRatio(SettlementRatioInfo settlementRatioSEO);
+    boolean insertOrupdateSettlementRatio(SettlementRatioInfo settlementRatioSEO);
     
+    
+    /**
+   	 * 
+   	 * 拷贝结算比例
+   	 * @param ContractSEO
+   	 * @return boolean
+   	 */
+    boolean copySettlementRatio(String ratioNumber);
+    
+    
+    
+    /**
+   	 * 
+   	 * 拷贝结算比例
+   	 * @param ContractSEO
+   	 * @return SettlementRatioInfo
+   	 */
+    SettlementRatioInfo getSettlementRatio(String ratioNumber);
+    
+    
+    /**
+   	 * 
+   	 * 作废结算比例
+   	 * @param ContractSEO
+   	 * @return SettlementRatioInfo
+   	 */
+    boolean cancellatSettlementRatio(String ratioNumber);
+    
+    
+    /**
+     * 获取费用名称从埃森哲获取
+     * @param ratioNumber
+     * @return
+     */
+    Map<String,String> getCostNames();
     
     
     
