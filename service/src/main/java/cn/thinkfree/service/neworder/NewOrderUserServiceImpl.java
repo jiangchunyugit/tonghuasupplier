@@ -32,7 +32,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Autowired(required = false)
     private PreProjectGuideMapper preProjectGuideMapper;
     @Autowired(required = false)
-    private DesignOrderMapper designOrderMapper;
+    private DesignerOrderMapper DesignerOrderMapper;
     @Autowired
     private ProjectMapper projectMapper;
     @Autowired
@@ -114,7 +114,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         String nickName = (String) result.get("nickName");
         String phone = (String) result.get("phone");
         */
-        List<ProjectOrderVO> projectOrderList = designOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
+        List<ProjectOrderVO> projectOrderList = DesignerOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
         projectOrderList.forEach((projectOrder)->{
             projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
             projectOrder.setDesignerName(employeeInfoVO.getDesigner());
@@ -135,7 +135,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public Integer queryProjectOrderCount(ProjectOrderVO projectOrderVO) {
         projectOrderVO.setStatus(1);
-        return designOrderMapper.selectProjectOrderCount(projectOrderVO);
+        return DesignerOrderMapper.selectProjectOrderCount(projectOrderVO);
     }
 
     /**
@@ -147,13 +147,13 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO) {
-        DesignOrder designOrder = new DesignOrder();
-        designOrder.setCompanyId(orderConfirmationVO.getCompanyId());
-        designOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
+        DesignerOrder DesignerOrder = new DesignerOrder();
+        DesignerOrder.setCompanyId(orderConfirmationVO.getCompanyId());
+        DesignerOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
 
-        DesignOrderExample example = new DesignOrderExample();
+        DesignerOrderExample example = new DesignerOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
-        return designOrderMapper.updateByExampleSelective(designOrder, example);
+        return DesignerOrderMapper.updateByExampleSelective(DesignerOrder, example);
     }
 
     /**
@@ -221,11 +221,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public Integer modifyOrder(OrderConfirmationVO orderConfirmationVO) {
-        DesignOrder designOrder = new DesignOrder();
-        designOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
-        DesignOrderExample example = new DesignOrderExample();
+        DesignerOrder DesignerOrder = new DesignerOrder();
+        DesignerOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
+        DesignerOrderExample example = new DesignerOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
-        return designOrderMapper.updateByExampleSelective(designOrder, example);
+        return DesignerOrderMapper.updateByExampleSelective(DesignerOrder, example);
     }
 
     /**

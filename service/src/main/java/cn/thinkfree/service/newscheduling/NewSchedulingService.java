@@ -44,4 +44,19 @@ public interface NewSchedulingService {
      * @return
      */
     MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(String projectNo);
+
+    /**
+     * 生成排期
+     * @param projectNo
+     * @param companyId
+     * @return
+     */
+    MyRespBundle createScheduling(String projectNo, String companyId);
+
+    /**
+     * 确认排期
+     * @param projectBigSchedulingDetailsVO
+     * @return
+     */
+    MyRespBundle confirmProjectScheduling(List<ProjectBigSchedulingDetailsVO> projectBigSchedulingDetailsVO);
 }

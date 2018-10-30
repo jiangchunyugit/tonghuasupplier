@@ -6,14 +6,14 @@ import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.service.constants.*;
+import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
-import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.MathUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +36,7 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
     ProjectDataMapper projectDataMapper;
     @Autowired
-    DesignOrderMapper designOrderMapper;
+    DesignerOrderMapper DesignerOrderMapper;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
@@ -122,11 +122,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         flexibleOrderPlayVos2.add(base5);
         flexibleOrderPlayVos2.add(base6);
         flexibleOrderPlayVos2.add(base7);
-        ProjectOrderDetailVo designOrderDetailVo = designOrderMapper.selectByProjectNo(projectNo);
-        designOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos1);
+        ProjectOrderDetailVo DesignerOrderDetailVo = DesignerOrderMapper.selectByProjectNo(projectNo);
+        DesignerOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos1);
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         constructionOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos2);
-        projectOrderDetailVoList.add(designOrderDetailVo);
+        projectOrderDetailVoList.add(DesignerOrderDetailVo);
         projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);

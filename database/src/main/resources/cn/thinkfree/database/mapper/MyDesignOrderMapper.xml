@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.thinkfree.database.mapper.DesignOrderMapper">
+<mapper namespace="cn.thinkfree.database.mapper.DesignerOrderMapper">
     <!--分页查询项目派单-->
     <select id="selectProjectOrderByPage" resultType="cn.thinkfree.database.vo.ProjectOrderVO">
         SELECT
@@ -19,7 +19,7 @@
 
 
         FROM
-        design_order o
+        designer_order o
         LEFT JOIN construction_order co ON co.project_no = o.project_no
 
         LEFT JOIN project_delay d ON d.project_no = o.project_no
@@ -39,7 +39,7 @@
     <select id="selectProjectOrderCount" resultType="java.lang.Integer">
         SELECT count(1)
                 FROM
-        design_order o
+        designer_order o
         LEFT JOIN construction_order co ON co.project_no = o.project_no
 
         LEFT JOIN project_delay d ON d.project_no = o.project_no
@@ -59,7 +59,7 @@
           order_no as orderNo,
           type as type
         FROM
-          design_order
+          designer_order
         WHERE
           project_no = #{projectNo}
     </select>

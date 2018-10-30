@@ -195,73 +195,73 @@ public class RemindOwnerLogExample {
             criteria.add(new Criterion(condition, value1, value2));
         }
 
-        public Criteria andDesignOrderNoIsNull() {
+        public Criteria andDesignerOrderNoIsNull() {
             addCriterion("design_order_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoIsNotNull() {
+        public Criteria andDesignerOrderNoIsNotNull() {
             addCriterion("design_order_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoEqualTo(String value) {
-            addCriterion("design_order_no =", value, "designOrderNo");
+        public Criteria andDesignerOrderNoEqualTo(String value) {
+            addCriterion("design_order_no =", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoNotEqualTo(String value) {
-            addCriterion("design_order_no <>", value, "designOrderNo");
+        public Criteria andDesignerOrderNoNotEqualTo(String value) {
+            addCriterion("design_order_no <>", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoGreaterThan(String value) {
-            addCriterion("design_order_no >", value, "designOrderNo");
+        public Criteria andDesignerOrderNoGreaterThan(String value) {
+            addCriterion("design_order_no >", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoGreaterThanOrEqualTo(String value) {
-            addCriterion("design_order_no >=", value, "designOrderNo");
+        public Criteria andDesignerOrderNoGreaterThanOrEqualTo(String value) {
+            addCriterion("design_order_no >=", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoLessThan(String value) {
-            addCriterion("design_order_no <", value, "designOrderNo");
+        public Criteria andDesignerOrderNoLessThan(String value) {
+            addCriterion("design_order_no <", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoLessThanOrEqualTo(String value) {
-            addCriterion("design_order_no <=", value, "designOrderNo");
+        public Criteria andDesignerOrderNoLessThanOrEqualTo(String value) {
+            addCriterion("design_order_no <=", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoLike(String value) {
-            addCriterion("design_order_no like", value, "designOrderNo");
+        public Criteria andDesignerOrderNoLike(String value) {
+            addCriterion("design_order_no like", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoNotLike(String value) {
-            addCriterion("design_order_no not like", value, "designOrderNo");
+        public Criteria andDesignerOrderNoNotLike(String value) {
+            addCriterion("design_order_no not like", value, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoIn(List<String> values) {
-            addCriterion("design_order_no in", values, "designOrderNo");
+        public Criteria andDesignerOrderNoIn(List<String> values) {
+            addCriterion("design_order_no in", values, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoNotIn(List<String> values) {
-            addCriterion("design_order_no not in", values, "designOrderNo");
+        public Criteria andDesignerOrderNoNotIn(List<String> values) {
+            addCriterion("design_order_no not in", values, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoBetween(String value1, String value2) {
-            addCriterion("design_order_no between", value1, value2, "designOrderNo");
+        public Criteria andDesignerOrderNoBetween(String value1, String value2) {
+            addCriterion("design_order_no between", value1, value2, "DesignerOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andDesignOrderNoNotBetween(String value1, String value2) {
-            addCriterion("design_order_no not between", value1, value2, "designOrderNo");
+        public Criteria andDesignerOrderNoNotBetween(String value1, String value2) {
+            addCriterion("design_order_no not between", value1, value2, "DesignerOrderNo");
             return (Criteria) this;
         }
 

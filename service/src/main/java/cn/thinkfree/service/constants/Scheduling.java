@@ -35,7 +35,39 @@ public enum Scheduling {
     /**
      * 不需要验收
      */
-    CHECK_NO(0,"不需要验收");
+    CHECK_NO(0,"不需要验收"),
+    /**
+     * 匹配
+     */
+    MATCHING_YES(1,"匹配"),
+    /**
+     * 未匹配
+     */
+    MATHCHING_NO(0,"未匹配"),
+    /**
+     * 未完成
+     */
+    COMPLETED_YES(1,"未完成"),
+    /**
+     * 已完成
+     */
+    COMPLETED_NO(0,"已完成"),
+    /**
+     * 新增
+     */
+    ADD_YES(1,"新增"),
+    /**
+     * 未新增
+     */
+    ADD_NO(0,"未新增"),
+    /**
+     * 变更次数
+     */
+    CHANGE_NUM(0,"变更次数"),
+    /**
+     * 提交次数
+     */
+    SUBMIT_NUM(0,"提交次数");
 
     private Integer value;
     private String description;
