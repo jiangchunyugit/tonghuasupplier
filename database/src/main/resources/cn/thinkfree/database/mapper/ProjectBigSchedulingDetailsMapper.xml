@@ -549,6 +549,7 @@
         FROM project_big_scheduling_details b
         LEFT JOIN project p ON b.project_no = b.project_no
         WHERE b.project_no=#{constructionPlanVO.projectNo} AND b.status=#{constructionPlanVO.status}
+        ORDER BY b.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
@@ -570,6 +571,7 @@
         FROM
         project_big_scheduling_details b
         WHERE b.project_no=#{projectNo}
+        ORDER BY b.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>

@@ -30,6 +30,7 @@
 
         WHERE
         o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status}
+        ORDER BY o.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
