@@ -350,7 +350,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     /**
-     * 是否能发起完工申请
+     * 完工申请
      * @param configPlanVOs
      * @param config
      * @param companyNo
@@ -425,6 +425,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         return status;
     }
 
+    /**
+     * 开工申请、开工报告
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
     private void startApplication(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort){
         // 开工申请
         AfConfig config = configService.findByAlias(AFAlias.START_APPLICATION.alias);
@@ -533,6 +541,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         return configPlanVO;
     }
 
+    /**
+     * 验收申请
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
     private void checkApplication(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
         AfConfig config = configService.findByAlias(AFAlias.CHECK_APPLICATION.alias);
         AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
@@ -544,24 +560,42 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         checkReport(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
     }
 
+    /**
+     * 验收报告
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
     private void checkReport(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        int miss = compareInstanceSuccessCount(AFAlias.CHECK_APPLICATION.alias, AFAlias.CHECK_REPORT.alias, projectNo, scheduleSort);
+        completeConfig(configPlanVOs, companyNo, roleId, projectNo, scheduleSort, AFAlias.CHECK_APPLICATION.alias, AFAlias.CHECK_REPORT.alias);
+    }
+    private void completeConfig(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort, String aAlias, String bAlias){
+        AfConfig aConfig = configService.findByAlias(aAlias);
+        AfConfig bConfig = configService.findByAlias(bAlias);
+        int miss = compareInstanceSuccessCount(aConfig.getConfigNo(), bConfig.getConfigNo(), projectNo, scheduleSort);
         if (miss > 0) {
-            AfConfig config = configService.findByAlias(AFAlias.CHECK_REPORT.alias);
-            AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
+            AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(bConfig.getConfigNo(), companyNo, roleId);
             if (plan != null) {
                 // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+                AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), bConfig.getName(), bConfig.getConfigNo());
                 configPlanVOs.add(configPlanVO);
             }
         }
     }
-
-    private int compareInstanceSuccessCount(String aAlias, String bAlias, String projectNo, Integer scheduleSort){
+    /**
+     * 比较同一个项目、同一个排期的两种审批流的完成数量
+     * @param aConfigNo
+     * @param bConfigNo
+     * @param projectNo
+     * @param scheduleSort
+     * @return
+     */
+    private int compareInstanceSuccessCount(String aConfigNo, String bConfigNo, String projectNo, Integer scheduleSort){
         int aCount = 0, bCount = 0;
 
-        AfConfig aConfig = configService.findByAlias(aAlias);
-        List<AfInstance> aInstances = findByConfigNoAndProjectNoAndScheduleSort(aConfig.getConfigNo(), projectNo, scheduleSort);
+        List<AfInstance> aInstances = findByConfigNoAndProjectNoAndScheduleSort(aConfigNo, projectNo, scheduleSort);
         if (aInstances != null) {
             for (AfInstance instance : aInstances) {
                 if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS) {
@@ -570,8 +604,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         }
 
-        AfConfig bConfig = configService.findByAlias(bAlias);
-        List<AfInstance> bInstances = findByConfigNoAndProjectNoAndScheduleSort(bConfig.getConfigNo(), projectNo, scheduleSort);
+        List<AfInstance> bInstances = findByConfigNoAndProjectNoAndScheduleSort(bConfigNo, projectNo, scheduleSort);
         if (bInstances != null) {
             for (AfInstance instance : bInstances) {
                 if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS || instance.getStatus() == AfConstants.APPROVAL_STATUS_START) {
@@ -582,8 +615,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         return aCount - bCount;
     }
 
-
-
+    /**
+     * 问题整改
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
     private void problemRectification(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
         AfConfig config = configService.findByAlias(AFAlias.PROBLEM_RECTIFICATION.alias);
         AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
@@ -592,8 +631,29 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
             configPlanVOs.add(configPlanVO);
         }
+        rectificationComplete(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
     }
 
+    /**
+     * 整改完成
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
+    private void rectificationComplete(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
+        completeConfig(configPlanVOs, companyNo, roleId, projectNo, scheduleSort, AFAlias.PROBLEM_RECTIFICATION.alias, AFAlias.RECTIFICATION_COMPLETE.alias);
+    }
+
+    /**
+     * 变更单
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
     private void changeOrder(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
         AfConfig config = configService.findByAlias(AFAlias.CHANGE_ORDER.alias);
         AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
@@ -602,8 +662,21 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
             configPlanVOs.add(configPlanVO);
         }
+        changeComplete(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
     }
 
+    private void changeComplete(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
+        completeConfig(configPlanVOs, companyNo, roleId, projectNo, scheduleSort, AFAlias.CHANGE_ORDER.alias, AFAlias.CHANGE_COMPLETE.alias);
+    }
+
+    /**
+     * 延期单
+     * @param configPlanVOs
+     * @param companyNo
+     * @param roleId
+     * @param projectNo
+     * @param scheduleSort
+     */
     private void delayOrder(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
         AfConfig config = configService.findByAlias(AFAlias.DELAY_ORDER.alias);
         AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
