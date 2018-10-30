@@ -32,7 +32,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId).andCompanyIdEqualTo(companyId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
-        if(employeeMsgs.isEmpty()){
+        if (employeeMsgs.isEmpty()) {
             throw new RuntimeException("没有查询到该员工");
         }
         EmployeeMsg employeeMsg = new EmployeeMsg();
@@ -47,7 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("申请状态异常");
         }
         EmployeeApplyLog applyLog = queryApplyLog(userId);
-        if(applyLog != null){
+        if (applyLog != null) {
             throw new RuntimeException("有未处理的申请");
         }
         checkCompanyExit(companyId);
@@ -73,6 +73,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 查询是否有未处理的申请
+     *
      * @param userId
      * @return
      */
@@ -81,13 +82,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         invalidExample.createCriteria().andDealStateEqualTo(2).andInvalidTimeLessThanOrEqualTo(new Date());
         EmployeeApplyLog applyLog = new EmployeeApplyLog();
         applyLog.setDealState(3);
-        int res = applyLogMapper.updateByExampleSelective(applyLog,invalidExample);
+        int res = applyLogMapper.updateByExampleSelective(applyLog, invalidExample);
         logger.info("跟新申请信息为已过期：res={}", res);
         //查询改用户是否有未处理的申请
         EmployeeApplyLogExample applyLogExample = new EmployeeApplyLogExample();
         applyLogExample.createCriteria().andUserIdEqualTo(userId).andDealStateEqualTo(2).andInvalidTimeGreaterThanOrEqualTo(new Date());
         List<EmployeeApplyLog> applyLogs = applyLogMapper.selectByExample(applyLogExample);
-        if(applyLogs.isEmpty()){
+        if (applyLogs.isEmpty()) {
             return null;
         }
         return applyLogs.get(0);
@@ -99,10 +100,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("申请状态异常");
         }
         EmployeeApplyLog applyLog = queryApplyLog(userId);
-        if(applyLog == null){
+        if (applyLog == null) {
             throw new RuntimeException("没有查询到申请记录");
         }
-        if(!applyLog.getCompanyId().equals(companyId)){
+        if (!applyLog.getCompanyId().equals(companyId)) {
             throw new RuntimeException("公司信息异常");
         }
         checkCompanyExit(companyId);
@@ -139,11 +140,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void submitCardMsg(String userId, int cardType, String cardNo, String realName) {
+    public void submitCardMsg(String userId, int cardType, String cardNo, String realName, String photo1, String photo2, String photo3) {
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setCertificateType(cardType);
         employeeMsg.setCertificate(cardNo);
         employeeMsg.setRealName(realName);
+        employeeMsg.setCertificatePhotoUrl1(photo1);
+        employeeMsg.setCertificatePhotoUrl2(photo2);
+        employeeMsg.setCertificatePhotoUrl3(photo3);
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
@@ -163,7 +167,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId).andCompanyIdEqualTo(companyId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
-        if(employeeMsgs.isEmpty()){
+        if (employeeMsgs.isEmpty()) {
             throw new RuntimeException("没有查询到该员工");
         }
         EmployeeMsg employeeMsg = new EmployeeMsg();
@@ -176,9 +180,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 判断公司是否存在
+     *
      * @param companyId 公司ID
      */
-    private void checkCompanyExit(String companyId){
+    private void checkCompanyExit(String companyId) {
 //        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
 //        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2")).andAuditStatusEqualTo("7");
 //        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);

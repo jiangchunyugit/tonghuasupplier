@@ -63,9 +63,12 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "cardType", required = false, value = "证件类型") @RequestParam(name = "cardType", required = false) int cardType,
             @ApiParam(name = "cardNo", required = false, value = "证件号码") @RequestParam(name = "cardNo", required = false) String cardNo,
-            @ApiParam(name = "realName", required = false, value = "真实姓名") @RequestParam(name = "realName", required = false) String realName) {
+            @ApiParam(name = "realName", required = false, value = "真实姓名") @RequestParam(name = "realName", required = false) String realName,
+            @ApiParam(name = "idCardUrl1", required = false, value = "证件正面") @RequestParam(name = "idCardUrl1", required = false) String idCardUrl1,
+            @ApiParam(name = "idCardUrl2", required = false, value = "证件反面") @RequestParam(name = "idCardUrl2", required = false) String idCardUrl2,
+            @ApiParam(name = "idCardUrl3", required = false, value = "手持证件") @RequestParam(name = "idCardUrl3", required = false) String idCardUrl3) {
         try{
-            employeeService.submitCardMsg(userId, cardType, cardNo, realName);
+            employeeService.submitCardMsg(userId, cardType, cardNo, realName, idCardUrl1, idCardUrl2, idCardUrl3);
         }catch (Exception e){
             return sendFailMessage(e.getMessage());
         }

@@ -74,8 +74,9 @@ public interface ReserveOrderService {
      * @param decorationBudget 装修预算
      * @param balconyNum       阳台个数
      * @param ownerId          业主ID
+     * @param designerId       设计师ID
      */
     void createProject(String reserveNo, String companyId, int source, int huxing, int roomNum, int officeNum, int toiletNum,
                        String address, String addressDetail, int style, int area, int houseType, int peopleNum,
-                       String planStartTime, String planEndTime, int decorationBudget, int balconyNum, String ownerId);
+                       String planStartTime, String planEndTime, int decorationBudget, int balconyNum, String ownerId, String designerId);
 }
