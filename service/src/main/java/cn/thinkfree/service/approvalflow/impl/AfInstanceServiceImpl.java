@@ -226,7 +226,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVOs.add(approvalLogVO);
         }
 
-        AfConfig config = configService.findByConfigNo(instance.getConfigNo());
+        AfConfig config = configService.findByNo(instance.getConfigNo());
         if (config == null) {
 
         }
@@ -274,7 +274,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 // 结束审批流
                 instance.setStatus(2);
                 instance.setCurrentApprovalLogNo(null);
-                sendMessage();
+                sendSuccessMessage();
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
             }
@@ -286,6 +286,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         updateByPrimaryKey(instance);
         approvalLogService.updateByPrimaryKey(approvalLog);
+    }
+
+    private void sendSuccessMessage() {
+
     }
 
     private void updateByPrimaryKey(AfInstance instance) {
@@ -698,7 +702,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (instances != null) {
             for (AfInstance instance : instances) {
                 AfInstanceVO instanceVO = new AfInstanceVO();
-                AfConfig config = configService.findByConfigNo(instance.getConfigNo());
+                AfConfig config = configService.findByNo(instance.getConfigNo());
                 if (config == null) {
                     // TODO
                 }

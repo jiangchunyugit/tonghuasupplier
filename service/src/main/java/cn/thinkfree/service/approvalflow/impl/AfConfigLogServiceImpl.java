@@ -25,13 +25,21 @@ public class AfConfigLogServiceImpl implements AfConfigLogService {
     private AfConfigLogMapper configLogMapper;
 
     @Override
-    public void create(AfConfig config, String configLogNo) {
+    public void create(AfConfig config, String configLogNo, String createUserId) {
         AfConfigLog configLog = new AfConfigLog();
         configLog.setConfigLogNo(configLogNo);
         configLog.setConfigNo(config.getConfigNo());
         configLog.setCreateTime(new Date());
-//        configLog.setStartMessage(config);
-//        configLog.setEndMessage(config);
+        configLog.setCreateUserId(createUserId);
         configLog.setVersion(config.getVersion());
+        configLog.setName(config.getName());
+        configLog.setAlias(config.getAlias());
+        configLog.setDescribe(config.getDescribe());
+
+        insert(configLog);
+    }
+
+    private void insert(AfConfigLog configLog){
+        configLogMapper.insertSelective(configLog);
     }
 }

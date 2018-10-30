@@ -28,11 +28,7 @@ public class AfConfigServiceImpl implements AfConfigService {
     @Resource
     private AfConfigMapper configMapper;
     @Resource
-    private AfApprovalRoleService approvalRoleService;
-    @Resource
     private AfSubRoleService subRoleService;
-    @Resource
-    private AfSubUrlService subUrlService;
     @Resource
     private RoleService roleService;
     @Resource
@@ -62,12 +58,15 @@ public class AfConfigServiceImpl implements AfConfigService {
 
 
     private List<AfConfig> findAll() {
-        return configMapper.selectByExample(null);
+        AfConfigExample example = new AfConfigExample();
+        example.createCriteria().andUsableEqualTo(1);
+        return configMapper.selectByExample(example);
     }
 
-    private AfConfig findByNo(String configNo) {
+    @Override
+    public AfConfig findByNo(String configNo) {
         AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andConfigNoEqualTo(configNo);
+        example.createCriteria().andConfigNoEqualTo(configNo).andUsableEqualTo(1);
         List<AfConfig> configs = configMapper.selectByExample(example);
         return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }
@@ -80,10 +79,6 @@ public class AfConfigServiceImpl implements AfConfigService {
             throw new RuntimeException();
         }
         List<UserRoleSet> roles = roleService.findAll();
-        return detail(config, roles);
-    }
-
-    private AfConfigVO detail(AfConfig config, List<UserRoleSet> roles) {
         List<AfPlanVO> plans = planService.findByConfigLogNo(config.getConfigNo(), roles);
         List<UserRoleSet> subRoles = subRoleService.findByConfigLogNo(config.getConfigLogNo(), roles);
 
@@ -95,9 +90,35 @@ public class AfConfigServiceImpl implements AfConfigService {
     }
 
     @Override
-    public void update(AfConfigVO configVO) {
+    public void add(AfConfigVO configVO) {
+        AfConfig config = configVO.getConfig();
+        String configLogNo = UniqueCodeGenerator.AF_CONFIG_LOG.getCode();
+        config.setConfigLogNo(configLogNo);
+        config.setVersion(1);
+        config.setCreateTime(new Date());
+        config.setConfigNo(UniqueCodeGenerator.AF_CONFIG.getCode());
+        config.setUsable(1);
+
+        insert(config);
+
+        configLogService.create(config, configLogNo, config.getCreateUserId());
+        planService.create(configLogNo, configVO.getPlans());
+        subRoleService.create(configLogNo, configVO.getSubRoles());
+    }
+
+    private void insert(AfConfig config) {
+        configMapper.insertSelective(config);
+    }
+
+    @Override
+    public void edit(AfConfigVO configVO) {
         AfConfig config = configVO.getConfig();
         AfConfig record = findByNo(config.getConfigNo());
+        if (record == null) {
+            // TODO
+            throw new RuntimeException();
+        }
+
         String configLogNo = UniqueCodeGenerator.AF_CONFIG_LOG.getCode();
         record.setAlias(config.getAlias());
         record.setName(config.getName());
@@ -105,29 +126,33 @@ public class AfConfigServiceImpl implements AfConfigService {
         record.setUpdateUserId("");
         record.setConfigLogNo(configLogNo);
         record.setVersion(record.getVersion() + 1);
-        save(record);
 
-        configLogService.create(record, configLogNo);
+        AfConfigExample example = new AfConfigExample();
+        example.createCriteria().andConfigNoEqualTo(config.getConfigNo());
+
+        configMapper.updateByPrimaryKey(record);
+
+        configLogService.create(record, configLogNo, config.getUpdateUserId());
         planService.create(configLogNo, configVO.getPlans());
         subRoleService.create(configLogNo, configVO.getSubRoles());
     }
 
-    private void save(AfConfig config) {
-        configMapper.updateByPrimaryKey(config);
-    }
-
     @Override
-    public AfConfig findByConfigNo(String configNo) {
+    public void delete(String configNo) {
+        AfConfig config = new AfConfig();
+        config.setUsable(0);
         AfConfigExample example = new AfConfigExample();
         example.createCriteria().andConfigNoEqualTo(configNo);
-        List<AfConfig> configs = configMapper.selectByExample(example);
-        return configs != null && configs.size() > 0 ? configs.get(0) : null;
+        int row = configMapper.updateByExampleSelective(config, example);
+        if (row != 1) {
+            // TODO
+        }
     }
 
     @Override
     public AfConfig findByAlias(String alias) {
         AfConfigExample example = new AfConfigExample();
-        example.createCriteria().andAliasNotEqualTo(alias);
+        example.createCriteria().andAliasNotEqualTo(alias).andUsableEqualTo(1);
         List<AfConfig> configs = configMapper.selectByExample(example);
         return configs != null && configs.size() > 0 ? configs.get(0) : null;
     }
