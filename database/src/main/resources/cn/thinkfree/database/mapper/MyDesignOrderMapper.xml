@@ -57,7 +57,7 @@
         SELECT
           order_stage as taskStage,
           order_no as orderNo,
-          type as type
+          style_type as styleType
         FROM
           designer_order
         WHERE
