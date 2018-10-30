@@ -144,7 +144,7 @@ public class SettlementRatioController extends AbsBaseController {
     @MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算比例名称")
     public MyRespBundle<Map<String,String>> getCostNames(){
 
-        boolean  result= settlementRatioService.cancellatSettlementRatio(ratioNumber);
+        Map<String, String>  result= settlementRatioService.getCostNames();
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
