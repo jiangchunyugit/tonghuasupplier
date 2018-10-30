@@ -251,8 +251,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExample(projectData, example);
-        if (i != ProjectDataStatus.BASE_STATUS.getValue()) {
+        int i = projectDataMapper.updateByExampleSelective(projectData, example);
+        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("确认失败!");
         }
         return RespData.success();
