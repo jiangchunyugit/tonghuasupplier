@@ -6,14 +6,14 @@ import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.service.constants.*;
+import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
-import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.MathUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +36,13 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
     ProjectDataMapper projectDataMapper;
     @Autowired
-    DesignOrderMapper designOrderMapper;
+    DesignerOrderMapper DesignerOrderMapper;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    OrderApplyRefundMapper orderApplyRefundMapper;
 
 
     /**
@@ -122,11 +124,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         flexibleOrderPlayVos2.add(base5);
         flexibleOrderPlayVos2.add(base6);
         flexibleOrderPlayVos2.add(base7);
-        ProjectOrderDetailVo designOrderDetailVo = designOrderMapper.selectByProjectNo(projectNo);
-        designOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos1);
+        ProjectOrderDetailVo DesignerOrderDetailVo = DesignerOrderMapper.selectByProjectNo(projectNo);
+        DesignerOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos1);
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         constructionOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos2);
-        projectOrderDetailVoList.add(designOrderDetailVo);
+        projectOrderDetailVoList.add(DesignerOrderDetailVo);
         projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);
@@ -249,8 +251,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExample(projectData, example);
-        if (i != ProjectDataStatus.BASE_STATUS.getValue()) {
+        int i = projectDataMapper.updateByExampleSelective(projectData, example);
+        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("确认失败!");
         }
         return RespData.success();
@@ -289,15 +291,49 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     public MyRespBundle<Map<String, UserVo>> getListUserByUserIds(List<String> userIds) {
         Map<String, UserVo> map = new HashMap<>();
-        for (String string : userIds) {
-            EmployeeMsg employeeMsg = employeeMsgMapper.selectByUserId(string);
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdIn(userIds);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        for (EmployeeMsg employeeMsg : employeeMsgs) {
             UserVo vo = new UserVo();
             vo.setRealName(employeeMsg.getRealName());
             vo.setRoleCode(employeeMsg.getRoleCode());
             vo.setUserId(employeeMsg.getUserId());
             vo.setRoleName(UserJobs.findByCodeStr(vo.getRoleCode()).mes);
-            map.put(string, vo);
+            map.put(employeeMsg.getUserId(), vo);
         }
         return RespData.success(map);
+    }
+
+    /**
+     * 退款
+     *
+     * @param orderNo
+     * @param payOrderNo
+     * @param otherReason
+     * @param money
+     * @param moneyName
+     * @param userId
+     * @param cancelReason
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> applyRefund(String orderNo, String payOrderNo, String otherReason, Integer money, String moneyName, String userId, String cancelReason) {
+        OrderApplyRefund orderApplyRefund = new OrderApplyRefund();
+        orderApplyRefund.setLaunchTime(new Date());
+        orderApplyRefund.setType(ProjectDataStatus.REFUND_ONE.getValue());
+        orderApplyRefund.setOrderNo(orderNo);
+        orderApplyRefund.setPayOrderNo(payOrderNo);
+        orderApplyRefund.setMoney(money);
+        orderApplyRefund.setCancleReason(cancelReason);
+        orderApplyRefund.setOtherReason(otherReason);
+        orderApplyRefund.setMoneyName(moneyName);
+        orderApplyRefund.setInitiatorId(userId);
+        int i = orderApplyRefundMapper.insertSelective(orderApplyRefund);
+        if(i!=ProjectDataStatus.INSERT_SUCCESS.getValue()){
+            return RespData.error("退款申请失败!!");
+        }
+        return RespData.success();
     }
 }

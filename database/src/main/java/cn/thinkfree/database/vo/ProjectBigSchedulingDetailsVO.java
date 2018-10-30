@@ -13,6 +13,10 @@ import java.util.Date;
 public class ProjectBigSchedulingDetailsVO {
 
     /**
+     * 公司编号
+     */
+    private String companyId;
+    /**
      * 项目编号
      */
     private String projectNo;

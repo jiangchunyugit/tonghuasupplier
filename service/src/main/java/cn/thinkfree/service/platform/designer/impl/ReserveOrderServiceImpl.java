@@ -1,10 +1,10 @@
 package cn.thinkfree.service.platform.designer.impl;
 
 import cn.thinkfree.core.constants.DesignStateEnum;
-import cn.thinkfree.database.mapper.DesignOrderMapper;
+import cn.thinkfree.database.mapper.DesignerOrderMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.mapper.ReserveProjectMapper;
-import cn.thinkfree.database.model.DesignOrder;
+import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.model.ReserveProject;
 import cn.thinkfree.database.model.ReserveProjectExample;
@@ -32,9 +32,11 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     @Autowired
     private ProjectMapper projectMapper;
     @Autowired
-    private DesignOrderMapper designOrderMapper;
+    private DesignerOrderMapper DesignerOrderMapper;
+
     /**
      * 创建设计订单
+     *
      * @param ownerName 业主姓名
      * @param phone     业主手机号
      * @param address   地址
@@ -66,29 +68,29 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
 
     @Override
     public void closeReserveOrder(String reserveNo, int state, String reason) {
-        if(state != 3 && state != 4){
+        if (state != 3 && state != 4) {
             throw new RuntimeException("无效的状态");
         }
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
         List<ReserveProject> reserveProjects = reserveProjectMapper.selectByExample(reserveProjectExample);
-        if(reserveProjects.isEmpty()){
+        if (reserveProjects.isEmpty()) {
             throw new RuntimeException("无效的订单");
         }
         ReserveProject reserveProject = new ReserveProject();
         reserveProject.setState(state);
         reserveProject.setReason(reason);
-        reserveProjectMapper.updateByExample(reserveProject,reserveProjectExample);
+        reserveProjectMapper.updateByExample(reserveProject, reserveProjectExample);
     }
 
     @Override
     public PageVo<List<ReserveProject>> queryReserveOrder(String ownerName, String phone, int pageSize, int pageIndex) {
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         ReserveProjectExample.Criteria criteria = reserveProjectExample.createCriteria();
-        if(StringUtils.isNotBlank(ownerName)){
+        if (StringUtils.isNotBlank(ownerName)) {
             criteria.andOwnerNameLike("%" + ownerName + "%");
         }
-        if(StringUtils.isNotBlank(phone)){
+        if (StringUtils.isNotBlank(phone)) {
             criteria.andPhoneLike("%" + phone + "%");
         }
         long total = reserveProjectMapper.countByExample(reserveProjectExample);
@@ -106,7 +108,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
         List<ReserveProject> reserveProjects = reserveProjectMapper.selectByExample(reserveProjectExample);
-        if(reserveProjects.isEmpty()){
+        if (reserveProjects.isEmpty()) {
             throw new RuntimeException("无效的订单");
         }
         return reserveProjects.get(0);
@@ -131,12 +133,13 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
      * @param decorationBudget 装修预算
      * @param balconyNum       阳台个数
      * @param ownerId          业主ID
+     * @param designerId       设计师ID
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void createProject(String reserveNo, String companyId, int source, int huxing, int roomNum, int officeNum, int toiletNum,
                               String address, String addressDetail, int style, int area, int houseType, int peopleNum, String planStartTime,
-                              String planEndTime, int decorationBudget, int balconyNum, String ownerId) {
+                              String planEndTime, int decorationBudget, int balconyNum, String ownerId, String designerId) {
         Project project = new Project();
         project.setCompanyId(companyId);
         project.setProjectNo(OrderNoUtils.getNo("PN"));
@@ -160,26 +163,26 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         project.setOwnerId(ownerId);
         project.setBalcony(balconyNum);
         projectMapper.insertSelective(project);
-        DesignOrder designOrder = new DesignOrder();
-        designOrder.setProjectNo(project.getProjectNo());
-        designOrder.setCreateTime(new Date());
-        designOrder.setOrderNo(OrderNoUtils.getNo("DO"));
-        designOrder.setOrderStage(DesignStateEnum.STATE_1.getState());
-        designOrder.setAppointmentTime(new Date());
-        designOrder.setStatus(1);
-        designOrder.setStyleType(style + "");
-        designOrderMapper.insertSelective(designOrder);
+		DesignerOrder DesignerOrder = new DesignerOrder();
+        DesignerOrder.setProjectNo(project.getProjectNo());
+        DesignerOrder.setCreateTime(new Date());
+        DesignerOrder.setOrderNo(OrderNoUtils.getNo("DO"));
+        DesignerOrder.setOrderStage(DesignStateEnum.STATE_1.getState());
+        DesignerOrder.setAppointmentTime(new Date());
+        DesignerOrder.setStatus(1);
+        DesignerOrder.setStyleType(style + "");
+        DesignerOrderMapper.insertSelective(DesignerOrder);
         //TODO 待创建施工订单
-        if(StringUtils.isBlank(reserveNo)){
+        if (StringUtils.isBlank(reserveNo)) {
             return;
         }
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
         ReserveProject reserveProject = new ReserveProject();
         reserveProject.setProjectNo(project.getProjectNo());
-        reserveProject.setDesignOrderNo(designOrder.getOrderNo());
+        reserveProject.setDesignerOrderNo(DesignerOrder.getOrderNo());
         reserveProject.setChangeTime(new Date());
         reserveProject.setState(2);
-        reserveProjectMapper.updateByExample(reserveProject,reserveProjectExample);
+        reserveProjectMapper.updateByExample(reserveProject, reserveProjectExample);
     }
 }

@@ -74,7 +74,8 @@
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project" domainObjectName="Project"/>-->
-        <!--<table tableName="design_order" domainObjectName="DesignOrder"/>-->
+        <!--<table tableName="designer_order" domainObjectName="DesignerOrder"/>-->
+        <!--<table tableName="order_apply_refund" domainObjectName="OrderApplyRefund"/>-->
         <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
         <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
