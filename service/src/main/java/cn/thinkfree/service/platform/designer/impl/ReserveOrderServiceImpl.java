@@ -171,7 +171,8 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         DesignerOrder.setAppointmentTime(new Date());
         DesignerOrder.setStatus(1);
         DesignerOrder.setStyleType(style + "");
-        DesignerOrderMapper.insertSelective(DesignerOrder);        //TODO 待创建施工订单
+        DesignerOrderMapper.insertSelective(DesignerOrder);
+        //TODO 待创建施工订单
         if (StringUtils.isBlank(reserveNo)) {
             return;
         }
