@@ -1,6 +1,8 @@
 package cn.thinkfree.database.vo.settle;
 
 
+import java.util.Date;
+
 import cn.thinkfree.database.vo.AbsPageSearchCriteria;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +18,7 @@ public class SettlementRatioSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("结算比例编号")
     private String ratioNumber;
     
-    @ApiModelProperty("结算状态")
+    @ApiModelProperty("比例状态 0生效 1失效 2作废 3未生效 ")
     private String ratioStatus;
     
     @ApiModelProperty("结算比例名称")
@@ -26,13 +28,71 @@ public class SettlementRatioSEO extends AbsPageSearchCriteria  {
     private String createUser;
     
     @ApiModelProperty("开始时间")
-    private String startTime;
+    private Date startTime;
     
     @ApiModelProperty("结束时间")
-    private String endTime;
+    private Date endTime;
     
-    @ApiModelProperty("审核状态")
+    @ApiModelProperty("审核状态 1 待审核 2审核通过 3审核不通过")
     private String auditStatus;
+
+	public String getRatioNumber() {
+		return ratioNumber;
+	}
+
+	public void setRatioNumber(String ratioNumber) {
+		this.ratioNumber = ratioNumber;
+	}
+
+	public String getRatioStatus() {
+		return ratioStatus;
+	}
+
+	public void setRatioStatus(String ratioStatus) {
+		this.ratioStatus = ratioStatus;
+	}
+
+	public String getRatioName() {
+		return ratioName;
+	}
+
+	public void setRatioName(String ratioName) {
+		this.ratioName = ratioName;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
+	
+
+	public String getAuditStatus() {
+		return auditStatus;
+	}
+
+	public void setAuditStatus(String auditStatus) {
+		this.auditStatus = auditStatus;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
     
     
 
