@@ -6,6 +6,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.construction.vo.ConstructionStateVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -32,8 +33,8 @@ public class ConstructionStateController extends AbsBaseController {
     @ApiOperation("获取状态接口")
     @MyRespBody
     @RequestMapping(value = "getState", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> getStateByRole(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
-                                               @RequestParam @ApiParam(value = "操作角色",required = true) String role) {
+    public MyRespBundle<ConstructionStateVo> getStateByRole(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
+                                                            @RequestParam @ApiParam(value = "操作角色",required = true) String role) {
 
         return constructionStateService.getConstructionState(projectNo,role);
     }
@@ -42,9 +43,10 @@ public class ConstructionStateController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "updateState", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> updateStateByRole(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
-                                               @RequestParam @ApiParam(value = "操作角色",required = true) String role) {
+                                                  @RequestParam @ApiParam(value = "操作角色",required = true) String role,
+                                                  @RequestParam @ApiParam(value = "状态值",required = true) int stateCode){
 
-        return constructionStateService.getConstructionState(projectNo,role);
+        return constructionStateService.updateConstructionState(projectNo, role,stateCode);
     }
 
 }
