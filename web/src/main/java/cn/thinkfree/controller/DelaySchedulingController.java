@@ -213,7 +213,7 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
     @RequestMapping(value = "siteDetailsList", method = RequestMethod.POST)
     @ApiOperation(value = "施工工地详情", notes = "")
-    public MyRespBundle<DesignerOrder> siteDetailsList(@RequestBody ConstructionSiteVO constructionSiteVO,
+    public MyRespBundle<ConstructionSiteVO> siteDetailsList(@RequestBody ConstructionSiteVO constructionSiteVO,
                                                      @RequestParam(defaultValue = "1") Integer pageNum,
                                                      @RequestParam(defaultValue = "10") Integer pageSize
     ) {

@@ -566,17 +566,16 @@
 
     <!--分页查询施工计划-->
     <select id="selectConstructionPlanByPage" resultType="cn.thinkfree.database.vo.ConstructionPlanVO">
-        select
-        p.stage AS stage,
-        b.big_name AS constructionProject,
-        b.plan_satrt_time AS planSatrtTime,
-        b.plan_end_time AS planEndTime,
-        b.actual_satrt_time AS actualSatrtTime,
-        b.actual_end_time actualEndTime
-        FROM project_big_scheduling_details b
-        LEFT JOIN project p ON b.project_no = b.project_no
-        WHERE b.project_no=#{constructionPlanVO.projectNo} AND b.status=#{constructionPlanVO.status}
-        ORDER BY b.create_time DESC
+      select
+      p.stage AS stage,
+      b.big_name AS constructionProject,
+      b.plan_satrt_time AS planSatrtTime,
+      b.plan_end_time AS planEndTime,
+      b.actual_satrt_time AS actualSatrtTime,
+      b.actual_end_time actualEndTime
+      FROM project_big_scheduling_details b,project p
+      WHERE b.project_no=#{constructionPlanVO.projectNo} AND b.status=#{constructionPlanVO.status} AND  p.project_no = b.project_no
+      ORDER BY b.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
