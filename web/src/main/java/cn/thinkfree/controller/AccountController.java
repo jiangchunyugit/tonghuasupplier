@@ -15,6 +15,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.account.*;
 import cn.thinkfree.service.account.*;
+import cn.thinkfree.service.companyuser.CompanyUserService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.userResource.PcSystemResourceService;
 import com.github.pagehelper.PageInfo;
@@ -50,6 +51,9 @@ public class AccountController extends AbsBaseController {
 
     @Autowired
     UserRoleSetService userRoleSetService;
+
+    @Autowired
+    CompanyUserService CompanyUserService;
 
     /**
      * 创建权限
@@ -123,7 +127,7 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     public MyRespBundle<List> resource(@PathVariable("id")Integer id){
         List<SystemResource> resources = systemResourceService.listResourceByPermissionID(id);
-        Collections.sort(resources, Comparator.comparingInt(SystemResource::getId));
+        Collections.sort(resources, Comparator.comparingInt(SystemResource::getSortNum));
         return sendJsonData(ResultMessage.SUCCESS,resources);
     }
 
@@ -425,6 +429,76 @@ public class AccountController extends AbsBaseController {
         String mes = userRoleSetService.saveEnterPriseRole(userRoleSet);
         return sendJsonData(ResultMessage.SUCCESS,mes);
     }
+
+    /**
+     * 查询企业角色类型
+     * @param id
+     * @return
+     */
+    @GetMapping("/enterprise/role/{id}")
+    @MyRespBody
+    public MyRespBundle<UserRoleSet> detailEnterPriseRole(@PathVariable Integer id){
+        UserRoleSet result = userRoleSetService.findUserRoleSetVO(id);
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 企业角色类型列表
+     * @param userRoleSetSEO
+     * @return
+     */
+    @GetMapping("/enterprise/role")
+    @MyRespBody
+    public MyRespBundle<PageInfo<UserRoleSet>>  enterpriseRoles(UserRoleSetSEO userRoleSetSEO){
+        PageInfo<UserRoleSet> result = userRoleSetService.pageEnterPriseRole(userRoleSetSEO);
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 企业角色编辑
+     * @param id
+     * @param userRoleSet
+     * @return
+     */
+    @PostMapping("/enterprise/role/{id}")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "企业角色编辑")
+    public MyRespBundle<String> enterPriseRole(@PathVariable Integer id,UserRoleSet userRoleSet){
+        String mes = userRoleSetService.updateEnterPriseRole(id,userRoleSet);
+        return sendSuccessMessage(mes);
+    }
+
+    /**
+     * 获取企业角色资源
+     * @param id
+     * @return
+     */
+    @GetMapping("/enterprise/role/{id}/resource")
+    @MyRespBody
+    public MyRespBundle<List<SystemResource>> enterPriseRoleResource(@PathVariable Integer id){
+        List<SystemResource> resources = systemResourceService.listResourceByEnterPriseRoleID(id);
+        Collections.sort(resources, Comparator.comparingInt(SystemResource::getSortNum));
+        return sendJsonData(ResultMessage.SUCCESS,resources);
+    }
+
+    /**
+     * 编辑企业角色资源
+     * @param id
+     * @param resources
+     * @return
+     */
+    @PostMapping("/enterprise/role/{id}/resource")
+    @MyRespBody
+    public MyRespBundle<String> enterPriseRoleGrantResource(@PathVariable Integer id,@RequestParam(value = "resource",required = false) Integer[] resources){
+
+        String mes = CompanyUserService.updateEnterPriseRoleResource(id,resources);
+
+        return sendJsonData(ResultMessage.SUCCESS,mes);
+    }
+
+
+
+
 
 
 }

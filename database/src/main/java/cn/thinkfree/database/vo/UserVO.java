@@ -29,6 +29,9 @@ public class UserVO extends SecurityUser {
      */
     private PcUserInfo pcUserInfo;
 
+    /**
+     * 可用资源
+     */
     private List<SystemResource> resources;
     /**
      * 公司关系图
@@ -45,7 +48,10 @@ public class UserVO extends SecurityUser {
      */
     private CityBranch cityBranch;
 
-
+    /**
+     * 企业账号
+     */
+    private CompanyUser companyUser;
     /**
      * 是否根公司
      */
@@ -148,16 +154,8 @@ public class UserVO extends SecurityUser {
     }
 
     public String getCompanyID(){
-        // TODO 公司编码
-        if(companyInfo == null && pcUserInfo != null){
-//            return pcUserInfo.getCompanyId();
-            return  null;
-        }else{
-            return companyInfo.getCompanyId();
-
-        }
+        return companyInfo.getCompanyId();
     }
-
 
     @Override
     public String getName() {
@@ -179,6 +177,7 @@ public class UserVO extends SecurityUser {
         return pcUserInfo.getCreateTime();
     }
 
+
     public BranchCompany getBranchCompany() {
         return branchCompany;
     }
@@ -193,5 +192,13 @@ public class UserVO extends SecurityUser {
 
     public void setCityBranch(CityBranch cityBranch) {
         this.cityBranch = cityBranch;
+    }
+
+    public CompanyUser getCompanyUser() {
+        return companyUser;
+    }
+
+    public void setCompanyUser(CompanyUser companyUser) {
+        this.companyUser = companyUser;
     }
 }

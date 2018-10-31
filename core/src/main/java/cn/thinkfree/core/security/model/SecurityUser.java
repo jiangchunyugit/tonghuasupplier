@@ -17,4 +17,6 @@ public abstract class SecurityUser extends BaseModel implements UserDetails {
     public abstract String getCompanyName();
 
     public abstract Date getCreateTime();
+
 }
+

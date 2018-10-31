@@ -3,7 +3,16 @@ package cn.thinkfree.service.companyuser;
 import java.util.Date;
 import java.util.List;
 
+import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.security.utils.MultipleMd5;
+import cn.thinkfree.core.utils.LogUtil;
+import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.StringUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,15 +21,6 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.core.utils.WebFileUtil;
-import cn.thinkfree.database.mapper.CompanyRoleMapper;
-import cn.thinkfree.database.mapper.CompanyUserMapper;
-import cn.thinkfree.database.mapper.CompanyUserRoleMapper;
-import cn.thinkfree.database.model.CompanyRole;
-import cn.thinkfree.database.model.CompanyRoleExample;
-import cn.thinkfree.database.model.CompanyUser;
-import cn.thinkfree.database.model.CompanyUserExample;
-import cn.thinkfree.database.model.CompanyUserRole;
-import cn.thinkfree.database.model.CompanyUserRoleExample;
 import cn.thinkfree.database.vo.CompanyUserSEO;
 import cn.thinkfree.database.vo.CompanyUserVo;
 
@@ -36,6 +36,14 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 	
 	@Autowired
 	CompanyRoleMapper companyRoleMapper;
+
+	@Autowired
+	CompanyRoleResourceMapper companyRoleResourceMapper;
+
+	@Autowired
+	UserRegisterMapper userRegisterMapper;
+
+	MyLogger logger = LogUtil.getLogger(getClass());
 	
 
 	final static String TARGET = "static/";
@@ -54,23 +62,38 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 		return new PageInfo<>(list);
 	}
 
+	/**
+	 * 新增或编辑企业用户
+	 * @param companyUser
+	 * @return
+	 */
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public boolean inserOrUpdateCompanyUser(CompanyUserVo companyUser) {
+	public boolean insertOrUpdateCompanyUser(CompanyUserVo companyUser) {
 		boolean flag = false;
-		if(companyUser == null){
+		if(companyUser == null || companyUser.getCompanyUser() == null){
 			return flag;
 		}
+		CompanyUser saveObj = companyUser.getCompanyUser();
 		try {
 			//处理头像
-			if(companyUser.getCompanyUser()!= null && companyUser.getPhotoUrl() != null ){
-				companyUser.getCompanyUser().setPhotoUrl(WebFileUtil.fileCopy(TARGET, companyUser.getPhotoUrl()));
+			if( companyUser.getPhotoUrl() != null ){
+				saveObj.setPhotoUrl(WebFileUtil.fileCopy(TARGET, companyUser.getPhotoUrl()));
 			}
-			if(companyUser.getCompanyUser().getId() == null || ("").equals(companyUser.getCompanyUser().getId())){//判断主键值是否空
-
-					companyUser.getCompanyUser().setCreateTime(new Date());
-					companyUser.getCompanyUser().setUpdateTime(new Date());
-					companyUserMapper.insertSelective(companyUser.getCompanyUser());
+			if(saveObj.getId() == null ){//判断主键值是否空
+					saveObj.setEmpNumber(AccountHelper.createUserNo(AccountHelper.UserType.PE.prefix));
+					saveObj.setCreateTime(new Date());
+					saveObj.setUpdateTime(new Date());
+					companyUserMapper.insertSelective(saveObj);
+					// 处理账号信息
+					UserRegister account = initAccount();
+					account.setHeadPortraits(saveObj.getPhotoUrl());
+					account.setPhone(saveObj.getEmail());
+					account.setUserId(saveObj.getEmpNumber());
+					String password = AccountHelper.createUserPassWord();
+					account.setPassword(new MultipleMd5().encode(password));
+					userRegisterMapper.insertSelective(account);
+					//TODO 发布新增账号事件
 
 			}else{
 
@@ -98,6 +121,14 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 			throw new RuntimeException("内部错误");
 		}
 		return flag;
+	}
+
+	private UserRegister initAccount() {
+		UserRegister userRegister = new UserRegister();
+		userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+		userRegister.setType(UserRegisterType.Enterprise.shortVal());
+		userRegister.setRegisterTime(new Date());
+		return userRegister;
 	}
 
 	@Override
@@ -146,6 +177,34 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 		return false;
 	}
 
-	
-   
+	/**
+	 * 更新企业角色资源
+	 * @param id
+	 * @param resources
+	 * @return
+	 */
+	@Transactional
+	@Override
+	public String updateEnterPriseRoleResource(Integer id, Integer[] resources) {
+		logger.info("企业角色资源分配,清空旧资源");
+		CompanyRoleResourceExample condition = new CompanyRoleResourceExample();
+		condition.createCriteria().andRoleIdEqualTo(id);
+		companyRoleResourceMapper.deleteByExample(condition);
+
+		logger.info("企业角色资源分配,写入新资源");
+		if(resources == null || resources.length == 0 ){
+			logger.info("企业角色资源分配,清空角色");
+			return "操作成功!";
+		}
+
+		for(Integer rid : resources){
+			CompanyRoleResource saveObj = new CompanyRoleResource();
+			saveObj.setRoleId(id);
+			saveObj.setResourceId(rid);
+			companyRoleResourceMapper.insertSelective(saveObj);
+		}
+		return "操作成功!";
+	}
+
+
 }

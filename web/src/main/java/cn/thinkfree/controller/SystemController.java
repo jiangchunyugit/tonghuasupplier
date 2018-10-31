@@ -5,26 +5,36 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.SpringContextHolder;
+import cn.thinkfree.database.vo.ActivationCodeVO;
 import cn.thinkfree.database.vo.IndexMenuVO;
+import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.designer.service.HomeStylerService;
 import cn.thinkfree.service.designer.vo.HomeStyler;
 import cn.thinkfree.service.designer.vo.HomeStylerVO;
 import cn.thinkfree.service.index.IndexService;
 import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.utils.ActivationCodeHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import sun.misc.BASE64Encoder;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Random;
 
 @Api(description = "系统相关操作")
-@Controller
+@RestController
 public class SystemController extends AbsBaseController {
 
 
@@ -32,10 +42,7 @@ public class SystemController extends AbsBaseController {
     IndexService indexService;
 
     @Autowired
-    CloudService cloudService;
-
-    @Autowired
-    HomeStylerService homeStylerService;
+    RedisService redisService;
 
 
     /**
@@ -51,68 +58,86 @@ public class SystemController extends AbsBaseController {
     }
 
 
-
-    @RequestMapping("/loginPage")
-    public String loginPage(){
-        ApplicationContext ac = SpringContextHolder.getApplicationContext();
-        System.out.println(ac);
-        System.out.println("gotoLogin");
-        return  "loginPage";
+    /**
+     * 验证激活码
+     * @param email
+     * @param code
+     * @return
+     */
+    @PostMapping("/validateCode")
+    @MyRespBody
+    public MyRespBundle<String> validateCode(String email,String code){
+        String mes = redisService.validate(email,code);
+        return sendSuccessMessage(mes);
     }
 
-    @RequestMapping("/index")
-    public String index(){
-        System.out.println("index");
-        return "index";
+    /**
+     * 获取激活码
+     * @return
+     */
+    @GetMapping("/validateCode")
+    @MyRespBody
+    public MyRespBundle<String> validateCode(String key){
+        try {
+            String code = redisService.saveVerificationCode(key);
+            return sendSuccessMessage(code);
+        }catch (Exception e){
+            return sendFailMessage(ERROR.message);
+        }
     }
 
-    @RequestMapping("/gotoPage")
-    public String gotoPage(String page){
-        System.out.println(page);
-        int pos = page.indexOf("?");
-        return  (pos > -1? page.substring(0,pos)  :page);
+    /**
+     *  简易验证码
+     * @return
+     */
+    @GetMapping("/valicode")
+    public ResponseEntity<byte[]> valicode() throws IOException {
+        String randomCode = ActivationCodeHelper.ActivationCode.Mix.code.get();
+        byte[] body = createImage(randomCode);
+
+        ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.ok();
+        bodyBuilder.contentType(MediaType.valueOf("image/png"));
+        bodyBuilder.contentLength(body.length);
+        ResponseEntity<byte[]> entity = bodyBuilder.body(body);
+        return entity;
     }
 
-    @RequestMapping("/test")
-    public void test(){
-//        SystemMessage systemMessage = new SystemMessage();
-//        systemMessage.setCompanyId("2");
-//        systemMessage.setSendUserId("1");
-//        systemMessage.setTitle("1");
-//        systemMessage.setContent("2");
-//        systemMessage.setId(1);
-//        systemMessage.setSendUser("user");
-//        cloudService.sendNotice(systemMessage, Lists.newArrayList("1"));
-//        cloudService.sendSms("18910441835","123456");
-//        cloudService.projectUpOnline("ITEM18082910221300000EH", ProjectStatus.WaitStart.shortVal());
 
+
+    /**
+     *  简易验证码
+     * @return
+     */
+    @GetMapping("/validateCodeBody")
+    public MyRespBundle<ActivationCodeVO>  validateCodeBody() throws IOException {
+        String randomCode = ActivationCodeHelper.ActivationCode.Mix.code.get();
+        byte[] body = createImage(randomCode);
+        String base64 =new BASE64Encoder().encode(body);
+        return sendJsonData(ResultMessage.SUCCESS,new ActivationCodeVO(randomCode,base64.replace("\r\n","")));
     }
 
-    @RequestMapping("/test1")
-    public void test1(){
+    /**
+     * 生成图片
+     * @param code
+     * @return
+     * @throws IOException
+     */
+    private byte[] createImage(String code) throws IOException {
+        BufferedImage image = new BufferedImage(180, 40, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        g2d.setColor(Color.BLACK);
+        g2d.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
+        char[] cs = code.toCharArray();
+        for (int i = 0; i < cs.length; i++) {
+            g2d.drawChars(cs, i, 1, i * 20 + 3, 25);
+        }
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-//        cloudService.sendSms("18910471835","123456");
+        ImageIO.write(image, "png", out);
 
+        return out.toByteArray();
     }
 
-    @RequestMapping("/spiler")
-    @ResponseBody
-    public String spiler(String id){
-
-        String ls = homeStylerService.saveHomeStyler(id);
-
-        return "Success";
-    }
-
-    @RequestMapping("/homeStyler")
-    @ResponseBody
-    public MyRespBundle<HomeStylerVO> mock(String id){
-        HomeStyler homeStyler = homeStylerService.findDataByProjectNo(id);
-        HomeStylerVO homeStylerVO = new HomeStylerVO();
-        homeStylerVO.setProjectNo(id);
-        homeStylerVO.setSpaceDetailsBeans(homeStyler.getSpaceDetails());
-        return sendJsonData(ResultMessage.SUCCESS,homeStylerVO);
-    }
 
 
 

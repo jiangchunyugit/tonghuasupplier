@@ -24,6 +24,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class AccountHelper {
 
+
+
     /**
      * 用户类型
      */
@@ -35,7 +37,11 @@ public class AccountHelper {
         /**
          * APP用户
          */
-        APP(2,"AP");
+        APP(2,"AP"),
+        /**
+         * 后台企业用户
+         */
+        PE(3,"PE");
         public Integer code;
         public String prefix;
         UserType(Integer code,String prefix){
@@ -53,8 +59,7 @@ public class AccountHelper {
     /**
      * 序列最大值
      */
-//    private final static Long MAX_SEQUENCE = 99000L;
-    private final static Long MAX_SEQUENCE = 9L;
+    private final static Long MAX_SEQUENCE = 99000L;
 
 
     /**

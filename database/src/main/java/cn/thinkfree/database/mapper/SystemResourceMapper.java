@@ -91,4 +91,11 @@ public interface SystemResourceMapper {
      * @return
      */
     List<SystemResource> selectResourceForAuthorize(Integer id);
+    /**
+     * 查询资源企业平台 -- 进行授权
+     * @param id
+     * @return
+     */
+    List<SystemResource> selectEnterPriseResourceForAuthorize(Integer id);
+
 }
