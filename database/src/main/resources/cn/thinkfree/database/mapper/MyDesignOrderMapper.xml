@@ -8,6 +8,7 @@
         i.company_name AS companyName,
         o.order_no AS orderNo,
         P .create_time AS appointmentTime,
+        po.sign_time AS signedTime,
         P .address_detail AS addressDetail,
 
 
@@ -26,7 +27,7 @@
         LEFT JOIN project_big_scheduling_details b ON b.project_no = o.project_no
         LEFT JOIN company_info i ON i.company_id = o.company_id
         LEFT JOIN project P ON P .project_no = o.project_no
-
+        LEFT JOIN pc_order_contract po ON po.order_number = o.order_no
 
         WHERE
         o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status}
@@ -47,7 +48,7 @@
         LEFT JOIN project_big_scheduling_details b ON b.project_no = o.project_no
         LEFT JOIN company_info i ON i.company_id = o.company_id
         LEFT JOIN project P ON P .project_no = o.project_no
-
+        LEFT JOIN pc_order_contract po ON po.order_number = o.order_no
 
         WHERE
         o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status}
