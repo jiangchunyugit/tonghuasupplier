@@ -1,7 +1,6 @@
 package cn.thinkfree.core.utils;
 
-import java.math.BigInteger;
-import java.time.DayOfWeek;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -94,6 +93,13 @@ public class DateUtils {
 
     }
 
+    public static String dateToDateTime(Date date) {
+    	 String DATE_FORMAT = "yyyy-MM-dd";
+        String datestr = null;
+        SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
+        datestr = df.format(date);
+        return datestr;
+      }
 
 
 }
