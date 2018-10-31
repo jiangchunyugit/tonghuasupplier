@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.CityBranch;
+import cn.thinkfree.database.model.PcUserInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -23,6 +24,17 @@ public class CityBranchVO extends CityBranch {
      */
     @ApiModelProperty("店面信息")
     private List<StoreInfoVO> storeInfoVOList;
+
+//    @ApiModelProperty("所属城市分站账号信息")
+//    private List<PcUserInfo> pcUserInfoList;
+
+//    public List<PcUserInfo> getPcUserInfoList() {
+//        return pcUserInfoList;
+//    }
+//
+//    public void setPcUserInfoList(List<PcUserInfo> pcUserInfoList) {
+//        this.pcUserInfoList = pcUserInfoList;
+//    }
 
     public String getBranchCompanyNm() {
         return branchCompanyNm;

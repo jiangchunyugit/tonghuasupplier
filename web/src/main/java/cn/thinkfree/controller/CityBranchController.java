@@ -6,10 +6,12 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.model.City;
 import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.CityBranchSEO;
 import cn.thinkfree.database.vo.CityBranchVO;
+import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
 import cn.thinkfree.database.vo.Severitys;
 import cn.thinkfree.service.citybranch.CityBranchService;
 import com.github.pagehelper.PageInfo;
@@ -73,6 +75,17 @@ public class CityBranchController extends AbsBaseController{
     }
 
     /**
+     * 查询城市分站信息
+     */
+    @GetMapping(value = "/cityBranchlistOfCompany")
+    @MyRespBody
+    @ApiOperation(value="城市分站管理：分公司查看详细城市分站分页查询")
+    public MyRespBundle<PageInfo<CityBranchWtihProCitVO>> cityBranchlistOfCompany(@ApiParam("查询城市分站参数")CityBranchSEO cityBranchSEO){
+
+        PageInfo<CityBranchWtihProCitVO> pageInfo = cityBranchService.cityBranchWithProList(cityBranchSEO);
+        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
+    }
+    /**
      * 城市分站详情
      */
     @GetMapping(value = "/cityBranchDetails")
@@ -85,9 +98,21 @@ public class CityBranchController extends AbsBaseController{
     }
 
     /**
+     * 城市分站详情
+     */
+    @GetMapping(value = "/cityBranchById")
+    @MyRespBody
+    @ApiOperation(value="城市分站管理：编辑回写")
+    public MyRespBundle<CityBranchVO> cityBranchById(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
+
+        CityBranchVO cityBranchVO = cityBranchService.cityBranchById(id);
+        return sendJsonData(ResultMessage.SUCCESS, cityBranchVO);
+    }
+
+    /**
      * 城市分站
      */
-    @DeleteMapping(value = "/cityBranchDelete")
+    @PostMapping(value = "/cityBranchDelete")
     @MyRespBody
     @ApiOperation(value="城市分站管理：删除")
     public MyRespBundle<String> cityBranchDelete(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
@@ -150,6 +175,19 @@ public class CityBranchController extends AbsBaseController{
     public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份code")@RequestParam(value = "provinceCode") Integer provinceCode, @ApiParam("城市code")@RequestParam(value = "cityCode") Integer cityCode){
 
         return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(provinceCode,cityCode));
+    }
+
+
+
+    /**
+     * 城市分站
+     */
+    @GetMapping(value = "/cityBranchSearch")
+    @MyRespBody
+    @ApiOperation(value="城市分站管理：城市分站城市信息")
+    public MyRespBundle<List<City>> cityBranchSearch(){
+
+        return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectCity());
     }
 }
 
