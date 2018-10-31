@@ -7,6 +7,10 @@
             location="src/main/resources/edb-jdbc16.jar" />
     <context id="context1"  >
         <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
+        <plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel" />
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty" />
+        </plugin>
         <!-- 该死的注释 -->
         <commentGenerator  >
             <property name="addRemarkComments" value="true"/>
@@ -29,6 +33,8 @@
             <property name="trimStrings" value="true"/>
             <property name="useActualColumnNames" value="false"/>
             <property name="rootClass" value="cn.thinkfree.core.model.BaseModel"/>
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel" />
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty" />
 
         </javaModelGenerator>
         <!-- XML-->
@@ -44,6 +50,7 @@
             <!--<property name="enableSubPackages" value="false"/>-->
         <!--</javaClientGenerator>-->
         <!-- 表-->
+        <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
@@ -92,5 +99,8 @@
         <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
         <table tableName="user_role_set" domainObjectName="UserRoleSet" />
         <!-- 权限相关 E-->
+        <table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo" />
+        <table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo" />
+        <table tableName="pc_settlement_rule_info" domainObjectName="SettlementRuleInfo" />
     </context>
 </generatorConfiguration>

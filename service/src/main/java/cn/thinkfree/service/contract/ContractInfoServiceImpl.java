@@ -12,6 +12,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -36,11 +38,6 @@ import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.vo.CompanyInfoVo;
-import cn.thinkfree.database.vo.ContractDetails;
-import cn.thinkfree.database.vo.ContractSEO;
-import cn.thinkfree.database.vo.ContractVo;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
@@ -73,6 +70,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	//发送邮件的模板引擎
 	@Autowired
 	private FreeMarkerConfigurer configurer;
+
+	@Autowired
+	CompanySubmitService companySubmitService;
 
 	
 	@Override
@@ -198,18 +198,17 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		PcAuditInfo record = new PcAuditInfo("1", "2", auditPersion, auditStatus, new Date(),
 				companyId, auditCase, contractNumber);
 		
-		int flagi = pcAuditInfoMapper.insertSelective(record);
+		int flagon = pcAuditInfoMapper.insertSelective(record);
 	    
-		if(flag > 0 && flagT > 0 &&  flagi  > 0 ){
-			
+		if(flag > 0 && flagT > 0 &&  flagon > 0 ){
 			map.put("code", "0");
 			map.put("msg", "审核成功");
-			
+			return map;
 		}else{
 			map.put("code", "1");
 			map.put("msg", "审核失败");
+			return map;
 		}
-		return map;
 	}
 	
 	
@@ -389,7 +388,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		Map<String, Object> reMap = new HashMap<>();
 		// 公司详情
-		CompanyInfoVo companyInfo = companyInfoMapper.selectByCompanyId(companyId);
+		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(companyId);
 		
 		// 合同详情
 	    ContractTermsExample exp = new ContractTermsExample();
@@ -401,9 +400,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		
 		if(list.size() == 0 && companyInfo != null){
 			ContractTerms term_0 = new ContractTerms("01","居然设计家");
-			ContractTerms term_1 = new ContractTerms("02",companyInfo.getCompanyName());
+			ContractTerms term_1 = new ContractTerms("02",companyInfo.getCompanyInfo().getCompanyName());
 			list.add(term_0);
 			list.add(term_1);
+
 		}
 		reMap.put("companyMap", companyInfo==null?"":companyInfo);
 		reMap.put("ContractList", list);

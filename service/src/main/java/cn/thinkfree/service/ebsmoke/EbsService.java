@@ -1,10 +1,10 @@
 package cn.thinkfree.service.ebsmoke;
 
+import cn.thinkfree.database.vo.ebsmokevo.EbsMokeBranchCompany;
 import cn.thinkfree.database.vo.ebsmokevo.EbsCityBranch;
 import cn.thinkfree.database.vo.ebsmokevo.StoreBusinessEntity;
 
 import java.util.List;
-import java.util.Map;
 
 public interface EbsService {
 
@@ -12,7 +12,7 @@ public interface EbsService {
      * 埃森哲分公司
      * @return
      */
-    Map<Integer,String> ebsBranchCompanyList();
+    List<EbsMokeBranchCompany> ebsBranchCompanyList();
 
     /**
      * 埃森哲城市分站

@@ -120,7 +120,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="公司申请信息审批列表")
-    public MyRespBundle<String> list(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+    public MyRespBundle<PageInfo<CompanyListVo>> list(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
         PageInfo<CompanyListVo> pageInfo = companySubmitService.list(companyListSEO);
         return sendJsonData(success, "操作成功", pageInfo);
     }
@@ -145,9 +145,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      */
     @ApiOperation(value = "查看合同", notes = "查看合同",consumes = "application/text")
     @PostMapping("/getContractDetailInfo")
-    public MyRespBundle<String> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
+    public MyRespBundle<Map<String,Object>> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
     		@ApiParam("公司编号")@RequestParam(required = true) String companyId){
-    	Map<String,Object>   resMap  =  contractService.getContractDetailInfo(contractNumber, companyId);
+    	Map<String,Object>  resMap  =  contractService.getContractDetailInfo(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     /**

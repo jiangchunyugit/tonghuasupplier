@@ -19,6 +19,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value = "/cityBranch")
 @Api(value = "城市分站",description = "城市分站")
@@ -137,6 +139,17 @@ public class CityBranchController extends AbsBaseController{
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
+    }
+
+    /**
+     * 城市分站
+     */
+    @PostMapping(value = "/cityBranchRuZhu")
+    @MyRespBody
+    @ApiOperation(value="城市分站管理：城市分站")
+    public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份code")@RequestParam(value = "provinceCode") Integer provinceCode, @ApiParam("城市code")@RequestParam(value = "cityCode") Integer cityCode){
+
+        return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(provinceCode,cityCode));
     }
 }
 

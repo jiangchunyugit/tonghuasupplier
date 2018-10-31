@@ -1,18 +1,27 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.CityBranch;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.List;
 
+/**
+ * @author jiangchunyu 城市分站信息
+ */
+@ApiModel("城市分站信息")
 public class CityBranchVO extends CityBranch {
 
     /**
      * 所属分公司名称
      */
+    @ApiModelProperty("所属分公司名称")
     private String branchCompanyNm;
 
     /**
      * 店面list
      */
+    @ApiModelProperty("店面信息")
     private List<StoreInfoVO> storeInfoVOList;
 
     public String getBranchCompanyNm() {

@@ -1,5 +1,8 @@
 package cn.thinkfree.service.constants;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,6 +18,22 @@ public enum CompanyAuditStatus {
      * 已激活
      */
     ACTIVATION(1,"已激活"),
+    /**
+     * 资质待审核中
+     */
+    APTITUDEING(8,"资质待审核中"),
+
+
+    /**
+     * 资质审核通过
+     */
+    APTITUDETG(9,"资质审核通过"),
+
+
+    /**
+     * 资质审核不通过
+     */
+    SUCCESSJOSB(10,"资质审核不通过"),
     /**
      * 财务审核中
      */
@@ -38,25 +57,8 @@ public enum CompanyAuditStatus {
     /**
      * 入驻成功
      */
-    SUCCESSJOIN(7,"入驻成功"),
-	
-	 /**
-	  * 8 910';
-     * 资质待审核中
-     */
-	APTITUDEING(8,"资质待审核中"),
-    
-    
-    /**
-     * 资质审核通过
-     */
-	APTITUDETG(9,"资质审核通过"),
-    
-    
-    /**
-     * 资质审核不通过
-     */
-    SUCCESSJOSB(10,"资质审核不通过");
+    SUCCESSJOIN(7,"入驻成功");
+
 
     public final Integer code;
     public final String mes;
@@ -77,6 +79,18 @@ public enum CompanyAuditStatus {
             }  
         }  
         return null;  
-    }  
+    }
+
+    public static List<Map<String, String>> map(){
+        List<Map<String, String>> list = new ArrayList<Map<String, String>>();
+        CompanyAuditStatus[] businessModeEnums = values();
+        for(CompanyAuditStatus businessModeEnum : businessModeEnums){
+            Map<String, String> map = new HashMap<>();
+            map.put("id",businessModeEnum.code.toString());
+            map.put("name", businessModeEnum.mes);
+            list.add(map);
+        }
+        return list;
+    }
 
 }

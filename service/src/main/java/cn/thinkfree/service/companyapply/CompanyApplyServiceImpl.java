@@ -13,6 +13,7 @@ import cn.thinkfree.database.mapper.UserRegisterMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.CompanyApply;
+import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
@@ -49,6 +50,27 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Autowired
     UserRegisterMapper userRegisterMapper;
+
+    /**
+     * 更新公司入驻状态
+     * @param companyId
+     * @param status
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateStatus(String companyId, String status) {
+        CompanyInfo companyInfo = new CompanyInfo();
+        companyInfo.setCompanyId(companyId);
+        companyInfo.setAuditStatus(status);
+        CompanyInfoExample example = new CompanyInfoExample();
+        example.createCriteria().andCompanyIdEqualTo(companyId);
+        int line = companyInfoMapper.updateByExampleSelective(companyInfo, example);
+        if(line > 0){
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 激活账户
@@ -114,7 +136,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     public boolean addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
         Date date = new Date();
         //公司id
-        String companyId = generateCompanyId(pcApplyInfoSEO.getCompanyRole());
+//        String companyId = generateCompanyId(pcApplyInfoSEO.getCompanyRole());
+        String companyId = pcApplyInfoSEO.getCompanyId();
         //插入公司表
 
         CompanyInfo companyInfo = new CompanyInfo();
@@ -124,6 +147,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
+        companyInfo.setSiteCompanyId(pcApplyInfoSEO.getSiteCompanyId());
+        //审核状态(待激活）
+        companyInfo.setAuditStatus(CompanyAuditStatus.NOTACTIVATION.stringVal());
         //公司平台类型：platform_type = 0
         companyInfo.setPlatformType(CompanyConstants.PlatformType.NORMAL.shortVal());
         //is_delete = 2
@@ -139,9 +165,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfoExpand.setEmail(pcApplyInfoSEO.getEmail());
         companyInfoExpand.setContactName(pcApplyInfoSEO.getContactName());
         companyInfoExpand.setContactPhone(pcApplyInfoSEO.getContactPhone());
-        /*companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
+        companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
         companyInfoExpand.setRegisterCityCode(pcApplyInfoSEO.getCityCode());
-        companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());*/
+        /*companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());*/
         companyInfoExpand.setCompanyId(companyId);
         int expandLine = companyInfoExpandMapper.insertSelective(companyInfoExpand);
 
@@ -160,21 +186,24 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
         //TODO 插入注册表？？？
         //插入注册表
-        /*UserRegister userRegister = new UserRegister();
+        UserRegister userRegister = new UserRegister();
         userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
         userRegister.setRegisterTime(date);
         userRegister.setUpdateTime(date);
         userRegister.setType(UserRegisterType.Enterprise.shortVal());
         MultipleMd5 md5 = new MultipleMd5();
+        if(pcApplyInfoSEO.getPassword() == null){
+            pcApplyInfoSEO.setPassword("123456");
+        }
         userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
 
         userRegister.setPhone(pcApplyInfoSEO.getContactPhone());
-        userRegister.setUserId(pcApplyInfoSEO.getCompanyId());
-        int registerLine = userRegisterMapper.insertSelective(userRegister);*/
+        userRegister.setUserId(companyId);
+        int registerLine = userRegisterMapper.insertSelective(userRegister);
 
         //TODO：添加账号发送短信 and 发送邮件
 
-        if(infoLine > 0 && expandLine > 0 && applyLine> 0){
+        if(infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0){
             return true;
         }
         return false;
@@ -230,7 +259,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Transactional(rollbackFor = Exception.class)
     public boolean updateApply(Integer id) {
         PcApplyInfo pcApplyInfo = new PcApplyInfo();
-//        pcApplyInfo.setId(id);
+        pcApplyInfo.setId(id);
         pcApplyInfo.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
 //        pcApplyInfo.setApplyType(1);
         PcApplyInfoExample pcApplyInfoExample = new PcApplyInfoExample();

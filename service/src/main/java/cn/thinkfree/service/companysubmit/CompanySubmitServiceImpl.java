@@ -85,12 +85,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
 		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
 				.andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-				.andIsCheckEqualTo(SysConstants.YesOrNo.YES.shortVal())
+				.andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
 				.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
 				.andPlatformTypeEqualTo(SysConstants.YesOrNo.NO.shortVal());
 
 		List<CompanyInfo> companyInfo = companyInfoMapper.selectByExample(companyInfoExample);
-		if(companyInfo.get(0) == null){
+		if(companyInfo.size() <= 0  && companyInfo.get(0) == null){
 			return null;
 		}
 		companySubmitVo.setCompanyInfo(companyInfo.get(0));
@@ -99,20 +99,29 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
 		companyInfoExpandExample.createCriteria().andCompanyIdEqualTo(companyId);
 		List<CompanyInfoExpand> companyInfoExpand = companyInfoExpandMapper.selectByExample(companyInfoExpandExample);
-		companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpand.get(0).getCompanyType().intValue()));
-		companySubmitVo.setCompanyInfoExpand(companyInfoExpand.get(0));
+
+		if(companyInfoExpand.size() > 0  && companyInfoExpand.get(0) != null){
+			if(companyInfoExpand.get(0).getCompanyType() != null && StringUtils.isNotBlank(companyInfoExpand.get(0).getCompanyType().toString())) {
+				companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpand.get(0).getCompanyType().intValue()));
+			}
+			companySubmitVo.setCompanyInfoExpand(companyInfoExpand.get(0));
+		}
+
 
 
 //		对公账信息PcCompanyFinancial
 		PcCompanyFinancialExample pcCompanyFinancialExample = new PcCompanyFinancialExample();
 		pcCompanyFinancialExample.createCriteria().andCompanyIdEqualTo(companyId);
 		List<PcCompanyFinancial> companyFinancials = pcCompanyFinancialMapper.selectByExample(pcCompanyFinancialExample);
-		companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+		if(companyFinancials.size() > 0  && companyFinancials.get(0) != null){
+			companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+		}
 
 		return companySubmitVo;
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public boolean changeCompanyInfo(CompanyTemporaryVo companyTemporaryVo) {
 		//图片重新生成
 		CompanySubmitFileVo companySubmitFileVo = new CompanySubmitFileVo();
@@ -150,6 +159,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public String auditChangeCompany(String companyId, String auditStatus, String auditCase) {
 		Date date = new Date();
 		//1：查询公司资质临时表
@@ -249,14 +259,18 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	/**
 	 * 公司列表
 	 * @param companyListSEO
+	 * map.put("company_id","desc");排序形式
 	 * @return
 	 */
 	@Override
 	public PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO) {
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-		List<String> relationMap = userVO.getRelationMap();
+		//todo 获取分站id？？？？星级
+//		List<String> relationMap = userVO.getRelationMap();
+		List<String> relationMap = new ArrayList<>();
+        relationMap.add("44");
+		relationMap.add("1402");
 		companyListSEO.setRelationMap(relationMap);
-
 		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
 		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
 		return new PageInfo<>(companyListVoList);
@@ -277,7 +291,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		//添加列
 		List<List<Object>> rows = new ArrayList<>();
 		List<Object> row = null;
-		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
+		List<CompanyListVo> companyListVoList = companyInfoMapper.downLoad(companyListSEO);
 
 		for(CompanyListVo vo: companyListVoList){
 			row=new ArrayList<>();
@@ -389,6 +403,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     }
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public Map<String, String> auditContract( String companyId, String auditStatus,
 			String auditCase) {
 		Map<String,String> map = new HashMap<>();
@@ -435,9 +450,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
 					companyId, auditCase, contractNumber);
 			
-			int flagi = pcAuditInfoMapper.insertSelective(record);
+			int flagon = pcAuditInfoMapper.insertSelective(record);
 		    
-			if(flag > 0 && flagT > 0 &&  flagi  > 0 ){
+			if(flag > 0 && flagT > 0 &&  flagon  > 0 ){
 				
 				map.put("code", "0");
 				map.put("msg", "审核成功");

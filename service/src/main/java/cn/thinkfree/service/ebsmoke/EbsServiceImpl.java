@@ -4,15 +4,13 @@ import cn.thinkfree.database.mapper.BusinessEntityMapper;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.ProvinceMapper;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.ebsmokevo.EbsMokeBranchCompany;
 import cn.thinkfree.database.vo.ebsmokevo.EbsCityBranch;
 import cn.thinkfree.database.vo.ebsmokevo.StoreBusinessEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class EbsServiceImpl implements EbsService {
@@ -27,7 +25,7 @@ public class EbsServiceImpl implements EbsService {
     BusinessEntityMapper businessEntityMapper;
 
     @Override
-    public Map<Integer,String> ebsBranchCompanyList() {
+    public List<EbsMokeBranchCompany> ebsBranchCompanyList() {
 
         Map<Integer,String> ebsBranchCompanyMap = new HashMap<>();
         ebsBranchCompanyMap.put(11,"北京分公司");
@@ -56,7 +54,20 @@ public class EbsServiceImpl implements EbsService {
         ebsBranchCompanyMap.put(61,"陕西分公司");
         ebsBranchCompanyMap.put(62,"甘肃分公司");
         ebsBranchCompanyMap.put(63,"青海分公司");
-        return ebsBranchCompanyMap;
+
+        Iterator<Map.Entry<Integer,String>> it = ebsBranchCompanyMap.entrySet().iterator();
+
+        List<EbsMokeBranchCompany> ebsMokeBranchCompanies= new ArrayList<>();
+        while (it.hasNext()) {
+            Map.Entry<Integer, String> entry = it.next();
+            EbsMokeBranchCompany ebsMokeBranchCompany = new EbsMokeBranchCompany();
+
+            ebsMokeBranchCompany.setId(entry.getKey());
+            ebsMokeBranchCompany.setNm(entry.getValue());
+            ebsMokeBranchCompanies.add(ebsMokeBranchCompany);
+        }
+
+        return ebsMokeBranchCompanies;
     }
 
     @Override

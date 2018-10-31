@@ -1,7 +1,9 @@
 package cn.thinkfree.controller;
 
 import java.util.List;
+import java.util.Map;
 
+import cn.thinkfree.service.constants.CompanyAuditStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -320,6 +322,18 @@ public class DictionaryController extends AbsBaseController {
     public MyRespBundle<List<SystemRole>> roles(Integer scope){
         List<SystemRole> permissions = systemRoleService.listRoleByScope(scope);
         return sendJsonData(ResultMessage.SUCCESS,permissions);
+    }
+
+    /**
+     * 公司入驻状态
+     * @return
+     */
+    @GetMapping("/join/status")
+    @MyRespBody
+    @ApiOperation(value = "公司入驻状态")
+    public MyRespBundle<List<Map<String, String>>> status(){
+        List<Map<String, String>> status = CompanyAuditStatus.map();
+        return sendJsonData(ResultMessage.SUCCESS,status);
     }
 
 }
