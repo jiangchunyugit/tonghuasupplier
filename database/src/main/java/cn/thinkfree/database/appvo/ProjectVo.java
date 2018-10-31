@@ -41,5 +41,7 @@ public class ProjectVo {
     private Boolean thirdView;
     @ApiModelProperty(name = "projectOrderDetailVoList",value = "订单模块集合")
     private List<ProjectOrderDetailVo> projectOrderDetailVoList;
+    @ApiModelProperty(value = "消息内容")
+    private String message = "消息内容";
 
 }

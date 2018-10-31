@@ -180,7 +180,14 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         return orderDetailsVO;
     }
 
-    private Map getUserName(String userId, String roleId) {
+    /**
+     * 获取用户信息
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    @Override
+    public Map getUserName(String userId, String roleId) {
         Map<String, String> requestMap = new HashMap<>(2);
         requestMap.put("userId", userId);
         requestMap.put("roleId", roleId);

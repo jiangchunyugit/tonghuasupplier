@@ -17,7 +17,7 @@
     SELECT
       order_stage as taskStage,
       order_no as orderNo,
-      type as type
+      type as styleType
     FROM
       construction_order
     WHERE

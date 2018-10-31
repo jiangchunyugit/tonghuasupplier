@@ -12,7 +12,9 @@ import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -45,6 +47,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     EmployeeMsgMapper employeeMsgMapper;
     @Autowired
     OrderApplyRefundMapper orderApplyRefundMapper;
+    @Autowired
+    NewOrderUserService newOrderUserService;
 
 
     /**
@@ -109,12 +113,12 @@ public class NewProjectServiceImpl implements NewProjectService {
         designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
         DesignerOrder designerOrder = designerOrders.get(0);
-        ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder,ProjectOrderDetailVo.class);
+        ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
 //        ProjectOrderDetailVo designerOrderDetailVo = designerOrderMapper.selectByProjectNo(projectNo);
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
         List<Map<String, Object>> maps = DesignStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
-        for (Map<String, Object> map: maps){
+        for (Map<String, Object> map : maps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort((Integer) map.get("key"));
             orderTaskSortVo.setName(map.get("val").toString());
@@ -125,16 +129,19 @@ public class NewProjectServiceImpl implements NewProjectService {
         //存放订单类型
         designerOrderDetailVo.setOrderType(ProjectDataStatus.DESIGN_STATUS.getValue());
         //存放展示信息
-        OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo,ProjectDataStatus.BASE_STATUS.getValue());
+        OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         List<PersionVo> persionList = new ArrayList<>();
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
+        Map userName = newOrderUserService.getUserName(designerOrder.getUserId(), persionVo.getRole());//正式时打开
+//        Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+        persionVo.setPhone(userName.get("phone").toString());
         persionList.add(persionVo);
         designOrderPlayVo.setPersionList(persionList);
         designerOrderDetailVo.setOrderPlayVo(designOrderPlayVo);
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
-        for (Map<String, Object> map: maps1){
+        for (Map<String, Object> map : maps1) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort((Integer) map.get("key"));
             orderTaskSortVo.setName(map.get("val").toString());
@@ -146,7 +153,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         //存放订单类型
         constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
         //存放展示信息
-        OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo,ProjectDataStatus.BASE_STATUS.getValue());
+        OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
         //存放人员信息
         List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
         constructionOrderPlayVo.setPersionList(constructionPersionList);
@@ -354,7 +362,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         orderApplyRefund.setMoneyName(moneyName);
         orderApplyRefund.setInitiatorId(userId);
         int i = orderApplyRefundMapper.insertSelective(orderApplyRefund);
-        if(i!=ProjectDataStatus.INSERT_SUCCESS.getValue()){
+        if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("退款申请失败!!");
         }
         return RespData.success();
