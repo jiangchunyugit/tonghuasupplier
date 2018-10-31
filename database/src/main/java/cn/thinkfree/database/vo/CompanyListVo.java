@@ -1,71 +1,87 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.CompanyInfo;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
 /**
  * 公司列表返回数据
  */
+@ApiModel("公司列表返回数据")
 public class CompanyListVo extends CompanyInfo {
     /**
      * 公司性质
      */
+    @ApiModelProperty(value = "公司性质")
     private Short comapnyNature;
     /**
      * 省
      */
-
+    @ApiModelProperty(value = "省")
     private Short siteProvinceCode;
     /**
      * 省
      */
+    @ApiModelProperty(value = "省")
     private String siteProvinceName;
     /**
      * 市
      */
+    @ApiModelProperty(value = "市")
     private Short siteCityCode;
     /**
      * 市
      */
+    @ApiModelProperty(value = "市")
     private String siteCityName;
     /**
      * 站点
      */
+    @ApiModelProperty(value = "站点")
     private Short siteCode;
     /**
      * 站点
      */
+    @ApiModelProperty(value = "站点")
     private String siteName;
     /**
      * 入驻时间
      */
+    @ApiModelProperty(value = "入驻时间")
     private Date startTime;
     /**
      * 截止日期
      */
+    @ApiModelProperty(value = "截止日期")
     private Date endTime;
     /**
      * 签约日期
      */
+    @ApiModelProperty(value = "签约日期")
     private Date signedTime;
     /**
      * 联系人
      */
+    @ApiModelProperty(value = "联系人")
     private String contactName;
     /**
      * 联系电话
      */
+    @ApiModelProperty(value = "联系电话")
     private String contactPhone;
 
     /**
      * 合同编号
      */
+    @ApiModelProperty(value = "合同编号")
     private String contractNumber;
 
     /**
      * 公司类型
      */
+    @ApiModelProperty(value = "公司类型")
     private String roleName;
 
     public String getRoleName() {

@@ -22,6 +22,17 @@ public class PcApplyInfoSEO extends PcApplyInfo {
     @ApiModelProperty("验证码")
     private String verifyCode;
 
+    @ApiModelProperty("站点公司id")
+    private String siteCompanyId;
+
+    public String getSiteCompanyId() {
+        return siteCompanyId;
+    }
+
+    public void setSiteCompanyId(String siteCompanyId) {
+        this.siteCompanyId = siteCompanyId;
+    }
+
     public String getVerifyCode() {
         return verifyCode;
     }
