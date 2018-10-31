@@ -41,7 +41,7 @@ public class AppProjectController {
 
     @RequestMapping(value = "getDesignData", method = RequestMethod.POST)
     @ApiOperation(value = "获取设计资料")
-    public MyRespBundle<DataVo> getDesignData(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+    public MyRespBundle<DataVo> getDesignData(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
         MyRespBundle<DataVo> dataVo = newProjectService.getDesignData(projectNo);
         return dataVo;
     }
@@ -69,7 +69,7 @@ public class AppProjectController {
 
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
     @ApiOperation(value = "确认资料")
-    public MyRespBundle<String> confirmVolumeRoomData(@ApiParam(name = "dataDetailVo", value = "资料详情") DataDetailVo dataDetailVo) {
+    public MyRespBundle<String> confirmVolumeRoomData(@RequestBody@ApiParam(name = "dataDetailVo", value = "资料详情") DataDetailVo dataDetailVo) {
         return newProjectService.confirmVolumeRoomData(dataDetailVo);
     }
 
