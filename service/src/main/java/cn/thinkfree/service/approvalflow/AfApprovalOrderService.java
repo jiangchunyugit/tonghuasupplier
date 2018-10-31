@@ -21,5 +21,7 @@ public interface AfApprovalOrderService {
 
     AfApprovalOrderVO findByNo(String planNo);
 
-    AfApprovalOrder findByConfigNoAndCompanyNoAndRoleId(String configNo, String companyNo, String roleId);
+    AfApprovalOrder findByConfigPlanNoAndRoleId(String configPlanNo, String roleId);
+
+    AfApprovalOrder findByConfigNoAndPlanNoAndRoleId(String configNo, String planNo, String roleId);
 }

@@ -14,14 +14,14 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * TODO
+ * 审批流配置控制层
  *
  * @author song
  * @version 1.0
  * @date 2018/10/25 18:21
  */
 @RestController
-@Api("审批流配置")
+@Api(description = "审批流配置")
 @RequestMapping("af-config")
 public class AfConfigController extends AbsBaseController {
 
@@ -32,7 +32,7 @@ public class AfConfigController extends AbsBaseController {
     @MyRespBody
     @ApiOperation(value="查询所有审批流")
     @ApiParam(name = "planNo", value= "方案编号", required = true)
-    public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "configNo", required = false) String planNo){
+    public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "planNo") String planNo){
         return sendJsonData(ResultMessage.SUCCESS, configService.list(planNo));
     }
 

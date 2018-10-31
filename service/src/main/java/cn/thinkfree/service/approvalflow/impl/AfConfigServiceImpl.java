@@ -2,10 +2,7 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfConfigMapper;
-import cn.thinkfree.database.model.AfConfig;
-import cn.thinkfree.database.model.AfConfigExample;
-import cn.thinkfree.database.model.AfConfigPlan;
-import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.*;
@@ -38,6 +35,8 @@ public class AfConfigServiceImpl implements AfConfigService {
     private AfApprovalOrderService approvalOrderService;
     @Resource
     private AfConfigPlanService configPlanService;
+    @Resource
+    private AfApprovalRoleService approvalRoleService;
 
     @Override
     public List<AfConfigVO> list(String planNo) {
@@ -127,5 +126,18 @@ public class AfConfigServiceImpl implements AfConfigService {
             approvalOrderService.create(configPlanNo, configVO.getConfigNo(), configVO.getApprovalOrders());
             subRoleService.create(configPlanNo, configVO.getSubRoles());
         }
+    }
+
+    @Override
+    public List<UserRoleSet> findApprovalOrder(String configNo, String planNo, String roleId, List<UserRoleSet> allRoles) {
+        List<UserRoleSet> approvalRoles = null;
+        AfConfigPlan configPlan = configPlanService.findByConfigNoAndPlanNo(configNo, planNo);
+        if (configPlan != null) {
+            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigPlanNoAndRoleId(configPlan.getConfigPlanNo(), roleId);
+            if (approvalOrder != null) {
+                approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), allRoles);
+            }
+        }
+        return approvalRoles;
     }
 }
