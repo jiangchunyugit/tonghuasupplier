@@ -1,7 +1,7 @@
 package cn.thinkfree.core.constants;
 
 /**
- * TODO
+ * 审批流相关常量
  *
  * @author song
  * @version 1.0

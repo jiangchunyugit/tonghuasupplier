@@ -1,7 +1,7 @@
 package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.base.MyLogger;
-import cn.thinkfree.core.constants.AFAlias;
+import cn.thinkfree.core.constants.AfConfig;
 import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
@@ -221,7 +221,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVOs.add(approvalLogVO);
         }
 
-        AfConfig config = configService.findByNo(instance.getConfigNo());
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(instance.getConfigNo());
         if (config == null) {
 
         }
@@ -329,7 +329,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             boolean preSuccess = scheduleCompleteApplicationSuccess(projectNo, preScheduleSort);
             // 上一个节点完工
             if (preSuccess) {
-                AfConfig config = configService.findByNo(AFAlias.COMPLETE_APPLICATION.alias);
+                cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.COMPLETE_APPLICATION.configNo);
                 if (config == null) {
                     // TODO
                 }
@@ -357,17 +357,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo
      * @param scheduleSort
      */
-    private void completeApplication(List<AfConfigPlanVO> configPlanVOs, AfConfig config, String planNo, String roleId, String projectNo, Integer scheduleSort){
+    private void completeApplication(List<AfConfigPlanVO> configPlanVOs, cn.thinkfree.database.model.AfConfig config, String planNo, String roleId, String projectNo, Integer scheduleSort){
         List<AfInstance> instances = findByProjectNoAndScheduleSort(projectNo, scheduleSort);
         boolean complete = true;
         if (instances != null) {
             int checkApplicationCount = 0, checkReportCount = 0, problemRectificationCount = 0, rectificationCompleteCount = 0, changeOrderCount = 0, changeCompleteCount = 0;
-            String checkApplicationConfigNo = AFAlias.CHECK_APPLICATION.alias;
-            String checkReportConfigNo = AFAlias.CHECK_REPORT.alias;
-            String problemRectificationConfigNo = AFAlias.PROBLEM_RECTIFICATION.alias;
-            String rectificationCompleteConfigNo = AFAlias.RECTIFICATION_COMPLETE.alias;
-            String changeOrderConfigNo = AFAlias.CHANGE_ORDER.alias;
-            String changeCompleteConfigNo = AFAlias.CHANGE_COMPLETE.alias;
+            String checkApplicationConfigNo = AfConfig.CHECK_APPLICATION.configNo;
+            String checkReportConfigNo = AfConfig.CHECK_REPORT.configNo;
+            String problemRectificationConfigNo = AfConfig.PROBLEM_RECTIFICATION.configNo;
+            String rectificationCompleteConfigNo = AfConfig.RECTIFICATION_COMPLETE.configNo;
+            String changeOrderConfigNo = AfConfig.CHANGE_ORDER.configNo;
+            String changeCompleteConfigNo = AfConfig.CHANGE_COMPLETE.configNo;
 
             for (AfInstance instance : instances) {
                 if (instance.getStatus() == AfConstants.APPROVAL_STATUS_START) {
@@ -434,14 +434,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      */
     private void startApplication(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort){
         // 开工申请
-        AfConfig config = configService.findByNo(AFAlias.START_APPLICATION.alias);
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.START_APPLICATION.configNo);
         if (config == null) {
             // TODO
         }
         int status = startStatus(config.getConfigNo(), projectNo);
         if (status == AfConstants.APPROVAL_STATUS_SUCCESS) {
             // 开工申请完成，判断开工报告
-            config = configService.findByNo(AFAlias.START_REPORT.alias);
+            config = configService.findByNo(AfConfig.START_REPORT.configNo);
             if (config == null) {
                 // TODO
             }
@@ -494,11 +494,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private boolean scheduleCompleteApplicationSuccess(String projectNo, Integer scheduleSort) {
         String configAlias;
         if (scheduleSort == -1) {
-            configAlias = AFAlias.START_REPORT.alias;
+            configAlias = AfConfig.START_REPORT.configNo;
         } else {
-            configAlias = AFAlias.COMPLETE_APPLICATION.alias;
+            configAlias = AfConfig.COMPLETE_APPLICATION.configNo;
         }
-        AfConfig config = configService.findByNo(configAlias);
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(configAlias);
         if (config == null) {
             // TODO
         }
@@ -549,7 +549,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort
      */
     private void checkApplication(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByNo(AFAlias.CHECK_APPLICATION.alias);
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.CHECK_APPLICATION.configNo);
         AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
         if (approvalOrder != null) {
             // 当前用户为发起用户
@@ -568,11 +568,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort
      */
     private void checkReport(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AFAlias.CHECK_APPLICATION.alias, AFAlias.CHECK_REPORT.alias);
+        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AfConfig.CHECK_APPLICATION.configNo, AfConfig.CHECK_REPORT.configNo);
     }
     private void completeConfig(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort, String aAlias, String bAlias){
-        AfConfig aConfig = configService.findByNo(aAlias);
-        AfConfig bConfig = configService.findByNo(bAlias);
+        cn.thinkfree.database.model.AfConfig aConfig = configService.findByNo(aAlias);
+        cn.thinkfree.database.model.AfConfig bConfig = configService.findByNo(bAlias);
         int miss = compareInstanceSuccessCount(aConfig.getConfigNo(), bConfig.getConfigNo(), projectNo, scheduleSort);
         if (miss > 0) {
             AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(bConfig.getConfigNo(), planNo, roleId);
@@ -623,7 +623,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort
      */
     private void problemRectification(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByNo(AFAlias.PROBLEM_RECTIFICATION.alias);
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.PROBLEM_RECTIFICATION.configNo);
         AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
         if (approvalOrder != null) {
             // 当前用户为发起用户
@@ -642,7 +642,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort
      */
     private void rectificationComplete(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AFAlias.PROBLEM_RECTIFICATION.alias, AFAlias.RECTIFICATION_COMPLETE.alias);
+        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AfConfig.PROBLEM_RECTIFICATION.configNo, AfConfig.RECTIFICATION_COMPLETE.configNo);
     }
 
     /**
@@ -654,7 +654,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort
      */
     private void changeOrder(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByNo(AFAlias.CHANGE_ORDER.alias);
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.CHANGE_ORDER.configNo);
         AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
         if (approvalOrder != null) {
             // 当前用户为发起用户
@@ -665,7 +665,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private void changeComplete(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AFAlias.CHANGE_ORDER.alias, AFAlias.CHANGE_COMPLETE.alias);
+        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AfConfig.CHANGE_ORDER.configNo, AfConfig.CHANGE_COMPLETE.configNo);
     }
 
     /**
@@ -677,7 +677,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort
      */
     private void delayOrder(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByNo(AFAlias.DELAY_ORDER.alias);
+        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.DELAY_ORDER.configNo);
         AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
         if (approvalOrder != null) {
             // 当前用户为发起用户
@@ -693,7 +693,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (instances != null) {
             for (AfInstance instance : instances) {
                 AfInstanceVO instanceVO = new AfInstanceVO();
-                AfConfig config = configService.findByNo(instance.getConfigNo());
+                cn.thinkfree.database.model.AfConfig config = configService.findByNo(instance.getConfigNo());
                 if (config == null) {
                     // TODO
                 }

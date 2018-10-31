@@ -1,10 +1,13 @@
 package cn.thinkfree.core.constants;
 
-
 /**
  * 审批流类型
+ *
+ * @author song
+ * @version 1.0
+ * @date 2018/10/25 16:14
  */
-public enum AFAlias {
+public enum AfConfig {
 
     START_APPLICATION("START_APPLICATION", "开工申请"),
     START_REPORT("START_REPORT", "开工报告"),
@@ -17,12 +20,11 @@ public enum AFAlias {
     CHANGE_COMPLETE("CHANGE_COMPLETE", "变更完成审批"),
     DELAY_ORDER("DELAY_ORDER", "延期单");
 
-
-    public final String alias;
+    public final String configNo;
     public final String name;
 
-    AFAlias(String alias, String name){
-        this.alias = alias;
+    AfConfig(String configNo, String name){
+        this.configNo = configNo;
         this.name = name;
     }
 }

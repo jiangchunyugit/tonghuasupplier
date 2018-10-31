@@ -44,32 +44,26 @@ public class AfConfigServiceImpl implements AfConfigService {
         List<UserRoleSet> roles = roleService.findAll();
         List<AfConfig> configs = findAll();
         if (configs != null) {
-            if (StringUtils.isNotEmpty(planNo)) {
-                List<AfConfigPlan> configPlans = configPlanService.findByPlanNo(planNo);
-                if (configPlans != null) {
-                    for (AfConfigPlan configPlan : configPlans) {
-
-                        List<List<UserRoleSet>> approvalOrders = approvalOrderService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
-                        List<UserRoleSet> subRoles = subRoleService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
-
-                        AfConfig record = null;
-                        for (AfConfig config : configs) {
+            for (AfConfig config : configs) {
+                AfConfigVO configVO = new AfConfigVO();
+                if (StringUtils.isNotEmpty(planNo)) {
+                    List<AfConfigPlan> configPlans = configPlanService.findByPlanNo(planNo);
+                    if (configPlans != null) {
+                        for (AfConfigPlan configPlan : configPlans) {
                             if (config.getConfigNo().equals(configPlan.getConfigNo())) {
-                                record = config;
+                                List<List<UserRoleSet>> approvalOrders = approvalOrderService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
+                                List<UserRoleSet> subRoles = subRoleService.findByConfigPlanNo(configPlan.getConfigPlanNo(), roles);
+                                configVO.setSubRoles(subRoles);
+                                configVO.setApprovalOrders(approvalOrders);
+                                configVO.setDescribe(configPlan.getDescribe());
                                 break;
                             }
                         }
-                        if (record == null) {
-                            // TODO
-                        }
-                        AfConfigVO configVO = new AfConfigVO();
-                        configVO.setConfigNo(record.getConfigNo());
-                        configVO.setSubRoles(subRoles);
-                        configVO.setApprovalOrders(approvalOrders);
-
-                        configVOs.add(configVO);
                     }
                 }
+                configVO.setConfigNo(config.getConfigNo());
+                configVO.setName(config.getName());
+                configVOs.add(configVO);
             }
         }
         return configVOs;
