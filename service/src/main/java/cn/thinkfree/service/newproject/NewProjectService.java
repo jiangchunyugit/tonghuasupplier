@@ -2,6 +2,7 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
+import cn.thinkfree.database.model.OrderApplyRefund;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -74,4 +75,17 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<Map<String,UserVo>> getListUserByUserIds(List<String> userIds);
+
+    /**
+     * 退款
+     * @param orderNo
+     * @param payOrderNo
+     * @param otherReason
+     * @param money
+     * @param moneyName
+     * @param userId
+     * @param cancelReason
+     * @return
+     */
+    MyRespBundle<String> applyRefund(String orderNo,String payOrderNo, String otherReason, Integer money, String moneyName,String userId, String cancelReason);
 }

@@ -69,6 +69,7 @@
         LEFT JOIN user_info ms ON ms.user_id = o.user_id
         WHERE
         p.project_no=#{constructionSiteVO.projectNo} AND p.status=#{constructionSiteVO.status}
+        ORDER BY p.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
@@ -107,6 +108,7 @@
         LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
         WHERE
         p.project_no=#{siteDetailsVO.projectNo} AND p.status=#{siteDetailsVO.status}
+        ORDER BY p.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>

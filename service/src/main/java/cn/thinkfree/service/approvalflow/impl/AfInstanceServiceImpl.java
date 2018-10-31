@@ -44,9 +44,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Resource
     private RoleService roleService;
     @Resource
-    private AfPlanService planService;
+    private AfApprovalOrderService approvalOrderService;
     @Resource
     private AfConfigService configService;
+    @Resource
+    private AfConfigPlanService configPlanService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo) {
@@ -60,10 +62,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         String customerId = project.getOwnerId();
         String customerName = getCustomerNameById(customerId);
 
-        String planNo = getPlanNo();
         List<UserRoleSet> roles = roleService.findAll();
 
-        List<UserRoleSet> approvalRoles = approvalRoleService.findByPlanNo(planNo, roles);
+        String planNo = getPlanNo();
+        String roleId = orderUserService.findRoleIdByOrderNoAndUserId(projectNo, userId);
+        List<UserRoleSet> approvalRoles = configService.findApprovalOrder(configNo, planNo, roleId, roles);
 
         List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
@@ -81,16 +84,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     // TODO
                 }
 
-                for (UserRoleSet record : roles) {
-                    if (record.getRoleCode().equals(role.getRoleCode())) {
-                        approvalLogVO.setRoleId(role.getRoleCode());
-                        approvalLogVO.setRoleName(role.getRoleName());
-                        break;
-                    }
-                }
-                if (approvalLogVO.getRoleId() == null) {
-                    // TODO
-                }
+                approvalLogVO.setRoleId(role.getRoleCode());
+                approvalLogVO.setRoleName(role.getRoleName());
                 approvalLogVO.setIsApproval(false);
                 approvalLogVO.setUserName(getUserNameByUserIdAndRoleId(approvalLogVO.getUserId(), approvalLogVO.getRoleId()));
                 approvalLogVOs.add(approvalLogVO);
@@ -120,11 +115,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void submitStart(String projectNo, String userId, String planNo, Integer scheduleSort, String data, String remark) {
-        AfPlanVO planVO = planService.findByPlanNo(planNo);
-        if (planVO == null) {
+        AfApprovalOrderVO approvalOrderVO = approvalOrderService.findByNo(planNo);
+        if (approvalOrderVO == null) {
             // TODO
         }
-        List<UserRoleSet> roles = planVO.getRoles();
+        List<UserRoleSet> roles = approvalOrderVO.getRoles();
         if (roles == null || roles.size() == 0) {
             // TODO
         }
@@ -152,7 +147,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
         AfInstance instance = new AfInstance();
         instance.setCompanyNo(null);
-        instance.setConfigLogNo(planVO.getPlan().getConfigLogNo());
+        instance.setConfigLogNo(approvalOrderVO.getApprovalOrder().getConfigNo());
         instance.setCreateRoleId(approvalLog.getRoleId());
         instance.setCreateTime(new Date());
         instance.setData(data);
@@ -189,7 +184,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         String customerId = project.getOwnerId();
         String customerName = getCustomerNameById(customerId);
 
-        String planNo = getPlanNo();
+        String approvalOrderNo = getPlanNo();
         List<UserRoleSet> roles = roleService.findAll();
 
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
@@ -226,7 +221,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVOs.add(approvalLogVO);
         }
 
-        AfConfig config = configService.findByConfigNo(instance.getConfigNo());
+        AfConfig config = configService.findByNo(instance.getConfigNo());
         if (config == null) {
 
         }
@@ -234,7 +229,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setAddress(project.getAddress() + project.getAddressDetail());
         instanceDetailVO.setConfigNo(instance.getConfigNo());
         instanceDetailVO.setConfigName(config.getName());
-        instanceDetailVO.setPlanNo(planNo);
+        instanceDetailVO.setPlanNo(approvalOrderNo);
         instanceDetailVO.setData(instance.getData());
         instanceDetailVO.setRemark(approvalLogs.get(0).getRemark());
         instanceDetailVO.setProjectNo(instance.getProjectNo());
@@ -274,7 +269,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 // 结束审批流
                 instance.setStatus(2);
                 instance.setCurrentApprovalLogNo(null);
-                sendMessage();
+                sendSuccessMessage();
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
             }
@@ -286,6 +281,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         updateByPrimaryKey(instance);
         approvalLogService.updateByPrimaryKey(approvalLog);
+    }
+
+    private void sendSuccessMessage() {
+
     }
 
     private void updateByPrimaryKey(AfInstance instance) {
@@ -322,26 +321,26 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         // 获取上一个排期编号
         Integer preScheduleSort = getPreScheduleSort(scheduleSort);
 
-        String companyNo = getCompanyNo();
+        String planNo = getPlanNo();
         String roleId = orderUserService.findRoleIdByOrderNoAndUserId(projectNo, userId);
         if (scheduleSort == -1) {
-            startApplication(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
+            startApplication(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
         } else {
             boolean preSuccess = scheduleCompleteApplicationSuccess(projectNo, preScheduleSort);
             // 上一个节点完工
             if (preSuccess) {
-                AfConfig config = configService.findByAlias(AFAlias.COMPLETE_APPLICATION.alias);
+                AfConfig config = configService.findByNo(AFAlias.COMPLETE_APPLICATION.alias);
                 if (config == null) {
                     // TODO
                 }
                 int completeApplicationStatus = scheduleCompleteApplicationStatus(config.getConfigNo(), projectNo, scheduleSort);
                 if (completeApplicationStatus != AfConstants.APPROVAL_STATUS_SUCCESS && completeApplicationStatus != AfConstants.APPROVAL_STATUS_START) {
                     // 当前节点未完工，且未发起完工审批
-                    checkApplication(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
-                    problemRectification(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
-                    changeOrder(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
-                    delayOrder(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
-                    completeApplication(configPlanVOs, config, companyNo, roleId, projectNo, scheduleSort);
+                    checkApplication(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
+                    problemRectification(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
+                    changeOrder(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
+                    delayOrder(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
+                    completeApplication(configPlanVOs, config, planNo, roleId, projectNo, scheduleSort);
                 }
             }
         }
@@ -353,22 +352,22 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * 完工申请
      * @param configPlanVOs
      * @param config
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void completeApplication(List<AfConfigPlanVO> configPlanVOs, AfConfig config, String companyNo, String roleId, String projectNo, Integer scheduleSort){
+    private void completeApplication(List<AfConfigPlanVO> configPlanVOs, AfConfig config, String planNo, String roleId, String projectNo, Integer scheduleSort){
         List<AfInstance> instances = findByProjectNoAndScheduleSort(projectNo, scheduleSort);
         boolean complete = true;
         if (instances != null) {
             int checkApplicationCount = 0, checkReportCount = 0, problemRectificationCount = 0, rectificationCompleteCount = 0, changeOrderCount = 0, changeCompleteCount = 0;
-            String checkApplicationConfigNo = configService.findConfigNoByAlias(AFAlias.CHECK_APPLICATION.alias);
-            String checkReportConfigNo = configService.findConfigNoByAlias(AFAlias.CHECK_REPORT.alias);
-            String problemRectificationConfigNo = configService.findConfigNoByAlias(AFAlias.PROBLEM_RECTIFICATION.alias);
-            String rectificationCompleteConfigNo = configService.findConfigNoByAlias(AFAlias.RECTIFICATION_COMPLETE.alias);
-            String changeOrderConfigNo = configService.findConfigNoByAlias(AFAlias.CHANGE_ORDER.alias);
-            String changeCompleteConfigNo = configService.findConfigNoByAlias(AFAlias.CHANGE_COMPLETE.alias);
+            String checkApplicationConfigNo = AFAlias.CHECK_APPLICATION.alias;
+            String checkReportConfigNo = AFAlias.CHECK_REPORT.alias;
+            String problemRectificationConfigNo = AFAlias.PROBLEM_RECTIFICATION.alias;
+            String rectificationCompleteConfigNo = AFAlias.RECTIFICATION_COMPLETE.alias;
+            String changeOrderConfigNo = AFAlias.CHANGE_ORDER.alias;
+            String changeCompleteConfigNo = AFAlias.CHANGE_COMPLETE.alias;
 
             for (AfInstance instance : instances) {
                 if (instance.getStatus() == AfConstants.APPROVAL_STATUS_START) {
@@ -399,10 +398,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         }
         if (complete) {
-            AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
-            if (plan != null) {
+            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
+            if (approvalOrder != null) {
                 // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+                AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
                 configPlanVOs.add(configPlanVO);
             }
         }
@@ -428,31 +427,31 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     /**
      * 开工申请、开工报告
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void startApplication(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort){
+    private void startApplication(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort){
         // 开工申请
-        AfConfig config = configService.findByAlias(AFAlias.START_APPLICATION.alias);
+        AfConfig config = configService.findByNo(AFAlias.START_APPLICATION.alias);
         if (config == null) {
             // TODO
         }
         int status = startStatus(config.getConfigNo(), projectNo);
         if (status == AfConstants.APPROVAL_STATUS_SUCCESS) {
             // 开工申请完成，判断开工报告
-            config = configService.findByAlias(AFAlias.START_REPORT.alias);
+            config = configService.findByNo(AFAlias.START_REPORT.alias);
             if (config == null) {
                 // TODO
             }
             status = startStatus(config.getConfigNo(), projectNo);
         }
         if (status != AfConstants.APPROVAL_STATUS_START && status != AfConstants.APPROVAL_STATUS_SUCCESS) {
-            AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
-            if (plan != null) {
+            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
+            if (approvalOrder != null) {
                 // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+                AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
                 configPlanVOs.add(configPlanVO);
             }
         }
@@ -499,7 +498,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else {
             configAlias = AFAlias.COMPLETE_APPLICATION.alias;
         }
-        AfConfig config = configService.findByAlias(configAlias);
+        AfConfig config = configService.findByNo(configAlias);
         if (config == null) {
             // TODO
         }
@@ -544,42 +543,42 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     /**
      * 验收申请
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void checkApplication(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByAlias(AFAlias.CHECK_APPLICATION.alias);
-        AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
-        if (plan != null) {
+    private void checkApplication(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        AfConfig config = configService.findByNo(AFAlias.CHECK_APPLICATION.alias);
+        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
+        if (approvalOrder != null) {
             // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
             configPlanVOs.add(configPlanVO);
         }
-        checkReport(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
+        checkReport(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
     }
 
     /**
      * 验收报告
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void checkReport(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, companyNo, roleId, projectNo, scheduleSort, AFAlias.CHECK_APPLICATION.alias, AFAlias.CHECK_REPORT.alias);
+    private void checkReport(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AFAlias.CHECK_APPLICATION.alias, AFAlias.CHECK_REPORT.alias);
     }
-    private void completeConfig(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort, String aAlias, String bAlias){
-        AfConfig aConfig = configService.findByAlias(aAlias);
-        AfConfig bConfig = configService.findByAlias(bAlias);
+    private void completeConfig(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort, String aAlias, String bAlias){
+        AfConfig aConfig = configService.findByNo(aAlias);
+        AfConfig bConfig = configService.findByNo(bAlias);
         int miss = compareInstanceSuccessCount(aConfig.getConfigNo(), bConfig.getConfigNo(), projectNo, scheduleSort);
         if (miss > 0) {
-            AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(bConfig.getConfigNo(), companyNo, roleId);
-            if (plan != null) {
+            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(bConfig.getConfigNo(), planNo, roleId);
+            if (approvalOrder != null) {
                 // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), bConfig.getName(), bConfig.getConfigNo());
+                AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), bConfig.getName(), bConfig.getConfigNo());
                 configPlanVOs.add(configPlanVO);
             }
         }
@@ -618,77 +617,73 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     /**
      * 问题整改
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void problemRectification(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByAlias(AFAlias.PROBLEM_RECTIFICATION.alias);
-        AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
-        if (plan != null) {
+    private void problemRectification(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        AfConfig config = configService.findByNo(AFAlias.PROBLEM_RECTIFICATION.alias);
+        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
+        if (approvalOrder != null) {
             // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
             configPlanVOs.add(configPlanVO);
         }
-        rectificationComplete(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
+        rectificationComplete(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
     }
 
     /**
      * 整改完成
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void rectificationComplete(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, companyNo, roleId, projectNo, scheduleSort, AFAlias.PROBLEM_RECTIFICATION.alias, AFAlias.RECTIFICATION_COMPLETE.alias);
+    private void rectificationComplete(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AFAlias.PROBLEM_RECTIFICATION.alias, AFAlias.RECTIFICATION_COMPLETE.alias);
     }
 
     /**
      * 变更单
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void changeOrder(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByAlias(AFAlias.CHANGE_ORDER.alias);
-        AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
-        if (plan != null) {
+    private void changeOrder(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        AfConfig config = configService.findByNo(AFAlias.CHANGE_ORDER.alias);
+        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
+        if (approvalOrder != null) {
             // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
             configPlanVOs.add(configPlanVO);
         }
-        changeComplete(configPlanVOs, companyNo, roleId, projectNo, scheduleSort);
+        changeComplete(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
     }
 
-    private void changeComplete(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, companyNo, roleId, projectNo, scheduleSort, AFAlias.CHANGE_ORDER.alias, AFAlias.CHANGE_COMPLETE.alias);
+    private void changeComplete(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AFAlias.CHANGE_ORDER.alias, AFAlias.CHANGE_COMPLETE.alias);
     }
 
     /**
      * 延期单
      * @param configPlanVOs
-     * @param companyNo
+     * @param planNo
      * @param roleId
      * @param projectNo
      * @param scheduleSort
      */
-    private void delayOrder(List<AfConfigPlanVO> configPlanVOs, String companyNo, String roleId, String projectNo, Integer scheduleSort) {
-        AfConfig config = configService.findByAlias(AFAlias.DELAY_ORDER.alias);
-        AfPlan plan = planService.findByConfigNoAndCompanyNoAndRoleId(config.getConfigNo(), companyNo, roleId);
-        if (plan != null) {
+    private void delayOrder(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
+        AfConfig config = configService.findByNo(AFAlias.DELAY_ORDER.alias);
+        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
+        if (approvalOrder != null) {
             // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(plan.getPlanNo(), config.getName(), config.getConfigNo());
+            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
             configPlanVOs.add(configPlanVO);
         }
-    }
-    private String getCompanyNo(){
-        // TODO
-        return "";
     }
 
     private List<AfInstanceVO> getInstances(String userId, String projectNo, Integer scheduleSort) {
@@ -698,7 +693,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (instances != null) {
             for (AfInstance instance : instances) {
                 AfInstanceVO instanceVO = new AfInstanceVO();
-                AfConfig config = configService.findByConfigNo(instance.getConfigNo());
+                AfConfig config = configService.findByNo(instance.getConfigNo());
                 if (config == null) {
                     // TODO
                 }

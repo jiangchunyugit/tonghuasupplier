@@ -41,6 +41,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    OrderApplyRefundMapper orderApplyRefundMapper;
 
 
     /**
@@ -249,8 +251,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExample(projectData, example);
-        if (i != ProjectDataStatus.BASE_STATUS.getValue()) {
+        int i = projectDataMapper.updateByExampleSelective(projectData, example);
+        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("确认失败!");
         }
         return RespData.success();
@@ -301,5 +303,37 @@ public class NewProjectServiceImpl implements NewProjectService {
             map.put(employeeMsg.getUserId(), vo);
         }
         return RespData.success(map);
+    }
+
+    /**
+     * 退款
+     *
+     * @param orderNo
+     * @param payOrderNo
+     * @param otherReason
+     * @param money
+     * @param moneyName
+     * @param userId
+     * @param cancelReason
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> applyRefund(String orderNo, String payOrderNo, String otherReason, Integer money, String moneyName, String userId, String cancelReason) {
+        OrderApplyRefund orderApplyRefund = new OrderApplyRefund();
+        orderApplyRefund.setLaunchTime(new Date());
+        orderApplyRefund.setType(ProjectDataStatus.REFUND_ONE.getValue());
+        orderApplyRefund.setOrderNo(orderNo);
+        orderApplyRefund.setPayOrderNo(payOrderNo);
+        orderApplyRefund.setMoney(money);
+        orderApplyRefund.setCancleReason(cancelReason);
+        orderApplyRefund.setOtherReason(otherReason);
+        orderApplyRefund.setMoneyName(moneyName);
+        orderApplyRefund.setInitiatorId(userId);
+        int i = orderApplyRefundMapper.insertSelective(orderApplyRefund);
+        if(i!=ProjectDataStatus.INSERT_SUCCESS.getValue()){
+            return RespData.error("退款申请失败!!");
+        }
+        return RespData.success();
     }
 }

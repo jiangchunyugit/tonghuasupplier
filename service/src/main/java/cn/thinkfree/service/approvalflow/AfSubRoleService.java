@@ -14,10 +14,10 @@ import java.util.List;
  */
 public interface AfSubRoleService {
 
-    List<AfSubRole> findByConfigLogNo(String configLogNo);
+    List<AfSubRole> findByConfigPlanNo(String configPlanNo);
 
-    List<UserRoleSet> findByConfigLogNo(String configLogNo, List<UserRoleSet> allRoles);
+    List<UserRoleSet> findByConfigPlanNo(String configPlanNo, List<UserRoleSet> allRoles);
 
-    void create(String configLogNo, List<UserRoleSet> roles);
+    void create(String configPlanNo, List<UserRoleSet> roles);
 
 }

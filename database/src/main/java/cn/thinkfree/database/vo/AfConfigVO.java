@@ -1,6 +1,5 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.AfConfig;
 import cn.thinkfree.database.model.UserRoleSet;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,10 +17,14 @@ import java.util.List;
 @Data
 @ApiModel(value = "审批流配置")
 public class AfConfigVO {
-    @ApiModelProperty(value = "审批流配置")
-    private AfConfig config;
+    @ApiModelProperty(value = "审批流配置编号")
+    private String configNo;
+    @ApiModelProperty(value = "审批流配置名称")
+    private String name;
+    @ApiModelProperty(value = "审批流配置描述")
+    private String describe;
     @ApiModelProperty(name = "审批顺序方案")
-    private List<AfPlanVO> plans;
+    private List<List<UserRoleSet>> approvalOrders;
     @ApiModelProperty(name = "订阅消息角色")
     private List<UserRoleSet> subRoles;
 }
