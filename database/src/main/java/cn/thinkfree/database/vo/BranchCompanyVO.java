@@ -19,19 +19,19 @@ public class BranchCompanyVO extends BranchCompany {
     @ApiModelProperty("省份名称")
     private String provinceNm;
 
-    /**
-     * 城市分站list
-     */
-    @ApiModelProperty("分公司城市分站")
-    private List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS;
+//    /**
+//     * 城市分站list
+//     */
+//    @ApiModelProperty("分公司城市分站")
+//    private List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS;
 
-    public List<CityBranchWtihProCitVO> getCityBranchWtihProCitVOS() {
-        return cityBranchWtihProCitVOS;
-    }
-
-    public void setCityBranchWtihProCitVOS(List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS) {
-        this.cityBranchWtihProCitVOS = cityBranchWtihProCitVOS;
-    }
+//    public List<CityBranchWtihProCitVO> getCityBranchWtihProCitVOS() {
+//        return cityBranchWtihProCitVOS;
+//    }
+//
+//    public void setCityBranchWtihProCitVOS(List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS) {
+//        this.cityBranchWtihProCitVOS = cityBranchWtihProCitVOS;
+//    }
 
     public String getProvinceNm() {
         return provinceNm;

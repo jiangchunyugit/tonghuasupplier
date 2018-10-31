@@ -39,7 +39,10 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     public int updateBranchCompany(BranchCompany branchCompany) {
 
         // todo 更新埃森哲省份信息
-        branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
+        if(branchCompany.getBranchCompEbsid() != null) {
+
+            branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
+        }
         return branchCompanyMapper.updateByPrimaryKeySelective(branchCompany);
     }
 
@@ -49,11 +52,6 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
         // 分公司信息
         BranchCompanyVO branchCompanyVO = new BranchCompanyVO();
         branchCompanyVO = branchCompanyMapper.selectBranchCompanyWithPro(id);
-
-        // 城市分站信息
-        List<CityBranchWtihProCitVO> cityBranchWtihProCitVOList = cityBranchMapper.selectCityBranchWithProCit(id);
-        branchCompanyVO.setCityBranchWtihProCitVOS(cityBranchWtihProCitVOList);
-
         return branchCompanyVO;
     }
 

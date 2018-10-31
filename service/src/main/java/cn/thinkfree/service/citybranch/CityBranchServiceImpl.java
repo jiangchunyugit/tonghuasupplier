@@ -3,21 +3,21 @@ package cn.thinkfree.service.citybranch;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
-import cn.thinkfree.database.mapper.BranchCompanyMapper;
-import cn.thinkfree.database.mapper.BusinessEntityMapper;
-import cn.thinkfree.database.mapper.CityBranchMapper;
-import cn.thinkfree.database.mapper.StoreInfoMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.CityBranchSEO;
 import cn.thinkfree.database.vo.CityBranchVO;
+import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CityBranchServiceImpl implements CityBranchService {
@@ -34,6 +34,8 @@ public class CityBranchServiceImpl implements CityBranchService {
     @Autowired
     BusinessEntityMapper businessEntityMapper;
 
+    @Autowired
+    CityMapper cityMapper;
     @Override
     public int addCityBranch(CityBranchVO cityBranchVO) {
 
@@ -82,7 +84,13 @@ public class CityBranchServiceImpl implements CityBranchService {
 
     @Override
     public CityBranchVO cityBranchDetails(Integer id) {
-        return cityBranchMapper.selectBranchDetails(id);
+        CityBranchVO cityBranchVO =  this.cityBranchById(id);
+
+//        PcUserInfoExample pcUserInfoExample = new PcUserInfoExample();
+//        pcUserInfoExample.createCriteria().andCityBranchCompanyIdEqualTo(cityBranchVO.getId().toString());
+//        List<PcUserInfo> pcUserInfoList = pcUserInfoMapper.selectByExample(pcUserInfoExample);
+//        cityBranchVO.setPcUserInfoList(pcUserInfoList);
+        return cityBranchVO;
     }
 
     @Override
@@ -99,6 +107,14 @@ public class CityBranchServiceImpl implements CityBranchService {
         PageHelper.startPage(cityBranchSEO.getPage(),cityBranchSEO.getRows());
         List<CityBranchVO> cityBranchList = cityBranchMapper.selectBranchCompanyByParam(cityBranchSEO);
         return new PageInfo<>(cityBranchList);
+    }
+
+    @Override
+    public PageInfo<CityBranchWtihProCitVO> cityBranchWithProList(CityBranchSEO cityBranchSEO) {
+
+        PageHelper.startPage(cityBranchSEO.getPage(),cityBranchSEO.getRows());
+        List<CityBranchWtihProCitVO> cityBranchWtihProCitVOList = cityBranchMapper.selectCityBranchWithProCit(cityBranchSEO.getBranchCompanyId());
+        return new PageInfo<>(cityBranchWtihProCitVOList);
     }
 
     @Override
@@ -129,5 +145,29 @@ public class CityBranchServiceImpl implements CityBranchService {
             criteria.andCityCodeEqualTo(city.shortValue());
         }
         return cityBranchMapper.selectByExample(cityBranchExample);
+    }
+
+    @Override
+    public List<City> selectCity() {
+
+        CityBranchExample cityBranchExample = new CityBranchExample();
+
+        List<CityBranch> cityBranchList = cityBranchMapper.selectByExample(cityBranchExample);
+        if (cityBranchList.size() >0 ) {
+
+            List<String> cityCodes = cityBranchList.stream().map(e->e.getCityCode().toString()).collect(Collectors.toList());
+
+            CityExample cityExample = new CityExample();
+            cityExample.createCriteria().andCityCodeIn(cityCodes);
+            List<City> cityList = cityMapper.selectByExample(cityExample);
+
+            return cityList;
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public CityBranchVO cityBranchById(Integer id) {
+        return cityBranchMapper.selectBranchDetails(id);
     }
 }
