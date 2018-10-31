@@ -1,8 +1,5 @@
-package cn.thinkfree.service.platform.designer.vo;
+package cn.thinkfree.service.platform.vo;
 
-import cn.thinkfree.database.model.ConstructionOrder;
-import cn.thinkfree.database.model.DesignOrder;
-import cn.thinkfree.database.model.Project;
 import io.swagger.annotations.ApiModelProperty;
 
 /**

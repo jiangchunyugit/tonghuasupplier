@@ -4,7 +4,7 @@ import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.EmployeeMsgExample;
 import cn.thinkfree.service.platform.designer.UserCenterService;
-import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.ReflectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,9 +29,9 @@ public class UserCenterServiceImpl implements UserCenterService {
         for(String userId : userIds){
             EmployeeMsg employeeMsg = employeeMsgMap.get(userId);
             if(employeeMsg == null){
-                userMsgVos.add(new UserMsgVo(userId,"测试名称","13241229115","CC"));
+                userMsgVos.add(new UserMsgVo(userId,"测试名称","13241229115","CC","http://xxx.xxxx.com"));
             }else {
-                userMsgVos.add(new UserMsgVo(userId,"测试名称","13241229115","CC", employeeMsg.getRealName()));
+                userMsgVos.add(new UserMsgVo(userId,"测试名称","13241229115","CC", employeeMsg.getRealName(),"http://xxx.xxxx.com"));
             }
         }
         return userMsgVos;
@@ -58,6 +58,9 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public UserMsgVo queryUser(String userId) {
         List<UserMsgVo> msgVos = queryUsers(Arrays.asList(userId));
+        if(msgVos.isEmpty()){
+            throw new RuntimeException("没有查询到用户信息");
+        }
         return msgVos.get(0);
     }
 }

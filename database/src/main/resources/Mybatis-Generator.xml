@@ -116,6 +116,9 @@
         <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->
         <!--<table tableName="a_f_sub_url" domainObjectName="AfSubUrl"/>-->
         <!--<table tableName="a_f_company_plan" domainObjectName="AfCompanyPlan"/>-->
+        <!--<table tableName="build_pay_config" domainObjectName="BuildPayConfig"/>-->
+        <!--<table tableName="build_scheme_config" domainObjectName="BuildSchemeConfig"/>-->
+        <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
         <!-- new approval flow end -->
     </context>
 </generatorConfiguration>

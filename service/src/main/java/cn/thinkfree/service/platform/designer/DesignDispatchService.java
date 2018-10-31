@@ -3,12 +3,9 @@ package cn.thinkfree.service.platform.designer;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignOrder;
 import cn.thinkfree.database.model.Project;
-import cn.thinkfree.database.model.ReserveProject;
-import cn.thinkfree.service.platform.designer.vo.DesignOrderVo;
-import cn.thinkfree.service.platform.designer.vo.PageVo;
-import org.springframework.web.multipart.MultipartFile;
+import cn.thinkfree.service.platform.vo.DesignOrderVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 

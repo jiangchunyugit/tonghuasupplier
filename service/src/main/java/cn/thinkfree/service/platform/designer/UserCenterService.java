@@ -1,6 +1,6 @@
 package cn.thinkfree.service.platform.designer;
 
-import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 
 import java.util.List;
 import java.util.Map;

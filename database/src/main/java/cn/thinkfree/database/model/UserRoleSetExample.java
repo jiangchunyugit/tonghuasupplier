@@ -455,76 +455,6 @@ public class UserRoleSetExample {
             return (Criteria) this;
         }
 
-        public Criteria andPermissionIsNull() {
-            addCriterion("permission is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionIsNotNull() {
-            addCriterion("permission is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionEqualTo(String value) {
-            addCriterion("permission =", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionNotEqualTo(String value) {
-            addCriterion("permission <>", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionGreaterThan(String value) {
-            addCriterion("permission >", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionGreaterThanOrEqualTo(String value) {
-            addCriterion("permission >=", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionLessThan(String value) {
-            addCriterion("permission <", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionLessThanOrEqualTo(String value) {
-            addCriterion("permission <=", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionLike(String value) {
-            addCriterion("permission like", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionNotLike(String value) {
-            addCriterion("permission not like", value, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionIn(List<String> values) {
-            addCriterion("permission in", values, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionNotIn(List<String> values) {
-            addCriterion("permission not in", values, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionBetween(String value1, String value2) {
-            addCriterion("permission between", value1, value2, "permission");
-            return (Criteria) this;
-        }
-
-        public Criteria andPermissionNotBetween(String value1, String value2) {
-            addCriterion("permission not between", value1, value2, "permission");
-            return (Criteria) this;
-        }
-
         public Criteria andIsShowIsNull() {
             addCriterion("is_show is null");
             return (Criteria) this;
@@ -642,6 +572,326 @@ public class UserRoleSetExample {
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableIsNull() {
+            addCriterion("is_enable is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableIsNotNull() {
+            addCriterion("is_enable is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableEqualTo(Integer value) {
+            addCriterion("is_enable =", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableNotEqualTo(Integer value) {
+            addCriterion("is_enable <>", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableGreaterThan(Integer value) {
+            addCriterion("is_enable >", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_enable >=", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableLessThan(Integer value) {
+            addCriterion("is_enable <", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableLessThanOrEqualTo(Integer value) {
+            addCriterion("is_enable <=", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableIn(List<Integer> values) {
+            addCriterion("is_enable in", values, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableNotIn(List<Integer> values) {
+            addCriterion("is_enable not in", values, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableBetween(Integer value1, Integer value2) {
+            addCriterion("is_enable between", value1, value2, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_enable not between", value1, value2, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelIsNull() {
+            addCriterion("is_del is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelIsNotNull() {
+            addCriterion("is_del is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelEqualTo(Integer value) {
+            addCriterion("is_del =", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelNotEqualTo(Integer value) {
+            addCriterion("is_del <>", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelGreaterThan(Integer value) {
+            addCriterion("is_del >", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_del >=", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelLessThan(Integer value) {
+            addCriterion("is_del <", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelLessThanOrEqualTo(Integer value) {
+            addCriterion("is_del <=", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelIn(List<Integer> values) {
+            addCriterion("is_del in", values, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelNotIn(List<Integer> values) {
+            addCriterion("is_del not in", values, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelBetween(Integer value1, Integer value2) {
+            addCriterion("is_del between", value1, value2, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_del not between", value1, value2, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorIsNull() {
+            addCriterion("creator is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorIsNotNull() {
+            addCriterion("creator is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorEqualTo(String value) {
+            addCriterion("creator =", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotEqualTo(String value) {
+            addCriterion("creator <>", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorGreaterThan(String value) {
+            addCriterion("creator >", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorGreaterThanOrEqualTo(String value) {
+            addCriterion("creator >=", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorLessThan(String value) {
+            addCriterion("creator <", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorLessThanOrEqualTo(String value) {
+            addCriterion("creator <=", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorLike(String value) {
+            addCriterion("creator like", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotLike(String value) {
+            addCriterion("creator not like", value, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorIn(List<String> values) {
+            addCriterion("creator in", values, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotIn(List<String> values) {
+            addCriterion("creator not in", values, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorBetween(String value1, String value2) {
+            addCriterion("creator between", value1, value2, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreatorNotBetween(String value1, String value2) {
+            addCriterion("creator not between", value1, value2, "creator");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNull() {
+            addCriterion("create_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIsNotNull() {
+            addCriterion("create_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeEqualTo(Date value) {
+            addCriterion("create_time =", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotEqualTo(Date value) {
+            addCriterion("create_time <>", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThan(Date value) {
+            addCriterion("create_time >", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("create_time >=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThan(Date value) {
+            addCriterion("create_time <", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeLessThanOrEqualTo(Date value) {
+            addCriterion("create_time <=", value, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeIn(List<Date> values) {
+            addCriterion("create_time in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotIn(List<Date> values) {
+            addCriterion("create_time not in", values, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeBetween(Date value1, Date value2) {
+            addCriterion("create_time between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCreateTimeNotBetween(Date value1, Date value2) {
+            addCriterion("create_time not between", value1, value2, "createTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfIsNull() {
+            addCriterion("cf is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfIsNotNull() {
+            addCriterion("cf is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfEqualTo(String value) {
+            addCriterion("cf =", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotEqualTo(String value) {
+            addCriterion("cf <>", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfGreaterThan(String value) {
+            addCriterion("cf >", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfGreaterThanOrEqualTo(String value) {
+            addCriterion("cf >=", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfLessThan(String value) {
+            addCriterion("cf <", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfLessThanOrEqualTo(String value) {
+            addCriterion("cf <=", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfLike(String value) {
+            addCriterion("cf like", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotLike(String value) {
+            addCriterion("cf not like", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfIn(List<String> values) {
+            addCriterion("cf in", values, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotIn(List<String> values) {
+            addCriterion("cf not in", values, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfBetween(String value1, String value2) {
+            addCriterion("cf between", value1, value2, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotBetween(String value1, String value2) {
+            addCriterion("cf not between", value1, value2, "cf");
             return (Criteria) this;
         }
     }

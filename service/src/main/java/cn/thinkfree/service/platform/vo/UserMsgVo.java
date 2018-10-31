@@ -1,4 +1,4 @@
-package cn.thinkfree.service.platform.designer.vo;
+package cn.thinkfree.service.platform.vo;
 
 /**
  * @author xusonghui
@@ -16,22 +16,34 @@ public class UserMsgVo {
 
     private String realName;
 
+    private String userIcon;
+
     public UserMsgVo() {
     }
 
-    public UserMsgVo(String userId, String userName, String userPhone, String userType) {
+    public UserMsgVo(String userId, String userName, String userPhone, String userType, String userIcon) {
         this.userId = userId;
         this.userName = userName;
         this.userPhone = userPhone;
         this.userType = userType;
+        this.userIcon = userIcon;
     }
 
-    public UserMsgVo(String userId, String userName, String userPhone, String userType, String realName) {
+    public UserMsgVo(String userId, String userName, String userPhone, String userType, String realName, String userIcon) {
         this.userId = userId;
         this.userName = userName;
         this.userPhone = userPhone;
         this.userType = userType;
         this.realName = realName;
+        this.userIcon = userIcon;
+    }
+
+    public void setUserIcon(String userIcon) {
+        this.userIcon = userIcon;
+    }
+
+    public String getUserIcon() {
+        return userIcon;
     }
 
     public void setRealName(String realName) {

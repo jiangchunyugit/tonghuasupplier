@@ -2,7 +2,11 @@ package cn.thinkfree.service.platform.employee.impl;
 
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private UserRoleSetMapper roleSetMapper;
     @Autowired
     private CompanyInfoMapper companyInfoMapper;
+    @Autowired
+    private UserCenterService userCenterService;
 
     @Override
     public void reviewEmployee(String userId, int authState, String companyId) {
@@ -176,6 +182,45 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
         logger.info("保存用户角色：res={}", res);
+    }
+
+    @Override
+    public EmployeeMsgVo employeeMsgById(String userId) {
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdEqualTo(userId).andEmployeeStateEqualTo(1);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if(employeeMsgs.isEmpty()){
+            throw new RuntimeException("没有查询到用户");
+        }
+        EmployeeMsg employeeMsg = employeeMsgs.get(0);
+        UserMsgVo userMsgVo = userCenterService.queryUser(userId);
+        UserRoleSet userRoleSet = queryRoleSet(employeeMsg.getRoleCode());
+        EmployeeMsgVo msgVo = new EmployeeMsgVo();
+        msgVo.setAuthState(employeeMsg.getAuthState());
+        msgVo.setIconUrl(userMsgVo.getUserIcon());
+        msgVo.setPhone(userMsgVo.getUserPhone());
+        msgVo.setRealName(employeeMsg.getRealName());
+        msgVo.setUserId(userId);
+        msgVo.setCompanyName("这里是公司名称");
+        msgVo.setBindCompanyState(StringUtils.isNotBlank(employeeMsg.getCompanyId()) ? 1 : 2);
+        msgVo.setRoleCode(userRoleSet.getRoleCode());
+        msgVo.setRoleName(userRoleSet.getRoleName());
+        return msgVo;
+    }
+
+    /**
+     * 通过角色编码查询角色信息
+     * @param roleCode 角色编码
+     * @return
+     */
+    public UserRoleSet queryRoleSet(String roleCode){
+        UserRoleSetExample roleSetExample = new UserRoleSetExample();
+        roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        List<UserRoleSet> userRoleSets = roleSetMapper.selectByExample(roleSetExample);
+        if(userRoleSets.isEmpty()){
+            throw new RuntimeException("无效的用户角色");
+        }
+        return userRoleSets.get(0);
     }
 
     /**
