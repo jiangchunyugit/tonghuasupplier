@@ -18,7 +18,7 @@
     <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
     <result column="reason" jdbcType="VARCHAR" property="reason" />
     <result column="project_no" jdbcType="VARCHAR" property="projectNo" />
-    <result column="design_order_no" jdbcType="VARCHAR" property="designOrderNo" />
+    <result column="design_order_no" jdbcType="VARCHAR" property="DesignerOrderNo" />
     <result column="reserve_no" jdbcType="VARCHAR" property="reserveNo" />
     <result column="reserve_time" jdbcType="TIMESTAMP" property="reserveTime" />
     <result column="change_time" jdbcType="TIMESTAMP" property="changeTime" />
@@ -140,7 +140,7 @@
       #{source,jdbcType=INTEGER}, #{style,jdbcType=INTEGER}, #{budget,jdbcType=VARCHAR}, 
       #{acreage,jdbcType=VARCHAR}, #{state,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=VARCHAR}, #{reason,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
-      #{designOrderNo,jdbcType=VARCHAR}, #{reserveNo,jdbcType=VARCHAR}, #{reserveTime,jdbcType=TIMESTAMP}, 
+      #{DesignerOrderNo,jdbcType=VARCHAR}, #{reserveNo,jdbcType=VARCHAR}, #{reserveTime,jdbcType=TIMESTAMP},
       #{changeTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ReserveProject">
@@ -186,7 +186,7 @@
       <if test="projectNo != null">
         project_no,
       </if>
-      <if test="designOrderNo != null">
+      <if test="DesignerOrderNo != null">
         design_order_no,
       </if>
       <if test="reserveNo != null">
@@ -236,8 +236,8 @@
       <if test="projectNo != null">
         #{projectNo,jdbcType=VARCHAR},
       </if>
-      <if test="designOrderNo != null">
-        #{designOrderNo,jdbcType=VARCHAR},
+      <if test="DesignerOrderNo != null">
+        #{DesignerOrderNo,jdbcType=VARCHAR},
       </if>
       <if test="reserveNo != null">
         #{reserveNo,jdbcType=VARCHAR},
@@ -303,8 +303,8 @@
       <if test="record.projectNo != null">
         project_no = #{record.projectNo,jdbcType=VARCHAR},
       </if>
-      <if test="record.designOrderNo != null">
-        design_order_no = #{record.designOrderNo,jdbcType=VARCHAR},
+      <if test="record.DesignerOrderNo != null">
+        design_order_no = #{record.DesignerOrderNo,jdbcType=VARCHAR},
       </if>
       <if test="record.reserveNo != null">
         reserve_no = #{record.reserveNo,jdbcType=VARCHAR},
@@ -338,7 +338,7 @@
       create_user_id = #{record.createUserId,jdbcType=VARCHAR},
       reason = #{record.reason,jdbcType=VARCHAR},
       project_no = #{record.projectNo,jdbcType=VARCHAR},
-      design_order_no = #{record.designOrderNo,jdbcType=VARCHAR},
+      design_order_no = #{record.DesignerOrderNo,jdbcType=VARCHAR},
       reserve_no = #{record.reserveNo,jdbcType=VARCHAR},
       reserve_time = #{record.reserveTime,jdbcType=TIMESTAMP},
       change_time = #{record.changeTime,jdbcType=TIMESTAMP}

@@ -1,11 +1,10 @@
 package cn.thinkfree.service.platform.designer;
 
 import cn.thinkfree.core.constants.DesignStateEnum;
-import cn.thinkfree.database.model.DesignOrder;
+import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
 import cn.thinkfree.service.platform.vo.DesignOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -36,7 +35,7 @@ public interface DesignDispatchService {
      * @param stateType          状态类型
      * @return
      */
-    PageVo<List<DesignOrderVo>> queryDesignerOrder(
+    PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
@@ -68,7 +67,7 @@ public interface DesignDispatchService {
      * @param projectNo
      * @return
      */
-    DesignOrderVo queryDesignOrderVoByProjectNo(String projectNo, int stateType);
+    DesignerOrderVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
 
     /**
      * 设计公司拒绝接单
@@ -175,10 +174,10 @@ public interface DesignDispatchService {
     /**
      * 检查订单状态
      *
-     * @param designOrder     订单信息
+     * @param DesignerOrder     订单信息
      * @param designStateEnum 目标状态枚举
      */
-    void checkOrderState(DesignOrder designOrder, DesignStateEnum designStateEnum);
+    void checkOrderState(DesignerOrder DesignerOrder, DesignStateEnum designStateEnum);
 
     /**
      * 根据项目编号查询项目信息
@@ -194,7 +193,7 @@ public interface DesignDispatchService {
      * @param projectNo 项目编号
      * @return 设计订单信息
      */
-    DesignOrder queryDesignOrder(String projectNo);
+    DesignerOrder queryDesignerOrder(String projectNo);
 
     /**
      * 根据设计订单编号查询设计订单信息
@@ -202,7 +201,7 @@ public interface DesignDispatchService {
      * @param orderNo 设计订单编号
      * @return 设计订单信息
      */
-    DesignOrder queryDesignOrderByOrderNo(String orderNo);
+    DesignerOrder queryDesignerOrderByOrderNo(String orderNo);
 
     /**
      * 订单支付超时
@@ -241,7 +240,7 @@ public interface DesignDispatchService {
      * @param fileName           excel文件名
      * @param response           返回数据对象
      */
-    void designOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+    void DesignerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
                           String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
                           String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 

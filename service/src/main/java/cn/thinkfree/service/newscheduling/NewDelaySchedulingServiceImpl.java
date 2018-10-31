@@ -1,11 +1,11 @@
 package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.mapper.DesignOrderMapper;
+import cn.thinkfree.database.mapper.DesignerOrderMapper;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
-import cn.thinkfree.database.model.DesignOrder;
-import cn.thinkfree.database.model.DesignOrderExample;
+import cn.thinkfree.database.model.DesignerOrder;
+import cn.thinkfree.database.model.DesignerOrderExample;
 import cn.thinkfree.database.vo.OrderConfirmationVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;

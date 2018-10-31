@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.OrderPlayVo;
 import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
@@ -131,4 +132,6 @@ public interface ConstructionOrderMapper {
      * @return
      */
     ProjectOrderDetailVo selectByProjectNo(String projectNo);
+
+    OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo,@Param("status") Integer status);
 }

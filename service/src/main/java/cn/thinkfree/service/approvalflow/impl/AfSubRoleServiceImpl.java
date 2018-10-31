@@ -25,15 +25,15 @@ public class AfSubRoleServiceImpl implements AfSubRoleService {
     private AfSubRoleMapper subRoleMapper;
 
     @Override
-    public List<AfSubRole> findByConfigLogNo(String configLogNo) {
+    public List<AfSubRole> findByConfigPlanNo(String configPlanNo) {
         AfSubRoleExample example = new AfSubRoleExample();
-        example.createCriteria().andConfigLogNoEqualTo(configLogNo);
+        example.createCriteria().andConfigPlanNoEqualTo(configPlanNo);
         return subRoleMapper.selectByExample(example);
     }
 
     @Override
-    public List<UserRoleSet> findByConfigLogNo(String configLogNo, List<UserRoleSet> allRoles) {
-        List<AfSubRole> subRoles = findByConfigLogNo(configLogNo);
+    public List<UserRoleSet> findByConfigPlanNo(String configPlanNo, List<UserRoleSet> allRoles) {
+        List<AfSubRole> subRoles = findByConfigPlanNo(configPlanNo);
         return getRoles(subRoles, allRoles);
     }
 
@@ -60,12 +60,12 @@ public class AfSubRoleServiceImpl implements AfSubRoleService {
     }
 
     @Override
-    public void create(String configLogNo, List<UserRoleSet> roles) {
+    public void create(String configPlanNo, List<UserRoleSet> roles) {
         if (roles != null) {
             AfSubRole subRole;
             for (int index = 0; index < roles.size(); index++){
                 subRole = new AfSubRole();
-                subRole.setConfigLogNo(configLogNo);
+                subRole.setConfigPlanNo(configPlanNo);
                 subRole.setRoleId(roles.get(index).getRoleCode());
                 insert(subRole);
             }

@@ -2,13 +2,19 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.service.constants.*;
+import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -34,11 +40,15 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
     ProjectDataMapper projectDataMapper;
     @Autowired
-    DesignOrderMapper designOrderMapper;
+    DesignerOrderMapper designerOrderMapper;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    OrderApplyRefundMapper orderApplyRefundMapper;
+    @Autowired
+    NewOrderUserService newOrderUserService;
 
 
     /**
@@ -97,34 +107,59 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("项目不存在!!");
         }
         ProjectVo projectVo = BaseToVoUtils.getVo(projects.get(0), ProjectVo.class, BaseToVoUtils.getProjectMap());
-        if (projectVo == null) {
-            System.out.println("工具类转换失败!!");
-            return RespData.error("工具类转换失败!!");
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(projectNo);
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        DesignerOrder designerOrder = designerOrders.get(0);
+        ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
+//        ProjectOrderDetailVo designerOrderDetailVo = designerOrderMapper.selectByProjectNo(projectNo);
+        //存放阶段信息
+        List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
+        List<Map<String, Object>> maps = DesignStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+        for (Map<String, Object> map : maps) {
+            OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
+            orderTaskSortVo.setSort((Integer) map.get("key"));
+            orderTaskSortVo.setName(map.get("val").toString());
+            orderTaskSortVoList.add(orderTaskSortVo);
         }
-        //添加灵活数据
-        List<FlexibleOrderPlayVo> flexibleOrderPlayVos1 = new ArrayList<>();
-        List<FlexibleOrderPlayVo> flexibleOrderPlayVos2 = new ArrayList<>();
-        //组合设计订单数据
-        FlexibleOrderPlayVo base1 = new FlexibleOrderPlayVo("业务编号", "1223098338391");
-        FlexibleOrderPlayVo base2 = new FlexibleOrderPlayVo("风格类型", "个性化");
-        FlexibleOrderPlayVo base3 = new FlexibleOrderPlayVo("承接公司", "北京市原创艺墅设计", "http://123.56.0.102/zentao/project-task-8-assignedtome.html", true);
-        flexibleOrderPlayVos1.add(base1);
-        flexibleOrderPlayVos1.add(base2);
-        flexibleOrderPlayVos1.add(base3);
-        //组合施工订单数据
-        FlexibleOrderPlayVo base4 = new FlexibleOrderPlayVo("业务编号", "1223098338391");
-        FlexibleOrderPlayVo base5 = new FlexibleOrderPlayVo("风格类型", "个性化");
-        FlexibleOrderPlayVo base6 = new FlexibleOrderPlayVo("承接公司", "北京市原创艺墅设计", "http://123.56.0.102/zentao/project-task-8-assignedtome.html", true);
-        FlexibleOrderPlayVo base7 = new FlexibleOrderPlayVo("工长", "黄蓉蓉", "15666666666", true);
-        flexibleOrderPlayVos2.add(base4);
-        flexibleOrderPlayVos2.add(base5);
-        flexibleOrderPlayVos2.add(base6);
-        flexibleOrderPlayVos2.add(base7);
-        ProjectOrderDetailVo designOrderDetailVo = designOrderMapper.selectByProjectNo(projectNo);
-        designOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos1);
+        designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
+        designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
+        //存放订单类型
+        designerOrderDetailVo.setOrderType(ProjectDataStatus.DESIGN_STATUS.getValue());
+        //存放展示信息
+        OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        List<PersionVo> persionList = new ArrayList<>();
+        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
+        Map userName = newOrderUserService.getUserName(designerOrder.getUserId(), persionVo.getRole());//正式时打开
+//        Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+        persionVo.setPhone(userName.get("phone").toString());
+        persionList.add(persionVo);
+        designOrderPlayVo.setPersionList(persionList);
+        designerOrderDetailVo.setOrderPlayVo(designOrderPlayVo);
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
-        constructionOrderDetailVo.setFlexibleOrderPlayVos(flexibleOrderPlayVos2);
-        projectOrderDetailVoList.add(designOrderDetailVo);
+        List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
+        List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+        for (Map<String, Object> map : maps1) {
+            OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
+            orderTaskSortVo.setSort((Integer) map.get("key"));
+            orderTaskSortVo.setName(map.get("val").toString());
+            orderTaskSortVoList1.add(orderTaskSortVo);
+        }
+        constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
+        constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
+        constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
+        //存放订单类型
+        constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
+        //存放展示信息
+        OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
+        //存放人员信息
+        List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
+        constructionOrderPlayVo.setPersionList(constructionPersionList);
+        constructionOrderDetailVo.setOrderPlayVo(constructionOrderPlayVo);
+        projectOrderDetailVoList.add(designerOrderDetailVo);
         projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);
@@ -247,8 +282,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExample(projectData, example);
-        if (i != ProjectDataStatus.BASE_STATUS.getValue()) {
+        int i = projectDataMapper.updateByExampleSelective(projectData, example);
+        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("确认失败!");
         }
         return RespData.success();
@@ -299,5 +334,37 @@ public class NewProjectServiceImpl implements NewProjectService {
             map.put(employeeMsg.getUserId(), vo);
         }
         return RespData.success(map);
+    }
+
+    /**
+     * 退款
+     *
+     * @param orderNo
+     * @param payOrderNo
+     * @param otherReason
+     * @param money
+     * @param moneyName
+     * @param userId
+     * @param cancelReason
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> applyRefund(String orderNo, String payOrderNo, String otherReason, Integer money, String moneyName, String userId, String cancelReason) {
+        OrderApplyRefund orderApplyRefund = new OrderApplyRefund();
+        orderApplyRefund.setLaunchTime(new Date());
+        orderApplyRefund.setType(ProjectDataStatus.REFUND_ONE.getValue());
+        orderApplyRefund.setOrderNo(orderNo);
+        orderApplyRefund.setPayOrderNo(payOrderNo);
+        orderApplyRefund.setMoney(money);
+        orderApplyRefund.setCancleReason(cancelReason);
+        orderApplyRefund.setOtherReason(otherReason);
+        orderApplyRefund.setMoneyName(moneyName);
+        orderApplyRefund.setInitiatorId(userId);
+        int i = orderApplyRefundMapper.insertSelective(orderApplyRefund);
+        if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+            return RespData.error("退款申请失败!!");
+        }
+        return RespData.success();
     }
 }

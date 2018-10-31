@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.thinkfree.database.mapper.DesignOrderMapper">
+<mapper namespace="cn.thinkfree.database.mapper.DesignerOrderMapper">
     <!--分页查询项目派单-->
     <select id="selectProjectOrderByPage" resultType="cn.thinkfree.database.vo.ProjectOrderVO">
         SELECT
@@ -8,6 +8,7 @@
         i.company_name AS companyName,
         o.order_no AS orderNo,
         P .create_time AS appointmentTime,
+        po.sign_time AS signedTime,
         P .address_detail AS addressDetail,
 
 
@@ -19,17 +20,18 @@
 
 
         FROM
-        design_order o
+        designer_order o
         LEFT JOIN construction_order co ON co.project_no = o.project_no
 
         LEFT JOIN project_delay d ON d.project_no = o.project_no
         LEFT JOIN project_big_scheduling_details b ON b.project_no = o.project_no
         LEFT JOIN company_info i ON i.company_id = o.company_id
         LEFT JOIN project P ON P .project_no = o.project_no
-
+        LEFT JOIN pc_order_contract po ON po.order_number = o.order_no
 
         WHERE
         o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status}
+        ORDER BY o.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
@@ -39,14 +41,14 @@
     <select id="selectProjectOrderCount" resultType="java.lang.Integer">
         SELECT count(1)
                 FROM
-        design_order o
+        designer_order o
         LEFT JOIN construction_order co ON co.project_no = o.project_no
 
         LEFT JOIN project_delay d ON d.project_no = o.project_no
         LEFT JOIN project_big_scheduling_details b ON b.project_no = o.project_no
         LEFT JOIN company_info i ON i.company_id = o.company_id
         LEFT JOIN project P ON P .project_no = o.project_no
-
+        LEFT JOIN pc_order_contract po ON po.order_number = o.order_no
 
         WHERE
         o.project_no=#{projectOrderVO.projectNo} AND o.status=#{projectOrderVO.status}
@@ -57,10 +59,22 @@
         SELECT
           order_stage as taskStage,
           order_no as orderNo,
-          type as type
+          style_type as styleType
         FROM
-          design_order
+          designer_order
         WHERE
           project_no = #{projectNo}
+    </select>
+
+    <select id="selectByProjectNoAndStatus" resultType="cn.thinkfree.database.appvo.OrderPlayVo">
+        SELECT
+            ci.company_name AS constructionCompany
+        FROM
+            designer_order deso
+        LEFT JOIN company_info ci ON deso.company_id = ci.company_id
+        WHERE
+            deso.project_no=#{projectNo}
+            AND
+            deso.status=#{status}
     </select>
 </mapper>

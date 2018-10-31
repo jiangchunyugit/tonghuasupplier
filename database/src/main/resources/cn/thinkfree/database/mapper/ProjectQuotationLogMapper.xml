@@ -285,4 +285,14 @@
       money = #{money,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!--查询排期基础数据-->
+  <select id="selectByProjectNo" resultType="java.lang.Integer">
+    SELECT
+      pb.sort
+    FROM
+      project_quotation_log pql
+    INNER JOIN project_base_small_scheduling bs ON bs.construct_code=pql.construct_code
+    LEFT JOIN project_base_big_scheduling pb ON bs.parent_sort=pb.sort
+  </select>
 </mapper>

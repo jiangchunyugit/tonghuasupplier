@@ -17,10 +17,26 @@
     SELECT
       order_stage as taskStage,
       order_no as orderNo,
-      type as type
+      type as styleType
     FROM
       construction_order
     WHERE
       project_no = #{projectNo}
   </select>
+
+    <select id="selectByProjectNoAndStatus" resultType="cn.thinkfree.database.appvo.OrderPlayVo">
+        SELECT
+          ci.company_name AS constructionCompany,
+          ps.task_num taskNum,
+          deso.money as cost,
+          ps.delay delay
+        FROM
+            construction_order deso
+        LEFT JOIN company_info ci ON deso.company_id = ci.company_id
+        LEFT JOIN project_scheduling ps ON ps.project_no=deso.project_no
+        WHERE
+            deso.project_no=#{projectNo}
+            AND
+            deso.status=#{status}
+    </select>
 </mapper>

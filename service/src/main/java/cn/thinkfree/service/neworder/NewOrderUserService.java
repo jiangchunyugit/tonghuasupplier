@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.vo.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 项目用户关系服务层
@@ -186,4 +187,12 @@ public interface NewOrderUserService {
      * @return
      **/
     Integer queryAcceptanceResultsCount(String projectNo);
+
+    /**
+     * 获取用户信息
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    Map getUserName(String userId, String roleId);
 }

@@ -111,7 +111,7 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @Param
      * @return
      **/
-    List<ConstructionPlanVO> selectConstructionPlanByPage(@Param("constructionPlanVO") ConstructionPlanVO constructionPlanVO, @Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+    List<ConstructionPlanVO> selectConstructionPlanByPage(@Param("constructionPlanVO") ConstructionPlanVO constructionPlanVO, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
     /**
      * @Author jiang
      * @Description 查询施工计划总条数
@@ -127,7 +127,7 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @Param
      * @return
      **/
-    List<AcceptanceResultsVO> selectAcceptanceResultsByPage(@Param("projectNo") String projectNo,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+    List<AcceptanceResultsVO> selectAcceptanceResultsByPage(@Param("projectNo") String projectNo, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
     /**
      * @Author jiang
      * @Description 查询验收总条数
@@ -136,4 +136,12 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @return
      **/
     Integer selectAcceptanceResultsCount(@Param("projectNo") String projectNo);
+
+    /**
+     * 按照项目编号将项目排期置为失效
+     * @param projectNo
+     * @param status
+     * @return
+     */
+    Integer updateByProjectNo(@Param("projectNo") String projectNo,@Param("status")Integer status);
 }

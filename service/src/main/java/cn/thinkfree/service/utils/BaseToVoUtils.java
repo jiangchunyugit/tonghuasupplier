@@ -57,7 +57,15 @@ public class BaseToVoUtils {
             for (int i= 0;i<declaredFields.length;i++){
                 Field field = declaredFields[i];
                 field.setAccessible(true);
-                Field field1 = object1.getClass().getDeclaredField(field.getName());
+                Field field1 = null;
+                try {
+                    field1 = object1.getClass().getDeclaredField(field.getName());
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                    continue;
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
                 field1.setAccessible(true);
                 field.set(object2,field1.get(object1));
             }

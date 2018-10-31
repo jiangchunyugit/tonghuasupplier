@@ -64,11 +64,12 @@
         LEFT JOIN user_info ur ON ur.company_id = p.company_id
         LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
         LEFT JOIN company_info i ON i.company_id = p.company_id
-        LEFT JOIN design_order o ON o .project_no = p.project_no
+        LEFT JOIN designer_order o ON o .project_no = p.project_no
         LEFT JOIN consumer_set s ON s. ID = P .owner_id
         LEFT JOIN user_info ms ON ms.user_id = o.user_id
         WHERE
         p.project_no=#{constructionSiteVO.projectNo} AND p.status=#{constructionSiteVO.status}
+        ORDER BY p.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
@@ -85,7 +86,7 @@
             LEFT JOIN user_info ur ON ur.company_id = p.company_id
             LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
             LEFT JOIN company_info i ON i.company_id = p.company_id
-            LEFT JOIN design_order o ON o .project_no = p.project_no
+            LEFT JOIN designer_order o ON o .project_no = p.project_no
             LEFT JOIN consumer_set s ON s. ID = P .owner_id
             LEFT JOIN user_info ms ON ms.user_id = o.user_id
             WHERE
@@ -107,6 +108,7 @@
         LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
         WHERE
         p.project_no=#{siteDetailsVO.projectNo} AND p.status=#{siteDetailsVO.status}
+        ORDER BY p.create_time DESC
         <if test="pageSize != null">
             limit #{pageSize} offset #{pageNum}
         </if>
