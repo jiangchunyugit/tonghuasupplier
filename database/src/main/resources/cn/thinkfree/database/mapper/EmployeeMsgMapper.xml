@@ -525,12 +525,28 @@
   </update>
 
 
-  <select id="selectByUserId" resultMap="BaseResultMap">
+  <select id="selectByUserId" resultType="cn.thinkfree.database.appvo.PersionVo">
     SELECT
-    <include refid="Base_Column_List" />
+        em.real_name AS NAME,
+        em.role_code AS ROLE,
+        dm.personal_home_url AS personalHomeUrl
     FROM
-    employee_msg
+        employee_msg em
+    LEFT JOIN designer_msg dm ON em.user_id = dm.user_id
     WHERE
-    user_id =#{ userId }
+        em.user_id =#{ userId }
+  </select>
+
+  <select id="selectAllByUserId" resultType="cn.thinkfree.database.appvo.PersionVo">
+    SELECT
+        em.real_name AS NAME,
+        em.role_code AS ROLE,
+        dm.personal_home_url AS personalHomeUrl
+    FROM
+        order_user ou
+    LEFT JOIN employee_msg em ON ou.user_id = em.user_id
+    LEFT JOIN designer_msg dm ON em.user_id = dm.user_id
+    WHERE
+        em.user_id =#{ userId }
   </select>
 </mapper>

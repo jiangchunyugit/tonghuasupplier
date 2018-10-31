@@ -34,7 +34,7 @@ public class AppProjectController {
 
     @RequestMapping(value = "getProjectDetail", method = RequestMethod.POST)
     @ApiOperation(value = "获取项目详情接口")
-    public MyRespBundle<ProjectVo> getProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
+    public MyRespBundle<ProjectVo> getProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
         MyRespBundle<ProjectVo> projectVo = newProjectService.getProjectDetail(projectNo);
         return projectVo;
     }

@@ -59,7 +59,23 @@ public enum ProjectDataStatus {
     /**
      * 先行赔付
      */
-    REDUND_TWO(2,"先行赔付");
+    REDUND_TWO(2,"先行赔付"),
+    /**
+     * 消费者
+     */
+    PLAY_CONSUMER(4,"消费者"),
+    /**
+     *平台
+     */
+    PLAY_PLATFORM(1,"平台"),
+    /**
+     *设计师
+     */
+    PLAY_DESIGNER(3,"设计师"),
+    /**
+     *设计公司
+     */
+    PLAY_DESIGN_COMPANY(2,"设计公司");
 
     private Integer value;
     private String description;
