@@ -104,6 +104,13 @@ public class AppProjectController {
         return newProjectService.applyRefund(orderNo,payOrderNo,otherReason,money,moneyName,userId,cancelReason);
     }
 
+    @RequestMapping(value = "pay",method = RequestMethod.POST)
+    @ApiOperation(value = "支付费用")
+    public MyRespBundle pay(@RequestParam("payType")@ApiParam(name = "payType",value = "支付类型") Integer payType,
+                            @RequestParam("payOrderNo")@ApiParam(name = "payOrderNo",value = "支付订单号")String payOrderNo ){
+        return RespData.success("支付成功!");
+    }
+
 
 //    @RequestMapping(value = "",method = RequestMethod.POST)
 //    @ApiOperation(value = "")
