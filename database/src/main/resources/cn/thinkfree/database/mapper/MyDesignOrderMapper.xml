@@ -65,4 +65,16 @@
         WHERE
           project_no = #{projectNo}
     </select>
+
+    <select id="selectByProjectNoAndStatus" resultType="cn.thinkfree.database.appvo.OrderPlayVo">
+        SELECT
+            ci.company_name AS constructionCompany
+        FROM
+            designer_order deso
+        LEFT JOIN company_info ci ON deso.company_id = ci.company_id
+        WHERE
+            deso.project_no=#{projectNo}
+            AND
+            deso.status=#{status}
+    </select>
 </mapper>

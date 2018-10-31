@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.OrderPlayVo;
 import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.DesignerOrderExample;
@@ -95,7 +96,6 @@ public interface DesignerOrderMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(DesignerOrder record);
-
     /**
      * 根据项目编号查询
      * @param projectNo
@@ -111,4 +111,7 @@ public interface DesignerOrderMapper {
     Integer selectProjectOrderCount(ProjectOrderVO projectOrderVO);
 
     List<ProjectOrderVO> selectProjectOrderByPage(ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize);
+
+    OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo, @Param("status") Integer status);
+
 }

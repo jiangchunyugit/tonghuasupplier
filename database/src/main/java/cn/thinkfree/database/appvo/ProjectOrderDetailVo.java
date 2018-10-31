@@ -25,11 +25,11 @@ public class ProjectOrderDetailVo {
     @ApiModelProperty(name = "orderType",value = "订单类型,1 设计订单, 2 施工订单")
     private Integer orderType;
     @ApiModelProperty(name = "type",value = "装修类型")
-    private Integer styleType;
+    private String styleType;
     @ApiModelProperty(name = "cancle",value = "能否取消")
     private Boolean cancle;
     @ApiModelProperty(name = "orderPlayVo",value = "展示信息")
     private OrderPlayVo orderPlayVo;
-    private List<FlexibleOrderPlayVo> flexibleOrderPlayVos;
+//    private List<FlexibleOrderPlayVo> flexibleOrderPlayVos;
 
 }

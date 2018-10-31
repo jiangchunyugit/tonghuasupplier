@@ -585,76 +585,6 @@ public class DesignerOrderExample {
             return (Criteria) this;
         }
 
-        public Criteria andStyleTypeIsNull() {
-            addCriterion("style_type is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeIsNotNull() {
-            addCriterion("style_type is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeEqualTo(String value) {
-            addCriterion("style_type =", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeNotEqualTo(String value) {
-            addCriterion("style_type <>", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeGreaterThan(String value) {
-            addCriterion("style_type >", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeGreaterThanOrEqualTo(String value) {
-            addCriterion("style_type >=", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeLessThan(String value) {
-            addCriterion("style_type <", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeLessThanOrEqualTo(String value) {
-            addCriterion("style_type <=", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeLike(String value) {
-            addCriterion("style_type like", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeNotLike(String value) {
-            addCriterion("style_type not like", value, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeIn(List<String> values) {
-            addCriterion("style_type in", values, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeNotIn(List<String> values) {
-            addCriterion("style_type not in", values, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeBetween(String value1, String value2) {
-            addCriterion("style_type between", value1, value2, "styleType");
-            return (Criteria) this;
-        }
-
-        public Criteria andStyleTypeNotBetween(String value1, String value2) {
-            addCriterion("style_type not between", value1, value2, "styleType");
-            return (Criteria) this;
-        }
-
         public Criteria andOrderStageIsNull() {
             addCriterion("order_stage is null");
             return (Criteria) this;
@@ -1282,6 +1212,76 @@ public class DesignerOrderExample {
 
         public Criteria andContractTypeNotBetween(Integer value1, Integer value2) {
             addCriterion("contract_type not between", value1, value2, "contractType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeIsNull() {
+            addCriterion("style_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeIsNotNull() {
+            addCriterion("style_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeEqualTo(String value) {
+            addCriterion("style_type =", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeNotEqualTo(String value) {
+            addCriterion("style_type <>", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeGreaterThan(String value) {
+            addCriterion("style_type >", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("style_type >=", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeLessThan(String value) {
+            addCriterion("style_type <", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeLessThanOrEqualTo(String value) {
+            addCriterion("style_type <=", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeLike(String value) {
+            addCriterion("style_type like", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeNotLike(String value) {
+            addCriterion("style_type not like", value, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeIn(List<String> values) {
+            addCriterion("style_type in", values, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeNotIn(List<String> values) {
+            addCriterion("style_type not in", values, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeBetween(String value1, String value2) {
+            addCriterion("style_type between", value1, value2, "styleType");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleTypeNotBetween(String value1, String value2) {
+            addCriterion("style_type not between", value1, value2, "styleType");
             return (Criteria) this;
         }
     }

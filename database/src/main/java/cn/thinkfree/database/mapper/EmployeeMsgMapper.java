@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.EmployeeMsgExample;
 import java.util.List;
@@ -93,4 +94,13 @@ public interface EmployeeMsgMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(EmployeeMsg record);
+
+    /**
+     * 根据人员id查询人员信息
+     * @param userId
+     * @return
+     */
+    PersionVo selectByUserId(@Param("userId") String userId);
+
+    List<PersionVo> selectAllByUserId(@Param("userId") String userId);
 }
