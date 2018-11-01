@@ -39,6 +39,15 @@ public class ConstructionStateController extends AbsBaseController {
         return constructionStateService.getConstructionState(projectNo,role);
     }
 
+    @ApiOperation("状态变更权限接口")
+    @MyRespBody
+    @RequestMapping(value = "isState", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<String> queryIsState(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
+                                                          @RequestParam @ApiParam(value = "操作角色",required = true) String role) {
+
+        return constructionStateService.queryIsState(projectNo,role);
+    }
+
     @ApiOperation("修改状态接口")
     @MyRespBody
     @RequestMapping(value = "updateState", method = {RequestMethod.POST, RequestMethod.GET})
