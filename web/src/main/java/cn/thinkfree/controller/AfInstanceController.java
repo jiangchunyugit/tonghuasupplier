@@ -47,7 +47,7 @@ public class AfInstanceController extends AbsBaseController {
                                                   @RequestParam(name = "configNo") String configNo,
                                                   @RequestParam(name = "projectNo") String projectNo,
                                                   @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.start(projectNo, userId, configNo, scheduleSort));
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.Mstart(projectNo, userId, configNo, scheduleSort));
     }
 
     @RequestMapping(value = "/submitStart", method = RequestMethod.POST)
@@ -67,7 +67,7 @@ public class AfInstanceController extends AbsBaseController {
                                     @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort,
                                     @RequestParam(name = "data", required = false) String data,
                                     @RequestParam(name = "remark", required = false) String remark){
-        instanceService.submitStart(projectNo, userId, configNo, scheduleSort, data, remark);
+        instanceService.MsubmitStart(projectNo, userId, configNo, scheduleSort, data, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 
@@ -79,7 +79,7 @@ public class AfInstanceController extends AbsBaseController {
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true)
     })
     public MyRespBundle<AfInstanceDetailVO> detail(@RequestParam(name = "instanceNo") String instanceNo, @RequestParam(name = "userId") String userId){
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.detail(instanceNo, userId));
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.Mdetail(instanceNo, userId));
     }
 
     @RequestMapping(value = "/approval", method = RequestMethod.POST)
@@ -95,7 +95,7 @@ public class AfInstanceController extends AbsBaseController {
                                  @RequestParam(name = "userId") String userId,
                                  @RequestParam(name = "option") Integer option,
                                  @RequestParam(name = "remark", required = false) String remark){
-        instanceService.approval(instanceNo, userId, option, remark);
+        instanceService.Mapproval(instanceNo, userId, option, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 
@@ -112,6 +112,6 @@ public class AfInstanceController extends AbsBaseController {
                                                @RequestParam(name = "projectNo") String projectNo,
                                                @RequestParam(name = "approvalType") String approvalType,
                                                @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.list(userId, projectNo, approvalType, scheduleSort));
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.Mlist(userId, projectNo, approvalType, scheduleSort));
     }
 }

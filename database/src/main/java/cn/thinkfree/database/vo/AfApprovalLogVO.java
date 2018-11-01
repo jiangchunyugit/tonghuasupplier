@@ -24,10 +24,14 @@ public class AfApprovalLogVO {
     private String roleId;
     @ApiModelProperty("用户角色名称")
     private String roleName;
+    @ApiModelProperty("用户头像")
+    private String headPortrait;
     @ApiModelProperty("审批时间")
     private Date approvalTime;
     @ApiModelProperty("是否审批过")
     private Boolean isApproval;
+    @ApiModelProperty("等待审批提示")
+    private String waitTip;
     @ApiModelProperty("备注")
     private String remark;
 }
