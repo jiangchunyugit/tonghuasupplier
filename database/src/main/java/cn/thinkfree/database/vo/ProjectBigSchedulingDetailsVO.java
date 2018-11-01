@@ -47,6 +47,16 @@ public class ProjectBigSchedulingDetailsVO {
     private Date planEndTime;
 
     /**
+     *   实际开始时间
+     */
+    private Date actualSatrtTime;
+
+    /**
+     *   实际结束时间
+     */
+    private Date actualEndTime;
+
+    /**
      *   状态(1-正常，2-失效，3-冻结)
      */
     private Integer status;
@@ -108,5 +118,21 @@ public class ProjectBigSchedulingDetailsVO {
      * 完成度
      */
     private Integer percentage;
+    /**
+     * 是否高亮
+     */
+    private Boolean highlight=false;
+    /**
+     * 是否支付
+     */
+    private Boolean pay;
+    /**
+     * 文字详情
+     */
+    private String detail;
+    /**
+     * 图片详情
+     */
+    private String imgUrl;
 
 }

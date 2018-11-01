@@ -61,7 +61,7 @@ public class BaseToVoUtils {
                 try {
                     field1 = object1.getClass().getDeclaredField(field.getName());
                 } catch (NoSuchFieldException e) {
-                    e.printStackTrace();
+                    System.out.println("字段未匹配:"+field.getName());
                     continue;
                 } catch (SecurityException e) {
                     e.printStackTrace();
