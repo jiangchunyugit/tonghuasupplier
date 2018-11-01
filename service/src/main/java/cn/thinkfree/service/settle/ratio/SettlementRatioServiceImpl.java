@@ -51,15 +51,19 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		if(!StringUtils.isBlank(ratio.getRatioNumber())){
 			example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%");	
 		}
-		else if(!StringUtils.isBlank(ratio.getRatioName())){
+		if(!StringUtils.isBlank(ratio.getRatioName())){
 			example.createCriteria().andFeeNameLike("%"+ratio.getRatioName()+"%");
-		}else if(!StringUtils.isBlank(ratio.getCreateUser())){
+		}
+		if(!StringUtils.isBlank(ratio.getCreateUser())){
 			example.createCriteria().andCreateUserLike("%"+ratio.getCreateUser()+"%");
-		}else if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
+		}
+		if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
 			example.createCriteria().andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
-		}else if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
+		}
+		if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
 			example.createCriteria().andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
-		}else if(!StringUtils.isBlank(ratio.getAuditStatus())){
+		}
+		if(!StringUtils.isBlank(ratio.getAuditStatus())){
 			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
 		}
 		if(!StringUtils.isBlank(ratio.getRatioStatus())){
@@ -151,8 +155,8 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 
 	@Override
 	public boolean insertOrupdateSettlementRatio(SettlementRatioInfo settlementRatioSEO) {
-		
-	
+
+
 		int flag = 0;
 		if (settlementRatioSEO != null) {
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
