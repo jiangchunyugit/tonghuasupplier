@@ -85,7 +85,11 @@
     <artifactId>itextpdf</artifactId>
     <version>5.5.10</version>
 </dependency>
-
+<dependency>
+     <groupId>org.xhtmlrenderer</groupId>
+     <artifactId>core-renderer</artifactId>
+     <version>R8</version>
+ </dependency>
 <!-- https://mvnrepository.com/artifact/com.itextpdf/font-asian -->
 <dependency>
     <groupId>com.itextpdf</groupId>
@@ -99,6 +103,12 @@
     <artifactId>itext-asian</artifactId>
     <version>5.2.0</version>
 </dependency>
+ <dependency>
+<groupId>com.itextpdf.tool</groupId>
+<artifactId>xmlworker</artifactId>
+<version>5.5.8</version>
+</dependency>
+
 <!--pdf end-->
 
 
@@ -138,14 +148,14 @@
       <activeByDefault>true</activeByDefault>
     </activation>
     <properties>
-      <pom.office.home>C:/Program Files (x86)/LibreOffice/program</pom.office.home>
+      <pom.office.home>C:/Program Files (x86)/LibreOffice</pom.office.home>
     </properties>
   </profile>
   <profile>
     <!-- linux环境 -->
     <id>linux</id>
     <properties>
-      <pom.office.home>/opt/libreoffice6.0</pom.office.home>
+      <pom.office.home>/opt/libreoffice6.1</pom.office.home>
     </properties>
   </profile>
 </profiles>

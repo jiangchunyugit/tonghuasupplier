@@ -105,27 +105,35 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
         //添加列
         List<List<Object>> rows = new ArrayList<>();
         List<Object> row = null;
-        PageHelper.startPage(ratio.getPage(),ratio.getRows());
-        SettlementRatioInfoExample example = new SettlementRatioInfoExample();
-		example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%")
-		.andFeeNameLike("%"+ratio.getRatioName()+"%")
-		.andCreateUserLike("%"+ratio.getCreateUser()+"%")
-		.andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime())
-		.andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime())
-		.andStatusEqualTo(ratio.getAuditStatus());
-		if(!StringUtils.isEmpty(ratio.getRatioStatus())){
+		PageHelper.startPage(ratio.getPage(), ratio.getRows());
+		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
+		if(!StringUtils.isBlank(ratio.getRatioNumber())){
+			example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%");
+		}
+		else if(!StringUtils.isBlank(ratio.getRatioName())){
+			example.createCriteria().andFeeNameLike("%"+ratio.getRatioName()+"%");
+		}else if(!StringUtils.isBlank(ratio.getCreateUser())){
+			example.createCriteria().andCreateUserLike("%"+ratio.getCreateUser()+"%");
+		}else if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
+			example.createCriteria().andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
+		}else if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
+			example.createCriteria().andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
+		}else if(!StringUtils.isBlank(ratio.getAuditStatus())){
+			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
+		}
+		if(!StringUtils.isBlank(ratio.getRatioStatus())){
 			if(ratio.getRatioStatus().equals("0")){//0生效 1失效 2作废 3未生效
 				example.createCriteria()
-				.andEffectStartTimeGreaterThanOrEqualTo(new Date())
-				.andEffectEndTimeLessThanOrEqualTo(new Date());
+						.andEffectStartTimeGreaterThanOrEqualTo(new Date())
+						.andEffectEndTimeLessThanOrEqualTo(new Date());
 			}else if(ratio.getRatioStatus().equals("1")){
-				 example.createCriteria()
-				.andEffectStartTimeLessThan(new Date())
-				.andEffectEndTimeGreaterThan(new Date());
+				example.createCriteria()
+						.andEffectStartTimeLessThan(new Date())
+						.andEffectEndTimeGreaterThan(new Date());
 			}else if(ratio.getRatioStatus().equals("2")){
-				 example.createCriteria().andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
+				example.createCriteria().andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
 			}else if(ratio.getRatioStatus().equals("3")){
-				 example.createCriteria().andStatusEqualTo(SettlementStatus.AuditWait.getCode());
+				example.createCriteria().andStatusEqualTo(SettlementStatus.AuditWait.getCode());
 			}
 		}
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
