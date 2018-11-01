@@ -359,6 +359,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             getInstances(instanceVOs, AfConfigs.PROBLEM_RECTIFICATION.configNo, userId, projectNo);
             // 问题整改：整改完成
             getInstances(instanceVOs, AfConfigs.RECTIFICATION_COMPLETE.configNo, userId, projectNo);
+
+            getStartMenus(startMenus, userId, projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo);
         } else if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
             // 施工变更：变更单
             getInstances(instanceVOs, AfConfigs.CHANGE_ORDER.configNo, userId, projectNo);
@@ -371,6 +373,34 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceListVO.setInstances(instanceVOs);
         instanceListVO.setStartMenus(startMenus);
         return instanceListVO;
+    }
+
+    private void getStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo, String startConfigNo, String completeConfigNo) {
+        boolean projectComplete = projectComplete(projectNo);
+        if (!projectComplete) {
+            // 发起菜单
+            addStartMenu(startMenus, projectNo, startConfigNo, userId);
+            List<AfInstance> startInstances = findByConfigNoAndProjectNo(startConfigNo, projectNo);
+            List<AfInstance> completeInstances = findByConfigNoAndProjectNo(completeConfigNo, projectNo);
+            int startCount = getSuccessCount(startInstances);
+            int completeCount = getStartAndSuccessCount(completeInstances);
+            if (startCount > completeCount) {
+                // 发起完成菜单
+                addStartMenu(startMenus, projectNo, completeConfigNo, userId);
+            }
+        }
+    }
+
+    private void addStartMenu(List<AfStartMenuVO> startMenus, String projectNo, String configNo, String userId) {
+        AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+        if (approvalOrder != null) {
+            AfStartMenuVO startMenuVO = createStartMenu(configNo);
+            startMenus.add(startMenuVO);
+        }
+    }
+
+    private boolean projectComplete(String projectNo) {
+        return false;
     }
 
     private void getStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo, Integer scheduleSort) {
@@ -390,27 +420,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 int checkApplicationCount = getSuccessCount(checkApplicationInstances);
                 int checkReportCount = getStartAndSuccessCount(checkReportInstances);
                 // 发起验收申请菜单
-                AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.CHECK_APPLICATION.configNo, userId);
-                if (approvalOrder != null) {
-                    AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
-                    startMenus.add(startMenuVO);
-                }
+                addStartMenu(startMenus, projectNo, AfConfigs.CHECK_APPLICATION.configNo, userId);
+
                 if (checkApplicationCount > checkReportCount) {
                     // 如果验收申请数量大于验收报告数量，发起验收报告菜单
-                    approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.CHECK_REPORT.configNo, userId);
-                    if (approvalOrder != null) {
-                        AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
-                        startMenus.add(startMenuVO);
-                    }
+                    addStartMenu(startMenus, projectNo, AfConfigs.START_APPLICATION.configNo, userId);
+
                 }
                 if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
                     if (checkApplicationCount == checkReportCount) {
                         // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
-                        approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
-                        if (approvalOrder != null) {
-                            AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
-                            startMenus.add(startMenuVO);
-                        }
+                        addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
                     }
                 }
             }
@@ -443,11 +463,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (preStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
             int status = getInstanceStatus(configNo, projectNo, scheduleSort);
             if (status == 0 || status == AfConstants.APPROVAL_STATUS_FAIL) {
-                AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
-                if (approvalOrder != null) {
-                    AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
-                    startMenus.add(startMenuVO);
-                }
+                addStartMenu(startMenus, projectNo, configNo, userId);
             }
         }
     }
@@ -461,19 +477,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private void getStartStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo) {
         int startApplicationStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
         if (startApplicationStatus == 0 || startApplicationStatus == AfConstants.APPROVAL_STATUS_FAIL) {
-            AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.START_APPLICATION.configNo, userId);
-            if (approvalOrder != null) {
-                AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
-                startMenus.add(startMenuVO);
-            }
+            addStartMenu(startMenus, projectNo, AfConfigs.START_APPLICATION.configNo, userId);
         } else if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS ) {
             int startReportStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
             if (startReportStatus == 0 || startReportStatus == AfConstants.APPROVAL_STATUS_FAIL ) {
-                AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.START_REPORT.configNo, userId);
-                if (approvalOrder != null) {
-                    AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_REPORT.configNo);
-                    startMenus.add(startMenuVO);
-                }
+                addStartMenu(startMenus, projectNo, AfConfigs.START_REPORT.configNo, userId);
             }
         }
     }
