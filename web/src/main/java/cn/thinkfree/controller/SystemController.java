@@ -4,9 +4,11 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.database.vo.ActivationCodeVO;
 import cn.thinkfree.database.vo.IndexMenuVO;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.designer.service.HomeStylerService;
@@ -14,8 +16,11 @@ import cn.thinkfree.service.designer.vo.HomeStyler;
 import cn.thinkfree.service.designer.vo.HomeStylerVO;
 import cn.thinkfree.service.index.IndexService;
 import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.user.UserService;
 import cn.thinkfree.service.utils.ActivationCodeHelper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -30,7 +35,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Api(description = "系统相关操作")
@@ -43,6 +50,9 @@ public class SystemController extends AbsBaseController {
 
     @Autowired
     RedisService redisService;
+
+    @Autowired
+    UserService userService;
 
 
     /**
@@ -66,6 +76,11 @@ public class SystemController extends AbsBaseController {
      */
     @PostMapping("/validateCode")
     @MyRespBody
+    @ApiOperation(value="验证激活码是否有效", notes="验证激活码是否有效,返回:验证成功!\n\r验证失败!")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "email", value = "手机号,邮箱等", required = true, dataType = "String"),
+            @ApiImplicitParam(paramType="query", name = "code", value = "激活码", required = true, dataType = "String")
+    })
     public MyRespBundle<String> validateCode(String email,String code){
         String mes = redisService.validate(email,code);
         return sendSuccessMessage(mes);
@@ -77,6 +92,10 @@ public class SystemController extends AbsBaseController {
      */
     @GetMapping("/validateCode")
     @MyRespBody
+    @ApiOperation(value="获取激活码", notes="获取激活码,返回激活码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "key", value = "手机号,邮箱等", required = true, dataType = "String"),
+    })
     public MyRespBundle<String> validateCode(String key){
         try {
             String code = redisService.saveVerificationCode(key);
@@ -91,6 +110,7 @@ public class SystemController extends AbsBaseController {
      * @return
      */
     @GetMapping("/valicode")
+    @ApiOperation(value="验证码", notes="获取验证码")
     public ResponseEntity<byte[]> valicode() throws IOException {
         String randomCode = ActivationCodeHelper.ActivationCode.Mix.code.get();
         byte[] body = createImage(randomCode);
@@ -105,16 +125,32 @@ public class SystemController extends AbsBaseController {
 
 
     /**
-     *  简易验证码
+     *  base64格式验证码
      * @return
      */
     @GetMapping("/validateCodeBody")
+    @MyRespBody
+    @ApiOperation(value="获取验证码和验证码图片", notes="获取验证码和图片")
     public MyRespBundle<ActivationCodeVO>  validateCodeBody() throws IOException {
         String randomCode = ActivationCodeHelper.ActivationCode.Mix.code.get();
         byte[] body = createImage(randomCode);
         String base64 =new BASE64Encoder().encode(body);
         return sendJsonData(ResultMessage.SUCCESS,new ActivationCodeVO(randomCode,base64.replace("\r\n","")));
     }
+
+    @GetMapping("/whoami")
+    @MyRespBody
+    public MyRespBundle<Map<String,String>> whoami(){
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        Map<String,String> result = new HashMap<>(20);
+        result.put("userName",userVO.getUserRegister().getPhone());
+        result.put("companyName",userVO.getCompanyName());
+        result.put("face",userVO.getUserRegister().getHeadPortraits());
+        result.put("name",userVO.getName());
+        result.put("first",userService.isFirstLogin());
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
 
     /**
      * 生成图片

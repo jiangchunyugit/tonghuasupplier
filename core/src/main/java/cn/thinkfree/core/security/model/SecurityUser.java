@@ -18,5 +18,7 @@ public abstract class SecurityUser extends BaseModel implements UserDetails {
 
     public abstract Date getCreateTime();
 
+    public abstract Short getType();
+
 }
 

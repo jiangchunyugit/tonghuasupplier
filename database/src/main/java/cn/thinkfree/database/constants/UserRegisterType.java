@@ -1,4 +1,4 @@
-package cn.thinkfree.service.constants;
+package cn.thinkfree.database.constants;
 
 /**
  * 请务必按照序号排放

@@ -4,6 +4,7 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.model.*;
 import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
@@ -175,6 +176,11 @@ public class UserVO extends SecurityUser {
     @Override
     public Date getCreateTime() {
         return pcUserInfo.getCreateTime();
+    }
+
+    @Override
+    public Short getType() {
+        return UserRegisterType.Platform.shortVal();
     }
 
 

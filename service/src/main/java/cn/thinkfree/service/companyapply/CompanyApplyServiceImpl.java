@@ -1,7 +1,6 @@
 package cn.thinkfree.service.companyapply;
 
 import cn.thinkfree.core.constants.SysConstants;
-import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
@@ -15,9 +14,8 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.CompanyConstants;
-import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
-import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
