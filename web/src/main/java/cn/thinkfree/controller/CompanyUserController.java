@@ -58,7 +58,7 @@ public class CompanyUserController extends AbsBaseController{
     @MyRespBody
     public MyRespBundle<String> insertInfo(@ApiParam("添加/修改用户信息")CompanyUserVo companyUser){
 
-        boolean  falg = companyInfoService.inserOrUpdateCompanyUser(companyUser);
+        boolean  falg = companyInfoService.insertOrUpdateCompanyUser(companyUser);
 
         return sendJsonData(ResultMessage.SUCCESS,falg);
     }

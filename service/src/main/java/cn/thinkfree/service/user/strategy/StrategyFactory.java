@@ -1,7 +1,7 @@
 package cn.thinkfree.service.user.strategy;
 
 import cn.thinkfree.database.constants.UserLevel;
-import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.user.strategy.build.PlatformUserBuildStrategy;
 import cn.thinkfree.service.user.strategy.relation.*;
 import cn.thinkfree.service.user.strategy.build.EnterpriseUserBuildStrategy;

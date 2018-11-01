@@ -1,20 +1,20 @@
 package cn.thinkfree.service.user.strategy.build;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.model.SecurityUser;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.PcUserInfoMapper;
-import cn.thinkfree.database.mapper.PcUserResourceMapper;
-import cn.thinkfree.database.mapper.SystemResourceMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.user.strategy.StrategyFactory;
 import cn.thinkfree.service.utils.ThreadLocalHolder;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import java.security.Permission;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,6 +36,12 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
     CompanyInfoMapper companyInfoMapper;
     @Autowired
     StrategyFactory strategyFactory;
+    @Autowired
+    SystemPermissionMapper systemPermissionMapper;
+    @Autowired
+    SystemPermissionResourceMapper systemPermissionResourceMapper;
+    @Autowired
+    SystemRoleMapper systemRoleMapper;
 
 
     /**
@@ -80,20 +86,34 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
      */
     private void completionUserRole(UserVO userVO, String userID) {
         printDebugMes("拼接用户权限");
-        PcUserResourceExample pcUserResourceExample = new PcUserResourceExample();
-        pcUserResourceExample.createCriteria().andUserIdEqualTo(userID);
-        List<PcUserResource> pus = pcUserResourceMapper.selectByExample(pcUserResourceExample);
-        if(pus.isEmpty()){
-            printErrorMes("用户无权限");
-            userVO.setResources(Collections.emptyList());
-        }else{
-            SystemResourceExample systemResourceExample = new SystemResourceExample();
-            systemResourceExample.createCriteria().andIdIn(
-                    pus.stream()
-                            .map(PcUserResource::getResourceId).collect(Collectors.toList())
-            );
-            userVO.setResources(systemResourceMapper.selectByExample(systemResourceExample));
+
+        List<SystemRole> userRoles = systemRoleMapper.selectEffectiveRoleByUserID(userID);
+        if(userRoles.isEmpty()){
+            userVO.setResources(Collections.EMPTY_LIST);
+            return;
         }
+        List<SystemPermission>  rolePermissions = systemPermissionMapper.selectEffectivePermission(userRoles.stream()
+                                                                                            .map(SystemRole::getId)
+                                                                                            .collect(Collectors.toList()));
+        if(rolePermissions.isEmpty()){
+            userVO.setResources(Collections.EMPTY_LIST);
+            return;
+        }
+
+        SystemPermissionResourceExample permissionResourceCondition = new SystemPermissionResourceExample();
+        permissionResourceCondition.createCriteria()
+                .andPermissionIdIn(rolePermissions.stream().map(SystemPermission::getId).collect(Collectors.toList()));
+        List<SystemPermissionResource> permissionResources = systemPermissionResourceMapper.selectByExample(permissionResourceCondition);
+        if(permissionResources.isEmpty()){
+            userVO.setResources(Collections.EMPTY_LIST);
+            return;
+        }
+
+        SystemResourceExample resourceCondition = new SystemResourceExample();
+        resourceCondition.createCriteria().andPlatformEqualTo(SysConstants.PlatformType.Platform.code)
+                .andIdIn(permissionResources.stream().map(SystemPermissionResource::getResourceId).collect(Collectors.toList()));
+        List<SystemResource> resources = systemResourceMapper.selectByExample(resourceCondition);
+        userVO.setResources(resources);
     }
 
     /**
@@ -106,18 +126,17 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         printDebugMes("获取到用户账号信息:{},准备获取用户详情信息",userID);
         PcUserInfoExample pcUserInfoExample = new PcUserInfoExample();
         pcUserInfoExample.createCriteria().andIdEqualTo(userID);
-        List<PcUserInfo> pcUserInfos = pcUserInfoMapper.selectByExample(pcUserInfoExample);
-        if(pcUserInfos.isEmpty() || pcUserInfos.size() > 1){
+        List<PcUserInfo> users = pcUserInfoMapper.selectByExample(pcUserInfoExample);
+        if(users.isEmpty() || users.size() > 1){
             throw  new UsernameNotFoundException("用户详情信息错误");
         }
-        PcUserInfo pcUserInfo = pcUserInfos.get(0);
+        PcUserInfo pcUserInfo = users.get(0);
         userVO.setPcUserInfo(pcUserInfo);
+
         userVO.setRelationMap(strategyFactory.getStrategy(userVO.getPcUserInfo().getLevel()).build(userVO));
 
-
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        // TODO 公司信息
-//        companyInfoExample.createCriteria().andCompanyIdEqualTo(userVO.getPcUserInfo().getCompanyId());
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId());
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
         if(companyInfos.isEmpty() || companyInfos.size() >1){
             throw  new UsernameNotFoundException("用户企业信息异常");

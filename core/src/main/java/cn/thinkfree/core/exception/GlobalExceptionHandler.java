@@ -86,8 +86,9 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
     }
 
 	private void responseHandler(HttpServletResponse response, HttpStatus status){
-		if(response != null)
-			response.setStatus(status.value());
+		if(response != null) response.setStatus(HttpStatus.OK.value());
+//			response.setStatus(status.value());
+
 	}
 
 	private MyRespBundle<String> buildErrorInfo(HttpStatus code, ValidationException e, HttpServletRequest req){

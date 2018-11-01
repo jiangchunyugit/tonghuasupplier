@@ -30,4 +30,18 @@
       where pc_system_resource.platform = 1
   </select>
 
+    <select id="selectEnterPriseResourceForAuthorize" parameterType="java.lang.Integer" resultMap="SystemResourceTreeVO">
+        SELECT
+        decode(pc_company_role_resource.id,null,0,1) as isAuth,
+        <include refid="MyColumnList">
+            <property name="alias" value="pc_system_resource"/>
+        </include>
+        FROM
+        pc_system_resource pc_system_resource
+        LEFT OUTER JOIN pc_company_role_resource pc_company_role_resource ON pc_system_resource.id = pc_company_role_resource.resource_id
+        AND pc_company_role_resource.role_id = #{id}
+        WHERE pc_system_resource.platform = 2
+
+    </select>
+
 </mapper>

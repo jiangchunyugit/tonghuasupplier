@@ -13,4 +13,10 @@ public interface SystemResourceService {
     List<SystemResource> listResourceByPermissionID(Integer id);
 
 
+    /**
+     * 查询当前企业角色资源状况
+     * @param id
+     * @return
+     */
+    List<SystemResource> listResourceByEnterPriseRoleID(Integer id);
 }

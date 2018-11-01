@@ -100,7 +100,7 @@ public class BusinessEntityController extends AbsBaseController{
     /**
      * 经营主体
      */
-    @DeleteMapping(value = "/businessEntityDelete")
+    @PostMapping(value = "/businessEntityDelete")
     @MyRespBody
     @ApiOperation(value="经营主体管理：删除")
     public MyRespBundle<String> businessEntityDelete(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){

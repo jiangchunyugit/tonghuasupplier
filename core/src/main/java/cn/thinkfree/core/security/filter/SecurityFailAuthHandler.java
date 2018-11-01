@@ -25,13 +25,13 @@ public class SecurityFailAuthHandler extends SimpleUrlAuthenticationFailureHandl
 
         MyRespBundle<String> result = new MyRespBundle<>();
         result.setData("登录失败!");
-        result.setCode(HttpStatus.BAD_REQUEST.value());
+        result.setCode(HttpStatus.OK.value());
         result.setMessage("登录失败!");
         result.setTimestamp(Instant.now().toEpochMilli());
 
         response.setHeader("Access-Control-Allow-Origin","*");
         response.setHeader("Content-Type","application/json; charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write(new Gson().toJson(result));
     }
 }

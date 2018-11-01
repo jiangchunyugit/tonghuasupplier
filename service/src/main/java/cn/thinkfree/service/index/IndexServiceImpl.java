@@ -52,23 +52,22 @@ public class IndexServiceImpl implements IndexService  {
     @Override
     public List<IndexMenuVO> listIndexMenu() {
 
-        UserVO userVO= (UserVO) SessionUserDetailsUtil.getUserDetails();
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         if(userVO.getResources() == null || userVO.getResources().isEmpty()){
             return Collections.emptyList();
         }
 
-        List<String> resouceCode = userVO.getResources().stream().map(SystemResource::getCode).collect(Collectors.toList());
-        if(resouceCode.isEmpty()){
+        List<String> resourceCode = userVO.getResources().stream().map(SystemResource::getCode).collect(Collectors.toList());
+        if(resourceCode.isEmpty()){
             return Collections.EMPTY_LIST;
         }
         MenuExample menuExample = new MenuExample();
         menuExample.setOrderByClause(" sort_num ");
         menuExample.createCriteria().
-                andResourceCodeIn(resouceCode);
+                andResourceCodeIn(resourceCode);
 
         List<Menu> menus = menuMapper.selectByExample(menuExample);
-        System.out.println(menus);
         return convertMenus(menus);
     }
 

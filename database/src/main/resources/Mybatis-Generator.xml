@@ -51,6 +51,8 @@
         <!--</javaClientGenerator>-->
         <!-- 表-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
+        <!--<table tableName="province" domainObjectName="Province" />-->
+        <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
         <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->
@@ -94,6 +96,8 @@
         <!--<table tableName="pc_system_role" domainObjectName="SystemRole"/>-->
         <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
+        <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
+        <table tableName="user_role_set" domainObjectName="UserRoleSet" />
         <!-- 权限相关 E-->
         <table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo" />
         <table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo" />

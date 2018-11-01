@@ -121,7 +121,7 @@ public class BranchCompanyController extends AbsBaseController{
     /**
      * 分公司
      */
-    @DeleteMapping(value = "/branchCompanyDelete")
+    @PostMapping(value = "/branchCompanyDelete")
     @MyRespBody
     @ApiOperation(value="分公司管理：删除")
     public MyRespBundle<String> branchCompanyDelete(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
