@@ -246,6 +246,29 @@ public class DateUtil {
         return null;
     }
 
+    /**
+     * 返回两个时间相差的天数
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentDaysByMillisecond(Date date1,Date date2)
+    {
+        return (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
+    }
+
+    /**
+     * 返回两个时间在除去天数的基础上相差的天数
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static int differentHoursByMillisecond(Date date1,Date date2)
+    {
+        return (int) (((date2.getTime() - date1.getTime()) % (1000*3600*24)) / (1000*3600));
+    }
+
+
     public static void main(String[] args) {
         Date date1 = formateToDate("2018-08-09 00:00:00", FORMAT);
         Date date2 = formateToDate("2018-08-11 00:00:00", FORMAT);

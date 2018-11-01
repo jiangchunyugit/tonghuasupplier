@@ -2,9 +2,7 @@ package cn.thinkfree.service.construction;
 
 
 import cn.thinkfree.core.base.AbsBaseController;
-import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
@@ -65,5 +63,6 @@ public class CommonService extends AbsBaseController {
             return false;
         }
     }
+
 
 }

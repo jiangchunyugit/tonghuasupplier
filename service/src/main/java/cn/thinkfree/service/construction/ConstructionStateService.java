@@ -24,7 +24,7 @@ public interface ConstructionStateService {
      * @param role
      * @return
      */
-    MyRespBundle<Object> queryIsState(String projectNo, String role);
+    MyRespBundle<String> queryIsState(String projectNo, String role);
 
 
     /**

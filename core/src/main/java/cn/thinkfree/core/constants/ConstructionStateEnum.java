@@ -1,6 +1,8 @@
 package cn.thinkfree.core.constants;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 
 /**
@@ -24,40 +26,88 @@ public enum ConstructionStateEnum {
     /**
      * 设计师-将订单转入施工 - 创建
      */
-    STATE_500(500, new String[]{"designer"}, "订单转入施工", "待签约", "等待平台派单", "---", "---", 1, new Integer[]{510}),
+    STATE_500(500, new String[]{"designer"}, "订单转入施工", "待签约", "等待平台派单", "", "", 1),
 
     /**
      * 运营平台-派单给装饰公司 - 签约
      */
-    STATE_510(510, new String[]{"platform"}, "派单给装饰公司", "待签约", "等待公司派单", "等待公司派单", "---", 1, new Integer[]{520}),
+    STATE_510(510, new String[]{"platform-520-888","consumer-888"}, "派单给装饰公司", "待签约", "等待公司派单", "等待公司派单", "", 1),
 
     /**
      * 装饰公司-派单给服务人员 - 签约
      */
-    STATE_520(520, new String[]{"constructionCompany"}, "派单给服务人员", "待签约", "等待公司派单", "等待公司派单", "---", 1, new Integer[]{530}),
+    STATE_520(520, new String[]{"constructionCompany-530-888","consumer-888"}, "派单给服务人员", "待签约", "等待报价", "等待公司派单", "", 1),
 
     /**
      * 装饰公司-施工报价完成- 签约
      */
-    STATE_530(530, new String[]{"constructionCompany"}, "施工报价完成", "待签约", "等待报价审核", "等待报价审核", "---", 1, new Integer[]{540}),
+    STATE_530(530, new String[]{"constructionCompany-540-888","consumer-888"}, "施工报价完成", "待签约", "等待报价审核", "等待报价审核", "", 1),
 
     /**
      * 装饰公司-审核完成- 签约
      */
-    STATE_540(540, new String[]{"constructionCompany"}, "审核完成", "待签约", "等待合同录入", "等待合同录入", "---", 1, new Integer[]{550}),
+    STATE_540(540, new String[]{"constructionCompany-550-888","consumer-888"}, "审核完成", "待签约", "等待合同录入", "等待合同录入", "", 1),
 
     /**
      * 装饰公司-合同录入- 签约
      */
-    STATE_550(550, new String[]{"constructionCompany"}, "合同录入", "待签约", "等待签约", "等待签约", "---", 1, new Integer[]{560}),
+    STATE_550(550, new String[]{"constructionCompany-560-888","consumer-888"}, "合同录入", "待签约", "等待签约", "等待签约", "", 1),
 
     /**
      * 装饰公司-确认线下签约完成（自动创建工地项目）- 签约
      */
-    STATE_560(560, new String[]{"constructionCompany"}, "确认线下签约完成(自动创建工地项目)", "待支付", "等待首付款支付", "等待首付款支付", "等待首付款支付", 1, new Integer[]{560}),
+    STATE_560(560, new String[]{"constructionCompany-600-888","consumer-888"}, "确认线下签约完成(自动创建工地项目)", "待支付", "等待首付款支付", "等待首付款支付", "等待首付款支付", 1),
 
-    //TODO  支付方式状态
 
+    /**
+     * 消费者- 首期款支付
+     */
+    STATE_600(600, new String[]{"consumer-605-720-888"}, "支付首期款", "待开工", "等待开工", "等待开工", "等待开工", 1),
+
+    /**
+     * 施工人员- 施工中
+     */
+    STATE_605(605, new String[]{"constructor-610"}, "开工报告", "施工中", "施工中", "施工中", "施工中", 0),
+
+    /* 阶段款支付 - 施工人员 验收 */
+    STATE_610(610, new String[]{"constructor"}, "阶段验收通过", "待支付", "等待阶段款支付", "等待阶段款支付", "等待阶段款支付", 0),
+
+    /* 施工中 - 消费者 支付  */
+    STATE_615(615, new String[]{"consumer-690"}, "支付阶段款", "施工中", "施工中", "施工中", "施工中", 0),
+
+    /**
+     * 施工人员- 尾款支付
+     */
+    STATE_690(690, new String[]{"constructor-700"}, "竣工验收通过", "待支付", "等待尾款支付", "等待尾款支付", "等待尾款支付", 0),
+
+    //TODO
+    /**
+     * 消费者- 订单完成
+     */
+    STATE_700(700, new String[]{"consumer"}, "支付尾款", "已完成", "已完成", "已完成", "已完成", 0),
+
+    //TODO
+    /**
+     *  消费者 签约阶段逆向
+     */
+    STATE_710(710, new String[]{"consumer"}, "取消订单", "等待处理——已关闭", "已关闭", "已关闭", "已关闭", 0),
+
+    /**
+     *  消费者 支付未开工逆向
+     */
+    STATE_720(720, new String[]{"consumer-730"}, "取消订单", "退款中", "退款待审核", "退款待审核", "退款待审核", 0),
+
+
+    /**
+     *  消费者 支付未开工逆向
+     */
+    STATE_730(730, new String[]{"constructionCompany-888"}, "支付尾款", "已完成", "已完成", "已完成", "已完成", 0),
+
+
+    /**
+     * 订单关闭 --
+     */
+    STATE_888(888, new String[]{"designer","platform","constructionCompany"}, "订单关闭", "订单关闭", "订单关闭", "订单关闭", "订单关闭", 1),
 
     ;
 
@@ -78,10 +128,8 @@ public enum ConstructionStateEnum {
     private String stateConstructor;
     // 是否自动可取消
     private int isCancel;
-    // 下一步状态
-    private Integer[] nextStates = new Integer[]{};
 
-    ConstructionStateEnum(int state, String[] operater, String operateInfo, String stateConsumer, String statePlatform, String stateConstructionCompany, String stateConstructor, int isCancel, Integer[] nextStates) {
+    ConstructionStateEnum(int state, String[] operater, String operateInfo, String stateConsumer, String statePlatform, String stateConstructionCompany, String stateConstructor, int isCancel) {
         this.state = state;
         this.operater = operater;
         this.operateInfo = operateInfo;
@@ -90,19 +138,30 @@ public enum ConstructionStateEnum {
         this.stateConstructionCompany = stateConstructionCompany;
         this.stateConstructor = stateConstructor;
         this.isCancel = isCancel;
-        this.nextStates = nextStates;
     }
 
     /**
-     *  下一步状态
+     * 下一步状态
+     *
      * @return
      */
-    public static List<Integer> getNextStates(int state) {
+    public static List<String> getNextStates(Integer state,String role) {
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
         for (ConstructionStateEnum constructionStateEnum : stateEnums) {
-            if (constructionStateEnum.state == state){
-                List<Integer> statesList = Arrays.asList(constructionStateEnum.nextStates);
-                return statesList;
+            if (constructionStateEnum.state == state) {
+                List<String> nextStatesList = new ArrayList<>();
+                for (String a1 : constructionStateEnum.operater){
+                    if (a1.contains(role)){
+                        String a2[] = a1.split("-");
+                        for (String a3:a2){
+                            if (a3.equals(role)){
+                                continue;
+                            }
+                            nextStatesList.add(a3);
+                        }
+                    }
+                }
+                return nextStatesList;
             }
         }
         return null;
@@ -117,32 +176,37 @@ public enum ConstructionStateEnum {
     public static List<Map<String, Object>> allStates(int type) {
         List<Map<String, Object>> listMap = new ArrayList<>();
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
-        List<String> stateNames = new ArrayList<>();
+
         for (ConstructionStateEnum constructionStateEnum : stateEnums) {
-            String stateName = null;
+            int stateCode = 0;
+            String stateInfo = "";
             switch (type) {
                 case 1:
-                    stateName = constructionStateEnum.statePlatform;
+                    stateCode = constructionStateEnum.state;
+                    stateInfo = constructionStateEnum.statePlatform;
+                    System.out.println("======"+constructionStateEnum.statePlatform);
                     break;
                 case 2:
-                    stateName = constructionStateEnum.stateConstructionCompany;
+                    stateCode = constructionStateEnum.state;
+                    stateInfo = constructionStateEnum.stateConstructionCompany;
                     break;
                 case 3:
-                    stateName = constructionStateEnum.stateConstructor;
+                    stateCode = constructionStateEnum.state;
+                    stateInfo = constructionStateEnum.stateConstructor;
                     break;
                 case 4:
-                    stateName = constructionStateEnum.stateConsumer;
+                    stateCode = constructionStateEnum.state;
+                    stateInfo = constructionStateEnum.stateConsumer;
                     break;
                 default:
                     break;
             }
-            if (stateName == null || stateNames.contains(stateName)) {
+            if (StringUtils.isBlank(stateInfo)){
                 continue;
             }
-            stateNames.add(stateName);
             Map<String, Object> map = new HashMap<>();
-            map.put("key", constructionStateEnum.state);
-            map.put("val", constructionStateEnum.statePlatform);
+            map.put("key", stateCode);
+            map.put("val", stateInfo);
             listMap.add(map);
         }
         return listMap;
@@ -214,7 +278,7 @@ public enum ConstructionStateEnum {
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
         for (ConstructionStateEnum constructionStateEnum : stateEnums) {
             List<String> operater = Arrays.asList(constructionStateEnum.operater);
-            if (operater.contains(role)){
+            if (operater.contains(role)) {
                 return true;
             }
         }

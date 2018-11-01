@@ -4,11 +4,8 @@ package cn.thinkfree.service.construction.impl;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.model.ConstructionOrder;
-import cn.thinkfree.database.model.ConstructionOrderExample;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.vo.ConstructionStateListVo;
@@ -18,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -60,11 +56,11 @@ public class ConstructionStateServiceImpl extends AbsBaseController implements C
 
         /* 查询下一个状态码 */
         ConstructionStateVo constructionStateVo = new ConstructionStateVo();
-        List<Integer> nextStateList = ConstructionStateEnum.getNextStates(stateCode);
-        for (Integer nextCode : nextStateList){
+        List<String> nextStateList = ConstructionStateEnum.getNextStates(stateCode,role);
+        for (String nextCode : nextStateList){
             ConstructionStateListVo constructionStateListVo = new ConstructionStateListVo();
-            constructionStateListVo.setStateCode(nextCode);
-            constructionStateListVo.setStateInfo(ConstructionStateEnum.queryStateByRole(nextCode, role));
+            constructionStateListVo.setStateCode(Integer.parseInt(nextCode));
+            constructionStateListVo.setStateInfo(ConstructionStateEnum.queryStateByRole(Integer.parseInt(nextCode), role));
             // 组装数据 下一个状态码&状态说明
             List<ConstructionStateListVo> list = new ArrayList<>();
             list.add(constructionStateListVo);
@@ -86,7 +82,7 @@ public class ConstructionStateServiceImpl extends AbsBaseController implements C
     * @return
      */
     @Override
-    public MyRespBundle<Object> queryIsState(String projectNo, String role) {
+    public MyRespBundle<String> queryIsState(String projectNo, String role) {
         if (StringUtils.isBlank(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号不能为空");
         }
@@ -123,7 +119,7 @@ public class ConstructionStateServiceImpl extends AbsBaseController implements C
         }
 
         /* 校验传入状态值-是否在下一步中存在 */
-        List<Integer> listCode = ConstructionStateEnum.getNextStates(commonService.queryStateCode(projectNo));
+        List<String> listCode = ConstructionStateEnum.getNextStates(commonService.queryStateCode(projectNo),role);
         if (!listCode.contains(stateCode)){
             return sendJsonData(ResultMessage.ERROR, "传入状态值不符");
         }
