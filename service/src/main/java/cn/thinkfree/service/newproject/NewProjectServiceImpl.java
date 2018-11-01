@@ -84,6 +84,12 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            //添加业主信息
+            PersionVo owner = new PersionVo();
+//            Map userName = newOrderUserService.getUserName(project.getOwnerId(),ProjectDataStatus.OWNER.getDescription() );//正式时打开
+            Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+            owner.setPhone(userName.get("phone").toString());
+            owner.setName(userName.get("nickName").toString());
             projectVoList.add(projectVo);
         }
         pageInfo.setList(projectVoList);

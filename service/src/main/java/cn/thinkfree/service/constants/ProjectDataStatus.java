@@ -75,7 +75,11 @@ public enum ProjectDataStatus {
     /**
      *设计公司
      */
-    PLAY_DESIGN_COMPANY(2,"设计公司");
+    PLAY_DESIGN_COMPANY(2,"设计公司"),
+    /**
+     * 业主
+     */
+    OWNER(1,"CC");
 
     private Integer value;
     private String description;

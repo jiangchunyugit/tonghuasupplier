@@ -8,6 +8,7 @@ import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.mapper.ProjectQuotationLogMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.utils.BaseToVoUtils;
@@ -79,6 +80,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             details.setIsNeedCheck(bigScheduling.getIsNeedCheck());
             details.setIsAdopt(Scheduling.CHECK_NO.getValue());
             details.setVersion(bigScheduling.getVersion());
+            details.setRenameBig(bigScheduling.getRename());
             if(bigSortSet.contains(bigScheduling.getSort())){
                 details.setPlanSatrtTime(bigStartTime);
                 details.setPlanEndTime(DateUtil.getDate(bigStartTime,bigScheduling.getWorkload()));
@@ -107,6 +109,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     public List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo) {
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo, Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
+
         return playBigList;
     }
 
@@ -158,11 +161,18 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     @Override
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(String projectNo) {
         ProjectBigSchedulingDetailsExample example = new ProjectBigSchedulingDetailsExample();
+        example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
+        for (int i=playBigList.size()-1;i>=0;i--){
+            if(playBigList.get(i).getIsCompleted().equals(ProjectDataStatus.CONFIRM.getValue())){
+                playBigList.get(i).setHighlight(true);
+                break;
+            }
+        }
         return RespData.success(playBigList);
     }
 
