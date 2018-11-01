@@ -7,7 +7,7 @@ package cn.thinkfree.core.constants;
  * @version 1.0
  * @date 2018/10/25 16:14
  */
-public enum AfConfig {
+public enum AfConfigs {
 
     START_APPLICATION("START_APPLICATION", "开工申请"),
     START_REPORT("START_REPORT", "开工报告"),
@@ -23,7 +23,7 @@ public enum AfConfig {
     public final String configNo;
     public final String name;
 
-    AfConfig(String configNo, String name){
+    AfConfigs(String configNo, String name){
         this.configNo = configNo;
         this.name = name;
     }

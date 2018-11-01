@@ -3,8 +3,8 @@ package cn.thinkfree.service.platform.designer;
 import cn.thinkfree.database.model.DesignerMsg;
 import cn.thinkfree.database.model.DesignerStyleConfig;
 import cn.thinkfree.database.model.EmployeeMsg;
-import cn.thinkfree.service.platform.designer.vo.DesignerMsgListVo;
-import cn.thinkfree.service.platform.designer.vo.PageVo;
+import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;

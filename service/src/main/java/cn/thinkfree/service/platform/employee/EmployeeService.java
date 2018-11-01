@@ -1,9 +1,7 @@
 package cn.thinkfree.service.platform.employee;
 
-import cn.thinkfree.database.model.Area;
-import cn.thinkfree.database.model.City;
-import cn.thinkfree.database.model.Province;
-import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 
 import java.util.List;
 
@@ -69,4 +67,11 @@ public interface EmployeeService {
      * @param companyId 公司ID
      */
     void setUserRole(String userId, String roleCode, String companyId);
+
+    /**
+     * 通过userId获取用户信息
+     * @param userId userId
+     * @return
+     */
+    EmployeeMsgVo employeeMsgById(String userId);
 }

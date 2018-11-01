@@ -107,6 +107,7 @@ public class ReflectUtils {
 		return mapT;
 	}
 
+
 	/**
 	 * 获取list对象中指定列数据
 	 * 

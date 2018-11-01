@@ -3,9 +3,8 @@ package cn.thinkfree.service.platform.designer;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
-import cn.thinkfree.service.platform.designer.vo.DesignerOrderVo;
-import cn.thinkfree.service.platform.designer.vo.PageVo;
-
+import cn.thinkfree.service.platform.vo.DesignerOrderVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -241,7 +240,7 @@ public interface DesignDispatchService {
      * @param fileName           excel文件名
      * @param response           返回数据对象
      */
-    void DesignerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+    void designerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
                           String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
                           String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 

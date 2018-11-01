@@ -1,7 +1,7 @@
 package cn.thinkfree.service.platform.designer;
 
 import cn.thinkfree.database.model.ReserveProject;
-import cn.thinkfree.service.platform.designer.vo.PageVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
 

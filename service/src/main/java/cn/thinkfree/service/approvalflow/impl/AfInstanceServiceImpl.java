@@ -1,8 +1,9 @@
 package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.base.MyLogger;
-import cn.thinkfree.core.constants.AfConfig;
+import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
+import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
@@ -10,6 +11,7 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.project.ProjectService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +53,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfConfigPlanService configPlanService;
 
     @Override
-    public AfInstanceDetailVO start(String projectNo, String userId, String configNo) {
+    public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
         AfInstanceDetailVO instanceDetailVO = new AfInstanceDetailVO();
         Project project = projectService.findByProjectNo(projectNo);
         if (project == null) {
@@ -63,10 +65,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         String customerName = getCustomerNameById(customerId);
 
         List<UserRoleSet> roles = roleService.findAll();
-
-        String planNo = getPlanNo();
-        String roleId = orderUserService.findRoleIdByOrderNoAndUserId(projectNo, userId);
-        List<UserRoleSet> approvalRoles = configService.findApprovalOrder(configNo, planNo, roleId, roles);
+        AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+        if (approvalOrder == null) {
+            // TODO
+            // 不具有审批资格
+        }
+        List<UserRoleSet> approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), roles);
+        if (approvalRoles == null) {
+            // TODO
+        }
 
         List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
@@ -91,7 +98,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 approvalLogVOs.add(approvalLogVO);
             }
         }
-
+        AfConfig config = configService.findByNo(configNo);
+        instanceDetailVO.setConfigNo(configNo);
+        instanceDetailVO.setConfigName(config.getName());
         instanceDetailVO.setProjectNo(projectNo);
         instanceDetailVO.setCustomerId(customerId);
         instanceDetailVO.setCustomerName(customerName);
@@ -109,29 +118,34 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private String getCustomerNameById(String customerId) {
-        // TODO
-        return "";
+        return getUserNameByUserIdAndRoleId(customerId, Role.CC.id);
     }
 
     @Override
-    public void submitStart(String projectNo, String userId, String planNo, Integer scheduleSort, String data, String remark) {
-        AfApprovalOrderVO approvalOrderVO = approvalOrderService.findByNo(planNo);
-        if (approvalOrderVO == null) {
+    public void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark) {
+
+        List<UserRoleSet> roles = roleService.findAll();
+        AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+        if (approvalOrder == null) {
+            // TODO
+            // 不具有审批资格
+        }
+        List<UserRoleSet> approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), roles);
+        if (approvalRoles == null || approvalRoles.size() < 1) {
             // TODO
         }
-        List<UserRoleSet> roles = approvalOrderVO.getRoles();
-        if (roles == null || roles.size() == 0) {
-            // TODO
-        }
-        List<AfApprovalLog> approvalLogs = new ArrayList<>(roles.size());
+        List<AfApprovalLog> approvalLogs = new ArrayList<>(approvalRoles.size());
         List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
-        for (UserRoleSet role : roles) {
+
+        String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
+        for (UserRoleSet role : approvalRoles) {
             AfApprovalLog approvalLog = null;
             for (OrderUser orderUser : orderUsers) {
                 if (role.getRoleCode().equals(orderUser.getRoleId())) {
                     approvalLog = new AfApprovalLog();
                     approvalLog.setRoleId(role.getRoleCode());
                     approvalLog.setUserId(orderUser.getUserId());
+                    approvalLog.setInstanceNo(instanceNo);
                     approvalLog.setApprovalNo(UniqueCodeGenerator.AF_APPROVAL_LOG.getCode());
                     break;
                 }
@@ -142,18 +156,21 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogs.add(approvalLog);
         }
         AfApprovalLog approvalLog = approvalLogs.get(0);
-        if (!approvalLog.getUserId().equals(userId)) {
-            // TODO
-        }
+        approvalLog.setRemark(remark);
+        approvalLog.setApprovalTime(new Date());
+        approvalLog.setIsApproval(1);
+
         AfInstance instance = new AfInstance();
-        instance.setCompanyNo(null);
-        instance.setConfigLogNo(approvalOrderVO.getApprovalOrder().getConfigNo());
+        instance.setConfigNo(configNo);
         instance.setCreateRoleId(approvalLog.getRoleId());
         instance.setCreateTime(new Date());
         instance.setData(data);
-        instance.setInstanceNo(UniqueCodeGenerator.AF_INSTANCE.getCode());
-        instance.setPlanNo(planNo);
+        instance.setInstanceNo(instanceNo);
         instance.setScheduleSort(scheduleSort);
+        instance.setApprovalOrderNo(approvalOrder.getApprovalOrderNo());
+        instance.setCreateUserId(userId);
+        instance.setProjectNo(projectNo);
+
         if (approvalLogs.size() > 1) {
             instance.setCurrentApprovalLogNo(approvalLogs.get(1).getApprovalNo());
             instance.setStatus(1);
@@ -161,6 +178,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             instance.setStatus(2);
             sendMessage();
         }
+
+        insert(instance);
+        approvalLogService.create(approvalLogs);
+    }
+
+    private void insert(AfInstance instance) {
+        instanceMapper.insertSelective(instance);
     }
 
     private void sendMessage(){
@@ -184,7 +208,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         String customerId = project.getOwnerId();
         String customerName = getCustomerNameById(customerId);
 
-        String approvalOrderNo = getPlanNo();
         List<UserRoleSet> roles = roleService.findAll();
 
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
@@ -212,7 +235,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 approvalLogVO.setIsApproval(false);
             }
 
-            if (approvalLog.getApprovalNo().equals(instance.getCurrentApprovalLogNo())) {
+            if (approvalLog.getApprovalNo().equals(instance.getCurrentApprovalLogNo()) && approvalLog.getUserId().equals(userId)) {
                 instanceDetailVO.setEditable(true);
             } else {
                 instanceDetailVO.setEditable(false);
@@ -221,15 +244,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVOs.add(approvalLogVO);
         }
 
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(instance.getConfigNo());
+        AfConfig config = configService.findByNo(instance.getConfigNo());
         if (config == null) {
-
+            // TODO
         }
         instanceDetailVO.setInstanceNo(instanceNo);
         instanceDetailVO.setAddress(project.getAddress() + project.getAddressDetail());
         instanceDetailVO.setConfigNo(instance.getConfigNo());
         instanceDetailVO.setConfigName(config.getName());
-        instanceDetailVO.setPlanNo(approvalOrderNo);
         instanceDetailVO.setData(instance.getData());
         instanceDetailVO.setRemark(approvalLogs.get(0).getRemark());
         instanceDetailVO.setProjectNo(instance.getProjectNo());
@@ -241,6 +263,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void approval(String instanceNo, String userId, Integer option, String remark) {
+        if (option == 0 && StringUtils.isEmpty(remark)) {
+            // TODO
+        }
         AfInstance instance = findByNo(instanceNo);
         if (instance == null) {
             // TODO
@@ -272,6 +297,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 sendSuccessMessage();
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
+                sendMessageToNext();
             }
         } else {
             // 不同意
@@ -281,6 +307,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         updateByPrimaryKey(instance);
         approvalLogService.updateByPrimaryKey(approvalLog);
+    }
+
+    private void sendMessageToNext() {
+
     }
 
     private void sendSuccessMessage() {
@@ -299,179 +329,183 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     @Override
-    public AfInstanceListVO list(String userId, String projectNo, Integer scheduleSort) {
-
-        List<AfInstanceVO> instanceVOs = getInstances(userId, projectNo, scheduleSort);
-        List<AfConfigPlanVO> configPlanVOs = getConfigPlans(userId, projectNo, scheduleSort);
+    public AfInstanceListVO list(String userId, String projectNo, String approvalType, Integer scheduleSort) {
         AfInstanceListVO instanceListVO = new AfInstanceListVO();
+        List<AfInstanceVO> instanceVOs = new ArrayList<>();
+        List<AfStartMenuVO> startMenus = new ArrayList<>();
+        if (AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE.equals(approvalType)) {
+            // 进度验收
+            if (scheduleSort == null) {
+                // 开工准备:开工申请
+                getInstances(instanceVOs, AfConfigs.START_APPLICATION.configNo, userId, projectNo);
+                // 开工准备:开工报告
+                getInstances(instanceVOs, AfConfigs.START_REPORT.configNo, userId, projectNo);
+                // 获取开工准备阶段发起菜单
+                getStartStartMenus(startMenus, userId, projectNo);
+            } else {
+                // 完工审批
+                getInstances(instanceVOs, AfConfigs.COMPLETE_APPLICATION.configNo, userId, projectNo, scheduleSort);
+                // 获取完工申请发起菜单
+                getCompleteStartMenus(startMenus, AfConfigs.COMPLETE_APPLICATION.configNo, userId, projectNo, scheduleSort);
+                // 验收申请
+                getInstances(instanceVOs, AfConfigs.CHECK_APPLICATION.configNo, userId, projectNo, scheduleSort);
+                // 验收报告
+                getInstances(instanceVOs, AfConfigs.CHECK_REPORT.configNo, userId, projectNo, scheduleSort);
+                getStartMenus(startMenus, userId, projectNo, scheduleSort);
+            }
+
+        } else if (AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION.equals(approvalType)) {
+            // 问题整改：问题整改
+            getInstances(instanceVOs, AfConfigs.PROBLEM_RECTIFICATION.configNo, userId, projectNo);
+            // 问题整改：整改完成
+            getInstances(instanceVOs, AfConfigs.RECTIFICATION_COMPLETE.configNo, userId, projectNo);
+        } else if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
+            // 施工变更：变更单
+            getInstances(instanceVOs, AfConfigs.CHANGE_ORDER.configNo, userId, projectNo);
+            // 施工变更：变更完成
+            getInstances(instanceVOs, AfConfigs.CHANGE_COMPLETE.configNo, userId, projectNo);
+        } else if (AfConstants.APPROVAL_TYPE_DELAY_VERIFY.equals(approvalType)) {
+            // 延期确认
+            getInstances(instanceVOs, AfConfigs.DELAY_ORDER.configNo, userId, projectNo);
+        }
         instanceListVO.setInstances(instanceVOs);
-        instanceListVO.setConfigPlans(configPlanVOs);
+        instanceListVO.setStartMenus(startMenus);
         return instanceListVO;
     }
 
-    /**
-     * 获取发起列表
-     * @param userId 用户ID
-     * @param projectNo 项目编号
-     * @param scheduleSort 排期编号
-     * @return 发起列表
-     */
-    private List<AfConfigPlanVO> getConfigPlans(String userId, String projectNo, Integer scheduleSort){
-        List<AfConfigPlanVO> configPlanVOs = new ArrayList<>();
-        // 获取上一个排期编号
+    private void getStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo, Integer scheduleSort) {
         Integer preScheduleSort = getPreScheduleSort(scheduleSort);
+        int preStatus = getInstanceStatus(AfConfigs.COMPLETE_APPLICATION.configNo, projectNo, preScheduleSort);
+        if (preStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+            // 上一个节点完成
+            int status = getInstanceStatus(AfConfigs.COMPLETE_APPLICATION.configNo, projectNo, scheduleSort);
+            if (status == 0 || status == AfConstants.APPROVAL_STATUS_FAIL) {
+                // 当前节点未完成
+                List<AfInstance> checkApplicationInstances = findByConfigNoAndProjectNoAndScheduleSort(AfConfigs.CHECK_APPLICATION.configNo, projectNo, scheduleSort);
+                List<AfInstance> checkReportInstances = findByConfigNoAndProjectNoAndScheduleSort(AfConfigs.CHECK_REPORT.configNo, projectNo, scheduleSort);
 
-        String planNo = getPlanNo();
-        String roleId = orderUserService.findRoleIdByOrderNoAndUserId(projectNo, userId);
-        if (scheduleSort == -1) {
-            startApplication(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-        } else {
-            boolean preSuccess = scheduleCompleteApplicationSuccess(projectNo, preScheduleSort);
-            // 上一个节点完工
-            if (preSuccess) {
-                cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.COMPLETE_APPLICATION.configNo);
-                if (config == null) {
-                    // TODO
+                int checkApplicationStatus = getInstanceStatus(checkApplicationInstances);
+                int checkReportStatus = getInstanceStatus(checkReportInstances);
+
+                int checkApplicationCount = getSuccessCount(checkApplicationInstances);
+                int checkReportCount = getStartAndSuccessCount(checkReportInstances);
+                // 发起验收申请菜单
+                AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.CHECK_APPLICATION.configNo, userId);
+                if (approvalOrder != null) {
+                    AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
+                    startMenus.add(startMenuVO);
                 }
-                int completeApplicationStatus = scheduleCompleteApplicationStatus(config.getConfigNo(), projectNo, scheduleSort);
-                if (completeApplicationStatus != AfConstants.APPROVAL_STATUS_SUCCESS && completeApplicationStatus != AfConstants.APPROVAL_STATUS_START) {
-                    // 当前节点未完工，且未发起完工审批
-                    checkApplication(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-                    problemRectification(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-                    changeOrder(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-                    delayOrder(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-                    completeApplication(configPlanVOs, config, planNo, roleId, projectNo, scheduleSort);
+                if (checkApplicationCount > checkReportCount) {
+                    // 如果验收申请数量大于验收报告数量，发起验收报告菜单
+                    approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.CHECK_REPORT.configNo, userId);
+                    if (approvalOrder != null) {
+                        AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
+                        startMenus.add(startMenuVO);
+                    }
                 }
-            }
-        }
-
-        return configPlanVOs;
-    }
-
-    /**
-     * 完工申请
-     * @param configPlanVOs
-     * @param config
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void completeApplication(List<AfConfigPlanVO> configPlanVOs, cn.thinkfree.database.model.AfConfig config, String planNo, String roleId, String projectNo, Integer scheduleSort){
-        List<AfInstance> instances = findByProjectNoAndScheduleSort(projectNo, scheduleSort);
-        boolean complete = true;
-        if (instances != null) {
-            int checkApplicationCount = 0, checkReportCount = 0, problemRectificationCount = 0, rectificationCompleteCount = 0, changeOrderCount = 0, changeCompleteCount = 0;
-            String checkApplicationConfigNo = AfConfig.CHECK_APPLICATION.configNo;
-            String checkReportConfigNo = AfConfig.CHECK_REPORT.configNo;
-            String problemRectificationConfigNo = AfConfig.PROBLEM_RECTIFICATION.configNo;
-            String rectificationCompleteConfigNo = AfConfig.RECTIFICATION_COMPLETE.configNo;
-            String changeOrderConfigNo = AfConfig.CHANGE_ORDER.configNo;
-            String changeCompleteConfigNo = AfConfig.CHANGE_COMPLETE.configNo;
-
-            for (AfInstance instance : instances) {
-                if (instance.getStatus() == AfConstants.APPROVAL_STATUS_START) {
-                    complete = false;
-                    break;
-                } else if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS){
-                    if (instance.getConfigNo().equals(checkApplicationConfigNo)) {
-                        checkApplicationCount++;
-                    } else if (instance.getConfigNo().equals(checkReportConfigNo)) {
-                        checkReportCount++;
-                    } else if (instance.getConfigNo().equals(problemRectificationConfigNo)) {
-                        problemRectificationCount++;
-                    } else if (instance.getConfigNo().equals(rectificationCompleteConfigNo)) {
-                        rectificationCompleteCount++;
-                    } else if (instance.getConfigNo().equals(changeOrderConfigNo)) {
-                        changeOrderCount++;
-                    } else if (instance.getConfigNo().equals(changeCompleteConfigNo)) {
-                        changeCompleteCount++;
+                if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
+                    if (checkApplicationCount == checkReportCount) {
+                        // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
+                        approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                        if (approvalOrder != null) {
+                            AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
+                            startMenus.add(startMenuVO);
+                        }
                     }
                 }
             }
-            if (complete) {
-                if (checkApplicationCount != checkReportCount
-                        || problemRectificationCount != rectificationCompleteCount
-                        || changeOrderCount != changeCompleteCount) {
-                    complete = false;
-                }
+        }
+    }
+
+    private int getSuccessCount(List<AfInstance> instances) {
+        int count = 0;
+        for (AfInstance instance : instances) {
+            if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                count++;
             }
         }
-        if (complete) {
-            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
-            if (approvalOrder != null) {
-                // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
-                configPlanVOs.add(configPlanVO);
+        return count;
+    }
+
+    private int getStartAndSuccessCount(List<AfInstance> instances) {
+        int count = 0;
+        for (AfInstance instance : instances) {
+            if (instance.getStatus() == AfConstants.APPROVAL_STATUS_START || instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void getCompleteStartMenus(List<AfStartMenuVO> startMenus, String configNo, String userId, String projectNo, Integer scheduleSort){
+        Integer preScheduleSort = getPreScheduleSort(scheduleSort);
+        int preStatus = getInstanceStatus(configNo, projectNo, preScheduleSort);
+        if (preStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+            int status = getInstanceStatus(configNo, projectNo, scheduleSort);
+            if (status == 0 || status == AfConstants.APPROVAL_STATUS_FAIL) {
+                AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+                if (approvalOrder != null) {
+                    AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
+                    startMenus.add(startMenuVO);
+                }
             }
         }
     }
 
-    private int scheduleCompleteApplicationStatus(String configNo, String projectNo, Integer scheduleSort) {
+    /**
+     * 获取开工准备发起菜单
+     * @param startMenus 发起菜单
+     * @param userId 用户id
+     * @param projectNo
+     */
+    private void getStartStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo) {
+        int startApplicationStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
+        if (startApplicationStatus == 0 || startApplicationStatus == AfConstants.APPROVAL_STATUS_FAIL) {
+            AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.START_APPLICATION.configNo, userId);
+            if (approvalOrder != null) {
+                AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_APPLICATION.configNo);
+                startMenus.add(startMenuVO);
+            }
+        } else if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS ) {
+            int startReportStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+            if (startReportStatus == 0 || startReportStatus == AfConstants.APPROVAL_STATUS_FAIL ) {
+                AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, AfConfigs.START_REPORT.configNo, userId);
+                if (approvalOrder != null) {
+                    AfStartMenuVO startMenuVO = createStartMenu(AfConfigs.START_REPORT.configNo);
+                    startMenus.add(startMenuVO);
+                }
+            }
+        }
+    }
 
-        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSort(configNo, projectNo, scheduleSort);
+    private AfStartMenuVO createStartMenu(String configNo) {
+        AfStartMenuVO startMenuVO = new AfStartMenuVO();
+        AfConfig config = configService.findByNo(configNo);
+        startMenuVO.setConfigNo(config.getConfigNo());
+        startMenuVO.setConfigName(config.getName());
+        return startMenuVO;
+    }
+
+    private int getInstanceStatus(String config, String projectNo) {
+        List<AfInstance> instances = findByConfigNoAndProjectNo(config, projectNo);
+        return getInstanceStatus(instances);
+    }
+
+    private int getInstanceStatus(String config, String projectNo, Integer scheduleSort) {
+        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSort(config, projectNo, scheduleSort);
+        return getInstanceStatus(instances);
+    }
+
+    private int getInstanceStatus(List<AfInstance> instances) {
         int status = 0;
         if (instances != null) {
             for (AfInstance instance : instances) {
-                if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS || instance.getStatus() == AfConstants.APPROVAL_STATUS_START) {
+                if (AfConstants.APPROVAL_STATUS_START == instance.getStatus()) {
                     status = instance.getStatus();
                     break;
-                } else {
+                } else if (AfConstants.APPROVAL_STATUS_SUCCESS == instance.getStatus()) {
                     status = instance.getStatus();
-                }
-            }
-        }
-        return status;
-    }
-
-    /**
-     * 开工申请、开工报告
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void startApplication(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort){
-        // 开工申请
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.START_APPLICATION.configNo);
-        if (config == null) {
-            // TODO
-        }
-        int status = startStatus(config.getConfigNo(), projectNo);
-        if (status == AfConstants.APPROVAL_STATUS_SUCCESS) {
-            // 开工申请完成，判断开工报告
-            config = configService.findByNo(AfConfig.START_REPORT.configNo);
-            if (config == null) {
-                // TODO
-            }
-            status = startStatus(config.getConfigNo(), projectNo);
-        }
-        if (status != AfConstants.APPROVAL_STATUS_START && status != AfConstants.APPROVAL_STATUS_SUCCESS) {
-            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
-            if (approvalOrder != null) {
-                // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
-                configPlanVOs.add(configPlanVO);
-            }
-        }
-    }
-
-    /**
-     * 项目开工申请或开工报告是否成功，因一个项目只能有一个开工申请或开工报告成功，所以不考虑排期
-     * @param startApplicationConfigNo 开工申请审批配置编号
-     * @param projectNo 项目编号
-     * @return 开工申请是否成功
-     */
-    private int startStatus(String startApplicationConfigNo, String projectNo) {
-        int status = 0;
-        List<AfInstance> instances = findByConfigNoAndProjectNo(startApplicationConfigNo, projectNo);
-        if (instances != null && instances.size() > 0) {
-            for (AfInstance instance : instances) {
-                if (instance.getStatus() == AfConstants.APPROVAL_STATUS_START || instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS) {
-                    status = instance.getStatus();
-                    break;
-                } else {
+                } else if (status != AfConstants.APPROVAL_STATUS_SUCCESS) {
                     status = instance.getStatus();
                 }
             }
@@ -483,36 +517,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         AfInstanceExample example = new AfInstanceExample();
         example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo);
         return instanceMapper.selectByExample(example);
-    }
-
-    /**
-     * 当前节点完工申请是否成功
-     * @param projectNo 项目编号
-     * @param scheduleSort 排期编号
-     * @return 完工申请是否成功
-     */
-    private boolean scheduleCompleteApplicationSuccess(String projectNo, Integer scheduleSort) {
-        String configAlias;
-        if (scheduleSort == -1) {
-            configAlias = AfConfig.START_REPORT.configNo;
-        } else {
-            configAlias = AfConfig.COMPLETE_APPLICATION.configNo;
-        }
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(configAlias);
-        if (config == null) {
-            // TODO
-        }
-        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSort(config.getConfigNo(), projectNo, scheduleSort);
-        boolean success = false;
-        if (instances != null) {
-            for (AfInstance instance : instances) {
-                if (instance.getStatus() == 2) {
-                    success = true;
-                    break;
-                }
-            }
-        }
-        return success;
     }
 
     /**
@@ -532,171 +536,24 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         return scheduleSort - 1;
     }
 
-    private AfConfigPlanVO createConfigPlanVO(String planNo, String configName, String configNo) {
-        AfConfigPlanVO configPlanVO = new AfConfigPlanVO();
-        configPlanVO.setPlanNo(planNo);
-        configPlanVO.setConfigName(configName);
-        configPlanVO.setConfigName(configNo);
-        return configPlanVO;
+    private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String userId, String projectNo) {
+        List<AfInstance> instances = findByConfigNoAndProjectNo(configNo, projectNo);
+        getInstances(instanceVOs, instances, configNo, userId);
     }
 
-    /**
-     * 验收申请
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void checkApplication(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.CHECK_APPLICATION.configNo);
-        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
-        if (approvalOrder != null) {
-            // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
-            configPlanVOs.add(configPlanVO);
+    private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String userId, String projectNo, Integer scheduleSort) {
+        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSort(configNo, projectNo, scheduleSort);
+        getInstances(instanceVOs, instances, configNo, userId);
+    }
+
+    private void getInstances( List<AfInstanceVO> instanceVOs, List<AfInstance> instances, String configNo, String userId) {
+        AfConfig config = configService.findByNo(configNo);
+        if (config == null) {
+            // TODO
         }
-        checkReport(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-    }
-
-    /**
-     * 验收报告
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void checkReport(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AfConfig.CHECK_APPLICATION.configNo, AfConfig.CHECK_REPORT.configNo);
-    }
-    private void completeConfig(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort, String aAlias, String bAlias){
-        cn.thinkfree.database.model.AfConfig aConfig = configService.findByNo(aAlias);
-        cn.thinkfree.database.model.AfConfig bConfig = configService.findByNo(bAlias);
-        int miss = compareInstanceSuccessCount(aConfig.getConfigNo(), bConfig.getConfigNo(), projectNo, scheduleSort);
-        if (miss > 0) {
-            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(bConfig.getConfigNo(), planNo, roleId);
-            if (approvalOrder != null) {
-                // 当前用户为发起用户
-                AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), bConfig.getName(), bConfig.getConfigNo());
-                configPlanVOs.add(configPlanVO);
-            }
-        }
-    }
-    /**
-     * 比较同一个项目、同一个排期的两种审批流的完成数量
-     * @param aConfigNo
-     * @param bConfigNo
-     * @param projectNo
-     * @param scheduleSort
-     * @return
-     */
-    private int compareInstanceSuccessCount(String aConfigNo, String bConfigNo, String projectNo, Integer scheduleSort){
-        int aCount = 0, bCount = 0;
-
-        List<AfInstance> aInstances = findByConfigNoAndProjectNoAndScheduleSort(aConfigNo, projectNo, scheduleSort);
-        if (aInstances != null) {
-            for (AfInstance instance : aInstances) {
-                if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS) {
-                    aCount++;
-                }
-            }
-        }
-
-        List<AfInstance> bInstances = findByConfigNoAndProjectNoAndScheduleSort(bConfigNo, projectNo, scheduleSort);
-        if (bInstances != null) {
-            for (AfInstance instance : bInstances) {
-                if (instance.getStatus() == AfConstants.APPROVAL_STATUS_SUCCESS || instance.getStatus() == AfConstants.APPROVAL_STATUS_START) {
-                    bCount++;
-                }
-            }
-        }
-        return aCount - bCount;
-    }
-
-    /**
-     * 问题整改
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void problemRectification(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.PROBLEM_RECTIFICATION.configNo);
-        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
-        if (approvalOrder != null) {
-            // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
-            configPlanVOs.add(configPlanVO);
-        }
-        rectificationComplete(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-    }
-
-    /**
-     * 整改完成
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void rectificationComplete(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AfConfig.PROBLEM_RECTIFICATION.configNo, AfConfig.RECTIFICATION_COMPLETE.configNo);
-    }
-
-    /**
-     * 变更单
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void changeOrder(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.CHANGE_ORDER.configNo);
-        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
-        if (approvalOrder != null) {
-            // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
-            configPlanVOs.add(configPlanVO);
-        }
-        changeComplete(configPlanVOs, planNo, roleId, projectNo, scheduleSort);
-    }
-
-    private void changeComplete(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        completeConfig(configPlanVOs, planNo, roleId, projectNo, scheduleSort, AfConfig.CHANGE_ORDER.configNo, AfConfig.CHANGE_COMPLETE.configNo);
-    }
-
-    /**
-     * 延期单
-     * @param configPlanVOs
-     * @param planNo
-     * @param roleId
-     * @param projectNo
-     * @param scheduleSort
-     */
-    private void delayOrder(List<AfConfigPlanVO> configPlanVOs, String planNo, String roleId, String projectNo, Integer scheduleSort) {
-        cn.thinkfree.database.model.AfConfig config = configService.findByNo(AfConfig.DELAY_ORDER.configNo);
-        AfApprovalOrder approvalOrder = approvalOrderService.findByConfigNoAndPlanNoAndRoleId(config.getConfigNo(), planNo, roleId);
-        if (approvalOrder != null) {
-            // 当前用户为发起用户
-            AfConfigPlanVO configPlanVO = createConfigPlanVO(approvalOrder.getApprovalOrderNo(), config.getName(), config.getConfigNo());
-            configPlanVOs.add(configPlanVO);
-        }
-    }
-
-    private List<AfInstanceVO> getInstances(String userId, String projectNo, Integer scheduleSort) {
-        List<AfInstanceVO> instanceVOs = new ArrayList<>();
-
-        List<AfInstance> instances = findByProjectNoAndScheduleSort(projectNo, scheduleSort);
         if (instances != null) {
             for (AfInstance instance : instances) {
                 AfInstanceVO instanceVO = new AfInstanceVO();
-                cn.thinkfree.database.model.AfConfig config = configService.findByNo(instance.getConfigNo());
-                if (config == null) {
-                    // TODO
-                }
                 AfApprovalLog approvalLog = approvalLogService.findByInstanceNoAndSort(instance.getInstanceNo(), 1);
                 if (approvalLog == null) {
                     // TODO
@@ -730,15 +587,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instanceVO.setRemark(approvalLog.getRemark());
                 instanceVO.setRoleId(role.getRoleCode());
                 instanceVO.setRoleName(role.getRoleName());
+
+                instanceVOs.add(instanceVO);
             }
         }
-        return instanceVOs;
-    }
-
-    private List<AfInstance> findByProjectNoAndScheduleSort(String projectNo, Integer scheduleSort) {
-        AfInstanceExample example = new AfInstanceExample();
-        example.createCriteria().andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort);
-        example.setOrderByClause("create_time desc");
-        return instanceMapper.selectByExample(example);
     }
 }

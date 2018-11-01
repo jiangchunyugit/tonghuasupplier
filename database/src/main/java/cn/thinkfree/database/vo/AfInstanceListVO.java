@@ -18,6 +18,6 @@ import java.util.List;
 public class AfInstanceListVO {
     @ApiModelProperty("审批实例")
     List<AfInstanceVO> instances;
-    @ApiModelProperty("待发起审批流信息")
-    List<AfConfigPlanVO> configPlans;
+    @ApiModelProperty("发起菜单")
+    List<AfStartMenuVO> startMenus;
 }

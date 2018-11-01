@@ -6,9 +6,9 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
-import cn.thinkfree.service.platform.designer.vo.DesignerOrderVo;
-import cn.thinkfree.service.platform.designer.vo.PageVo;
-import cn.thinkfree.service.platform.designer.vo.UserMsgVo;
+import cn.thinkfree.service.platform.vo.DesignerOrderVo;
+import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.ExcelUtil;
 import cn.thinkfree.service.utils.OrderNoUtils;
@@ -172,10 +172,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @NotNull
     private DesignerOrderVo getDesignerOrderVo(int stateType, Map<String, DesignerStyleConfig> designerStyleConfigMap, DesignerOrder DesignerOrder,
-                                           Project project, Map<String, UserMsgVo> msgVoMap) {
+                                             Project project, Map<String, UserMsgVo> msgVoMap) {
         DesignerOrderVo DesignerOrderVo = new DesignerOrderVo();
         DesignerOrderVo.setProjectNo(project.getProjectNo());
-        DesignerOrderVo.setDesignerOrderNo(DesignerOrder.getOrderNo());
+        DesignerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
         UserMsgVo ownerMsg = msgVoMap.get(project.getOwnerId());
         if (ownerMsg != null) {
             DesignerOrderVo.setOwnerName(ownerMsg.getUserName());
@@ -215,7 +215,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     @Override
-    public void DesignerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+    public void designerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
                                  String styleCode, String money, String acreage, int designerOrderState, String companyState, String optionUserName,
                                  String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response) {
         PageVo<List<DesignerOrderVo>> pageVo = queryDesignerOrder(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
@@ -230,7 +230,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             List<String> excelContent = new ArrayList<>();
             excelContent.add(index + "");
             excelContent.add(DesignerOrderVo.getProjectNo());
-            excelContent.add(DesignerOrderVo.getDesignerOrderNo());
+            excelContent.add(DesignerOrderVo.getDesignOrderNo());
             excelContent.add(DesignerOrderVo.getOwnerName());
             excelContent.add(DesignerOrderVo.getOwnerPhone());
             excelContent.add(DesignerOrderVo.getAddress());

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.utils;
 
 
+import com.alibaba.fastjson.JSONObject;
 import jdk.internal.util.xml.impl.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -145,6 +146,13 @@ public class HttpUtils {
 
     public static final String METHOD_POST = "POST";
 
+//    public static void main(String[] args) {
+//        Map<String,String> params = new HashMap<>();
+//        params.put("username","asdfsadf");
+//        params.put("password","fadfasdf");
+//        HttpRespMsg httpRespMsg = post("http://10.240.10.53:7181/login",params);
+//        System.out.println(JSONObject.toJSONString(httpRespMsg));
+//    }
     /**
      * 发送post请求
      * @param requestUrl 请求链接

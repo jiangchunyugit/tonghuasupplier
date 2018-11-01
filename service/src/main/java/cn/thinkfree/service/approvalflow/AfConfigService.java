@@ -1,7 +1,6 @@
 package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.AfConfig;
-import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 
@@ -41,6 +40,4 @@ public interface AfConfigService {
      * @return 审批流配置
      */
     AfConfig findByNo(String configNo);
-
-    List<UserRoleSet> findApprovalOrder(String configNo, String planNo, String roleId, List<UserRoleSet> allRoles);
 }

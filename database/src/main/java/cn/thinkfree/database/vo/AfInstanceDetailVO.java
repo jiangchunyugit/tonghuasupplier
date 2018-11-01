@@ -27,10 +27,10 @@ public class AfInstanceDetailVO {
     private String address;
     @ApiModelProperty("审批流配置编号")
     private String configNo;
+    @ApiModelProperty("排期编号")
+    private Integer scheduleSort;
     @ApiModelProperty("审批流配置名称")
     private String configName;
-    @ApiModelProperty("审批顺序方案编号")
-    private String planNo;
     @ApiModelProperty("审批流实例编号")
     private String instanceNo;
     @ApiModelProperty("审批人列表")

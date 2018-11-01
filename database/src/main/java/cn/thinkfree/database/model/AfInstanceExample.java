@@ -525,76 +525,6 @@ public class AfInstanceExample {
             return (Criteria) this;
         }
 
-        public Criteria andCompanyNoIsNull() {
-            addCriterion("company_no is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoIsNotNull() {
-            addCriterion("company_no is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoEqualTo(String value) {
-            addCriterion("company_no =", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoNotEqualTo(String value) {
-            addCriterion("company_no <>", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoGreaterThan(String value) {
-            addCriterion("company_no >", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoGreaterThanOrEqualTo(String value) {
-            addCriterion("company_no >=", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoLessThan(String value) {
-            addCriterion("company_no <", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoLessThanOrEqualTo(String value) {
-            addCriterion("company_no <=", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoLike(String value) {
-            addCriterion("company_no like", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoNotLike(String value) {
-            addCriterion("company_no not like", value, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoIn(List<String> values) {
-            addCriterion("company_no in", values, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoNotIn(List<String> values) {
-            addCriterion("company_no not in", values, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoBetween(String value1, String value2) {
-            addCriterion("company_no between", value1, value2, "companyNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCompanyNoNotBetween(String value1, String value2) {
-            addCriterion("company_no not between", value1, value2, "companyNo");
-            return (Criteria) this;
-        }
-
         public Criteria andScheduleSortIsNull() {
             addCriterion("schedule_sort is null");
             return (Criteria) this;
@@ -652,76 +582,6 @@ public class AfInstanceExample {
 
         public Criteria andScheduleSortNotBetween(Integer value1, Integer value2) {
             addCriterion("schedule_sort not between", value1, value2, "scheduleSort");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoIsNull() {
-            addCriterion("config_log_no is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoIsNotNull() {
-            addCriterion("config_log_no is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoEqualTo(String value) {
-            addCriterion("config_log_no =", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoNotEqualTo(String value) {
-            addCriterion("config_log_no <>", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoGreaterThan(String value) {
-            addCriterion("config_log_no >", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoGreaterThanOrEqualTo(String value) {
-            addCriterion("config_log_no >=", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoLessThan(String value) {
-            addCriterion("config_log_no <", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoLessThanOrEqualTo(String value) {
-            addCriterion("config_log_no <=", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoLike(String value) {
-            addCriterion("config_log_no like", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoNotLike(String value) {
-            addCriterion("config_log_no not like", value, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoIn(List<String> values) {
-            addCriterion("config_log_no in", values, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoNotIn(List<String> values) {
-            addCriterion("config_log_no not in", values, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoBetween(String value1, String value2) {
-            addCriterion("config_log_no between", value1, value2, "configLogNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andConfigLogNoNotBetween(String value1, String value2) {
-            addCriterion("config_log_no not between", value1, value2, "configLogNo");
             return (Criteria) this;
         }
 
@@ -935,73 +795,73 @@ public class AfInstanceExample {
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoIsNull() {
-            addCriterion("plan_no is null");
+        public Criteria andApprovalOrderNoIsNull() {
+            addCriterion("approval_order_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoIsNotNull() {
-            addCriterion("plan_no is not null");
+        public Criteria andApprovalOrderNoIsNotNull() {
+            addCriterion("approval_order_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoEqualTo(String value) {
-            addCriterion("plan_no =", value, "planNo");
+        public Criteria andApprovalOrderNoEqualTo(String value) {
+            addCriterion("approval_order_no =", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoNotEqualTo(String value) {
-            addCriterion("plan_no <>", value, "planNo");
+        public Criteria andApprovalOrderNoNotEqualTo(String value) {
+            addCriterion("approval_order_no <>", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoGreaterThan(String value) {
-            addCriterion("plan_no >", value, "planNo");
+        public Criteria andApprovalOrderNoGreaterThan(String value) {
+            addCriterion("approval_order_no >", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoGreaterThanOrEqualTo(String value) {
-            addCriterion("plan_no >=", value, "planNo");
+        public Criteria andApprovalOrderNoGreaterThanOrEqualTo(String value) {
+            addCriterion("approval_order_no >=", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoLessThan(String value) {
-            addCriterion("plan_no <", value, "planNo");
+        public Criteria andApprovalOrderNoLessThan(String value) {
+            addCriterion("approval_order_no <", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoLessThanOrEqualTo(String value) {
-            addCriterion("plan_no <=", value, "planNo");
+        public Criteria andApprovalOrderNoLessThanOrEqualTo(String value) {
+            addCriterion("approval_order_no <=", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoLike(String value) {
-            addCriterion("plan_no like", value, "planNo");
+        public Criteria andApprovalOrderNoLike(String value) {
+            addCriterion("approval_order_no like", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoNotLike(String value) {
-            addCriterion("plan_no not like", value, "planNo");
+        public Criteria andApprovalOrderNoNotLike(String value) {
+            addCriterion("approval_order_no not like", value, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoIn(List<String> values) {
-            addCriterion("plan_no in", values, "planNo");
+        public Criteria andApprovalOrderNoIn(List<String> values) {
+            addCriterion("approval_order_no in", values, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoNotIn(List<String> values) {
-            addCriterion("plan_no not in", values, "planNo");
+        public Criteria andApprovalOrderNoNotIn(List<String> values) {
+            addCriterion("approval_order_no not in", values, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoBetween(String value1, String value2) {
-            addCriterion("plan_no between", value1, value2, "planNo");
+        public Criteria andApprovalOrderNoBetween(String value1, String value2) {
+            addCriterion("approval_order_no between", value1, value2, "approvalOrderNo");
             return (Criteria) this;
         }
 
-        public Criteria andPlanNoNotBetween(String value1, String value2) {
-            addCriterion("plan_no not between", value1, value2, "planNo");
+        public Criteria andApprovalOrderNoNotBetween(String value1, String value2) {
+            addCriterion("approval_order_no not between", value1, value2, "approvalOrderNo");
             return (Criteria) this;
         }
 

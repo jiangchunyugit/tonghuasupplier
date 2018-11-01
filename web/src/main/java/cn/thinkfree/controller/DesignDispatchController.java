@@ -5,25 +5,18 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.ReserveProject;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
-import cn.thinkfree.service.platform.designer.vo.DesignerOrderVo;
-import cn.thinkfree.service.platform.designer.vo.PageVo;
-import cn.thinkfree.service.utils.ExcelUtil;
-import cn.thinkfree.service.utils.HttpUtils;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
+import cn.thinkfree.service.platform.vo.DesignerOrderVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -79,8 +72,8 @@ public class DesignDispatchController extends AbsBaseController {
     }
     @ApiOperation("设计订单导出-->运营平台-->设计师派单页面")
     @MyRespBody
-    @RequestMapping(value = "DesignerOrderExcel", method = {RequestMethod.POST, RequestMethod.GET})
-    public void DesignerOrderExcel(
+    @RequestMapping(value = "designOrderExcel", method = {RequestMethod.POST, RequestMethod.GET})
+    public void designOrderExcel(
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userMsg", required = false, value = "业主姓名或电话") @RequestParam(name = "userMsg", required = false) String userMsg,
@@ -98,7 +91,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType,
             @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response) {
         try {
-            designDispatchService.DesignerOrderExcel(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+            designDispatchService.designerOrderExcel(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
         } catch (Exception e) {
             e.printStackTrace();

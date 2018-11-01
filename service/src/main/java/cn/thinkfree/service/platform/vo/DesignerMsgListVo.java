@@ -1,4 +1,4 @@
-package cn.thinkfree.service.platform.designer.vo;
+package cn.thinkfree.service.platform.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 

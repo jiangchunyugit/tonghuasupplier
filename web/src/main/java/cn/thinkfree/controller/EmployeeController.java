@@ -4,9 +4,10 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.UserRoleSet;
-import cn.thinkfree.service.platform.designer.vo.CardTypeVo;
 import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,17 +29,6 @@ import java.util.List;
 public class EmployeeController extends AbsBaseController {
     @Autowired
     private EmployeeService employeeService;
-
-    @ApiOperation("证件类型")
-    @MyRespBody
-    @RequestMapping(value = "cardType", method = {RequestMethod.POST,RequestMethod.GET})
-    public MyRespBundle<List<CardTypeVo>> cardType(){
-        //暂时写死
-        List<CardTypeVo> cardTypeVos = new ArrayList<>();
-        cardTypeVos.add(new CardTypeVo(1,"身份证"));
-        cardTypeVos.add(new CardTypeVo(2,"护照"));
-        return sendJsonData(ResultMessage.SUCCESS,cardTypeVos);
-    }
 
     @ApiOperation("员工实名认证审核")
     @MyRespBody
@@ -128,6 +117,19 @@ public class EmployeeController extends AbsBaseController {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
+    }
+
+    @ApiOperation("根据用户ID获取用户信息")
+    @MyRespBody
+    @RequestMapping(value = "msg", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<EmployeeMsgVo> msg(
+            @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId){
+        try{
+            EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
+            return sendJsonData(ResultMessage.SUCCESS, employeeMsg);
+        }catch (Exception e){
+            return sendFailMessage(e.getMessage());
+        }
     }
 
 }

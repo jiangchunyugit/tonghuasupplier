@@ -12,13 +12,13 @@ import cn.thinkfree.database.vo.AfInstanceListVO;
  */
 public interface AfInstanceService {
 
-    AfInstanceDetailVO start(String projectNo, String userId, String configNo);
+    AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort);
 
-    void submitStart(String projectNo, String userId, String planNo, Integer scheduleSort, String data, String remark);
+    void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark);
 
     AfInstanceDetailVO detail(String instanceNo, String userId);
 
     void approval(String instanceNo, String userId, Integer option, String remark);
 
-    AfInstanceListVO list(String userId, String projectNo, Integer scheduleSort);
+    AfInstanceListVO list(String userId, String projectNo, String approvalType, Integer scheduleSort);
 }
