@@ -6,11 +6,11 @@ import cn.thinkfree.database.model.AfApprovalOrder;
 import cn.thinkfree.database.model.AfApprovalOrderExample;
 import cn.thinkfree.database.model.AfConfigPlan;
 import cn.thinkfree.database.model.UserRoleSet;
-import cn.thinkfree.database.vo.AfApprovalOrderVO;
 import cn.thinkfree.service.approvalflow.AfApprovalOrderService;
 import cn.thinkfree.service.approvalflow.AfApprovalRoleService;
 import cn.thinkfree.service.approvalflow.AfConfigPlanService;
 import cn.thinkfree.service.approvalflow.RoleService;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,6 +37,8 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
     private RoleService roleService;
     @Resource
     private AfConfigPlanService configPlanService;
+    @Resource
+    private NewOrderUserService orderUserService;
 
     @Override
     public List<List<UserRoleSet>> findByConfigPlanNo(String configPlanNo, List<UserRoleSet> allRoles) {
@@ -78,31 +80,28 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
     }
 
     @Override
-    public AfApprovalOrderVO findByNo(String approvalOrderNo) {
-        AfApprovalOrderVO approvalOrderVO = null;
-        AfApprovalOrderExample example = new AfApprovalOrderExample();
-        example.createCriteria().andApprovalOrderNoEqualTo(approvalOrderNo);
-        List<AfApprovalOrder> approvalOrders = approvalOrderMapper.selectByExample(example);
-        AfApprovalOrder approvalOrder = null;
-        if (approvalOrders != null && approvalOrders.size() > 0) {
-            approvalOrder = approvalOrders.get(0);
-
-            List<UserRoleSet> allRoles = roleService.findAll();
-            List<UserRoleSet> roles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), allRoles);
-
-            approvalOrderVO = new AfApprovalOrderVO();
-            approvalOrderVO.setApprovalOrder(approvalOrder);
-            approvalOrderVO.setRoles(roles);
-        }
-        return approvalOrderVO;
-    }
-
-    @Override
     public AfApprovalOrder findByConfigPlanNoAndRoleId(String configPlanNo, String roleId) {
         AfApprovalOrderExample example = new AfApprovalOrderExample();
         example.createCriteria().andConfigPlanNoEqualTo(configPlanNo).andFirstRoleIdEqualTo(roleId);
         List<AfApprovalOrder> approvalOrders = approvalOrderMapper.selectByExample(example);
         return approvalOrders != null && approvalOrders.size() > 0 ? approvalOrders.get(0) : null;
+    }
+
+    @Override
+    public AfApprovalOrder findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId) {
+        String planNo = getPlanNo(projectNo);
+        String roleId = orderUserService.findRoleIdByOrderNoAndUserId(projectNo, userId);
+
+        AfConfigPlan configPlan = configPlanService.findByConfigNoAndPlanNo(configNo, planNo);
+        if (configPlan != null) {
+            return findByConfigPlanNoAndRoleId(configPlan.getConfigPlanNo(), roleId);
+        }
+        return null;
+    }
+
+    private String getPlanNo(String projectNo){
+        // TODO
+        return "";
     }
 
     @Override

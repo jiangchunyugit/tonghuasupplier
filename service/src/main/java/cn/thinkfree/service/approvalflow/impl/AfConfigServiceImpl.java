@@ -6,6 +6,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.*;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,8 @@ public class AfConfigServiceImpl implements AfConfigService {
     private AfConfigPlanService configPlanService;
     @Resource
     private AfApprovalRoleService approvalRoleService;
+    @Resource
+    private NewOrderUserService orderUserService;
 
     @Override
     public List<AfConfigVO> list(String planNo) {
@@ -120,18 +123,5 @@ public class AfConfigServiceImpl implements AfConfigService {
             approvalOrderService.create(configPlanNo, configVO.getConfigNo(), configVO.getApprovalOrders());
             subRoleService.create(configPlanNo, configVO.getSubRoles());
         }
-    }
-
-    @Override
-    public List<UserRoleSet> findApprovalOrder(String configNo, String planNo, String roleId, List<UserRoleSet> allRoles) {
-        List<UserRoleSet> approvalRoles = null;
-        AfConfigPlan configPlan = configPlanService.findByConfigNoAndPlanNo(configNo, planNo);
-        if (configPlan != null) {
-            AfApprovalOrder approvalOrder = approvalOrderService.findByConfigPlanNoAndRoleId(configPlan.getConfigPlanNo(), roleId);
-            if (approvalOrder != null) {
-                approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), allRoles);
-            }
-        }
-        return approvalRoles;
     }
 }

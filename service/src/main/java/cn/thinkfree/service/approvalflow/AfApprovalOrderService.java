@@ -2,7 +2,6 @@ package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.AfApprovalOrder;
 import cn.thinkfree.database.model.UserRoleSet;
-import cn.thinkfree.database.vo.AfApprovalOrderVO;
 
 import java.util.List;
 
@@ -19,9 +18,9 @@ public interface AfApprovalOrderService {
 
     void create(String configPlanNo, String configNo, List<List<UserRoleSet>> approvalOrders);
 
-    AfApprovalOrderVO findByNo(String planNo);
-
     AfApprovalOrder findByConfigPlanNoAndRoleId(String configPlanNo, String roleId);
+
+    AfApprovalOrder findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId);
 
     AfApprovalOrder findByConfigNoAndPlanNoAndRoleId(String configNo, String planNo, String roleId);
 }

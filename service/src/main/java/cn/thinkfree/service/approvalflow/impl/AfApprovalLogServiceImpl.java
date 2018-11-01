@@ -60,4 +60,15 @@ public class AfApprovalLogServiceImpl implements AfApprovalLogService {
         example.createCriteria().andUserIdEqualTo(userId);
         return approvalLogMapper.selectByExample(example);
     }
+
+    @Override
+    public void create(List<AfApprovalLog> approvalLogs) {
+        for (AfApprovalLog approvalLog : approvalLogs) {
+            insert(approvalLog);
+        }
+    }
+
+    private void insert(AfApprovalLog approvalLog) {
+        approvalLogMapper.insertSelective(approvalLog);
+    }
 }

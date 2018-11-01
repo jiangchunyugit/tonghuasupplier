@@ -37,15 +37,15 @@ public class AfInstanceController extends AbsBaseController {
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="访问审批开始页面")
-    public MyRespBundle<AfInstanceDetailVO> start(String projectNo, String userId, String configNo){
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.start(projectNo, userId, configNo));
+    public MyRespBundle<AfInstanceDetailVO> start(String userId, String configNo, String projectNo, Integer scheduleSort){
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.start(projectNo, userId, configNo, scheduleSort));
     }
 
     @RequestMapping(value = "/submitStart", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="发起审批")
-    public MyRespBundle submitStart(String projectNo, String userId, String planNo, Integer scheduleSort, String data, String remark){
-        instanceService.submitStart(projectNo, userId, planNo, scheduleSort, data, remark);
+    public MyRespBundle submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark){
+        instanceService.submitStart(projectNo, userId, configNo, scheduleSort, data, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 
@@ -79,11 +79,13 @@ public class AfInstanceController extends AbsBaseController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true),
             @ApiImplicitParam(name = "projectNo", value = "项目编码", required = true),
+            @ApiImplicitParam(name = "approvalType", value = "审批类型", required = true),
             @ApiImplicitParam(name = "scheduleSort", value = "排期编码", required = true)
     })
     public MyRespBundle<AfInstanceListVO> list(@RequestParam(name = "userId") String userId,
                                                @RequestParam(name = "projectNo") String projectNo,
+                                               @RequestParam(name = "approvalType") String approvalType,
                                                @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.list(userId, projectNo, scheduleSort));
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.list(userId, projectNo, approvalType, scheduleSort));
     }
 }
