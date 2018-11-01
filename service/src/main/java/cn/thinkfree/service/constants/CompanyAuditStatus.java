@@ -13,51 +13,48 @@ public enum CompanyAuditStatus {
     /**
      * 待激活
      */
-    NOTACTIVATION(0,"待激活"),
+//    NOTACTIVATION(0,"待激活"),
     /**
      * 已激活
      */
-    ACTIVATION(1,"已激活"),
+    JOINING(0,"入驻中"),
     /**
      * 资质待审核中
      */
-    APTITUDEING(8,"资质待审核中"),
+    AUDITING(1,"资质待审核"),
 
 
     /**
      * 资质审核通过
      */
-    APTITUDETG(9,"资质审核通过"),
+    SUCCESSAUDIT(2,"资质审核通过"),
 
 
     /**
      * 资质审核不通过
      */
-    SUCCESSJOSB(10,"资质审核不通过"),
+    FAILAUDIT(3,"资质审核不通过"),
     /**
      * 财务审核中
      */
-    CHECKING(2,"财务审核中"),
+    CHECKING(4,"财务审核中"),
     /**
      * 财务审核成功
      */
-    SUCCESSCHECK(3,"财务审核成功"),
+    SUCCESSCHECK(5,"财务审核成功"),
     /**
      * 财务审核失败
      */
-    FAILCHECK(4,"财务审核失败"),
+    FAILCHECK(6,"财务审核失败"),
     /**
      * 待交保证金
      */
-    NOTPAYBAIL(5,"待交保证金"),
-    /**
-     * 已交保证金
-     */
-    PAYBAIL(6,"已交保证金"),
+    NOTPAYBAIL(7,"待交保证金"),
+
     /**
      * 入驻成功
      */
-    SUCCESSJOIN(7,"入驻成功");
+    SUCCESSJOIN(8,"入驻成功");
 
 
     public final Integer code;

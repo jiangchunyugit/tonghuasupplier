@@ -148,8 +148,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
         companyInfo.setSiteCompanyId(pcApplyInfoSEO.getSiteCompanyId());
-        //审核状态(待激活）
-        companyInfo.setAuditStatus(CompanyAuditStatus.NOTACTIVATION.stringVal());
+        //审核状态(入驻中）
+        companyInfo.setAuditStatus(CompanyAuditStatus.JOINING.stringVal());
         //公司平台类型：platform_type = 0
         companyInfo.setPlatformType(CompanyConstants.PlatformType.NORMAL.shortVal());
         //is_delete = 2
@@ -184,7 +184,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             applyLine = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfoSEO, example);
         }
 
-        //TODO 插入注册表？？？
+        //TODO 插入pc_user_info？？？
         //插入注册表
         UserRegister userRegister = new UserRegister();
         userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());

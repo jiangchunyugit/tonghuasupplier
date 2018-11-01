@@ -212,9 +212,10 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     public MyRespBundle<String> auditCompany(
     		@ApiParam("公司编号")@RequestParam() String companyId,
     		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
-    		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
+    		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase,
+            @ApiParam("审核级别0运营审核1财务审核 ")@RequestParam String auditLevel){
         
-    	 Map<String,String>  resMap = companySubmitService.auditContract(companyId,auditStatus,auditCase);
+    	 Map<String,String>  resMap = companySubmitService.auditContract(companyId,auditStatus,auditCase,auditLevel);
     	 
     	 String code = String.valueOf(resMap.get("code"));
     	 

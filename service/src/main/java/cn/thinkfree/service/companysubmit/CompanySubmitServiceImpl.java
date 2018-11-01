@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.service.constants.CompanyApply;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -347,9 +348,11 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
         CompanyInfoExpand companyInfoExpand = companySubmitVo.getCompanyInfoExpand();
         companyInfoExpand.setUpdateTime(date);
-		//企业税务登记证
-		if(companySubmitFileVo.getTaxCodePhotoUrl() != null) {
-			companyInfoExpand.setTaxCodePhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getTaxCodePhotoUrl()));
+        if(companySubmitFileVo != null){
+			//企业税务登记证
+			if(companySubmitFileVo.getTaxCodePhotoUrl() != null) {
+				companyInfoExpand.setTaxCodePhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getTaxCodePhotoUrl()));
+			}
 		}
         CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
         companyInfoExpandExample.createCriteria()
@@ -365,9 +368,11 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
         pcCompanyFinancial.setCreateTime(date);
         pcCompanyFinancial.setUpdateTime(date);
-		//开户行许可证
-		if(companySubmitFileVo.getLicenseUrl() != null) {
-			pcCompanyFinancial.setLicenseUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLicenseUrl()));
+        if(companySubmitFileVo != null){
+			//开户行许可证
+			if(companySubmitFileVo.getLicenseUrl() != null) {
+				pcCompanyFinancial.setLicenseUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLicenseUrl()));
+			}
 		}
         return pcCompanyFinancialMapper.insertSelective(pcCompanyFinancial);
     }
@@ -379,24 +384,27 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
         companyInfo.setPhone(companyInfo.getLegalPhone());
         companyInfo.setUpdateTime(date);
-        //资质上传成功后审批状态改为已激活
-        companyInfo.setAuditStatus(CompanyAuditStatus.ACTIVATION.stringVal());
-		//营业执照
-		if(companySubmitFileVo.getBusinessPhotoUrl() != null){
-			companyInfo.setBusinessPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getBusinessPhotoUrl()));
+        //资质上传成功后审批状态改为资质待审核
+        companyInfo.setAuditStatus(CompanyAuditStatus.AUDITING.stringVal());
+        if(companySubmitFileVo != null){
+			//营业执照
+			if(companySubmitFileVo.getBusinessPhotoUrl() != null){
+				companyInfo.setBusinessPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getBusinessPhotoUrl()));
+			}
+			//装修施工资质证书
+			if(companySubmitFileVo.getWorkPhotoUrl() != null) {
+				companyInfo.setWorkPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getWorkPhotoUrl()));
+			}
+			//法人身份证正面
+			if(companySubmitFileVo.getLefalCardUpUrl() != null) {
+				companyInfo.setLefalCardUpUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardUpUrl()));
+			}
+			//法人身份证反面
+			if(companySubmitFileVo.getLefalCardDownUrl() != null) {
+				companyInfo.setLefalCardDownUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardDownUrl()));
+			}
 		}
-		//装修施工资质证书
-		if(companySubmitFileVo.getWorkPhotoUrl() != null) {
-			companyInfo.setWorkPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getWorkPhotoUrl()));
-		}
-		//法人身份证正面
-		if(companySubmitFileVo.getLefalCardUpUrl() != null) {
-			companyInfo.setLefalCardUpUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardUpUrl()));
-		}
-		//法人身份证反面
-		if(companySubmitFileVo.getLefalCardDownUrl() != null) {
-			companyInfo.setLefalCardDownUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardDownUrl()));
-		}
+
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
         return companyInfoMapper.updateByExampleSelective(companyInfo,companyInfoExample);
@@ -404,8 +412,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Map<String, String> auditContract( String companyId, String auditStatus,
-			String auditCase) {
+	public Map<String, String> auditContract(String companyId, String auditStatus,
+			String auditCase, String auditLevel) {
 		Map<String,String> map = new HashMap<>();
 		
 		if(StringUtils.isEmpty(companyId)){
@@ -421,6 +429,22 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			map.put("msg", "清填写审核不通过原因");
 			return  map;
 		}
+
+		//修改公司表
+
+		CompanyInfo companyInfo = new CompanyInfo();
+		companyInfo.setCompanyId(companyId);
+
+		int flagT = companyInfoMapper.updateauditStatus(companyInfo);
+
+		//0:运营审核1：财务审核
+		if(CompanyApply.auditType.OPERATIONALAPPROVAL.code.equals(auditLevel)){
+			if(auditStatus.equals("0")){//运营审核通过
+				companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSAUDIT.stringVal());
+			}else{//财务审核不通过
+				companyInfo.setAuditStatus(CompanyAuditStatus.FAILAUDIT.stringVal());
+			}
+		}
 		if(auditStatus.equals("0")){
 	        //运营审核通过生成合同编号
 			//从登陆信息中获取公司类型
@@ -433,16 +457,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			vo.setContractNumber(contractNumber);
 			vo.setContractStatus("0");
 			int flag = contractInfoMapper.updateContractStatus(vo);
-			//修改公司表 
-		
-			CompanyInfo companyInfo = new CompanyInfo();
-			companyInfo.setCompanyId(companyId);
-			if(auditStatus.equals("0")){//运营审核通过
-				companyInfo.setAuditStatus(CompanyAuditStatus.APTITUDETG.stringVal());
-			}else{//财务审核不通过
-				companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSJOSB.stringVal());
-			}
-			int flagT = companyInfoMapper.updateauditStatus(companyInfo);
 			
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
