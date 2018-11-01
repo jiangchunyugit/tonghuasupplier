@@ -5,8 +5,11 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.model.ConstructionOrder;
+import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.vo.ConstructionStateVo;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -28,6 +31,9 @@ public class ConstructionStateController extends AbsBaseController {
 
     @Autowired
     ConstructionStateService constructionStateService;
+
+    @Autowired
+    ConstructionOrderOperate constructionOrderOperate;
 
 
     @ApiOperation("获取状态接口")
@@ -56,6 +62,16 @@ public class ConstructionStateController extends AbsBaseController {
                                                   @RequestParam @ApiParam(value = "状态值",required = true) int stateCode){
 
         return constructionStateService.updateConstructionState(projectNo, role,stateCode);
+    }
+
+
+    @ApiOperation("运营平台接口")
+    @MyRespBody
+    @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageInfo<ConstructionOrder>> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+                                                                             @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
+
+        return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize);
     }
 
 }
