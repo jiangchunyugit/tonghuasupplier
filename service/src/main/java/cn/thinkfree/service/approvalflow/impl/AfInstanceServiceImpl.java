@@ -263,7 +263,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // TODO
         }
         instanceDetailVO.setInstanceNo(instanceNo);
-        instanceDetailVO.setAddress(project.getAddress() + project.getAddressDetail());
+        instanceDetailVO.setAddress(project.getAddressDetail() + project.getAddressDetail());
         instanceDetailVO.setConfigNo(instance.getConfigNo());
         instanceDetailVO.setConfigName(config.getName());
         instanceDetailVO.setData(instance.getData());

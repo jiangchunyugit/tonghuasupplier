@@ -3,6 +3,7 @@ package cn.thinkfree.service.newproject;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.model.OrderApplyRefund;
+import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -22,10 +23,11 @@ public interface NewProjectService {
 
     /**
      * 确认资料
-     * @param dataDetailVo
+     * @param projectNo
+     * @param category
      * @return
      */
-    MyRespBundle<String> confirmVolumeRoomData(DataDetailVo dataDetailVo);
+    MyRespBundle<String> confirmVolumeRoomData(String projectNo, Integer category);
 
     /**
      * 获取设计资料
@@ -53,7 +55,7 @@ public interface NewProjectService {
      * @param projectNo
      * @return
      */
-    MyRespBundle<ProjectVo> getProjectDetail(String projectNo);
+    MyRespBundle<ProjectVo> getAppProjectDetail(String projectNo);
 
     /**
      * 批量获取人员信息
@@ -88,4 +90,11 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<String> applyRefund(String orderNo,String payOrderNo, String otherReason, Integer money, String moneyName,String userId, String cancelReason);
+
+    /**
+     * 获取Pc端项目详情
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<PcProjectDetailVo> getPcProjectDetail(String projectNo);
 }

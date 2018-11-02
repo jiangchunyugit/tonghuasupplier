@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 /**
  * @author gejiaming
  */
@@ -18,4 +20,6 @@ public class OrderTaskSortVo {
     private Integer sort;
     @ApiModelProperty(name = "name",value ="名字" )
     private String name;
+    @ApiModelProperty(value = "结束时间")
+    private Date completeTime;
 }
