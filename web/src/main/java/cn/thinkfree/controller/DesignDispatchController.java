@@ -98,12 +98,12 @@ public class DesignDispatchController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("获取所有订单状态")
+    @ApiOperation("获取所有订单状态，")
     @MyRespBody
     @RequestMapping(value = "allStates", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<Map<String, String>>> queryAllOrderStates(
-            @ApiParam(name = "state", required = false, value = "订单状态") @RequestParam(name = "state", required = false) int state) {
-        return sendJsonData(ResultMessage.SUCCESS, DesignStateEnum.allStates(state));
+            @ApiParam(name = "type", required = false, value = "参数：1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "type", required = false) int type) {
+        return sendJsonData(ResultMessage.SUCCESS, DesignStateEnum.allStates(type));
     }
 
     @ApiOperation("设计订单不派单")
