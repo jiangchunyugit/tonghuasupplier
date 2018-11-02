@@ -53,7 +53,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Resource
     private AfConfigService configService;
     @Resource
-    private AfConfigPlanService configPlanService;
+    private AfConfigSchemeService configPlanService;
     @Resource
     private HttpLinks httpLinks;
 

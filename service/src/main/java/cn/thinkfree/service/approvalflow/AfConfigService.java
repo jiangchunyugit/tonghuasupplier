@@ -18,15 +18,15 @@ public interface AfConfigService {
      * 列出所有审批流配置
      * @return 所有审批流配置
      */
-    List<AfConfigVO> list(String planNo);
+    List<AfConfigVO> list(String schemeNo);
 
     /**
      * 审批流配置详情
      * @param configNo 审批流配置编号
-     * @param planNo 方案编号
+     * @param schemeNo 方案编号
      * @return 审批流配置详情
      */
-    AfConfigVO detail(String configNo, String planNo);
+    AfConfigVO detail(String configNo, String schemeNo);
 
     /**
      * 修改审批流
