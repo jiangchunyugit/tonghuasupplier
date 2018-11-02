@@ -19,7 +19,7 @@
     <result column="house_toilet" jdbcType="INTEGER" property="houseToilet" />
     <result column="province" jdbcType="VARCHAR" property="province" />
     <result column="address_detail" jdbcType="VARCHAR" property="addressDetail" />
-    <result column="style" jdbcType="INTEGER" property="style" />
+    <result column="style" jdbcType="VARCHAR" property="style" />
     <result column="area" jdbcType="INTEGER" property="area" />
     <result column="house_type" jdbcType="INTEGER" property="houseType" />
     <result column="people_no" jdbcType="INTEGER" property="peopleNo" />
@@ -28,7 +28,7 @@
     <result column="decoration_budget" jdbcType="INTEGER" property="decorationBudget" />
     <result column="owner_id" jdbcType="VARCHAR" property="ownerId" />
     <result column="balcony" jdbcType="INTEGER" property="balcony" />
-    <result column="reference_scheme" jdbcType="INTEGER" property="referenceScheme" />
+    <result column="reference_scheme" jdbcType="VARCHAR" property="referenceScheme" />
     <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
     <result column="third_view" jdbcType="BIT" property="thirdView" />
     <result column="contract_type" jdbcType="INTEGER" property="contractType" />
@@ -176,10 +176,10 @@
       #{stage,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{releaseTime,jdbcType=TIMESTAMP}, 
       #{orderSource,jdbcType=INTEGER}, #{houseHuxing,jdbcType=INTEGER}, #{houseRoom,jdbcType=INTEGER}, 
       #{houseOffice,jdbcType=INTEGER}, #{houseToilet,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
-      #{addressDetail,jdbcType=VARCHAR}, #{style,jdbcType=INTEGER}, #{area,jdbcType=INTEGER}, 
+      #{addressDetail,jdbcType=VARCHAR}, #{style,jdbcType=VARCHAR}, #{area,jdbcType=INTEGER}, 
       #{houseType,jdbcType=INTEGER}, #{peopleNo,jdbcType=INTEGER}, #{planStartTime,jdbcType=TIMESTAMP}, 
       #{planEndTime,jdbcType=TIMESTAMP}, #{decorationBudget,jdbcType=INTEGER}, #{ownerId,jdbcType=VARCHAR}, 
-      #{balcony,jdbcType=INTEGER}, #{referenceScheme,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR}, 
+      #{balcony,jdbcType=INTEGER}, #{referenceScheme,jdbcType=VARCHAR}, #{imgUrl,jdbcType=VARCHAR}, 
       #{thirdView,jdbcType=BIT}, #{contractType,jdbcType=INTEGER}, #{city,jdbcType=VARCHAR}, 
       #{region,jdbcType=VARCHAR})
   </insert>
@@ -316,7 +316,7 @@
         #{addressDetail,jdbcType=VARCHAR},
       </if>
       <if test="style != null">
-        #{style,jdbcType=INTEGER},
+        #{style,jdbcType=VARCHAR},
       </if>
       <if test="area != null">
         #{area,jdbcType=INTEGER},
@@ -343,7 +343,7 @@
         #{balcony,jdbcType=INTEGER},
       </if>
       <if test="referenceScheme != null">
-        #{referenceScheme,jdbcType=INTEGER},
+        #{referenceScheme,jdbcType=VARCHAR},
       </if>
       <if test="imgUrl != null">
         #{imgUrl,jdbcType=VARCHAR},
@@ -419,7 +419,7 @@
         address_detail = #{record.addressDetail,jdbcType=VARCHAR},
       </if>
       <if test="record.style != null">
-        style = #{record.style,jdbcType=INTEGER},
+        style = #{record.style,jdbcType=VARCHAR},
       </if>
       <if test="record.area != null">
         area = #{record.area,jdbcType=INTEGER},
@@ -446,7 +446,7 @@
         balcony = #{record.balcony,jdbcType=INTEGER},
       </if>
       <if test="record.referenceScheme != null">
-        reference_scheme = #{record.referenceScheme,jdbcType=INTEGER},
+        reference_scheme = #{record.referenceScheme,jdbcType=VARCHAR},
       </if>
       <if test="record.imgUrl != null">
         img_url = #{record.imgUrl,jdbcType=VARCHAR},
@@ -487,7 +487,7 @@
       house_toilet = #{record.houseToilet,jdbcType=INTEGER},
       province = #{record.province,jdbcType=VARCHAR},
       address_detail = #{record.addressDetail,jdbcType=VARCHAR},
-      style = #{record.style,jdbcType=INTEGER},
+      style = #{record.style,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=INTEGER},
       house_type = #{record.houseType,jdbcType=INTEGER},
       people_no = #{record.peopleNo,jdbcType=INTEGER},
@@ -496,7 +496,7 @@
       decoration_budget = #{record.decorationBudget,jdbcType=INTEGER},
       owner_id = #{record.ownerId,jdbcType=VARCHAR},
       balcony = #{record.balcony,jdbcType=INTEGER},
-      reference_scheme = #{record.referenceScheme,jdbcType=INTEGER},
+      reference_scheme = #{record.referenceScheme,jdbcType=VARCHAR},
       img_url = #{record.imgUrl,jdbcType=VARCHAR},
       third_view = #{record.thirdView,jdbcType=BIT},
       contract_type = #{record.contractType,jdbcType=INTEGER},
@@ -550,7 +550,7 @@
         address_detail = #{addressDetail,jdbcType=VARCHAR},
       </if>
       <if test="style != null">
-        style = #{style,jdbcType=INTEGER},
+        style = #{style,jdbcType=VARCHAR},
       </if>
       <if test="area != null">
         area = #{area,jdbcType=INTEGER},
@@ -577,7 +577,7 @@
         balcony = #{balcony,jdbcType=INTEGER},
       </if>
       <if test="referenceScheme != null">
-        reference_scheme = #{referenceScheme,jdbcType=INTEGER},
+        reference_scheme = #{referenceScheme,jdbcType=VARCHAR},
       </if>
       <if test="imgUrl != null">
         img_url = #{imgUrl,jdbcType=VARCHAR},
@@ -615,7 +615,7 @@
       house_toilet = #{houseToilet,jdbcType=INTEGER},
       province = #{province,jdbcType=VARCHAR},
       address_detail = #{addressDetail,jdbcType=VARCHAR},
-      style = #{style,jdbcType=INTEGER},
+      style = #{style,jdbcType=VARCHAR},
       area = #{area,jdbcType=INTEGER},
       house_type = #{houseType,jdbcType=INTEGER},
       people_no = #{peopleNo,jdbcType=INTEGER},
@@ -624,7 +624,7 @@
       decoration_budget = #{decorationBudget,jdbcType=INTEGER},
       owner_id = #{ownerId,jdbcType=VARCHAR},
       balcony = #{balcony,jdbcType=INTEGER},
-      reference_scheme = #{referenceScheme,jdbcType=INTEGER},
+      reference_scheme = #{referenceScheme,jdbcType=VARCHAR},
       img_url = #{imgUrl,jdbcType=VARCHAR},
       third_view = #{thirdView,jdbcType=BIT},
       contract_type = #{contractType,jdbcType=INTEGER},

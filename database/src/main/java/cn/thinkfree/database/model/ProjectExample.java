@@ -1015,52 +1015,62 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andStyleEqualTo(Integer value) {
+        public Criteria andStyleEqualTo(String value) {
             addCriterion("style =", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleNotEqualTo(Integer value) {
+        public Criteria andStyleNotEqualTo(String value) {
             addCriterion("style <>", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleGreaterThan(Integer value) {
+        public Criteria andStyleGreaterThan(String value) {
             addCriterion("style >", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleGreaterThanOrEqualTo(Integer value) {
+        public Criteria andStyleGreaterThanOrEqualTo(String value) {
             addCriterion("style >=", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleLessThan(Integer value) {
+        public Criteria andStyleLessThan(String value) {
             addCriterion("style <", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleLessThanOrEqualTo(Integer value) {
+        public Criteria andStyleLessThanOrEqualTo(String value) {
             addCriterion("style <=", value, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleIn(List<Integer> values) {
+        public Criteria andStyleLike(String value) {
+            addCriterion("style like", value, "style");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleNotLike(String value) {
+            addCriterion("style not like", value, "style");
+            return (Criteria) this;
+        }
+
+        public Criteria andStyleIn(List<String> values) {
             addCriterion("style in", values, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleNotIn(List<Integer> values) {
+        public Criteria andStyleNotIn(List<String> values) {
             addCriterion("style not in", values, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleBetween(Integer value1, Integer value2) {
+        public Criteria andStyleBetween(String value1, String value2) {
             addCriterion("style between", value1, value2, "style");
             return (Criteria) this;
         }
 
-        public Criteria andStyleNotBetween(Integer value1, Integer value2) {
+        public Criteria andStyleNotBetween(String value1, String value2) {
             addCriterion("style not between", value1, value2, "style");
             return (Criteria) this;
         }
@@ -1565,52 +1575,62 @@ public class ProjectExample {
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeEqualTo(Integer value) {
+        public Criteria andReferenceSchemeEqualTo(String value) {
             addCriterion("reference_scheme =", value, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeNotEqualTo(Integer value) {
+        public Criteria andReferenceSchemeNotEqualTo(String value) {
             addCriterion("reference_scheme <>", value, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeGreaterThan(Integer value) {
+        public Criteria andReferenceSchemeGreaterThan(String value) {
             addCriterion("reference_scheme >", value, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeGreaterThanOrEqualTo(Integer value) {
+        public Criteria andReferenceSchemeGreaterThanOrEqualTo(String value) {
             addCriterion("reference_scheme >=", value, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeLessThan(Integer value) {
+        public Criteria andReferenceSchemeLessThan(String value) {
             addCriterion("reference_scheme <", value, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeLessThanOrEqualTo(Integer value) {
+        public Criteria andReferenceSchemeLessThanOrEqualTo(String value) {
             addCriterion("reference_scheme <=", value, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeIn(List<Integer> values) {
+        public Criteria andReferenceSchemeLike(String value) {
+            addCriterion("reference_scheme like", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeNotLike(String value) {
+            addCriterion("reference_scheme not like", value, "referenceScheme");
+            return (Criteria) this;
+        }
+
+        public Criteria andReferenceSchemeIn(List<String> values) {
             addCriterion("reference_scheme in", values, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeNotIn(List<Integer> values) {
+        public Criteria andReferenceSchemeNotIn(List<String> values) {
             addCriterion("reference_scheme not in", values, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeBetween(Integer value1, Integer value2) {
+        public Criteria andReferenceSchemeBetween(String value1, String value2) {
             addCriterion("reference_scheme between", value1, value2, "referenceScheme");
             return (Criteria) this;
         }
 
-        public Criteria andReferenceSchemeNotBetween(Integer value1, Integer value2) {
+        public Criteria andReferenceSchemeNotBetween(String value1, String value2) {
             addCriterion("reference_scheme not between", value1, value2, "referenceScheme");
             return (Criteria) this;
         }
