@@ -6,7 +6,6 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.HttpLinks;
-import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,28 +46,28 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private HttpLinks httpLinks;
 
     @Override
-    public List<OrderUser> findByOrderNo(String orderNo) {
+    public List<OrderUser> findByProjectNo(String orderNo) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo);
+        example.createCriteria().andProjectNoEqualTo(orderNo);
         return orderUserMapper.selectByExample(example);
     }
 
     @Override
-    public String findUserIdByOrderNoAndRoleId(String orderNo, String roleId) {
-        OrderUser orderUser = findByOrderNoAndRoleId(orderNo, roleId);
+    public String findUserIdByProjectNoAndRoleId(String projectNo, String roleId) {
+        OrderUser orderUser = findByProjectNoAndRoleId(projectNo, roleId);
         return orderUser != null ? orderUser.getUserId() : null;
     }
 
     @Override
-    public String findRoleIdByOrderNoAndUserId(String orderNo, String userId) {
-        OrderUser orderUser = findByOrderNoAndUserId(orderNo, userId);
+    public String findRoleIdByProjectNoAndUserId(String projectNo, String userId) {
+        OrderUser orderUser = findByProjectNoAndUserId(projectNo, userId);
         return orderUser != null ? orderUser.getRoleId() : null;
     }
 
     @Override
-    public OrderUser findByOrderNoAndUserId(String orderNo, String userId) {
+    public OrderUser findByProjectNoAndUserId(String projectNo, String userId) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(orderNo).andUserIdEqualTo(userId);
+        example.createCriteria().andProjectNoEqualTo(projectNo).andUserIdEqualTo(userId);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
         return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
     }
@@ -216,7 +215,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     @Override
-    public OrderUser findByOrderNoAndRoleId(String projectNo, String roleId) {
+    public OrderUser findByProjectNoAndRoleId(String projectNo, String roleId) {
         OrderUserExample example = new OrderUserExample();
         example.createCriteria().andOrderNoEqualTo(projectNo).andRoleIdEqualTo(roleId);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);

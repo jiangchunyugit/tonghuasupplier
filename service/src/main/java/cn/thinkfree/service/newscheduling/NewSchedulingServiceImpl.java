@@ -82,12 +82,12 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             details.setVersion(bigScheduling.getVersion());
             details.setRenameBig(bigScheduling.getRename());
             if(bigSortSet.contains(bigScheduling.getSort())){
-                details.setPlanSatrtTime(bigStartTime);
+                details.setPlanStartTime(bigStartTime);
                 details.setPlanEndTime(DateUtil.getDate(bigStartTime,bigScheduling.getWorkload()));
                 bigStartTime = DateUtil.getDate(bigStartTime,bigScheduling.getWorkload());
                 details.setIsMatching(Scheduling.MATCHING_YES.getValue());
             }else {
-                details.setPlanSatrtTime(bigStartTime);
+                details.setPlanStartTime(bigStartTime);
                 details.setPlanEndTime(bigStartTime);
                 details.setIsMatching(Scheduling.MATHCHING_NO.getValue());
             }

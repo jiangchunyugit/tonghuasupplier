@@ -129,7 +129,7 @@ public interface ProjectMapper {
      * @Param
      * @return
      **/
-    List<SiteDetailsVO> selectSiteByPage(@Param("siteDetailsVO") SiteDetailsVO siteDetailsVO,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+    List<SiteDetailsVO> selectSiteByPage(@Param("siteDetailsVO") SiteDetailsVO siteDetailsVO, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
     /**
      * @Author jiang
      * @Description 查询工地详情总条数

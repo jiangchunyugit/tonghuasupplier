@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.RoleVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -101,7 +103,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void dealApply(String userId, int employeeApplyState, String dealExplain, String dealUserId, String companyId) {
+    public void dealApply(String userId, int employeeApplyState, String dealExplain, String dealUserId, String roleCode, String companyId) {
         if (employeeApplyState == 1 || employeeApplyState == 4) {
             throw new RuntimeException("申请状态异常");
         }
@@ -113,6 +115,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("公司信息异常");
         }
         checkCompanyExit(companyId);
+        UserRoleSetExample roleSetExample = new UserRoleSetExample();
+        roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+        if(roleSets.isEmpty()){
+            throw new RuntimeException("无效的角色编码");
+        }
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -131,6 +139,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         employeeMsg.setEmployeeState(employeeState);
         employeeMsg.setEmployeeApplyState(employeeApplyState);
+        employeeMsg.setRoleCode(roleCode);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
         logger.info("更新用户信息：res={}", res);
         EmployeeApplyLogExample employeeApplyLogExample = new EmployeeApplyLogExample();
@@ -161,10 +170,45 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<UserRoleSet> queryRoles() {
+    public List<RoleVo> queryRoles() {
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
-        roleSetExample.createCriteria();
-        return roleSetMapper.selectByExample(roleSetExample);
+        //查询展示，且未删除的
+        roleSetExample.createCriteria().andIsShowEqualTo(Short.parseShort("1")).andIsDelEqualTo(2);
+        List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+        List<RoleVo> roleVos = new ArrayList<>();
+        for(UserRoleSet userRoleSet : roleSets){
+            RoleVo roleVo = new RoleVo(userRoleSet.getRoleCode(),userRoleSet.getRoleName());
+            roleVos.add(roleVo);
+        }
+        return roleVos;
+    }
+
+    @Override
+    public void createRole(String roleCode, String roleName) {
+        UserRoleSetExample roleSetExample = new UserRoleSetExample();
+        roleSetExample.createCriteria().andIsDelEqualTo(2);
+        roleSetExample.or().andRoleCodeEqualTo(roleCode);
+        roleSetExample.or().andRoleNameEqualTo(roleName);
+        List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+        if(roleSets.isEmpty()){
+            throw new RuntimeException("该角色已存在");
+        }
+        UserRoleSet userRoleSet = new UserRoleSet();
+        userRoleSet.setCreateTime(new Date());
+        userRoleSet.setIsDel(2);
+        userRoleSet.setIsShow(Short.parseShort("1"));
+        userRoleSet.setRoleCode(roleCode);
+        userRoleSet.setRoleName(roleName);
+        roleSetMapper.insertSelective(userRoleSet);
+    }
+
+    @Override
+    public void delRole(String roleCode) {
+        UserRoleSet userRoleSet = new UserRoleSet();
+        userRoleSet.setIsDel(1);
+        UserRoleSetExample setExample = new UserRoleSetExample();
+        setExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        roleSetMapper.updateByExample(userRoleSet,setExample);
     }
 
     @Override
