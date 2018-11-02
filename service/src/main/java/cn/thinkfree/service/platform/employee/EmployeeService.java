@@ -2,6 +2,7 @@ package cn.thinkfree.service.platform.employee;
 
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.RoleVo;
 
 import java.util.List;
 
@@ -37,7 +38,7 @@ public interface EmployeeService {
      * @param dealUserId         处理人ID
      * @param companyId          公司ID
      */
-    void dealApply(String userId, int employeeApplyState, String dealExplain, String dealUserId, String companyId);
+    void dealApply(String userId, int employeeApplyState, String dealExplain, String dealUserId, String roleCode, String companyId);
 
     /**
      * 提交证件信息
@@ -57,7 +58,7 @@ public interface EmployeeService {
      *
      * @return
      */
-    List<UserRoleSet> queryRoles();
+    List<RoleVo> queryRoles();
 
     /**
      * 设置用户角色
@@ -74,4 +75,17 @@ public interface EmployeeService {
      * @return
      */
     EmployeeMsgVo employeeMsgById(String userId);
+
+    /**
+     * 创建角色
+     * @param roleCode 角色编码
+     * @param roleName 角色名称
+     */
+    void createRole(String roleCode, String roleName);
+
+    /**
+     * 删除角色
+     * @param roleCode
+     */
+    void delRole(String roleCode);
 }

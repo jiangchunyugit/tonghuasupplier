@@ -31,7 +31,7 @@ public class DesignerOrderVo {
     private String companyName;
     @ApiModelProperty("公司状态")
     private String companyState;
-    @ApiModelProperty("归属设计公司名称")
+    @ApiModelProperty("归属设计师")
     private String designerName;
     @ApiModelProperty("订单状态")
     private String orderStateName;

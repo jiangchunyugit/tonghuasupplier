@@ -75,13 +75,7 @@ public class DesignerController extends AbsBaseController {
     @RequestMapping(value = "msg", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<DesignerMsgVo> queryDesignerMsgByUserId(
             @ApiParam(name = "userId", required = false, value = "设计师ID") @RequestParam(name = "userId", required = false) String userId) {
-        DesignerMsg designerMsg = designerService.queryDesignerByUserId(userId);
-        EmployeeMsg employeeMsg = designerService.queryEmployeeMsgByUserId(userId);
-        List<DesignerStyleConfig> designerStyleConfigs = designerService.queryDesignerStyleByUserId(userId);
-        DesignerMsgVo designerMsgVo = new DesignerMsgVo();
-        designerMsgVo.setDesignerMsg(designerMsg);
-        designerMsgVo.setDesignerStyleConfigs(designerStyleConfigs);
-        designerMsgVo.setEmployeeMsg(employeeMsg);
+        DesignerMsgVo designerMsgVo = designerService.queryDesignerByUserId(userId);
         return sendJsonData(ResultMessage.SUCCESS, designerMsgVo);
     }
 

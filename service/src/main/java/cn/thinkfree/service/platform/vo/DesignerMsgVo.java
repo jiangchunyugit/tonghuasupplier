@@ -60,36 +60,187 @@ public class DesignerMsgVo {
     @ApiModelProperty("擅长风格")
     private List<String> designerStyles;
 
-
-
-    @ApiModelProperty("设计师信息")
-    private DesignerMsg designerMsg;
-    @ApiModelProperty("设计师擅长风格")
-    private List<DesignerStyleConfig> designerStyleConfigs;
-    @ApiModelProperty("员工信息")
-    private EmployeeMsg employeeMsg;
-
-    public DesignerMsg getDesignerMsg() {
-        return designerMsg;
+    public String getRealName() {
+        return realName;
     }
 
-    public void setDesignerMsg(DesignerMsg designerMsg) {
-        this.designerMsg = designerMsg;
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
 
-    public List<DesignerStyleConfig> getDesignerStyleConfigs() {
-        return designerStyleConfigs;
+    public int getSex() {
+        return sex;
     }
 
-    public void setDesignerStyleConfigs(List<DesignerStyleConfig> designerStyleConfigs) {
-        this.designerStyleConfigs = designerStyleConfigs;
+    public void setSex(int sex) {
+        this.sex = sex;
     }
 
-    public void setEmployeeMsg(EmployeeMsg employeeMsg) {
-        this.employeeMsg = employeeMsg;
+    public String getBirthday() {
+        return birthday;
     }
 
-    public EmployeeMsg getEmployeeMsg() {
-        return employeeMsg;
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCertificate() {
+        return certificate;
+    }
+
+    public void setCertificate(String certificate) {
+        this.certificate = certificate;
+    }
+
+    public String getCertificateUrl1() {
+        return certificateUrl1;
+    }
+
+    public void setCertificateUrl1(String certificateUrl1) {
+        this.certificateUrl1 = certificateUrl1;
+    }
+
+    public String getCertificateUrl2() {
+        return certificateUrl2;
+    }
+
+    public void setCertificateUrl2(String certificateUrl2) {
+        this.certificateUrl2 = certificateUrl2;
+    }
+
+    public String getCertificateUrl3() {
+        return certificateUrl3;
+    }
+
+    public void setCertificateUrl3(String certificateUrl3) {
+        this.certificateUrl3 = certificateUrl3;
+    }
+
+    public int getAuthState() {
+        return authState;
+    }
+
+    public void setAuthState(int authState) {
+        this.authState = authState;
+    }
+
+    public int getSource() {
+        return source;
+    }
+
+    public void setSource(int source) {
+        this.source = source;
+    }
+
+    public String getRegisterTime() {
+        return registerTime;
+    }
+
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public String getDesignTag() {
+        return designTag;
+    }
+
+    public void setDesignTag(String designTag) {
+        this.designTag = designTag;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public String getIdentity() {
+        return identity;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public int getWorkingTime() {
+        return workingTime;
+    }
+
+    public void setWorkingTime(int workingTime) {
+        this.workingTime = workingTime;
+    }
+
+    public String getVolumeRoomMoney() {
+        return volumeRoomMoney;
+    }
+
+    public void setVolumeRoomMoney(String volumeRoomMoney) {
+        this.volumeRoomMoney = volumeRoomMoney;
+    }
+
+    public String getDesignerMoneyLow() {
+        return designerMoneyLow;
+    }
+
+    public void setDesignerMoneyLow(String designerMoneyLow) {
+        this.designerMoneyLow = designerMoneyLow;
+    }
+
+    public String getDesignerMoneyHigh() {
+        return designerMoneyHigh;
+    }
+
+    public void setDesignerMoneyHigh(String designerMoneyHigh) {
+        this.designerMoneyHigh = designerMoneyHigh;
+    }
+
+    public List<String> getDesignerStyles() {
+        return designerStyles;
+    }
+
+    public void setDesignerStyles(List<String> designerStyles) {
+        this.designerStyles = designerStyles;
     }
 }

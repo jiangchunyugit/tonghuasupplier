@@ -8,6 +8,7 @@ import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.RoleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -37,9 +38,9 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "authState", required = false, value = "审核状态") @RequestParam(name = "authState", required = false) int authState,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
-        try{
+        try {
             employeeService.reviewEmployee(userId, authState, companyId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
@@ -56,9 +57,9 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "idCardUrl1", required = false, value = "证件正面") @RequestParam(name = "idCardUrl1", required = false) String idCardUrl1,
             @ApiParam(name = "idCardUrl2", required = false, value = "证件反面") @RequestParam(name = "idCardUrl2", required = false) String idCardUrl2,
             @ApiParam(name = "idCardUrl3", required = false, value = "手持证件") @RequestParam(name = "idCardUrl3", required = false) String idCardUrl3) {
-        try{
+        try {
             employeeService.submitCardMsg(userId, cardType, cardNo, realName, idCardUrl1, idCardUrl2, idCardUrl3);
-        }catch (Exception e){
+        } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
@@ -71,9 +72,9 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
-        try{
+        try {
             employeeService.employeeApply(userId, employeeApplyState, companyId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
@@ -87,10 +88,11 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
             @ApiParam(name = "dealExplain", required = false, value = "处理结果") @RequestParam(name = "dealExplain", required = false) String dealExplain,
             @ApiParam(name = "dealUserId", required = false, value = "处理人ID") @RequestParam(name = "dealUserId", required = false) String dealUserId,
+            @ApiParam(name = "roleCode", required = false, value = "该员工所属角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
-        try{
-            employeeService.dealApply(userId, employeeApplyState, dealExplain, dealUserId, companyId);
-        }catch (Exception e){
+        try {
+            employeeService.dealApply(userId, employeeApplyState, dealExplain, dealUserId, roleCode, companyId);
+        } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
@@ -99,9 +101,36 @@ public class EmployeeController extends AbsBaseController {
     @ApiOperation("查询所有角色")
     @MyRespBody
     @RequestMapping(value = "queryRoles", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<List<UserRoleSet>> queryRoles() {
-        List<UserRoleSet> userRoleSets = employeeService.queryRoles();
+    public MyRespBundle<List<RoleVo>> queryRoles() {
+        List<RoleVo> userRoleSets = employeeService.queryRoles();
         return sendJsonData(ResultMessage.SUCCESS, userRoleSets);
+    }
+
+    @ApiOperation("创建角色")
+    @MyRespBody
+    @RequestMapping(value = "createRole", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle createRole(
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "roleName", required = false, value = "角色名称") @RequestParam(name = "roleName", required = false) String roleName) {
+        try {
+            employeeService.createRole(roleCode, roleName);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendJsonData(ResultMessage.SUCCESS, null);
+    }
+
+    @ApiOperation("删除角色")
+    @MyRespBody
+    @RequestMapping(value = "delRole", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle delRole(
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode) {
+        try {
+            employeeService.delRole(roleCode);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
     @ApiOperation("设置用户角色")
@@ -111,9 +140,9 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
-        try{
+        try {
             employeeService.setUserRole(userId, roleCode, companyId);
-        }catch (Exception e){
+        } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
@@ -123,11 +152,11 @@ public class EmployeeController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "msg", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<EmployeeMsgVo> msg(
-            @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId){
-        try{
+            @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId) {
+        try {
             EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
             return sendJsonData(ResultMessage.SUCCESS, employeeMsg);
-        }catch (Exception e){
+        } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
     }
