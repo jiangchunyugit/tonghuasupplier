@@ -2,11 +2,13 @@ package cn.thinkfree.service.platform.employee.impl;
 
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
+import cn.thinkfree.service.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private CompanyInfoMapper companyInfoMapper;
     @Autowired
     private UserCenterService userCenterService;
+    @Autowired
+    private BasicsService basicsService;
 
     @Override
     public void reviewEmployee(String userId, int authState, String companyId) {
@@ -156,6 +160,27 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void submitCardMsg(String userId, int cardType, String cardNo, String realName, String photo1, String photo2, String photo3) {
+        checkEmployeeExit(userId);
+        List<BasicsData> basicsData = basicsService.cardTypes();
+        List<String> types = ReflectUtils.getList(basicsData,"basicsCode");
+        if(!types.contains(cardType + "")){
+            throw new RuntimeException("无效的证件类型");
+        }
+        if(StringUtils.isBlank(cardNo)){
+            throw new RuntimeException("证件编号不能为空");
+        }
+        if(StringUtils.isBlank(realName)){
+            throw new RuntimeException("真实姓名不能为空");
+        }
+        if(StringUtils.isBlank(photo1)){
+            throw new RuntimeException("照片1不能为空");
+        }
+        if(StringUtils.isBlank(photo2)){
+            throw new RuntimeException("照片2不能为空");
+        }
+        if(StringUtils.isBlank(photo3)){
+            throw new RuntimeException("照片3不能为空");
+        }
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setCertificateType(cardType);
         employeeMsg.setCertificate(cardNo);
@@ -185,13 +210,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void createRole(String roleCode, String roleName) {
+        if(StringUtils.isBlank(roleCode)){
+            throw new RuntimeException("角色编码不能为空");
+        }
+        if(StringUtils.isBlank(roleName)){
+            throw new RuntimeException("角色名称不能为空");
+        }
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
         roleSetExample.createCriteria().andIsDelEqualTo(2);
         roleSetExample.or().andRoleCodeEqualTo(roleCode);
         roleSetExample.or().andRoleNameEqualTo(roleName);
         List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
         if(roleSets.isEmpty()){
-            throw new RuntimeException("该角色已存在");
+            throw new RuntimeException("该角色编码/角色名称已存在");
         }
         UserRoleSet userRoleSet = new UserRoleSet();
         userRoleSet.setCreateTime(new Date());
@@ -279,5 +310,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        if(companyInfos.isEmpty()){
 //            throw new RuntimeException("没有查询到该公司");
 //        }
+    }
+
+    private EmployeeMsg checkEmployeeExit(String userId){
+        EmployeeMsgExample employeeMsg = new EmployeeMsgExample();
+        employeeMsg.createCriteria().andUserIdEqualTo(userId);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsg);
+        if(employeeMsgs.isEmpty()){
+            throw new RuntimeException("无效的员工ID");
+        }
+        return employeeMsgs.get(0);
     }
 }

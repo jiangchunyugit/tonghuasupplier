@@ -11,12 +11,32 @@ import java.util.Map;
  * 基础数据接口
  */
 public interface BasicsService {
+
     /**
-     * 查询身份类型
-     * @param type 类型
+     * 查询证件类型
      * @return
      */
-    List<BasicsData> idCardTypes(String type);
+    List<BasicsData> cardTypes();
+    /**
+     * 查询证件类型
+     * @return
+     */
+    List<BasicsData> countryType();
+    /**
+     * 查询证件类型
+     * @return
+     */
+    List<BasicsData> cancelDesign();
+    /**
+     * 查询证件类型
+     * @return
+     */
+    List<BasicsData> refund();
+    /**
+     * 查询证件类型
+     * @return
+     */
+    List<BasicsData> cancelCons();
 
     /**
      * 获取省市区信息
