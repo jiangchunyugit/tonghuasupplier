@@ -109,7 +109,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     public List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo) {
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo, Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
-
         return playBigList;
     }
 
@@ -167,12 +166,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
-        for (int i=playBigList.size()-1;i>=0;i--){
-            if(playBigList.get(i).getIsCompleted().equals(ProjectDataStatus.CONFIRM.getValue())){
-                playBigList.get(i).setHighlight(true);
-                break;
-            }
-        }
         return RespData.success(playBigList);
     }
 

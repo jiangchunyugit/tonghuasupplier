@@ -248,6 +248,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public List<ConstructionSiteVO> querySiteDetailsByPage(ConstructionSiteVO constructionSiteVO, Integer pageNum, Integer pageSize) {
         constructionSiteVO.setStatus(1);
+        //获取业主  项目经理 设计师
+        EmployeeInfoVO employeeInfoVO = new EmployeeInfoVO();
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoEqualTo(constructionSiteVO.getProjectNo());
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
         return projectMapper.selectSiteDetailsByPage(constructionSiteVO, pageNum, pageSize);
     }
 
