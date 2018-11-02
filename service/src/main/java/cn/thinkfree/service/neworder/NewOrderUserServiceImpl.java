@@ -1,5 +1,6 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -252,7 +253,41 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         OrderUserExample orderUserExample = new OrderUserExample();
         orderUserExample.createCriteria().andProjectNoEqualTo(constructionSiteVO.getProjectNo());
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
-        return projectMapper.selectSiteDetailsByPage(constructionSiteVO, pageNum, pageSize);
+        List<EmployeeInfoVO> list = new ArrayList<>();
+        orderUsers.forEach((user) ->
+                {
+                    EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+                    employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
+                    List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+                    employeeMsgs.forEach(employeeMsg -> {
+                        if (employeeMsg.getRoleCode().equals("CP")) {
+                            employeeInfoVO.setProjectManager(employeeMsg.getRealName());
+                        } else if (employeeMsg.getRoleCode().equals("CM")) {
+                            employeeInfoVO.setForeman(employeeMsg.getRealName());
+                        }else if (employeeMsg.getRoleCode().equals("CS")) {
+                            employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
+                        }else if(employeeMsg.getRoleCode().equals("CQ")) {
+                            employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
+                        }else if(employeeMsg.getRoleCode().equals("CD")) {
+                            employeeInfoVO.setDesigner(employeeMsg.getRealName());
+                        }
+                    });
+                }
+
+        );
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(constructionSiteVO.getProjectNo());
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), projects.get(0).getOwnerId(), Role.CC.id);
+        List<ConstructionSiteVO> constructionSiteList = projectMapper.selectSiteDetailsByPage(constructionSiteVO, pageNum, pageSize);
+        constructionSiteList.forEach((projectOrder)->{
+            projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
+            projectOrder.setDesignerName(employeeInfoVO.getDesigner());
+           /* projectOrder.setOwner(customerInfo.getUsername());
+           projectOrder.setPhone(customerInfo.getPhone());*/
+        });
+
+        return constructionSiteList;
     }
 
     /**

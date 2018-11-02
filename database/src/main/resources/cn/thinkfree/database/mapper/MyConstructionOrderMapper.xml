@@ -39,4 +39,8 @@
             AND
             deso.status=#{status}
     </select>
+
+    <!--<select id="selectConstructionOrderVo" resultType="">-->
+
+    <!--</select>-->
 </mapper>

@@ -6,6 +6,7 @@ import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
 import java.util.List;
 
+import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
 import org.apache.ibatis.annotations.Param;
@@ -134,4 +135,6 @@ public interface ConstructionOrderMapper {
     ProjectOrderDetailVo selectByProjectNo(String projectNo);
 
     OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo,@Param("status") Integer status);
+
+    ConstructionOrderVO selectConstructionOrderVo(String projectNo);
 }

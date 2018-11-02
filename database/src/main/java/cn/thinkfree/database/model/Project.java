@@ -163,7 +163,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Integer style;
+    private String style;
 
     /**
      * Database Column Remarks:
@@ -262,7 +262,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    private Integer referenceScheme;
+    private String referenceScheme;
 
     /**
      * Database Column Remarks:
@@ -639,7 +639,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Integer getStyle() {
+    public String getStyle() {
         return style;
     }
 
@@ -651,8 +651,8 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setStyle(Integer style) {
-        this.style = style;
+    public void setStyle(String style) {
+        this.style = style == null ? null : style.trim();
     }
 
     /**
@@ -855,7 +855,7 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public Integer getReferenceScheme() {
+    public String getReferenceScheme() {
         return referenceScheme;
     }
 
@@ -867,8 +867,8 @@ public class Project extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setReferenceScheme(Integer referenceScheme) {
-        this.referenceScheme = referenceScheme;
+    public void setReferenceScheme(String referenceScheme) {
+        this.referenceScheme = referenceScheme == null ? null : referenceScheme.trim();
     }
 
     /**

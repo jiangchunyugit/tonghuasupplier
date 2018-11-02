@@ -81,11 +81,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<Project> projects = projectMapper.selectByExample(example);
         List<ProjectVo> projectVoList = new ArrayList<>();
         for (Project project : projects) {
-            ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
-            if (projectVo == null) {
-                System.out.println("工具类转换失败!!");
-                return RespData.error("工具类转换失败!!");
-            }
+            ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
+            projectVo.setAddress(project.getAddressDetail());
+            projectVo.setStageName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
             //添加业主信息
@@ -94,6 +92,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
             owner.setPhone(userName.get("phone").toString());
             owner.setName(userName.get("nickName").toString());
+            projectVo.setOwner(owner);
             projectVoList.add(projectVo);
         }
         pageInfo.setList(projectVoList);
@@ -185,8 +184,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         PcProjectDetailVo pcProjectDetailVo = new PcProjectDetailVo();
         //获取项目阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = projectStageLogMapper.selectByProjectNo(projectNo);
+        pcProjectDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         //组合施工订单信息
-        ConstructionOrderVO constructionOrderVO;
+        ConstructionOrderVO constructionOrderVO = constructionOrderMapper.selectConstructionOrderVo(projectNo);
         //组合设计订单信息
         DesignerOrderVo designerOrderVo;
         //组合报价信息
