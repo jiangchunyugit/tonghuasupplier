@@ -18,37 +18,37 @@ public interface NewOrderUserService {
     /**
      * 根据项目编号查询项目用户关系
      *
-     * @param orderNo 项目编号
+     * @param projectNo 项目编号
      * @return 项目用户关系
      */
-    List<OrderUser> findByOrderNo(String orderNo);
+    List<OrderUser> findByProjectNo(String projectNo);
 
     /**
      * 根据项目编号与角色编号查询用户ID
      *
-     * @param orderNo 项目编号
+     * @param projectNo 项目编号
      * @param roleId  角色编号
      * @return 用户ID
      */
-    String findUserIdByOrderNoAndRoleId(String orderNo, String roleId);
+    String findUserIdByProjectNoAndRoleId(String projectNo, String roleId);
 
     /**
      * 根据项目编号与用户编号查询角色ID
      *
-     * @param orderNo 项目编号
+     * @param projectNo 项目编号
      * @param userId  用户编号
      * @return 角色ID
      */
-    String findRoleIdByOrderNoAndUserId(String orderNo, String userId);
+    String findRoleIdByProjectNoAndUserId(String projectNo, String userId);
 
     /**
      * 根据项目编号与用户编号查询项目角色用户关系
      *
-     * @param orderNo 项目编号
+     * @param projectNo 项目编号
      * @param userId  用户编号
      * @return 项目角色用户关系
      */
-    OrderUser findByOrderNoAndUserId(String orderNo, String userId);
+    OrderUser findByProjectNoAndUserId(String projectNo, String userId);
 
     /**
      * 分页查询项目派单
@@ -99,7 +99,7 @@ public interface NewOrderUserService {
      * @param roleId    角色编号
      * @return 项目、角色、用户关系
      */
-    OrderUser findByOrderNoAndRoleId(String projectNo, String roleId);
+    OrderUser findByProjectNoAndRoleId(String projectNo, String roleId);
 
     /**
      * @return

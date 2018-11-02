@@ -14,13 +14,13 @@ import java.util.List;
  */
 public interface AfApprovalOrderService {
 
-    List<List<UserRoleSet>> findByConfigPlanNo(String configLogNo, List<UserRoleSet> roles);
+    List<List<UserRoleSet>> findByConfigSchemeNo(String configLogNo, List<UserRoleSet> roles);
 
-    void create(String configPlanNo, String configNo, List<List<UserRoleSet>> approvalOrders);
+    void create(String configSchemeNo, String configNo, List<List<UserRoleSet>> approvalOrders);
 
-    AfApprovalOrder findByConfigPlanNoAndRoleId(String configPlanNo, String roleId);
+    AfApprovalOrder findByConfigSchemeNoAndRoleId(String configSchemeNo, String roleId);
 
     AfApprovalOrder findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId);
 
-    AfApprovalOrder findByConfigNoAndPlanNoAndRoleId(String configNo, String planNo, String roleId);
+    AfApprovalOrder findByConfigNoAndSchemeNoAndRoleId(String configNo, String schemeNo, String roleId);
 }
