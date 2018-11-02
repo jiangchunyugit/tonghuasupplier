@@ -159,7 +159,8 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @ApiOperation(value = "查看合同条款字典", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/text")
     @PostMapping("/queryContractDic/")
     public MyRespBundle<String> queryContractDic(@RequestParam String type){
-    	 Map<String,String>  resMap  =  contractTemplateService.queryContractDic(type);
+    	 Map<String,String>  resMap  =  null;
+                 //contractTemplateService.queryContractDic(type);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     

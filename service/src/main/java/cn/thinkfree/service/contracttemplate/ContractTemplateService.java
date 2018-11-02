@@ -31,10 +31,22 @@ public interface ContractTemplateService {
      * 生成pdf 
      * 
      */
-    boolean updateContractTemplateInfo(String id,String type,String contractTpName, String contractTpRemark, MultipartFile file);
+    boolean updateContractTemplateInfo(String id,String type,String contractTpName, String contractTpRemark);
     
     
     
+    /**
+     * 根据合同类型 查询合同类型模板
+     * @author lvqidong
+     * @param type
+     * @return string
+     */
+    String getTemplatePdfUrl(String type);
     
     
+    /**
+     * 上传
+     * 
+     */
+    boolean uploadFile(String type,MultipartFile  file);
 }

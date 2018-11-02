@@ -102,4 +102,24 @@ public interface ContractService {
       Map<String,Object> getContractDetailInfo(String contractNumber,String companyId);
       
       
+      
+
+      /**
+       * 根据订单号和订单类型生成合同和公司
+       * @param  companyId , orderNumber, type (0设计合同 1装饰合同)
+       * @return list
+       */
+      boolean createOrderContract(String companyId,String orderNumber,String type);
+      
+      
+      
+      /**
+       * 根据订单号获取
+       * @param  orderNumber 
+       * @return String pdf_url 
+       */
+      String getPdfUrlByOrderNumber(String orderNumber);
+      
+      
+      
 }
