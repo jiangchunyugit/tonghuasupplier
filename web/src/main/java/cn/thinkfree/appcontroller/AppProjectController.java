@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.*;
+import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.newproject.NewProjectService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -32,11 +33,17 @@ public class AppProjectController {
         return page;
     }
 
-    @RequestMapping(value = "getProjectDetail", method = RequestMethod.POST)
-    @ApiOperation(value = "获取项目详情接口")
-    public MyRespBundle<ProjectVo> getProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
-        MyRespBundle<ProjectVo> projectVo = newProjectService.getProjectDetail(projectNo);
+    @RequestMapping(value = "getAppProjectDetail", method = RequestMethod.POST)
+    @ApiOperation(value = "APP获取项目详情接口")
+    public MyRespBundle<ProjectVo> getAppProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+        MyRespBundle<ProjectVo> projectVo = newProjectService.getAppProjectDetail(projectNo);
         return projectVo;
+    }
+
+    @RequestMapping(value = "getPcProjectDetail", method = RequestMethod.POST)
+    @ApiOperation(value = "PC获取项目详情接口")
+    public MyRespBundle<PcProjectDetailVo> getPcProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+        return newProjectService.getPcProjectDetail(projectNo);
     }
 
     @RequestMapping(value = "getDesignData", method = RequestMethod.POST)
@@ -69,8 +76,10 @@ public class AppProjectController {
 
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
     @ApiOperation(value = "确认资料")
-    public MyRespBundle<String> confirmVolumeRoomData(@RequestBody@ApiParam(name = "dataDetailVo", value = "资料详情") DataDetailVo dataDetailVo) {
-        return newProjectService.confirmVolumeRoomData(dataDetailVo);
+    public MyRespBundle<String> confirmVolumeRoomData(
+                    @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ")String projectNo,
+                    @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号,测试请用 ")Integer category) {
+        return newProjectService.confirmVolumeRoomData(projectNo,category);
     }
 
     @RequestMapping(value = "getProjectUsers", method = RequestMethod.POST)
@@ -91,23 +100,23 @@ public class AppProjectController {
         return newProjectService.getListUserByUserIds(userIds);
     }
 
-    @RequestMapping(value = "applyRefund",method = RequestMethod.POST)
+    @RequestMapping(value = "applyRefund", method = RequestMethod.POST)
     @ApiOperation(value = "退款接口")
     public MyRespBundle<String> applyRefund(
-            @RequestParam("OrderNo")@ApiParam(name = "OrderNo",value = "订单号")String orderNo ,
-            @RequestParam("payOrderNo")@ApiParam(name = "payOrderNo",value = "支付订单号")String payOrderNo ,
-            @RequestParam("otherReason")@ApiParam(name = "otherReason",value = "其他原因")String otherReason ,
-            @RequestParam("money")@ApiParam(name = "money",value = "金额")Integer money ,
-            @RequestParam("moneyName")@ApiParam(name = "moneyName",value = "退款项目名")String moneyName ,
-            @RequestParam("userId")@ApiParam(name = "userId",value = "用户id")String userId ,
-            @RequestParam("cancelReason")@ApiParam(name = "cancelReason",value = "取消原因")String cancelReason ){
-        return newProjectService.applyRefund(orderNo,payOrderNo,otherReason,money,moneyName,userId,cancelReason);
+            @RequestParam("OrderNo") @ApiParam(name = "OrderNo", value = "订单号") String orderNo,
+            @RequestParam("payOrderNo") @ApiParam(name = "payOrderNo", value = "支付订单号") String payOrderNo,
+            @RequestParam("otherReason") @ApiParam(name = "otherReason", value = "其他原因") String otherReason,
+            @RequestParam("money") @ApiParam(name = "money", value = "金额") Integer money,
+            @RequestParam("moneyName") @ApiParam(name = "moneyName", value = "退款项目名") String moneyName,
+            @RequestParam("userId") @ApiParam(name = "userId", value = "用户id") String userId,
+            @RequestParam("cancelReason") @ApiParam(name = "cancelReason", value = "取消原因") String cancelReason) {
+        return newProjectService.applyRefund(orderNo, payOrderNo, otherReason, money, moneyName, userId, cancelReason);
     }
 
-    @RequestMapping(value = "pay",method = RequestMethod.POST)
+    @RequestMapping(value = "pay", method = RequestMethod.POST)
     @ApiOperation(value = "支付费用")
-    public MyRespBundle pay(@RequestParam("payType")@ApiParam(name = "payType",value = "支付类型") Integer payType,
-                            @RequestParam("payOrderNo")@ApiParam(name = "payOrderNo",value = "支付订单号")String payOrderNo ){
+    public MyRespBundle pay(@RequestParam("payType") @ApiParam(name = "payType", value = "支付类型") Integer payType,
+                            @RequestParam("payOrderNo") @ApiParam(name = "payOrderNo", value = "支付订单号") String payOrderNo) {
         return RespData.success("支付成功!");
     }
 

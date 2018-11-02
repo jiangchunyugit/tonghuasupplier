@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
@@ -18,6 +19,7 @@ import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     OrderApplyRefundMapper orderApplyRefundMapper;
     @Autowired
     NewOrderUserService newOrderUserService;
+    @Autowired
+    ProjectStageLogMapper projectStageLogMapper;
 
 
     /**
@@ -103,7 +107,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<ProjectVo> getProjectDetail(String projectNo) {
+    public MyRespBundle<ProjectVo> getAppProjectDetail(String projectNo) {
         List<ProjectOrderDetailVo> projectOrderDetailVoList = new ArrayList<>();
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
@@ -169,6 +173,37 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);
+    }
+
+    /**
+     * 获取Pc端项目详情
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<PcProjectDetailVo> getPcProjectDetail(String projectNo) {
+        PcProjectDetailVo pcProjectDetailVo = new PcProjectDetailVo();
+        //获取项目阶段信息
+        List<OrderTaskSortVo> orderTaskSortVoList = projectStageLogMapper.selectByProjectNo(projectNo);
+        //组合施工订单信息
+        ConstructionOrderVO constructionOrderVO;
+        //组合设计订单信息
+        DesignerOrderVo designerOrderVo;
+        //组合报价信息
+        OfferVo offerVo;
+        //组合合同信息
+        ContractVo contractVo;
+        //组合施工信息
+        SchedulingVo schedulingVo;
+        //组合结算信息
+        SettlementVo settlementVo;
+        //组合评价管理
+        EvaluateVo evaluateVo;
+        //组合发票管理
+        InvoiceVo invoiceVo;
+
+
+        return null;
     }
 
     /**
@@ -274,19 +309,20 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 确认资料
-     *
-     * @param dataDetailVo
+     * @param projectNo
+     * @param category
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle<String> confirmVolumeRoomData(DataDetailVo dataDetailVo) {
-        ProjectData projectData = BaseToVoUtils.getVo(dataDetailVo, ProjectData.class);
+    public MyRespBundle<String> confirmVolumeRoomData(String projectNo, Integer category) {
+        ProjectData projectData = new ProjectData();
         projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
         projectData.setConfirmTime(new Date());
         ProjectDataExample example = new ProjectDataExample();
         ProjectDataExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(dataDetailVo.getProjectNo());
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andCategoryEqualTo(category);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         int i = projectDataMapper.updateByExampleSelective(projectData, example);
         if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {

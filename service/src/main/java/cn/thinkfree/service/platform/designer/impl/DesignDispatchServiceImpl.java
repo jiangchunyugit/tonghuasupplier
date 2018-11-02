@@ -80,12 +80,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司缺失");
         }
-        projectCriteria.andCompanyIdEqualTo(companyId);
         if (!userIds.isEmpty()) {
             projectCriteria.andOwnerIdIn(ReflectUtils.listToList(userIds));
-        }
-        if (!companyIds.isEmpty()) {
-            projectCriteria.andCompanyIdIn(ReflectUtils.listToList(companyIds));
         }
         if (StringUtils.isNotBlank(orderSource)) {
             projectCriteria.andOrderSourceEqualTo(Integer.parseInt(orderSource));
@@ -181,7 +177,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrderVo.setOwnerName(ownerMsg.getUserName());
             DesignerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
-        DesignerOrderVo.setAddress(project.getAddress());
+        DesignerOrderVo.setAddress(project.getAddressDetail());
         DesignerOrderVo.setOrderSource(ProjectSource.queryByState(project.getOrderSource()).getSourceName());
         DesignerOrderVo.setCreateTime(DateUtils.dateToStr(project.getCreateTime()));
         DesignerStyleConfig designerStyleConfig = designerStyleConfigMap.get(DesignerOrder.getStyleType());
