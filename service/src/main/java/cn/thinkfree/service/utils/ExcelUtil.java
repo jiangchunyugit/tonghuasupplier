@@ -37,7 +37,7 @@ public class ExcelUtil {
         //表头样式（加粗，水平居中，垂直居中）
         HSSFCellStyle cellStyle = wb.createCellStyle();
         cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);//水平居中
-      //  cellStyle.setVerticalAlignment( VerticalAlignment.CENTER);//垂直居中
+       cellStyle.setVerticalAlignment( VerticalAlignment.CENTER);//垂直居中
         //设置边框样式
         cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
         cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
@@ -51,7 +51,7 @@ public class ExcelUtil {
 
         //标题样式（加粗，垂直居中）
         HSSFCellStyle cellStyle2 = wb.createCellStyle();
-       // cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        cellStyle2.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
         cellStyle2.setFont(fontStyle);
 
         //设置边框样式
@@ -62,7 +62,7 @@ public class ExcelUtil {
 
         //字段样式（垂直居中）
         HSSFCellStyle cellStyle3 = wb.createCellStyle();
-       // cellStyle3.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
+        cellStyle3.setVerticalAlignment(VerticalAlignment.CENTER);//垂直居中
 
         //设置边框样式
         cellStyle3.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
