@@ -22,7 +22,7 @@ import java.util.Map;
  * @author xusonghui
  * 基础字典性信息提供
  */
-@Api(value = "基础信息接口", tags = "基础信息接口")
+@Api(value = "基础信息接口", tags = "基础信息接口--->app和后台公用")
 @Controller
 @RequestMapping("basics")
 public class BasicsController extends AbsBaseController {
@@ -43,6 +43,33 @@ public class BasicsController extends AbsBaseController {
     public MyRespBundle<List<BasicsData>> countryType() {
         //暂时写死
         List<BasicsData> cardTypeVos = basicsService.idCardTypes("COUNTRY_TYPE");
+        return sendJsonData(ResultMessage.SUCCESS, cardTypeVos);
+    }
+
+    @ApiOperation("取消设计原因，取汉字传回后台")
+    @MyRespBody
+    @RequestMapping(value = "cancelDesign", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> cancelDesign() {
+        //暂时写死
+        List<BasicsData> cardTypeVos = basicsService.idCardTypes("CANCEL_DESIGN");
+        return sendJsonData(ResultMessage.SUCCESS, cardTypeVos);
+    }
+
+    @ApiOperation("退款原因，取汉字传回后台")
+    @MyRespBody
+    @RequestMapping(value = "refund", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> refund() {
+        //暂时写死
+        List<BasicsData> cardTypeVos = basicsService.idCardTypes("REFUND");
+        return sendJsonData(ResultMessage.SUCCESS, cardTypeVos);
+    }
+
+    @ApiOperation("取消施工原因，取汉字传回后台")
+    @MyRespBody
+    @RequestMapping(value = "cancelCons", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> cancelCons() {
+        //暂时写死
+        List<BasicsData> cardTypeVos = basicsService.idCardTypes("CANCEL_CONS");
         return sendJsonData(ResultMessage.SUCCESS, cardTypeVos);
     }
 

@@ -23,4 +23,9 @@ public class AfUserDTO {
      * 用户头像
      */
     private String headPortrait;
+    /**
+     * 用户手机号
+     */
+    private String phone;
+
 }

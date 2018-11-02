@@ -1,6 +1,8 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
@@ -31,6 +33,7 @@ public class UserRoleSet extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("角色编码")
     private String roleCode;
 
     /**
@@ -42,6 +45,7 @@ public class UserRoleSet extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("角色名称")
     private String roleName;
 
     /**
