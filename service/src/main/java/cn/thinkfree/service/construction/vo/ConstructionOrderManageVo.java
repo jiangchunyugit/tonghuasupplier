@@ -6,67 +6,33 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.util.List;
 
-/**
- * 施工订单管理-反参实体
- * 运营后台
- */
 @Getter
 @Setter
-@Api(tags = "施工订单管理-反参实体（运营后台）")
+@Api(tags = "施工订单管理-页面-反参实体（运营后台）")
 public class ConstructionOrderManageVo {
 
-    @ApiModelProperty("所属地区1")
-    private String address;
+    @ApiModelProperty("待审核")
+    private String waitExamine;
 
-    @ApiModelProperty("公司名称2")
-    private String companyName;
+    @ApiModelProperty("待签约")
+    private String waitSign;
 
-    @ApiModelProperty("订单编号3")
-    private String orderNo;
+    @ApiModelProperty("待支付")
+    private String waitPay;
 
-    @ApiModelProperty("项目编号4")
-    private String projectNo;
+    @ApiModelProperty("订单个数")
+    private Integer orderNum;
 
-    @ApiModelProperty("预约日期5")
-    private Date appointmentTime;
+    @ApiModelProperty("总页数")
+    private Integer countPageNum;
 
-    @ApiModelProperty("签约日期6")
-    private Date signedTime;
+    @ApiModelProperty("城市列表")
+    private List<ConstructionCityVo> cityList;
 
-    @ApiModelProperty("项目地址7")
-    private String addressDetail;
-
-    @ApiModelProperty("业主8")
-    private String owner;
-
-    @ApiModelProperty("手机号码9")
-    private String phone;
-
-    @ApiModelProperty("折后合同额10")
-    private Integer reducedContractAmount;
-
-    @ApiModelProperty("已支付11")
-    private Integer havePaid;
-
-    @ApiModelProperty("订单状态12")
-    private Integer orderStage;
-
-    @ApiModelProperty("施工进度13")
-    private String constructionProgress;
-
-    @ApiModelProperty("最近验收情况14")
-    private Integer checkCondition;
-
-    @ApiModelProperty("延期天数15")
-    private Integer delayDays;
-
-    @ApiModelProperty("项目经理16")
-    private String projectManager;
-
-    @ApiModelProperty("设计师17")
-    private String designerName;
+    @ApiModelProperty("订单列表")
+    private List<ConstructionOrderListVo> orderList;
 
 
 }
