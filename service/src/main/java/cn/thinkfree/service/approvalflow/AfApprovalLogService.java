@@ -22,4 +22,6 @@ public interface AfApprovalLogService {
     void updateByPrimaryKey(AfApprovalLog approvalLog);
 
     List<AfApprovalLog> findByUserId(String userId);
+
+    void create(List<AfApprovalLog> afApprovalLogs);
 }

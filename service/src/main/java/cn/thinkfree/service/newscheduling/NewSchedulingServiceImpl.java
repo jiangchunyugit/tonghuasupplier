@@ -8,6 +8,7 @@ import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.mapper.ProjectQuotationLogMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
+import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.utils.BaseToVoUtils;
@@ -79,6 +80,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             details.setIsNeedCheck(bigScheduling.getIsNeedCheck());
             details.setIsAdopt(Scheduling.CHECK_NO.getValue());
             details.setVersion(bigScheduling.getVersion());
+            details.setRenameBig(bigScheduling.getRename());
             if(bigSortSet.contains(bigScheduling.getSort())){
                 details.setPlanSatrtTime(bigStartTime);
                 details.setPlanEndTime(DateUtil.getDate(bigStartTime,bigScheduling.getWorkload()));
@@ -158,6 +160,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     @Override
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(String projectNo) {
         ProjectBigSchedulingDetailsExample example = new ProjectBigSchedulingDetailsExample();
+        example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());

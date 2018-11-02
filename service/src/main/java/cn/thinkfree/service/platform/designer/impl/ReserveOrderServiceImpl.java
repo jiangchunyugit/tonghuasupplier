@@ -141,7 +141,6 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
                               String address, String addressDetail, int style, int area, int houseType, int peopleNum, String planStartTime,
                               String planEndTime, int decorationBudget, int balconyNum, String ownerId, String designerId) {
         Project project = new Project();
-        project.setCompanyId(companyId);
         project.setProjectNo(OrderNoUtils.getNo("PN"));
         project.setStatus(1);
         project.setStage(1);
@@ -152,7 +151,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         project.setHouseRoom(roomNum);
         project.setHouseOffice(officeNum);
         project.setHouseToilet(toiletNum);
-        project.setAddress(address);
+        project.setAddressDetail(address);
         project.setAddressDetail(addressDetail);
         project.setStatus(style);
         project.setArea(area);

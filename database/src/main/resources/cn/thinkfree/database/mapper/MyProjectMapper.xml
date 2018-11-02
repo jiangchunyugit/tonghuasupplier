@@ -49,24 +49,17 @@
         p.address AS address,
         i.company_name AS companyName,
         p.address_detail AS addressDetail,
-        s. NAME AS OWNER,
-        s.phone AS phone,
         co.money AS reducedContractAmount,
         o.order_stage AS orderStage,
         b.big_name AS constructionProgress,
         b.actual_satrt_time AS startTime,
         b.actual_end_time AS endTime,
-        ur.name AS projectManager,
-        ms.name AS designerName
         FROM
         project p
         LEFT JOIN construction_order co ON co.project_no = p.project_no
-        LEFT JOIN user_info ur ON ur.company_id = p.company_id
         LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
         LEFT JOIN company_info i ON i.company_id = p.company_id
         LEFT JOIN designer_order o ON o .project_no = p.project_no
-        LEFT JOIN consumer_set s ON s. ID = P .owner_id
-        LEFT JOIN user_info ms ON ms.user_id = o.user_id
         WHERE
         p.project_no=#{constructionSiteVO.projectNo} AND p.status=#{constructionSiteVO.status}
         ORDER BY p.create_time DESC
@@ -83,12 +76,9 @@
             FROM
                 project p
             LEFT JOIN construction_order co ON co.project_no = p.project_no
-            LEFT JOIN user_info ur ON ur.company_id = p.company_id
             LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
             LEFT JOIN company_info i ON i.company_id = p.company_id
             LEFT JOIN designer_order o ON o .project_no = p.project_no
-            LEFT JOIN consumer_set s ON s. ID = P .owner_id
-            LEFT JOIN user_info ms ON ms.user_id = o.user_id
             WHERE
         p.project_no=#{constructionSiteVO.projectNo} AND p.status=#{constructionSiteVO.status}
 
