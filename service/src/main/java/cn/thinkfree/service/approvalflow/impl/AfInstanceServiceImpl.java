@@ -9,6 +9,7 @@ import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
+import cn.thinkfree.service.constants.HttpLinks;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
@@ -53,6 +54,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfConfigService configService;
     @Resource
     private AfConfigPlanService configPlanService;
+    @Resource
+    private HttpLinks httpLinks;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -65,7 +68,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         String customerId = project.getOwnerId();
 
-        AfUserDTO customerInfo = AfUtils.getUserInfo(customerId, Role.CC.id);
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), customerId, Role.CC.id);
 
         List<UserRoleSet> roles = roleService.findAll();
         AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
@@ -97,7 +100,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 approvalLogVO.setRoleId(role.getRoleCode());
                 approvalLogVO.setRoleName(role.getRoleName());
                 approvalLogVO.setIsApproval(false);
-                AfUserDTO userDTO = AfUtils.getUserInfo(userId, approvalLogVO.getRoleId());
+                AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), userId, approvalLogVO.getRoleId());
                 approvalLogVO.setUserName(userDTO.getUsername());
                 approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
                 approvalLogVOs.add(approvalLogVO);
@@ -114,7 +117,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private AfUserDTO getUserNameByUserIdAndRoleId(String userId, String roleId) {
-        return AfUtils.getUserInfo(userId, roleId);
+        return AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), userId, roleId);
     }
 
     private AfUserDTO getCustomerNameById(String customerId) {
@@ -207,7 +210,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         String customerId = project.getOwnerId();
 
-        AfUserDTO customer = AfUtils.getUserInfo(customerId, Role.CC.id);
+        AfUserDTO customer = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), customerId, Role.CC.id);
 
         List<UserRoleSet> roles = roleService.findAll();
 
@@ -228,7 +231,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     break;
                 }
             }
-            AfUserDTO userDTO = AfUtils.getUserInfo(approvalLogVO.getUserId(), approvalLogVO.getRoleId());
+            AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), approvalLogVO.getUserId(), approvalLogVO.getRoleId());
             approvalLogVO.setUserName(userDTO.getUsername());
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
 
@@ -607,7 +610,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instanceVO.setCreateTime(instance.getCreateTime());
                 instanceVO.setCreateUserId(instance.getCreateUserId());
 
-                AfUserDTO userDTO = AfUtils.getUserInfo(instance.getCreateUserId(), instance.getCreateRoleId());
+                AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), instance.getCreateUserId(), instance.getCreateRoleId());
                 instanceVO.setCreateUsername(userDTO.getUsername());
                 instanceVO.setScheduleSort(instance.getScheduleSort());
                 instanceVO.setRemark(approvalLog.getRemark());
@@ -734,11 +737,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         {
             AfStartMenuVO startMenuVO = new AfStartMenuVO();
             startMenuVO.setConfigNo(AfConfigs.START_APPLICATION.configNo);
-            startMenuVO.setConfigNo(AfConfigs.START_APPLICATION.name);
+            startMenuVO.setConfigName(AfConfigs.START_APPLICATION.name);
             startMenuVOS.add(startMenuVO);
             startMenuVO = new AfStartMenuVO();
             startMenuVO.setConfigNo(AfConfigs.COMPLETE_APPLICATION.configNo);
-            startMenuVO.setConfigNo(AfConfigs.COMPLETE_APPLICATION.name);
+            startMenuVO.setConfigName(AfConfigs.COMPLETE_APPLICATION.name);
             startMenuVOS.add(startMenuVO);
         }
         instanceListVO.setInstances(instanceVOS);

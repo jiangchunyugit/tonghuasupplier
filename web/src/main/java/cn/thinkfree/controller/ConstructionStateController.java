@@ -8,6 +8,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.ConstructionStateVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -68,8 +69,8 @@ public class ConstructionStateController extends AbsBaseController {
     @ApiOperation("运营平台接口")
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<PageInfo<ConstructionOrder>> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
-                                                                             @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
+    public MyRespBundle<PageInfo<ConstructionOrderManageVo>> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+                                                                                     @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
 
         return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize);
     }
