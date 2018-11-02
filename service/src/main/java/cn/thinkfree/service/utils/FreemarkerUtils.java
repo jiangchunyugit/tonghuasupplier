@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Map;
 
 import javax.print.DocFlavor.STRING;
+import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -113,5 +115,7 @@ public class FreemarkerUtils {
 		}
          return  hostUrl+flieName;
 	}
-
+	
+    
+    
 }
