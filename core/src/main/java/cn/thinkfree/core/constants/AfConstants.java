@@ -37,4 +37,20 @@ public class AfConstants {
      * 审批类型：延期确认
      */
     public static final String APPROVAL_TYPE_DELAY_VERIFY = "APPROVAL_TYPE_DELAY_VERIFY";
+    /**
+     * 审批状态：发起
+     */
+    public static final int APPROVAL_OPTION_START = 1;
+    /**
+     * 审批状态：同意
+     */
+    public static final int APPROVAL_OPTION_AGREE = 2;
+    /**
+     * 审批状态：拒绝
+     */
+    public static final int APPROVAL_OPTION_REFUSAL = 3;
+    /**
+     * 审批状态：未审批
+     */
+    public static final int APPROVAL_OPTION_UNAPPROVAL = 4;
 }

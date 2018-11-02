@@ -21,7 +21,9 @@ public interface AfApprovalLogService {
 
     void updateByPrimaryKey(AfApprovalLog approvalLog);
 
-    List<AfApprovalLog> findByUserId(String userId);
+    List<AfApprovalLog> findByConfigNoAndProjectNoAndUserId(String configNo, String projectNo, String userId);
+
+    List<AfApprovalLog> findByConfigNoAndProjectNoAndScheduleSortAndUserId(String configNo, String projectNo, Integer scheduleSort, String userId);
 
     void create(List<AfApprovalLog> afApprovalLogs);
 }
