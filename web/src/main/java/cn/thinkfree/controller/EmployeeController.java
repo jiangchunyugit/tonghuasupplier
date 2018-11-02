@@ -24,14 +24,14 @@ import java.util.List;
  * @author xusonghui
  * 员工管理
  */
-@Api(value = "员工管理API接口", tags = "员工管理API接口")
+@Api(value = "员工管理API接口", tags = "员工管理API接口--->app后台公用")
 @Controller
 @RequestMapping("employee")
 public class EmployeeController extends AbsBaseController {
     @Autowired
     private EmployeeService employeeService;
 
-    @ApiOperation("员工实名认证审核")
+    @ApiOperation("员工实名认证审核--->王玲组专用")
     @MyRespBody
     @RequestMapping(value = "review", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewDesigner(
@@ -46,7 +46,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("提交证件信息")
+    @ApiOperation("提交证件信息--->app专用")
     @MyRespBody
     @RequestMapping(value = "submitCardMsg", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle submitCardMsg(
@@ -65,7 +65,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("员工申请")
+    @ApiOperation("员工申请--->app专用")
     @MyRespBody
     @RequestMapping(value = "apply", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle apply(
@@ -80,7 +80,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("处理员工申请")
+    @ApiOperation("处理员工申请--->王玲组专用")
     @MyRespBody
     @RequestMapping(value = "dealApply", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle dealApply(
@@ -98,7 +98,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("查询所有角色")
+    @ApiOperation("查询所有角色--->谁用谁掉接口，无参数")
     @MyRespBody
     @RequestMapping(value = "queryRoles", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<RoleVo>> queryRoles() {
@@ -106,7 +106,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, userRoleSets);
     }
 
-    @ApiOperation("创建角色")
+    @ApiOperation("创建角色--->王玲组专用")
     @MyRespBody
     @RequestMapping(value = "createRole", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle createRole(
@@ -120,7 +120,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("删除角色")
+    @ApiOperation("删除角色--->王玲组专用")
     @MyRespBody
     @RequestMapping(value = "delRole", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle delRole(
@@ -133,7 +133,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("设置用户角色")
+    @ApiOperation("设置用户角色--->王玲组专用")
     @MyRespBody
     @RequestMapping(value = "setUserRole", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle setUserRole(
@@ -148,7 +148,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("根据用户ID获取用户信息")
+    @ApiOperation("根据用户ID获取用户信息--->公用")
     @MyRespBody
     @RequestMapping(value = "msg", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<EmployeeMsgVo> msg(
