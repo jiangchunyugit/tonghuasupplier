@@ -87,7 +87,7 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
     @Override
     public AfApprovalOrder findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId) {
         String schemeNo = getSchemeNo(projectNo);
-        String roleId = orderUserService.findRoleIdByOrderNoAndUserId(projectNo, userId);
+        String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
 
         AfConfigScheme configScheme = configPlanService.findByConfigNoAndSchemeNo(configNo, schemeNo);
         if (configScheme != null) {
