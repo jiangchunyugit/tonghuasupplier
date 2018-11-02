@@ -53,7 +53,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Resource
     private AfConfigService configService;
     @Resource
-    private AfConfigPlanService configPlanService;
+    private AfConfigSchemeService configPlanService;
     @Resource
     private HttpLinks httpLinks;
 
@@ -81,7 +81,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // TODO
         }
 
-        List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
+        List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
         if (approvalRoles != null) {
             for (UserRoleSet role : approvalRoles) {
@@ -138,7 +138,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // TODO
         }
         List<AfApprovalLog> approvalLogs = new ArrayList<>(approvalRoles.size());
-        List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
+        List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
 
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
         for (UserRoleSet role : approvalRoles) {
@@ -299,7 +299,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (approvalLog == null) {
             // TODO
         }
-        String recordUserId = orderUserService.findUserIdByOrderNoAndRoleId(instance.getProjectNo(), approvalLog.getRoleId());
+        String recordUserId = orderUserService.findUserIdByProjectNoAndRoleId(instance.getProjectNo(), approvalLog.getRoleId());
         if (!userId.equals(recordUserId)) {
             // TODO
         }

@@ -19,7 +19,7 @@ public class AfConfigEditVO {
     @ApiModelProperty("审批流配置")
     List<AfConfigVO> configVOs;
     @ApiModelProperty("方案编号")
-    String planNo;
+    String schemeNo;
     @ApiModelProperty("用户编号")
     String userId;
 }

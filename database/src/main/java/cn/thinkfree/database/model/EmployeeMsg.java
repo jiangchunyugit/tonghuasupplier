@@ -1,6 +1,8 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
@@ -20,6 +22,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("用户ID")
     private String userId;
 
     /**
@@ -31,6 +34,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("所属公司ID")
     private String companyId;
 
     /**
@@ -42,6 +46,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("证件号")
     private String certificate;
 
     /**
@@ -53,6 +58,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("真实姓名")
     private String realName;
 
     /**
@@ -64,6 +70,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("证件类型：1身份证，2护照")
     private Integer certificateType;
 
     /**
@@ -75,6 +82,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("实名认证状态，1未认证，2已认证")
     private Integer authState;
 
     /**
@@ -86,6 +94,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("角色编码")
     private String roleCode;
 
     /**
@@ -97,6 +106,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("性别，1男，2女")
     private Integer sex;
 
     /**
@@ -108,6 +118,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("所在省份编码")
     private String province;
 
     /**
@@ -119,6 +130,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("所在城市编码")
     private String city;
 
     /**
@@ -130,6 +142,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("所在地区编码")
     private String area;
 
     /**
@@ -141,6 +154,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("邮箱地址")
     private String email;
 
     /**
@@ -152,6 +166,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("申请时间")
     private Date applyTime;
 
     /**
@@ -163,6 +178,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("员工状态，1在职，2离职")
     private Integer employeeState;
 
     /**
@@ -174,6 +190,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("离职时间（解约时间）")
     private Date leavedate;
 
     /**
@@ -185,6 +202,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("绑定时间")
     private Date bindDate;
 
     /**
@@ -196,6 +214,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("工作年限")
     private Integer workingTime;
 
     /**
@@ -207,6 +226,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
     private Integer employeeApplyState;
 
     /**
@@ -218,6 +238,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("证件图片1")
     private String certificatePhotoUrl1;
 
     /**
@@ -229,6 +250,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("证件图片2")
     private String certificatePhotoUrl2;
 
     /**
@@ -240,6 +262,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("证件图片3")
     private String certificatePhotoUrl3;
 
     /**

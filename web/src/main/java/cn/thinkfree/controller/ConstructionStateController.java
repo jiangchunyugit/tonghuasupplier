@@ -4,18 +4,15 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.ConstructionStateVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  *  施工状态相关接口
  */
-@Api(value = "施工状态相关API接口", tags = "施工状态相关API接口")
+@Api(value = "施工订单相关API接口", tags = "施工订单相关API接口")
 @Controller
 @RequestMapping("construction")
 public class ConstructionStateController extends AbsBaseController {
@@ -69,8 +66,8 @@ public class ConstructionStateController extends AbsBaseController {
     @ApiOperation("运营平台接口")
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<PageInfo<ConstructionOrderManageVo>> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
-                                                                                     @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
+    public MyRespBundle<ConstructionOrderManageVo> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
 
         return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize);
     }

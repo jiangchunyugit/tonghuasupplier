@@ -3,8 +3,11 @@ package cn.thinkfree.service.platform.designer.impl;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.designer.DesignerService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
+import cn.thinkfree.service.platform.vo.DesignerMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.ExcelToListMap;
 import cn.thinkfree.service.utils.ReflectUtils;
@@ -48,6 +51,8 @@ public class DesignerServiceImpl implements DesignerService {
     private CityMapper cityMapper;
     @Autowired
     private AreaMapper areaMapper;
+    @Autowired
+    private UserCenterService userCenterService;
 
     /**
      * @param designerName          设计师用户名
@@ -156,14 +161,53 @@ public class DesignerServiceImpl implements DesignerService {
      * @return
      */
     @Override
-    public DesignerMsg queryDesignerByUserId(String userId) {
+    public DesignerMsgVo queryDesignerByUserId(String userId) {
+        if(StringUtils.isEmpty(userId)){
+            throw new RuntimeException("设计师ID不能为空");
+        }
         DesignerMsgExample msgExample = new DesignerMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId);
         List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
-        if (!designerMsgs.isEmpty()) {
-            return designerMsgs.get(0);
+        if (designerMsgs.isEmpty()) {
+            throw new RuntimeException("无效的设计是ID");
         }
-        return null;
+        DesignerMsg designerMsg = designerMsgs.get(0);
+        EmployeeMsg employeeMsg = queryEmployeeMsgByUserId(userId);
+        UserMsgVo userMsgVo = userCenterService.queryUser(userId);
+        DesignerMsgVo designerMsgVo = new DesignerMsgVo();
+        designerMsgVo.setRealName(userMsgVo.getRealName());
+        designerMsgVo.setSex(employeeMsg.getSex());
+        designerMsgVo.setBirthday(DateUtils.dateToStr(employeeMsg.getBindDate()));
+        designerMsgVo.setUserName(userMsgVo.getUserName());
+        designerMsgVo.setPhone(userMsgVo.getUserPhone());
+        designerMsgVo.setEmail(employeeMsg.getEmail());
+        designerMsgVo.setCertificate(employeeMsg.getCertificate());
+        designerMsgVo.setCertificateUrl1(employeeMsg.getCertificatePhotoUrl1());
+        designerMsgVo.setCertificateUrl2(employeeMsg.getCertificatePhotoUrl2());
+        designerMsgVo.setCertificateUrl3(employeeMsg.getCertificatePhotoUrl3());
+        designerMsgVo.setAuthState(employeeMsg.getAuthState());
+        designerMsgVo.setSource(designerMsg.getSource());
+        designerMsgVo.setRegisterTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
+        String designTag = "云设计家设计师";
+        if(designerMsg.getTag() != 1){
+            designTag = "待定";
+        }
+        designerMsgVo.setDesignTag(designTag);
+        designerMsgVo.setLevel(designerMsg.getLevel().intValue());
+        String identity = "社会化设计师";
+        if(designerMsg.getIdentity() != 1){
+            identity = "待定";
+        }
+        designerMsgVo.setIdentity(identity);
+        designerMsgVo.setCompanyName(employeeMsg.getCompanyId());
+        designerMsgVo.setWorkingTime(employeeMsg.getWorkingTime());
+        designerMsgVo.setVolumeRoomMoney(designerMsg.getVolumeRoomMoney().toString());
+        designerMsgVo.setDesignerMoneyLow(designerMsg.getDesignerMoneyLow().toString());
+        designerMsgVo.setDesignerMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
+        List<DesignerStyleConfig> styleConfigs = queryDesignerStyleByUserId(userId);
+        List<String> styles = ReflectUtils.getList(styleConfigs,"styleName");
+        designerMsgVo.setDesignerStyles(styles);
+        return designerMsgVo;
     }
 
     /**
@@ -214,7 +258,7 @@ public class DesignerServiceImpl implements DesignerService {
             List<DesignerStyleConfig> designerStyleConfigs = styleConfigMapper.selectByExample(styleConfigExample);
             return designerStyleConfigs;
         }
-        return null;
+        return new ArrayList<>();
     }
 
     /**

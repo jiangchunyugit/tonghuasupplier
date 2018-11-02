@@ -41,7 +41,7 @@ public class DesignDispatchController extends AbsBaseController {
     @Autowired
     private ApplyRefundService applyRefundService;
 
-    @ApiOperation("设计师派单管理列表")
+    @ApiOperation("设计师派单管理列表---->王玲组")
     @MyRespBody
     @RequestMapping(value = "orderList", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<DesignerOrderVo>>> queryDesignerOrder(
@@ -70,7 +70,7 @@ public class DesignDispatchController extends AbsBaseController {
             return sendFailMessage(e.getMessage());
         }
     }
-    @ApiOperation("设计订单导出-->运营平台-->设计师派单页面")
+    @ApiOperation("设计订单导出-->运营平台-->设计师派单页面---->王玲组")
     @MyRespBody
     @RequestMapping(value = "designOrderExcel", method = {RequestMethod.POST, RequestMethod.GET})
     public void designOrderExcel(
@@ -98,15 +98,15 @@ public class DesignDispatchController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("获取所有订单状态")
+    @ApiOperation("获取所有订单状态---->王玲组")
     @MyRespBody
     @RequestMapping(value = "allStates", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<Map<String, String>>> queryAllOrderStates(
-            @ApiParam(name = "state", required = false, value = "订单状态") @RequestParam(name = "state", required = false) int state) {
-        return sendJsonData(ResultMessage.SUCCESS, DesignStateEnum.allStates(state));
+            @ApiParam(name = "type", required = false, value = "参数：1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "type", required = false) int type) {
+        return sendJsonData(ResultMessage.SUCCESS, DesignStateEnum.allStates(type));
     }
 
-    @ApiOperation("设计订单不派单")
+    @ApiOperation("设计订单不派单---->王玲组")
     @MyRespBody
     @RequestMapping(value = "notDispatch", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle notDispatch(
@@ -122,7 +122,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计订单派单")
+    @ApiOperation("设计订单派单---->王玲组")
     @MyRespBody
     @RequestMapping(value = "dispatch", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle dispatch(
@@ -139,7 +139,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("根据项目编号查询设计订单详情")
+    @ApiOperation("根据项目编号查询设计订单详情---->王玲组")
     @MyRespBody
     @RequestMapping(value = "designDel", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<DesignerOrderVo> queryDesignDel(
@@ -152,7 +152,7 @@ public class DesignDispatchController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("设计公司拒绝接单")
+    @ApiOperation("设计公司拒绝接单---->王玲组")
     @MyRespBody
     @RequestMapping(value = "refuseOrder", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle refuseOrder(
@@ -169,7 +169,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计公司指派设计师")
+    @ApiOperation("设计公司指派设计师---->王玲组")
     @MyRespBody
     @RequestMapping(value = "assignDesigner", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle assignDesigner(
@@ -186,7 +186,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计师拒绝接单")
+    @ApiOperation("设计师拒绝接单---->app使用")
     @MyRespBody
     @RequestMapping(value = "designerRefuse", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle designerRefuse(
@@ -201,7 +201,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计师接单")
+    @ApiOperation("设计师接单---->app使用")
     @MyRespBody
     @RequestMapping(value = "designerReceipt", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle designerReceipt(
@@ -215,7 +215,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计师发起量房预约")
+    @ApiOperation("设计师发起量房预约---->app使用")
     @MyRespBody
     @RequestMapping(value = "volumeRoom", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle volumeRoom(
@@ -229,7 +229,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("提醒业主")
+    @ApiOperation("提醒业主---->app使用")
     @MyRespBody
     @RequestMapping(value = "remindOwner", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle remindOwner(
@@ -243,7 +243,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("更新设计订单状态为量房待确认")
+    @ApiOperation("更新设计订单状态为量房待确认---->app使用")
     @MyRespBody
     @RequestMapping(value = "volumeRoomConfirmed", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle volumeRoomConfirmed(@ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo) {
@@ -270,7 +270,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("业主确认交付物")
+    @ApiOperation("业主确认交付物---->app使用")
     @MyRespBody
     @RequestMapping(value = "confirmedDeliveries", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle confirmedDeliveries(
@@ -284,7 +284,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计师提交设计合同待审核")
+    @ApiOperation("设计师提交设计合同待审核---->app使用")
     @MyRespBody
     @RequestMapping(value = "submitContract", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle submitContract(@ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo) {
@@ -296,7 +296,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计公司合同审核不通过")
+    @ApiOperation("设计公司合同审核不通过---->王玲组")
     @MyRespBody
     @RequestMapping(value = "reviewReject", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewReject(
@@ -310,7 +310,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计公司合同审核通过")
+    @ApiOperation("设计公司合同审核通过---->王玲组")
     @MyRespBody
     @RequestMapping(value = "reviewPass", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewPass(
@@ -327,7 +327,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("合同款/量房费支付成功")
+    @ApiOperation("合同款/量房费支付成功--->支付回调")
     @MyRespBody
     @RequestMapping(value = "paySuccess", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle paySuccess(
@@ -358,7 +358,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("业主确认3D效果图")
+    @ApiOperation("业主确认3D效果图---->app使用")
     @MyRespBody
     @RequestMapping(value = "confirm3D", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle confirm3D(
@@ -376,7 +376,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("3D资料上传成功后修改订单状态")
+    @ApiOperation("施工资料上传成功后修改订单状态")
     @MyRespBody
     @RequestMapping(value = "uploadData", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle uploadData(
@@ -394,7 +394,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("业主确认施工资料")
+    @ApiOperation("业主确认施工资料---->app使用")
     @MyRespBody
     @RequestMapping(value = "confirmData", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle confirmData(
@@ -412,7 +412,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计订单申请退款")
+    @ApiOperation("设计订单申请退款---->app使用")
     @MyRespBody
     @RequestMapping(value = "applyRefund", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle applyRefund(
@@ -430,7 +430,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计公司同意退款")
+    @ApiOperation("设计公司同意退款--->王玲组")
     @MyRespBody
     @RequestMapping(value = "companyRefundAgree", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle companyRefundAgree(
@@ -445,7 +445,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("设计公司驳回退款申请")
+    @ApiOperation("设计公司驳回退款申请--->王玲组")
     @MyRespBody
     @RequestMapping(value = "companyRefundReject", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle companyRefundReject(
@@ -461,7 +461,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("平台同意退款")
+    @ApiOperation("平台同意退款--->王玲组")
     @MyRespBody
     @RequestMapping(value = "platformRefundAgree", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle platformRefundAgree(
@@ -476,7 +476,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("平台驳回退款申请")
+    @ApiOperation("平台驳回退款申请--->王玲组")
     @MyRespBody
     @RequestMapping(value = "platformRefundReject", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle platformRefundReject(
@@ -492,7 +492,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("财务同意退款")
+    @ApiOperation("财务同意退款--->王玲组")
     @MyRespBody
     @RequestMapping(value = "financeRefundAgree", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle financeRefundAgree(
@@ -520,7 +520,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("业主终止订单")
+    @ApiOperation("业主终止订单---->app使用")
     @MyRespBody
     @RequestMapping(value = "endOrder", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle endOrder(
