@@ -4,6 +4,7 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
+import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.CompanyClassify;
 import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
@@ -11,8 +12,6 @@ import cn.thinkfree.database.mapper.PcApplyInfoMapper;
 import cn.thinkfree.database.mapper.UserRegisterMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
-import cn.thinkfree.service.constants.CompanyApply;
-import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.remote.CloudService;
@@ -261,8 +260,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         pcApplyInfo.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
 //        pcApplyInfo.setApplyType(1);
         PcApplyInfoExample pcApplyInfoExample = new PcApplyInfoExample();
-        pcApplyInfoExample.createCriteria().andIdEqualTo(id).
-                andApplyTypeEqualTo(CompanyApply.applyTpye.PCAPPLY.code.shortValue());
+        pcApplyInfoExample.createCriteria().andIdEqualTo(id);
         int line = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfo, pcApplyInfoExample);
         if(line > 0){
             return true;

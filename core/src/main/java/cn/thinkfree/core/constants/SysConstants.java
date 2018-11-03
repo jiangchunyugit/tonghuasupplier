@@ -44,6 +44,25 @@ public class SysConstants {
     }
 
     /**
+     *  是否值
+     */
+    public enum NoOrYes {
+        YES("0"), NO("1");
+        public final Byte val;
+
+        NoOrYes(String val) {
+            this.val = Byte.valueOf(val);
+        }
+
+        public Boolean getBoolVal() {
+            return this.val == 0 ? false : true;
+        }
+        public Short shortVal(){
+            return this.val.shortValue();
+        }
+    }
+
+    /**
      * 平台类型
      */
     public enum PlatformType {

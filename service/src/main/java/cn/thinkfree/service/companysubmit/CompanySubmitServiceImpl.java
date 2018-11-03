@@ -9,6 +9,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.CompanyApply;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,23 +31,6 @@ import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditTemporaryInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
-import cn.thinkfree.database.model.CompanyInfoExpand;
-import cn.thinkfree.database.model.CompanyInfoExpandExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfoExample;
-import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.vo.CompanyListSEO;
-import cn.thinkfree.database.vo.CompanyListVo;
-import cn.thinkfree.database.vo.CompanySubmitFileVo;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.CompanyTemporaryVo;
-import cn.thinkfree.database.vo.ContractVo;
-import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.utils.ContractNum;
 import cn.thinkfree.service.utils.ExcelData;
@@ -76,6 +62,34 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	PcAuditTemporaryInfoMapper pcAuditTemporaryInfoMapper;
 
 	final static String TARGET = "static/";
+
+
+	@Override
+	public PcAuditInfo findAuditCase(String contractNumber) {
+		PcAuditInfoExample example = new PcAuditInfoExample();
+		example.createCriteria().andContractNumberEqualTo(contractNumber);
+
+		List<PcAuditInfo> pcAuditInfos = pcAuditInfoMapper.selectByExample(example);
+
+		if(pcAuditInfos.size() > 0){
+			return pcAuditInfos.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public AuditInfoVO findAuditStatus(String companyId) {
+		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(companyId);
+		//TOdo
+		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
+		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setAuditCase("");
+			auditInfoVO.setCompanyAuditName("签约完成");
+		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setCompanyAuditName("资质审核中");
+		}
+		return null;
+	}
 
 	@Override
 	public CompanySubmitVo findCompanyInfo(String companyId) {

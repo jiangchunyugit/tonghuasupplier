@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PcAuditInfoMapper">
+  <resultMap id="AuditInfoVO" type="cn.thinkfree.database.vo.AuditInfoVO" extends="BaseResultMap">
+    <result column="company_audit_type" jdbcType="VARCHAR" property="companyAuditType" />
+  </resultMap>
+
+  <select id="findAuditStatus" resultMap="AuditInfoVO" parameterType="java.lang.String">
+    SELECT
+	auditInfo.id,
+	auditInfo.audit_type,
+	auditInfo.audit_level,
+	auditInfo.audit_persion,
+	auditInfo.audit_status,
+	auditInfo.audit_time,
+	auditInfo.company_id,
+	auditInfo.audit_case,
+	auditInfo.contract_number,
+	companyInfo.audit_status company_audit_type
+FROM
+	pc_audit_info auditInfo
+	LEFT JOIN company_info companyInfo ON auditInfo.company_id = companyInfo.company_id
+WHERE
+	auditInfo.company_id = #{companyId}
+	AND auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
+  </select>
+
+</mapper>

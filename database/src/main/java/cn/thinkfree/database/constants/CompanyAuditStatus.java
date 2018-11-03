@@ -1,4 +1,4 @@
-package cn.thinkfree.service.constants;
+package cn.thinkfree.database.constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +60,7 @@ public enum CompanyAuditStatus {
     public final Integer code;
     public final String mes;
 
-    CompanyAuditStatus(Integer code ,String mes){
+    CompanyAuditStatus(Integer code , String mes){
         this.code = code;
         this.mes = mes;
     }

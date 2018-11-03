@@ -3,14 +3,12 @@ package cn.thinkfree.controller;
 import java.util.List;
 import java.util.Map;
 
-import cn.thinkfree.service.constants.CompanyAuditStatus;
+import cn.thinkfree.database.constants.CompanyAuditStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,10 +17,8 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.account.PermissionVO;
 import cn.thinkfree.service.account.PermissionService;
 import cn.thinkfree.service.account.SystemRoleService;
-import cn.thinkfree.core.resolver.MultiRequestBody;
 import cn.thinkfree.database.model.Area;
 import cn.thinkfree.database.model.City;
 import cn.thinkfree.database.model.CompanyInfo;

@@ -16,6 +16,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.constants.CompanyAuditStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -55,7 +56,6 @@ import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
-import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.ExcelData;
