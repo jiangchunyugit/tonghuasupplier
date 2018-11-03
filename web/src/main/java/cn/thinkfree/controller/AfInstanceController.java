@@ -47,7 +47,7 @@ public class AfInstanceController extends AbsBaseController {
                                                   @RequestParam(name = "configNo") String configNo,
                                                   @RequestParam(name = "projectNo") String projectNo,
                                                   @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
-        return sendJsonData(ResultMessage.SUCCESS, instanceService.Mstart(projectNo, userId, configNo, scheduleSort));
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.start(projectNo, userId, configNo, scheduleSort));
     }
 
     @RequestMapping(value = "/submitStart", method = RequestMethod.POST)
