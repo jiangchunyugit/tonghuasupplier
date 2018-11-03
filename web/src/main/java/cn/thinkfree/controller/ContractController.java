@@ -52,7 +52,7 @@ public class ContractController extends AbsBaseController{
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "财务合同管理列表", notes = "根据一定条件获取分页合同记录")
+    @ApiOperation(value = "前端--运营后台--财务合同管理列表--吕启栋", notes = "根据一定条件获取分页合同记录")
     @PostMapping("/list")
     @MyRespBody
     public MyRespBundle<PageInfo<ContractVo>> list(@ApiParam("项目搜索条件")   ContractSEO contractSEO){
@@ -68,7 +68,7 @@ public class ContractController extends AbsBaseController{
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "财务合同数据导出", notes = "根据一定条件获取分页数据导出")
+    @ApiOperation(value = "前端--运营后台--财务合同数据导出--吕启栋", notes = "根据一定条件获取分页数据导出")
     @PostMapping("/exportList")
     @MyRespBody
     public void exportList(HttpServletResponse response,
@@ -82,7 +82,7 @@ public class ContractController extends AbsBaseController{
      * @author lqd
      * @return Message
      */
-    @ApiOperation(value = "财务合同审批", notes = "财务审核")
+    @ApiOperation(value = "前端--运营后台--财务合同审批--吕启栋", notes = "财务审核")
     @PostMapping("/audit")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
@@ -91,18 +91,9 @@ public class ContractController extends AbsBaseController{
     		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
     		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
         
-    	 Map<String,String>  resMap = contractService.auditContract(contractNumber, companyId,auditStatus,auditCase);
-    	 
-    	 String code = String.valueOf(resMap.get("code"));
-    	 
-    	 String mes = String.valueOf(resMap.get("msg"));
-    	 
-    	 if(code.equals("1")){//失败的情况
-    		 return sendFailMessage(mes);
-    	 }else{//成功的情况
-    		 return sendSuccessMessage(mes);
-    	 }
-       
+    	 boolean flag = contractService.auditContract(contractNumber, companyId,auditStatus,auditCase);
+    		 
+    	 return sendJsonData(ResultMessage.SUCCESS,flag);
     }
     
     
@@ -111,22 +102,16 @@ public class ContractController extends AbsBaseController{
      * @author lvqidong
      * @return Message
      */
-    @ApiOperation(value = "财务确认保证金", notes = "财务保证金收到后确认")
+    @ApiOperation(value = "前端--运营后台--财务确认保证金--吕启栋", notes = "财务保证金收到后确认保证金")
     @PostMapping("/ackEarnestMoney")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "确认保证金信息")
     public MyRespBundle<String> ackEarnestMoney(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-    	Map<String,String>  resMap = contractService.ackEarnestMoney(contractNumber, companyId);
-    	String code = String.valueOf(resMap.get("code"));
-   	 
-	   	 String mes = String.valueOf(resMap.get("msg"));
-	   	 
-	   	 if(code.equals("1")){//失败的情况
-	   		 return sendFailMessage(mes);
-	   	 }else{//成功的情况
-	   		 return sendSuccessMessage(mes);
-	   	 }
+    	
+    	boolean  flag = contractService.ackEarnestMoney(contractNumber, companyId);
+    	
+    	return sendJsonData(ResultMessage.SUCCESS,flag);
     }
     
     /**
@@ -135,7 +120,7 @@ public class ContractController extends AbsBaseController{
      * @author lvqidong
      * @return Message
      */
-    @ApiOperation(value = "合同详情", notes = "合同详情")
+    @ApiOperation(value = "前端--运营后台--合同详情--吕启栋", notes = "合同详情")
     @PostMapping("/contractDetails")
     @MyRespBody
     public MyRespBundle<String> contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
@@ -151,7 +136,7 @@ public class ContractController extends AbsBaseController{
      * @author lvqidong
      */
     
-    @ApiOperation(value = "合同下载", notes = "根据合同编号和公司的编号下载合同", consumes = "application/pdf")
+    @ApiOperation(value = "前端--运营后台--合同下载--吕启栋", notes = "根据合同编号和公司的编号下载合同", consumes = "application/pdf")
     @PostMapping(path = "downloadContract")
     public String downloadContract(@ApiParam("合同编号")@RequestParam(required=true) String contractNumber, HttpServletResponse response) {    
     	//根据合同编号查询下载地址
@@ -204,8 +189,6 @@ public class ContractController extends AbsBaseController{
     
      }
 
-    
-    
     
     /**
      * 

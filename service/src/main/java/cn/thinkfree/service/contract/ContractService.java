@@ -36,7 +36,7 @@ public interface ContractService {
 	 * @param ContractSEO
 	 * @return map  code mess
 	 */
-    Map<String,String>  auditContract(String contractNumber,String companyId,String auditStatus,String auditCase);
+    boolean auditContract(String contractNumber,String companyId,String auditStatus,String auditCase);
     
     
     

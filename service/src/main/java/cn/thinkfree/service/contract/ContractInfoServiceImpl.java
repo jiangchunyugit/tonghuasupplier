@@ -167,28 +167,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	 */
 	@Override
 	@Transactional
-	public Map<String,String>  auditContract(String contractNumber, String companyId,
+	public boolean  auditContract(String contractNumber, String companyId,
 											 String auditStatus,String auditCase) {
-
-		Map<String,String> map = new HashMap<>();
-
-		if(StringUtils.isEmpty(contractNumber)){
-			map.put("code", "1");
-			map.put("msg", "合同编号为空");
-			return  map;
-		}if(StringUtils.isEmpty(companyId)){
-			map.put("code", "1");
-			map.put("msg", "公司编号为空");
-			return  map;
-		}if(StringUtils.isEmpty(auditStatus)){
-			map.put("code", "1");
-			map.put("msg", "审核状态为空");
-			return  map;
-		}if((!StringUtils.isEmpty(auditCase) && auditStatus.equals("1"))){
-			map.put("code", "1");
-			map.put("msg", "清填写审核不通过原因");
-			return  map;
-		}
 
 		//修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝
 		ContractVo vo = new ContractVo();
@@ -222,14 +202,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		int flagon = pcAuditInfoMapper.insertSelective(record);
 
 		if(flag > 0 && flagT > 0 &&  flagon > 0 ){
-			map.put("code", "0");
-			map.put("msg", "审核成功");
-			return map;
-		}else{
-			map.put("code", "1");
-			map.put("msg", "审核失败");
-			return map;
+		   return true;
 		}
+		
+		 return false;
 	}
 
 
