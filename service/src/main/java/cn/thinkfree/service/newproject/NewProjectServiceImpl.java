@@ -11,6 +11,7 @@ import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.constants.UserRoleStatus;
 import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -174,37 +175,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         return RespData.success(projectVo);
     }
 
-    /**
-     * 获取Pc端项目详情
-     * @param projectNo
-     * @return
-     */
-    @Override
-    public MyRespBundle<PcProjectDetailVo> getPcProjectDetail(String projectNo) {
-        PcProjectDetailVo pcProjectDetailVo = new PcProjectDetailVo();
-        //获取项目阶段信息
-        List<OrderTaskSortVo> orderTaskSortVoList = projectStageLogMapper.selectByProjectNo(projectNo);
-        pcProjectDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
-        //组合施工订单信息
-        ConstructionOrderVO constructionOrderVO = constructionOrderMapper.selectConstructionOrderVo(projectNo);
-        //组合设计订单信息
-        DesignerOrderVo designerOrderVo;
-        //组合报价信息
-        OfferVo offerVo;
-        //组合合同信息
-        ContractVo contractVo;
-        //组合施工信息
-        SchedulingVo schedulingVo;
-        //组合结算信息
-        SettlementVo settlementVo;
-        //组合评价管理
-        EvaluateVo evaluateVo;
-        //组合发票管理
-        InvoiceVo invoiceVo;
 
-
-        return null;
-    }
 
     /**
      * 获取设计资料

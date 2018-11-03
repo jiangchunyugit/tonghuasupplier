@@ -108,9 +108,9 @@ public interface DesignerOrderMapper {
      * @param projectOrderVO
      * @return
      */
-    Integer selectProjectOrderCount(ProjectOrderVO projectOrderVO);
+    Integer selectProjectOrderCount(@Param("projectOrderVO")ProjectOrderVO projectOrderVO);
 
-    List<ProjectOrderVO> selectProjectOrderByPage(ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize);
+    List<ProjectOrderVO> selectProjectOrderByPage(@Param("projectOrderVO") ProjectOrderVO projectOrderVO,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
 
     OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo, @Param("status") Integer status);
 

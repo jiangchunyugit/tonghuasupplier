@@ -1,9 +1,7 @@
-package cn.thinkfree.appcontroller;
+package cn.thinkfree.controller;
 
-import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.newproject.NewProjectService;
@@ -14,12 +12,13 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author gejiaming
  */
-@Api(tags = "项目相关")
+@Api(tags = "APP-项目相关")
 @RestController
 @RequestMapping(value = "project")
 public class AppProjectController {
@@ -38,12 +37,6 @@ public class AppProjectController {
     public MyRespBundle<ProjectVo> getAppProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
         MyRespBundle<ProjectVo> projectVo = newProjectService.getAppProjectDetail(projectNo);
         return projectVo;
-    }
-
-    @RequestMapping(value = "getPcProjectDetail", method = RequestMethod.POST)
-    @ApiOperation(value = "PC获取项目详情接口")
-    public MyRespBundle<PcProjectDetailVo> getPcProjectDetail(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
-        return newProjectService.getPcProjectDetail(projectNo);
     }
 
     @RequestMapping(value = "getDesignData", method = RequestMethod.POST)

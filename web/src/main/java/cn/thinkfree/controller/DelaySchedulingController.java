@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 /**
  * @author gejiaming
  */
-@Api(tags = "延期控相关")
+@Api(tags = "PC-运营平台-施工平台相关")
 @RestController
 @RequestMapping(value = "delayScheduling")
 public class DelaySchedulingController extends AbsBaseController {
@@ -48,16 +48,18 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "projectOrderList", method = RequestMethod.POST)
-    @ApiOperation(value = "项目派单列表", notes = "")
-    public MyRespBundle<DesignerOrder> projectOrderList(@RequestBody ProjectOrderVO projectOrderVO,
-                                                      @RequestParam(defaultValue = "1") Integer pageNum,
-                                                      @RequestParam(defaultValue = "10") Integer pageSize
+    @ApiOperation(value = "施工订单-项目派单页面-项目派单列表接口", notes = "")
+    public MyRespBundle<DesignerOrder> projectOrderList(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo,
+                                                        @RequestParam(defaultValue = "1") Integer pageNum,
+                                                        @RequestParam(defaultValue = "10") Integer pageSize
     ) {
-        if (null == projectOrderVO.getProjectNo() || "".equals(projectOrderVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
         Map<String, Object> params = new HashMap<>();
         List<ProjectOrderVO> preProjectGuideList = new ArrayList<>();
+        ProjectOrderVO projectOrderVO = new ProjectOrderVO();
+        projectOrderVO.setProjectNo(projectNo);
         preProjectGuideList = newOrderUserService.queryProjectOrderByPage(projectOrderVO, (pageNum - 1) * pageSize, pageSize);
         //这里查询的是所有的数据
         params.put("list", preProjectGuideList);
@@ -77,11 +79,14 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "orderConfirmation", method = RequestMethod.POST)
-    @ApiOperation(value = "订单确认")
-    public MyRespBundle orderConfirmation(@ApiParam(value = "订单确认") OrderConfirmationVO orderConfirmationVO) {
-        if (null == orderConfirmationVO.getProjectNo() || "".equals(orderConfirmationVO.getProjectNo())) {
+    @ApiOperation(value = "施工订单-订单确认-订单确认接口")
+    public MyRespBundle orderConfirmation(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo
+    ) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+        OrderConfirmationVO orderConfirmationVO = new OrderConfirmationVO();
+        orderConfirmationVO.setProjectNo(projectNo);
         Integer result = newOrderUserService.updateorderConfirmation(orderConfirmationVO);
         if (result == 0) {
             return sendJsonData(ResultMessage.ERROR, "确认失败");
@@ -97,15 +102,18 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "orderListExcel", method = RequestMethod.POST)
-    @ApiOperation(value = "导出派单列表", notes = "")
-    public MyRespBundle<DesignerOrder> orderListExcel(@RequestBody ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize
+    @ApiOperation(value = "施工订单-项目派单页面导出按钮-导出派单列表接口", notes = "")
+    public MyRespBundle<DesignerOrder> orderListExcel(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo, Integer pageNum, Integer pageSize
 
     ) {
-        if (null == projectOrderVO.getProjectNo() || "".equals(projectOrderVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
         Map<String, Object> params = new HashMap<>();
         List<ProjectOrderVO> projectList = new ArrayList<>();
+        ProjectOrderVO projectOrderVO = new ProjectOrderVO();
+        projectOrderVO.setProjectNo(projectNo);
+
         projectList = newOrderUserService.queryProjectOrderByPage(projectOrderVO, pageNum, pageSize);
         //这里查询的是所有的数据
         params.put("list", projectList);
@@ -155,7 +163,7 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "findOrderDetails", method = RequestMethod.POST)
-    @ApiOperation(value = "查看订单详情", notes = "")
+    @ApiOperation(value = "订单管理-订单详情页面-查看订单详情接口", notes = "")
     public MyRespBundle<Project> findOrderDetails(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo) {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
@@ -174,7 +182,7 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "stageDetailsList", method = RequestMethod.POST)
-    @ApiOperation(value = "查看阶段详情", notes = "")
+    @ApiOperation(value = "订单管理-订单详情页面-查看阶段详情接口", notes = "")
     public MyRespBundle<Project> stageDetailsList(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo) {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
@@ -192,10 +200,11 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
     @RequestMapping(value = "modifyOrder", method = RequestMethod.POST)
     @ApiOperation(value = "修改订单状态")
-    public MyRespBundle modifyOrder(@ApiParam(value = "修改订单状态") OrderConfirmationVO orderConfirmationVO) {
-        if (null == orderConfirmationVO.getProjectNo() || "".equals(orderConfirmationVO.getProjectNo())) {
+    public MyRespBundle modifyOrder(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+        OrderConfirmationVO orderConfirmationVO = new OrderConfirmationVO();
         Integer result = newOrderUserService.modifyOrder(orderConfirmationVO);
         if (result == 0) {
             return sendJsonData(ResultMessage.ERROR, "修改失败");
@@ -212,14 +221,16 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "siteDetailsList", method = RequestMethod.POST)
-    @ApiOperation(value = "施工工地详情", notes = "")
-    public MyRespBundle<ConstructionSiteVO> siteDetailsList(@RequestBody ConstructionSiteVO constructionSiteVO,
-                                                     @RequestParam(defaultValue = "1") Integer pageNum,
-                                                     @RequestParam(defaultValue = "10") Integer pageSize
+    @ApiOperation(value = "工地管理-施工工地页面导出按钮-施工工地列表接口", notes = "")
+    public MyRespBundle<ConstructionSiteVO> siteDetailsList(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo,
+                                                            @RequestParam(defaultValue = "1") Integer pageNum,
+                                                            @RequestParam(defaultValue = "10") Integer pageSize
     ) {
-        if (null == constructionSiteVO.getProjectNo() || "".equals(constructionSiteVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+        ConstructionSiteVO constructionSiteVO = new ConstructionSiteVO();
+        constructionSiteVO.setProjectNo(projectNo);
         Map<String, Object> params = new HashMap<>();
         List<ConstructionSiteVO> siteDetailsList = new ArrayList<>();
         siteDetailsList = newOrderUserService.querySiteDetailsByPage(constructionSiteVO, (pageNum - 1) * pageSize, pageSize);
@@ -241,14 +252,16 @@ public class DelaySchedulingController extends AbsBaseController {
      * @Param
      **/
     @RequestMapping(value = "siteDetailsListExcel", method = RequestMethod.POST)
-    @ApiOperation(value = "导出施工工地详情", notes = "")
-    public MyRespBundle<DesignerOrder> siteDetailsListExcel(@RequestBody ConstructionSiteVO constructionSiteVO,
-                                                          Integer pageNum,
-                                                          Integer pageSize
+    @ApiOperation(value = "工地管理-施工工地页面导出按钮-导出施工工地详情", notes = "")
+    public MyRespBundle<DesignerOrder> siteDetailsListExcel(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo,
+                                                            Integer pageNum,
+                                                            Integer pageSize
     ) {
-        if (null == constructionSiteVO.getProjectNo() || "".equals(constructionSiteVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+        ConstructionSiteVO constructionSiteVO = new ConstructionSiteVO();
+        constructionSiteVO.setProjectNo(projectNo);
         Map<String, Object> params = new HashMap<>();
         List<ConstructionSiteVO> siteDetailsList = new ArrayList<>();
         siteDetailsList = newOrderUserService.querySiteDetailsByPage(constructionSiteVO, pageSize, pageSize);
@@ -299,13 +312,15 @@ public class DelaySchedulingController extends AbsBaseController {
 
     @RequestMapping(value = "siteList", method = RequestMethod.POST)
     @ApiOperation(value = "工地详情", notes = "")
-    public MyRespBundle<DesignerOrder> siteList(@RequestBody SiteDetailsVO siteDetailsVO,
-                                              @RequestParam(defaultValue = "1") Integer pageNum,
-                                              @RequestParam(defaultValue = "10") Integer pageSize
+    public MyRespBundle<DesignerOrder> siteList(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo,
+                                                @RequestParam(defaultValue = "1") Integer pageNum,
+                                                @RequestParam(defaultValue = "10") Integer pageSize
     ) {
-        if (null == siteDetailsVO.getProjectNo() || "".equals(siteDetailsVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+        SiteDetailsVO siteDetailsVO = new SiteDetailsVO();
+        siteDetailsVO.setProjectNo(projectNo);
         Map<String, Object> params = new HashMap<>();
         List<SiteDetailsVO> siteDetailsList = new ArrayList<>();
         siteDetailsList = newOrderUserService.querySiteByPage(siteDetailsVO, (pageNum - 1) * pageSize, pageSize);
@@ -327,14 +342,16 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
 
     @RequestMapping(value = "constructionPlanList", method = RequestMethod.POST)
-    @ApiOperation(value = "施工计划", notes = "")
-    public MyRespBundle<DesignerOrder> constructionPlanList(@RequestBody ConstructionPlanVO constructionPlanVO,
-                                                          @RequestParam(defaultValue = "1") Integer pageNum,
-                                                          @RequestParam(defaultValue = "10") Integer pageSize
+    @ApiOperation(value = "工地管理-施工计划页面-施工计划列表", notes = "")
+    public MyRespBundle<DesignerOrder> constructionPlanList(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo,
+                                                            @RequestParam(defaultValue = "1") Integer pageNum,
+                                                            @RequestParam(defaultValue = "10") Integer pageSize
     ) {
-        if (null == constructionPlanVO.getProjectNo() || "".equals(constructionPlanVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
+        ConstructionPlanVO constructionPlanVO = new ConstructionPlanVO();
+        constructionPlanVO.setProjectNo(projectNo);
         Map<String, Object> params = new HashMap<>();
         List<ConstructionPlanVO> siteDetailsList = new ArrayList<>();
         siteDetailsList = newOrderUserService.queryConstructionPlanByPage(constructionPlanVO, (pageNum - 1) * pageSize, pageSize);
@@ -357,15 +374,17 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
 
     @RequestMapping(value = "constructionPlanExcel", method = RequestMethod.POST)
-    @ApiOperation(value = "导出施工计划", notes = "")
-    public MyRespBundle<DesignerOrder> constructionPlanExcel(@RequestBody ConstructionPlanVO constructionPlanVO,
-                                                           Integer pageNum,
-                                                           Integer pageSize
+    @ApiOperation(value = "工地管理-施工计划页面-导出施工计划接口", notes = "")
+    public MyRespBundle<DesignerOrder> constructionPlanExcel(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo,
+                                                             Integer pageNum,
+                                                             Integer pageSize
     ) {
-        if (null == constructionPlanVO.getProjectNo() || "".equals(constructionPlanVO.getProjectNo())) {
+        if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
         }
         Map<String, Object> params = new HashMap<>();
+        ConstructionPlanVO constructionPlanVO = new ConstructionPlanVO();
+        constructionPlanVO.setProjectNo(projectNo);
         List<ConstructionPlanVO> siteDetailsList = new ArrayList<>();
         siteDetailsList = newOrderUserService.queryConstructionPlanByPage(constructionPlanVO, pageNum, pageSize);
         //这里查询的是所有的数据
@@ -405,7 +424,7 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
 
     @RequestMapping(value = "getEmployeeInfo", method = RequestMethod.POST)
-    @ApiOperation(value = "获取员工信息", notes = "")
+    @ApiOperation(value = "订单管理-订单详情页面-获取员工信息接口", notes = "")
     public MyRespBundle<Project> getEmployeeInfo(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo) {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
@@ -423,10 +442,10 @@ public class DelaySchedulingController extends AbsBaseController {
      **/
 
     @RequestMapping(value = "acceptanceResults", method = RequestMethod.POST)
-    @ApiOperation(value = "验收结果", notes = "")
+    @ApiOperation(value = "工地管理-验收结果页面-验收结果接口", notes = "")
     public MyRespBundle<DesignerOrder> acceptanceResults(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                          @RequestParam(defaultValue = "1") Integer pageNum,
-                                                          @RequestParam(defaultValue = "10") Integer pageSize
+                                                         @RequestParam(defaultValue = "1") Integer pageNum,
+                                                         @RequestParam(defaultValue = "10") Integer pageSize
     ) {
         if (null == projectNo || "".equals(projectNo)) {
             return sendJsonData(ResultMessage.ERROR, "项目编号为空");
@@ -442,7 +461,6 @@ public class DelaySchedulingController extends AbsBaseController {
         params.put("pageNum", pageNum);
         return sendJsonData(ResultMessage.SUCCESS, params);
     }
-
 
 
 }

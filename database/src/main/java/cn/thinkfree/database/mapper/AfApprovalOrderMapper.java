@@ -2,9 +2,8 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.AfApprovalOrder;
 import cn.thinkfree.database.model.AfApprovalOrderExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface AfApprovalOrderMapper {
     /**

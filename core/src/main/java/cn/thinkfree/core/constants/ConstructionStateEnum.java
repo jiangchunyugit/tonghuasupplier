@@ -286,6 +286,27 @@ public enum ConstructionStateEnum {
     }
 
     /**
+     * 根据类型获取所有类型值
+     *
+     * @param type  ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
+     * @return
+     */
+    public String getStateName(int type){
+        switch (type) {
+            case 1:
+                return statePlatform;
+            case 2:
+                return stateConstructionCompany;
+            case 3:
+                return stateConstructor;
+            case 4:
+                return stateConsumer;
+            default:
+                throw new RuntimeException("无效的类型");
+        }
+    }
+
+    /**
      * 根据枚举的状态值查询枚举
      *
      * @param state 状态值

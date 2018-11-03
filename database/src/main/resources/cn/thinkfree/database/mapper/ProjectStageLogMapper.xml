@@ -308,6 +308,6 @@
     FROM
         project_stage_log pl
     WHERE
-        pl.order_no={projectNo}
+        pl.project_no=#{projectNo}
   </select>
 </mapper>

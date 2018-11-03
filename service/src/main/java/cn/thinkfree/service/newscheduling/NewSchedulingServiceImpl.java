@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.thinkfree.service.utils.DateUtil;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +47,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public MyRespBundle createScheduling(String projectNo,String companyId) {
+    public MyRespBundle createScheduling(String projectNo, String companyId) {
 
         //获取报价基础信息
         Set<Integer> bigSortSet = projectQuotationLogMapper.selectByProjectNo(projectNo);
@@ -65,7 +66,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         Date bigStartTime = project.getPlanStartTime();
         Collections.sort(projectBigSchedulings);
         //生成排期
-        for(ProjectBigScheduling bigScheduling : projectBigSchedulings) {
+        for (ProjectBigScheduling bigScheduling : projectBigSchedulings) {
             ProjectBigSchedulingDetails details = new ProjectBigSchedulingDetails();
             details.setCompanyId(companyId);
             details.setProjectNo(projectNo);
@@ -81,18 +82,18 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             details.setIsAdopt(Scheduling.CHECK_NO.getValue());
             details.setVersion(bigScheduling.getVersion());
             details.setRenameBig(bigScheduling.getRename());
-            if(bigSortSet.contains(bigScheduling.getSort())){
+            if (bigSortSet.contains(bigScheduling.getSort())) {
                 details.setPlanStartTime(bigStartTime);
-                details.setPlanEndTime(DateUtil.getDate(bigStartTime,bigScheduling.getWorkload()));
-                bigStartTime = DateUtil.getDate(bigStartTime,bigScheduling.getWorkload());
+                details.setPlanEndTime(DateUtil.getDate(bigStartTime, bigScheduling.getWorkload()));
+                bigStartTime = DateUtil.getDate(bigStartTime, bigScheduling.getWorkload());
                 details.setIsMatching(Scheduling.MATCHING_YES.getValue());
-            }else {
+            } else {
                 details.setPlanStartTime(bigStartTime);
                 details.setPlanEndTime(bigStartTime);
                 details.setIsMatching(Scheduling.MATHCHING_NO.getValue());
             }
             int i = projectBigSchedulingDetailsMapper.insertSelective(details);
-            if(i!=Scheduling.INSERT_SUCCESS.getValue()){
+            if (i != Scheduling.INSERT_SUCCESS.getValue()) {
                 return RespData.error("生成排期失败!!");
             }
         }
@@ -163,7 +164,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
-        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
+//        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         return RespData.success(playBigList);
@@ -171,18 +172,19 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
 
     /**
      * 确认排期
+     *
      * @param bigList
      * @return
      */
     @Override
     public MyRespBundle confirmProjectScheduling(List<ProjectBigSchedulingDetailsVO> bigList) {
-        if(bigList.isEmpty()){
+        if (bigList.isEmpty()) {
             return RespData.success("暂无修改");
         }
         String projectNo = bigList.get(0).getProjectNo();
         //将原数据置为失效
-        Integer i = projectBigSchedulingDetailsMapper.updateByProjectNo(projectNo,Scheduling.INVALID_STATUS.getValue());
-        for(ProjectBigSchedulingDetailsVO detailsVO:bigList){
+        Integer i = projectBigSchedulingDetailsMapper.updateByProjectNo(projectNo, Scheduling.INVALID_STATUS.getValue());
+        for (ProjectBigSchedulingDetailsVO detailsVO : bigList) {
             ProjectBigSchedulingDetails projectBigSchedulingDetails = BaseToVoUtils.getVo(detailsVO, ProjectBigSchedulingDetails.class);
             projectBigSchedulingDetails.setStatus(Scheduling.BASE_STATUS.getValue());
             projectBigSchedulingDetails.setCreateTime(new Date());
