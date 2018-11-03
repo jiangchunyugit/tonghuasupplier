@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * @author gejiaming
  */
-@Api(tags = "排期基础信息操作")
+@Api(tags = "PC-排期基础信息操作")
 @RestController
 @RequestMapping(value = "schedulingBase")
 public class SchedulingBaseController extends AbsBaseController {
@@ -28,35 +28,35 @@ public class SchedulingBaseController extends AbsBaseController {
     private NewSchedulingBaseService schedulingBaseService;
 
     @RequestMapping(value = "listSmallScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "获取本地基础小排期信息")
+    @ApiOperation(value = "基础施工项同步-获取本地基础小排期信息")
     public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listSmallScheduling(@ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo) {
         PageInfo<ProjectSmallSchedulingVO> page = schedulingBaseService.listSmallScheduling(schedulingSeo);
         return sendJsonData(ResultMessage.SUCCESS, page);
     }
 
     @RequestMapping(value = "addBigScheduling",method = RequestMethod.POST)
-    @ApiOperation("添加基础大排期")
+    @ApiOperation("施工阶段工期设置-添加基础大排期")
     public MyRespBundle<String> addBigScheduling(@ApiParam(name = "projectBigSchedulingVO",value = "基础大排期信息")ProjectBigSchedulingVO projectBigSchedulingVO){
         String result = schedulingBaseService.addBigScheduling(projectBigSchedulingVO);
         return sendSuccessMessage(result);
     }
 
     @RequestMapping(value = "listBigScheduling",method = RequestMethod.POST)
-    @ApiOperation("获取基础大排期")
+    @ApiOperation("施工阶段工期设置-获取基础大排期")
     public MyRespBundle<PageInfo<ProjectBigScheduling>> listBigScheduling(@ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo){
         PageInfo<ProjectBigScheduling> page = schedulingBaseService.listBigScheduling(schedulingSeo);
         return sendJsonData(ResultMessage.SUCCESS, page);
     }
 
     @RequestMapping(value = "updateSmallScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "关联小排期与大排期")
+    @ApiOperation(value = "施工项关联-关联小排期与大排期")
     public MyRespBundle<String> updateSmallScheduling(@ApiParam(name = "projectSmallSchedulingVO", value = "小排期实体") ProjectSmallSchedulingVO projectSmallSchedulingVO) {
         String result = schedulingBaseService.updateSmallScheduling(projectSmallSchedulingVO);
         return sendSuccessMessage(result);
     }
 
     @RequestMapping(value = "listShangHai",method = RequestMethod.POST)
-    @ApiOperation(value = "同步上海基础小排期")
+    @ApiOperation(value = "基础施工项同步-同步上海基础小排期")
     public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listShangHai(@ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo){
 //        PageInfo<ProjectSmallSchedulingVO> pageInfo = schedulingBaseService.listShangHai(schedulingSeo);
 //        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
@@ -65,7 +65,7 @@ public class SchedulingBaseController extends AbsBaseController {
     }
 
     @RequestMapping(value = "",method = RequestMethod.POST)
-    @ApiOperation(value = "修改基础大排期")
+    @ApiOperation(value = "阶段验收配置-修改基础大排期")
     public MyRespBundle<String> updateBigScheduling(@ApiParam(name = "projectBigSchedulingVO",value = "基础大排期信息")ProjectBigSchedulingVO projectBigSchedulingVO){
         return schedulingBaseService.updateBigScheduling(projectBigSchedulingVO);
     }

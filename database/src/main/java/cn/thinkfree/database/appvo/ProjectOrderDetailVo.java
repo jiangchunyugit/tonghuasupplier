@@ -20,6 +20,10 @@ public class ProjectOrderDetailVo {
     private List<OrderTaskSortVo> orderTaskSortVoList;
     @ApiModelProperty(name = "taskStage",value = "任务阶段")
     private Integer taskStage;
+    @ApiModelProperty(name = "playTask",value = "展示内容")
+    private String playTask;
+    @ApiModelProperty(name = "playTaskColor",value = "展示内容颜色")
+    private String playTaskColor;
     @ApiModelProperty(name = "orderNo",value = "订单编号")
     private String orderNo;
     @ApiModelProperty(name = "orderType",value = "订单类型,1 设计订单, 2 施工订单")

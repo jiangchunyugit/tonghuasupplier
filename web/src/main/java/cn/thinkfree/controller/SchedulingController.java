@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author gejiaming
  */
-@Api(tags = "排期相关")
+@Api(tags = "APP/PC-排期相关")
 @RestController
 @RequestMapping(value = "scheduling")
 public class SchedulingController extends AbsBaseController {
@@ -26,7 +26,7 @@ public class SchedulingController extends AbsBaseController {
     @Autowired
     private NewSchedulingService schedulingService;
 
-    @ApiOperation(value = "获取排期信息")
+    @ApiOperation(value = "APP/PC-获取排期信息")
     @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 使用 111") String projectNo) {
         List<ProjectBigSchedulingDetailsVO> bigSchedulingDetailsVoList = schedulingService.getScheduling(projectNo);
@@ -41,20 +41,20 @@ public class SchedulingController extends AbsBaseController {
     }
 
     @RequestMapping(value = "deleteProjectScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "删除大排期")
+    @ApiOperation(value = "APP-删除大排期")
     public MyRespBundle deleteProjectScheduling(@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
         String result = schedulingService.deleteProjectScheduling(projectBigSchedulingDetailsVO);
         return sendSuccessMessage(result);
     }
 
     @RequestMapping(value = "updateProjectScheduling",method = RequestMethod.POST)
-    @ApiOperation(value = "确认排期")
+    @ApiOperation(value = "APP-确认排期")
     public MyRespBundle confirmProjectScheduling(@RequestBody@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") List<ProjectBigSchedulingDetailsVO> bigList){
         return schedulingService.confirmProjectScheduling(bigList);
     }
 
     @RequestMapping(value = "",method = RequestMethod.POST)
-    @ApiOperation("获取验收阶段")
+    @ApiOperation("APP-获取验收阶段")
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 111") String projectNo){
         return schedulingService.getCheckStage(projectNo);
     }

@@ -40,7 +40,28 @@
             deso.status=#{status}
     </select>
 
-    <!--<select id="selectConstructionOrderVo" resultType="">-->
-
-    <!--</select>-->
+    <select id="selectConstructionOrderVo" resultType="cn.thinkfree.database.pcvo.ConstructionOrderVO">
+        SELECT
+          co.order_no orderNo,
+          co.create_time createTime,
+          co.close_time closeTime,
+          co.order_stage orderStage,
+          pro.order_source orderSource,
+          pro.owner_id ownerId,
+          pro.address_detail addressDetail,
+          pro.house_type houseType,
+          pro.decoration_budget decorationBudget,
+          pro.house_room houseRoom,
+          pro.house_office houseOffice,
+          pro.house_toilet houseToilet,
+          pro.area area,
+          pro.style style,
+        pro.reference_scheme referenceScheme,
+          co.remark remark
+        FROM
+          construction_order co
+        LEFT JOIN project pro ON co.project_no=pro.project_no
+        WHERE
+          co.project_no=#{projectNo}
+    </select>
 </mapper>
