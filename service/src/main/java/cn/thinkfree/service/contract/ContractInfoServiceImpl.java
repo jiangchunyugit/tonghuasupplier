@@ -43,9 +43,7 @@ import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.OrderContract;
 import cn.thinkfree.database.model.OrderContractExample;
 import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.model.PcCompanyFinancialExample;
 import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractClauseVO;
@@ -237,26 +235,17 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 
-
 	@Override
-	public  Map<String,String> ackEarnestMoney(String contractNumber, String companyId) {
-
-		Map<String,String> map = new HashMap<>();
+	public  boolean ackEarnestMoney(String contractNumber, String companyId) {
 		//修改公司表
 		CompanyInfo companyInfo = new CompanyInfo();
 		companyInfo.setCompanyId(companyId);
 		companyInfo.setAuditStatus("6");//确认已交保证金
 		int flag = companyInfoMapper.updateauditStatus(companyInfo);
 		if(flag > 0){
-
-			map.put("code", "0");
-			map.put("msg", "操作成功");
-
-		}else{
-			map.put("code", "1");
-			map.put("msg", "操作失败");
+			return true;
 		}
-		return map;
+		return false;
 	}
 
 	@Override
@@ -265,25 +254,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		//查询公司
 		ContractDetails companyVo = companyInfoMapper.selectCompanyDetails(companyId);
 		if(companyVo != null ){//查詢合同信息
-			ContractVo contractVo = new ContractVo();
-			contractVo.setContractNumber(contractNumber);
-			ContractVo con = contractInfoMapper.selectContractBycontractNumber(contractVo);
-			companyVo.setSignedTime(con.getSignedTime());
-			companyVo.setStartEime(con.getStartTime());
-			companyVo.setAuditName(CompanyAuditStatus.getDesc(Integer.valueOf(companyVo.getAuditStatus())));//审核状态
-			companyVo.setSignedTime(con.getSignedTime());//签约时间
-			//发票信息
-			PcCompanyFinancialExample example = new PcCompanyFinancialExample();
-			example.createCriteria().andCompanyIdEqualTo(companyId);
-			List<PcCompanyFinancial>  list = pcCompanyFinancialMapper.selectByExample(example);
-			companyVo.setPcCompanyFinancial(list.get(0));
-			//审核信息
-			PcAuditInfoExample auexample = new PcAuditInfoExample();
-			auexample.createCriteria().andContractNumberEqualTo(contractNumber);
-			auexample.setOrderByClause("audit_time");
-			List<PcAuditInfo> auditList = pcAuditInfoMapper.selectByExample(auexample);
-			companyVo.setAuditInfo(auditList);
-			//合同信息
+			// 公司详情
+			CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(companyId);
+			//合同信息结算信息
 		}
 
 		return companyVo;
@@ -374,9 +347,6 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Transactional
 	@Override
 	public boolean insertContractClause(String contractNumber,String companyId,ContractClauseVO contractClausevo) {
-
-		Map<String,String> resMap = new HashMap<>();
-		//List<PcContractTerms> list = new ArrayList<>();
 		if(contractClausevo.getParamMap() != null){
 			Iterator<Map.Entry<String, String>> entries = contractClausevo.getParamMap().entrySet().iterator();
 			while (entries.hasNext()) {
@@ -441,18 +411,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			ContractTerms term_0 = new ContractTerms("01","居然设计家");
 			list.add(term_0);
 		}
-		
-		
-		
-		//定义结算规则
-		Map<String,Map<String,List<ContractTermsChild>>> map =new HashMap<>();
 		//查询结算规则
 		ContractTermsChildExample example = new ContractTermsChildExample();
 		example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
 		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
 		Map<Long, List<ContractTermsChild>> map2 = new LinkedHashMap<Long, List<ContractTermsChild>>();
 		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type");//根据类型分组
-		
 		if(childList != null){
 			Map<String,List<ContractTermsChild>> ma = new HashMap<>();
 			for (int i = 0; i < childList.size(); i++) {
@@ -465,7 +429,6 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 			reMap.put("ContractChild", ma);
 		}
-		
 		//查询合同设置项目
 		reMap.put("companyMap", companyInfo==null?"":companyInfo);
 		reMap.put("ContractList", list);

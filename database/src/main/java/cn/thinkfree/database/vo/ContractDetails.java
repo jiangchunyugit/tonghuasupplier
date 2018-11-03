@@ -6,7 +6,8 @@ import java.util.List;
 
 import cn.thinkfree.database.model.PcAuditInfo;
 
-public class ContractDetails extends CompanySubmitVo{
+public class ContractDetails  {
+	
 	
 	private String signedTime;//合同签订时间
 	
@@ -27,6 +28,8 @@ public class ContractDetails extends CompanySubmitVo{
 	private String legalName;
 	
 	private String legalIdCard;
+	
+	private CompanySubmitVo companySubmitVO;//公司详情
 	
 	public String getAuditStatus() {
 		return auditStatus;
@@ -300,6 +303,14 @@ public class ContractDetails extends CompanySubmitVo{
 
 	public void setAuditInfo(List<PcAuditInfo> auditInfo) {
 		this.auditInfo = auditInfo;
+	}
+
+	public CompanySubmitVo getCompanySubmitVO() {
+		return companySubmitVO;
+	}
+
+	public void setCompanySubmitVO(CompanySubmitVo companySubmitVO) {
+		this.companySubmitVO = companySubmitVO;
 	}
 
 

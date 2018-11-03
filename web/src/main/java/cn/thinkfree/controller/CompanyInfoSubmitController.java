@@ -145,7 +145,6 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     }
 
     //补全合同
-    
     /**
      * 查看合同
      * @author lqd
@@ -193,7 +192,6 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     }
 
 
-   
     
     /**
      * 公司详情

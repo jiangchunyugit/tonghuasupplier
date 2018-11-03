@@ -46,7 +46,7 @@ public interface ContractService {
 	 * @param ContractSEO
 	 * @return String mess
 	 */
-    Map<String,String>   ackEarnestMoney(String contractNumber,String companyId);
+    boolean  ackEarnestMoney(String contractNumber,String companyId);
     
     
     
