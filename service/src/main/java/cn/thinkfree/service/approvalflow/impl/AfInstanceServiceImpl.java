@@ -22,6 +22,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -238,7 +239,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_START);
                 } else if (approvalLog.getOption() == 1){
                     approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_AGREE);
-                } else if (approvalLog.getOption() == 0) {
+                } else {
                     approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_REFUSAL);
                     instanceDetailVO.setRefusalReason(approvalLog.getRemark());
                 }
@@ -625,6 +626,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
     }
 
+    @Override
+    public int getProjectCheckResult(String projectNo) {
+        Integer result = instanceMapper.getProjectCheckResult(projectNo, AfConfigs.CHECK_REPORT.configNo);
+        return result != null ? result : 0;
+    }
+
+
+    @Override
+    public Map<String, Integer> getProjectCheckResult(List<String> projectNos) {
+        return instanceMapper.getProjectCheckResults(projectNos, AfConfigs.CHECK_REPORT.configNo);
+    }
 
     @Override
     public AfInstanceDetailVO Mstart(String projectNo, String userId, String configNo, Integer scheduleSort) {

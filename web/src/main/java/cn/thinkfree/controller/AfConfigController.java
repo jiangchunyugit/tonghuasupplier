@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2018/10/25 18:21
  */
 @RestController
-@Api(description = "审批流配置")
+@Api(description = "前端-审批流配置-宋传让")
 @RequestMapping("af-config")
 public class AfConfigController extends AbsBaseController {
 
@@ -30,7 +30,7 @@ public class AfConfigController extends AbsBaseController {
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="查询所有审批流")
+    @ApiOperation(value="前端-查询所有审批流-宋传让")
     @ApiParam(name = "schemeNo", value= "方案编号", required = true)
     public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "schemeNo") String schemeNo){
         return sendJsonData(ResultMessage.SUCCESS, configService.list(schemeNo));
@@ -38,7 +38,7 @@ public class AfConfigController extends AbsBaseController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="获取审批流节点信息")
+    @ApiOperation(value="前端-获取审批流节点信息-宋传让")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "configNo", value = "审批流配置编号", required = true),
             @ApiImplicitParam(name = "schemeNo", value = "方案编号", required = true)
@@ -49,7 +49,7 @@ public class AfConfigController extends AbsBaseController {
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="修改审批流配置")
+    @ApiOperation(value="前端-修改审批流配置-宋传让")
     @ApiParam(name = "configEditVO", value= "审批流信息", required = true)
     public MyRespBundle<AfConfigVO> edit(@RequestBody AfConfigEditVO configEditVO){
         configService.edit(configEditVO);
