@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.DesignerMsg;
 import cn.thinkfree.database.model.DesignerStyleConfig;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
+import cn.thinkfree.service.platform.vo.DesignerMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +47,7 @@ public interface DesignerService {
      * @param userId 用户ID
      * @return
      */
-    DesignerMsg queryDesignerByUserId(String userId);
+    DesignerMsgVo queryDesignerByUserId(String userId);
 
     /**
      * 根据用户ID查询员工信息

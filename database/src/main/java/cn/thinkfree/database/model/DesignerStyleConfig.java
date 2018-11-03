@@ -1,6 +1,7 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * Database Table Remarks:
@@ -19,6 +20,7 @@ public class DesignerStyleConfig extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("设计风格编码")
     private String styleCode;
 
     /**
@@ -30,6 +32,7 @@ public class DesignerStyleConfig extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("设计风格名称")
     private String styleName;
 
     /**
@@ -41,6 +44,7 @@ public class DesignerStyleConfig extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("设计风格排序")
     private Integer styleSort;
 
     /**

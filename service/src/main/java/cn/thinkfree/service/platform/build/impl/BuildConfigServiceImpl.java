@@ -1,6 +1,7 @@
 package cn.thinkfree.service.platform.build.impl;
 
 import cn.thinkfree.database.mapper.BuildPayConfigMapper;
+import cn.thinkfree.database.mapper.BuildSchemeCompanyRelMapper;
 import cn.thinkfree.database.mapper.BuildSchemeConfigMapper;
 import cn.thinkfree.database.model.BuildPayConfig;
 import cn.thinkfree.database.model.BuildPayConfigExample;
@@ -26,6 +27,8 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     private BuildSchemeConfigMapper schemeConfigMapper;
     @Autowired
     private BuildPayConfigMapper payConfigMapper;
+    @Autowired
+    private BuildSchemeCompanyRelMapper companyRelMapper;
 
     /**
      * 查询所有施工配置方案
@@ -139,5 +142,10 @@ public class BuildConfigServiceImpl implements BuildConfigService {
             throw new RuntimeException("无效的方案编号");
         }
         return schemeConfig;
+    }
+
+    @Override
+    public void chooseScheme(String companyId, String schemeNo, String optionUserId, String optionUserName) {
+
     }
 }

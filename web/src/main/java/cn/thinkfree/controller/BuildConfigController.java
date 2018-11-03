@@ -22,7 +22,7 @@ import java.util.List;
  * @author xusonghui
  * 施工配置控制器
  */
-@Api(value = "施工配置控制", tags = {"施工配置接口, 支付方案配置接口"})
+@Api(value = "施工配置控制", tags = {"施工配置接口, 支付方案配置接口---->王玲组专用"})
 @Controller
 @RequestMapping("build")
 public class BuildConfigController extends AbsBaseController {
@@ -40,15 +40,15 @@ public class BuildConfigController extends AbsBaseController {
     @ApiOperation("创建施工方案")
     @ResponseBody
     @RequestMapping(value = "createScheme", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<List<BuildSchemeConfig>> createScheme(
+    public MyRespBundle<String> createScheme(
             @ApiParam(name = "schemeName", required = false, value = "施工方案名称") @RequestParam(name = "schemeName", required = false) String schemeName,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "cityStation", required = false, value = "城市站ID") @RequestParam(name = "cityStation", required = false) String cityStation,
             @ApiParam(name = "storeNo", required = false, value = "门店ID") @RequestParam(name = "storeNo", required = false) String storeNo,
             @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
-            buildConfigService.createScheme(schemeName, companyId, cityStation, storeNo, remark);
-            return sendSuccessMessage(null);
+            String schemeNo = buildConfigService.createScheme(schemeName, companyId, cityStation, storeNo, remark);
+            return sendSuccessMessage(schemeNo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -119,13 +119,29 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("启用施工方案")
+    @ApiOperation("删除支付方案")
     @ResponseBody
     @RequestMapping(value = "delPayConfig", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle delPayConfig(
             @ApiParam(name = "paySchemeNo", required = false, value = "支付方案编号") @RequestParam(name = "paySchemeNo", required = false) String paySchemeNo) {
         try {
             buildConfigService.delPayConfig(paySchemeNo);
+            return sendSuccessMessage(null);
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("公司选择方案")
+    @ResponseBody
+    @RequestMapping(value = "chooseScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle chooseScheme(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "schemeNo", required = false, value = "方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
+            @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName){
+        try {
+            buildConfigService.chooseScheme(companyId, schemeNo, optionUserId, optionUserName);
             return sendSuccessMessage(null);
         } catch (Exception e) {
             return sendSuccessMessage(e.getMessage());

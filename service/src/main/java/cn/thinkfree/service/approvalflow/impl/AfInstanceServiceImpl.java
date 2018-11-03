@@ -53,7 +53,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Resource
     private AfConfigService configService;
     @Resource
-    private AfConfigPlanService configPlanService;
+    private AfConfigSchemeService configPlanService;
     @Resource
     private HttpLinks httpLinks;
 
@@ -81,7 +81,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // TODO
         }
 
-        List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
+        List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
         if (approvalRoles != null) {
             for (UserRoleSet role : approvalRoles) {
@@ -99,8 +99,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
                 approvalLogVO.setRoleId(role.getRoleCode());
                 approvalLogVO.setRoleName(role.getRoleName());
-                approvalLogVO.setIsApproval(false);
-                AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), userId, approvalLogVO.getRoleId());
+                approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_UNAPPROVAL);
+                AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), approvalLogVO.getUserId(), approvalLogVO.getRoleId());
                 approvalLogVO.setUserName(userDTO.getUsername());
                 approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
                 approvalLogVOs.add(approvalLogVO);
@@ -114,14 +114,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setCustomerName(customerInfo.getUsername());
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         return instanceDetailVO;
-    }
-
-    private AfUserDTO getUserNameByUserIdAndRoleId(String userId, String roleId) {
-        return AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), userId, roleId);
-    }
-
-    private AfUserDTO getCustomerNameById(String customerId) {
-        return getUserNameByUserIdAndRoleId(customerId, Role.CC.id);
     }
 
     @Override
@@ -138,10 +130,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // TODO
         }
         List<AfApprovalLog> approvalLogs = new ArrayList<>(approvalRoles.size());
-        List<OrderUser> orderUsers = orderUserService.findByOrderNo(projectNo);
+        List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
 
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
-        for (UserRoleSet role : approvalRoles) {
+        for (int index = 0; index < approvalRoles.size(); index++) {
+            UserRoleSet role = approvalRoles.get(index);
             AfApprovalLog approvalLog = null;
             for (OrderUser orderUser : orderUsers) {
                 if (role.getRoleCode().equals(orderUser.getRoleId())) {
@@ -150,6 +143,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     approvalLog.setUserId(orderUser.getUserId());
                     approvalLog.setInstanceNo(instanceNo);
                     approvalLog.setApprovalNo(UniqueCodeGenerator.AF_APPROVAL_LOG.getCode());
+                    approvalLog.setIsApproval(0);
+                    approvalLog.setSort(index + 1);
+                    approvalLog.setConfigNo(configNo);
+                    approvalLog.setProjectNo(projectNo);
+                    approvalLog.setScheduleSort(scheduleSort);
                     break;
                 }
             }
@@ -236,13 +234,19 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
 
             if (approvalLog.getIsApproval() == 1) {
-                approvalLogVO.setIsApproval(true);
+                if (approvalLog.getSort() == 1) {
+                    approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_START);
+                } else if (approvalLog.getOption() == 1){
+                    approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_AGREE);
+                } else if (approvalLog.getOption() == 0) {
+                    approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_REFUSAL);
+                    instanceDetailVO.setRefusalReason(approvalLog.getRemark());
+                }
                 approvalLogVO.setApprovalTime(approvalLog.getApprovalTime());
-                approvalLogVO.setRemark(approvalLog.getRemark());
                 approvalTime = approvalLog.getApprovalTime();
                 wait = 1;
             } else {
-                approvalLogVO.setIsApproval(false);
+                approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_UNAPPROVAL);
                 if (wait == 1) {
                     approvalLogVO.setWaitTip(getWaitTip(approvalTime));
                     wait++;
@@ -251,8 +255,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
             if (approvalLog.getApprovalNo().equals(instance.getCurrentApprovalLogNo()) && approvalLog.getUserId().equals(userId)) {
                 instanceDetailVO.setEditable(true);
-            } else {
-                instanceDetailVO.setEditable(false);
             }
 
             approvalLogVOs.add(approvalLogVO);
@@ -299,21 +301,22 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (approvalLog == null) {
             // TODO
         }
-        String recordUserId = orderUserService.findUserIdByOrderNoAndRoleId(instance.getProjectNo(), approvalLog.getRoleId());
+        String recordUserId = orderUserService.findUserIdByProjectNoAndRoleId(instance.getProjectNo(), approvalLog.getRoleId());
         if (!userId.equals(recordUserId)) {
             // TODO
         }
 
         approvalLog.setRemark(remark);
+        approvalLog.setIsApproval(1);
+        approvalLog.setApprovalTime(new Date());
 
         if (option == 1) {
             // 同意
-            approvalLog.setApprovalTime(new Date());
-            approvalLog.setIsApproval(1);
+            approvalLog.setOption(option);
             AfApprovalLog nextApprovalLog = approvalLogService.findByInstanceNoAndSort(instanceNo, approvalLog.getSort() + 1);
             if (nextApprovalLog == null) {
                 // 结束审批流
-                instance.setStatus(2);
+                instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
                 instance.setCurrentApprovalLogNo(null);
                 sendSuccessMessage();
             } else {
@@ -322,7 +325,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         } else {
             // 不同意
-            instance.setStatus(3);
+            approvalLog.setOption(option);
+            instance.setStatus(AfConstants.APPROVAL_STATUS_FAIL);
             instance.setCurrentApprovalLogNo(null);
         }
 
@@ -354,7 +358,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         AfInstanceListVO instanceListVO = new AfInstanceListVO();
         List<AfInstanceVO> instanceVOs = new ArrayList<>();
         List<AfStartMenuVO> startMenus = new ArrayList<>();
-        if (AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE.equals(approvalType)) {
+        if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
             // 进度验收
             if (scheduleSort == null) {
                 // 开工准备:开工申请
@@ -382,7 +386,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             getInstances(instanceVOs, AfConfigs.RECTIFICATION_COMPLETE.configNo, userId, projectNo);
 
             getStartMenus(startMenus, userId, projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo);
-        } else if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
+        } else if (AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE.equals(approvalType)) {
             // 施工变更：变更单
             getInstances(instanceVOs, AfConfigs.CHANGE_ORDER.configNo, userId, projectNo);
             // 施工变更：变更完成
@@ -566,24 +570,24 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String userId, String projectNo) {
-        List<AfInstance> instances = findByConfigNoAndProjectNo(configNo, projectNo);
-        getInstances(instanceVOs, instances, configNo, userId);
+        List<AfApprovalLog> approvalLogs = approvalLogService.findByConfigNoAndProjectNoAndUserId(configNo, projectNo, userId);
+        getInstances(instanceVOs, approvalLogs, configNo, userId);
     }
 
     private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String userId, String projectNo, Integer scheduleSort) {
-        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSort(configNo, projectNo, scheduleSort);
-        getInstances(instanceVOs, instances, configNo, userId);
+        List<AfApprovalLog> approvalLogs = approvalLogService.findByConfigNoAndProjectNoAndScheduleSortAndUserId(configNo, projectNo, scheduleSort, userId);
+        getInstances(instanceVOs, approvalLogs, configNo, userId);
     }
 
-    private void getInstances( List<AfInstanceVO> instanceVOs, List<AfInstance> instances, String configNo, String userId) {
+    private void getInstances( List<AfInstanceVO> instanceVOs, List<AfApprovalLog> approvalLogs, String configNo, String userId) {
         AfConfig config = configService.findByNo(configNo);
         if (config == null) {
             // TODO
         }
-        if (instances != null) {
-            for (AfInstance instance : instances) {
+        if (approvalLogs != null) {
+            for (AfApprovalLog approvalLog : approvalLogs) {
                 AfInstanceVO instanceVO = new AfInstanceVO();
-                AfApprovalLog approvalLog = approvalLogService.findByInstanceNoAndSort(instance.getInstanceNo(), 1);
+                AfInstance instance = findByNo(approvalLog.getInstanceNo());
                 if (approvalLog == null) {
                     // TODO
                 }
@@ -609,7 +613,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instanceVO.setConfigName(config.getName());
                 instanceVO.setCreateTime(instance.getCreateTime());
                 instanceVO.setCreateUserId(instance.getCreateUserId());
-
                 AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), instance.getCreateUserId(), instance.getCreateRoleId());
                 instanceVO.setCreateUsername(userDTO.getUsername());
                 instanceVO.setScheduleSort(instance.getScheduleSort());
@@ -679,11 +682,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             afApprovalLogVO.setUserId("aaaaaa" + i);
             afApprovalLogVO.setUserName("张三" + i);
             if (i < 1) {
-                afApprovalLogVO.setIsApproval(true);
-                afApprovalLogVO.setRemark("啦啦啦啦");
+                afApprovalLogVO.setStatus(1);
                 afApprovalLogVO.setApprovalTime(new Date());
-            } else {
-                afApprovalLogVO.setIsApproval(false);
+            } else if (i == 1){
+                afApprovalLogVO.setStatus(2);
             }
             approvalLogs.add(afApprovalLogVO);
         }

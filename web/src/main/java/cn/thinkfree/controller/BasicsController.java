@@ -22,7 +22,7 @@ import java.util.Map;
  * @author xusonghui
  * 基础字典性信息提供
  */
-@Api(value = "基础信息接口", tags = "基础信息接口")
+@Api(value = "基础信息接口", tags = "基础信息接口--->app和后台公用")
 @Controller
 @RequestMapping("basics")
 public class BasicsController extends AbsBaseController {
@@ -32,18 +32,35 @@ public class BasicsController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "cardType", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<BasicsData>> cardType() {
-        //暂时写死
-        List<BasicsData> cardTypeVos = basicsService.idCardTypes("ID_CARD_TYPE");
-        return sendJsonData(ResultMessage.SUCCESS, cardTypeVos);
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.cardTypes());
     }
 
     @ApiOperation("国家类型")
     @MyRespBody
     @RequestMapping(value = "countryType", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<BasicsData>> countryType() {
-        //暂时写死
-        List<BasicsData> cardTypeVos = basicsService.idCardTypes("COUNTRY_TYPE");
-        return sendJsonData(ResultMessage.SUCCESS, cardTypeVos);
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.countryType());
+    }
+
+    @ApiOperation("取消设计原因，取汉字传回后台")
+    @MyRespBody
+    @RequestMapping(value = "cancelDesign", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> cancelDesign() {
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.cancelDesign());
+    }
+
+    @ApiOperation("退款原因，取汉字传回后台")
+    @MyRespBody
+    @RequestMapping(value = "refund", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> refund() {
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.refund());
+    }
+
+    @ApiOperation("取消施工原因，取汉字传回后台")
+    @MyRespBody
+    @RequestMapping(value = "cancelCons", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> cancelCons() {
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.cancelCons());
     }
 
     @ApiOperation("根据类型查询地区信息，先调用一下，看看，直接返回的listmap集合")

@@ -31,9 +31,9 @@ public class AfConfigController extends AbsBaseController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="查询所有审批流")
-    @ApiParam(name = "planNo", value= "方案编号", required = true)
-    public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "planNo") String planNo){
-        return sendJsonData(ResultMessage.SUCCESS, configService.list(planNo));
+    @ApiParam(name = "schemeNo", value= "方案编号", required = true)
+    public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "schemeNo") String schemeNo){
+        return sendJsonData(ResultMessage.SUCCESS, configService.list(schemeNo));
     }
 
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
@@ -41,10 +41,10 @@ public class AfConfigController extends AbsBaseController {
     @ApiOperation(value="获取审批流节点信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "configNo", value = "审批流配置编号", required = true),
-            @ApiImplicitParam(name = "planNo", value = "方案编号", required = true)
+            @ApiImplicitParam(name = "schemeNo", value = "方案编号", required = true)
     })
-    public MyRespBundle<AfConfigVO> detail(@RequestParam(name = "configNo") String configNo, @RequestParam(name = "planNo") String planNo){
-        return sendJsonData(ResultMessage.SUCCESS, configService.detail(configNo, planNo));
+    public MyRespBundle<AfConfigVO> detail(@RequestParam(name = "configNo") String configNo, @RequestParam(name = "schemeNo") String schemeNo){
+        return sendJsonData(ResultMessage.SUCCESS, configService.detail(configNo, schemeNo));
     }
 
     @RequestMapping(value = "/edit", method = RequestMethod.POST)

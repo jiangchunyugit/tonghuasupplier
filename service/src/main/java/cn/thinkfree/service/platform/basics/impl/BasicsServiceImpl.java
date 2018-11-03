@@ -30,12 +30,32 @@ public class BasicsServiceImpl implements BasicsService {
     @Autowired
     private BasicsDataMapper basicsDataMapper;
 
-    @Override
-    public List<BasicsData> idCardTypes(String type) {
+    private List<BasicsData> queryData(String type) {
         //暂时写死
         BasicsDataExample dataExample = new BasicsDataExample();
         dataExample.createCriteria().andBasicsGroupEqualTo(type);
         return basicsDataMapper.selectByExample(dataExample);
+    }
+
+    @Override
+    public List<BasicsData> cardTypes() {
+        return queryData("ID_CARD_TYPE");
+    }
+    @Override
+    public List<BasicsData> countryType() {
+        return queryData("COUNTRY_TYPE");
+    }
+    @Override
+    public List<BasicsData> cancelDesign() {
+        return queryData("CANCEL_DESIGN");
+    }
+    @Override
+    public List<BasicsData> refund() {
+        return queryData("REFUND");
+    }
+    @Override
+    public List<BasicsData> cancelCons() {
+        return queryData("CANCEL_CONS");
     }
 
     @Override

@@ -32,12 +32,14 @@ public interface BuildConfigService {
 
     /**
      * 启用施工方案
+     *
      * @param schemeNo
      */
     void enableScheme(String schemeNo);
 
     /**
      * 删除施工方案
+     *
      * @param schemeNo
      */
     void delScheme(String schemeNo);
@@ -71,9 +73,18 @@ public interface BuildConfigService {
 
     /**
      * 删除支付方案
+     *
      * @param paySchemeNo 支付方案编号
      */
     void delPayConfig(String paySchemeNo);
 
-
+    /**
+     * 公司选择方案
+     *
+     * @param companyId      公司ID
+     * @param schemeNo       方案编号
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    void chooseScheme(String companyId, String schemeNo, String optionUserId, String optionUserName);
 }

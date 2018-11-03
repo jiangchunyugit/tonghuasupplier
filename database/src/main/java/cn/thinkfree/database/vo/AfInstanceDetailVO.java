@@ -41,4 +41,6 @@ public class AfInstanceDetailVO {
     private String data;
     @ApiModelProperty("备注")
     private String remark;
+    @ApiModelProperty("拒绝原因")
+    private String refusalReason;
 }

@@ -28,10 +28,8 @@ public class AfApprovalLogVO {
     private String headPortrait;
     @ApiModelProperty("审批时间")
     private Date approvalTime;
-    @ApiModelProperty("是否审批过")
-    private Boolean isApproval;
+    @ApiModelProperty("审批状态，1：发起；2：同意；3：拒绝；4：未审批")
+    private Integer status;
     @ApiModelProperty("等待审批提示")
     private String waitTip;
-    @ApiModelProperty("备注")
-    private String remark;
 }
