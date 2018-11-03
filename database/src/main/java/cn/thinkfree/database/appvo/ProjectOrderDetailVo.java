@@ -20,7 +20,7 @@ public class ProjectOrderDetailVo {
     private List<OrderTaskSortVo> orderTaskSortVoList;
     @ApiModelProperty(name = "taskStage",value = "任务阶段")
     private Integer taskStage;
-    @ApiModelProperty(name = "playTask",value = "展示内容")
+    @ApiModelProperty(name = "playTask",value = "展示内容-导航的内容-默认5个的")
     private String playTask;
     @ApiModelProperty(name = "playTaskColor",value = "展示内容颜色")
     private String playTaskColor;

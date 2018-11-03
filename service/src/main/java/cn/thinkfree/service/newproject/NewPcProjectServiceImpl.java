@@ -58,10 +58,17 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         //获取项目阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = projectStageLogMapper.selectByProjectNo(projectNo);
         for (OrderTaskSortVo taskSortVo:orderTaskSortVoList){
-            if(!DesignStateEnum.queryByState(ProjectDataStatus.PLAY_PLATFORM.getValue()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()).isEmpty()){
-                taskSortVo.setName(DesignStateEnum.queryByState(ProjectDataStatus.PLAY_PLATFORM.getValue()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()));
+            try {
+                if(!DesignStateEnum.queryByState(taskSortVo.getSort()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()).isEmpty()){
+                    taskSortVo.setName(DesignStateEnum.queryByState(ProjectDataStatus.PLAY_PLATFORM.getValue()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()));
+                }
+                if(ConstructionStateEnum.queryByState(taskSortVo.getSort()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()).isEmpty()){
+                    taskSortVo.setName(ConstructionStateEnum.queryByState(taskSortVo.getSort()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                continue;
             }
-//            if(ConstructionStateEnum.queryByState(ProjectDataStatus.PLAY_PLATFORM.getValue()).getStateName(ProjectDataStatus.PLAY_PLATFORM.getValue()).isEmpty()){}
         }
         return RespData.success(orderTaskSortVoList);
     }
