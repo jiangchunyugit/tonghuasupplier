@@ -98,7 +98,7 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
 
     private String getSchemeNo(String projectNo){
         // TODO
-        return "";
+        return "schemeNo";
     }
 
     @Override

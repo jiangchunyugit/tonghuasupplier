@@ -784,6 +784,266 @@ public class AfApprovalLogExample {
             addCriterion("sort not between", value1, value2, "sort");
             return (Criteria) this;
         }
+
+        public Criteria andOptionIsNull() {
+            addCriterion("option is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionIsNotNull() {
+            addCriterion("option is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionEqualTo(Integer value) {
+            addCriterion("option =", value, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionNotEqualTo(Integer value) {
+            addCriterion("option <>", value, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionGreaterThan(Integer value) {
+            addCriterion("option >", value, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionGreaterThanOrEqualTo(Integer value) {
+            addCriterion("option >=", value, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionLessThan(Integer value) {
+            addCriterion("option <", value, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionLessThanOrEqualTo(Integer value) {
+            addCriterion("option <=", value, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionIn(List<Integer> values) {
+            addCriterion("option in", values, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionNotIn(List<Integer> values) {
+            addCriterion("option not in", values, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionBetween(Integer value1, Integer value2) {
+            addCriterion("option between", value1, value2, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andOptionNotBetween(Integer value1, Integer value2) {
+            addCriterion("option not between", value1, value2, "option");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIsNull() {
+            addCriterion("config_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIsNotNull() {
+            addCriterion("config_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoEqualTo(String value) {
+            addCriterion("config_no =", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotEqualTo(String value) {
+            addCriterion("config_no <>", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoGreaterThan(String value) {
+            addCriterion("config_no >", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoGreaterThanOrEqualTo(String value) {
+            addCriterion("config_no >=", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLessThan(String value) {
+            addCriterion("config_no <", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLessThanOrEqualTo(String value) {
+            addCriterion("config_no <=", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoLike(String value) {
+            addCriterion("config_no like", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotLike(String value) {
+            addCriterion("config_no not like", value, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoIn(List<String> values) {
+            addCriterion("config_no in", values, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotIn(List<String> values) {
+            addCriterion("config_no not in", values, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoBetween(String value1, String value2) {
+            addCriterion("config_no between", value1, value2, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigNoNotBetween(String value1, String value2) {
+            addCriterion("config_no not between", value1, value2, "configNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoIsNull() {
+            addCriterion("project_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoIsNotNull() {
+            addCriterion("project_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoEqualTo(String value) {
+            addCriterion("project_no =", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotEqualTo(String value) {
+            addCriterion("project_no <>", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoGreaterThan(String value) {
+            addCriterion("project_no >", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoGreaterThanOrEqualTo(String value) {
+            addCriterion("project_no >=", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoLessThan(String value) {
+            addCriterion("project_no <", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoLessThanOrEqualTo(String value) {
+            addCriterion("project_no <=", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoLike(String value) {
+            addCriterion("project_no like", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotLike(String value) {
+            addCriterion("project_no not like", value, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoIn(List<String> values) {
+            addCriterion("project_no in", values, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotIn(List<String> values) {
+            addCriterion("project_no not in", values, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoBetween(String value1, String value2) {
+            addCriterion("project_no between", value1, value2, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andProjectNoNotBetween(String value1, String value2) {
+            addCriterion("project_no not between", value1, value2, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortIsNull() {
+            addCriterion("schedule_sort is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortIsNotNull() {
+            addCriterion("schedule_sort is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortEqualTo(Integer value) {
+            addCriterion("schedule_sort =", value, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortNotEqualTo(Integer value) {
+            addCriterion("schedule_sort <>", value, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortGreaterThan(Integer value) {
+            addCriterion("schedule_sort >", value, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortGreaterThanOrEqualTo(Integer value) {
+            addCriterion("schedule_sort >=", value, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortLessThan(Integer value) {
+            addCriterion("schedule_sort <", value, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortLessThanOrEqualTo(Integer value) {
+            addCriterion("schedule_sort <=", value, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortIn(List<Integer> values) {
+            addCriterion("schedule_sort in", values, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortNotIn(List<Integer> values) {
+            addCriterion("schedule_sort not in", values, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_sort between", value1, value2, "scheduleSort");
+            return (Criteria) this;
+        }
+
+        public Criteria andScheduleSortNotBetween(Integer value1, Integer value2) {
+            addCriterion("schedule_sort not between", value1, value2, "scheduleSort");
+            return (Criteria) this;
+        }
     }
 
     /**

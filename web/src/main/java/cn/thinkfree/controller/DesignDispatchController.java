@@ -26,7 +26,7 @@ import java.util.Map;
  * @author xusonghui
  * 设计订单派单相关接口
  */
-@Api(value = "设计订单派单，状态变更，相关接口", tags = "设计订单派单，状态变更，相关接口")
+@Api(value = "设计订单派单，状态变更，相关接口", tags = "设计订单派单，状态变更，相关接口--->app后台公用")
 @Controller
 @RequestMapping("designerOrder")
 public class DesignDispatchController extends AbsBaseController {

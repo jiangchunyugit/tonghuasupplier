@@ -33,5 +33,5 @@ public interface ConstructionStateService {
      * @param role
      * @return
      */
-    MyRespBundle<String> updateConstructionState(String projectNo,String role,int stateCode);
+    MyRespBundle<String> updateConstructionState(String projectNo, String role, int stateCode);
 }

@@ -73,7 +73,7 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--Scheduling start-->
-        <table tableName="project" domainObjectName="Project"/>
+        <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
         <!--<table tableName="designer_order" domainObjectName="DesignerOrder"/>-->
         <!--<table tableName="order_apply_refund" domainObjectName="OrderApplyRefund"/>-->
@@ -87,13 +87,13 @@
         <table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>
         <!--Scheduling end-->
         <!--approval flow start-->
-        <table tableName="a_f_config" domainObjectName="AfConfig"/>
-        <table tableName="a_f_config_scheme" domainObjectName="AfConfigScheme"/>
-        <table tableName="a_f_instance" domainObjectName="AfInstance"/>
-        <table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>
-        <table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>
-        <table tableName="a_f_approval_order" domainObjectName="AfApprovalOrder"/>
-        <table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>
+        <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
+        <!--<table tableName="a_f_config_scheme" domainObjectName="AfConfigScheme"/>-->
+        <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
+        <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
+        <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
+        <!--<table tableName="a_f_approval_order" domainObjectName="AfApprovalOrder"/>-->
+        <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->
         <!--approval flow end-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
         <!--<table tableName="designer_style_config" domainObjectName="DesignerStyleConfig"/>-->
