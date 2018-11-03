@@ -80,7 +80,7 @@ public class ContracttemplateController extends AbsBaseController{
      * @param String type
      * @return PcContractTemplate
      */
-    @ApiOperation(value = "合同模板管理列表", notes = "根据合同类型查询合同模板数据(0设计公司合同 1装修公司合同 2设计业主合同 3装修业主合同)")
+    @ApiOperation(value = "前端--运营后台--合同模板管理列表--吕启栋", notes = "根据合同类型查询合同模板数据(0设计公司合同 1装修公司合同 2设计业主合同 3装修业主合同)")
 	@GetMapping(value = "/list")
     @MyRespBody
     public MyRespBundle<List<ContractTemplate>> list(@ApiParam("合同类型") @RequestParam(value ="type") String type){
@@ -125,7 +125,7 @@ public class ContracttemplateController extends AbsBaseController{
      * @param String type
      * @return PcContractTemplate
      */
-    @ApiOperation(value = "根据合同模板类型修改编辑合同模板", notes = "根据合同模板类型修改编辑合同模板是否 可用/不可用(0可用 1不可用)")
+    @ApiOperation(value = "前端--运营后台--根据合同模板类型修改编辑合同模板--吕启栋", notes = "根据合同模板类型修改编辑合同模板是否 可用/不可用(0可用 1不可用)")
     @PostMapping("/updateContractTemplateStatus")
     @MyRespBody
     public MyRespBundle<String> updateContractTemplateStatus( @ApiParam("合同类型") @RequestParam String type,
@@ -142,7 +142,7 @@ public class ContracttemplateController extends AbsBaseController{
      * 
      *  
      */
-    @ApiOperation(value = "新增/修改合同模板数据", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
+    @ApiOperation(value = "前端--运营后台--新增/修改合同模板数据--吕启栋", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
     @PostMapping("/insertOrModifyTemplate ")
     @MyRespBody
     
@@ -160,7 +160,7 @@ public class ContracttemplateController extends AbsBaseController{
     /**
      * 上传合同
      */
-    @ApiOperation(value = "新增/修改合同模板数据", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
+    @ApiOperation(value = "前端--运营后台--上传合同模板--吕启栋", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
     @PostMapping("/uploadTemplate")
     @MyRespBody
     
@@ -185,7 +185,7 @@ public class ContracttemplateController extends AbsBaseController{
 	 * 预览pdf文件
 	 * @param fileName
 	 */
-	@ApiOperation(value = "预览合同模板", notes = "根据合同类型预览合同模板（只返回存储路径  项目访问地址需拼接）")
+	@ApiOperation(value = "前端--运营后台--预览合同模板--吕启栋", notes = "根据合同类型预览合同模板（只返回存储路径  项目访问地址需拼接）")
 	@GetMapping("/preview")
 	public MyRespBundle<String> pdfStreamHandler( @ApiParam("合同类型") String type,
 			HttpServletResponse response) {
@@ -203,7 +203,7 @@ public class ContracttemplateController extends AbsBaseController{
      * @param 
      * @return 
      */
-    @ApiOperation(value = "下载合同", notes = "根据合同类型查下载合同（下载必须走form表达提交啊）")
+    @ApiOperation(value = "前端--运营后台--下载合同模板--吕启栋 ", notes = "根据合同类型查下载合同（下载必须走form表达提交啊）")
     @PostMapping("/download")
     @MyRespBody
     public String download(@ApiParam("合同类型") @RequestParam String type,HttpServletResponse response){

@@ -50,7 +50,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @param settlementRatioSEO
      * @return
      */
-    @ApiOperation(value = "结算比例列表", notes = "根据一定条件获取分页合同记录")
+    @ApiOperation(value = "前端--运营后台--结算比例--结算比例列表--吕启栋 ", notes = "根据一定条件获取分页合同记录")
     @PostMapping("/queryRatioPage")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "分页查询结算比例")
@@ -70,7 +70,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "结算比列导出", notes = "根据一定条件获取分页数据导出")
+    @ApiOperation(value = "前端--运营后台--结算比例--结算比例列表--吕启栋 ", notes = "根据一定条件获取分页数据导出")
     @PostMapping("/exportList")
     @MyRespBody
     public void exportList(HttpServletResponse response,
@@ -87,7 +87,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @return
      */
     
-    @ApiOperation(value = "新增或者修改结算比例", notes = "新增或者修改结算比例")
+    @ApiOperation(value = "前端--运营后台--结算比例--新增或者修改结算比例--吕启栋 ", notes = "新增或者修改结算比例")
     @PostMapping("/insertRatio")
     @MyRespBody
    // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算比例")
@@ -106,7 +106,7 @@ public class SettlementRatioController extends AbsBaseController {
      *
      */
     
-    @ApiOperation(value = "获取结算比例", notes = "更加结算比例编号获取结算比例")
+    @ApiOperation(value = "前端--运营后台--结算比例--获取结算比例--吕启栋", notes = "更加结算比例编号获取结算比例")
     @PostMapping("/getRatioByRatioNumber")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "添加结算比例")
@@ -124,7 +124,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @param settlementRatio
      * @return
      */
-    @ApiOperation(value = "拷贝结算比例", notes = "拷贝结算比例")
+    @ApiOperation(value = "前端--运营后台--结算比例--拷贝结算比例--吕启栋", notes = "拷贝结算比例")
     @PostMapping("/copyRatio")
     @MyRespBody
    // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算比例")
@@ -143,7 +143,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @param settlementRatio
      * @return
      */
-    @ApiOperation(value = "作废结算比例", notes = "作废结算比例")
+    @ApiOperation(value = "前端--运营后台--结算比例--作废结算比例--吕启栋", notes = "作废结算比例")
     @PostMapping("/cancellatRatio")
     @MyRespBody
     //@MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_CONTRACT,desc = "添加结算比例")
@@ -179,7 +179,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @param settlementRatio
      * @return
      */
-    @ApiOperation(value = "费用名称Map", notes = "费用名称Map （key字符串 value字符串）")
+    @ApiOperation(value = "前端--运营后台--结算比例--批量审批 --吕启栋", notes = "费用名称Map （key字符串 value字符串）")
     @PostMapping("/batchcCheckSettlementRatio")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算比例名称")
@@ -196,7 +196,7 @@ public class SettlementRatioController extends AbsBaseController {
      * @author lvqidong
      * 2018-11-3
      */
-    @ApiOperation(value = "根据结算比列类型 获取合同下拉列表", notes = "根据结算比列类型 获取合同下拉列表")
+    @ApiOperation(value = "前端--运营后台--公司管理（合同设置）--根据结算比列类型 获取合同下拉列表--吕启栋", notes = "根据结算比列类型 获取合同下拉列表")
     @GetMapping("/getRatiloListByCostType")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算比例名称")
