@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
 
+import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
@@ -82,7 +83,7 @@ public interface ContractService {
        *  @param contractNumber
        *  @param map 合同
        */
-      Map<String,String>  insertContractClause(String contractNumber,String companyId,Map<String,String> map);
+      boolean  insertContractClause(String contractNumber,String companyId,ContractClauseVO contractClausevo);
       
       
       

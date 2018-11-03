@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +29,7 @@ import com.github.pagehelper.PageInfo;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
+import cn.thinkfree.database.mapper.ContractTermsChildMapper;
 import cn.thinkfree.database.mapper.ContractTermsMapper;
 import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.OrderContractMapper;
@@ -34,6 +37,8 @@ import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.ContractTerms;
+import cn.thinkfree.database.model.ContractTermsChild;
+import cn.thinkfree.database.model.ContractTermsChildExample;
 import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.OrderContract;
 import cn.thinkfree.database.model.OrderContractExample;
@@ -43,6 +48,7 @@ import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.model.PcCompanyFinancialExample;
 import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
+import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
@@ -51,6 +57,7 @@ import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.FreemarkerUtils;
@@ -86,6 +93,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	CompanySubmitService companySubmitService;
+	
+	@Autowired
+	ContractTermsChildMapper  contractTermsChildMapper;
 
 
 	@Override
@@ -363,31 +373,47 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Transactional
 	@Override
-	public Map<String, String> insertContractClause(String contractNumber,String companyId,Map<String,String> map) {
+	public boolean insertContractClause(String contractNumber,String companyId,ContractClauseVO contractClausevo) {
 
 		Map<String,String> resMap = new HashMap<>();
 		//List<PcContractTerms> list = new ArrayList<>();
-		Iterator<Map.Entry<String, String>> entries = map.entrySet().iterator();
-		while (entries.hasNext()) {
-			Map.Entry<String, String> entry = entries.next();
-			String key = entry.getKey();
-			String value = entry.getValue();
-			ContractTerms terms = new ContractTerms();
-			terms.setCompanyId(companyId);
-			terms.setContractNumber(contractNumber);
-			terms.setCreateTime(new Date());
-			terms.setUpdateTime(new Date());
-			terms.setContractDictCode(key);
-			terms.setContractValue(value);
-			//list.add(terms);
-			ContractTermsExample exp = new ContractTermsExample();
-			exp.createCriteria().andCompanyIdEqualTo(companyId).andContractDictCodeEqualTo(key).andContractNumberEqualTo(contractNumber);
-			pcContractTermsMapper.deleteByExample(exp);
-			pcContractTermsMapper.insertSelective(terms);
+		if(contractClausevo.getParamMap() != null){
+			Iterator<Map.Entry<String, String>> entries = contractClausevo.getParamMap().entrySet().iterator();
+			while (entries.hasNext()) {
+				Map.Entry<String, String> entry = entries.next();
+				String key = entry.getKey();
+				String value = entry.getValue();
+				ContractTerms terms = new ContractTerms();
+				terms.setCompanyId(companyId);
+				terms.setContractNumber(contractNumber);
+				terms.setCreateTime(new Date());
+				terms.setUpdateTime(new Date());
+				terms.setContractDictCode(key);
+				terms.setContractValue(value);
+				//list.add(terms);
+				ContractTermsExample exp = new ContractTermsExample();
+				exp.createCriteria().andCompanyIdEqualTo(companyId).andContractDictCodeEqualTo(key).andContractNumberEqualTo(contractNumber);
+				pcContractTermsMapper.deleteByExample(exp);
+				pcContractTermsMapper.insertSelective(terms);
+			}
 		}
-		resMap.put("code", "0");
-		resMap.put("msg", "设置成功");
-		return resMap;
+		//设置结算规则
+		if(contractClausevo.getChildparamMap() != null){
+			Iterator<Entry<String, List<ContractTermsChild>>> childentries = contractClausevo.getChildparamMap().entrySet().iterator();
+			while (childentries.hasNext()) {
+				Entry<String, List<ContractTermsChild>> entry = childentries.next();
+				String key = entry.getKey();
+			    List<ContractTermsChild> list = entry.getValue();
+			    for (int i = 0; i < list.size(); i++) {
+			    	ContractTermsChild child = list.get(i);
+			    	ContractTermsChildExample exp = new ContractTermsChildExample();
+			    	exp.createCriteria().andCompanyIdEqualTo(companyId).andCostTypeEqualTo(key).andContractNumberEqualTo(contractNumber);
+			    	contractTermsChildMapper.deleteByExample(exp);//删除重复数据
+			    	contractTermsChildMapper.insertSelective(child);//新增合同规则
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override
@@ -413,13 +439,37 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		if(list.size() == 0 && companyInfo != null){
 			ContractTerms term_0 = new ContractTerms("01","居然设计家");
-			ContractTerms term_1 = new ContractTerms("02",companyInfo.getCompanyInfo().getCompanyName());
 			list.add(term_0);
-			list.add(term_1);
 		}
+		
+		
+		
+		//定义结算规则
+		Map<String,Map<String,List<ContractTermsChild>>> map =new HashMap<>();
+		//查询结算规则
+		ContractTermsChildExample example = new ContractTermsChildExample();
+		example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
+		Map<Long, List<ContractTermsChild>> map2 = new LinkedHashMap<Long, List<ContractTermsChild>>();
+		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type");//根据类型分组
+		
+		if(childList != null){
+			Map<String,List<ContractTermsChild>> ma = new HashMap<>();
+			for (int i = 0; i < childList.size(); i++) {
+				ContractTermsChildExample example1 = new ContractTermsChildExample();
+				example1.createCriteria().andCompanyIdEqualTo(companyId)
+						.andContractNumberEqualTo(contractNumber)
+						.andCostTypeEqualTo(childList.get(i).getCostType());
+				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample(example1);
+				ma.put(childList.get(i).getCostType(), childListr);
+			}
+			reMap.put("ContractChild", ma);
+		}
+		
+		//查询合同设置项目
 		reMap.put("companyMap", companyInfo==null?"":companyInfo);
 		reMap.put("ContractList", list);
-
+		
 		return reMap;
 	}
 

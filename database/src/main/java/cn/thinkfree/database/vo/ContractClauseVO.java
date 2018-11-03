@@ -1,14 +1,14 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.database.model.ContractTermsChild;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import cn.thinkfree.database.model.ContractTermsChild;
 
 public class ContractClauseVO {
 

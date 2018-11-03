@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mysql.fabric.xmlrpc.base.Data;
 
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
@@ -317,6 +318,34 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	                .format(new Date()) + df.format(random.nextInt(100));
 		return no;
 	}
+
+
+	/**
+	 * 
+	 * 查询有效的 的结算比列
+	 * 平台服务管理费比列 0
+	 *  设计费计算比列
+	 */
+	@Override
+	public List<String>  getRatiloList(String code) {
+		List<String> resList = new ArrayList<String>();
+		Date now = new Date();
+		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
+		example.createCriteria().andFeeDicIdEqualTo(code).
+		andEffectStartTimeLessThan(now).andEffectEndTimeGreaterThanOrEqualTo(now);
+		List<SettlementRatioInfo>  list = settlementRatioInfoMapper.selectByExample(example);
+		for (int i = 0; i < list.size(); i++) {
+			String amount = list.get(i).getAmount();
+			String ratio = list.get(i).getRatio();
+			if(!StringUtils.isEmpty(ratio)){
+				resList.add(ratio);
+			}else if(!StringUtils.isEmpty(ratio)){
+				resList.add(amount);
+			}
+		}
+		return resList;
+	}
+	
 
 
 }

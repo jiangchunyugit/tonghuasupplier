@@ -1,5 +1,6 @@
 package cn.thinkfree.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
@@ -185,6 +186,23 @@ public class SettlementRatioController extends AbsBaseController {
     public MyRespBundle<String> batchcCheckSettlementRatio(SettlementRatioParam param){
 
     	boolean  result= settlementRatioService.batchcCheckSettlementRatio(param.getRatioNumbers(),param.getAuditStatus(),param.getAuditCase());
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    
+    /**
+     * 根据结算比列类型 获取合同下拉列表
+     * @author lvqidong
+     * 2018-11-3
+     */
+    @ApiOperation(value = "根据结算比列类型 获取合同下拉列表", notes = "根据结算比列类型 获取合同下拉列表")
+    @GetMapping("/getRatiloListByCostType")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算比例名称")
+    public MyRespBundle<List<String>> getRatiloListByCostType(String CostType){
+
+    	List<String>  result= settlementRatioService.getRatiloList(CostType);
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }

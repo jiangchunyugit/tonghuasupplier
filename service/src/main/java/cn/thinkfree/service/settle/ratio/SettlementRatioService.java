@@ -68,6 +68,7 @@ public interface SettlementRatioService {
 
 
     /**
+     * 
      * 获取费用名称从埃森哲获取
      * @param
      * @return
@@ -84,4 +85,17 @@ public interface SettlementRatioService {
 	boolean  batchcCheckSettlementRatio(List<String> ratioNumbers,String auditStatus,String auditCase);
 
       
+	
+	/**
+	 * 获取支付比列 map
+	 * key name  value 编号
+	 */
+	List<String>  getRatiloList(String code);
+	
+	/**
+	 * 根据支付比列 获取 对应的方案
+	 * 
+	 */
+	//Map<String,String> getlist();
+	
 }

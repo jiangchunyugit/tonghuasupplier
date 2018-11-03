@@ -173,9 +173,6 @@ public class ContracttemplateController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS,true);
     }
     
-    
-    
-//    
 
 	/**
 	 *
@@ -228,7 +225,7 @@ public class ContracttemplateController extends AbsBaseController{
     	            //设置文件路径
     	            File file = null;
 					try {
-						file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "static/contract/template/pdf/"+list.get(0).getPdfUrl());
+						file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "static/contract/template/pdf/"+type+".pdf");
 					} catch (FileNotFoundException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

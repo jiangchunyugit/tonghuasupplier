@@ -1,6 +1,7 @@
 package cn.thinkfree.service.contracttemplate;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +37,16 @@ public interface ContractTemplateService {
     
     
     /**
+     * 
+     * 根据合同类型 查询 合同字典code
+     * @param contractNumber 
+     * @retuen map 
+     */
+    Map<String,String> queryContractDic(String type);
+    
+    
+    
+    /**
      * 根据合同类型 查询合同类型模板
      * @author lvqidong
      * @param type
@@ -49,4 +60,7 @@ public interface ContractTemplateService {
      * 
      */
     boolean uploadFile(String type,MultipartFile  file);
+    
+    
+    
 }

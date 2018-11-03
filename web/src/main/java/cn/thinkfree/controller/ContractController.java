@@ -47,12 +47,12 @@ public class ContractController extends AbsBaseController{
 	ContractService contractService;
 	
 	/**
-     * 合同列表
+     * 财务审核入驻合同列表
      * @author lqd
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "合同管理列表", notes = "根据一定条件获取分页合同记录")
+    @ApiOperation(value = "财务合同管理列表", notes = "根据一定条件获取分页合同记录")
     @PostMapping("/list")
     @MyRespBody
     public MyRespBundle<PageInfo<ContractVo>> list(@ApiParam("项目搜索条件")   ContractSEO contractSEO){
@@ -68,7 +68,7 @@ public class ContractController extends AbsBaseController{
      * @param ContractSEO
      * @return pageList
      */
-    @ApiOperation(value = "合同数据导出", notes = "根据一定条件获取分页数据导出")
+    @ApiOperation(value = "财务合同数据导出", notes = "根据一定条件获取分页数据导出")
     @PostMapping("/exportList")
     @MyRespBody
     public void exportList(HttpServletResponse response,
@@ -82,7 +82,7 @@ public class ContractController extends AbsBaseController{
      * @author lqd
      * @return Message
      */
-    @ApiOperation(value = "合同审批", notes = "财务审核")
+    @ApiOperation(value = "财务合同审批", notes = "财务审核")
     @PostMapping("/audit")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
@@ -111,7 +111,7 @@ public class ContractController extends AbsBaseController{
      * @author lvqidong
      * @return Message
      */
-    @ApiOperation(value = "确认保证金", notes = "财务保证金收到后确认")
+    @ApiOperation(value = "财务确认保证金", notes = "财务保证金收到后确认")
     @PostMapping("/ackEarnestMoney")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "确认保证金信息")
@@ -206,10 +206,41 @@ public class ContractController extends AbsBaseController{
 
     
     
-
+    
+    /**
+     * 
+     * 施工/设计合同生成
+     * @author lvqidong
+     * @return Message
+     */
+    @ApiOperation(value = "施工/设计合同生成", notes = "施工/设计合同生成")
+    @PostMapping("/createOrderContract")
+    @MyRespBody
+    public MyRespBundle<String> createOrderContract(@ApiParam("公司编号")@RequestParam String companyId,
+    		@ApiParam("订单编号")@RequestParam String orderNumber,@ApiParam("订单类型（0设计 1施工）")@RequestParam String type){
+    	boolean  flag = contractService.createOrderContract( companyId, orderNumber, type);
+    	   
+        return sendJsonData(ResultMessage.SUCCESS,flag);
+    }
     
     
-
+    /**
+     * 
+     * 获取施工或订单合同pdf
+     * @author lvqidong
+     * @return Message
+     */
+    @ApiOperation(value = "获取施工或订单合同pdf", notes = "根据订单编号获取施工或订单合同pdf")
+    @PostMapping("/getOrderContract")
+    @MyRespBody
+    public MyRespBundle<String> getOrderContract(@ApiParam("订单编号")@RequestParam String orderNumber){
+    	
+    	String  url = contractService.getPdfUrlByOrderNumber(orderNumber);
+    	   
+        return sendJsonData(ResultMessage.SUCCESS,url);
+    }
+    
+    
     
     
 }

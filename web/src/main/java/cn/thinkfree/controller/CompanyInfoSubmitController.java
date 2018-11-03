@@ -1,10 +1,19 @@
 package cn.thinkfree.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.database.model.ContractTermsChild;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -156,11 +165,10 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @return Message
      * 
      */
-    @ApiOperation(value = "查看合同条款字典", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/text")
+    @ApiOperation(value = "查看合同条款字典", notes = "合同条款设置(设置合同条款需要查询字典接口)")
     @PostMapping("/queryContractDic/")
     public MyRespBundle<String> queryContractDic(@RequestParam String type){
-    	 Map<String,String>  resMap  =  null;
-                 //contractTemplateService.queryContractDic(type);
+    	 Map<String,String>  resMap  = contractTemplateService.queryContractDic(type);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     
@@ -177,13 +185,15 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @MyRespBody
     public MyRespBundle<String> settingContractClause(@PathVariable("contractNumber") String contractNumber,
     		@PathVariable("companyId") String companyId,
-    		@ApiParam("合同条款key和value值")@RequestBody (required = true) Map<String,String> paramMap){
-    	 Map<String,String>  resMap  =  contractService.insertContractClause(contractNumber, companyId, paramMap);
-        return sendJsonData(ResultMessage.SUCCESS,resMap);
+    		@ApiParam("合同条款key和value值")@RequestBody ContractClauseVO contractClausevo){
+    	
+    	boolean  falg  =  contractService.insertContractClause(contractNumber, companyId, contractClausevo);
+    	 
+        return sendJsonData(ResultMessage.SUCCESS,falg);
     }
 
 
-    
+   
     
     /**
      * 公司详情
