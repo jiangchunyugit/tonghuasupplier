@@ -864,6 +864,66 @@ public class ContractTermsChildExample extends cn.thinkfree.core.model.AbstractD
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
+
+        public Criteria andSettlementRuleIdIsNull() {
+            addCriterion("settlement_rule_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdIsNotNull() {
+            addCriterion("settlement_rule_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdEqualTo(Integer value) {
+            addCriterion("settlement_rule_id =", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdNotEqualTo(Integer value) {
+            addCriterion("settlement_rule_id <>", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdGreaterThan(Integer value) {
+            addCriterion("settlement_rule_id >", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("settlement_rule_id >=", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdLessThan(Integer value) {
+            addCriterion("settlement_rule_id <", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdLessThanOrEqualTo(Integer value) {
+            addCriterion("settlement_rule_id <=", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdIn(List<Integer> values) {
+            addCriterion("settlement_rule_id in", values, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdNotIn(List<Integer> values) {
+            addCriterion("settlement_rule_id not in", values, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdBetween(Integer value1, Integer value2) {
+            addCriterion("settlement_rule_id between", value1, value2, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("settlement_rule_id not between", value1, value2, "settlementRuleId");
+            return (Criteria) this;
+        }
     }
 
     /**
