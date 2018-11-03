@@ -27,7 +27,7 @@ import java.util.List;
  * @author xusonghui
  * 设计师相关接口
  */
-@Api(value = "设计师相关API接口", tags = "设计师相关API接口--->王玲组专用")
+@Api(value = "设计师相关API接口", tags = "设计师相关API接口--->王玲组专用===>徐松辉")
 @Controller
 @RequestMapping("designer")
 public class DesignerController extends AbsBaseController {

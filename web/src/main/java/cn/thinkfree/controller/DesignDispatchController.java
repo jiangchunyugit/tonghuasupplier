@@ -26,7 +26,7 @@ import java.util.Map;
  * @author xusonghui
  * 设计订单派单相关接口
  */
-@Api(value = "设计订单派单，状态变更，相关接口", tags = "设计订单派单，状态变更，相关接口--->app后台公用")
+@Api(value = "设计订单派单，状态变更，相关接口", tags = "设计订单派单，状态变更，相关接口--->app后台公用===>徐松辉")
 @Controller
 @RequestMapping("designerOrder")
 public class DesignDispatchController extends AbsBaseController {
@@ -93,6 +93,27 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             designDispatchService.designerOrderExcel(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ApiOperation("设计合同管理---->王玲组")
+    @MyRespBody
+    @RequestMapping(value = "designOrderContract", method = {RequestMethod.POST, RequestMethod.GET})
+    public void designOrderContract(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "contractNo", required = false, value = "合同编号") @RequestParam(name = "contractNo", required = false) String contractNo,
+            @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo,
+            @ApiParam(name = "source", required = false, value = "订单来源") @RequestParam(name = "source", required = false) String source,
+            @ApiParam(name = "ownerMsg", required = false, value = "业主信息") @RequestParam(name = "ownerMsg", required = false) String ownerMsg,
+            @ApiParam(name = "signTimeStart", required = false, value = "签约时间开始") @RequestParam(name = "signTimeStart", required = false) String signTimeStart,
+            @ApiParam(name = "signTimeEnd", required = false, value = "签约时间结束") @RequestParam(name = "signTimeEnd", required = false) String signTimeEnd,
+            @ApiParam(name = "province", required = false, value = "所在省份") @RequestParam(name = "province", required = false) String province,
+            @ApiParam(name = "city", required = false, value = "所在市") @RequestParam(name = "city", required = false) String city,
+            @ApiParam(name = "contractState", required = false, value = "合同状态，1生效，2未生效") @RequestParam(name = "contractState", required = false, defaultValue = "-1") int contractState){
+        try {
+            designDispatchService.designOrderContract(companyId, contractNo, designOrderNo, source, ownerMsg, signTimeStart, signTimeEnd, province, city, contractState);
         } catch (Exception e) {
             e.printStackTrace();
         }

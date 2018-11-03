@@ -24,7 +24,7 @@ import java.util.List;
  * @author xusonghui
  * 员工管理
  */
-@Api(value = "员工管理API接口", tags = "员工管理API接口--->app后台公用")
+@Api(value = "员工管理API接口", tags = "员工管理API接口--->app后台公用===>徐松辉")
 @Controller
 @RequestMapping("employee")
 public class EmployeeController extends AbsBaseController {
