@@ -88,6 +88,7 @@ public class RespData {
      */
     public static <T> MyRespBundle<T> error(String msg) {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
+        myRespBundle.setCode(ErrorCode.FAIL.getCode());
         myRespBundle.setData(null);
         myRespBundle.setMessage(msg);
         return myRespBundle;

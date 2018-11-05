@@ -23,18 +23,22 @@ public class ProjectVo {
     private Integer stage;
     @ApiModelProperty(value = "项目阶段名称")
     private String stageName;
+    @ApiModelProperty(value = "项目阶段名称颜色")
+    private String stageNameColor;
     @ApiModelProperty(name = "constructionProgress",value = "施工进度")
     private Integer constructionProgress;
     @ApiModelProperty(name = "address",value = "装修地址")
     private String address;
     @ApiModelProperty(name = "releaseTime",value = "发布时间")
     private Date releaseTime;
-    @ApiModelProperty(name = "projectDynamic",value = "项目动态")
+    @ApiModelProperty(name = "projectDynamic",value = "项目动态小红点 0-无 1-有 2-灰")
     private Integer projectDynamic;
-    @ApiModelProperty(name = "projectOrder",value = "项目订单")
+    @ApiModelProperty(name = "projectOrder",value = "项目订单小红点 0-无 1-有 2-灰")
     private Integer projectOrder;
-    @ApiModelProperty(name = "projectData",value = "项目资料")
+    @ApiModelProperty(name = "projectData",value = "项目资料小红点 0-无 1-有 2-灰")
     private Integer projectData;
+    @ApiModelProperty(name = "projectInvoice",value = "开具发票小红点 0-无 1-有 2-灰")
+    private Integer projectInvoice;
     @ApiModelProperty(name = "owner",value = "业主实体")
     private PersionVo owner;
     @ApiModelProperty(name = "imgUrl",value = "图片地址")

@@ -41,6 +41,8 @@ public class DesignerOrderVo {
     private String optionTime;
     @ApiModelProperty("订单状态")
     private String orderState;
+    @ApiModelProperty("项目总额（订单总额）")
+    private String projectMoney;
 
     public String getProjectNo() {
         return projectNo;
@@ -176,5 +178,13 @@ public class DesignerOrderVo {
 
     public void setOrderState(String orderState) {
         this.orderState = orderState;
+    }
+
+    public void setProjectMoney(String projectMoney) {
+        this.projectMoney = projectMoney;
+    }
+
+    public String getProjectMoney() {
+        return projectMoney;
     }
 }

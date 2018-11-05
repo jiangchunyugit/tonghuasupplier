@@ -185,6 +185,16 @@ public class HttpUtils {
     public static HttpRespMsg post(String requestUrl, String requestMsg) {
         return send(requestUrl, METHOD_POST, CHARSET_UTF8, requestMsg);
     }
+
+    /**
+     * 发送post请求
+     * @param requestUrl 请求链接
+     * @param requestMsg 请求参数 格式 userId=111&projectNo=1111
+     * @return
+     */
+    public static HttpRespMsg postJson(String requestUrl, String requestMsg) {
+        return send(requestUrl, METHOD_POST, CHARSET_UTF8, requestMsg,"application/json");
+    }
     /**
      * 发送请求
      * @param requestUrl

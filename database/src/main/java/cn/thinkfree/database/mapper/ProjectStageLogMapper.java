@@ -95,5 +95,5 @@ public interface ProjectStageLogMapper {
      */
     int updateByPrimaryKey(ProjectStageLog record);
 
-    List<OrderTaskSortVo> selectByProjectNo(String projectNo);
+    List<OrderTaskSortVo> selectByProjectNo(@Param("projectNo") String projectNo);
 }

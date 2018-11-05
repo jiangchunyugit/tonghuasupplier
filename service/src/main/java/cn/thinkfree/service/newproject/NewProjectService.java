@@ -3,6 +3,7 @@ package cn.thinkfree.service.newproject;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.model.OrderApplyRefund;
+import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import com.github.pagehelper.PageInfo;
 
@@ -91,10 +92,5 @@ public interface NewProjectService {
      */
     MyRespBundle<String> applyRefund(String orderNo,String payOrderNo, String otherReason, Integer money, String moneyName,String userId, String cancelReason);
 
-    /**
-     * 获取Pc端项目详情
-     * @param projectNo
-     * @return
-     */
-    MyRespBundle<PcProjectDetailVo> getPcProjectDetail(String projectNo);
+
 }
