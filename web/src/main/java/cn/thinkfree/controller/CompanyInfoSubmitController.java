@@ -48,7 +48,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @param contractNumber
      * @return
      */
-    @RequestMapping(value = "/findAuditStatus", method = RequestMethod.GET)
+//    @RequestMapping(value = "/findAuditStatus", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--设计/装饰公司--列表--状态--不通过原因--李阳")
     public MyRespBundle<PcAuditInfo> findAuditCase(@ApiParam("合同编码")@RequestParam(value = "contractNumber") String contractNumber){

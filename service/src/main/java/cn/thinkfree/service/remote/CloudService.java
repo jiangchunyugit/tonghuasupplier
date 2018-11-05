@@ -30,4 +30,7 @@ public interface CloudService {
      */
       RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 
+
+
+
 }

@@ -18,6 +18,7 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.account.AccountVO;
 import cn.thinkfree.database.vo.account.ThirdAccountVO;
 import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.AccountHelper;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
@@ -59,6 +60,8 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Autowired
     SystemRoleMapper systemRoleMapper;
 
+    @Autowired
+    EventService eventService;
 
     @Override
     public List<PcUserInfo> selectByParam(UserVO userVO) {
@@ -137,23 +140,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         pcUserInfoVo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
         //临时启用
         pcUserInfoVo.setEnabled(UserEnabled.Enabled_true.shortVal());
-        //根据新增公司id和登录用户公司id 是否相等判断level
-        /* TODO 用户信息改造 公司部分
 
-        if(userVO.getCompanyID().equals(pcUserInfoVo.getCompanyId())){
-            pcUserInfoVo.setLevel(userVO.getPcUserInfo().getLevel());
-        }else{
-            pcUserInfoVo.setLevel(getLevel(userVO.getPcUserInfo().getLevel()));
-        }
-        pcUserInfoVo.setParentCompanyId(userVO.getCompanyID());
-        //省市区存储
-        CompanyInfo companyInfo = companyInfoMapper.findByCompanyId(pcUserInfoVo.getCompanyId());
-        if(null != companyInfo){
-            pcUserInfoVo.setCity(companyInfo.getCityCode().toString());
-            pcUserInfoVo.setProvince(companyInfo.getProvinceCode().toString());
-            pcUserInfoVo.setArea(companyInfo.getAreaCode().toString());
-        }
-         */
 
         //注册表
         UserRegister userRegister = new UserRegister();
@@ -218,8 +205,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     public PcUserInfoVo findByUserId(String userId) {
         PcUserInfoVo pcUserInfoVo = pcUserInfoMapper.findByUserId(userId);
-//        MultipleMd5 md5 = new MultipleMd5();
-//        pcUserInfoVo.setPassword(md5.matches());
+
         return pcUserInfoVo;
     }
 
@@ -302,7 +288,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
         // TODO 发送事件
         AccountCreate accountCreate = new AccountCreate();
-
+//        eventService.publish(accountCreate);
         return accountVO;
     }
 

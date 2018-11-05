@@ -4,18 +4,10 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
-import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.database.vo.ActivationCodeVO;
 import cn.thinkfree.database.vo.IndexMenuVO;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.cache.RedisService;
-import cn.thinkfree.service.constants.ProjectStatus;
-import cn.thinkfree.service.designer.service.HomeStylerService;
-import cn.thinkfree.service.designer.vo.HomeStyler;
-import cn.thinkfree.service.designer.vo.HomeStylerVO;
 import cn.thinkfree.service.index.IndexService;
-import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.user.UserService;
 import cn.thinkfree.service.utils.ActivationCodeHelper;
 import io.swagger.annotations.Api;
@@ -23,11 +15,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -35,10 +27,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 @Api(description = "系统相关操作")
 @RestController
@@ -136,19 +125,6 @@ public class SystemController extends AbsBaseController {
         byte[] body = createImage(randomCode);
         String base64 =new BASE64Encoder().encode(body);
         return sendJsonData(ResultMessage.SUCCESS,new ActivationCodeVO(randomCode,base64.replace("\r\n","")));
-    }
-
-    @GetMapping("/whoami")
-    @MyRespBody
-    public MyRespBundle<Map<String,String>> whoami(){
-        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        Map<String,String> result = new HashMap<>(20);
-        result.put("userName",userVO.getUserRegister().getPhone());
-        result.put("companyName",userVO.getCompanyName());
-        result.put("face",userVO.getUserRegister().getHeadPortraits());
-        result.put("name",userVO.getName());
-        result.put("first",userService.isFirstLogin());
-        return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
 
