@@ -539,6 +539,7 @@
 
   <select id="selectAllByUserId" resultType="cn.thinkfree.database.appvo.PersionVo">
     SELECT
+        em.user_id as userId,
         em.real_name AS NAME,
         em.role_code AS ROLE,
         dm.personal_home_url AS personalHomeUrl

@@ -20,7 +20,7 @@ public interface NewSchedulingService {
      * @param projectNo
      * @return
      */
-    List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo);
+    MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(String projectNo);
 
     /**
      * 添加公司施工节点

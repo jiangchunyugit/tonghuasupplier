@@ -107,10 +107,14 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      * @return
      */
     @Override
-    public List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo) {
+    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(String projectNo) {
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByProjectNo(projectNo, Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
-        return playBigList;
+        //组合延期天数
+        for (ProjectBigSchedulingDetailsVO bigSchedulingVO : playBigList) {
+            bigSchedulingVO.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingVO.getPlanEndTime(),bigSchedulingVO.getActualEndTime()));
+        }
+        return RespData.success(playBigList);
     }
 
     /**

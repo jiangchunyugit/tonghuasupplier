@@ -153,6 +153,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setPageSize(pageSize);
         pageVo.setTotal(total);
         pageVo.setData(DesignerOrderVos);
+        pageVo.setPageIndex(pageIndex);
         return pageVo;
     }
 

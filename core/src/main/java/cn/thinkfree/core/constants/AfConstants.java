@@ -38,19 +38,28 @@ public class AfConstants {
      */
     public static final String APPROVAL_TYPE_DELAY_VERIFY = "APPROVAL_TYPE_DELAY_VERIFY";
     /**
-     * 审批状态：发起
+     * 审批操作：发起
      */
     public static final int APPROVAL_OPTION_START = 1;
     /**
-     * 审批状态：同意
+     * 审批操作：同意
      */
     public static final int APPROVAL_OPTION_AGREE = 2;
     /**
-     * 审批状态：拒绝
+     * 审批操作：拒绝
      */
     public static final int APPROVAL_OPTION_REFUSAL = 3;
     /**
-     * 审批状态：未审批
+     * 审批操作：未审批
      */
     public static final int APPROVAL_OPTION_UNAPPROVAL = 4;
+
+    /**
+     * 审批操作：同意
+     */
+    public static final int OPTION_AGREE = 1;
+    /**
+     * 审批操作：拒绝
+     */
+    public static final int OPTION_REFUSAL = 0;
 }

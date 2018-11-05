@@ -35,7 +35,7 @@ public interface AfInstanceService {
     /**
      * 批量获取项目的审批结果
      * @param projectNos 项目编号
-     * @return 审批结果，0：未审批或正在审批；1：同意；2：拒绝
+     * @return 审批结果，null：未审批或正在审批；1：同意；2：拒绝
      */
     Map<String, Integer> getProjectCheckResult(List<String> projectNos);
 

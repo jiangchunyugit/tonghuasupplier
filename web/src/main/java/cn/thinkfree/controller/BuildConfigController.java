@@ -6,9 +6,13 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BuildPayConfig;
 import cn.thinkfree.database.model.BuildSchemeConfig;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,18 +30,23 @@ import java.util.List;
 @Controller
 @RequestMapping("build")
 public class BuildConfigController extends AbsBaseController {
+    /**
+     * logger日志接口
+     */
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
     @Autowired
     private BuildConfigService buildConfigService;
 
-    @ApiOperation("获取所有配置方案")
+    @ApiOperation("获取所有配置方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "allScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<BuildSchemeConfig>> allScheme() {
         return sendJsonData(ResultMessage.SUCCESS, buildConfigService.allBuildScheme());
     }
 
-    @ApiOperation("创建施工方案")
+    @ApiOperation("创建施工方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "createScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> createScheme(
@@ -47,6 +56,7 @@ public class BuildConfigController extends AbsBaseController {
             @ApiParam(name = "storeNo", required = false, value = "门店ID") @RequestParam(name = "storeNo", required = false) String storeNo,
             @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
+            logger.info("创建施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             String schemeNo = buildConfigService.createScheme(schemeName, companyId, cityStation, storeNo, remark);
             return sendSuccessMessage(schemeNo);
         } catch (Exception e) {
@@ -54,11 +64,12 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("启用施工方案")
+    @ApiOperation("启用施工方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "enableScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle enableScheme(@ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
         try {
+            logger.info("启用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.enableScheme(schemeNo);
             return sendSuccessMessage(null);
         } catch (Exception e) {
@@ -66,11 +77,12 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("删除施工方案")
+    @ApiOperation("删除施工方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "delScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle delScheme(@ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
         try {
+            logger.info("删除施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.delScheme(schemeNo);
             return sendSuccessMessage(null);
         } catch (Exception e) {
@@ -78,31 +90,33 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("根据施工方案编号，获取施工方案基础信息")
+    @ApiOperation("根据施工方案编号，获取施工方案基础信息====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "bySchemeNo", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<BuildSchemeConfig> bySchemeNo(
             @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
         try {
+            logger.info("根据施工方案编号，获取施工方案基础信息：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             return sendJsonData(ResultMessage.SUCCESS, buildConfigService.bySchemeNo(schemeNo));
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
     }
 
-    @ApiOperation("根据方案编号查询支付方案信息")
+    @ApiOperation("根据方案编号查询支付方案信息====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "payConfigBySchemeNo", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<BuildPayConfig>> payConfigBySchemeNo(
             @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
         try {
+            logger.info("根据方案编号查询支付方案信息：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             return sendJsonData(ResultMessage.SUCCESS, buildConfigService.payConfigBySchemeNo(schemeNo));
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
     }
 
-    @ApiOperation("保存支付方案")
+    @ApiOperation("保存支付方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "savePayConfig", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle savePayConfig(
@@ -112,6 +126,7 @@ public class BuildConfigController extends AbsBaseController {
             @ApiParam(name = "time", required = false, value = "未支付超时时间") @RequestParam(name = "time", required = false, defaultValue = "-1") int time,
             @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
+            logger.info("保存支付方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.savePayConfig(schemeNo, progressName, stageNo, time, remark);
             return sendSuccessMessage(null);
         } catch (Exception e) {
@@ -119,12 +134,13 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("删除支付方案")
+    @ApiOperation("删除支付方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "delPayConfig", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle delPayConfig(
             @ApiParam(name = "paySchemeNo", required = false, value = "支付方案编号") @RequestParam(name = "paySchemeNo", required = false) String paySchemeNo) {
         try {
+            logger.info("删除支付方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.delPayConfig(paySchemeNo);
             return sendSuccessMessage(null);
         } catch (Exception e) {
@@ -132,7 +148,7 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("公司选择方案")
+    @ApiOperation("公司选择方案====》装饰后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "chooseScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle chooseScheme(
@@ -141,7 +157,35 @@ public class BuildConfigController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName){
         try {
+            logger.info("公司选择方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.chooseScheme(companyId, schemeNo, optionUserId, optionUserName);
+            return sendSuccessMessage(null);
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("查询施工方案方案====》装饰后台====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "queryScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BuildSchemeConfig>> queryScheme(
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey,
+            @ApiParam(name = "companyId", required = false, value = "分公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "cityStation", required = false, value = "所属分站编号") @RequestParam(name = "cityStation", required = false) String cityStation,
+            @ApiParam(name = "storeNo", required = false, value = "所属门店编号") @RequestParam(name = "storeNo", required = false) String storeNo) {
+        return sendJsonData(ResultMessage.SUCCESS, buildConfigService.queryScheme(searchKey,companyId,cityStation,storeNo));
+    }
+
+    @ApiOperation("公司停用施工方案====》装饰后台====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "stopScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle stopScheme(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName){
+        try {
+            logger.info("公司停用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
+            buildConfigService.stopScheme(companyId, optionUserId, optionUserName);
             return sendSuccessMessage(null);
         } catch (Exception e) {
             return sendSuccessMessage(e.getMessage());

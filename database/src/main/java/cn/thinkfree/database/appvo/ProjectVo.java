@@ -21,12 +21,16 @@ public class ProjectVo {
     private String projectNo;
     @ApiModelProperty(name = "stage",value = "项目阶段(预约/量房/设计/施工)")
     private Integer stage;
-    @ApiModelProperty(value = "项目阶段名称")
-    private String stageName;
-    @ApiModelProperty(value = "项目阶段名称颜色")
+    @ApiModelProperty(value = "B端项目阶段名称")
+    private String stageDesignName;
+    @ApiModelProperty(value = "C端项目阶段名称")
+    private String stageConsumerName;
+    @ApiModelProperty(value = "项目阶段名称颜色-#50ABD2蓝色 #E95548红色 #5D5D5D灰色")
     private String stageNameColor;
     @ApiModelProperty(name = "constructionProgress",value = "施工进度")
     private Integer constructionProgress;
+    @ApiModelProperty(value = "进度条是否展示")
+    private Boolean progressIsShow;
     @ApiModelProperty(name = "address",value = "装修地址")
     private String address;
     @ApiModelProperty(name = "releaseTime",value = "发布时间")

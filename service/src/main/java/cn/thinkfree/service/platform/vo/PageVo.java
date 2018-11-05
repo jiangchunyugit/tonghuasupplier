@@ -11,6 +11,8 @@ public class PageVo<T> {
     private long total;
     @ApiModelProperty("每页多少条")
     private int pageSize;
+    @ApiModelProperty("第几页")
+    private int pageIndex;
     @ApiModelProperty("业务数据")
     private T data;
 
@@ -36,5 +38,13 @@ public class PageVo<T> {
 
     public T getData() {
         return data;
+    }
+
+    public void setPageIndex(int pageIndex) {
+        this.pageIndex = pageIndex;
+    }
+
+    public int getPageIndex() {
+        return pageIndex;
     }
 }

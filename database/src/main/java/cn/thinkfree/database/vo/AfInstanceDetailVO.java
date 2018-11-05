@@ -35,8 +35,10 @@ public class AfInstanceDetailVO {
     private String instanceNo;
     @ApiModelProperty("审批人列表")
     private List<AfApprovalLogVO> approvalLogs;
-    @ApiModelProperty("是否可修改")
-    private Boolean editable;
+    @ApiModelProperty("是否显示审批按钮")
+    private Boolean isShowButton;
+    @ApiModelProperty("审批状态：1：正在进行；2：结束，审批通过；3结束，审批不通过")
+    private Integer status;
     @ApiModelProperty("审批数据")
     private String data;
     @ApiModelProperty("备注")

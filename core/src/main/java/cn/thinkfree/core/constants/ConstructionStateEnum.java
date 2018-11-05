@@ -141,6 +141,32 @@ public enum ConstructionStateEnum {
     }
 
     /**
+     * 查询状态码 对应的状态
+     *
+     * @return
+     */
+    public static String getNowStateInfo(Integer state,int type) {
+        ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
+        for (ConstructionStateEnum constructionStateEnum : stateEnums) {
+            if (constructionStateEnum.state == state) {
+                switch (type) {
+                    case 1:
+                        return constructionStateEnum.statePlatform;
+                    case 2:
+                        return constructionStateEnum.stateConstructionCompany;
+                    case 3:
+                        return constructionStateEnum.stateConstructor;
+                    case 4:
+                        return constructionStateEnum.stateConsumer;
+                    default:
+                        break;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
      * 下一步状态
      *
      * @return

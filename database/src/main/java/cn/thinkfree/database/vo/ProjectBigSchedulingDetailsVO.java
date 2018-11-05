@@ -31,7 +31,7 @@ public class ProjectBigSchedulingDetailsVO {
     /**
      *   大排期名字
      */
-    @ApiModelProperty(value = "大排期名字")
+    @ApiModelProperty(value = "施工阶段-大排期名字")
     private String bigName;
     /**
      *   自定义大排期名字
@@ -119,6 +119,11 @@ public class ProjectBigSchedulingDetailsVO {
      */
     @ApiModelProperty(value = "完成度")
     private Integer percentage;
+    /**
+     * 延期天数
+     */
+    @ApiModelProperty(value = "延期天数")
+    private Integer delay;
 
 
 }
