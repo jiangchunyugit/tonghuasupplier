@@ -3,6 +3,7 @@ package cn.thinkfree.database.vo;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.thinkfree.database.model.PcAuditInfo;
 
@@ -29,8 +30,7 @@ public class ContractDetails  {
 	
 	private String legalIdCard;
 
-	//公司详情
-	private CompanySubmitVo companySubmitVO;
+    
 	
 	public String getAuditStatus() {
 		return auditStatus;
@@ -306,13 +306,7 @@ public class ContractDetails  {
 		this.auditInfo = auditInfo;
 	}
 
-	public CompanySubmitVo getCompanySubmitVO() {
-		return companySubmitVO;
-	}
 
-	public void setCompanySubmitVO(CompanySubmitVo companySubmitVO) {
-		this.companySubmitVO = companySubmitVO;
-	}
 
 
 }
