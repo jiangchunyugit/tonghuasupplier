@@ -31,7 +31,16 @@ public class BaseToVoUtils {
                 //获取目标对象相应属性的set方法
                 Field field = t.getDeclaredField(map.get(string));
                 field.setAccessible(true);
-                Field field1 = object1.getClass().getDeclaredField(string);
+                Field field1 = null;
+                try {
+                    field1 = object1.getClass().getDeclaredField(string);
+                } catch (NoSuchFieldException e) {
+                    e.printStackTrace();
+                    System.out.println("字段未匹配:"+field.getName());
+                    continue;
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
                 field1.setAccessible(true);
                 field.set(object2,field1.get(object1));
             }
@@ -133,7 +142,7 @@ public class BaseToVoUtils {
         Map<String, String> map = new HashMap<>();
         map.put("projectNo", "projectNo");
         map.put("stage", "stage");
-        map.put("address", "address");
+        map.put("addressDetail", "address");
         map.put("releaseTime", "releaseTime");
         map.put("imgUrl", "imgUrl");
         map.put("thirdView", "thirdView");

@@ -263,8 +263,10 @@ public class DateUtil {
      * @param date2
      * @return
      */
-    public static int differentHoursByMillisecond(Date date1,Date date2)
-    {
+    public static int differentHoursByMillisecond(Date date1,Date date2){
+        if(date1 == null || date2 == null){
+            return 0;
+        }
         return (int) (((date2.getTime() - date1.getTime()) % (1000*3600*24)) / (1000*3600));
     }
 

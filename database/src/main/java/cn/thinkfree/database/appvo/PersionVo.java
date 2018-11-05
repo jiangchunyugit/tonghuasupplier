@@ -12,6 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PersionVo {
     /**
+     * 用户id
+     */
+    private String userId;
+    /**
      * 电话
      */
     private String phone;

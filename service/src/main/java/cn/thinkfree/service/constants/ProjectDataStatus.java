@@ -79,7 +79,31 @@ public enum ProjectDataStatus {
     /**
      * 业主
      */
-    OWNER(1,"CC");
+    OWNER(1,"CC"),
+    /**
+     * 按钮置灰
+     */
+    BUTTON_NO(2,"按钮置灰"),
+    /**
+     * 按钮亮,小红点有
+     */
+    BUTTON_YES_HAVE(1,"按钮亮,小红点有"),
+    /**
+     * 按钮亮,小红点无
+     */
+    BUTTON_YES_NOTHING(0,"按钮亮,小红点无"),
+    /**
+     * 导航展示内容颜色-蓝色
+     */
+    PLAY_TASK_BLUE(0,"50ABD2"),
+    /**
+     * 导航展示内容颜色-红色
+     */
+    PLAY_TASK_RED(1,"E95548"),
+    /**
+     * 导航展示内容颜色-灰色
+     */
+    PLAY_TASK_GRAY(2,"5D5D5D");
 
     private Integer value;
     private String description;
