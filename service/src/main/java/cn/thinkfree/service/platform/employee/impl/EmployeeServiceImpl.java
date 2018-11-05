@@ -6,9 +6,12 @@ import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.ReflectUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xusonghui
@@ -296,6 +300,57 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("无效的用户角色");
         }
         return userRoleSets.get(0);
+    }
+
+    @Override
+    public PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if(StringUtils.isBlank(roleCode)){
+            throw new RuntimeException("角色编码不能为空");
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+        if(StringUtils.isNotBlank(searchKey)){
+            msgExample.or().andUserIdLike("%" + searchKey + "%");
+            msgExample.or().andRealNameLike("%" + searchKey + "%");
+            msgExample.or().andCertificateLike("%" + searchKey + "%");
+        }
+        long total = employeeMsgMapper.countByExample(msgExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
+        if(msgs.isEmpty()){
+            return new PageVo<>();
+        }
+        List<String> userIds = ReflectUtils.getList(msgs,"userId");
+        List<RoleVo> roleVos = queryRoles();
+        Map<String,String> roleMap = ReflectUtils.listToMap(roleVos,"roleCode","roleName");
+        Map<String,UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
+        List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        for(EmployeeMsg employeeMsg : msgs){
+            UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
+            String roleName = roleMap.get(employeeMsg.getRoleCode());
+            EmployeeMsgVo msgVo = new EmployeeMsgVo();
+            msgVo.setAuthState(employeeMsg.getAuthState());
+            if(userMsgVo != null){
+                msgVo.setIconUrl(userMsgVo.getUserIcon());
+                msgVo.setPhone(userMsgVo.getUserPhone());
+            }
+            msgVo.setRealName(employeeMsg.getRealName());
+            msgVo.setUserId(employeeMsg.getUserId());
+            msgVo.setCompanyName("这里是公司名称");
+            msgVo.setBindCompanyState(StringUtils.isNotBlank(employeeMsg.getCompanyId()) ? 1 : 2);
+            msgVo.setRoleCode(employeeMsg.getRoleCode());
+            msgVo.setRoleName(roleName);
+            employeeMsgVos.add(msgVo);
+        }
+        PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(employeeMsgVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
     }
 
     /**

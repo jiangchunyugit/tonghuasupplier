@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import io.swagger.annotations.Api;
@@ -26,7 +27,7 @@ import java.util.Map;
  * @author xusonghui
  * 设计订单派单相关接口
  */
-@Api(value = "设计订单派单，状态变更，相关接口", tags = "设计订单派单，状态变更，相关接口--->app后台公用")
+@Api(value = "设计订单派单，状态变更，相关接口", tags = "设计订单派单，状态变更，相关接口--->app后台公用===>徐松辉")
 @Controller
 @RequestMapping("designerOrder")
 public class DesignDispatchController extends AbsBaseController {
@@ -98,6 +99,27 @@ public class DesignDispatchController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("设计合同管理---->王玲组")
+    @MyRespBody
+    @RequestMapping(value = "designOrderContract", method = {RequestMethod.POST, RequestMethod.GET})
+    public void designOrderContract(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "contractNo", required = false, value = "合同编号") @RequestParam(name = "contractNo", required = false) String contractNo,
+            @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo,
+            @ApiParam(name = "source", required = false, value = "订单来源") @RequestParam(name = "source", required = false) String source,
+            @ApiParam(name = "ownerMsg", required = false, value = "业主信息") @RequestParam(name = "ownerMsg", required = false) String ownerMsg,
+            @ApiParam(name = "signTimeStart", required = false, value = "签约时间开始") @RequestParam(name = "signTimeStart", required = false) String signTimeStart,
+            @ApiParam(name = "signTimeEnd", required = false, value = "签约时间结束") @RequestParam(name = "signTimeEnd", required = false) String signTimeEnd,
+            @ApiParam(name = "province", required = false, value = "所在省份") @RequestParam(name = "province", required = false) String province,
+            @ApiParam(name = "city", required = false, value = "所在市") @RequestParam(name = "city", required = false) String city,
+            @ApiParam(name = "contractState", required = false, value = "合同状态，1生效，2未生效") @RequestParam(name = "contractState", required = false, defaultValue = "-1") int contractState){
+        try {
+            designDispatchService.designOrderContract(companyId, contractNo, designOrderNo, source, ownerMsg, signTimeStart, signTimeEnd, province, city, contractState);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @ApiOperation("获取所有订单状态---->王玲组")
     @MyRespBody
     @RequestMapping(value = "allStates", method = {RequestMethod.POST, RequestMethod.GET})
@@ -142,7 +164,7 @@ public class DesignDispatchController extends AbsBaseController {
     @ApiOperation("根据项目编号查询设计订单详情---->王玲组")
     @MyRespBody
     @RequestMapping(value = "designDel", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<DesignerOrderVo> queryDesignDel(
+    public MyRespBundle<DesignOrderDelVo> queryDesignDel(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType) {
         try {
@@ -220,9 +242,10 @@ public class DesignDispatchController extends AbsBaseController {
     @RequestMapping(value = "volumeRoom", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle volumeRoom(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "volumeRoomDate", required = false, value = "预约时间") @RequestParam(name = "volumeRoomDate", required = false) String volumeRoomDate,
             @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId) {
         try {
-            designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId);
+            designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId, volumeRoomDate);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

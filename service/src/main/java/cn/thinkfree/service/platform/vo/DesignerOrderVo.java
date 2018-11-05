@@ -33,7 +33,7 @@ public class DesignerOrderVo {
     private String companyState;
     @ApiModelProperty("归属设计师")
     private String designerName;
-    @ApiModelProperty("订单状态")
+    @ApiModelProperty("订单状态名称")
     private String orderStateName;
     @ApiModelProperty("操作人姓名")
     private String optionUserName;
@@ -41,6 +41,35 @@ public class DesignerOrderVo {
     private String optionTime;
     @ApiModelProperty("订单状态")
     private String orderState;
+    @ApiModelProperty("项目总额（订单总额）")
+    private String projectMoney;
+
+    public DesignerOrderVo() {
+    }
+
+    public DesignerOrderVo(String projectNo, String designOrderNo, String ownerName, String ownerPhone, String address,
+                           String orderSource, String createTime, String styleName, String budget, String area, String companyName,
+                           String companyState, String designerName, String orderStateName, String optionUserName, String optionTime,
+                           String orderState, String projectMoney) {
+        this.projectNo = projectNo;
+        this.designOrderNo = designOrderNo;
+        this.ownerName = ownerName;
+        this.ownerPhone = ownerPhone;
+        this.address = address;
+        this.orderSource = orderSource;
+        this.createTime = createTime;
+        this.styleName = styleName;
+        this.budget = budget;
+        this.area = area;
+        this.companyName = companyName;
+        this.companyState = companyState;
+        this.designerName = designerName;
+        this.orderStateName = orderStateName;
+        this.optionUserName = optionUserName;
+        this.optionTime = optionTime;
+        this.orderState = orderState;
+        this.projectMoney = projectMoney;
+    }
 
     public String getProjectNo() {
         return projectNo;
@@ -176,5 +205,13 @@ public class DesignerOrderVo {
 
     public void setOrderState(String orderState) {
         this.orderState = orderState;
+    }
+
+    public void setProjectMoney(String projectMoney) {
+        this.projectMoney = projectMoney;
+    }
+
+    public String getProjectMoney() {
+        return projectMoney;
     }
 }

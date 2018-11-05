@@ -2,8 +2,9 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.AfInstance;
 import cn.thinkfree.database.model.AfInstanceExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface AfInstanceMapper {
     /**
@@ -93,4 +94,8 @@ public interface AfInstanceMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(AfInstance record);
+
+    Integer getProjectCheckResult(@Param("projectNo") String projectNo, @Param("configNo") String configNo, @Param("statuses") List<Integer> statuses);
+
+    List<AfInstance> getProjectCheckResults(@Param("projectNos") List<String> projectNos, @Param("configNo") String configNo, @Param("statuses") List<Integer> statuses);
 }

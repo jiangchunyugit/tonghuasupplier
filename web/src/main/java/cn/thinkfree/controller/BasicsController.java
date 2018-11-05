@@ -22,7 +22,7 @@ import java.util.Map;
  * @author xusonghui
  * 基础字典性信息提供
  */
-@Api(value = "基础信息接口", tags = "基础信息接口--->app和后台公用")
+@Api(value = "基础信息接口", tags = "基础信息接口--->app和后台公用===>徐松辉")
 @Controller
 @RequestMapping("basics")
 public class BasicsController extends AbsBaseController {

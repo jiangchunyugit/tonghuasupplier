@@ -3,8 +3,10 @@ package cn.thinkfree.service.platform.designer;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
+import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -65,9 +67,10 @@ public interface DesignDispatchService {
      * 根据项目编号查询订单详情
      *
      * @param projectNo
+     * @param stateType
      * @return
      */
-    DesignerOrderVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
+    DesignOrderDelVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
 
     /**
      * 设计公司拒绝接单
@@ -113,8 +116,9 @@ public interface DesignDispatchService {
      *
      * @param projectNo      项目编号
      * @param designerUserId 设计师ID
+     * @param volumeRoomDate 预约时间
      */
-    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId);
+    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate);
 
     /**
      * 提醒业主
@@ -174,7 +178,7 @@ public interface DesignDispatchService {
     /**
      * 检查订单状态
      *
-     * @param DesignerOrder     订单信息
+     * @param DesignerOrder   订单信息
      * @param designStateEnum 目标状态枚举
      */
     void checkOrderState(DesignerOrder DesignerOrder, DesignStateEnum designStateEnum);
@@ -241,8 +245,8 @@ public interface DesignDispatchService {
      * @param response           返回数据对象
      */
     void designerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-                          String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
-                          String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
+                            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
+                            String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 
     /**
      * 设计师关联案例Id
@@ -259,4 +263,23 @@ public interface DesignDispatchService {
      * @param projectNo
      */
     void createConstructionOrder(String projectNo);
+
+    /**
+     * 设计合同管理列表
+     *
+     * @param companyId     公司ID
+     * @param contractNo    合同编号
+     * @param designOrderNo 设计订单
+     * @param source        来源
+     * @param ownerMsg      业主信息
+     * @param signTimeStart 签约时间开始
+     * @param signTimeEnd   签约时间结束
+     * @param province      省
+     * @param city          市
+     * @param contractState 合同状态，1生效，2未生效
+     */
+    void designOrderContract(String companyId, String contractNo, String designOrderNo, String source, String ownerMsg,
+                             String signTimeStart, String signTimeEnd, String province, String city, int contractState);
+
+
 }

@@ -13,5 +13,5 @@ public interface ConstructionOrderOperate {
      * 运营后台
      * @return
      */
-    MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize);
+    MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize,String cityName);
 }

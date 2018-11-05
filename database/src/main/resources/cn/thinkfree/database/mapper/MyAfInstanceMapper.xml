@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.AfInstanceMapper">
+  <select id="getProjectCheckResult" resultType="java.lang.Integer">
+    select status
+    from a_f_instance
+    where project_no = #{projectNo}
+    and config_no = #{projectNo}
+    and status in (2, 3)
+    and create_time = (
+			select max(create_time)
+			from a_f_instance
+			where project_no = #{projectNo}
+			and config_no = #{projectNo}
+			and status in
+            <foreach collection="statuses" item="status" separator="," open="(" close=")">
+              #{status}
+            </foreach>
+		)
+  </select>
+
+  <select id="getProjectCheckResults" resultMap="BaseResultMap">
+    select instance0.project_no project_no, instance0.status status
+    from a_f_instance instance0 RIGHT JOIN
+      (select project_no, max(create_time) create_time
+      from a_f_instance
+      where project_no in
+      <foreach collection="projectNos" item="projectNo" separator="," open="(" close=")">
+        #{projectNo}
+      </foreach>
+      and config_no = #{configNo} and status in
+      <foreach collection="statuses" item="status" separator="," open="(" close=")">
+        #{status}
+      </foreach>
+      group by project_no) instance1
+    on instance0.project_no = instance1.project_no and instance0.create_time = instance1.create_time
+  </select>
+</mapper>
