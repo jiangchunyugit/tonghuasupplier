@@ -58,7 +58,7 @@ public class ConstructionOrderListVo {
     private String constructionProgress;
 
     @ApiModelProperty("最近验收情况14")
-    private Integer checkCondition;
+    private String checkCondition;
 
     @ApiModelProperty("延期天数15")
     private Integer delayDays;

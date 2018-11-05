@@ -412,7 +412,7 @@
   </update>
 
     <select id="getCompanyName" resultType="java.lang.String">
-        SELECT company_name from company_info WHERE company_id=#{company_id}
+        SELECT company_name from company_info WHERE company_id=#{companyId}
     </select>
 
 </mapper>

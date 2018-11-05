@@ -116,7 +116,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         // 延期天数
         List<ProjectScheduling> list4 = getdelayDay(listProjectNo);
         // 确认验收
-   //     Map<String,Integer> Map5 = getApprove(listProjectNo);
+        Map<String,Integer> Map5 = getApprove(listProjectNo);
         // 合同金额/时间
         List<FundsOrder> list6 = getFundsOrder(listProjectNo);
 
@@ -185,6 +185,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
             // 最近验收情况14
 //           for (Map.Entry<String,Integer> map : Map5.entrySet()){
 //                if (constructionOrder.getProjectNo().equals(map.getKey())){
+//                    switch ()
 //                    constructionOrderListVo.setCheckCondition(map.getValue());
 //                }else {
 //                    constructionOrderListVo.setCheckCondition(0);
