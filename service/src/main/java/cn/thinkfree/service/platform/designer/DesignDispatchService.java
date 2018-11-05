@@ -3,6 +3,7 @@ package cn.thinkfree.service.platform.designer;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
+import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 
@@ -66,9 +67,10 @@ public interface DesignDispatchService {
      * 根据项目编号查询订单详情
      *
      * @param projectNo
+     * @param stateType
      * @return
      */
-    DesignerOrderVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
+    DesignOrderDelVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
 
     /**
      * 设计公司拒绝接单
@@ -114,8 +116,9 @@ public interface DesignDispatchService {
      *
      * @param projectNo      项目编号
      * @param designerUserId 设计师ID
+     * @param volumeRoomDate 预约时间
      */
-    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId);
+    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate);
 
     /**
      * 提醒业主
@@ -277,7 +280,6 @@ public interface DesignDispatchService {
      */
     void designOrderContract(String companyId, String contractNo, String designOrderNo, String source, String ownerMsg,
                              String signTimeStart, String signTimeEnd, String province, String city, int contractState);
-
 
 
 }
