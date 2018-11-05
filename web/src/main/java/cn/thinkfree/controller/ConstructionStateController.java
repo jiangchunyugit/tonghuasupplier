@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 /**
  *  施工状态相关接口
  */
-@Api(value = "施工订单相关API接口---->王玲组专用", tags = "施工订单相关API接口---->王玲组专用")
+@Api(value = "施工订单相关API接口---->孙宇专用", tags = "施工订单相关API接口---->孙宇专用")
 @Controller
 @RequestMapping("construction")
 public class ConstructionStateController extends AbsBaseController {
@@ -63,13 +63,14 @@ public class ConstructionStateController extends AbsBaseController {
     }
 
 
-    @ApiOperation("运营平台接口---->王玲组专用")
+    @ApiOperation("运营平台接口---->孙宇专用")
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<ConstructionOrderManageVo> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
-                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
+                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
+                                                                           @RequestParam(required = false) @ApiParam(value = "城市名称")  String cityName){
 
-        return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize);
+        return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize,cityName);
     }
 
 }
