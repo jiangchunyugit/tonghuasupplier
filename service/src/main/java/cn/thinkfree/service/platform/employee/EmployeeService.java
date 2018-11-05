@@ -2,6 +2,7 @@ package cn.thinkfree.service.platform.employee;
 
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 
 import java.util.List;
@@ -71,6 +72,7 @@ public interface EmployeeService {
 
     /**
      * 通过userId获取用户信息
+     *
      * @param userId userId
      * @return
      */
@@ -78,6 +80,7 @@ public interface EmployeeService {
 
     /**
      * 创建角色
+     *
      * @param roleCode 角色编码
      * @param roleName 角色名称
      */
@@ -85,7 +88,18 @@ public interface EmployeeService {
 
     /**
      * 删除角色
+     *
      * @param roleCode
      */
     void delRole(String roleCode);
+
+    /**
+     * 根据公司ID和角色编码，搜索条件查询员工信息
+     *
+     * @param companyId 公司ID
+     * @param roleCode  角色编码
+     * @param searchKey 搜索条件
+     * @return
+     */
+    PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex);
 }

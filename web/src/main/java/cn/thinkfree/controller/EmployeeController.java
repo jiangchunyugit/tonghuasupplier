@@ -8,6 +8,7 @@ import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -65,7 +66,7 @@ public class EmployeeController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("员工申请--->app专用")
+    @ApiOperation("员工绑定公司申请--->app专用")
     @MyRespBody
     @RequestMapping(value = "apply", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle apply(
@@ -156,6 +157,24 @@ public class EmployeeController extends AbsBaseController {
         try {
             EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
             return sendJsonData(ResultMessage.SUCCESS, employeeMsg);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+
+    @ApiOperation("根据角色和公司ID查询员工信息--->公用")
+    @MyRespBody
+    @RequestMapping(value = "queryStaff", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<EmployeeMsgVo>>> queryStaff(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryEmployee(companyId, roleCode, searchKey, pageSize, pageIndex);
+            return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
