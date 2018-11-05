@@ -26,7 +26,7 @@ import javax.annotation.Resource;
  * @date 2018/10/25 18:22
  */
 @RestController
-@Api(description = "审批流实例")
+@Api(description = "app-审批流实例")
 @RequestMapping("af-instance")
 public class AfInstanceController extends AbsBaseController {
 
@@ -36,7 +36,7 @@ public class AfInstanceController extends AbsBaseController {
 
     @RequestMapping(value = "/start", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="访问审批开始页面")
+    @ApiOperation(value="app-访问审批开始页面-宋传让")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
             @ApiImplicitParam(name = "configNo", value = "审批流配置编号", required = true),
@@ -52,7 +52,7 @@ public class AfInstanceController extends AbsBaseController {
 
     @RequestMapping(value = "/submitStart", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="发起审批")
+    @ApiOperation(value="app-发起审批-宋传让")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
             @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
@@ -73,7 +73,7 @@ public class AfInstanceController extends AbsBaseController {
 
     @RequestMapping(value = "/detail", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="审批流实例详情")
+    @ApiOperation(value="app-审批流实例详情-宋传让")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "instanceNo", value = "审批流实例编码", required = true),
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true)
@@ -84,11 +84,11 @@ public class AfInstanceController extends AbsBaseController {
 
     @RequestMapping(value = "/approval", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="执行审批")
+    @ApiOperation(value="app-执行审批-宋传让")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "instanceNo", value = "审批流实例编码", required = true),
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true),
-            @ApiImplicitParam(name = "option", value = "用户选择", required = true),
+            @ApiImplicitParam(name = "option", value = "用户选择，1；同意，0：拒绝", required = true),
             @ApiImplicitParam(name = "remark", value = "备注")
     })
     public MyRespBundle approval(@RequestParam(name = "instanceNo") String instanceNo,
@@ -101,7 +101,7 @@ public class AfInstanceController extends AbsBaseController {
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="审批实例列表")
+    @ApiOperation(value="app-审批实例列表-宋传让")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true),
             @ApiImplicitParam(name = "projectNo", value = "项目编码", required = true),
