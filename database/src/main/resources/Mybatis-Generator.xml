@@ -72,6 +72,7 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
+        <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
@@ -84,7 +85,7 @@
         <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
         <!--<table tableName="project_quotation_log" domainObjectName="ProjectQuotationLog"/>-->
         <!--<table tableName="project_stage_log" domainObjectName="ProjectStageLog"/>-->
-        <table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>
+        <!--<table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->

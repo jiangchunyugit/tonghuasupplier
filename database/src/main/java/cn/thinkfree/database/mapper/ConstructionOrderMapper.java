@@ -137,4 +137,6 @@ public interface ConstructionOrderMapper {
     OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo,@Param("status") Integer status);
 
     ConstructionOrderVO selectConstructionOrderVo(@Param("projectNo")String projectNo);
+
+    String getCompanyName(@Param("companyId") String companyId);
 }
