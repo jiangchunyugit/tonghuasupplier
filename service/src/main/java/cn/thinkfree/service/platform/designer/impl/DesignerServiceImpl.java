@@ -151,6 +151,7 @@ public class DesignerServiceImpl implements DesignerService {
         msgVo.setTotal(total);
         msgVo.setPageSize(pageSize);
         msgVo.setData(msgVos);
+        msgVo.setPageIndex(pageIndex);
         return msgVo;
     }
 

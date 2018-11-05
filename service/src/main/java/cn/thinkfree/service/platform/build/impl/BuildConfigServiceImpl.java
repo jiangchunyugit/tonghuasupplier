@@ -3,15 +3,13 @@ package cn.thinkfree.service.platform.build.impl;
 import cn.thinkfree.database.mapper.BuildPayConfigMapper;
 import cn.thinkfree.database.mapper.BuildSchemeCompanyRelMapper;
 import cn.thinkfree.database.mapper.BuildSchemeConfigMapper;
-import cn.thinkfree.database.model.BuildPayConfig;
-import cn.thinkfree.database.model.BuildPayConfigExample;
-import cn.thinkfree.database.model.BuildSchemeConfig;
-import cn.thinkfree.database.model.BuildSchemeConfigExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -43,19 +41,19 @@ public class BuildConfigServiceImpl implements BuildConfigService {
 
     @Override
     public String createScheme(String schemeName, String companyId, String cityStation, String storeNo, String remark) {
-        if(StringUtils.isNotBlank(schemeName)){
+        if(StringUtils.isBlank(schemeName)){
             throw new RuntimeException("方案名称不能为空");
         }
-        if(StringUtils.isNotBlank(companyId)){
+        if(StringUtils.isBlank(companyId)){
             throw new RuntimeException("公司ID不能为空");
         }
-        if(StringUtils.isNotBlank(cityStation)){
+        if(StringUtils.isBlank(cityStation)){
             throw new RuntimeException("城市站不能为空");
         }
-        if(StringUtils.isNotBlank(storeNo)){
+        if(StringUtils.isBlank(storeNo)){
             throw new RuntimeException("门店编号不能为空");
         }
-        if(StringUtils.isNotBlank(remark)){
+        if(StringUtils.isBlank(remark)){
             throw new RuntimeException("请输入备注");
         }
         String schemeNo = OrderNoUtils.getNo("SN");
@@ -104,16 +102,16 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     @Override
     public void savePayConfig(String schemeNo, String progressName, String stageNo, int time, String remark) {
         checkScheme(schemeNo);
-        if(StringUtils.isNotBlank(progressName)){
+        if(StringUtils.isBlank(progressName)){
             throw new RuntimeException("请输入工程进度名");
         }
-        if(StringUtils.isNotBlank(stageNo)){
+        if(StringUtils.isBlank(stageNo)){
             throw new RuntimeException("请选择验收阶段");
         }
         if(time <= 0){
             throw new RuntimeException("无效的超时提醒");
         }
-        if(StringUtils.isNotBlank(remark)){
+        if(StringUtils.isBlank(remark)){
             throw new RuntimeException("请输入备注");
         }
         BuildPayConfig payConfig = new BuildPayConfig();
@@ -144,8 +142,63 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         return schemeConfig;
     }
 
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void chooseScheme(String companyId, String schemeNo, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if(StringUtils.isBlank(schemeNo)){
+            throw new RuntimeException("方案编号不能为空");
+        }
+        if(StringUtils.isBlank(optionUserId)){
+            throw new RuntimeException("操作人ID不能为空");
+        }
+        if(StringUtils.isBlank(optionUserName)){
+            throw new RuntimeException("操作人名称不能为空");
+        }
+        BuildSchemeCompanyRelExample companyRelExample = new BuildSchemeCompanyRelExample();
+        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId);
+        BuildSchemeCompanyRel schemeCompanyRel = new BuildSchemeCompanyRel();
+        schemeCompanyRel.setIsEable(2);
+        companyRelMapper.updateByExampleSelective(schemeCompanyRel,companyRelExample);
+        BuildSchemeCompanyRel companyRel = new BuildSchemeCompanyRel();
+        companyRel.setBuildSchemeNo(schemeNo);
+        companyRel.setCompanyId(companyId);
+        companyRel.setOptionUserId(optionUserId);
+        companyRel.setOptionUserName(optionUserName);
+        companyRel.setCreateTime(new Date());
+        companyRel.setIsEable(1);
+        companyRelMapper.insertSelective(companyRel);
+    }
 
+    @Override
+    public void stopScheme(String companyId, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if(StringUtils.isBlank(optionUserId)){
+            throw new RuntimeException("操作人ID不能为空");
+        }
+        if(StringUtils.isBlank(optionUserName)){
+            throw new RuntimeException("操作人名称不能为空");
+        }
+        BuildSchemeCompanyRelExample companyRelExample = new BuildSchemeCompanyRelExample();
+        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId);
+        BuildSchemeCompanyRel schemeCompanyRel = new BuildSchemeCompanyRel();
+        schemeCompanyRel.setIsEable(2);
+        companyRelMapper.updateByExampleSelective(schemeCompanyRel,companyRelExample);
+    }
+
+    @Override
+    public List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo) {
+        BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
+        BuildSchemeConfigExample.Criteria criteria = configExample.createCriteria();
+        criteria.andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo).andDelStateEqualTo(2).andIsEnableEqualTo(1);
+        if(StringUtils.isBlank(searchKey)){
+            criteria.andSchemeNameLike("%" + searchKey + "%");
+            criteria.andSchemeNoLike("%" + searchKey + "%");
+        }
+        return schemeConfigMapper.selectByExample(configExample);
     }
 }
