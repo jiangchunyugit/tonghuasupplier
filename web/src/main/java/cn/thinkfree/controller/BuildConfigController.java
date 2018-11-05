@@ -22,7 +22,7 @@ import java.util.List;
  * @author xusonghui
  * 施工配置控制器
  */
-@Api(value = "施工配置控制", tags = {"施工配置接口, 支付方案配置接口---->王玲组专用"})
+@Api(value = "施工配置控制", tags = {"施工配置接口, 支付方案配置接口---->王玲组专用===>徐松辉"})
 @Controller
 @RequestMapping("build")
 public class BuildConfigController extends AbsBaseController {

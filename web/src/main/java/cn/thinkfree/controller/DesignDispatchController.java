@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import io.swagger.annotations.Api;
@@ -163,7 +164,7 @@ public class DesignDispatchController extends AbsBaseController {
     @ApiOperation("根据项目编号查询设计订单详情---->王玲组")
     @MyRespBody
     @RequestMapping(value = "designDel", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<DesignerOrderVo> queryDesignDel(
+    public MyRespBundle<DesignOrderDelVo> queryDesignDel(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType) {
         try {
@@ -241,9 +242,10 @@ public class DesignDispatchController extends AbsBaseController {
     @RequestMapping(value = "volumeRoom", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle volumeRoom(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "volumeRoomDate", required = false, value = "预约时间") @RequestParam(name = "volumeRoomDate", required = false) String volumeRoomDate,
             @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId) {
         try {
-            designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId);
+            designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId, volumeRoomDate);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

@@ -99,6 +99,7 @@ public interface ConstructionOrderMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ConstructionOrder record);
+
     /**
      * @return
      * @Author jiang
@@ -134,7 +135,7 @@ public interface ConstructionOrderMapper {
      */
     ProjectOrderDetailVo selectByProjectNo(String projectNo);
 
-    OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo,@Param("status") Integer status);
+    OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo, @Param("status") Integer status);
 
     ConstructionOrderVO selectConstructionOrderVo(@Param("projectNo")String projectNo);
 
