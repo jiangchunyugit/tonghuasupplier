@@ -48,7 +48,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @param contractNumber
      * @return
      */
-//    @RequestMapping(value = "/findAuditStatus", method = RequestMethod.GET)
+    @RequestMapping(value = "/findAuditCase", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--设计/装饰公司--列表--状态--不通过原因--李阳")
     public MyRespBundle<PcAuditInfo> findAuditCase(@ApiParam("合同编码")@RequestParam(value = "contractNumber") String contractNumber){
@@ -165,14 +165,13 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         companySubmitService.downLoad(response, companyListSEO);
     }
 
-    //补全合同
     /**
      * 查看合同
      * @author lqd
      * @return Message
      * 
      */
-    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--导出excel--李阳", notes = "查看合同",consumes = "application/text")
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同----李阳", notes = "查看合同",consumes = "application/text")
     @PostMapping("/getContractDetailInfo")
     public MyRespBundle<Map<String,Object>> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
     		@ApiParam("公司编号")@RequestParam(required = true) String companyId){
@@ -223,9 +222,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--公司详情--李阳", notes = "公司详情")
     @PostMapping("/companyDetails")
     @MyRespBody
-    public MyRespBundle<String> companyDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
+    public MyRespBundle<CompanyDetailsVO> companyDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-    	ContractDetails jbj =  contractService.contractDetails(contractNumber, companyId);
+        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
@@ -239,22 +238,10 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/auditCompany")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> auditCompany(
-    		@ApiParam("公司编号")@RequestParam() String companyId,
-    		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
-    		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase,
-            @ApiParam("审核级别0运营审核1财务审核 ")@RequestParam String auditLevel){
+    public MyRespBundle<String> auditCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
         
-    	 Map<String,String>  resMap = companySubmitService.auditContract(companyId,auditStatus,auditCase,auditLevel);
-    	 
-    	 String code = String.valueOf(resMap.get("code"));
-    	 
-    	 String mes = String.valueOf(resMap.get("msg"));
-    	 
-    	 if(code.equals("1")){//失败的情况
-    		 return sendFailMessage(mes);
-    	 }else{//成功的情况
-    		 return sendSuccessMessage(mes);
-    	 }
+    	 String  result = companySubmitService.auditContract(pcAuditInfo);
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
     }
 }

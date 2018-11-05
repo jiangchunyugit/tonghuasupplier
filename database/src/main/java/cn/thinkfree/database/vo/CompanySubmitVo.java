@@ -17,8 +17,8 @@ public class CompanySubmitVo {
     /**
      * 公司资质相关文件
      */
-    @ApiModelProperty("公司资质图片")
-    private CompanySubmitFileVo companySubmitFileVo;
+//    @ApiModelProperty("公司资质图片")
+//    private CompanySubmitFileVo companySubmitFileVo;
 
     /**
      * 公司表
@@ -76,13 +76,6 @@ public class CompanySubmitVo {
         this.pcCompanyFinancial = pcCompanyFinancial;
     }
 
-    public CompanySubmitFileVo getCompanySubmitFileVo() {
-        return companySubmitFileVo;
-    }
-
-    public void setCompanySubmitFileVo(CompanySubmitFileVo companySubmitFileVo) {
-        this.companySubmitFileVo = companySubmitFileVo;
-    }
 
     @Override
     public String toString() {

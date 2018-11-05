@@ -28,8 +28,9 @@ public class ContractDetails  {
 	private String legalName;
 	
 	private String legalIdCard;
-	
-	private CompanySubmitVo companySubmitVO;//公司详情
+
+	//公司详情
+	private CompanySubmitVo companySubmitVO;
 	
 	public String getAuditStatus() {
 		return auditStatus;

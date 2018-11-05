@@ -181,7 +181,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             applyLine = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfoSEO, example);
         }
 
-        //TODO 插入pc_user_info？？？
         //插入注册表
         UserRegister userRegister = new UserRegister();
         userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
@@ -197,6 +196,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         userRegister.setPhone(pcApplyInfoSEO.getContactPhone());
         userRegister.setUserId(companyId);
         int registerLine = userRegisterMapper.insertSelective(userRegister);
+
+        //TODO 插入pc_user_info？？？
 
         //TODO：添加账号发送短信 and 发送邮件
 
