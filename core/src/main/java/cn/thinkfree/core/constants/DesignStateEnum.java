@@ -276,6 +276,11 @@ public enum DesignStateEnum {
         return designStateEnums;
     }
 
+    /**
+     *
+     * @param type 1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
+     * @return
+     */
     public String getStateName(int type){
         switch (type) {
             case 1:

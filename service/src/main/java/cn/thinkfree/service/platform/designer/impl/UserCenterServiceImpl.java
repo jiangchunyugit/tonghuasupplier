@@ -37,7 +37,10 @@ public class UserCenterServiceImpl implements UserCenterService {
                 employeeMsgMap.put(userId, employeeMsg);
             }
         }
-        userMsgVos.addAll(queryUserMsg(employeeMsgMap));
+        for(String userId : userIds){
+            userMsgVos.add(new UserMsgVo(userId, "测试", "13241229115", "CC", "测试", ""));
+        }
+//        userMsgVos.addAll(queryUserMsg(employeeMsgMap));
         return userMsgVos;
     }
 
