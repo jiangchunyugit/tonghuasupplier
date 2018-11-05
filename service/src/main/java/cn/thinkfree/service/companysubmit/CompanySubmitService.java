@@ -43,7 +43,7 @@ public interface CompanySubmitService {
      * 
      */
     
-    Map<String,String>  auditContract(String companyId,String auditStatus,String auditCase, String auditLevel);
+    String  auditContract(PcAuditInfo pcAuditInfo);
 
     /**
      * 公司列表
@@ -87,4 +87,12 @@ public interface CompanySubmitService {
      * @return
      */
     PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId);
+
+    /**
+     * 公司详情
+     * @param contractNumber
+     * @param companyId
+     * @return
+     */
+    CompanyDetailsVO companyDetails(String contractNumber,String companyId);
 }
