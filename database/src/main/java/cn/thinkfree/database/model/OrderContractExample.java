@@ -784,6 +784,66 @@ public class OrderContractExample extends cn.thinkfree.core.model.AbstractDataAu
             addCriterion("update_time not between", value1, value2, "updateTime");
             return (Criteria) this;
         }
+
+        public Criteria andAuditTypeIsNull() {
+            addCriterion("audit_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeIsNotNull() {
+            addCriterion("audit_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeEqualTo(Short value) {
+            addCriterion("audit_type =", value, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeNotEqualTo(Short value) {
+            addCriterion("audit_type <>", value, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeGreaterThan(Short value) {
+            addCriterion("audit_type >", value, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeGreaterThanOrEqualTo(Short value) {
+            addCriterion("audit_type >=", value, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeLessThan(Short value) {
+            addCriterion("audit_type <", value, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeLessThanOrEqualTo(Short value) {
+            addCriterion("audit_type <=", value, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeIn(List<Short> values) {
+            addCriterion("audit_type in", values, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeNotIn(List<Short> values) {
+            addCriterion("audit_type not in", values, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeBetween(Short value1, Short value2) {
+            addCriterion("audit_type between", value1, value2, "auditType");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuditTypeNotBetween(Short value1, Short value2) {
+            addCriterion("audit_type not between", value1, value2, "auditType");
+            return (Criteria) this;
+        }
     }
 
     /**
