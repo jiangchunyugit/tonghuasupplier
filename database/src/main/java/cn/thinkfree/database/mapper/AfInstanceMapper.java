@@ -5,7 +5,6 @@ import cn.thinkfree.database.model.AfInstanceExample;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface AfInstanceMapper {
     /**
@@ -96,7 +95,7 @@ public interface AfInstanceMapper {
      */
     int updateByPrimaryKey(AfInstance record);
 
-    Integer getProjectCheckResult(@Param("projectNo") String projectNo, @Param("configNo") String configNo);
+    Integer getProjectCheckResult(@Param("projectNo") String projectNo, @Param("configNo") String configNo, @Param("statuses") List<Integer> statuses);
 
-    Map<String, Integer> getProjectCheckResults(@Param("projectNos") List<String> projectNos, @Param("configNo") String configNo);
+    List<AfInstance> getProjectCheckResults(@Param("projectNos") List<String> projectNos, @Param("configNo") String configNo, @Param("statuses") List<Integer> statuses);
 }

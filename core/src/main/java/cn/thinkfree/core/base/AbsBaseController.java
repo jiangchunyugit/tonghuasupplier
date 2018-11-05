@@ -23,9 +23,9 @@ import java.util.Date;
 public abstract class AbsBaseController extends AbsLogPrinter {
 
 
-    protected static final Integer success = 200;
-    protected static final Integer fail = 300;
-    protected static final Integer error = 500;
+    protected static final Integer success = ResultMessage.SUCCESS.code;
+    protected static final Integer fail = ResultMessage.FAIL.code;
+    protected static final Integer error = ResultMessage.ERROR.code;
     protected static final ResultMessage SUCCESS = ResultMessage.SUCCESS;
     protected static final ResultMessage FAIL = ResultMessage.FAIL;
     protected static final ResultMessage ERROR = ResultMessage.ERROR;
