@@ -79,12 +79,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyDetailsVO companyDetailsVO = new CompanyDetailsVO();
 		CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
 		companyDetailsVO.setCompanySubmitVO(companySubmitVo);
-
+        //todo 合同结算条款待完成
 
 		return null;
 	}
 
-	@Override
+    @Override
 	public PcAuditInfo findAuditCase(String contractNumber) {
 		PcAuditInfoExample example = new PcAuditInfoExample();
 		example.createCriteria().andContractNumberEqualTo(contractNumber);
@@ -437,4 +437,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			}
 		}
 	}
+
+    @Override
+    public String joinSuccess(String companyId) {
+	    boolean aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal());
+
+	    //todo 合同状态修改待完成
+	    return null;
+    }
 }

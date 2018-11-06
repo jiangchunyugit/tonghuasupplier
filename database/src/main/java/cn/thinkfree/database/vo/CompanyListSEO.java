@@ -21,7 +21,7 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      * 入驻日期
      */
     @ApiModelProperty(value = "入驻日期")
-    private Date startTime;
+    private String startTime;
     /**
      * 公司类型
      */
@@ -38,12 +38,12 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      * 状态：0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金6已交保证金 7入驻成功 8资质待审核 9资质审核通过 10资质审核不通过';
      */
     @ApiModelProperty(value = "状态：0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金6已交保证金 7入驻成功 8资质待审核 9资质审核通过 10资质审核不通过';")
-    private short auditStatus;
+    private String auditStatus;
     /**
      * 签约日期
      */
     @ApiModelProperty(value = "签约日期")
-    private Date signedTime;
+    private String signedTime;
 
     /**
      * 省
@@ -73,7 +73,7 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      * 公司级别：一级，二级，三级
      */
     @ApiModelProperty(value = "公司级别：一级，二级，三级")
-    private Short companyClassify;
+    private String companyClassify;
 
     /**
      * 导出条件项
@@ -88,6 +88,38 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      */
     @ApiModelProperty(value = "排序字段")
     Map<String, String> orderList;
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getAuditStatus() {
+        return auditStatus;
+    }
+
+    public void setAuditStatus(String auditStatus) {
+        this.auditStatus = auditStatus;
+    }
+
+    public String getSignedTime() {
+        return signedTime;
+    }
+
+    public void setSignedTime(String signedTime) {
+        this.signedTime = signedTime;
+    }
+
+    public String getCompanyClassify() {
+        return companyClassify;
+    }
+
+    public void setCompanyClassify(String companyClassify) {
+        this.companyClassify = companyClassify;
+    }
 
     public Map<String, String> getOrderList() {
         return orderList;
@@ -105,13 +137,6 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
         this.companyIds = companyIds;
     }
 
-    public Short getCompanyClassify() {
-        return companyClassify;
-    }
-
-    public void setCompanyClassify(Short companyClassify) {
-        this.companyClassify = companyClassify;
-    }
 
     public String getCompanyId() {
         return companyId;
@@ -121,13 +146,6 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
         this.companyId = companyId;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
 
     public String getRoleId() {
         return roleId;
@@ -145,21 +163,6 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
         this.param = param;
     }
 
-    public short getAuditStatus() {
-        return auditStatus;
-    }
-
-    public void setAuditStatus(short auditStatus) {
-        this.auditStatus = auditStatus;
-    }
-
-    public Date getSignedTime() {
-        return signedTime;
-    }
-
-    public void setSignedTime(Date signedTime) {
-        this.signedTime = signedTime;
-    }
 
     public String getProvinceCode() {
         return provinceCode;

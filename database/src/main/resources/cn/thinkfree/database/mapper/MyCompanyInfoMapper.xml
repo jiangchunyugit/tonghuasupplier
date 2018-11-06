@@ -197,9 +197,12 @@
     contract.signed_time,
     contract.contract_number,
     info.legal_name,
-    branch.province_name as siteProvinceName,
-    branch.city_branch_name site_name,
-    branch.city_name as siteCityName,
+    branch.province_name as site_province_name,
+    branch.province_code as site_province_code,
+    branch.city_branch_name as site_name,
+    branch.id as site_code,
+    branch.city_name as site_city_name,
+    branch.city_code as site_city_code,
     expand.contact_name,
     expand.contact_phone,
     info.deposit_money,
@@ -245,7 +248,15 @@
         #{item}
     </foreach>
     </if>
-
+    <if test="siteCode != null and siteCode != ''">
+        AND info.site_company_id = #{siteCode}
+    </if>
+    <if test="provinceCode != null and provinceCode != ''">
+        AND branch.province_code = #{provinceCode}
+    </if>
+    <if test="cityCode != null and cityCode != ''">
+        AND branch.city_code = #{cityCode}
+    </if>
     <if test="companyId != null and companyId != ''">
         AND info.company_id = #{companyId}
     </if>

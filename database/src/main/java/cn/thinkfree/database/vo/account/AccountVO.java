@@ -4,40 +4,49 @@ import cn.thinkfree.database.model.BranchCompany;
 import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.model.PcUserInfo;
 import cn.thinkfree.database.model.SystemRole;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
-
+@ApiModel("账号主题")
 public class AccountVO  {
     /**
      * 权限范围
      */
+    @ApiModelProperty("权限范围")
     private String scope;
 
     /**
      * 角色集
      */
+    @ApiModelProperty("角色集合")
     private List<SystemRole> roles;
 
     /**
      * 埃森哲账号信息
      */
+    @ApiModelProperty("三方信息")
     private ThirdAccountVO thirdAccount;
 
     /**
      * 第三方主键
      */
+    @ApiModelProperty("第三方主键")
     private String thirdId;
 
+    @ApiModelProperty("用户信息")
     private PcUserInfo pcUserInfo;
 
     /**
      * 省分公司信息
      */
+    @ApiModelProperty("分公司信息")
     private BranchCompany branchCompany;
 
     /**
      * 市分公司信息
      */
+    @ApiModelProperty("市分公司")
     private CityBranch cityBranch;
 
     public String getScope() {

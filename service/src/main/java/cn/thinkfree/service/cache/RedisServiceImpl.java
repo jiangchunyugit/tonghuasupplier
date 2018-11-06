@@ -1,5 +1,7 @@
 package cn.thinkfree.service.cache;
 
+import cn.thinkfree.database.event.SendValidateCode;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.AccountHelper;
 import cn.thinkfree.service.utils.ActivationCodeHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +17,9 @@ public class RedisServiceImpl implements RedisService {
 
     @Autowired
     StringRedisTemplate redisTemplate;
+
+    @Autowired
+    EventService eventService;
 
     /**
      * 验证是否存在
@@ -41,7 +46,9 @@ public class RedisServiceImpl implements RedisService {
     public String saveVerificationCode(String key) {
         String code = ActivationCodeHelper.ActivationCode.Mix.code.get();
         redisTemplate.opsForValue().set(key,code,30, TimeUnit.MINUTES);
-        //TODO 发送事件
+
+        SendValidateCode event = new SendValidateCode(key,key,code);
+        eventService.publish(event);
         return code;
     }
 }
