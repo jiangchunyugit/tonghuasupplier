@@ -6,11 +6,9 @@ import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
-import cn.thinkfree.service.constants.HttpLinks;
+import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
-import net.bytebuddy.implementation.bytecode.Throw;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -203,7 +201,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         Map<String, String> requestMap = new HashMap<>(2);
         requestMap.put("userId", userId);
         requestMap.put("roleId", roleId);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsgUrl(), requestMap);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsg(), requestMap);
         Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
         return (Map) responseMap.get("data");
     }
@@ -287,7 +285,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(constructionSiteVO.getProjectNo());
         List<Project> projects = projectMapper.selectByExample(projectExample);
-        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), projects.get(0).getOwnerId(), Role.CC.id);
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
         List<ConstructionSiteVO> constructionSiteList = projectMapper.selectSiteDetailsByPage(constructionSiteVO, pageNum, pageSize);
         constructionSiteList.forEach((projectOrder) -> {
             projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
