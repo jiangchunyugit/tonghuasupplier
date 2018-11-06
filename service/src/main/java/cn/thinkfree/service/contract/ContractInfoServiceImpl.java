@@ -16,6 +16,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -674,6 +675,19 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			
 			return false;
 		}
+	}
+
+
+
+
+	@Override
+	public List<ContractInfo> getEnterContractBycompanyId(String companyId) {
+		List<ContractInfo> list = new ArrayList<>();
+		if (!StringUtils.isEmpty(companyId)) {
+			ContractInfoExample example = new ContractInfoExample();
+			list.addAll(cxcontractInfoMapper.selectByExample(example));
+		}
+		return list;
 	}
 
 
