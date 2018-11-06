@@ -124,6 +124,8 @@ public class ProjectBigSchedulingDetailsVO {
      */
     @ApiModelProperty(value = "延期天数")
     private Integer delay;
+    @ApiModelProperty(value = "人员ID")
+    private String userId;
 
 
 }

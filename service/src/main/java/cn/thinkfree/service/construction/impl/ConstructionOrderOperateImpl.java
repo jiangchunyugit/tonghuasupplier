@@ -258,7 +258,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
      */
     public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoIn(listProjectNo).andRoleIdEqualTo(role).andIsTransferEqualTo((short) 0);
+        example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
         List<OrderUser> list = orderUserMapper.selectByExample(example);
         List<Map<String, String>> listName = new ArrayList<>();
         for (OrderUser orderUser : list) {
