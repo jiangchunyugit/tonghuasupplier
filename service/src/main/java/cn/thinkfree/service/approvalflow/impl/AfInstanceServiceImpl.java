@@ -1,6 +1,7 @@
 package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.Role;
@@ -370,7 +371,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfInstanceVO> instanceVOs = new ArrayList<>();
         List<AfStartMenuVO> startMenus = new ArrayList<>();
 
-        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo);
+        MyRespBundle<List<ProjectBigSchedulingDetailsVO>> schedulingDetailsVOs = schedulingService.getScheduling(projectNo);
         // TODO
 //        if (schedulingDetailsVOs != null && schedulingDetailsVOs.size() > 0) {
 //            int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
@@ -397,7 +398,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 //                            if (scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
 //                                if (isNeedCheck(schedulingDetailsVOs, scheduleSort)) {
                                     // 获取验收、完工申请发起菜单
-                                    getCheckAndCompleteStartMenus(startMenus, userId, projectNo, schedulingDetailsVOs, scheduleSort);
+                                    getCheckAndCompleteStartMenus(startMenus, userId, projectNo, schedulingDetailsVOs.getData(), scheduleSort);
 //                                }
 //                            }
 //                        }
