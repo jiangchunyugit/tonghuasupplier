@@ -8,8 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.FileSystemResource;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -46,7 +49,6 @@ import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.service.contract.ContractService;
-import cn.thinkfree.service.event.AuditEvent;
 import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.user.UserService;
 import cn.thinkfree.service.utils.ExcelData;
@@ -54,12 +56,16 @@ import cn.thinkfree.service.utils.ExcelUtils;
 
 @RestController
 public class ExampleController extends AbsBaseController {
+	
+
 
     @Autowired
     UserService userService;
 
     @Autowired
     RestTemplate restTemplate;
+    
+  
 
 
    @Autowired
@@ -178,5 +184,25 @@ public class ExampleController extends AbsBaseController {
     }
 
 
+    //@RequestMapping(value = "projectExport", method = RequestMethod.GET)
+    @GetMapping("/projectExport")
+    public void projectExport(HttpServletRequest request, HttpServletResponse response) {
+//        try {
+//            
+//            Map map=new HashMap<String,Object>();
+//            map.put("test","测试");
+//           
+//            ByteArrayOutputStream baos = PDFUtil.createPDF("templates/project.html", map);
+//            //设置response文件头
+//          
+//            PDFUtil.renderPdf(response, baos.toByteArray(), "pdf文件");
+//            baos.close();
+//        } catch (Exception e) {
+//            System.out.println(e);
+//        }
+    	   //contractService.createOrderContract("11233333", "111111", "1");
+    	   contractService.createOrderContract("11233333", "11111122", "1");
+    	 //String url =  contractService.getPdfUrlByOrderNumber("111111");
+    }
 
 }

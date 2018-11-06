@@ -4,15 +4,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
-
-import javax.print.DocFlavor.STRING;
-import javax.servlet.http.HttpServletResponse;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -34,6 +30,8 @@ public class FreemarkerUtils {
      * 访问地址
      */
     private static String hostUrl = "http://127.0.0.1:8080/";
+    
+   
 	/**
 	 * 
 	 * @param type 业务合同类型
@@ -42,11 +40,15 @@ public class FreemarkerUtils {
 	 */
 	private static String loadFtlHtml(String type,Map globalMap){
 		String  fltName = "";
-		if(type.equals("0")){
+		if(type.equals("0")){//设计公司_to_B
 			
 			fltName = "design_template.ftl";
-		}else{
+		}else if(type.equals("1")){//装饰公司_to_B
 			fltName = "roadWork_template.ftl";
+		}else if(type.equals("2")){
+			
+		}else if(type.equals("3")){
+			
 		}
 		
 		fltName = "template2.ftl";
@@ -78,14 +80,17 @@ public class FreemarkerUtils {
 	 * 
 	 * @param flieName pdf url
 	 * @param type 合同模板类型
-	 * @param globalMap 传入模板的数据
+	 * @param root 传入模板的数据
 	 */
-	public static String savePdf(String flieName, String type, Map<String,Object> globalMap) {
+	public static String savePdf(String flieName, String type, Map<String, List<Map<String, Object>>> root) {
 		FileOutputStream out = null;
 		Document document = new Document(PageSize.A4, 50, 50, 60, 60);
+		String filePath = outPath + flieName+".pdf";
 		try {
-			out = new FileOutputStream(new File(outPath + flieName+".pdf"));//生成pdf
-			String html = loadFtlHtml(type, globalMap);
+			out = new FileOutputStream(new File(filePath));//生成pdf
+
+
+			String html = loadFtlHtml(type, root);
 			PdfWriter writer = null;
 			try {
 				writer = PdfWriter.getInstance(document, out);
@@ -113,9 +118,8 @@ public class FreemarkerUtils {
 				e.printStackTrace();
 			}
 		}
-         return  hostUrl+flieName;
+         return filePath;
 	}
 	
-    
     
 }

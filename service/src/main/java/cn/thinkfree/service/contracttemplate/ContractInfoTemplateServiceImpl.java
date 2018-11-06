@@ -105,7 +105,7 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 		ContractTemplate record = new ContractTemplate();
 		record.setContractTpType(type);
 		record.setUploadUrl(url);
-		record.setPdfUrl("static/contract/template/pdf"+type+".pdf");
+		record.setPdfUrl("static/contract/template/pdf/"+type+".pdf");
 		record.setUpdateTime(new Date());
 		ContractTemplateExample example = new ContractTemplateExample();
 		example.createCriteria().andContractTpTypeEqualTo(type);
