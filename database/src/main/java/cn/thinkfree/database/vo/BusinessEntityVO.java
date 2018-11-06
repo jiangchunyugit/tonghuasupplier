@@ -12,10 +12,10 @@ import java.util.List;
 @ApiModel("经营主体信息")
 public class BusinessEntityVO extends BusinessEntity {
 
-    @ApiModelProperty("分公司名称")
+    @ApiModelProperty("选择分公司")
     private String branchCompanyNm;
 
-    @ApiModelProperty("城市分站名称")
+    @ApiModelProperty("站点")
     private String cityBranchNm;
 
     public String getBranchCompanyNm() {

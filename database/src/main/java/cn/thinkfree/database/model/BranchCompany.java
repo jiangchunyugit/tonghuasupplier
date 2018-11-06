@@ -1,8 +1,12 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import cn.thinkfree.database.vo.Severitys;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -24,6 +28,7 @@ public class BranchCompany extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="id自增id")
+    @NotNull(message = "编辑id不可为空",groups = {Severitys.Update.class})
     private Integer id;
 
     /**
@@ -35,7 +40,8 @@ public class BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="companyName分公司名称")
+    @ApiModelProperty(value="companyName分站名称")
+    @NotBlank(message = "分公司名称不能为空",groups = {Severitys.Insert.class})
     private String companyName;
 
     /**
@@ -59,7 +65,7 @@ public class BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="legalName法人姓名")
+    @ApiModelProperty(value="legalName分公司负责人姓名")
     private String legalName;
 
     /**
@@ -71,7 +77,7 @@ public class BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="legalPhone法人电话号")
+    @ApiModelProperty(value="legalPhone分公司负责人电话号")
     private String legalPhone;
 
     /**
@@ -131,7 +137,8 @@ public class BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompEbsid分公司ebsid")
+    @ApiModelProperty(value="branchCompEbsid选择分公司id")
+    @NotNull(message = "分公司ebsid",groups = {Severitys.Insert.class})
     private Integer branchCompEbsid;
 
     /**

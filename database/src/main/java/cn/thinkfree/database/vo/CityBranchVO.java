@@ -16,10 +16,22 @@ public class CityBranchVO extends CityBranch {
     /**
      * 所属分公司名称
      */
-    @ApiModelProperty("所属分公司名称")
+    @ApiModelProperty("选择分公司")
     private String branchCompanyNm;
 
+    @ApiModelProperty("选择城市站点")
+    private String ebsCityBranchNm;
+
+    public String getEbsCityBranchNm() {
+        return ebsCityBranchNm;
+    }
+
+    public void setEbsCityBranchNm(String ebsCityBranchNm) {
+        this.ebsCityBranchNm = ebsCityBranchNm;
+    }
+
     /**
+
      * 店面list
      */
     @ApiModelProperty("店面信息")

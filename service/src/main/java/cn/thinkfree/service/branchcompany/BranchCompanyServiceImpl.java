@@ -1,5 +1,6 @@
 package cn.thinkfree.service.branchcompany;
 
+import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.mapper.BranchCompanyMapper;
@@ -26,23 +27,23 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
 
     @Override
     public int addBranchCompany(BranchCompany branchCompany) {
-        branchCompany.setCreateTime(new Date());
-        branchCompany.setIsDel(OneTrue.YesOrNo.NO.shortVal());
-        branchCompany.setIsEnable(UserEnabled.Enabled_false.shortVal());
-        // todo 埃森哲获取省份信息(moke 跟ebsid一致)
-        branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
 
-        return branchCompanyMapper.insertSelective(branchCompany);
+        if (branchCompany.getId() != null) {
+            return branchCompanyMapper.updateByPrimaryKeySelective(branchCompany);
+        } else {
+
+            branchCompany.setCreateTime(new Date());
+            branchCompany.setIsDel(OneTrue.YesOrNo.NO.shortVal());
+            branchCompany.setIsEnable(UserEnabled.Enabled_false.shortVal());
+            // todo 埃森哲获取省份信息(moke 跟ebsid一致)
+            branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
+
+            return branchCompanyMapper.insertSelective(branchCompany);
+        }
     }
 
     @Override
     public int updateBranchCompany(BranchCompany branchCompany) {
-
-        // todo 更新埃森哲省份信息
-        if(branchCompany.getBranchCompEbsid() != null) {
-
-            branchCompany.setProvinceCode(branchCompany.getBranchCompEbsid().shortValue());
-        }
         return branchCompanyMapper.updateByPrimaryKeySelective(branchCompany);
     }
 
@@ -81,8 +82,11 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     }
 
     @Override
-    public BranchCompany branchCompanyById(Integer id) {
-        return branchCompanyMapper.selectByPrimaryKey(id);
+    public BranchCompanyVO branchCompanyById(Integer id) {
+
+        BranchCompanyVO branchCompanyVO = new BranchCompanyVO();
+        SpringBeanUtil.copy(branchCompanyMapper.selectByPrimaryKey(id),branchCompanyVO);
+        return branchCompanyVO;
     }
 
     @Override
