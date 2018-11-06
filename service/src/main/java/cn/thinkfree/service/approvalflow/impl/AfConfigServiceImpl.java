@@ -2,12 +2,16 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfConfigMapper;
-import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.model.AfConfig;
+import cn.thinkfree.database.model.AfConfigExample;
+import cn.thinkfree.database.model.AfConfigScheme;
+import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.*;
-import cn.thinkfree.service.neworder.NewOrderUserService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * 审批流配置服务层
  *
  * @author song
  * @version 1.0
@@ -25,6 +29,9 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfConfigServiceImpl implements AfConfigService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AfConfigServiceImpl.class);
+
 
     @Resource
     private AfConfigMapper configMapper;
@@ -36,10 +43,6 @@ public class AfConfigServiceImpl implements AfConfigService {
     private AfApprovalOrderService approvalOrderService;
     @Resource
     private AfConfigSchemeService configPlanService;
-    @Resource
-    private AfApprovalRoleService approvalRoleService;
-    @Resource
-    private NewOrderUserService orderUserService;
 
     @Override
     public List<AfConfigVO> list(String schemeNo) {
@@ -72,7 +75,10 @@ public class AfConfigServiceImpl implements AfConfigService {
         return configVOs;
     }
 
-
+    /**
+     * 查询所有审批流配置信息
+     * @return 审批流配置信息
+     */
     private List<AfConfig> findAll() {
         AfConfigExample example = new AfConfigExample();
         return configMapper.selectByExample(example);
@@ -92,7 +98,7 @@ public class AfConfigServiceImpl implements AfConfigService {
 
         AfConfig config = findByNo(configNo);
         if (config == null) {
-            // TODO
+            LOGGER.error("未查询到审批流配置信息，configNo：{}", configNo);
             throw new RuntimeException();
         }
         AfConfigScheme configPlan = configPlanService.findByConfigNoAndSchemeNo(configNo, schemeNo);
@@ -114,8 +120,9 @@ public class AfConfigServiceImpl implements AfConfigService {
     @Override
     public void edit(AfConfigEditVO configEditVO) {
         List<AfConfigVO> configVOs = configEditVO.getConfigVOs();
-        if (configVOs == null || configVOs.size() != 10) {
-            // TODO
+        if (configVOs == null || configVOs.isEmpty()) {
+            LOGGER.error("审批流配置为空");
+            throw new RuntimeException();
         }
         for (AfConfigVO configVO : configVOs) {
             String configSchemeNo = UniqueCodeGenerator.AF_CONFIG_SCHEME.getCode();

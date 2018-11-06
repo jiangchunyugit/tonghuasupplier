@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO
+ * 审批流实例服务层
  *
  * @author song
  * @version 1.0
@@ -15,14 +15,52 @@ import java.util.Map;
  */
 public interface AfInstanceService {
 
+    /**
+     * 访问发起页面
+     * @param projectNo 项目编号
+     * @param userId 用户编号
+     * @param configNo 审批流配置编号
+     * @param scheduleSort 排期编号
+     * @return 审批流实例信息
+     */
     AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort);
 
+    /**
+     * 提交发起
+     * @param projectNo 项目编号
+     * @param userId 用户编号
+     * @param configNo 审批流配置编号
+     * @param scheduleSort 排期编号
+     * @param data 审批数据
+     * @param remark 备注信息
+     */
     void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark);
 
+    /**
+     * 获取审批流实例详情
+     * @param instanceNo 审批流实例编号
+     * @param userId 用户编号
+     * @return 审批流实例详情
+     */
     AfInstanceDetailVO detail(String instanceNo, String userId);
 
+    /**
+     * 执行审批
+     * @param instanceNo 审批流实例编号
+     * @param userId 用户编号
+     * @param option 用户选择
+     * @param remark 备注
+     */
     void approval(String instanceNo, String userId, Integer option, String remark);
 
+    /**
+     * 获取审批流实例列表
+     * @param userId 用户编号
+     * @param projectNo 项目编号
+     * @param approvalType 审批流类型
+     * @param scheduleSort 排期编号
+     * @return 审批流实例列表
+     */
     AfInstanceListVO list(String userId, String projectNo, String approvalType, Integer scheduleSort);
 
     /**

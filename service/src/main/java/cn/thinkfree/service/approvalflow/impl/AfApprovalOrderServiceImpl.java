@@ -1,5 +1,6 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfApprovalOrderMapper;
 import cn.thinkfree.database.model.AfApprovalOrder;
@@ -10,6 +11,7 @@ import cn.thinkfree.service.approvalflow.AfApprovalOrderService;
 import cn.thinkfree.service.approvalflow.AfApprovalRoleService;
 import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * 审批顺序服务层
  *
  * @author song
  * @version 1.0
@@ -28,12 +30,14 @@ import java.util.List;
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
 
+    private static final MyLogger LOGGER = new MyLogger(AfApprovalOrderServiceImpl.class);
+
     @Resource
     private AfApprovalOrderMapper approvalOrderMapper;
     @Resource
     private AfApprovalRoleService approvalRoleService;
     @Resource
-    private AfConfigSchemeService configPlanService;
+    private AfConfigSchemeService configSchemeService;
     @Resource
     private NewOrderUserService orderUserService;
 
@@ -53,7 +57,7 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
     }
 
     @Override
-    public void create(String configSchemeNo, String configNo, List<List<UserRoleSet>> approvalOrders) {
+    public void create(String configSchemeNo, List<List<UserRoleSet>> approvalOrders) {
         if (approvalOrders != null) {
             AfApprovalOrder approvalOrder;
             for (List<UserRoleSet> roles : approvalOrders) {
@@ -86,13 +90,18 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
     @Override
     public AfApprovalOrder findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId) {
         String schemeNo = getSchemeNo(projectNo);
+        if (StringUtils.isEmpty(schemeNo)) {
+            LOGGER.error("未获取到方案编号，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
         String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
 
-        AfConfigScheme configScheme = configPlanService.findByConfigNoAndSchemeNo(configNo, schemeNo);
-        if (configScheme != null) {
-            return findByConfigSchemeNoAndRoleId(configScheme.getConfigSchemeNo(), roleId);
+        AfConfigScheme configScheme = configSchemeService.findByConfigNoAndSchemeNo(configNo, schemeNo);
+        if (configScheme == null) {
+            LOGGER.error("未获取到审批流配置方案，configNo:{}，schemeNo：{}", configNo, schemeNo);
+            throw new RuntimeException();
         }
-        return null;
+        return findByConfigSchemeNoAndRoleId(configScheme.getConfigSchemeNo(), roleId);
     }
 
     private String getSchemeNo(String projectNo){
@@ -102,7 +111,7 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
 
     @Override
     public AfApprovalOrder findByConfigNoAndSchemeNoAndRoleId(String configNo, String schemeNo, String roleId) {
-        AfConfigScheme configScheme = configPlanService.findByConfigNoAndSchemeNo(configNo, schemeNo);
+        AfConfigScheme configScheme = configSchemeService.findByConfigNoAndSchemeNo(configNo, schemeNo);
         if (configScheme != null) {
             return findByConfigSchemeNoAndRoleId(configScheme.getConfigSchemeNo(), roleId);
         }
