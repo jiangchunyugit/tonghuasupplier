@@ -31,7 +31,7 @@ public class DelayTiming {
     private ProjectSchedulingMapper projectSchedulingMapper;
 
     @Scheduled(cron = "0 0 1 * * ?")
-    public void timer4() {
+    public void timing() {
         try {
             LOGGER.info("开始执行定时任务");
             ProjectBigSchedulingDetailsExample projectBigSchedulingDetailsExample = new ProjectBigSchedulingDetailsExample();
