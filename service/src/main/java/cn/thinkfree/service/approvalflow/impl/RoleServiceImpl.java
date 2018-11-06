@@ -10,8 +10,15 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
+/**
+ * 角色服务层
+ *
+ * @author song
+ * @version 1.0
+ * @date 2018/10/25 15:52
+ */
 @Service
-@Transactional
+@Transactional(rollbackFor = RuntimeException.class)
 public class RoleServiceImpl implements RoleService {
 
     @Resource
