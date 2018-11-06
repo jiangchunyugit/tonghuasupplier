@@ -127,7 +127,7 @@ public class AfConfigServiceImpl implements AfConfigService {
         for (AfConfigVO configVO : configVOs) {
             String configSchemeNo = UniqueCodeGenerator.AF_CONFIG_SCHEME.getCode();
             configPlanService.create(configSchemeNo, configVO.getConfigNo(), configEditVO.getSchemeNo(), configVO.getDescribe(), configEditVO.getUserId());
-            approvalOrderService.create(configSchemeNo, configVO.getConfigNo(), configVO.getApprovalOrders());
+            approvalOrderService.create(configSchemeNo, configVO.getApprovalOrders());
             subRoleService.create(configSchemeNo, configVO.getSubRoles());
         }
     }
