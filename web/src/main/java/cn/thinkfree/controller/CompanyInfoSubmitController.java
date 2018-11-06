@@ -51,6 +51,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @param contractNumber
      * @return
      */
+    //todo 方法有问题
     @RequestMapping(value = "/findAuditCase", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--设计/装饰公司--列表--状态--不通过原因--李阳")
@@ -260,4 +261,32 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         String resMap  = companySubmitService.joinSuccess(companyId);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
+
+
+    /**
+     * 入驻公司判断资质是否可以编辑
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/isEdit", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--装饰/设计公司管理中心--公司信息--公司管理:变更--审核/未通过/通过--是否可以编辑--李阳")
+    public MyRespBundle<CompanyTemporaryVo> isEdit(@ApiParam("公司id") @RequestParam String companyId){
+        boolean flag = companySubmitService.isEdit(companyId);
+        return sendJsonData(ResultMessage.SUCCESS, flag);
+    }
+
+    /**
+     * 入驻公司资质变更查询审批状态
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/findTempAuditStatus", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--装饰/设计公司管理中心--公司信息--公司管理:变更--审核/未通过/通过--查询审批状态--李阳")
+    public MyRespBundle<AuditInfoVO> findTempAuditStatus(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
+        AuditInfoVO auditInfoVO = companySubmitService.findTempAuditStatus(companyId);
+        return sendJsonData(success, "操作成功", auditInfoVO);
+    }
+
 }

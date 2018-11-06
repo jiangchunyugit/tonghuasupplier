@@ -48,6 +48,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Autowired
     UserRegisterMapper userRegisterMapper;
 
+    @Autowired
+    CompanyApplyService companyApplyService;
+
     /**
      * 更新公司入驻状态
      * @param companyId
@@ -107,6 +110,39 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     /**
+     * true:有结果  false:无结果
+     * @param name
+     * @return
+     */
+    @Override
+    public boolean checkCompanyName(String name) {
+        if(name == null || StringUtils.isBlank(name)){
+            return false;
+        }
+        CompanyInfoExample example = new CompanyInfoExample();
+        example.createCriteria().andCompanyNameEqualTo(name);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(example);
+        if(companyInfos.size() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkEmail(String email) {
+        if(email == null || StringUtils.isBlank(email)){
+            return false;
+        }
+        CompanyInfoExpandExample example = new CompanyInfoExpandExample();
+        example.createCriteria().andEmailEqualTo(email);
+        List<CompanyInfoExpand> companyInfoExpands = companyInfoExpandMapper.selectByExample(example);
+        if(companyInfoExpands.size() > 0){
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * a:添加账号---》返回公司id
      * @param roleId
      * @return
@@ -120,6 +156,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return companyId;
     }
 
+
+
     /**
      * b:添加账号--》创建用户 发送短信
      * 注：添加账号及发送短信后申请表状态改为已办理  不显示办理按钮。。
@@ -130,7 +168,18 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
+    public String addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
+        //公司名称校验
+        boolean cflag = companyApplyService.checkCompanyName(pcApplyInfoSEO.getCompanyName());
+        if(!cflag){
+            return "公司名称校验失败";
+        }
+        //公司邮箱地址校验
+        boolean eflag = companyApplyService.checkEmail(pcApplyInfoSEO.getEmail());
+        if(!eflag){
+            return "邮箱校验失败";
+        }
+
         Date date = new Date();
         //公司id
 //        String companyId = generateCompanyId(pcApplyInfoSEO.getCompanyRole());
@@ -202,9 +251,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         //TODO：添加账号发送短信 and 发送邮件
 
         if(infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0){
-            return true;
+            return "操作成功";
         }
-        return false;
+        return "操作失败";
     }
 
     /**

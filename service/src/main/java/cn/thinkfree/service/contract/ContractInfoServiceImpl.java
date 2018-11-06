@@ -254,7 +254,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		ContractVo  vo  = new ContractVo();
 		vo.setContractNumber(contractNumber);
 		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo);//合同信息
-		CompanyInfoVo  companyInfo  = companyInfoMapper.selectByCompanyId(newVo.getCompanyId());//公司信息
+		CompanySubmitVo  companyInfo  = companySubmitService.findCompanyInfo(newVo.getCompanyId());//公司信息
 		List<Map<String, Object>> list = getContractInfo(contractNumber, newVo, companyInfo);
 		return list;
 	}
@@ -263,12 +263,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 	private List<Map<String, Object>>  getContractInfo(String contractNumber, ContractVo newVo,
-			CompanyInfoVo companyInfo) {
+													   CompanySubmitVo  companyInfo) {
 		
 		List<Map<String, Object>>  resList = new ArrayList<>();
 		
 		String ownerCompanyName = "居然之家";//甲方公司名称
-		String secondCompanyName = companyInfo.getCompanyName();//乙方公司名称
+		String secondCompanyName = companyInfo.getCompanyInfo().getCompanyName();//乙方公司名称
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 		DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 		String formatstartYear[] = null;
@@ -291,7 +291,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		String accounBranchName = accountinfo.getAccountBranchName();//开户银行名称
 		String accountNumber = accountinfo.getAccountNumber()+"";//银行卡卡号
 		
-	    Map<String, Object> rmap = balanceInfo(contractNumber, newVo.getCompanyId(),companyInfo.getRoleId());
+	    Map<String, Object> rmap = balanceInfo(contractNumber, newVo.getCompanyId(),companyInfo.getCompanyInfo().getRoleId());
 	    
 		Map<String,Object> rep=new HashMap<> ();
 		rep.put("ownerCompanyName", ownerCompanyName);
@@ -328,16 +328,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		ContractVo  vo  = new ContractVo();
 		vo.setContractNumber(contractNumber);
 		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo);//合同信息
-		CompanyInfoVo  companyInfo  = companyInfoMapper.selectByCompanyId(newVo.getCompanyId());//公司信息
+		CompanySubmitVo  companyInfo  = companySubmitService.findCompanyInfo((newVo.getCompanyId()));//公司信息
 		List<Map<String, Object>> list = getContractInfo(contractNumber, newVo, companyInfo);
 		reportresult.addAll(list);
 		root.put("reportresult", reportresult);
 		//判断公司类型
-		if(companyInfo.getRoleId().equals("BD")){//装修公司
+		if(companyInfo.getCompanyInfo().getRoleId().equals("BD")){//装修公司
 			url = FreemarkerUtils.savePdf(contractNumber,"0" , root);
 			//WordUtil.createWord(configurer,root, "/sj_ftl.xml", "", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
 
-		}else if(companyInfo.getRoleId().equals("SJ")){//设计公司
+		}else if(companyInfo.getCompanyInfo().getRoleId().equals("SJ")){//设计公司
 			
 			//WordUtil.createWord(configurer,root, "/sj_ftl.xml", "http://localhost:7181/static/", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
 		}
