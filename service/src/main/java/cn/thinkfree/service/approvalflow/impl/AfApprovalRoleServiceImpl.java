@@ -1,5 +1,6 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.database.mapper.AfApprovalRoleMapper;
 import cn.thinkfree.database.model.AfApprovalRole;
 import cn.thinkfree.database.model.AfApprovalRoleExample;
@@ -13,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * 审批角色服务层
  *
  * @author song
  * @version 1.0
@@ -22,6 +23,8 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
+
+    private static final MyLogger LOGGER = new MyLogger(AfApprovalRoleServiceImpl.class);
 
     @Resource
     private AfApprovalRoleMapper approvalRoleMapper;
@@ -40,6 +43,12 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
         return getRoles(approvalRoles, allRoles);
     }
 
+    /**
+     * 根据审批角色信息、所有角色信息获取详细审批角色信息
+     * @param approvalRoles 审批角色信息
+     * @param allRoles 所有角色信息
+     * @return 详细审批角色信息
+     */
     private List<UserRoleSet> getRoles(List<AfApprovalRole> approvalRoles, List<UserRoleSet> allRoles) {
         List<UserRoleSet> roles = new ArrayList<>();
         if (approvalRoles != null) {
@@ -52,11 +61,10 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
                     }
                 }
                 if (role == null) {
-                    // TODO
+                    LOGGER.error("获取角色信息出错，roleId:{}", approvalRole.getRoleId());
                     throw new RuntimeException();
-                } else {
-                    roles.add(role);
                 }
+                roles.add(role);
             }
         }
         return roles;

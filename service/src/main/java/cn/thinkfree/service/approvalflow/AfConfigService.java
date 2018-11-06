@@ -16,6 +16,7 @@ import java.util.List;
 public interface AfConfigService {
     /**
      * 列出所有审批流配置
+     * @param schemeNo 方案编号
      * @return 所有审批流配置
      */
     List<AfConfigVO> list(String schemeNo);

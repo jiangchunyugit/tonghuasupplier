@@ -304,7 +304,7 @@
   <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.OrderTaskSortVo">
     SELECT
         pl.stage sort,
-        pl.end_time completeTime
+        pl.begin_time beginTime
     FROM
         project_stage_log pl
     WHERE

@@ -22,6 +22,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.xml.internal.bind.v2.TODO;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,6 +34,7 @@ import java.util.*;
  *
  * @author gejiaming
  */
+@Slf4j
 @Service
 public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
@@ -85,13 +87,18 @@ public class NewProjectServiceImpl implements NewProjectService {
         for (Project project : projects) {
             ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
             projectVo.setAddress(project.getAddressDetail());
-
             //添加业主信息
             PersionVo owner = new PersionVo();
-//            Map userName = newOrderUserService.getUserName(project.getOwnerId(),ProjectDataStatus.OWNER.getDescription() );//正式时打开
-            Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
-            owner.setPhone(userName.get("phone").toString());
-            owner.setName(userName.get("nickName").toString());
+            // TODO 联调时打开
+            try {
+//                Map userName = newOrderUserService.getUserName(project.getOwnerId(),ProjectDataStatus.OWNER.getDescription() );//正式时打开
+                Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+                owner.setPhone(userName.get("phone").toString());
+                owner.setName(userName.get("nickName").toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("调取人员信息失败!");
+            }
             projectVo.setOwner(owner);
             //添加进度展示
             if (project.getStage() > ConstructionStateEnum.STATE_500.getState()) {
@@ -107,8 +114,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             //TODO 添加项目四个按钮状态 正式时修改,询问赋值规则和数据来源
             projectVo.setProjectDynamic(ProjectDataStatus.BUTTON_NO.getValue());
-            projectVo.setProjectOrder(ProjectDataStatus.BUTTON_NO.getValue());
-            projectVo.setProjectData(ProjectDataStatus.BUTTON_NO.getValue());
+            projectVo.setProjectOrder(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
+            projectVo.setProjectData(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
             projectVo.setProjectInvoice(ProjectDataStatus.BUTTON_NO.getValue());
             projectVoList.add(projectVo);
         }
@@ -118,6 +125,7 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * C/B-项目个数
+     *
      * @param userId
      * @return
      */
@@ -166,17 +174,22 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProgressIsShow(false);
         }
         //TODO 添加项目四个按钮状态 正式时修改,询问赋值规则和数据来源
-        projectVo.setProjectDynamic(ProjectDataStatus.BUTTON_NO.getValue());
-        projectVo.setProjectOrder(ProjectDataStatus.BUTTON_NO.getValue());
-        projectVo.setProjectData(ProjectDataStatus.BUTTON_NO.getValue());
-        projectVo.setProjectInvoice(ProjectDataStatus.BUTTON_NO.getValue());
+        projectVo.setProjectDynamic(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
+        projectVo.setProjectOrder(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
+        projectVo.setProjectData(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
+        projectVo.setProjectInvoice(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
         //添加业主信息
         PersionVo owner = new PersionVo();
-        //Map userName1 = newOrderUserService.getUserName(project.getOwnerId(),ProjectDataStatus.OWNER.getDescription() );//正式时打开
-        Map userName1 = newOrderUserService.getUserName("CC1810301612170000C", "CC");
-        //TODO 正式时打开
-        owner.setPhone(userName1.get("phone").toString());
-        owner.setName(userName1.get("nickName").toString());
+        try {
+//            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(),ProjectDataStatus.OWNER.getDescription() );//正式时打开
+            Map userName1 = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+            //TODO 正式时打开
+            owner.setPhone(userName1.get("phone").toString());
+            owner.setName(userName1.get("nickName").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("调取人员信息失败!");
+        }
         projectVo.setOwner(owner);
 
         //组合设计订单
@@ -209,9 +222,14 @@ public class NewProjectServiceImpl implements NewProjectService {
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         List<PersionVo> persionList = new ArrayList<>();
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
-        Map userName = newOrderUserService.getUserName(designerOrder.getUserId(), persionVo.getRole());//正式时打开
+        try {
+            Map userName = newOrderUserService.getUserName(designerOrder.getUserId(), persionVo.getRole());//正式时打开
 //        Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
-        persionVo.setPhone(userName.get("phone").toString());
+            persionVo.setPhone(userName.get("phone").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.info("调取人员信息失败!");
+        }
         persionList.add(persionVo);
         designOrderPlayVo.setPersionList(persionList);
         designerOrderDetailVo.setOrderPlayVo(designOrderPlayVo);
@@ -243,9 +261,14 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
         for (PersionVo persionVo1 : constructionPersionList) {
             //TODO 正式时打开
-//            Map persionDetail = newOrderUserService.getUserName(persionVo1.getUserId(), persionVo1.getRole());
-            Map persionDetail = newOrderUserService.getUserName("CC1810301612170000C", "CC");
-            persionVo1.setPhone(persionDetail.get("phone").toString());
+            try {
+//                Map persionDetail = newOrderUserService.getUserName(persionVo1.getUserId(), persionVo1.getRole());
+                Map persionDetail = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+                persionVo1.setPhone(persionDetail.get("phone").toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("调取人员信息失败!");
+            }
         }
         constructionOrderPlayVo.setPersionList(constructionPersionList);
         constructionOrderDetailVo.setOrderPlayVo(constructionOrderPlayVo);
@@ -256,6 +279,7 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * APP-获取项目详情头接口
+     *
      * @param projectNo
      * @return
      */
@@ -490,6 +514,7 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 取消订单
+     *
      * @param orderNo
      * @param projectNo
      * @param userId
@@ -497,7 +522,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle cancleOrder(String orderNo,String projectNo, String userId, String cancelReason) {
+    public MyRespBundle cancleOrder(String orderNo, String projectNo, String userId, String cancelReason) {
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria designerCriteria = designerOrderExample.createCriteria();
         designerCriteria.andOrderNoEqualTo(orderNo);

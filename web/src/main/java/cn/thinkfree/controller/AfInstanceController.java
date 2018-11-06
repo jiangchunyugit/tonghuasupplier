@@ -11,6 +11,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +32,8 @@ import javax.annotation.Resource;
 @RequestMapping("af-instance")
 public class AfInstanceController extends AbsBaseController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AfInstanceController.class);
+
     @Resource
     private AfInstanceService instanceService;
 
@@ -47,7 +51,7 @@ public class AfInstanceController extends AbsBaseController {
                                                   @RequestParam(name = "configNo") String configNo,
                                                   @RequestParam(name = "projectNo") String projectNo,
                                                   @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
-        printInfoMes("请求数据：[userId:{}, configNo:{}, projectNo:{}, scheduleSort:{}]", userId, configNo, projectNo, scheduleSort);
+        LOGGER.info("请求数据：[userId:{}, configNo:{}, projectNo:{}, scheduleSort:{}]", userId, configNo, projectNo, scheduleSort);
         return sendJsonData(ResultMessage.SUCCESS, instanceService.start(projectNo, userId, configNo, scheduleSort));
     }
 
@@ -68,7 +72,7 @@ public class AfInstanceController extends AbsBaseController {
                                     @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort,
                                     @RequestParam(name = "data", required = false) String data,
                                     @RequestParam(name = "remark", required = false) String remark){
-        printInfoMes("请求数据：[projectNo:{}, userId:{}, configNo:{}, scheduleSort:{}, data:{}, remark:{}]",
+        LOGGER.info("请求数据：[projectNo:{}, userId:{}, configNo:{}, scheduleSort:{}, data:{}, remark:{}]",
                 projectNo, userId, configNo, scheduleSort, data, remark);
         instanceService.submitStart(projectNo, userId, configNo, scheduleSort, data, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
@@ -82,7 +86,7 @@ public class AfInstanceController extends AbsBaseController {
             @ApiImplicitParam(name = "userId", value = "用户编码", required = true)
     })
     public MyRespBundle<AfInstanceDetailVO> detail(@RequestParam(name = "instanceNo") String instanceNo, @RequestParam(name = "userId") String userId){
-        printInfoMes("请求数据：[instanceNo:{}, userId:{}]", instanceNo, userId);
+        LOGGER.info("请求数据：[instanceNo:{}, userId:{}]", instanceNo, userId);
         return sendJsonData(ResultMessage.SUCCESS, instanceService.detail(instanceNo, userId));
     }
 
@@ -99,7 +103,7 @@ public class AfInstanceController extends AbsBaseController {
                                  @RequestParam(name = "userId") String userId,
                                  @RequestParam(name = "option") Integer option,
                                  @RequestParam(name = "remark", required = false) String remark){
-        printInfoMes("请求数据：[instanceNo:{}, userId:{}, option:{}, remark:{}]", instanceNo, userId, option, remark);
+        LOGGER.info("请求数据：[instanceNo:{}, userId:{}, option:{}, remark:{}]", instanceNo, userId, option, remark);
         instanceService.approval(instanceNo, userId, option, remark);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
@@ -117,7 +121,7 @@ public class AfInstanceController extends AbsBaseController {
                                                @RequestParam(name = "projectNo") String projectNo,
                                                @RequestParam(name = "approvalType") String approvalType,
                                                @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
-        printInfoMes("请求数据：[userId:{}, projectNo:{}, approvalType:{}, scheduleSort:{}]", userId, projectNo, approvalType, scheduleSort);
+        LOGGER.info("请求数据：[userId:{}, projectNo:{}, approvalType:{}, scheduleSort:{}]", userId, projectNo, approvalType, scheduleSort);
         return sendJsonData(ResultMessage.SUCCESS, instanceService.list(userId, projectNo, approvalType, scheduleSort));
     }
 }
