@@ -370,7 +370,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfInstanceVO> instanceVOs = new ArrayList<>();
         List<AfStartMenuVO> startMenus = new ArrayList<>();
 
-        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo);
+        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
         // TODO
 //        if (schedulingDetailsVOs != null && schedulingDetailsVOs.size() > 0) {
 //            int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
