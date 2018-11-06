@@ -125,8 +125,9 @@ public class ContractController extends AbsBaseController{
     @MyRespBody
     public MyRespBundle<String> contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-    	ContractDetails jbj =  contractService.contractDetails(contractNumber, companyId);
-        return sendJsonData(ResultMessage.SUCCESS,jbj);
+//    	ContractDetails jbj =  contractService.contractDetails(contractNumber, companyId);
+//        return sendJsonData(ResultMessage.SUCCESS,jbj);
+        return null;
     }
 
     
@@ -201,9 +202,9 @@ public class ContractController extends AbsBaseController{
     @MyRespBody
     public MyRespBundle<String> createOrderContract(@ApiParam("公司编号")@RequestParam String companyId,
     		@ApiParam("订单编号")@RequestParam String orderNumber,@ApiParam("订单类型（0设计 1施工）")@RequestParam String type){
-    	boolean  flag = contractService.createOrderContract( companyId, orderNumber, type);
-    	   
-        return sendJsonData(ResultMessage.SUCCESS,flag);
+//    	boolean  flag = contractService.createOrderContract( companyId, orderNumber, type);
+//        return sendJsonData(ResultMessage.SUCCESS,flag);
+        return null;
     }
     
     
