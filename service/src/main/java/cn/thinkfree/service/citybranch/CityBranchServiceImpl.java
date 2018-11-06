@@ -50,6 +50,7 @@ public class CityBranchServiceImpl implements CityBranchService {
         BranchCompany branchCompany = new BranchCompany();
         branchCompany = branchCompanyMapper.selectByPrimaryKey(cityBranch.getBranchCompId());
         cityBranch.setProvinceCode(branchCompany.getProvinceCode());
+        // todo 通过埃森哲城市分站获取城市code冗余
         int result = cityBranchMapper.insertSelective(cityBranch);
 
         // 回刷经营主体,保存店面信息
@@ -155,7 +156,7 @@ public class CityBranchServiceImpl implements CityBranchService {
         List<CityBranch> cityBranchList = cityBranchMapper.selectByExample(cityBranchExample);
         if (cityBranchList.size() >0 ) {
 
-            List<String> cityCodes = cityBranchList.stream().map(e->e.getCityCode().toString()).collect(Collectors.toList());
+            List<String> cityCodes = cityBranchList.stream().filter(e->e.getCityCode() != null).map(e->e.getCityCode().toString()).collect(Collectors.toList());
 
             CityExample cityExample = new CityExample();
             cityExample.createCriteria().andCityCodeIn(cityCodes);

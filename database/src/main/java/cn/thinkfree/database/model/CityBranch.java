@@ -1,8 +1,13 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import cn.thinkfree.database.vo.Severitys;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.servlet.Servlet;
+import javax.validation.constraints.NotNull;
+import javax.xml.ws.Service;
 import java.util.Date;
 
 /**
@@ -23,7 +28,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="id自增id")
+    @ApiModelProperty(value="自增id")
     private Integer id;
 
     /**
@@ -35,7 +40,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="legalName法人姓名")
+    @ApiModelProperty(value="负责人姓名")
     private String legalName;
 
     /**
@@ -47,7 +52,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="legalPhone法人电话号")
+    @ApiModelProperty(value="负责人手机号")
     private String legalPhone;
 
     /**
@@ -59,7 +64,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="createTime创建时间")
+    @ApiModelProperty(value="创建时间")
     private Date createTime;
 
     /**
@@ -95,7 +100,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cityBranchName城市分站名称")
+    @ApiModelProperty(value="城市站点名称")
     private String cityBranchName;
 
     /**
@@ -107,7 +112,8 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cityBranchEbsid所属城市分站ebsid")
+    @ApiModelProperty(value="选择城市站点id")
+    @NotNull(message = "埃森哲城市分站不可为空",groups = {Severitys.Insert.class})
     private Integer cityBranchEbsid;
 
     /**
@@ -143,7 +149,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompEbsid所属分公司ebsid")
+    @ApiModelProperty(value="埃森哲分公司id")
     private Integer branchCompEbsid;
 
     /**
@@ -155,7 +161,8 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompId分公司id")
+    @ApiModelProperty(value="选择分公司id")
+    @NotNull(message = "分公司不可为空",groups = {Severitys.Insert.class})
     private Integer branchCompId;
 
     /**

@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/businessEntity")
-@Api(value = "经营主体",description = "经营主体")
+@Api(value = "前端使用---经营主体数据---蒋春雨经营主体",description = "前端使用---经营主体数据---蒋春雨经营主体")
 public class BusinessEntityController extends AbsBaseController{
 
     @Autowired
@@ -34,7 +34,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @PostMapping(value = "/saveBusinessEntity")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：新增")
+    @ApiOperation(value="经营主体数据：创建主体")
     public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntity businessEntity){
         BeanValidator.validate(businessEntity, Severitys.Insert.class);
         int line = businessEntityService.addBusinessEntity(businessEntity);
@@ -49,7 +49,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @PostMapping(value = "/updateBusinessEntity")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：编辑")
+    @ApiOperation(value="经营主体数据：编辑主体")
     public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntity businessEntity){
         BeanValidator.validate(businessEntity, Severitys.Update.class);
         int line = businessEntityService.updateBusinessEntity(businessEntity);
@@ -64,7 +64,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @GetMapping(value = "/businessEntitylist")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：经营主体分页查询")
+    @ApiOperation(value="经营主体数据：经营主体数据维护（经营主体分页查询）")
     public MyRespBundle<PageInfo<BusinessEntityVO>> businessEntitylist(@ApiParam("查询经营主体参数")BusinessEntitySEO businessEntitySEO){
 
         PageInfo<BusinessEntityVO> pageInfo = businessEntityService.businessEntityList(businessEntitySEO);
@@ -77,7 +77,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @GetMapping(value = "/businessEntityDetails")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：查看")
+    @ApiOperation(value="经营主体数据：查看主体")
     public MyRespBundle<BusinessEntityVO> businessEntityDetails(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BusinessEntityVO businessEntityVO = businessEntityService.businessEntityDetails(id);
@@ -89,7 +89,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @GetMapping(value = "/businessEntitys")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：经营主体信息")
+    @ApiOperation(value="经营主体数据：经营主体信息")
     public MyRespBundle<List<BusinessEntity>> businessEntitys(){
 
         List<BusinessEntity> businessEntitys = businessEntityService.businessEntitys();
@@ -102,7 +102,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @PostMapping(value = "/businessEntityDelete")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：删除")
+    @ApiOperation(value="经营主体数据：删除")
     public MyRespBundle<String> businessEntityDelete(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -121,7 +121,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @PostMapping(value = "/businessEntityEnable")
     @MyRespBody
-    @ApiOperation(value="经营主体管理：启用")
+    @ApiOperation(value="经营主体数据：启用")
     public MyRespBundle<String> businessEntityEnable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -140,7 +140,7 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @RequestMapping(value = "/businessEntityDisable", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="经营主体管理：禁用")
+    @ApiOperation(value="经营主体数据：禁用")
     public MyRespBundle<String> businessEntityDisable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);

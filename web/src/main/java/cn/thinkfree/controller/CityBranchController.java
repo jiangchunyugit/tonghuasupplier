@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cityBranch")
-@Api(value = "城市分站",description = "城市分站")
+@Api(value = "前端使用---城市分站---蒋春雨经营主体",description = "前端使用---城市分站---蒋春雨经营主体")
 public class CityBranchController extends AbsBaseController{
 
     @Autowired
@@ -36,8 +36,8 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/saveCityBranch")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：新增")
-    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息") @RequestBody CityBranchVO cityBranchVO){
+    @ApiOperation(value="城市分站：创建分站")
+    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息")  @RequestParam CityBranchVO cityBranchVO){
         BeanValidator.validate(cityBranchVO, Severitys.Insert.class);
         int line = cityBranchService.addCityBranch(cityBranchVO);
         if(line > 0){
@@ -51,7 +51,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/updateCityBranch")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：编辑")
+    @ApiOperation(value="城市分站：编辑分站")
     public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息")@RequestBody CityBranchVO cityBranchVO){
         BeanValidator.validate(cityBranchVO, Severitys.Update.class);
         int line = cityBranchService.updateCityBranch(cityBranchVO);
@@ -66,7 +66,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchlist")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：城市分站分页查询")
+    @ApiOperation(value="城市分站：分站管理（市地区城市分站分页查询）")
     public MyRespBundle<PageInfo<CityBranchVO>> cityBranchlist(@ApiParam("查询城市分站参数")CityBranchSEO cityBranchSEO){
 
         PageInfo<CityBranchVO> pageInfo = cityBranchService.cityBranchList(cityBranchSEO);
@@ -79,7 +79,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchlistOfCompany")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：分公司查看详细城市分站分页查询")
+    @ApiOperation(value="城市分站管理：分站管理>分站详情>分站信息(分站省地区查看分站市地区详情（分页查询）)")
     public MyRespBundle<PageInfo<CityBranchWtihProCitVO>> cityBranchlistOfCompany(@ApiParam("查询城市分站参数")CityBranchSEO cityBranchSEO){
 
         PageInfo<CityBranchWtihProCitVO> pageInfo = cityBranchService.cityBranchWithProList(cityBranchSEO);
@@ -90,7 +90,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchDetails")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：查看")
+    @ApiOperation(value="城市分站：查看分站")
     public MyRespBundle<CityBranchVO> cityBranchDetails(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         CityBranchVO cityBranchVO = cityBranchService.cityBranchDetails(id);
@@ -102,7 +102,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchById")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：编辑回写")
+    @ApiOperation(value="城市分站：编辑回写")
     public MyRespBundle<CityBranchVO> cityBranchById(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         CityBranchVO cityBranchVO = cityBranchService.cityBranchById(id);
@@ -114,7 +114,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/cityBranchDelete")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：删除")
+    @ApiOperation(value="城市分站：删除")
     public MyRespBundle<String> cityBranchDelete(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -133,7 +133,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/cityBranchEnable")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：启用")
+    @ApiOperation(value="城市分站：启用")
     public MyRespBundle<String> cityBranchEnable(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -152,7 +152,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/cityBranchDisable")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：禁用")
+    @ApiOperation(value="城市分站：禁用")
     public MyRespBundle<String> cityBranchDisable(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -171,7 +171,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/cityBranchRuZhu")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：城市分站")
+    @ApiOperation(value="城市分站：城市分站")
     public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份code")@RequestParam(value = "provinceCode") Integer provinceCode, @ApiParam("城市code")@RequestParam(value = "cityCode") Integer cityCode){
 
         return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(provinceCode,cityCode));
@@ -184,7 +184,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchSearch")
     @MyRespBody
-    @ApiOperation(value="城市分站管理：城市分站城市信息")
+    @ApiOperation(value="城市分站：选择地区")
     public MyRespBundle<List<City>> cityBranchSearch(){
 
         return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectCity());

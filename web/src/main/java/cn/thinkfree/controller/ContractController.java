@@ -5,12 +5,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +27,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
-import cn.thinkfree.database.vo.ContractDetails;
+import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.service.contract.ContractService;
@@ -123,11 +126,10 @@ public class ContractController extends AbsBaseController{
     @ApiOperation(value = "前端--运营后台--合同详情--吕启栋", notes = "合同详情")
     @PostMapping("/contractDetails")
     @MyRespBody
-    public MyRespBundle<String> contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
+    public MyRespBundle<List<Map<String,Object>> > contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-//    	ContractDetails jbj =  contractService.contractDetails(contractNumber, companyId);
-//        return sendJsonData(ResultMessage.SUCCESS,jbj);
-        return null;
+    	List<Map<String,Object>>  jbj =  contractService.contractDetails(contractNumber, companyId);
+        return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
     
@@ -192,22 +194,40 @@ public class ContractController extends AbsBaseController{
 
     
     /**
-     * 
-     * 施工/设计合同生成
-     * @author lvqidong
-     * @return Message
+     * 设计合同录入
+     *
      */
-    @ApiOperation(value = "施工/设计合同生成", notes = "施工/设计合同生成")
-    @PostMapping("/createOrderContract")
+
+    @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
+    @PostMapping("/insertDesignOrderContract/{orderNumber}{companyId}")
     @MyRespBody
-    public MyRespBundle<String> createOrderContract(@ApiParam("公司编号")@RequestParam String companyId,
-    		@ApiParam("订单编号")@RequestParam String orderNumber,@ApiParam("订单类型（0设计 1施工）")@RequestParam String type){
-//    	boolean  flag = contractService.createOrderContract( companyId, orderNumber, type);
-//        return sendJsonData(ResultMessage.SUCCESS,flag);
-        return null;
+    public MyRespBundle<String> insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
+    		@PathVariable("companyId") String companyId,
+    		@ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
+
+    	boolean flag  = contractService.insertDesignOrderContract(orderNumber, companyId, paramMap);
+
+    	return sendJsonData(ResultMessage.SUCCESS,flag);
+    }
+
+
+    /**
+     * 施工合同录入
+     */
+    @ApiOperation(value = "B端--施工合同输入--吕启栋", notes = "设计合同录入",consumes = "application/json")
+    @PostMapping("/insertRoadWorkOrderContract/{orderNumber}/{companyId}")
+    @MyRespBody
+    public MyRespBundle<String> insertRoadWorkOrderContract(@PathVariable("orderNumber") String orderNumber,
+    		@PathVariable("companyId") String companyId,
+    		@ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
+
+        boolean flag  = contractService.insertDesignOrderContract(orderNumber, companyId, paramMap);
+
+    	return sendJsonData(ResultMessage.SUCCESS,flag);
     }
     
-    
+
+
     /**
      * 
      * 获取施工或订单合同pdf
@@ -225,6 +245,21 @@ public class ContractController extends AbsBaseController{
     }
     
     
-    
+    /**
+     * 入住协议
+     * @param companyId
+     * @author lvqidong
+     */
+    @ApiOperation(value = "前端--B端--入住协议列表--吕启栋", notes = "根据订单编号获取施工或订单合同pdf")
+    @PostMapping("/enterAgreementContract")
+    @MyRespBody
+    public MyRespBundle<List<ContractInfo>> enterAgreementContract(@ApiParam("公司编号")@RequestParam String companyId){
+
+    	List<ContractInfo> resList =  contractService.getEnterContractBycompanyId(companyId);
+
+        return sendJsonData(ResultMessage.SUCCESS,resList);
+    }
+
+
     
 }

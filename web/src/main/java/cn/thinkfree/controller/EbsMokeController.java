@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/ebsMoke")
-@Api(value = "埃森哲默克接口",description = "埃森哲默克接口")
+@Api(value = "前端使用---埃森哲分站mock接口---蒋春雨",description = "前端使用---埃森哲分站mock接口---蒋春雨")
 public class EbsMokeController extends AbsBaseController{
 
 
@@ -29,7 +29,7 @@ public class EbsMokeController extends AbsBaseController{
      */
     @GetMapping(value = "/ebsBranchCompany")
     @MyRespBody
-    @ApiOperation(value="埃森哲管理：埃森哲分公司查询")
+    @ApiOperation(value="埃森哲管理：选择分公司（埃森哲分公司查询）")
     public MyRespBundle<List<EbsMokeBranchCompany>> ebsBranchCompany(){
 
         return sendJsonData(ResultMessage.SUCCESS, ebsService.ebsBranchCompanyList());
@@ -40,8 +40,8 @@ public class EbsMokeController extends AbsBaseController{
      */
     @GetMapping(value = "/ebsCityBranch")
     @MyRespBody
-    @ApiOperation(value="埃森哲管理：埃森哲分公司查询")
-    public MyRespBundle<List<EbsCityBranch>> ebsCityBranch(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
+    @ApiOperation(value="埃森哲管理：选择城市站点||站点（埃森哲城市分站查询）")
+    public MyRespBundle<List<EbsCityBranch>> ebsCityBranch(@ApiParam("埃森哲分公司id")@RequestParam(value = "id") Integer id){
 
         return sendJsonData(ResultMessage.SUCCESS, ebsService.ebsCityBranchList(id));
     }
@@ -51,7 +51,7 @@ public class EbsMokeController extends AbsBaseController{
      */
     @GetMapping(value = "/storeBusinessEntity")
     @MyRespBody
-    @ApiOperation(value="埃森哲管理：分店主体查询")
+    @ApiOperation(value="埃森哲管理：选择主体")
     public MyRespBundle<List<StoreBusinessEntity>> storeBusinessEntity(@ApiParam("埃森哲城市分站id")@RequestParam(value = "id") Integer id){
 
         return sendJsonData(ResultMessage.SUCCESS, ebsService.storeBusinessEntityList(id));

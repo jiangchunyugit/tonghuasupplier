@@ -15,11 +15,12 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping(value = "/branchCompany")
-@Api(value = "分公司",description = "分公司")
+@Api(value = "前端使用---分公司站点---蒋春雨",description = "前端使用---分公司站点---蒋春雨")
 public class BranchCompanyController extends AbsBaseController{
 
     @Autowired
@@ -30,9 +31,9 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/saveBranchCompany", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="分公司管理：新增")
+    @ApiOperation(value="分公司站点：创建分站")
     public MyRespBundle<String> saveBranchCompany(@ApiParam("分公司信息") BranchCompany branchCompany){
-//        BeanValidator.validate(branchCompany, Severitys.Insert.class);
+        BeanValidator.validate(branchCompany,Severitys.Insert.class);
         int line = branchCompanyService.addBranchCompany(branchCompany);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
@@ -45,7 +46,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/updateBranchCompany", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="分公司管理：编辑")
+    @ApiOperation(value="分公司站点：编辑分站")
     public MyRespBundle<String> updateBranchCompany(@ApiParam("分公司信息")BranchCompany branchCompany){
         BeanValidator.validate(branchCompany, Severitys.Update.class);
         int line = branchCompanyService.updateBranchCompany(branchCompany);
@@ -60,7 +61,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanylist", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司管理：分公司分页查询")
+    @ApiOperation(value="分公司站点：分站管理（省分站分公司分页查询）")
     public MyRespBundle<PageInfo<BranchCompanyVO>> branchCompanylist(@ApiParam("查询分公司参数")BranchCompanySEO branchCompanySEO){
 
         PageInfo<BranchCompanyVO> pageInfo = branchCompanyService.branchCompanyList(branchCompanySEO);
@@ -73,7 +74,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanyDetails", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司管理：查看")
+    @ApiOperation(value="分公司站点：查看分站")
     public MyRespBundle<BranchCompanyVO> branchCompanyDetails(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BranchCompanyVO branchCompanyVO = branchCompanyService.branchCompanyDetails(id);
@@ -85,11 +86,11 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanyById", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司管理：编辑回写")
-    public MyRespBundle<BranchCompany> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
+    @ApiOperation(value="分公司站点：编辑回写")
+    public MyRespBundle<BranchCompanyVO> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
-        BranchCompany branchCompany = branchCompanyService.branchCompanyById(id);
-        return sendJsonData(ResultMessage.SUCCESS, branchCompany);
+        BranchCompanyVO branchCompanyVO = branchCompanyService.branchCompanyById(id);
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyVO);
     }
 
     /**
@@ -97,7 +98,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanys", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司管理：分公司全部信息")
+    @ApiOperation(value="分公司站点：分站名称||选择省分站名称")
     public MyRespBundle<List<BranchCompany>> branchCompanys(){
 
         List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys();
@@ -110,7 +111,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/companyRelations", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司管理：分公司全部信息和所属期城市分站信息")
+    @ApiOperation(value="分公司站点：分公司全部信息和所属期城市分站信息")
     public MyRespBundle<List<CompanyRelationVO>> companyRelations(){
 
         List<CompanyRelationVO> companyRelationVOList = branchCompanyService.companyRelationList();
@@ -123,7 +124,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @PostMapping(value = "/branchCompanyDelete")
     @MyRespBody
-    @ApiOperation(value="分公司管理：删除")
+    @ApiOperation(value="分公司站点：删除")
     public MyRespBundle<String> branchCompanyDelete(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -142,7 +143,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanyEnable", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="分公司管理：启用")
+    @ApiOperation(value="分公司站点：启用")
     public MyRespBundle<String> branchCompanyEnable(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
@@ -161,7 +162,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanyDisable", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="分公司管理：禁用")
+    @ApiOperation(value="分公司站点：禁用")
     public MyRespBundle<PageInfo<String>> branchCompanyDisable(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BeanValidator.validate(id, Severitys.Update.class);
