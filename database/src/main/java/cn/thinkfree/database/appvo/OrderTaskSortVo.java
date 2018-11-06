@@ -20,6 +20,6 @@ public class OrderTaskSortVo {
     private Integer sort;
     @ApiModelProperty(name = "name",value ="名字" )
     private String name;
-    @ApiModelProperty(value = "结束时间")
-    private Date completeTime;
+    @ApiModelProperty(value = "开始时间")
+    private Date beginTime;
 }
