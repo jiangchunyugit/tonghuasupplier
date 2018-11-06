@@ -97,5 +97,12 @@ public interface SettlementRatioService {
 	 * 
 	 */
 	//Map<String,String> getlist();
+
+	/**
+	 *
+	 * 申请作废结算规则
+	 * @return SettlementRuleInfo
+	 */
+	boolean applicationInvalid(String ruleNumber);
 	
 }

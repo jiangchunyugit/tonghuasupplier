@@ -18,7 +18,7 @@ public class SettlementRatioSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("结算比例编号")
     private String ratioNumber;
     
-    @ApiModelProperty("比例状态 0生效 1失效 2作废 3未生效 ")
+    @ApiModelProperty("比例状态 1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效 ")
     private String ratioStatus;
     
     @ApiModelProperty("结算比例名称")
