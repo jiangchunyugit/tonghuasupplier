@@ -60,7 +60,6 @@ public class AfApprovalOrderServiceImpl implements AfApprovalOrderService {
                 if (roles.size() > 0) {
                     approvalOrder = new AfApprovalOrder();
                     approvalOrder.setId(null);
-                    approvalOrder.setConfigNo(configNo);
                     approvalOrder.setConfigSchemeNo(configSchemeNo);
                     approvalOrder.setApprovalOrderNo(UniqueCodeGenerator.AF_APPROVAL_ORDER.getCode());
                     approvalOrder.setFirstRoleId(roles.get(0).getRoleCode());

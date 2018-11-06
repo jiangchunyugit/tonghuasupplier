@@ -39,14 +39,4 @@ public interface AfInstanceService {
      */
     Map<String, Integer> getProjectCheckResult(List<String> projectNos);
 
-    AfInstanceDetailVO Mstart(String projectNo, String userId, String configNo, Integer scheduleSort);
-
-    void MsubmitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark);
-
-    AfInstanceDetailVO Mdetail(String instanceNo, String userId);
-
-    void Mapproval(String instanceNo, String userId, Integer option, String remark);
-
-    AfInstanceListVO Mlist(String userId, String projectNo, String approvalType, Integer scheduleSort);
-
 }
