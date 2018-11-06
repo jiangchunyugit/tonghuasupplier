@@ -5,7 +5,7 @@ import cn.thinkfree.core.model.BaseModel;
 /**
  * 推送消息 交易主体
  */
-public class TransactionVO extends BaseModel {
+public class SyncTransactionVO extends BaseModel {
 
 
     /**

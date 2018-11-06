@@ -9,7 +9,8 @@ import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.RoleScope;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
-import cn.thinkfree.database.event.AccountCreate;
+import cn.thinkfree.database.event.account.AccountCreate;
+import cn.thinkfree.database.event.account.ResetPassWord;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MyPageHelper;
@@ -277,8 +278,6 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
         logger.info("创建账号 => 初始化账号信息,准备处理密码");
 
-
-
         PcUserInfo userInfo = getUserInfo(accountVO);
         userInfo.setId(userCode);
         pcUserInfoMapper.insertSelective(userInfo);
@@ -286,9 +285,8 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         List<SystemRole> roles = accountVO.getRoles();
         saveUserRole(userCode,roles);
 
-        // TODO 发送事件
-        AccountCreate accountCreate = new AccountCreate();
-//        eventService.publish(accountCreate);
+        AccountCreate accountCreate = new AccountCreate(userCode,account.getPhone(),password);
+        eventService.publish(accountCreate);
         return accountVO;
     }
 
@@ -377,6 +375,24 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         update.setId(id);
         update.setEnabled(state.shortValue());
         pcUserInfoMapper.updateByPrimaryKeySelective(update);
+        return "操作成功!";
+    }
+
+    /**
+     * 更新密码 - 初次登录重置
+     *
+     * @param id
+     * @param passWord
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updatePassWordForInit(String id, String passWord) {
+        UserRegister update = new UserRegister();
+        update.setPassword(new MultipleMd5().encode(passWord));
+        UserRegisterExample condition = new UserRegisterExample();
+        condition.createCriteria().andUserIdEqualTo(id);
+        userRegisterMapper.updateByExampleSelective(update,condition);
         return "操作成功!";
     }
 
@@ -544,13 +560,19 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     @Override
     public String updateForResetPassWord(String id) {
         UserRegister update = new UserRegister();
-        update.setPassword(new MultipleMd5().encode(AccountHelper.createUserPassWord()));
+        String password = AccountHelper.createUserPassWord();
+        update.setPassword(new MultipleMd5().encode(password));
         UserRegisterExample condition = new UserRegisterExample();
         condition.createCriteria().andUserIdEqualTo(id);
         userRegisterMapper.updateByExampleSelective(update,condition);
 
-        // TODO 发送密码重置事件
+        List<UserRegister> accounts = userRegisterMapper.selectByExample(condition);
+        if(accounts.isEmpty() || accounts.size() != 1){
+            throw  new MyException("多重账号信息");
+        }
 
+        ResetPassWord event = new ResetPassWord(id,accounts.get(0).getPhone(),password);
+        eventService.publish(event);
         return "操作成功";
     }
 

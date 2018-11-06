@@ -2,10 +2,7 @@ package cn.thinkfree.service.company;
 
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyUserSet;
-import cn.thinkfree.database.vo.CompanyInfoSEO;
-import cn.thinkfree.database.vo.CompanyInfoVo;
-import cn.thinkfree.database.vo.StaffsVO;
-import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -39,4 +36,11 @@ public interface CompanyInfoService {
      * @return
      */
     CompanyInfoVo companyDetails(String companyId);
+
+    /**
+     * 获取公司信息根据公司名
+     * @param name
+     * @return
+     */
+    List<SelectItem> listCompanyByLikeName(String name);
 }

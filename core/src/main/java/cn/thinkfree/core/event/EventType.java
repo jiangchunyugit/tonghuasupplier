@@ -1,4 +1,11 @@
 package cn.thinkfree.core.event;
 
-public class EventType {
+public enum  EventType {
+
+    /**
+     * 系统默认事件
+     */
+    SYSTEM;
+
+
 }

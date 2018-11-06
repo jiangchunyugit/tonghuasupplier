@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -351,5 +352,18 @@ public class AccountControllerTest extends AbsControllerTest {
         Assert.assertEquals(rsb.getData(),"操作成功!");
     }
 
+    @Test
+    public void me() throws Exception {
+
+        String rs = mvc.perform(get("/account/me")
+                .with(user(userVO))
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<Map<String,Object>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<Map<String,Object>>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"操作成功!");
+    }
 
 }

@@ -1,4 +1,4 @@
-package cn.thinkfree.database.event;
+package cn.thinkfree.database.event.account;
 
 import cn.thinkfree.core.event.AbsBaseEvent;
 
