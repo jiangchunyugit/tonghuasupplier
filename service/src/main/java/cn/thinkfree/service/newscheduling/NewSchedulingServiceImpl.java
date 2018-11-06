@@ -2,10 +2,7 @@ package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
-import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
-import cn.thinkfree.database.mapper.ProjectMapper;
-import cn.thinkfree.database.mapper.ProjectQuotationLogMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
@@ -38,6 +35,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     ProjectMapper projectMapper;
     @Autowired
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
+    @Autowired
+    ProjectSchedulingMapper projectSchedulingMapper;
 
 
     /**
@@ -112,7 +111,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         //组合延期天数
         for (ProjectBigSchedulingDetailsVO bigSchedulingVO : playBigList) {
-            bigSchedulingVO.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingVO.getPlanEndTime(),bigSchedulingVO.getActualEndTime()));
+            bigSchedulingVO.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingVO.getPlanEndTime(), bigSchedulingVO.getActualEndTime()));
         }
         return RespData.success(playBigList);
     }
@@ -198,5 +197,87 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             }
         }
         return RespData.success();
+    }
+
+    /**
+     * 大阶段完成,添加大阶段完成时间
+     *
+     * @param projectNo
+     * @param bigSort
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String completeBigScheduling(String projectNo, Integer bigSort) {
+        ProjectBigSchedulingDetails bigSchedulingDetail = null;
+        ProjectBigSchedulingDetails bigSchedulingDetails = new ProjectBigSchedulingDetails();
+        bigSchedulingDetails.setIsCompleted(Scheduling.COMPLETED_YES.getValue());
+        bigSchedulingDetails.setActualEndTime(new Date());
+        ProjectBigSchedulingDetailsExample detailsExample = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria detailsCriteria = detailsExample.createCriteria();
+        detailsCriteria.andProjectNoEqualTo(projectNo);
+        detailsCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        detailsExample.setOrderByClause("big_sort asc");
+        List<ProjectBigSchedulingDetails> allBigDetails = projectBigSchedulingDetailsMapper.selectByExample(detailsExample);
+        for (ProjectBigSchedulingDetails schedulingDetails : allBigDetails) {
+            if (schedulingDetails.getBigSort().equals(bigSort)){
+                bigSchedulingDetail = schedulingDetails;
+            }
+            if (schedulingDetails.getBigSort() > bigSort) {
+                ProjectBigSchedulingDetails nextBig = new ProjectBigSchedulingDetails();
+                nextBig.setActualStartTime(new Date());
+                detailsCriteria.andBigSortEqualTo(schedulingDetails.getBigSort());
+                int nextResult = projectBigSchedulingDetailsMapper.updateByExampleSelective(nextBig, detailsExample);
+                if (nextResult == 0) {
+                    return "修改排期下个阶段开始时间失败!";
+                }
+                break;
+            }
+        }
+        ProjectBigSchedulingDetailsExample detailsExampleTwo = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria detailsCriteriaTwo = detailsExampleTwo.createCriteria();
+        detailsCriteriaTwo.andProjectNoEqualTo(projectNo);
+        detailsCriteriaTwo.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        detailsCriteriaTwo.andBigSortEqualTo(bigSort);
+        int i = projectBigSchedulingDetailsMapper.updateByExampleSelective(bigSchedulingDetails, detailsExampleTwo);
+        if (i == 0) {
+            return "修改排期完成时间失败!";
+        }
+        if (System.currentTimeMillis() > bigSchedulingDetail.getPlanEndTime().getTime()) {
+            ProjectScheduling projectScheduling = new ProjectScheduling();
+            ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
+            ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
+            schedulingCriteria.andProjectNoEqualTo(projectNo);
+            schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+            List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
+            ProjectScheduling scheduling = projectSchedulings.get(0);
+            projectScheduling.setDelay(scheduling.getDelay() + 1);
+            int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
+            if (result == 0) {
+                return "修改延期时间失败!";
+            }
+        }
+        return "执行成功!!";
+    }
+
+    /**
+     * 开工申请
+     * @param projectNo
+     * @param bigSort
+     * @return
+     */
+    @Override
+    public String projectStart(String projectNo, Integer bigSort) {
+        ProjectBigSchedulingDetails bigSchedulingDetails = new ProjectBigSchedulingDetails();
+        bigSchedulingDetails.setActualStartTime(new Date());
+        ProjectBigSchedulingDetailsExample detailsExample = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria detailsCriteria = detailsExample.createCriteria();
+        detailsCriteria.andProjectNoEqualTo(projectNo);
+        detailsCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        detailsCriteria.andBigSortEqualTo(bigSort);
+        int i = projectBigSchedulingDetailsMapper.updateByExampleSelective(bigSchedulingDetails, detailsExample);
+        if (i == 0) {
+            return "修改排期实际开始时间失败!";
+        }
+        return "修改成功";
     }
 }

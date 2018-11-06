@@ -66,6 +66,14 @@ public class SchedulingController extends AbsBaseController {
         return schedulingService.createScheduling(projectNo,companyId);
     }
 
+//    @RequestMapping(value = "aa",method = RequestMethod.POST)
+//    @ApiOperation("完工测试")
+//    public MyRespBundle aa(
+//            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 ") String projectNo,
+//            @RequestParam(name = "bigSort") @ApiParam(name = "bigSort", value = "大阶段序号 ") Integer bigSort ){
+//        return sendSuccessMessage(schedulingService.projectStart(projectNo,bigSort));
+//    }
+
 
 
 
