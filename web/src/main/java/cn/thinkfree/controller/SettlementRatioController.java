@@ -208,4 +208,18 @@ public class SettlementRatioController extends AbsBaseController {
     }
 
 
+    /**
+     * 申请废除
+     * @return
+     */
+    @ApiOperation(value = "申请废除", notes = "申请废除")
+    @PostMapping("/applicationInvalid")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
+    public MyRespBundle<String> applicationInvalid(@ApiParam("结算比例编号")@RequestParam String ruleNumber){
+
+        boolean  result= settlementRatioService.applicationInvalid(ruleNumber);
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
 }
