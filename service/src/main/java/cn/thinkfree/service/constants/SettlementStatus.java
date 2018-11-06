@@ -8,6 +8,7 @@ public enum SettlementStatus {
 //状态   1 待审核 2审核通过 3审核不通过 4作废
 
 
+    UnSubmitted(0,"未提交"),
     /**
      * 待审核
      */
@@ -24,8 +25,15 @@ public enum SettlementStatus {
     /**
      * 作废
      */
-    AuditCAN(4,"作废");
+    AuditCAN(4,"作废"),
 
+    CANDecline(5,"申请作废"),
+
+    Effective(7,"生效"),
+
+    Invalid(8,"失效"),
+
+    EffectiveWait(9,"待生效");
 
     public final Integer code;
     public final String mes;

@@ -9,11 +9,11 @@ public enum AuditStatus {
     /**
      * 审批通过
      */
-    AuditPass(0,"审批通过"),
+    AuditPass(1,"审批通过"),
     /**
      * 审批拒绝
      */
-    AuditDecline(1,"审批拒绝");
+    AuditDecline(0,"审批拒绝");
 
 
     public final Integer code;

@@ -1,8 +1,8 @@
 package cn.thinkfree.service.remote;
 
-import cn.thinkfree.database.model.SystemMessage;
-
 import java.util.List;
+
+import cn.thinkfree.database.model.SystemMessage;
 
 public interface CloudService {
 
@@ -30,8 +30,9 @@ public interface CloudService {
      */
       RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 
-
-
-
-
+      /**
+       * 合同上传
+       *  @param filepath
+       */
+      public String uploadFile(String fileName);
 }

@@ -1,16 +1,23 @@
 package cn.thinkfree.service.remote;
 
-import cn.thinkfree.database.model.SystemMessage;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
+import cn.thinkfree.database.model.SystemMessage;
 
 @Service
 public class CloudServiceImpl implements CloudService {
@@ -26,7 +33,10 @@ public class CloudServiceImpl implements CloudService {
 
     @Value("${custom.cloud.noticeShowUrl}")
     String noticeShowUrl;
-
+    
+    @Value("${custom.cloud.fileUpload}")
+    private String fileUploadUrl;
+    
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
 
@@ -127,6 +137,33 @@ public class CloudServiceImpl implements CloudService {
         }
         return result;
     }
+
+	@Override
+	public String uploadFile(String fileName) {
+		// TODO Auto-generated method stub
+//      HttpHeaders headers = new HttpHeaders();
+//      headers.add("Authorization", "token");
+//      MediaType type = MediaType.parseMediaType("multipart/form-data");
+//      headers.setContentType(type);
+      File file  = new File(fileName);
+	   if(!file.exists()){
+	    	try {
+				file.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	   }
+	  List<File> files = new ArrayList<>();
+	  files.add(file);
+      MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
+	    form.add("files", null);
+//      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
+      RemoteResult<String>   result = invokeRemoteMethod(fileUploadUrl,form);
+      System.out.println("返回结果。。。"+result);
+        file.delete();
+		return null;
+	  }
 
 
 

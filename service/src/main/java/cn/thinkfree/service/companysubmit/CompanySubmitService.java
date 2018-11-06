@@ -95,4 +95,11 @@ public interface CompanySubmitService {
      * @return
      */
     CompanyDetailsVO companyDetails(String contractNumber,String companyId);
+
+    /**
+     * 签约完成
+     * @param companyId
+     * @return
+     */
+    String joinSuccess(String companyId);
 }

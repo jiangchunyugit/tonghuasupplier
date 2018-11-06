@@ -43,6 +43,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     ContractTemplateService contractTemplateService;
 
 
+
+
+
     /**
      * 查询审批不通过的原因
      * @param contractNumber
@@ -185,7 +188,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * 
      */
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--合同条款字典--吕启栋", notes = "合同条款设置(设置合同条款需要查询字典接口)")
-    @PostMapping("/queryContractDic/")
+    @PostMapping("/queryContractDic")
     public MyRespBundle<String> queryContractDic(@RequestParam String type){
     	 Map<String,String>  resMap  = contractTemplateService.queryContractDic(type);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
@@ -243,5 +246,18 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     	 String  result = companySubmitService.auditContract(pcAuditInfo);
 
         return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 签约完成
+     * @author lqd
+     * @return Message
+     *
+     */
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--签约完成--李阳")
+    @PostMapping("/joinSuccess")
+    public MyRespBundle<String> joinSuccess(@ApiParam("公司id")@RequestParam String companyId){
+        String resMap  = companySubmitService.joinSuccess(companyId);
+        return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
 }
