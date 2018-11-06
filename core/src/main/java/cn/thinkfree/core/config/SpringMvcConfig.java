@@ -9,6 +9,7 @@ import com.google.common.collect.Lists;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
@@ -76,10 +77,15 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport {
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         super.configureMessageConverters(converters);
         converters.add(responseBodyConverter());
+        converters.add(byteConvert());
     }
     @Bean
     public HttpMessageConverter<String> responseBodyConverter() {
         return new StringHttpMessageConverter(Charset.forName("UTF-8"));
+    }
+    @Bean
+    public HttpMessageConverter<byte[]> byteConvert(){
+        return new ByteArrayHttpMessageConverter();
     }
 
 }

@@ -13,7 +13,7 @@
     <result column="account_name" jdbcType="VARCHAR" property="accountName" />
     <result column="card_name" jdbcType="VARCHAR" property="cardName" />
     <result column="account_branch_name" jdbcType="VARCHAR" property="accountBranchName" />
-    <result column="account_number" jdbcType="INTEGER" property="accountNumber" />
+    <result column="account_number" jdbcType="VARCHAR" property="accountNumber" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="company_id" jdbcType="VARCHAR" property="companyId" />
@@ -138,7 +138,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{accountProvince,jdbcType=VARCHAR}, #{accountCity,jdbcType=VARCHAR}, 
       #{accountDistrict,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, #{cardName,jdbcType=VARCHAR}, 
-      #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{companyId,jdbcType=VARCHAR}, #{licenseUrl,jdbcType=VARCHAR}, 
       #{accountArea,jdbcType=VARCHAR}, #{accountType,jdbcType=SMALLINT}, #{taxpayerRegistrationNumber,jdbcType=VARCHAR}
       )
@@ -219,7 +219,7 @@
         #{accountBranchName,jdbcType=VARCHAR},
       </if>
       <if test="accountNumber != null">
-        #{accountNumber,jdbcType=INTEGER},
+        #{accountNumber,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -283,7 +283,7 @@
         account_branch_name = #{record.accountBranchName,jdbcType=VARCHAR},
       </if>
       <if test="record.accountNumber != null">
-        account_number = #{record.accountNumber,jdbcType=INTEGER},
+        account_number = #{record.accountNumber,jdbcType=VARCHAR},
       </if>
       <if test="record.createTime != null">
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -324,7 +324,7 @@
       account_name = #{record.accountName,jdbcType=VARCHAR},
       card_name = #{record.cardName,jdbcType=VARCHAR},
       account_branch_name = #{record.accountBranchName,jdbcType=VARCHAR},
-      account_number = #{record.accountNumber,jdbcType=INTEGER},
+      account_number = #{record.accountNumber,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       company_id = #{record.companyId,jdbcType=VARCHAR},
@@ -337,7 +337,7 @@
     </if>
   </update>
   
-  <select id="findPcCompanyFinancialByCompanyId" resultMap="BaseResultMap" parameterType="java.lang.String">
+  <select id="findPcCompanyFinancialByCompanyId" parameterType="java.lang.String" resultMap="BaseResultMap">
   
   select * from pc_company_financial where company_id = #{companyId}
   

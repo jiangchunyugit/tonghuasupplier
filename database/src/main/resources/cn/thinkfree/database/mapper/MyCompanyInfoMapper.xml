@@ -105,7 +105,7 @@
             <if test="legalPhone != null and legalPhone != ''">
                 and legal_phone like #{legalPhone}
             </if>
-            order by to_char(create_time, 'YYYY/MM/DD')
+            order by create_time
         </where>
 
 
@@ -187,78 +187,151 @@
 	= #{companyId}
 </select>
 <select id="list" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
-        SELECT
-	info.company_id,
-	role.role_name,
-	expand.comapny_nature as comapny_nature,
-	info.company_name,
-	contract.start_time,
-	contract.end_time,
-	contract.signed_time,
+    SELECT
+    info.company_id,
+    role.role_name,
+    expand.comapny_nature as comapny_nature,
+    info.company_name,
+    contract.start_time,
+    contract.end_time,
+    contract.signed_time,
     contract.contract_number,
-	info.legal_name,
-	childCompany.province_name as siteProvinceName,
-	childCompany.company_name site_name,
-	childCompany.city_name as siteCityName,
-	childCompany.area_name,
-	expand.contact_name,
-	expand.contact_phone,
-	info.deposit_money,
-	info.audit_status
-FROM
-	company_info info
-	LEFT JOIN (
-SELECT
-	info.company_id,
-	info.company_name,
-	info.province_code,
-	province.province_name,
-	info.city_code,
-	city.city_name,
-	area.area_code,
-	area.area_name
-FROM
-	company_info info
-	LEFT JOIN province province ON province.province_code = info.province_code
-	LEFT JOIN city city ON city.city_code = info.city_code
-	LEFT JOIN area area ON area.area_code = info.area_code
-WHERE (company_classify = 0 or company_classify = 1)
-     <if test="relationMap != null">
-        and info.company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
+    info.legal_name,
+    branch.province_name as siteProvinceName,
+    branch.city_branch_name site_name,
+    branch.city_name as siteCityName,
+    expand.contact_name,
+    expand.contact_phone,
+    info.deposit_money,
+    info.audit_status
+    FROM
+    company_info info
+    LEFT JOIN (
+    SELECT
+    cityBranch.id,
+    cityBranch.city_branch_name,
+    cityBranch.province_code,
+    province.province_name,
+    cityBranch.city_code,
+    city.city_name
+    FROM
+    pc_city_branch cityBranch
+    LEFT JOIN province province ON province.province_code = cityBranch.province_code
+    LEFT JOIN city city ON city.city_code = cityBranch.city_code
+
+    ) branch ON info.site_company_id = branch.id
+    LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
+    LEFT JOIN user_role_set role ON info.role_id = role.role_code
+    inner JOIN (
+    SELECT
+    id,
+    contract_number,
+    contract_status,
+    signed_time,
+    start_time,
+    end_time,
+    create_time,
+    company_id,
+    contract_url,
+    contract_remark
+    FROM
+    pc_contract_info
+    WHERE
+    id IN ( SELECT max( id ) FROM pc_contract_info GROUP BY company_id )
+    ) contract ON info.company_id = contract.company_id
+    WHERE info.company_classify = 2
+    <if test="relationMap != null">
+        and info.site_company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
         #{item}
-        </foreach>
-     </if>
-    <if test="provinceCode != null and provinceCode != ''">
-	    AND info.province_code = #{provinceCode}
+    </foreach>
     </if>
-        <if test="cityCode != null and cityCode != ''">
-            AND info.city_code = #{cityCode}
-        </if>
-        <if test="siteCode != null and siteCode != ''">
-            AND company_id = #{siteCode}
+
+    <if test="companyId != null and companyId != ''">
+        AND info.company_id = #{companyId}
+    </if>
+    <if test="startTime != null and startTime != ''">
+        AND to_char(contract.start_time, 'YYYY-MM-DD') = #{startTime}
+    </if>
+    <if test="roleId != null and roleId != ''">
+        AND info.role_id = #{roleId}
+    </if>
+    <if test="param != null and param != ''">
+        AND ( info.company_name = #{param} OR info.legal_name = #{param}
+        OR expand.contact_name = #{param} OR expand.contract_number = #{param} )
+    </if>
+    <if test="auditStatus != null and auditStatus != ''">
+        AND info.audit_status = #{auditStatus}
+    </if>
+    <if test="signedTime != null and signedTime != ''">
+        AND to_char(contract.signed_time, 'YYYY-MM-DD') = #{signedTime}
+    </if>
+    <if test="orderList != null">
+        order by <foreach collection="orderList" index="key" item="value" separator="," >
+        ${key} ${value}
+    </foreach>
+    </if>
+    </select>
+
+    <select id="downLoad" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
+        SELECT
+        info.company_id,
+        role.role_name,
+        expand.comapny_nature as comapny_nature,
+        info.company_name,
+        contract.start_time,
+        contract.end_time,
+        contract.signed_time,
+        contract.contract_number,
+        info.legal_name,
+        branch.province_name as siteProvinceName,
+        branch.city_branch_name site_name,
+        branch.city_name as siteCityName,
+        expand.contact_name,
+        expand.contact_phone,
+        info.deposit_money,
+        info.audit_status
+        FROM
+        company_info info
+        LEFT JOIN (
+        SELECT
+        cityBranch.id,
+        cityBranch.city_branch_name,
+        cityBranch.province_code,
+        province.province_name,
+        cityBranch.city_code,
+        city.city_name
+        FROM
+        pc_city_branch cityBranch
+        LEFT JOIN province province ON province.province_code = cityBranch.province_code
+        LEFT JOIN city city ON city.city_code = cityBranch.city_code
+
+        ) branch ON info.site_company_id = branch.id
+        LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
+        LEFT JOIN user_role_set role ON info.role_id = role.role_code
+        inner JOIN (
+        SELECT
+        id,
+        contract_number,
+        contract_status,
+        signed_time,
+        start_time,
+        end_time,
+        create_time,
+        company_id,
+        contract_url,
+        contract_remark
+        FROM
+        pc_contract_info
+        WHERE
+        id IN ( SELECT max( id ) FROM pc_contract_info GROUP BY company_id )
+        ) contract ON info.company_id = contract.company_id
+        WHERE info.company_classify = 2
+        <if test="relationMap != null">
+            and info.site_company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
+            #{item}
+        </foreach>
         </if>
 
-	) childCompany ON info.root_company_id = childCompany.company_id
-	LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
-	LEFT JOIN user_role_set role ON info.role_id = role.role_code
-	LEFT JOIN (
-SELECT
-	id,
-	contract_number,
-	contract_status,
-	signed_time,
-	start_time,
-	end_time,
-	create_time,
-	company_id,
-	contract_url,
-	contract_remark
-FROM
-	pc_contract_info
-WHERE
-	id IN ( SELECT max( id ) FROM pc_contract_info GROUP BY company_id )
-	) contract ON info.company_id = contract.company_id
-WHERE info.company_classify = 2
         <if test="companyId != null and companyId != ''">
             AND info.company_id = #{companyId}
         </if>
@@ -276,7 +349,18 @@ WHERE info.company_classify = 2
             AND info.audit_status = #{auditStatus}
         </if>
         <if test="signedTime != null and signedTime != ''">
-            AND contract.signed_time = #{signedTime}
+            AND to_char(contract.signed_time, 'YYYY-MM-DD') = #{signedTime}
         </if>
+        <if test="companyIds != null">
+            and info.company_id in <foreach item="item" index="index" collection="companyIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        </if>
+        <if test="orderList != null">
+            order by <foreach collection="orderList" index="key" item="value" separator="," >
+            ${key} ${value}
+        </foreach>
+        </if>
+
     </select>
 </mapper>

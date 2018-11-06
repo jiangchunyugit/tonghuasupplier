@@ -1,11 +1,13 @@
 package cn.thinkfree.service.contract;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
 
+import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
@@ -35,7 +37,7 @@ public interface ContractService {
 	 * @param ContractSEO
 	 * @return map  code mess
 	 */
-    Map<String,String>  auditContract(String contractNumber,String companyId,String auditStatus,String auditCase);
+    boolean auditContract(String contractNumber,String companyId,String auditStatus,String auditCase);
     
     
     
@@ -45,7 +47,7 @@ public interface ContractService {
 	 * @param ContractSEO
 	 * @return String mess
 	 */
-    Map<String,String>   ackEarnestMoney(String contractNumber,String companyId);
+    boolean  ackEarnestMoney(String contractNumber,String companyId);
     
     
     
@@ -55,7 +57,7 @@ public interface ContractService {
   	 * @param ContractSEO
   	 * @return String mess
   	 */
-    ContractDetails  contractDetails(String contractNumber,String companyId);
+    List<Map<String,Object>>   contractDetails(String contractNumber,String companyId);
      
      
     
@@ -74,7 +76,7 @@ public interface ContractService {
       * @param contractNumber
       * @return map  code 0 成功  1 失败  mess 失败的原因
       */
-      Map<String,String> createContractDoc(String contractNumber);
+      String createContractDoc(String contractNumber);
       
       
       /**
@@ -82,7 +84,7 @@ public interface ContractService {
        *  @param contractNumber
        *  @param map 合同
        */
-      Map<String,String>  insertContractClause(String contractNumber,String companyId,Map<String,String> map);
+      boolean  insertContractClause(String contractNumber,String companyId,ContractClauseVO contractClausevo);
       
       
       
@@ -101,5 +103,50 @@ public interface ContractService {
        */
       Map<String,Object> getContractDetailInfo(String contractNumber,String companyId);
       
+      
+      
+
+      /**
+       * 根据订单号和订单类型生成合同和公司
+       * @param  companyId , orderNumber, type (02设计合同 03装饰合同)
+       * @return String 合同编号
+       */
+      String createOrderContract(String companyId,String orderNumber,String type);
+      
+      /**
+       * 审核 业务合同 
+       * @param orderNumber 
+       * @auditStatus 0 不通过  1 通过
+       */
+      boolean auditStatusOrderContract(String orderNumber,String auditStatus);
+      
+      /**
+       * 根据订单号获取
+       * @param  orderNumber 
+       * @return String pdf_url 
+       */
+      String getPdfUrlByOrderNumber(String orderNumber);
+      
+      /**
+       * 获取合同中的结算比例
+       * @param contractNumber
+       * @param CompanyId
+       * @param roleType公司类型
+       */
+      Map<String, Object>  balanceInfo(String contractNumber, String CompanyId, String roleType);
+      
+      
+      /**
+       * 新增设计合同
+       * @param  orderNumber 
+       * @param  orderNumber 
+       */
+      boolean insertDesignOrderContract(String orderNumber,String companyId,Map<String,String> paramMap);
+      
+      /**
+       * 新增施工合同
+       * @param  orderNumber 
+       */
+      boolean insertRoadWorkOrderContract(String orderNumber,String companyId,Map<String,String> paramMap);
       
 }

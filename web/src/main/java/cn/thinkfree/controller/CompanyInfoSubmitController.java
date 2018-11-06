@@ -1,11 +1,14 @@
 package cn.thinkfree.controller;
 
+
 import java.util.Map;
 
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
+
 import com.github.pagehelper.PageInfo;
-import org.checkerframework.checker.units.qual.A;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,13 +44,40 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 
 
     /**
+     * 查询审批不通过的原因
+     * @param contractNumber
+     * @return
+     */
+    @RequestMapping(value = "/findAuditCase", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--运营后台--公司管理--设计/装饰公司--列表--状态--不通过原因--李阳")
+    public MyRespBundle<PcAuditInfo> findAuditCase(@ApiParam("合同编码")@RequestParam(value = "contractNumber") String contractNumber){
+        PcAuditInfo auditInfo = companySubmitService.findAuditCase(contractNumber);
+        return sendJsonData(success, "操作成功", auditInfo);
+    }
+
+
+    /**
+     * 审批详情查询
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/findAuditStatus", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--装饰/设计公司管理中心--入驻2--签约完成--审批详情查询--李阳")
+    public MyRespBundle<AuditInfoVO> findAuditStatus(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
+        AuditInfoVO auditInfoVO = companySubmitService.findAuditStatus(companyId);
+        return sendJsonData(success, "操作成功", auditInfoVO);
+    }
+
+    /**
      * 入驻公司资质变更回显
      * @param companyId
      * @return
      */
     @RequestMapping(value = "/findCompanyInfo", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="入驻公司资质变更回显")
+    @ApiOperation(value="前端--装饰/设计公司管理中心--公司变更页面--资质变更回显--李阳")
     public MyRespBundle<CompanySubmitVo> findCompanyInfo(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
         CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
         return sendJsonData(success, "操作成功", companySubmitVo);
@@ -60,7 +90,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      */
     @RequestMapping(value = "/changeCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="入驻公司资质变更更新")
+    @ApiOperation(value="前端--装饰/设计公司管理中心--公司变更页面--资质变更提交--李阳")
     public MyRespBundle<String> changeCompanyInfo(@ApiParam("变更的公司资质信息")CompanyTemporaryVo companyTemporaryVo){
         boolean flag = companySubmitService.changeCompanyInfo(companyTemporaryVo);
         if(flag){
@@ -76,7 +106,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      */
     @RequestMapping(value = "/findCompanyTemporaryInfo", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="入驻公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口")
+    @ApiOperation(value="前端--运营后台--公司管理--资质变更--办理--公司详情--公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口--李阳")
     public MyRespBundle<PcAuditTemporaryInfo> findCompanyTemporaryInfo(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
         PcAuditTemporaryInfo pcAuditTemporaryInfo = companySubmitService.findCompanyTemporaryInfo(companyId);
         return sendJsonData(success, "操作成功", pcAuditTemporaryInfo);
@@ -90,7 +120,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @param auditCase
      * @return
      */
-    @ApiOperation(value = "入驻公司资质变更审批。注：申请列表的申请事项如果是资质变更，则使用此接口", notes = "运营审核")
+    @ApiOperation(value = "前端--运营后台----公司详情--公司变更审批--李阳", notes = "运营审核")
     @PostMapping("/auditChangeCompany")
     @MyRespBody
     public MyRespBundle<String> auditChangeCompany(
@@ -105,7 +135,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 
     @RequestMapping(value = "/upCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="审核资质上传")
+    @ApiOperation(value="前端--装饰/设计公司管理中心--完善公司资质--提交--李阳")
     public MyRespBundle<String> upCompanyInfo(@ApiParam("公司资质信息")CompanySubmitVo companySubmitVo){
         boolean flag = companySubmitService.upCompanyInfo(companySubmitVo);
         if(flag){
@@ -119,8 +149,8 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="公司申请信息审批列表")
-    public MyRespBundle<String> list(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--列表--李阳")
+    public MyRespBundle<PageInfo<CompanyListVo>> list(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
         PageInfo<CompanyListVo> pageInfo = companySubmitService.list(companyListSEO);
         return sendJsonData(success, "操作成功", pageInfo);
     }
@@ -130,24 +160,22 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      */
     @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
     @ExceptionHandler(value=Exception.class)
-    @ApiOperation(value="公司申请信息审批列表导出")
+    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--导出excel--李阳")
     public void downLoad(HttpServletResponse response, @ApiParam("条件查询参数")CompanyListSEO companyListSEO){
         companySubmitService.downLoad(response, companyListSEO);
     }
 
-    //补全合同
-    
     /**
      * 查看合同
      * @author lqd
      * @return Message
      * 
      */
-    @ApiOperation(value = "查看合同", notes = "查看合同",consumes = "application/text")
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同----李阳", notes = "查看合同",consumes = "application/text")
     @PostMapping("/getContractDetailInfo")
-    public MyRespBundle<String> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
+    public MyRespBundle<Map<String,Object>> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
     		@ApiParam("公司编号")@RequestParam(required = true) String companyId){
-    	Map<String,Object>   resMap  =  contractService.getContractDetailInfo(contractNumber, companyId);
+    	Map<String,Object>  resMap  =  contractService.getContractDetailInfo(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     /**
@@ -156,10 +184,10 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @return Message
      * 
      */
-    @ApiOperation(value = "查看合同条款字典", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/text")
-    @PostMapping("/queryContractDic/")
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--合同条款字典--吕启栋", notes = "合同条款设置(设置合同条款需要查询字典接口)")
+    @PostMapping("/queryContractDic")
     public MyRespBundle<String> queryContractDic(@RequestParam String type){
-    	 Map<String,String>  resMap  =  contractTemplateService.queryContractDic(type);
+    	 Map<String,String>  resMap  = contractTemplateService.queryContractDic(type);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     
@@ -171,18 +199,19 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @author lqd
      * @return Message
      */
-    @ApiOperation(value = "合同条款设置", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/json")
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--合同条款设置--吕启栋", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/json")
     @PostMapping("/settingContractClause/{contractNumber}/{companyId}")
     @MyRespBody
     public MyRespBundle<String> settingContractClause(@PathVariable("contractNumber") String contractNumber,
     		@PathVariable("companyId") String companyId,
-    		@ApiParam("合同条款key和value值")@RequestBody (required = true) Map<String,String> paramMap){
-    	 Map<String,String>  resMap  =  contractService.insertContractClause(contractNumber, companyId, paramMap);
-        return sendJsonData(ResultMessage.SUCCESS,resMap);
+    		@ApiParam("合同条款key和value值")@RequestBody ContractClauseVO contractClausevo){
+    	
+    	boolean  falg  =  contractService.insertContractClause(contractNumber, companyId, contractClausevo);
+    	 
+        return sendJsonData(ResultMessage.SUCCESS,falg);
     }
 
 
-    
     
     /**
      * 公司详情
@@ -190,12 +219,12 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @return Message
      */
     
-    @ApiOperation(value = "公司详情", notes = "公司详情")
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--公司详情--李阳", notes = "公司详情")
     @PostMapping("/companyDetails")
     @MyRespBody
-    public MyRespBundle<String> companyDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
+    public MyRespBundle<CompanyDetailsVO> companyDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-    	ContractDetails jbj =  contractService.contractDetails(contractNumber, companyId);
+        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
@@ -205,25 +234,14 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @author lqd
      * @return Message
      */
-    @ApiOperation(value = "资质审批", notes = "运营审核")
+    @ApiOperation(value = "前端--运营后台----公司管理---查看合同--资质审批--李阳", notes = "运营审核")
     @PostMapping("/auditCompany")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> auditCompany(
-    		@ApiParam("公司编号")@RequestParam() String companyId,
-    		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
-    		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
+    public MyRespBundle<String> auditCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
         
-    	 Map<String,String>  resMap = companySubmitService.auditContract(companyId,auditStatus,auditCase);
-    	 
-    	 String code = String.valueOf(resMap.get("code"));
-    	 
-    	 String mes = String.valueOf(resMap.get("msg"));
-    	 
-    	 if(code.equals("1")){//失败的情况
-    		 return sendFailMessage(mes);
-    	 }else{//成功的情况
-    		 return sendSuccessMessage(mes);
-    	 }
+    	 String  result = companySubmitService.auditContract(pcAuditInfo);
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
     }
 }

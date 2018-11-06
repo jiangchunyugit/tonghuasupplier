@@ -17,7 +17,7 @@ import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.account.AccountVO;
 import cn.thinkfree.database.vo.account.ThirdAccountVO;
-import cn.thinkfree.service.constants.UserRegisterType;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.utils.AccountHelper;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;

@@ -1,9 +1,9 @@
 package cn.thinkfree.core.constants;
 
 public enum ResultMessage {
-        SUCCESS(200,"操作成功!"),
+        SUCCESS(200,"请求成功!"),
         FAIL(400,"参数错误"),
-        ERROR(500,"操作失败!");
+        ERROR(500,"请求失败!");
 
         public final Integer code ;
         public final String message;

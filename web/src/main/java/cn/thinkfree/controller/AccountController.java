@@ -10,19 +10,19 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.constants.UserEnabled;
-import cn.thinkfree.database.model.SystemPermission;
-import cn.thinkfree.database.model.SystemPermissionResource;
-import cn.thinkfree.database.model.SystemResource;
-import cn.thinkfree.database.model.SystemRole;
+import cn.thinkfree.database.mapper.UserRoleSetMapper;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.account.*;
-import cn.thinkfree.service.account.PermissionResourceService;
-import cn.thinkfree.service.account.PermissionService;
-import cn.thinkfree.service.account.SystemResourceService;
-import cn.thinkfree.service.account.SystemRoleService;
+import cn.thinkfree.service.account.*;
+import cn.thinkfree.service.companyuser.CompanyUserService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
+import cn.thinkfree.service.user.UserService;
 import cn.thinkfree.service.userResource.PcSystemResourceService;
 import com.github.pagehelper.PageInfo;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,11 +53,21 @@ public class AccountController extends AbsBaseController {
     @Autowired
     PcUserInfoService pcUserInfoService;
 
+    @Autowired
+    UserRoleSetService userRoleSetService;
+
+    @Autowired
+    CompanyUserService CompanyUserService;
+
+    @Autowired
+    UserService userService;
+
     /**
      * 创建权限
      * @param permissionVO 权限
      * @return
      */
+    @ApiOperation(value="新增权限", notes="新增权限")
     @PostMapping("/permission")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新增权限信息")
@@ -75,6 +85,7 @@ public class AccountController extends AbsBaseController {
      * @param permissionSEO
      * @return
      */
+    @ApiOperation(value="权限列表", notes="权限列表")
     @GetMapping("/permission")
     @MyRespBody
     public MyRespBundle<PageInfo<SystemPermission>> permissions(PermissionSEO permissionSEO){
@@ -88,6 +99,7 @@ public class AccountController extends AbsBaseController {
      * @param id 主键
      * @return
      */
+    @ApiOperation(value="权限详情", notes="权限详情")
     @GetMapping("/permission/{id}")
     @MyRespBody
     public MyRespBundle<SystemPermission> findPermission(@PathVariable("id") Integer id ){
@@ -103,6 +115,7 @@ public class AccountController extends AbsBaseController {
      * @param permissionVO 权限信息
      * @return
      */
+    @ApiOperation(value="权限编辑", notes="权限编辑")
     @PostMapping("/permission/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "编辑权限信息")
@@ -121,11 +134,12 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="权限资源状况", notes="权限资源状况")
     @GetMapping("/permission/{id}/resource")
     @MyRespBody
     public MyRespBundle<List> resource(@PathVariable("id")Integer id){
         List<SystemResource> resources = systemResourceService.listResourceByPermissionID(id);
-        Collections.sort(resources, Comparator.comparingInt(SystemResource::getId));
+        Collections.sort(resources, Comparator.comparingInt(SystemResource::getSortNum));
         return sendJsonData(ResultMessage.SUCCESS,resources);
     }
 
@@ -136,6 +150,7 @@ public class AccountController extends AbsBaseController {
      * @param resources
      * @return
      */
+    @ApiOperation(value="权限授权", notes="权限授权")
     @PostMapping("/permission/{id}/resource")
     @MyRespBody
     @MySysLog(action = SysLogAction.GRANT,module = SysLogModule.PC_PERMISSION,desc = "分配资源")
@@ -151,6 +166,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="启用权限", notes="启用权限")
     @PostMapping("/permission/{id}/enable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用权限")
@@ -166,6 +182,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="禁用权限", notes="禁用权限")
     @PostMapping("/permission/{id}/disable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "禁用权限")
@@ -179,6 +196,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="删除权限", notes="删除权限")
     @DeleteMapping("/permission/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除权限")
@@ -195,6 +213,7 @@ public class AccountController extends AbsBaseController {
      * @param systemRoleVO
      * @return
      */
+    @ApiOperation(value="新增角色", notes="新增角色")
     @PostMapping("/role")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "创建角色")
@@ -212,6 +231,7 @@ public class AccountController extends AbsBaseController {
      * @param systemRoleSEO
      * @return
      */
+    @ApiOperation(value="角色列表", notes="角色列表")
     @GetMapping("/role")
     @MyRespBody
     public MyRespBundle<PageInfo<SystemRole>> roles(SystemRoleSEO systemRoleSEO){
@@ -227,6 +247,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="角色详情", notes="角色详情")
     @GetMapping("/role/{id}")
     @MyRespBody
     public MyRespBundle<SystemRole> detail(@PathVariable("id")Integer id){
@@ -240,6 +261,7 @@ public class AccountController extends AbsBaseController {
      * @param systemRoleVO
      * @return
      */
+    @ApiOperation(value="编辑角色", notes="编辑角色")
     @PostMapping("/role/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "编辑角色")
@@ -255,6 +277,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="角色权限状况", notes="角色权限状况")
     @GetMapping("/role/{id}/permission")
     @MyRespBody
     public MyRespBundle<List<SystemPermission>> rolePermission(@PathVariable Integer id ){
@@ -271,6 +294,7 @@ public class AccountController extends AbsBaseController {
      * @param permissions
      * @return
      */
+    @ApiOperation(value="角色授权", notes="角色授权")
     @PostMapping("/role/{id}/permission")
     @MyRespBody
     @MySysLog(action = SysLogAction.GRANT,module = SysLogModule.PC_PERMISSION,desc = "授予权限")
@@ -286,6 +310,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="停用角色", notes="停用角色")
     @PostMapping("/role/{id}/disable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "停用角色")
@@ -299,6 +324,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="启用角色", notes="启用角色")
     @PostMapping("/role/{id}/enable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用角色")
@@ -312,6 +338,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="删除角色", notes="删除角色")
     @DeleteMapping("/role/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除角色")
@@ -326,6 +353,7 @@ public class AccountController extends AbsBaseController {
      * @param accountVO
      * @return
      */
+    @ApiOperation(value="创建账号", notes="创建账号")
     @PostMapping("/info")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新建账号")
@@ -339,6 +367,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="账号详情", notes="账号详情")
     @GetMapping("/info/{id}")
     @MyRespBody
     public MyRespBundle<AccountVO> details(@PathVariable String id){
@@ -352,6 +381,7 @@ public class AccountController extends AbsBaseController {
      * @param accountVO
      * @return
      */
+    @ApiOperation(value="账号编辑", notes="账号编辑")
     @PostMapping("/info/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "修改账号信息")
@@ -365,6 +395,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="重置密码", notes="重置密码")
     @PostMapping("/info/{id}/reset")
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "重置密码")
@@ -379,6 +410,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="删除账号", notes="删除账号")
     @DeleteMapping("/info/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PERMISSION,desc = "删除账号")
@@ -393,6 +425,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="启用账号", notes="启用账号")
     @PostMapping("/info/{id}/enable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用账号")
@@ -406,6 +439,7 @@ public class AccountController extends AbsBaseController {
      * @param id
      * @return
      */
+    @ApiOperation(value="禁用账号", notes="禁用账号")
     @PostMapping("/info/{id}/disable")
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "停用账号")
@@ -413,5 +447,109 @@ public class AccountController extends AbsBaseController {
         String mes = pcUserInfoService.updateAccountState(id,UserEnabled.Disable.code);
         return sendSuccessMessage(SUCCESS.message);
     }
+
+
+    /**
+     * 创建企业角色类型
+     * @param userRoleSet
+     * @return
+     */
+    @ApiOperation(value="创建企业角色类型", notes="创建企业角色类型")
+    @PostMapping("/enterprise/role")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "创建企业角色")
+    public MyRespBundle<String> enterpriseRole(UserRoleSet userRoleSet){
+        String mes = userRoleSetService.saveEnterPriseRole(userRoleSet);
+        return sendJsonData(ResultMessage.SUCCESS,mes);
+    }
+
+    /**
+     * 查询企业角色类型
+     * @param id
+     * @return
+     */
+    @ApiOperation(value="查询企业角色类型", notes="企业角色类型详情")
+    @GetMapping("/enterprise/role/{id}")
+    @MyRespBody
+    public MyRespBundle<UserRoleSet> detailEnterPriseRole(@PathVariable Integer id){
+        UserRoleSet result = userRoleSetService.findUserRoleSetVO(id);
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 企业角色类型列表
+     * @param userRoleSetSEO
+     * @return
+     */
+    @ApiOperation(value="企业角色类型列表", notes="企业角色类型列表")
+    @GetMapping("/enterprise/role")
+    @MyRespBody
+    public MyRespBundle<PageInfo<UserRoleSet>>  enterpriseRoles(UserRoleSetSEO userRoleSetSEO){
+        PageInfo<UserRoleSet> result = userRoleSetService.pageEnterPriseRole(userRoleSetSEO);
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 企业角色编辑
+     * @param id
+     * @param userRoleSet
+     * @return
+     */
+    @ApiOperation(value="企业角色类型编辑", notes="企业角色类型编辑")
+    @PostMapping("/enterprise/role/{id}")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "企业角色编辑")
+    public MyRespBundle<String> enterPriseRole(@PathVariable Integer id,UserRoleSet userRoleSet){
+        String mes = userRoleSetService.updateEnterPriseRole(id,userRoleSet);
+        return sendSuccessMessage(mes);
+    }
+
+    /**
+     * 获取企业角色资源
+     * @param id
+     * @return
+     */
+    @ApiOperation(value="企业角色类型资源", notes="企业角色类型资源")
+    @GetMapping("/enterprise/role/{id}/resource")
+    @MyRespBody
+    public MyRespBundle<List<SystemResource>> enterPriseRoleResource(@PathVariable Integer id){
+        List<SystemResource> resources = systemResourceService.listResourceByEnterPriseRoleID(id);
+        Collections.sort(resources, Comparator.comparingInt(SystemResource::getSortNum));
+        return sendJsonData(ResultMessage.SUCCESS,resources);
+    }
+
+    /**
+     * 编辑企业角色资源
+     * @param id
+     * @param resources
+     * @return
+     */
+    @ApiOperation(value="企业角色类型资源分配", notes="企业角色类型资源分配")
+    @PostMapping("/enterprise/role/{id}/resource")
+    @MyRespBody
+    public MyRespBundle<String> enterPriseRoleGrantResource(@PathVariable Integer id,@RequestParam(value = "resource",required = false) Integer[] resources){
+
+        String mes = CompanyUserService.updateEnterPriseRoleResource(id,resources);
+
+        return sendJsonData(ResultMessage.SUCCESS,mes);
+    }
+
+
+    /**
+     * 变更个人信息
+     * @param changeMeVO
+     * @return
+     */
+    @PostMapping("/me")
+    @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "修改个人信息")
+    public MyRespBundle<String> changeMe(ChangeMeVO changeMeVO){
+        String mes = userService.updateUserInfo(changeMeVO);
+        return sendJsonData(ResultMessage.SUCCESS,mes);
+    }
+
+
+
+
 
 }

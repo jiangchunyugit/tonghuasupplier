@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.mysql.fabric.xmlrpc.base.Data;
 
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
@@ -105,27 +106,35 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
         //添加列
         List<List<Object>> rows = new ArrayList<>();
         List<Object> row = null;
-        PageHelper.startPage(ratio.getPage(),ratio.getRows());
-        SettlementRatioInfoExample example = new SettlementRatioInfoExample();
-		example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%")
-		.andFeeNameLike("%"+ratio.getRatioName()+"%")
-		.andCreateUserLike("%"+ratio.getCreateUser()+"%")
-		.andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime())
-		.andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime())
-		.andStatusEqualTo(ratio.getAuditStatus());
-		if(!StringUtils.isEmpty(ratio.getRatioStatus())){
+		PageHelper.startPage(ratio.getPage(), ratio.getRows());
+		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
+		if(!StringUtils.isBlank(ratio.getRatioNumber())){
+			example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%");
+		}
+		else if(!StringUtils.isBlank(ratio.getRatioName())){
+			example.createCriteria().andFeeNameLike("%"+ratio.getRatioName()+"%");
+		}else if(!StringUtils.isBlank(ratio.getCreateUser())){
+			example.createCriteria().andCreateUserLike("%"+ratio.getCreateUser()+"%");
+		}else if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
+			example.createCriteria().andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
+		}else if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
+			example.createCriteria().andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
+		}else if(!StringUtils.isBlank(ratio.getAuditStatus())){
+			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
+		}
+		if(!StringUtils.isBlank(ratio.getRatioStatus())){
 			if(ratio.getRatioStatus().equals("0")){//0生效 1失效 2作废 3未生效
 				example.createCriteria()
-				.andEffectStartTimeGreaterThanOrEqualTo(new Date())
-				.andEffectEndTimeLessThanOrEqualTo(new Date());
+						.andEffectStartTimeGreaterThanOrEqualTo(new Date())
+						.andEffectEndTimeLessThanOrEqualTo(new Date());
 			}else if(ratio.getRatioStatus().equals("1")){
-				 example.createCriteria()
-				.andEffectStartTimeLessThan(new Date())
-				.andEffectEndTimeGreaterThan(new Date());
+				example.createCriteria()
+						.andEffectStartTimeLessThan(new Date())
+						.andEffectEndTimeGreaterThan(new Date());
 			}else if(ratio.getRatioStatus().equals("2")){
-				 example.createCriteria().andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
+				example.createCriteria().andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
 			}else if(ratio.getRatioStatus().equals("3")){
-				 example.createCriteria().andStatusEqualTo(SettlementStatus.AuditWait.getCode());
+				example.createCriteria().andStatusEqualTo(SettlementStatus.AuditWait.getCode());
 			}
 		}
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
@@ -309,6 +318,34 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	                .format(new Date()) + df.format(random.nextInt(100));
 		return no;
 	}
+
+
+	/**
+	 * 
+	 * 查询有效的 的结算比列
+	 * 平台服务管理费比列 0
+	 *  设计费计算比列
+	 */
+	@Override
+	public List<String>  getRatiloList(String code) {
+		List<String> resList = new ArrayList<String>();
+		Date now = new Date();
+		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
+		example.createCriteria().andFeeDicIdEqualTo(code).
+		andEffectStartTimeLessThan(now).andEffectEndTimeGreaterThanOrEqualTo(now);
+		List<SettlementRatioInfo>  list = settlementRatioInfoMapper.selectByExample(example);
+		for (int i = 0; i < list.size(); i++) {
+			String amount = list.get(i).getAmount();
+			String ratio = list.get(i).getRatio();
+			if(!StringUtils.isEmpty(ratio)){
+				resList.add(ratio);
+			}else if(!StringUtils.isEmpty(ratio)){
+				resList.add(amount);
+			}
+		}
+		return resList;
+	}
+	
 
 
 }

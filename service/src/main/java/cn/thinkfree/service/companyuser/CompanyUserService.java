@@ -22,7 +22,7 @@ public interface CompanyUserService {
      * 添加或者修改入驻公司用户
      * @author lvqidong
      */
-    boolean  inserOrUpdateCompanyUser(CompanyUserVo companyUser);
+    boolean insertOrUpdateCompanyUser(CompanyUserVo companyUser);
 
 
     /**
@@ -53,4 +53,12 @@ public interface CompanyUserService {
      * @author lvqidong
      */
     boolean inserRoleInfo(CompanyRole user);
+
+    /**
+     * 更新企业角色资源
+     * @param id
+     * @param resources
+     * @return
+     */
+    String updateEnterPriseRoleResource(Integer id, Integer[] resources);
 }

@@ -63,7 +63,6 @@ public class SecuritySuccessAuthHandler
         userModel.put("createTime",(user.getCreateTime() !=null) ?user.getCreateTime().getTime() : null);
         result.put("userModel",userModel);
         String token = jwtUtils.generateToken(user);
-        System.out.println(token);
         result.put("token","Bearer "+token);
 
         sendAjaxResult(request,response,result);

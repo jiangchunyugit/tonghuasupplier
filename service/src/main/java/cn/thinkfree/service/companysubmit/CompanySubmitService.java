@@ -2,11 +2,9 @@ package cn.thinkfree.service.companysubmit;
 
 import java.util.Map;
 
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
-import cn.thinkfree.database.vo.CompanyListSEO;
-import cn.thinkfree.database.vo.CompanyListVo;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.CompanyTemporaryVo;
+import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +14,21 @@ import javax.servlet.http.HttpServletResponse;
  * 公司入驻业务
  */
 public interface CompanySubmitService {
+
+    /**
+     * 查询审批不通过的原因
+     * @param contractNumber
+     * @return
+     */
+    PcAuditInfo findAuditCase(String contractNumber);
+
+    /**
+     * 审批详情查询
+     * @param companyId
+     * @return
+     */
+    AuditInfoVO findAuditStatus(String companyId);
+
     /**
      * 公司资质上传是否成功
      * @param companySubmitVo 公司资质
@@ -30,7 +43,7 @@ public interface CompanySubmitService {
      * 
      */
     
-    Map<String,String>  auditContract(String companyId,String auditStatus,String auditCase);
+    String  auditContract(PcAuditInfo pcAuditInfo);
 
     /**
      * 公司列表
@@ -74,4 +87,12 @@ public interface CompanySubmitService {
      * @return
      */
     PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId);
+
+    /**
+     * 公司详情
+     * @param contractNumber
+     * @param companyId
+     * @return
+     */
+    CompanyDetailsVO companyDetails(String contractNumber,String companyId);
 }

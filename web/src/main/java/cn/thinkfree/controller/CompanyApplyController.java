@@ -39,7 +39,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="发送邮件验证码")
+    @ApiOperation(value="前端--设计/装饰公司申请--发送邮件验证码--李阳")
     public void sendMessage(@ApiParam("邮箱") @RequestParam String email){
         companyApplyService.sendMessage(email);
     }
@@ -51,7 +51,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/applyThink", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="添加公司申请事项：入驻，资质变更，续约")
+    @ApiOperation(value="前端--设计/装饰公司管理中心--设计/装饰公司入驻--入驻申请--注：添加公司申请事项-->0：入驻，1：资质变更 2:续约--李阳")
     public MyRespBundle<String> applyThink(@ApiParam("申请信息")@RequestBody PcApplyInfoSEO pcApplyInfoSEO){
         boolean flag = companyApplyService.addApplyInfo(pcApplyInfoSEO);
         if(flag){
@@ -67,7 +67,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="公司管理")
+    @ApiOperation(value="前端--运营后台--公司管理--列表--李阳")
     public MyRespBundle<PageInfo<PcApplyInfoVo>> list(@ApiParam("申请信息查询参数")CompanyApplySEO companyApplySEO){
         PageInfo<PcApplyInfoVo> pageInfo = companyApplyService.findByParam(companyApplySEO);
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
@@ -81,7 +81,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/delApply", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="公司管理---->删除")
+    @ApiOperation(value="前端--运营后台--公司管理--操作--删除--申请id--李阳")
     public MyRespBundle<String> delApply(@RequestParam(value = "id") Integer id){
         boolean flag = companyApplyService.updateApply(id);
         if(flag){
@@ -96,7 +96,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/findById", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="公司管理---->办理")
+    @ApiOperation(value="前端--运营后台--公司管理--操作--办理--申请id--李阳")
     public MyRespBundle<PcApplyInfoVo> findById(@RequestParam(value = "id")Integer id){
         PcApplyInfoVo pcApplyInfoVo = companyApplyService.findById(id);
         return sendJsonData(ResultMessage.SUCCESS, pcApplyInfoVo);
@@ -106,9 +106,9 @@ public class CompanyApplyController extends AbsBaseController {
     //申请列表条数
     @RequestMapping(value = "/countApply", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="公司管理---->办理")
-    public MyRespBundle<Long> countApply(@RequestParam(value = "role")String role){
-        Long line = companyApplyService.countApply(role);
+    @ApiOperation(value="前端--运营后台--设计公司/装饰公司--申请信息--个数查询--李阳")
+    public MyRespBundle<Long> countApply(@RequestParam(value = "roleId")String roleId){
+        Long line = companyApplyService.countApply(roleId);
         return sendJsonData(ResultMessage.SUCCESS, line);
     }
 
@@ -128,7 +128,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/generateCompanyId", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="公司管理--->（办理）添加账号--->提交（返回公司id）")
+    @ApiOperation(value="前端--运营后台--公司管理--添加账号--提交（返回公司id）--李阳")
     public MyRespBundle<String> generateCompanyId(@RequestParam(value = "roleId")String roleId){
         String companyId = companyApplyService.generateCompanyId(roleId);
         return sendJsonData(ResultMessage.SUCCESS, companyId);
@@ -140,7 +140,7 @@ public class CompanyApplyController extends AbsBaseController {
      */
     @RequestMapping(value = "/addCompanyAdmin", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="公司管理--->（办理）添加账号--->提交（返回公司id）---->确认(发送短信)")
+    @ApiOperation(value="前端--运营后台--公司管理--添加账号--二次确认界面---确认(发送短信)--李阳")
     public MyRespBundle<String> addCompanyAdmin(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
         boolean flag = companyApplyService.addCompanyAdmin(pcApplyInfoSEO);
         if(flag){

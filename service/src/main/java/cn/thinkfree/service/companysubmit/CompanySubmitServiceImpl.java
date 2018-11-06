@@ -9,6 +9,13 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.companyapply.CompanyApplyService;
+import cn.thinkfree.service.constants.AuditStatus;
+import cn.thinkfree.service.constants.CompanyApply;
+import cn.thinkfree.service.constants.ContractStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,23 +34,6 @@ import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcAuditTemporaryInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
-import cn.thinkfree.database.model.CompanyInfoExpand;
-import cn.thinkfree.database.model.CompanyInfoExpandExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfoExample;
-import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.vo.CompanyListSEO;
-import cn.thinkfree.database.vo.CompanyListVo;
-import cn.thinkfree.database.vo.CompanySubmitFileVo;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.CompanyTemporaryVo;
-import cn.thinkfree.database.vo.ContractVo;
-import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.constants.CompanyAuditStatus;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.utils.ContractNum;
 import cn.thinkfree.service.utils.ExcelData;
@@ -74,7 +64,52 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Autowired
 	PcAuditTemporaryInfoMapper pcAuditTemporaryInfoMapper;
 
+	@Autowired
+	CompanyApplyService companyApplyService;
+
+	@Autowired
+	CompanySubmitService companySubmitService;
+
 	final static String TARGET = "static/";
+
+
+
+	@Override
+	public CompanyDetailsVO companyDetails(String contractNumber, String companyId) {
+		CompanyDetailsVO companyDetailsVO = new CompanyDetailsVO();
+		CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
+		companyDetailsVO.setCompanySubmitVO(companySubmitVo);
+
+
+		return null;
+	}
+
+	@Override
+	public PcAuditInfo findAuditCase(String contractNumber) {
+		PcAuditInfoExample example = new PcAuditInfoExample();
+		example.createCriteria().andContractNumberEqualTo(contractNumber);
+
+		List<PcAuditInfo> pcAuditInfos = pcAuditInfoMapper.selectByExample(example);
+
+		if(pcAuditInfos.size() > 0){
+			return pcAuditInfos.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public AuditInfoVO findAuditStatus(String companyId) {
+		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(companyId);
+		//TOdo
+		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
+		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setAuditCase("");
+			auditInfoVO.setCompanyAuditName("签约完成");
+		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setCompanyAuditName("资质审核中");
+		}
+		return null;
+	}
 
 	@Override
 	public CompanySubmitVo findCompanyInfo(String companyId) {
@@ -85,12 +120,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
 		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
 				.andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-				.andIsCheckEqualTo(SysConstants.YesOrNo.YES.shortVal())
+				.andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
 				.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
 				.andPlatformTypeEqualTo(SysConstants.YesOrNo.NO.shortVal());
 
 		List<CompanyInfo> companyInfo = companyInfoMapper.selectByExample(companyInfoExample);
-		if(companyInfo.get(0) == null){
+		if(companyInfo.size() <= 0  && companyInfo.get(0) == null){
 			return null;
 		}
 		companySubmitVo.setCompanyInfo(companyInfo.get(0));
@@ -99,47 +134,30 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
 		companyInfoExpandExample.createCriteria().andCompanyIdEqualTo(companyId);
 		List<CompanyInfoExpand> companyInfoExpand = companyInfoExpandMapper.selectByExample(companyInfoExpandExample);
-		companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpand.get(0).getCompanyType().intValue()));
-		companySubmitVo.setCompanyInfoExpand(companyInfoExpand.get(0));
+
+		if(companyInfoExpand.size() > 0  && companyInfoExpand.get(0) != null){
+			if(companyInfoExpand.get(0).getCompanyType() != null && StringUtils.isNotBlank(companyInfoExpand.get(0).getCompanyType().toString())) {
+				companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpand.get(0).getCompanyType().intValue()));
+			}
+			companySubmitVo.setCompanyInfoExpand(companyInfoExpand.get(0));
+		}
+
 
 
 //		对公账信息PcCompanyFinancial
 		PcCompanyFinancialExample pcCompanyFinancialExample = new PcCompanyFinancialExample();
 		pcCompanyFinancialExample.createCriteria().andCompanyIdEqualTo(companyId);
 		List<PcCompanyFinancial> companyFinancials = pcCompanyFinancialMapper.selectByExample(pcCompanyFinancialExample);
-		companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+		if(companyFinancials.size() > 0  && companyFinancials.get(0) != null){
+			companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+		}
 
 		return companySubmitVo;
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public boolean changeCompanyInfo(CompanyTemporaryVo companyTemporaryVo) {
-		//图片重新生成
-		CompanySubmitFileVo companySubmitFileVo = new CompanySubmitFileVo();
-		//营业执照
-		if(companySubmitFileVo.getBusinessPhotoUrl() != null){
-			companyTemporaryVo.setBusinessPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getBusinessPhotoUrl()));
-		}
-		//装修施工资质证书
-		if(companySubmitFileVo.getWorkPhotoUrl() != null) {
-			companyTemporaryVo.setWorkPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getWorkPhotoUrl()));
-		}
-		//法人身份证正面
-		if(companySubmitFileVo.getLefalCardUpUrl() != null) {
-			companyTemporaryVo.setLefalCardUpUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardUpUrl()));
-		}
-		//法人身份证反面
-		if(companySubmitFileVo.getLefalCardDownUrl() != null) {
-			companyTemporaryVo.setLefalCardDownUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardDownUrl()));
-		}
-		//企业税务登记证
-		if(companySubmitFileVo.getTaxCodePhotoUrl() != null) {
-			companyTemporaryVo.setTaxCodePhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getTaxCodePhotoUrl()));
-		}
-		//开户行许可证
-		if(companySubmitFileVo.getLicenseUrl() != null) {
-			companyTemporaryVo.setLicenseUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLicenseUrl()));
-		}
 		PcAuditTemporaryInfo pcAuditTemporaryInfo = new PcAuditTemporaryInfo();
 		SpringBeanUtil.copy(companyTemporaryVo, pcAuditTemporaryInfo);
 		int line = pcAuditTemporaryInfoMapper.insertSelective(pcAuditTemporaryInfo);
@@ -150,6 +168,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public String auditChangeCompany(String companyId, String auditStatus, String auditCase) {
 		Date date = new Date();
 		//1：查询公司资质临时表
@@ -249,14 +268,18 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	/**
 	 * 公司列表
 	 * @param companyListSEO
+	 * map.put("company_id","desc");排序形式
 	 * @return
 	 */
 	@Override
 	public PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO) {
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-		List<String> relationMap = userVO.getRelationMap();
+		//todo 获取分站id？？？？星级
+//		List<String> relationMap = userVO.getRelationMap();
+		List<String> relationMap = new ArrayList<>();
+        relationMap.add("44");
+		relationMap.add("1402");
 		companyListSEO.setRelationMap(relationMap);
-
 		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
 		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
 		return new PageInfo<>(companyListVoList);
@@ -277,7 +300,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		//添加列
 		List<List<Object>> rows = new ArrayList<>();
 		List<Object> row = null;
-		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
+		List<CompanyListVo> companyListVoList = companyInfoMapper.downLoad(companyListSEO);
 
 		for(CompanyListVo vo: companyListVoList){
 			row=new ArrayList<>();
@@ -328,15 +351,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     }
 
     private int updateCompanyExpand(CompanySubmitVo companySubmitVo, Date date) {
-        //公司资质上传文件
-        CompanySubmitFileVo companySubmitFileVo = companySubmitVo.getCompanySubmitFileVo();
 
         CompanyInfoExpand companyInfoExpand = companySubmitVo.getCompanyInfoExpand();
         companyInfoExpand.setUpdateTime(date);
-		//企业税务登记证
-		if(companySubmitFileVo.getTaxCodePhotoUrl() != null) {
-			companyInfoExpand.setTaxCodePhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getTaxCodePhotoUrl()));
-		}
+
         CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
         companyInfoExpandExample.createCriteria()
 				.andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
@@ -344,118 +362,79 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     }
 
     private int addFinancial(CompanySubmitVo companySubmitVo, Date date) {
-        //公司资质上传文件
-        CompanySubmitFileVo companySubmitFileVo = companySubmitVo.getCompanySubmitFileVo();
 
         PcCompanyFinancial pcCompanyFinancial = companySubmitVo.getPcCompanyFinancial();
         pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
         pcCompanyFinancial.setCreateTime(date);
         pcCompanyFinancial.setUpdateTime(date);
-		//开户行许可证
-		if(companySubmitFileVo.getLicenseUrl() != null) {
-			pcCompanyFinancial.setLicenseUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLicenseUrl()));
-		}
         return pcCompanyFinancialMapper.insertSelective(pcCompanyFinancial);
     }
 
     private int updateCompanyInfo(CompanySubmitVo companySubmitVo, Date date) {
-        //公司资质上传文件
-        CompanySubmitFileVo companySubmitFileVo = companySubmitVo.getCompanySubmitFileVo();
         CompanyInfo companyInfo = companySubmitVo.getCompanyInfo();
 
         companyInfo.setPhone(companyInfo.getLegalPhone());
         companyInfo.setUpdateTime(date);
-        //资质上传成功后审批状态改为已激活
-        companyInfo.setAuditStatus(CompanyAuditStatus.ACTIVATION.stringVal());
-		//营业执照
-		if(companySubmitFileVo.getBusinessPhotoUrl() != null){
-			companyInfo.setBusinessPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getBusinessPhotoUrl()));
-		}
-		//装修施工资质证书
-		if(companySubmitFileVo.getWorkPhotoUrl() != null) {
-			companyInfo.setWorkPhotoUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getWorkPhotoUrl()));
-		}
-		//法人身份证正面
-		if(companySubmitFileVo.getLefalCardUpUrl() != null) {
-			companyInfo.setLefalCardUpUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardUpUrl()));
-		}
-		//法人身份证反面
-		if(companySubmitFileVo.getLefalCardDownUrl() != null) {
-			companyInfo.setLefalCardDownUrl(WebFileUtil.fileCopy(TARGET, companySubmitFileVo.getLefalCardDownUrl()));
-		}
+        //资质上传成功后审批状态改为资质待审核
+        companyInfo.setAuditStatus(CompanyAuditStatus.AUDITING.stringVal());
+
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
         return companyInfoMapper.updateByExampleSelective(companyInfo,companyInfoExample);
     }
 
 	@Override
-	public Map<String, String> auditContract( String companyId, String auditStatus,
-			String auditCase) {
+	@Transactional(rollbackFor = Exception.class)
+	public String auditContract(PcAuditInfo pcAuditInfo) {
+		Date date = new Date();
 		Map<String,String> map = new HashMap<>();
-		
-		if(StringUtils.isEmpty(companyId)){
-			map.put("code", "1");
-			map.put("msg", "公司编号为空");
-			return  map;
-		}if(StringUtils.isEmpty(auditStatus)){
-			map.put("code", "1");
-			map.put("msg", "审核状态为空");
-			return  map;
-		}if(!StringUtils.isEmpty(auditStatus) && auditStatus.equals("1") && StringUtils.isEmpty(auditCase)){
-			map.put("code", "1");
-			map.put("msg", "清填写审核不通过原因");
-			return  map;
-		}
-		if(auditStatus.equals("0")){
-	        //运营审核通过生成合同编号
-			//从登陆信息中获取公司类型
+
+		String companyId = pcAuditInfo.getCompanyId();
+
+		//审核通过  运营审核通过生成合同编号
+		if(AuditStatus.AuditPass.shortVal().equals(pcAuditInfo.getAuditStatus())){
+			//1.修改公司表
+			boolean applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString());
+
+			//todo 从登陆信息中获取公司类型
 			String contractNumber =ContractNum.getInstance().GenerateOrder("DB");
 		//	String contractNumber = String.valueOf(UUID.randomUUID());
 			
-			//修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝
+			//2.修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝ContractStatus
 			ContractVo vo = new ContractVo();
 			vo.setCompanyId(companyId);
 			vo.setContractNumber(contractNumber);
-			vo.setContractStatus("0");
+			vo.setContractStatus(ContractStatus.DraftStatus.shortVal());
 			int flag = contractInfoMapper.updateContractStatus(vo);
-			//修改公司表 
-		
-			CompanyInfo companyInfo = new CompanyInfo();
-			companyInfo.setCompanyId(companyId);
-			if(auditStatus.equals("0")){//运营审核通过
-				companyInfo.setAuditStatus(CompanyAuditStatus.APTITUDETG.stringVal());
-			}else{//财务审核不通过
-				companyInfo.setAuditStatus(CompanyAuditStatus.SUCCESSJOSB.stringVal());
-			}
-			int flagT = companyInfoMapper.updateauditStatus(companyInfo);
 			
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
-			//添加审核记录表
-			PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
-					companyId, auditCase, contractNumber);
+			//3.添加审核记录表
+			PcAuditInfo record = new PcAuditInfo(pcAuditInfo.getAuditType(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
+					companyId, pcAuditInfo.getAuditCase(), contractNumber);
 			
 			int flagon = pcAuditInfoMapper.insertSelective(record);
 		    
-			if(flag > 0 && flagT > 0 &&  flagon  > 0 ){
-				
-				map.put("code", "0");
-				map.put("msg", "审核成功");
+			if(flag > 0 && applyFlag &&  flagon  > 0 ){
+				return "审核成功";
 				
 			}else{
-				map.put("code", "1");
-				map.put("msg", "审核失败");
+				return "审核失败";
 			}
 		}else{//审核失败
+			boolean applyFlag = companyApplyService.updateStatus(pcAuditInfo.getCompanyId(), CompanyAuditStatus.FAILAUDIT.code.toString());
 
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
 			//添加审核记录表
-			PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(),
-					companyId, auditCase, "");
-		    pcAuditInfoMapper.insertSelective(record);
-			
+			PcAuditInfo record = new PcAuditInfo(pcAuditInfo.getAuditType(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
+					companyId, pcAuditInfo.getAuditCase(), "");
+		    int line = pcAuditInfoMapper.insertSelective(record);
+		    if(applyFlag && line > 0){
+				return "审核成功";
+			}else{
+				return "审核失败";
+			}
 		}
-		return map;
 	}
 }

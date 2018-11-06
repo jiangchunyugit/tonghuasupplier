@@ -3,10 +3,12 @@ package cn.thinkfree.database.vo;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.thinkfree.database.model.PcAuditInfo;
 
-public class ContractDetails extends CompanySubmitVo{
+public class ContractDetails  {
+	
 	
 	private String signedTime;//合同签订时间
 	
@@ -27,6 +29,8 @@ public class ContractDetails extends CompanySubmitVo{
 	private String legalName;
 	
 	private String legalIdCard;
+
+    
 	
 	public String getAuditStatus() {
 		return auditStatus;
@@ -301,6 +305,8 @@ public class ContractDetails extends CompanySubmitVo{
 	public void setAuditInfo(List<PcAuditInfo> auditInfo) {
 		this.auditInfo = auditInfo;
 	}
+
+
 
 
 }

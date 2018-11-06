@@ -39,6 +39,16 @@ public class SystemResourceServiceImpl implements SystemResourceService {
 
     }
 
+    /**
+     * 查询当前企业角色资源状况
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<SystemResource> listResourceByEnterPriseRoleID(Integer id) {
+        return systemResourceMapper.selectEnterPriseResourceForAuthorize(id);
+    }
 
 
     /**

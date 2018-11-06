@@ -13,6 +13,15 @@ import com.github.pagehelper.PageInfo;
  * 公司申请事项接口：入驻申请，资质变更。。。
  */
 public interface CompanyApplyService {
+
+    /**
+     * 更新公司入驻状态
+     * @param companyId
+     * @param status
+     * @return
+     */
+    boolean updateStatus(String companyId, String status);
+
     /**
      * 公司申请事项（运营人员添加入驻信息）
      * @param pcApplyInfoSEO

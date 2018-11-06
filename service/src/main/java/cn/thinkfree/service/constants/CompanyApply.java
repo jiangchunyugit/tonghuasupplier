@@ -59,5 +59,30 @@ public class CompanyApply {
             return code.shortValue();
         }
     }
+    /**
+     *  审批角色
+     */
+    public enum auditType {
+        /**
+         * 运营审批
+         */
+        OPERATIONALAPPROVAL(0,"运营审批"),
+        /**
+         * 财务审批
+         */
+        FINANCIALAPPROVAL(1,"财务审批");
+
+        public final Integer code;
+        public final String msg;
+
+        auditType(Integer code ,String msg){
+            this.code = code;
+            this.msg = msg;
+        }
+        public Short shortVal(){
+            return code.shortValue();
+        }
+    }
+
 
 }

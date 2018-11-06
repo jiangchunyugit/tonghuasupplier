@@ -1,18 +1,25 @@
 package cn.thinkfree.service.user.strategy.relation;
 
-import cn.thinkfree.database.constants.UserLevel;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.core.exception.ForbiddenException;
+import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.mapper.BranchCompanyMapper;
+import cn.thinkfree.database.mapper.CityBranchMapper;
+import cn.thinkfree.database.model.BranchCompany;
+import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.vo.UserVO;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 @Component
 public class CompanyCityRelationStrategy implements RelationStrategy {
 
     @Autowired
-    CompanyInfoMapper companyInfoMapper;
+    BranchCompanyMapper branchCompanyMapper;
+    @Autowired
+    CityBranchMapper cityBranchMapper;
 
     /**
      * 构建关系图
@@ -22,11 +29,10 @@ public class CompanyCityRelationStrategy implements RelationStrategy {
      */
     @Override
     public List<String> build(UserVO userVO) {
-        CompanyInfo condition = new CompanyInfo();
-//        condition.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
-        condition.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
-        condition.setCityCode(Short.valueOf(userVO.getPcUserInfo().getCity()));
-//        condition.setParentCompanyId(UserLevel.Company_City.code+"");
-        return companyInfoMapper.selectRelationMap(condition);
+        BranchCompany branchCompany = branchCompanyMapper.selectByPrimaryKey(Integer.valueOf(userVO.getPcUserInfo().getBranchCompanyId()));
+        userVO.setBranchCompany(branchCompany);
+        CityBranch cityBranch = cityBranchMapper.selectByPrimaryKey(Integer.valueOf(userVO.getPcUserInfo().getCityBranchCompanyId()));
+        userVO.setCityBranch(cityBranch);
+        return Lists.newArrayList(userVO.getPcUserInfo().getCityBranchCompanyId());
     }
 }
