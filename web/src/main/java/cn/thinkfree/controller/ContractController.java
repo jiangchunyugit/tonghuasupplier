@@ -255,9 +255,10 @@ public class ContractController extends AbsBaseController{
     @MyRespBody
     public MyRespBundle<List<ContractInfo>> enterAgreementContract(@ApiParam("公司编号")@RequestParam String companyId){
 
-    	List<ContractInfo> resList =  contractService.getEnterContractBycompanyId(companyId);
+//    	List<ContractInfo> resList =  contractService.getEnterContractBycompanyId(companyId);
 
-        return sendJsonData(ResultMessage.SUCCESS,resList);
+//        return sendJsonData(ResultMessage.SUCCESS,resList);
+        return null;
     }
 
 
