@@ -557,4 +557,15 @@ public class DesignDispatchController extends AbsBaseController {
         }
         return sendSuccessMessage(null);
     }
+    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"HTQY(发起合同签约)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\"]")
+    @MyRespBody
+    @RequestMapping(value = "showBtn", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<String>> showBtn(
+            @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo){
+        try{
+            return sendJsonData(ResultMessage.SUCCESS,designDispatchService.showBtn(designOrderNo));
+        }catch (Exception e){
+            return sendFailMessage(e.getMessage());
+        }
+    }
 }

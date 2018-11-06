@@ -8,6 +8,7 @@ import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +37,7 @@ public class EmployeeController extends AbsBaseController {
     @RequestMapping(value = "review", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewDesigner(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "authState", required = false, value = "审核状态") @RequestParam(name = "authState", required = false) int authState,
+            @ApiParam(name = "authState", required = false, value = "审核状态,2审核通过，4审核不通过") @RequestParam(name = "authState", required = false) int authState,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
         try {
             employeeService.reviewEmployee(userId, authState, companyId);
@@ -54,23 +55,24 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "cardType", required = false, value = "证件类型") @RequestParam(name = "cardType", required = false) int cardType,
             @ApiParam(name = "cardNo", required = false, value = "证件号码") @RequestParam(name = "cardNo", required = false) String cardNo,
             @ApiParam(name = "realName", required = false, value = "真实姓名") @RequestParam(name = "realName", required = false) String realName,
+            @ApiParam(name = "country", required = false, value = "所属国家编码") @RequestParam(name = "country", required = false) String country,
             @ApiParam(name = "idCardUrl1", required = false, value = "证件正面") @RequestParam(name = "idCardUrl1", required = false) String idCardUrl1,
             @ApiParam(name = "idCardUrl2", required = false, value = "证件反面") @RequestParam(name = "idCardUrl2", required = false) String idCardUrl2,
             @ApiParam(name = "idCardUrl3", required = false, value = "手持证件") @RequestParam(name = "idCardUrl3", required = false) String idCardUrl3) {
         try {
-            employeeService.submitCardMsg(userId, cardType, cardNo, realName, idCardUrl1, idCardUrl2, idCardUrl3);
+            employeeService.submitCardMsg(userId, cardType, cardNo, realName, country, idCardUrl1, idCardUrl2, idCardUrl3);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendJsonData(ResultMessage.SUCCESS, null);
     }
 
-    @ApiOperation("员工申请--->app专用")
+    @ApiOperation("员工绑定公司申请--->app专用")
     @MyRespBody
     @RequestMapping(value = "apply", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle apply(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
+            @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态1入驻待审核，4解约待审核") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
         try {
             employeeService.employeeApply(userId, employeeApplyState, companyId);
@@ -156,6 +158,24 @@ public class EmployeeController extends AbsBaseController {
         try {
             EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
             return sendJsonData(ResultMessage.SUCCESS, employeeMsg);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+
+    @ApiOperation("根据角色和公司ID查询员工信息--->公用")
+    @MyRespBody
+    @RequestMapping(value = "queryStaff", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<EmployeeMsgVo>>> queryStaff(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryEmployee(companyId, roleCode, searchKey, pageSize, pageIndex);
+            return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

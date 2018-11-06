@@ -87,4 +87,23 @@ public interface BuildConfigService {
      * @param optionUserName 操作人姓名
      */
     void chooseScheme(String companyId, String schemeNo, String optionUserId, String optionUserName);
+
+    /**
+     * 停用施工方案
+     *
+     * @param companyId      公司ID
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人名称
+     */
+    void stopScheme(String companyId, String optionUserId, String optionUserName);
+
+    /**
+     * 根据条件查询施工方案
+     * @param searchKey
+     * @param companyId
+     * @param cityStation
+     * @param storeNo
+     * @return
+     */
+    List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo);
 }

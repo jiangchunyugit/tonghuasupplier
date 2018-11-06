@@ -153,6 +153,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setPageSize(pageSize);
         pageVo.setTotal(total);
         pageVo.setData(DesignerOrderVos);
+        pageVo.setPageIndex(pageIndex);
         return pageVo;
     }
 
@@ -391,9 +392,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         DesignerOrderVo DesignerOrderVo = getDesignerOrderVo(stateType, designerStyleConfigMap, DesignerOrder, project, msgVoMap);
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(DesignerOrder.getOrderStage());
-        DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(DesignerOrderVo,1,stateEnum.getStateName(stateType),
-                "我也不知道这是啥","小区名称",DesignerOrder.getProjectNo(),
-                DateUtils.dateToStr(DesignerOrder.getVolumeRoomTime(),"yyyy-MM-dd"),"这是合同名称","这是合同地址");
+        DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(DesignerOrderVo, 1, stateEnum.getStateName(stateType),
+                "我也不知道这是啥", "小区名称", DesignerOrder.getProjectNo(),
+                DateUtils.dateToStr(DesignerOrder.getVolumeRoomTime(), "yyyy-MM-dd"), "这是合同名称", "这是合同地址");
         return designOrderDelVo;
     }
 
@@ -547,8 +548,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder updateOrder = new DesignerOrder();
         //清空设计师ID
         updateOrder.setOrderStage(DesignStateEnum.STATE_40.getState());
-        Date date = DateUtils.strToDate(volumeRoomDate,"yyyy-MM-dd");
-        if(date.getTime() == 0){
+        Date date = DateUtils.strToDate(volumeRoomDate, "yyyy-MM-dd");
+        if (date.getTime() == 0) {
             throw new RuntimeException("无效的预约时间");
         }
         updateOrder.setVolumeRoomTime(date);
@@ -871,5 +872,54 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         stageLog.setBeginTime(new Date());
         stageLog.setType(project.getContractType());
         stageLogMapper.insertSelective(stageLog);
+    }
+
+    /**
+     * @param designOrderNo 设计订单编号
+     * @return ["LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)","SJZL(提交设计资料)","CKHT(查看合同)"]
+     */
+    @Override
+    public List<String> showBtn(String designOrderNo) {
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrderNo).andStatusEqualTo(1);
+        List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.isEmpty()){
+            throw new RuntimeException("无效的订单编号");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
+        List<String> btns = new ArrayList<>();
+        switch (stateEnum) {
+            case STATE_40:
+                btns.add("LFFY");
+                break;
+            case STATE_50:
+                btns.add("LFZL");
+                break;
+            case STATE_130:
+                btns.add("HTQY");
+                btns.add("CKHT");
+                break;
+            case STATE_140:
+            case STATE_160:
+            case STATE_170:
+            case STATE_190:
+            case STATE_200:
+            case STATE_210:
+            case STATE_220:
+            case STATE_240:
+            case STATE_260:
+            case STATE_270:
+                btns.add("CKHT");
+                break;
+            case STATE_150:
+            case STATE_180:
+            case STATE_230:
+            case STATE_250:
+                btns.add("SJZL");
+                btns.add("CKHT");
+                break;
+        }
+        return btns;
     }
 }

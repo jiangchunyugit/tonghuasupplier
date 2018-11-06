@@ -8,7 +8,7 @@ import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
-import cn.thinkfree.service.constants.HttpLinks;
+import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
@@ -249,7 +249,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         Map<String, String> requestMap = new HashMap<>();
         requestMap.put("userId", userId);
         requestMap.put("roleId", "CC");
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsgUrl(), requestMap);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsg(), requestMap);
         Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
         owner.setName(responseMap.get("nickName").toString());
         owner.setPhone(responseMap.get("phone").toString());
@@ -264,7 +264,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
      */
     public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoIn(listProjectNo).andRoleIdEqualTo(role).andIsTransferEqualTo((short) 0);
+        example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
         List<OrderUser> list = orderUserMapper.selectByExample(example);
         List<Map<String, String>> listName = new ArrayList<>();
         for (OrderUser orderUser : list) {

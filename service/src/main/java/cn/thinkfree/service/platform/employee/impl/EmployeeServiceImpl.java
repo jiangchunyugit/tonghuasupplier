@@ -6,18 +6,19 @@ import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.ReflectUtils;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -63,6 +64,50 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("有未处理的申请");
         }
         checkCompanyExit(companyId);
+        if (employeeApplyState == 4) {
+            dissolutionApply(userId, employeeApplyState, applyLog, companyId);
+        } else if (employeeApplyState == 1) {
+            EmployeeMsg employeeMsg = checkEmployeeMsg(userId);
+            if (Arrays.asList(new Integer[]{3, 4, 5}).contains(employeeMsg.getEmployeeApplyState())) {
+                throw new RuntimeException("无效的操作");
+            }
+            employeeMsg.setCompanyId(companyId);
+            employeeMsg.setEmployeeState(employeeApplyState);
+            employeeMsg.setApplyTime(new Date());
+            int res = employeeMsgMapper.updateByPrimaryKey(employeeMsg);
+            logger.info("新增用户绑定记录：res={}", res);
+            applyLog = new EmployeeApplyLog();
+            applyLog.setApplyTime(new Date());
+            //设置3个小时后失效
+            applyLog.setInvalidTime(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3));
+            //1，已处理，2未处理，3已过期
+            applyLog.setDealState(2);
+            applyLog.setUserId(userId);
+            applyLog.setCompanyId(companyId);
+            res = applyLogMapper.insertSelective(applyLog);
+            logger.info("保存用户申请记录：res={}", res);
+        }
+    }
+
+    /**
+     * 检查用户是否存在，不存在则创建
+     *
+     * @param userId
+     * @return
+     */
+    private EmployeeMsg checkEmployeeMsg(String userId) {
+        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(userId);
+        if (employeeMsg != null) {
+            return employeeMsg;
+        }
+        employeeMsg = new EmployeeMsg();
+        employeeMsg.setUserId(userId);
+        employeeMsg.setApplyTime(new Date());
+        employeeMsgMapper.insertSelective(employeeMsg);
+        return employeeMsg;
+    }
+
+    private void dissolutionApply(String userId, int employeeApplyState, EmployeeApplyLog applyLog, String companyId) {
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -122,7 +167,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
         roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
         List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
-        if(roleSets.isEmpty()){
+        if (roleSets.isEmpty()) {
             throw new RuntimeException("无效的角色编码");
         }
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
@@ -159,38 +204,42 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void submitCardMsg(String userId, int cardType, String cardNo, String realName, String photo1, String photo2, String photo3) {
-        checkEmployeeExit(userId);
+    public void submitCardMsg(String userId, int cardType, String cardNo, String realName, String country, String photo1, String photo2, String photo3) {
+        checkEmployeeMsg(userId);
         List<BasicsData> basicsData = basicsService.cardTypes();
-        List<String> types = ReflectUtils.getList(basicsData,"basicsCode");
-        if(!types.contains(cardType + "")){
+        List<String> types = ReflectUtils.getList(basicsData, "basicsCode");
+        if (!types.contains(cardType + "")) {
             throw new RuntimeException("无效的证件类型");
         }
-        if(StringUtils.isBlank(cardNo)){
+        if (StringUtils.isBlank(cardNo)) {
             throw new RuntimeException("证件编号不能为空");
         }
-        if(StringUtils.isBlank(realName)){
+        if (StringUtils.isBlank(realName)) {
             throw new RuntimeException("真实姓名不能为空");
         }
-        if(StringUtils.isBlank(photo1)){
+        if (StringUtils.isBlank(country)) {
+            throw new RuntimeException("所属国家编码不能为空");
+        }
+        if (StringUtils.isBlank(photo1)) {
             throw new RuntimeException("照片1不能为空");
         }
-        if(StringUtils.isBlank(photo2)){
+        if (StringUtils.isBlank(photo2)) {
             throw new RuntimeException("照片2不能为空");
         }
-        if(StringUtils.isBlank(photo3)){
+        if (StringUtils.isBlank(photo3)) {
             throw new RuntimeException("照片3不能为空");
         }
         EmployeeMsg employeeMsg = new EmployeeMsg();
+        employeeMsg.setUserId(userId);
         employeeMsg.setCertificateType(cardType);
         employeeMsg.setCertificate(cardNo);
+        employeeMsg.setAuthState(3);
+        employeeMsg.setCountryCode(country);
         employeeMsg.setRealName(realName);
         employeeMsg.setCertificatePhotoUrl1(photo1);
         employeeMsg.setCertificatePhotoUrl2(photo2);
         employeeMsg.setCertificatePhotoUrl3(photo3);
-        EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
-        employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
-        int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
+        int res = employeeMsgMapper.updateByPrimaryKey(employeeMsg);
         logger.info("保存用户实名认证资料：res={}", res);
     }
 
@@ -201,8 +250,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         roleSetExample.createCriteria().andIsShowEqualTo(Short.parseShort("1")).andIsDelEqualTo(2);
         List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
         List<RoleVo> roleVos = new ArrayList<>();
-        for(UserRoleSet userRoleSet : roleSets){
-            RoleVo roleVo = new RoleVo(userRoleSet.getRoleCode(),userRoleSet.getRoleName());
+        for (UserRoleSet userRoleSet : roleSets) {
+            RoleVo roleVo = new RoleVo(userRoleSet.getRoleCode(), userRoleSet.getRoleName());
             roleVos.add(roleVo);
         }
         return roleVos;
@@ -210,10 +259,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void createRole(String roleCode, String roleName) {
-        if(StringUtils.isBlank(roleCode)){
+        if (StringUtils.isBlank(roleCode)) {
             throw new RuntimeException("角色编码不能为空");
         }
-        if(StringUtils.isBlank(roleName)){
+        if (StringUtils.isBlank(roleName)) {
             throw new RuntimeException("角色名称不能为空");
         }
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
@@ -221,7 +270,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         roleSetExample.or().andRoleCodeEqualTo(roleCode);
         roleSetExample.or().andRoleNameEqualTo(roleName);
         List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
-        if(roleSets.isEmpty()){
+        if (roleSets.isEmpty()) {
             throw new RuntimeException("该角色编码/角色名称已存在");
         }
         UserRoleSet userRoleSet = new UserRoleSet();
@@ -239,7 +288,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         userRoleSet.setIsDel(1);
         UserRoleSetExample setExample = new UserRoleSetExample();
         setExample.createCriteria().andRoleCodeEqualTo(roleCode);
-        roleSetMapper.updateByExample(userRoleSet,setExample);
+        roleSetMapper.updateByExample(userRoleSet, setExample);
     }
 
     @Override
@@ -264,10 +313,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId).andEmployeeStateEqualTo(1);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
-        if(employeeMsgs.isEmpty()){
-            throw new RuntimeException("没有查询到用户");
+        EmployeeMsg employeeMsg;
+        if (!employeeMsgs.isEmpty()) {
+            employeeMsg = employeeMsgs.get(0);
+        } else {
+            employeeMsg = new EmployeeMsg();
+            employeeMsg.setAuthState(1);
+            employeeMsg.setEmployeeApplyState(-1);
         }
-        EmployeeMsg employeeMsg = employeeMsgs.get(0);
         UserMsgVo userMsgVo = userCenterService.queryUser(userId);
         UserRoleSet userRoleSet = queryRoleSet(employeeMsg.getRoleCode());
         EmployeeMsgVo msgVo = new EmployeeMsgVo();
@@ -277,7 +330,30 @@ public class EmployeeServiceImpl implements EmployeeService {
         msgVo.setRealName(employeeMsg.getRealName());
         msgVo.setUserId(userId);
         msgVo.setCompanyName("这里是公司名称");
-        msgVo.setBindCompanyState(StringUtils.isNotBlank(employeeMsg.getCompanyId()) ? 1 : 2);
+        //1未绑定，2已绑定，3实名认证审核中，4审核不通过
+        int bindCompanyState = 1;
+        //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
+        switch (employeeMsg.getEmployeeApplyState()) {
+            case 1:
+                bindCompanyState = 3;
+                break;
+            case 2:
+                bindCompanyState = 4;
+                break;
+            case 3:
+                bindCompanyState = 2;
+                break;
+            case 4:
+                bindCompanyState = 2;
+                break;
+            case 5:
+                bindCompanyState = 2;
+                break;
+            case 6:
+                bindCompanyState = 1;
+                break;
+        }
+        msgVo.setBindCompanyState(bindCompanyState);
         msgVo.setRoleCode(userRoleSet.getRoleCode());
         msgVo.setRoleName(userRoleSet.getRoleName());
         return msgVo;
@@ -285,17 +361,72 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 通过角色编码查询角色信息
+     *
      * @param roleCode 角色编码
      * @return
      */
-    public UserRoleSet queryRoleSet(String roleCode){
+    public UserRoleSet queryRoleSet(String roleCode) {
+        if (roleCode == null) {
+            return new UserRoleSet();
+        }
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
         roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
         List<UserRoleSet> userRoleSets = roleSetMapper.selectByExample(roleSetExample);
-        if(userRoleSets.isEmpty()){
+        if (userRoleSets.isEmpty()) {
             throw new RuntimeException("无效的用户角色");
         }
         return userRoleSets.get(0);
+    }
+
+    @Override
+    public PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
+        if (StringUtils.isBlank(companyId)) {
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if (StringUtils.isBlank(roleCode)) {
+            throw new RuntimeException("角色编码不能为空");
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+        if (StringUtils.isNotBlank(searchKey)) {
+            msgExample.or().andUserIdLike("%" + searchKey + "%");
+            msgExample.or().andRealNameLike("%" + searchKey + "%");
+            msgExample.or().andCertificateLike("%" + searchKey + "%");
+        }
+        long total = employeeMsgMapper.countByExample(msgExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
+        if (msgs.isEmpty()) {
+            return new PageVo<>();
+        }
+        List<String> userIds = ReflectUtils.getList(msgs, "userId");
+        List<RoleVo> roleVos = queryRoles();
+        Map<String, String> roleMap = ReflectUtils.listToMap(roleVos, "roleCode", "roleName");
+        Map<String, UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
+        List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        for (EmployeeMsg employeeMsg : msgs) {
+            UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
+            String roleName = roleMap.get(employeeMsg.getRoleCode());
+            EmployeeMsgVo msgVo = new EmployeeMsgVo();
+            msgVo.setAuthState(employeeMsg.getAuthState());
+            if (userMsgVo != null) {
+                msgVo.setIconUrl(userMsgVo.getUserIcon());
+                msgVo.setPhone(userMsgVo.getUserPhone());
+            }
+            msgVo.setRealName(employeeMsg.getRealName());
+            msgVo.setUserId(employeeMsg.getUserId());
+            msgVo.setCompanyName("这里是公司名称");
+            msgVo.setBindCompanyState(StringUtils.isNotBlank(employeeMsg.getCompanyId()) ? 1 : 2);
+            msgVo.setRoleCode(employeeMsg.getRoleCode());
+            msgVo.setRoleName(roleName);
+            employeeMsgVos.add(msgVo);
+        }
+        PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(employeeMsgVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
     }
 
     /**
@@ -310,15 +441,5 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        if(companyInfos.isEmpty()){
 //            throw new RuntimeException("没有查询到该公司");
 //        }
-    }
-
-    private EmployeeMsg checkEmployeeExit(String userId){
-        EmployeeMsgExample employeeMsg = new EmployeeMsgExample();
-        employeeMsg.createCriteria().andUserIdEqualTo(userId);
-        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsg);
-        if(employeeMsgs.isEmpty()){
-            throw new RuntimeException("无效的员工ID");
-        }
-        return employeeMsgs.get(0);
     }
 }

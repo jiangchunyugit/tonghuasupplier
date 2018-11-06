@@ -281,5 +281,12 @@ public interface DesignDispatchService {
     void designOrderContract(String companyId, String contractNo, String designOrderNo, String source, String ownerMsg,
                              String signTimeStart, String signTimeEnd, String province, String city, int contractState);
 
+    /**
+     * 根据设计订单编号查询展示的按钮
+     * @param designOrderNo 设计订单编号
+     * @return ["LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)","SJZL(提交设计资料)","CKHT(查看合同)"]
+     */
+    List<String> showBtn(String designOrderNo);
+
 
 }

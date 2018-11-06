@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * TODO
+ * 审批流配置方案关系服务层
  *
  * @author song
  * @version 1.0
@@ -57,6 +57,11 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
         insert(configScheme);
     }
 
+    /**
+     * 旧数据标志位usable置为0：不可用
+     * @param configNo 审批流配置编号
+     * @param schemeNo 方案编号
+     */
     private void delete(String configNo, String schemeNo) {
         AfConfigScheme configScheme = new AfConfigScheme();
         configScheme.setUsable(0);

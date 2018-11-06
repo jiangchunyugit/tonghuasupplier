@@ -12,11 +12,13 @@ import java.util.Map;
 
 /**
  * 项目相关
+ *
  * @author gejiaming
  */
 public interface NewProjectService {
     /**
      * 项目列表
+     *
      * @param appProjectSEO
      * @return
      */
@@ -24,6 +26,7 @@ public interface NewProjectService {
 
     /**
      * 确认资料
+     *
      * @param projectNo
      * @param category
      * @return
@@ -32,6 +35,7 @@ public interface NewProjectService {
 
     /**
      * 获取设计资料
+     *
      * @param projectNo
      * @return
      */
@@ -39,6 +43,7 @@ public interface NewProjectService {
 
     /**
      * 获取施工资料
+     *
      * @param projectNo
      * @return
      */
@@ -46,6 +51,7 @@ public interface NewProjectService {
 
     /**
      * 获取报价单资料
+     *
      * @param projectNo
      * @return
      */
@@ -53,6 +59,7 @@ public interface NewProjectService {
 
     /**
      * 获取项目详情接口
+     *
      * @param projectNo
      * @return
      */
@@ -60,6 +67,7 @@ public interface NewProjectService {
 
     /**
      * 批量获取人员信息
+     *
      * @param projectNo
      * @return
      */
@@ -67,6 +75,7 @@ public interface NewProjectService {
 
     /**
      * 获取项目阶段
+     *
      * @param projectNo
      * @return
      */
@@ -74,13 +83,15 @@ public interface NewProjectService {
 
     /**
      * 批量获取员工的信息
+     *
      * @param userIds
      * @return
      */
-    MyRespBundle<Map<String,UserVo>> getListUserByUserIds(List<String> userIds);
+    MyRespBundle<Map<String, UserVo>> getListUserByUserIds(List<String> userIds);
 
     /**
      * 退款
+     *
      * @param orderNo
      * @param payOrderNo
      * @param otherReason
@@ -90,7 +101,29 @@ public interface NewProjectService {
      * @param cancelReason
      * @return
      */
-    MyRespBundle<String> applyRefund(String orderNo,String payOrderNo, String otherReason, Integer money, String moneyName,String userId, String cancelReason);
+    MyRespBundle<String> applyRefund(String orderNo, String payOrderNo, String otherReason, Integer money, String moneyName, String userId, String cancelReason);
 
+    /**
+     * 取消订单
+     * @param orderNo
+     * @param projectNo
+     * @param userId
+     * @param cancelReason
+     * @return
+     */
+    MyRespBundle cancleOrder(String orderNo,String projectNo, String userId, String cancelReason);
 
+    /**
+     * APP-获取项目详情头接口
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<ProjectTitleVo> getAppProjectTitleDetail(String projectNo);
+
+    /**
+     * C/B-项目个数
+     * @param userId
+     * @return
+     */
+    MyRespBundle<Integer> getProjectNum(String userId);
 }

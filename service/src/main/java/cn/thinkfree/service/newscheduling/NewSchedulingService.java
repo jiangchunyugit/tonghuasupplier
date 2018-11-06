@@ -20,7 +20,7 @@ public interface NewSchedulingService {
      * @param projectNo
      * @return
      */
-    List<ProjectBigSchedulingDetailsVO> getScheduling(String projectNo);
+    MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(String projectNo);
 
     /**
      * 添加公司施工节点
@@ -59,4 +59,19 @@ public interface NewSchedulingService {
      * @return
      */
     MyRespBundle confirmProjectScheduling(List<ProjectBigSchedulingDetailsVO> projectBigSchedulingDetailsVO);
+
+    /**
+     * 大阶段完成,添加大阶段完成时间
+     * @param projectNo
+     * @param bigSort
+     */
+    String completeBigScheduling(String projectNo,Integer bigSort);
+
+    /**
+     * 开工申请
+     * @param projectNo
+     * @param bigSort
+     * @return
+     */
+    String projectStart(String projectNo,Integer bigSort);
 }

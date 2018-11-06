@@ -1,11 +1,12 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
-import cn.thinkfree.service.constants.HttpLinks;
+import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import java.util.Map;
 @Transactional(rollbackFor = RuntimeException.class)
 public class NewOrderUserServiceImpl implements NewOrderUserService {
 
+    private static final MyLogger LOGGER = new MyLogger(NewOrderUserService.class);
+
     @Resource
     private OrderUserMapper orderUserMapper;
     @Autowired(required = false)
@@ -45,6 +48,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private EmployeeMsgMapper employeeMsgMapper;
     @Resource
     private HttpLinks httpLinks;
+    @Autowired
+    private ProjectSchedulingMapper projectSchedulingMapper;
 
     @Override
     public List<OrderUser> findByProjectNo(String orderNo) {
@@ -62,7 +67,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public String findRoleIdByProjectNoAndUserId(String projectNo, String userId) {
         OrderUser orderUser = findByProjectNoAndUserId(projectNo, userId);
-        return orderUser != null ? orderUser.getRoleId() : null;
+        return orderUser != null ? orderUser.getRoleCode() : null;
     }
 
     @Override
@@ -99,11 +104,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                             employeeInfoVO.setProjectManager(employeeMsg.getRealName());
                         } else if (employeeMsg.getRoleCode().equals("CM")) {
                             employeeInfoVO.setForeman(employeeMsg.getRealName());
-                        }else if (employeeMsg.getRoleCode().equals("CS")) {
+                        } else if (employeeMsg.getRoleCode().equals("CS")) {
                             employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
-                        }else if(employeeMsg.getRoleCode().equals("CQ")) {
+                        } else if (employeeMsg.getRoleCode().equals("CQ")) {
                             employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
-                        }else if(employeeMsg.getRoleCode().equals("CD")) {
+                        } else if (employeeMsg.getRoleCode().equals("CD")) {
                             employeeInfoVO.setDesigner(employeeMsg.getRealName());
                         }
                     });
@@ -119,7 +124,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         String phone = (String) result.get("phone");
         */
         List<ProjectOrderVO> projectOrderList = DesignerOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
-        projectOrderList.forEach((projectOrder)->{
+        projectOrderList.forEach((projectOrder) -> {
             projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
             projectOrder.setDesignerName(employeeInfoVO.getDesigner());
            /* projectOrder.setOwner(nickName);
@@ -186,6 +191,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     /**
      * 获取用户信息
+     *
      * @param userId
      * @param roleId
      * @return
@@ -195,7 +201,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         Map<String, String> requestMap = new HashMap<>(2);
         requestMap.put("userId", userId);
         requestMap.put("roleId", roleId);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsgUrl(), requestMap);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsg(), requestMap);
         Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
         return (Map) responseMap.get("data");
     }
@@ -218,7 +224,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public OrderUser findByProjectNoAndRoleId(String projectNo, String roleId) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(projectNo).andRoleIdEqualTo(roleId);
+        example.createCriteria().andOrderNoEqualTo(projectNo).andRoleCodeEqualTo(roleId);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
         return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
     }
@@ -265,11 +271,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                             employeeInfoVO.setProjectManager(employeeMsg.getRealName());
                         } else if (employeeMsg.getRoleCode().equals("CM")) {
                             employeeInfoVO.setForeman(employeeMsg.getRealName());
-                        }else if (employeeMsg.getRoleCode().equals("CS")) {
+                        } else if (employeeMsg.getRoleCode().equals("CS")) {
                             employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
-                        }else if(employeeMsg.getRoleCode().equals("CQ")) {
+                        } else if (employeeMsg.getRoleCode().equals("CQ")) {
                             employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
-                        }else if(employeeMsg.getRoleCode().equals("CD")) {
+                        } else if (employeeMsg.getRoleCode().equals("CD")) {
                             employeeInfoVO.setDesigner(employeeMsg.getRealName());
                         }
                     });
@@ -279,9 +285,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(constructionSiteVO.getProjectNo());
         List<Project> projects = projectMapper.selectByExample(projectExample);
-        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsgUrl(), projects.get(0).getOwnerId(), Role.CC.id);
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
         List<ConstructionSiteVO> constructionSiteList = projectMapper.selectSiteDetailsByPage(constructionSiteVO, pageNum, pageSize);
-        constructionSiteList.forEach((projectOrder)->{
+        constructionSiteList.forEach((projectOrder) -> {
             projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
             projectOrder.setDesignerName(employeeInfoVO.getDesigner());
            /* projectOrder.setOwner(customerInfo.getUsername());
@@ -380,9 +386,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                             employeeInfoVO.setProjectManager(employeeMsg.getRealName());
                         } else if (employeeMsg.getRoleCode().equals("CM")) {
                             employeeInfoVO.setForeman(employeeMsg.getRealName());
-                        }else if (employeeMsg.getRoleCode().equals("CS")) {
+                        } else if (employeeMsg.getRoleCode().equals("CS")) {
                             employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
-                        }else if(employeeMsg.getRoleCode().equals("CQ")) {
+                        } else if (employeeMsg.getRoleCode().equals("CQ")) {
                             employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
                         }
                     });
@@ -394,28 +400,59 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     /**
+     * @return
      * @Author jiang
      * @Description 分页查询验收结果
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public List<AcceptanceResultsVO> queryAcceptanceResultsByPage(String projectNo, Integer pageNum, Integer pageSize) {
 
-        return projectBigSchedulingDetailsMapper.selectAcceptanceResultsByPage( projectNo,  pageNum,  pageSize);
+        return projectBigSchedulingDetailsMapper.selectAcceptanceResultsByPage(projectNo, pageNum, pageSize);
     }
 
     /**
+     * @return
      * @Author jiang
      * @Description 查询验收结果总条数
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public Integer queryAcceptanceResultsCount(String projectNo) {
         return projectBigSchedulingDetailsMapper.selectAcceptanceResultsCount(projectNo);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 更改延期天数
+     * @Date
+     * @Param
+     **/
+    @Override
+    public void modifyDelayDay(String projectNo, Integer newDelay) {
+        ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
+        projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
+        if (projectSchedulings.size() == 1) {
+            ProjectScheduling projectScheduling = projectSchedulings.get(0);
+            Integer delay = projectScheduling.getDelay();
+            ProjectScheduling projectScheduling1 = new ProjectScheduling();
+            projectScheduling1.setDelay(newDelay + delay);
+            projectSchedulingMapper.updateByExampleSelective(projectScheduling1, projectSchedulingExample);
+        }
+        if (projectSchedulings.size() <= 0) {
+            LOGGER.error("未查询到项目编号为{}的项目！", projectNo);
+            throw new RuntimeException();
+        }
+        if (projectSchedulings.size() > 1) {
+            LOGGER.error("查询到项目编号为{}的项目不止一个！", projectNo);
+            throw new RuntimeException();
+        }
+
+
     }
 
 

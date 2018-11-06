@@ -994,6 +994,76 @@ public class AfInstanceExample {
             addCriterion("config_no not between", value1, value2, "configNo");
             return (Criteria) this;
         }
+
+        public Criteria andConfigSchemeNoIsNull() {
+            addCriterion("config_scheme_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoIsNotNull() {
+            addCriterion("config_scheme_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoEqualTo(String value) {
+            addCriterion("config_scheme_no =", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoNotEqualTo(String value) {
+            addCriterion("config_scheme_no <>", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoGreaterThan(String value) {
+            addCriterion("config_scheme_no >", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoGreaterThanOrEqualTo(String value) {
+            addCriterion("config_scheme_no >=", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoLessThan(String value) {
+            addCriterion("config_scheme_no <", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoLessThanOrEqualTo(String value) {
+            addCriterion("config_scheme_no <=", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoLike(String value) {
+            addCriterion("config_scheme_no like", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoNotLike(String value) {
+            addCriterion("config_scheme_no not like", value, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoIn(List<String> values) {
+            addCriterion("config_scheme_no in", values, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoNotIn(List<String> values) {
+            addCriterion("config_scheme_no not in", values, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoBetween(String value1, String value2) {
+            addCriterion("config_scheme_no between", value1, value2, "configSchemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andConfigSchemeNoNotBetween(String value1, String value2) {
+            addCriterion("config_scheme_no not between", value1, value2, "configSchemeNo");
+            return (Criteria) this;
+        }
     }
 
     /**

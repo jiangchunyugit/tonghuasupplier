@@ -229,6 +229,9 @@ public class HttpUtils {
             httpConn.setDoInput(true);
             httpConn.setUseCaches(false);
             httpConn.setRequestProperty("Content-Type",contentType);
+            //设置超时时间
+            httpConn.setConnectTimeout(2000);
+            httpConn.setReadTimeout(2000);
             httpConn.connect();
             OutputStreamWriter out = new OutputStreamWriter(httpConn.getOutputStream(), charset);
             out.write(requestMsg);

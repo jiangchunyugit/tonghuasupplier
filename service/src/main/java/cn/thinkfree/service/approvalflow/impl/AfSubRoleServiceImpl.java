@@ -1,7 +1,10 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.database.mapper.AfSubRoleMapper;
-import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.model.AfSubRole;
+import cn.thinkfree.database.model.AfSubRoleExample;
+import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.approvalflow.AfSubRoleService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * TODO
+ * 订阅角色服务层
  *
  * @author song
  * @version 1.0
@@ -20,6 +23,9 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfSubRoleServiceImpl implements AfSubRoleService {
+
+    private static final MyLogger LOGGER = new MyLogger(AfSubRoleServiceImpl.class);
+
 
     @Resource
     private AfSubRoleMapper subRoleMapper;
@@ -37,6 +43,12 @@ public class AfSubRoleServiceImpl implements AfSubRoleService {
         return getRoles(subRoles, allRoles);
     }
 
+    /**
+     * 根据订阅角色信息、所有角色信息获取详细审批角色信息
+     * @param subRoles 订阅角色信息
+     * @param allRoles 所有角色信息
+     * @return 详细订阅角色信息
+     */
     private List<UserRoleSet> getRoles(List<AfSubRole> subRoles, List<UserRoleSet> allRoles) {
         List<UserRoleSet> roles = new ArrayList<>();
         if (subRoles != null) {
@@ -49,11 +61,10 @@ public class AfSubRoleServiceImpl implements AfSubRoleService {
                     }
                 }
                 if (role == null) {
-                    // TODO
+                    LOGGER.error("未获取到角色信息，roleId：{}", subRole.getRoleId());
                     throw new RuntimeException();
-                } else {
-                    roles.add(role);
                 }
+                roles.add(role);
             }
         }
         return roles;

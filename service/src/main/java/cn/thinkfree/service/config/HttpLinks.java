@@ -1,7 +1,7 @@
-package cn.thinkfree.service.constants;
+package cn.thinkfree.service.config;
 
 import lombok.Data;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
+@ConfigurationProperties(prefix = "url")
 public class HttpLinks {
     /**
      * 获取用户信息链接
      */
-    @Value("${user.center.url.get-user-msg}")
-    private String userCenterGetUserMsgUrl;
+    private String userCenterGetUserMsg;
 }

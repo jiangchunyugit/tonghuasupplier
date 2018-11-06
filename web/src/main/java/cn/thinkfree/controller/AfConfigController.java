@@ -4,10 +4,13 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.AfConfigService;
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -25,6 +28,9 @@ import java.util.List;
 @RequestMapping("af-config")
 public class AfConfigController extends AbsBaseController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AfConfigController.class);
+
+
     @Resource
     private AfConfigService configService;
 
@@ -33,6 +39,7 @@ public class AfConfigController extends AbsBaseController {
     @ApiOperation(value="前端-查询所有审批流-宋传让")
     @ApiParam(name = "schemeNo", value= "方案编号", required = true)
     public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "schemeNo") String schemeNo){
+        LOGGER.info("请求参数，schemeNo:{}", schemeNo);
         return sendJsonData(ResultMessage.SUCCESS, configService.list(schemeNo));
     }
 
@@ -44,6 +51,7 @@ public class AfConfigController extends AbsBaseController {
             @ApiImplicitParam(name = "schemeNo", value = "方案编号", required = true)
     })
     public MyRespBundle<AfConfigVO> detail(@RequestParam(name = "configNo") String configNo, @RequestParam(name = "schemeNo") String schemeNo){
+        LOGGER.info("请求参数，configNo：{}，schemeNo:{}", configNo, schemeNo);
         return sendJsonData(ResultMessage.SUCCESS, configService.detail(configNo, schemeNo));
     }
 
@@ -52,6 +60,7 @@ public class AfConfigController extends AbsBaseController {
     @ApiOperation(value="前端-修改审批流配置-宋传让")
     @ApiParam(name = "configEditVO", value= "审批流信息", required = true)
     public MyRespBundle<AfConfigVO> edit(@RequestBody AfConfigEditVO configEditVO){
+        LOGGER.info("请求参数，configEditVO：{}", JSONUtil.bean2JsonStr(configEditVO));
         configService.edit(configEditVO);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
