@@ -94,7 +94,7 @@ public class SettlementRuleController extends AbsBaseController {
     @PostMapping("/insertRule")
     @MyRespBody
     // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
-    public MyRespBundle<String> insertRule(@ApiParam("结算规则信息")  @RequestParam SettlementRuleVO settlementRuleVO){
+    public MyRespBundle<String> insertRule(@ApiParam("结算规则信息")   SettlementRuleVO settlementRuleVO){
 
         BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
 
