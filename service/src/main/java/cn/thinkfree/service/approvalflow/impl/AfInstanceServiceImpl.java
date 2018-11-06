@@ -180,7 +180,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             instance.setStatus(AfConstants.APPROVAL_STATUS_START);
         } else {
             instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
-            sendSuccessMessage(instance.getConfigSchemeNo());
+            sendSuccessMessage(projectNo, scheduleSort, instance.getConfigNo(), instance.getConfigSchemeNo());
         }
 
         insert(instance);
@@ -334,7 +334,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 // 结束审批流
                 instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
                 instance.setCurrentApprovalLogNo(null);
-                sendSuccessMessage(instance.getConfigSchemeNo());
+                sendSuccessMessage(instance.getProjectNo(), instance.getScheduleSort(), instance.getConfigNo(), instance.getConfigSchemeNo());
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
                 sendMessageToNext(nextApprovalLog.getUserId());
@@ -360,10 +360,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     /**
      * 发送审批成功消息
+     * @param configNo 审批流配置编号
      * @param configSchemeNo 审批流配置方案编号
      */
-    private void sendSuccessMessage(String configSchemeNo) {
-
+    private void sendSuccessMessage(String projectNo, Integer scheduleSort, String configNo, String configSchemeNo) {
+        if (AfConfigs.START_REPORT.configNo.equals(configNo)) {
+            schedulingService.projectStart(projectNo, scheduleSort);
+        } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(configNo)) {
+            schedulingService.completeBigScheduling(projectNo, scheduleSort);
+        }
     }
 
     /**

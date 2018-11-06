@@ -37,7 +37,7 @@ public class EmployeeController extends AbsBaseController {
     @RequestMapping(value = "review", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewDesigner(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "authState", required = false, value = "审核状态") @RequestParam(name = "authState", required = false) int authState,
+            @ApiParam(name = "authState", required = false, value = "审核状态,2审核通过，4审核不通过") @RequestParam(name = "authState", required = false) int authState,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
         try {
             employeeService.reviewEmployee(userId, authState, companyId);
@@ -55,11 +55,12 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "cardType", required = false, value = "证件类型") @RequestParam(name = "cardType", required = false) int cardType,
             @ApiParam(name = "cardNo", required = false, value = "证件号码") @RequestParam(name = "cardNo", required = false) String cardNo,
             @ApiParam(name = "realName", required = false, value = "真实姓名") @RequestParam(name = "realName", required = false) String realName,
+            @ApiParam(name = "country", required = false, value = "所属国家编码") @RequestParam(name = "country", required = false) String country,
             @ApiParam(name = "idCardUrl1", required = false, value = "证件正面") @RequestParam(name = "idCardUrl1", required = false) String idCardUrl1,
             @ApiParam(name = "idCardUrl2", required = false, value = "证件反面") @RequestParam(name = "idCardUrl2", required = false) String idCardUrl2,
             @ApiParam(name = "idCardUrl3", required = false, value = "手持证件") @RequestParam(name = "idCardUrl3", required = false) String idCardUrl3) {
         try {
-            employeeService.submitCardMsg(userId, cardType, cardNo, realName, idCardUrl1, idCardUrl2, idCardUrl3);
+            employeeService.submitCardMsg(userId, cardType, cardNo, realName, country, idCardUrl1, idCardUrl2, idCardUrl3);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -71,7 +72,7 @@ public class EmployeeController extends AbsBaseController {
     @RequestMapping(value = "apply", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle apply(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
+            @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态1入驻待审核，4解约待审核") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
         try {
             employeeService.employeeApply(userId, employeeApplyState, companyId);
