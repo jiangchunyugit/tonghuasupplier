@@ -8,6 +8,8 @@ import cn.thinkfree.database.Param.SettlementRuleParam;
 import cn.thinkfree.database.model.SettlementRuleInfo;
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.utils.BeanValidator;
+import cn.thinkfree.database.vo.Severitys;
+import cn.thinkfree.database.vo.settle.SettlementRuleContractVO;
 import cn.thinkfree.database.vo.settle.SettlementRuleSEO;
 import cn.thinkfree.database.vo.settle.SettlementRuleVO;
 import cn.thinkfree.service.settle.rule.SettlementRuleService;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,7 +29,7 @@ import java.util.Map;
  * @date 2018-09-20
  * @author jiangchunyu
  */
-@Api(value = "合同结算规则",description = "合同结算规则信息描述")
+@Api(value = "前端使用---结算系统---结算规则设置---蒋春雨",description = "结算规则设置信息描述")
 @RestController
 @RequestMapping("/rule")
 public class SettlementRuleController extends AbsBaseController {
@@ -40,16 +43,14 @@ public class SettlementRuleController extends AbsBaseController {
      * @param settlementRuleSEO
      * @return
      */
-    @ApiOperation(value = "结算规则列表", notes = "根据一定条件获取分页合同记录")
+    @ApiOperation(value = "结算规则", notes = "根据一定条件获取分页结算规则记录")
     @GetMapping("/queryRulePage")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "分页查询结算规则")
     public MyRespBundle<SystemPermission> queryRulePage(SettlementRuleSEO settlementRuleSEO){
 
         BeanValidator.validate(settlementRuleSEO);
-
         PageInfo<SettlementRuleInfo> result= settlementRuleService.pageSettlementRuleBySEO(settlementRuleSEO);
-
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
@@ -59,7 +60,7 @@ public class SettlementRuleController extends AbsBaseController {
      * @author lqd
      * @return pageList
      */
-    @ApiOperation(value = "结算比列导出", notes = "根据一定条件获取分页数据导出")
+    @ApiOperation(value = "结算规则导出", notes = "根据一定条件获取分页数据导出")
     @GetMapping("/exportList")
     @MyRespBody
     public void exportList(HttpServletResponse response,
@@ -68,6 +69,19 @@ public class SettlementRuleController extends AbsBaseController {
     }
 
 
+
+    @ApiOperation(value = "结算规则", notes = "根据类型，和费用类型查找全部规则和方法")
+    @GetMapping("/ruleContraList")
+    @MyRespBody
+    public MyRespBundle<List<SettlementRuleContractVO>> ruleContraList(@ApiParam("结算规则类型")@RequestParam String collectionType,
+                                                                       @ApiParam("结算规则费用")@RequestParam String feeNm){
+        SettlementRuleInfo settlementRuleInfo = new SettlementRuleInfo();
+        settlementRuleInfo.setCollectionType(collectionType);
+        settlementRuleInfo.setFeeName(feeNm);
+        List<SettlementRuleContractVO> settlementRuleContractVOS = settlementRuleService.getSettlementRuleContract(settlementRuleInfo);
+      int ad = 4;
+       return sendJsonData(ResultMessage.SUCCESS,settlementRuleContractVOS);
+    }
 
 
     /**
@@ -80,9 +94,9 @@ public class SettlementRuleController extends AbsBaseController {
     @PostMapping("/insertRule")
     @MyRespBody
     // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
-    public MyRespBundle<String> insertRule(@ApiParam("结算规则信息") @RequestBody SettlementRuleVO settlementRuleVO){
+    public MyRespBundle<String> insertRule(@ApiParam("结算规则信息")  @RequestParam SettlementRuleVO settlementRuleVO){
 
-        BeanValidator.validate(settlementRuleVO);
+        BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
 
         boolean  result= settlementRuleService.insertOrupdateSettlementRule(settlementRuleVO);
 
@@ -93,7 +107,7 @@ public class SettlementRuleController extends AbsBaseController {
      * 获取结算规则
      *
      */
-    @ApiOperation(value = "获取结算规则", notes = "更加结算规则编号获取结算规则")
+    @ApiOperation(value = "查看结算规则", notes = "根据结算规则编号获取结算规则")
     @GetMapping("/getRuleByRuleNumber")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
@@ -168,10 +182,25 @@ public class SettlementRuleController extends AbsBaseController {
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
     public MyRespBundle<String> batchcCheckSettlementRule(SettlementRuleParam param){
 
+        BeanValidator.validate(param);
         boolean  result= settlementRuleService.batchcCheckSettlementRule(param.getRuleNumbers(),param.getAuditStatus(),param.getAuditCase());
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
+    /**
+     * 申请废除
+     * @return
+     */
+    @ApiOperation(value = "申请废除", notes = "申请废除")
+    @PostMapping("/applicationInvalid")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
+    public MyRespBundle<String> applicationInvalid(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
+
+        boolean  result= settlementRuleService.applicationInvalid(ruleNumber);
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
 
 }

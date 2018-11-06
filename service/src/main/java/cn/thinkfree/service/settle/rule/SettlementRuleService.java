@@ -1,6 +1,7 @@
 package cn.thinkfree.service.settle.rule;
 
 import cn.thinkfree.database.model.SettlementRuleInfo;
+import cn.thinkfree.database.vo.settle.SettlementRuleContractVO;
 import cn.thinkfree.database.vo.settle.SettlementRuleSEO;
 import cn.thinkfree.database.vo.settle.SettlementRuleVO;
 import com.github.pagehelper.PageInfo;
@@ -50,6 +51,13 @@ public interface SettlementRuleService {
      */
     boolean cancellatSettlementRule(String ruleNumber);
 
+    /**
+     *
+     * 申请作废结算规则
+     * @return SettlementRuleInfo
+     */
+    boolean applicationInvalid(String ruleNumber);
+
 
     /**
      * 获取费用名称从埃森哲获取
@@ -68,5 +76,7 @@ public interface SettlementRuleService {
      * @return
      */
     boolean  batchcCheckSettlementRule(List<String> ruleNumbers, String auditStatus, String auditCase);
+
+    List<SettlementRuleContractVO> getSettlementRuleContract(SettlementRuleInfo settlementRuleInfo);
 
 }
