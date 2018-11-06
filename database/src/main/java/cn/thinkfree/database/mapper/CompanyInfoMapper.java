@@ -1,13 +1,12 @@
 package cn.thinkfree.database.mapper;
 
-import java.util.List;
-
+import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.CompanyInfoExample;
 import cn.thinkfree.database.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
+import java.util.List;
 
 @Component
 public interface CompanyInfoMapper {
@@ -131,4 +130,5 @@ public interface CompanyInfoMapper {
      * @return
      */
     List<CompanyListVo> downLoad(CompanyListSEO companyListSEO);
+
 }

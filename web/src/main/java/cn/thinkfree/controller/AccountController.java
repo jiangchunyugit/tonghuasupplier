@@ -349,6 +349,19 @@ public class AccountController extends AbsBaseController {
 
 
     /**
+     * 账号管理--列表
+     * @param accountVO
+     * @return
+     */
+    @ApiOperation(value="前端-运营平台-账号管理", notes="账号管理列表")
+    @GetMapping("/info")
+    @MyRespBody
+    public MyRespBundle<AccountVO> accountList(AccountVO accountVO){
+        AccountVO result = pcUserInfoService.saveUserAccount(accountVO);
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
      * 创建账号
      * @param accountVO
      * @return
