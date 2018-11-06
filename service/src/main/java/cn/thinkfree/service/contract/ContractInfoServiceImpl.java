@@ -251,14 +251,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public List<Map<String,Object>> contractDetails(String contractNumber, String companyId) {
 		
-		List<Map<String,Object>> reportresult =new ArrayList<>();
 		ContractVo  vo  = new ContractVo();
 		vo.setContractNumber(contractNumber);
 		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo);//合同信息
 		CompanyInfoVo  companyInfo  = companyInfoMapper.selectByCompanyId(newVo.getCompanyId());//公司信息
 		List<Map<String, Object>> list = getContractInfo(contractNumber, newVo, companyInfo);
-
-		return reportresult;
+		return list;
 	}
 
 
@@ -336,12 +334,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		root.put("reportresult", reportresult);
 		//判断公司类型
 		if(companyInfo.getRoleId().equals("BD")){//装修公司
-			
-			WordUtil.createWord(configurer,root, "/sj_ftl.xml", "", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
+			url = FreemarkerUtils.savePdf(contractNumber,"0" , root);
+			//WordUtil.createWord(configurer,root, "/sj_ftl.xml", "", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
 
 		}else if(companyInfo.getRoleId().equals("SJ")){//设计公司
 			
-			WordUtil.createWord(configurer,root, "/sj_ftl.xml", "http://localhost:7181/static/", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
+			//WordUtil.createWord(configurer,root, "/sj_ftl.xml", "http://localhost:7181/static/", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
 		}
 
 		return url;
@@ -537,7 +535,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("test", "测试");
-			url = FreemarkerUtils.savePdf(contractNumber, type, map);
+			//url = FreemarkerUtils.savePdf(contractNumber, type, map);
 
 		} catch (Exception e) {
 			printErrorMes("生成订单合同 系统错误{}", e.getMessage());
