@@ -574,7 +574,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         RemindOwnerLogExample logExample = new RemindOwnerLogExample();
         //24小时内只能提示一次
         logExample.createCriteria().andDesignerOrderNoEqualTo(DesignerOrder.getOrderNo())
-                .andRemindTimeGreaterThanOrEqualTo(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24));
+                .andRemindTimeGreaterThanOrEqualTo(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
         List<RemindOwnerLog> remindOwnerLogs = remindOwnerLogMapper.selectByExample(logExample);
         if (!remindOwnerLogs.isEmpty()) {
             throw new RuntimeException("每24小时能只能提示一次~");
