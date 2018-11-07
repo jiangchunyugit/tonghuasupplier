@@ -29,7 +29,8 @@
           ci.company_name AS constructionCompany,
           ps.task_num taskNum,
           deso.money as cost,
-          ps.delay delay
+          ps.delay delay,
+          ps.is_confirm isConfirm
         FROM
             construction_order deso
         LEFT JOIN company_info ci ON deso.company_id = ci.company_id

@@ -27,7 +27,7 @@ public interface NewOrderUserService {
      * 根据项目编号与角色编号查询用户ID
      *
      * @param projectNo 项目编号
-     * @param roleId  角色编号
+     * @param roleId    角色编号
      * @return 用户ID
      */
     String findUserIdByProjectNoAndRoleId(String projectNo, String roleId);
@@ -36,7 +36,7 @@ public interface NewOrderUserService {
      * 根据项目编号与用户编号查询角色ID
      *
      * @param projectNo 项目编号
-     * @param userId  用户编号
+     * @param userId    用户编号
      * @return 角色ID
      */
     String findRoleIdByProjectNoAndUserId(String projectNo, String userId);
@@ -45,13 +45,14 @@ public interface NewOrderUserService {
      * 根据项目编号与用户编号查询项目角色用户关系
      *
      * @param projectNo 项目编号
-     * @param userId  用户编号
+     * @param userId    用户编号
      * @return 项目角色用户关系
      */
     OrderUser findByProjectNoAndUserId(String projectNo, String userId);
 
     /**
      * 分页查询项目派单
+     *
      * @param projectOrderVO
      * @param pageNum
      * @param pageSize
@@ -60,26 +61,26 @@ public interface NewOrderUserService {
     List<ProjectOrderVO> queryProjectOrderByPage(ProjectOrderVO projectOrderVO, Integer pageNum, Integer pageSize);
 
     /**
-     * @Author jiang
-     * @Description 查询项目派单总条数
      * @param projectOrderVO
      * @return
+     * @Author jiang
+     * @Description 查询项目派单总条数
      */
     Integer queryProjectOrderCount(ProjectOrderVO projectOrderVO);
 
     /**
-     * @Author jiang
-     * @Description 订单确认接口
      * @param orderConfirmationVO
      * @return
+     * @Author jiang
+     * @Description 订单确认接口
      */
     Integer updateorderConfirmation(OrderConfirmationVO orderConfirmationVO);
 
     /**
-     * @Author jiang
-     * @Description 查看订单详情
      * @param projectNo
      * @return
+     * @Author jiang
+     * @Description 查看订单详情
      */
     OrderDetailsVO selectOrderDetails(String projectNo);
 
@@ -163,6 +164,7 @@ public interface NewOrderUserService {
      * @Param
      **/
     Integer queryConstructionPlanCount(ConstructionPlanVO constructionPlanVO);
+
     /**
      * @return
      * @Author jiang
@@ -171,28 +173,41 @@ public interface NewOrderUserService {
      * @Param
      **/
     EmployeeInfoVO selectemployeeInfoList(String projectNo);
+
     /**
+     * @return
      * @Author jiang
      * @Description 分页查询验收结果
      * @Date
      * @Param
-     * @return
      **/
     List<AcceptanceResultsVO> queryAcceptanceResultsByPage(String projectNo, Integer pageNum, Integer pageSize);
+
     /**
+     * @return
      * @Author jiang
      * @Description 验收结果总条数
      * @Date
      * @Param
-     * @return
      **/
     Integer queryAcceptanceResultsCount(String projectNo);
 
     /**
      * 获取用户信息
+     *
      * @param userId
      * @param roleId
      * @return
      */
     Map getUserName(String userId, String roleId);
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 更改延期天数
+     * @Date
+     * @Param projectNo
+     * @Param newDelay
+     **/
+    public void modifyDelayDay(String projectNo, Integer newDelay);
 }

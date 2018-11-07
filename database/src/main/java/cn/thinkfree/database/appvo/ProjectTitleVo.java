@@ -1,11 +1,10 @@
 package cn.thinkfree.database.appvo;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 /**
  * @author gejiaming
@@ -13,13 +12,14 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderPlayVo {
-    @ApiModelProperty(name = "constructionCompany",value = "承接公司")
-    private String constructionCompany;
-    @ApiModelProperty(name = "companyUrl",value = "公司个人主页地址")
-    private String companyUrl;
-    @ApiModelProperty(name = "persionList",value = "人员集合")
-    private List<PersionVo> persionList;
+@ApiModel(value = "ProjectTitleVo",description = "项目头详情")
+public class ProjectTitleVo {
+    @ApiModelProperty(name = "projectNo",value = "项目编号")
+    private String projectNo;
+    @ApiModelProperty(name = "address",value = "装修地址")
+    private String address;
+    @ApiModelProperty(name = "constructionProgress",value = "施工进度")
+    private Integer constructionProgress;
     @ApiModelProperty(name = "taskNum",value = "任务数")
     private Integer taskNum;
     @ApiModelProperty(name = "cost",value = "费用")
@@ -30,4 +30,6 @@ public class OrderPlayVo {
     private Integer delay;
     @ApiModelProperty(value = "排期是否可以编辑(0,不可以 1,可以)")
     private Integer isConfirm;
+
+
 }

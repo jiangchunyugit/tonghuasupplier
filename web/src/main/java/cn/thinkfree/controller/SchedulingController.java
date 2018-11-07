@@ -29,8 +29,7 @@ public class SchedulingController extends AbsBaseController {
     @ApiOperation(value = "APP/PC-获取排期信息")
     @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 使用 111") String projectNo) {
-        List<ProjectBigSchedulingDetailsVO> bigSchedulingDetailsVoList = schedulingService.getScheduling(projectNo);
-        return sendJsonData(ResultMessage.SUCCESS, bigSchedulingDetailsVoList);
+        return schedulingService.getScheduling(projectNo);
     }
 
     @RequestMapping(value = "saveProjectScheduling", method = RequestMethod.POST)
@@ -66,6 +65,14 @@ public class SchedulingController extends AbsBaseController {
             @RequestParam(name = "projectNo") @ApiParam(name = "companyId", value = "公司编号 使用 111") String companyId ){
         return schedulingService.createScheduling(projectNo,companyId);
     }
+
+//    @RequestMapping(value = "aa",method = RequestMethod.POST)
+//    @ApiOperation("完工测试")
+//    public MyRespBundle aa(
+//            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 ") String projectNo,
+//            @RequestParam(name = "bigSort") @ApiParam(name = "bigSort", value = "大阶段序号 ") Integer bigSort ){
+//        return sendSuccessMessage(schedulingService.projectStart(projectNo,bigSort));
+//    }
 
 
 

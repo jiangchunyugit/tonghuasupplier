@@ -16,7 +16,7 @@ public interface EmployeeService {
      * 员工实名认证审核
      *
      * @param userId    用户ID
-     * @param authState 审核状态
+     * @param authState 审核状态1未认证，2已认证，3实名认证审核中，4审核不通过
      * @param companyId 公司ID
      */
     void reviewEmployee(String userId, int authState, String companyId);
@@ -48,11 +48,12 @@ public interface EmployeeService {
      * @param cardType 证件类型
      * @param cardNo   证件号码
      * @param realName 真实姓名
+     * @param country  所属国家
      * @param photo1   证件-正面
      * @param photo2   证件-反面
      * @param photo3   手持证件
      */
-    void submitCardMsg(String userId, int cardType, String cardNo, String realName, String photo1, String photo2, String photo3);
+    void submitCardMsg(String userId, int cardType, String cardNo, String realName, String country, String photo1, String photo2, String photo3);
 
     /**
      * 查询角色信息

@@ -1,14 +1,15 @@
 package cn.thinkfree.service.utils;
 
-import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.vo.AfUserDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TODO
+ * 审批流工具
  *
  * @author song
  * @version 1.0
@@ -17,8 +18,15 @@ import java.util.Map;
 
 public class AfUtils {
 
-    private static final MyLogger LOGGER = new MyLogger(AfUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AfUtils.class);
 
+    /**
+     * 获取用户信息
+     * @param url 外部url
+     * @param userId 用户编号
+     * @param roleId 角色编号
+     * @return 用户信息
+     */
     public static AfUserDTO getUserInfo(String url, String userId, String roleId) {
         Map<String, String> requestMap = new HashMap<>(2);
         requestMap.put("userId", userId);

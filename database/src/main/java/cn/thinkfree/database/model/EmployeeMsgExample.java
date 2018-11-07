@@ -1574,6 +1574,76 @@ public class EmployeeMsgExample {
             addCriterion("certificate_photo_url3 not between", value1, value2, "certificatePhotoUrl3");
             return (Criteria) this;
         }
+
+        public Criteria andCountryCodeIsNull() {
+            addCriterion("country_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeIsNotNull() {
+            addCriterion("country_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeEqualTo(String value) {
+            addCriterion("country_code =", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeNotEqualTo(String value) {
+            addCriterion("country_code <>", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeGreaterThan(String value) {
+            addCriterion("country_code >", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("country_code >=", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeLessThan(String value) {
+            addCriterion("country_code <", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeLessThanOrEqualTo(String value) {
+            addCriterion("country_code <=", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeLike(String value) {
+            addCriterion("country_code like", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeNotLike(String value) {
+            addCriterion("country_code not like", value, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeIn(List<String> values) {
+            addCriterion("country_code in", values, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeNotIn(List<String> values) {
+            addCriterion("country_code not in", values, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeBetween(String value1, String value2) {
+            addCriterion("country_code between", value1, value2, "countryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCountryCodeNotBetween(String value1, String value2) {
+            addCriterion("country_code not between", value1, value2, "countryCode");
+            return (Criteria) this;
+        }
     }
 
     /**

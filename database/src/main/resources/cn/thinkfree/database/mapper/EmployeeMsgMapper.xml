@@ -27,6 +27,7 @@
     <result column="certificate_photo_url1" jdbcType="VARCHAR" property="certificatePhotoUrl1" />
     <result column="certificate_photo_url2" jdbcType="VARCHAR" property="certificatePhotoUrl2" />
     <result column="certificate_photo_url3" jdbcType="VARCHAR" property="certificatePhotoUrl3" />
+    <result column="country_code" jdbcType="VARCHAR" property="countryCode" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -102,7 +103,7 @@
     user_id, company_id, certificate, real_name, certificate_type, auth_state, role_code, 
     sex, province, city, area, email, apply_time, employee_state, leavedate, bind_date, 
     working_time, employee_apply_state, certificate_photo_url1, certificate_photo_url2, 
-    certificate_photo_url3
+    certificate_photo_url3, country_code
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.EmployeeMsgExample" resultMap="BaseResultMap">
     <!--
@@ -162,7 +163,7 @@
       apply_time, employee_state, leavedate, 
       bind_date, working_time, employee_apply_state, 
       certificate_photo_url1, certificate_photo_url2, 
-      certificate_photo_url3)
+      certificate_photo_url3, country_code)
     values (#{userId,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{certificate,jdbcType=VARCHAR}, 
       #{realName,jdbcType=VARCHAR}, #{certificateType,jdbcType=INTEGER}, #{authState,jdbcType=INTEGER}, 
       #{roleCode,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{province,jdbcType=VARCHAR}, 
@@ -170,7 +171,7 @@
       #{applyTime,jdbcType=TIMESTAMP}, #{employeeState,jdbcType=INTEGER}, #{leavedate,jdbcType=TIMESTAMP}, 
       #{bindDate,jdbcType=TIMESTAMP}, #{workingTime,jdbcType=INTEGER}, #{employeeApplyState,jdbcType=INTEGER}, 
       #{certificatePhotoUrl1,jdbcType=VARCHAR}, #{certificatePhotoUrl2,jdbcType=VARCHAR}, 
-      #{certificatePhotoUrl3,jdbcType=VARCHAR})
+      #{certificatePhotoUrl3,jdbcType=VARCHAR}, #{countryCode,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.EmployeeMsg">
     <!--
@@ -242,6 +243,9 @@
       <if test="certificatePhotoUrl3 != null">
         certificate_photo_url3,
       </if>
+      <if test="countryCode != null">
+        country_code,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="userId != null">
@@ -306,6 +310,9 @@
       </if>
       <if test="certificatePhotoUrl3 != null">
         #{certificatePhotoUrl3,jdbcType=VARCHAR},
+      </if>
+      <if test="countryCode != null">
+        #{countryCode,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -389,6 +396,9 @@
       <if test="record.certificatePhotoUrl3 != null">
         certificate_photo_url3 = #{record.certificatePhotoUrl3,jdbcType=VARCHAR},
       </if>
+      <if test="record.countryCode != null">
+        country_code = #{record.countryCode,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -420,7 +430,8 @@
       employee_apply_state = #{record.employeeApplyState,jdbcType=INTEGER},
       certificate_photo_url1 = #{record.certificatePhotoUrl1,jdbcType=VARCHAR},
       certificate_photo_url2 = #{record.certificatePhotoUrl2,jdbcType=VARCHAR},
-      certificate_photo_url3 = #{record.certificatePhotoUrl3,jdbcType=VARCHAR}
+      certificate_photo_url3 = #{record.certificatePhotoUrl3,jdbcType=VARCHAR},
+      country_code = #{record.countryCode,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -492,6 +503,9 @@
       <if test="certificatePhotoUrl3 != null">
         certificate_photo_url3 = #{certificatePhotoUrl3,jdbcType=VARCHAR},
       </if>
+      <if test="countryCode != null">
+        country_code = #{countryCode,jdbcType=VARCHAR},
+      </if>
     </set>
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
@@ -520,7 +534,8 @@
       employee_apply_state = #{employeeApplyState,jdbcType=INTEGER},
       certificate_photo_url1 = #{certificatePhotoUrl1,jdbcType=VARCHAR},
       certificate_photo_url2 = #{certificatePhotoUrl2,jdbcType=VARCHAR},
-      certificate_photo_url3 = #{certificatePhotoUrl3,jdbcType=VARCHAR}
+      certificate_photo_url3 = #{certificatePhotoUrl3,jdbcType=VARCHAR},
+      country_code = #{countryCode,jdbcType=VARCHAR}
     where user_id = #{userId,jdbcType=VARCHAR}
   </update>
 
@@ -539,6 +554,7 @@
 
   <select id="selectAllByUserId" resultType="cn.thinkfree.database.appvo.PersionVo">
     SELECT
+        em.user_id as userId,
         em.real_name AS NAME,
         em.role_code AS ROLE,
         dm.personal_home_url AS personalHomeUrl
