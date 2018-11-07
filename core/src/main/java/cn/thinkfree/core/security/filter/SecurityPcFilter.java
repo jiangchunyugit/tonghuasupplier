@@ -2,7 +2,6 @@ package cn.thinkfree.core.security.filter;
 
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.security.filter.util.SecurityConstants;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.VersionUtil;

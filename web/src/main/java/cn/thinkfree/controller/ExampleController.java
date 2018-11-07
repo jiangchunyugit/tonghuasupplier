@@ -1,5 +1,35 @@
 package cn.thinkfree.controller;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+
 import cn.thinkfree.core.annotation.AppParameter;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.annotation.MySysLog;
@@ -12,26 +42,15 @@ import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.PreProjectGuideMapper;
+import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.PreProjectGuide;
+import cn.thinkfree.database.vo.PcUserInfoVo;
+import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.event.AuditEvent;
+import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.user.UserService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.thinkfree.service.utils.ExcelData;
+import cn.thinkfree.service.utils.ExcelUtils;
 
 @RestController
 public class ExampleController extends AbsBaseController {
@@ -43,7 +62,8 @@ public class ExampleController extends AbsBaseController {
     RestTemplate restTemplate;
 
 
-
+   @Autowired
+   CustomListenerServie customListenerServie;
 
 
     @PostMapping("/file")
@@ -94,6 +114,68 @@ public class ExampleController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,pi);
     }
 
+	@Autowired
+	ContractService contractService;
+	
+	@Autowired
+    private ApplicationContext applicationContext;
+    /**
+     * 测试创建合同
+     * @return
+     */
+    @MyRespBody
+    @GetMapping("/createContract")
+    public String createContract(){
+    	try {
+    		ContractInfo s = new ContractInfo();
+        	s.setContractStatus("1");
+        	//applicationContext.publishEvent(new AuditEvent(s));
+        	customListenerServie.publish(s);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+    	//contractService.createContractDoc("HT2018080710405900001");
+    
+        return "成功";
+    }
+    @ExceptionHandler(value=Exception.class)
+    @RequestMapping("export")
+    public void export(HttpServletResponse response) throws Exception{
+
+    	ExcelData data = new ExcelData();
+        data.setName("用户信息数据");
+        //添加表头
+        List<String> titles = new ArrayList();
+        //for(String title: excelInfo.getNames())
+        titles.add("用户名");
+        titles.add("性别");
+        titles.add("公司");
+        titles.add("ce");
+        titles.add("ssr");
+        data.setTitles(titles);
+        //添加列
+        List<List<Object>> rows = new ArrayList();
+        List<Object> row = null;
+        List<PcUserInfoVo> s = new ArrayList<>();
+        PcUserInfoVo ss = new PcUserInfoVo();
+        		ss.setCity("11");;
+        		s.add(ss);
+       for(int i=0; i<s.size();i++){
+           row=new ArrayList();
+           row.add("1");
+           row.add(s.get(i).getCity());
+           row.add(s.get(i).getCity());
+           row.add(s.get(i).getCity());
+           row.add(s.get(i).getCity());
+           rows.add(row);
+
+       }
+
+        data.setRows(rows);
+        SimpleDateFormat fdate=new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
+        String fileName=fdate.format(new Date())+".xls";
+        ExcelUtils.exportExcel(response, fileName, data);
+    }
 
 
 

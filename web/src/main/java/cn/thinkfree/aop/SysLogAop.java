@@ -8,7 +8,6 @@ import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.model.LogInfo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.system.LogInfoService;
-import jdk.jfr.events.ThrowablesEvent;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -75,20 +74,7 @@ public class SysLogAop {
         logInfo.setDetails(mySysLog.desc());
         logInfo.setCompanyId(userVO.getCompanyID());
         logInfoService.save(logInfo);
-//        String url = request.getRequestURI();
 
-//        LogInfo systemLog = SystemLogFactory.newLogInfo();
-//        boolean hasSignatures = Signatures.class.isAssignableFrom(retObj.getClass());
-//        if(hasSignatures){
-//            systemLog.setSignatures(((Signatures) retObj).getSignatures());
-//        }
-//        systemLog.setOperationUrl(url);
-//        systemLog.setOwnModel(haoheLog.module().desc());
-//        systemLog.setOperationType(haoheLog.action().value());
-        // 处理系统默认参数
-//        systemLog.setOperator(SessionUserDetailsUtil.getLoginUserID());
-//        systemLog.setOperationTime(new Date());
-//        logInfoService.saveLogByAOP(systemLog);
     }
 
     private LogInfo buildLogInfo(){

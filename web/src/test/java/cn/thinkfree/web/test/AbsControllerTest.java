@@ -62,13 +62,13 @@ public  abstract class AbsControllerTest {
         pcUserInfo.setCity("6101");
         pcUserInfo.setProvince("61");
         pcUserInfo.setRootCompanyId("BD2018080710405900001");
-        pcUserInfo.setCompanyId("BD2018080710405900001");
+//        pcUserInfo.setCompanyId("BD2018080710405900001");
         pcUserInfo.setLevel(Short.valueOf("1"));
         userVO.setPcUserInfo(pcUserInfo);
 
-        companyInfo.setRootCompanyId("BD2018080710405900001");
+//        companyInfo.setRootCompanyId("BD2018080710405900001");
         companyInfo.setCompanyId("BD2018080710405900001");
-        companyInfo.setParentCompanyId("BD2018080710405900001");
+//        companyInfo.setParentCompanyId("BD2018080710405900001");
         companyInfo.setAreaCode(110105);
         companyInfo.setProvinceCode(Short.valueOf("11"));
         companyInfo.setCityCode(Short.valueOf("1101"));
