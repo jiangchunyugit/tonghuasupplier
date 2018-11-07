@@ -60,7 +60,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         }
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectSmallScheduling> list = projectSmallSchedulingMapper.selectByExample(projectSmallSchedulingExample);
-        List<ProjectSmallSchedulingVO> voList = BaseToVoUtils.getListVo(list, ProjectSmallSchedulingVO.class, BaseToVoUtils.getBaseSmallMap());
+        List<ProjectSmallSchedulingVO> voList = BaseToVoUtils.getListVo(list, ProjectSmallSchedulingVO.class);
         if (voList == null) {
             System.out.println("工具类转换失败!!");
         }

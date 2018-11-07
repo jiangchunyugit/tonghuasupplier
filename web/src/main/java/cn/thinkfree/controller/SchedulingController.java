@@ -28,7 +28,7 @@ public class SchedulingController extends AbsBaseController {
 
     @ApiOperation(value = "APP/PC-获取排期信息")
     @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
-    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 使用 111") String projectNo) {
+    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 使用 1223098338391") String projectNo) {
         return schedulingService.getScheduling(projectNo);
     }
 
