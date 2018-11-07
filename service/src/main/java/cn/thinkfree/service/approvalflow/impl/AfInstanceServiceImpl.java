@@ -88,7 +88,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             AfApprovalLogVO approvalLogVO = new AfApprovalLogVO();
 
             for (OrderUser orderUser : orderUsers) {
-                if (orderUser.getRoleId().equals(role.getRoleCode())) {
+                if (orderUser.getRoleCode().equals(role.getRoleCode())) {
                     approvalLogVO.setUserId(orderUser.getUserId());
                     break;
                 }
@@ -138,7 +138,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             UserRoleSet role = approvalRoles.get(index);
             AfApprovalLog approvalLog = null;
             for (OrderUser orderUser : orderUsers) {
-                if (role.getRoleCode().equals(orderUser.getRoleId())) {
+                if (role.getRoleCode().equals(orderUser.getRoleCode())) {
                     approvalLog = new AfApprovalLog();
                     approvalLog.setRoleId(role.getRoleCode());
                     approvalLog.setUserId(orderUser.getUserId());

@@ -8,6 +8,7 @@ import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
+import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
     @Autowired
     ProjectSchedulingMapper projectSchedulingMapper;
+    @Autowired
+    OrderUserMapper orderUserMapper;
 
 
     /**
@@ -180,13 +183,26 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle confirmProjectScheduling(List<ProjectBigSchedulingDetailsVO> bigList) {
         if (bigList.isEmpty()) {
             return RespData.success("暂无修改");
         }
         String projectNo = bigList.get(0).getProjectNo();
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andProjectNoEqualTo(projectNo);
+        userCriteria.andUserIdEqualTo(bigList.get(0).getUserId());
+        userCriteria.andRoleCodeEqualTo(UserJobs.Foreman.roleCode);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if(orderUsers.size()==0){
+            return RespData.error("此操作者没有此项目编辑排期的权限!");
+        }
         //将原数据置为失效
         Integer i = projectBigSchedulingDetailsMapper.updateByProjectNo(projectNo, Scheduling.INVALID_STATUS.getValue());
+        if (i == 0){
+            return RespData.error("确认排期失败,原因:原数据失效失败!");
+        }
         for (ProjectBigSchedulingDetailsVO detailsVO : bigList) {
             ProjectBigSchedulingDetails projectBigSchedulingDetails = BaseToVoUtils.getVo(detailsVO, ProjectBigSchedulingDetails.class);
             projectBigSchedulingDetails.setStatus(Scheduling.BASE_STATUS.getValue());
