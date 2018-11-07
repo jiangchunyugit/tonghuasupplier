@@ -25,17 +25,23 @@ public class CommonService extends AbsBaseController {
     CityMapper cityMapper;
 
     /**
-     * 查询操作角色 是否有变更状态的权限
+     * 查询 当前状态值 By projectNo
      */
     public Integer queryStateCode(String projectNo) {
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.createCriteria().andProjectNoEqualTo(projectNo);
         List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
-        if (!constructionOrderList.isEmpty()){
-            return constructionOrderList.get(0).getOrderStage();
-        }else {
-            return null;
-        }
+        return constructionOrderList.get(0).getOrderStage();
+    }
+
+    /**
+     * 查询 当前状态值 By orderNo
+     */
+    public Integer queryStateCodeByOrderNo(String orderNo) {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
+        return constructionOrderList.get(0).getOrderStage();
     }
 
 
@@ -57,31 +63,48 @@ public class CommonService extends AbsBaseController {
     }
 
     /**
-     * 更新状态值
+     * 更新状态值 By projectNo
      */
-    public boolean updateStateCode(String projectNo,int stateCode) {
+    public boolean updateStateCode(String projectNo, int stateCode) {
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.createCriteria().andProjectNoEqualTo(projectNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
         constructionOrder.setOrderStage(stateCode);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
-        if (isUpdate == 1){
+        if (isUpdate == 1) {
             return true;
-        }else {
+        } else {
             return false;
         }
     }
 
     /**
-     *  施工订单 城市列表
+     * 更新状态值 By orderNo
+     */
+    public boolean updateStateCodeByOrderNo(String orderNo, int stateCode) {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        ConstructionOrder constructionOrder = new ConstructionOrder();
+        constructionOrder.setOrderStage(stateCode);
+        int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
+        if (isUpdate == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 施工订单 城市列表
+     *
      * @return
      */
-    public List<ConstructionCityVo> getCityList(){
+    public List<ConstructionCityVo> getCityList() {
         CityExample cityExample = new CityExample();
         cityExample.setOrderByClause("city_code ASC");
-        List<City> list =  cityMapper.selectByExample(cityExample);
-        List<ConstructionCityVo> listVo= new ArrayList<>();
-        for (City c : list){
+        List<City> list = cityMapper.selectByExample(cityExample);
+        List<ConstructionCityVo> listVo = new ArrayList<>();
+        for (City c : list) {
             ConstructionCityVo constructionCityVo = new ConstructionCityVo();
             constructionCityVo.setCityCode(c.getCityCode());
             constructionCityVo.setCityName(c.getCityName());

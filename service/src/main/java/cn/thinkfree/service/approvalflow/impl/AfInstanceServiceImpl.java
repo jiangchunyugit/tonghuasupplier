@@ -590,10 +590,35 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 //        }
         if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
             if (checkApplicationCount == checkReportCount) {
-                // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
-                addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                if (schedulingDetailsVOs.get(schedulingDetailsVOs.size() - 1).getBigSort().equals(scheduleSort)) {
+                    // 当前阶段为最后一个阶段
+                    if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
+                            && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                            && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+                        addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                    }
+                } else {
+                    // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
+                    addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                }
             }
         }
+    }
+
+    private long getCount(String projectNo, int status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
+        return instanceMapper.countByExample(example);
+    }
+
+    private boolean countEqual(String projectNo, String startConfigNo, String completeConfigNo, int status) {
+        return getCount(projectNo, startConfigNo, status) == getCount(projectNo, completeConfigNo, status);
+    }
+
+    private long getCount(String projectNo, String configNo, int status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo).andConfigNoEqualTo(configNo).andStatusEqualTo(status);
+        return instanceMapper.countByExample(example);
     }
 
     /**
