@@ -86,10 +86,10 @@ public interface EmployeeService {
     /**
      * 创建角色
      *
-     * @param roleCode 角色编码
      * @param roleName 角色名称
+     * @param remark   备注
      */
-    void createRole(String roleCode, String roleName, String remark);
+    void createRole(String roleName, String remark);
 
     /**
      * 删除角色
@@ -127,4 +127,12 @@ public interface EmployeeService {
      * @return
      */
     PageVo<List<EmployeeMsgVo>> queryStaffByPlatform(String roleCode, String searchKey, String city, int pageSize, int pageIndex);
+
+    /**
+     * 编辑角色编码
+     * @param roleCode
+     * @param roleName
+     * @param remark
+     */
+    void editRole(String roleCode, String roleName, String remark);
 }

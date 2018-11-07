@@ -5,7 +5,6 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BasicsData;
-import cn.thinkfree.database.model.BasicsDataParentCode;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -83,7 +82,7 @@ public class BasicsController extends AbsBaseController {
     @ApiOperation("获取所有数据编码")
     @MyRespBody
     @RequestMapping(value = "allParentCode", method = {RequestMethod.GET})
-    public MyRespBundle<List<BasicsDataParentCode>> allParentCode() {
+    public MyRespBundle<List<Map<String,String>>> allParentCode() {
         return sendJsonData(ResultMessage.SUCCESS, basicsService.allParentCode());
     }
 

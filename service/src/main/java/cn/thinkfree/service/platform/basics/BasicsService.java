@@ -1,8 +1,6 @@
 package cn.thinkfree.service.platform.basics;
 
 import cn.thinkfree.database.model.BasicsData;
-import cn.thinkfree.database.model.BasicsDataParentCode;
-import cn.thinkfree.service.platform.vo.CardTypeVo;
 
 import java.util.List;
 import java.util.Map;
@@ -16,7 +14,7 @@ public interface BasicsService {
      * 查询所有数据编码
      * @return
      */
-    List<BasicsDataParentCode> allParentCode();
+    List<Map<String,String>> allParentCode();
 
     /**
      * 查询证件类型
@@ -60,6 +58,14 @@ public interface BasicsService {
      * @return
      */
     List<BasicsData> queryData(String groupCode);
+
+    /**
+     * 根据分组类型查询基础配置信息
+     *
+     * @param groupCode 分支类型
+     * @return
+     */
+    List<BasicsData> queryData(String groupCode,List<String> keyCodes);
 
     /**
      * 创建基础数据

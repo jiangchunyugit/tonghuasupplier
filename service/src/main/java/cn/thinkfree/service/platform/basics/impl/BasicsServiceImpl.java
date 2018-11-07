@@ -1,9 +1,11 @@
 package cn.thinkfree.service.platform.basics.impl;
 
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.vo.CardTypeVo;
+import cn.thinkfree.service.utils.OrderNoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +25,6 @@ public class BasicsServiceImpl implements BasicsService {
     private AreaMapper areaMapper;
     @Autowired
     private BasicsDataMapper basicsDataMapper;
-    @Autowired
-    private BasicsDataParentCodeMapper parentCodeMapper;
 
     @Override
     public List<BasicsData> queryData(String groupCode) {
@@ -35,9 +35,16 @@ public class BasicsServiceImpl implements BasicsService {
     }
 
     @Override
+    public List<BasicsData> queryData(String groupCode, List<String> keyCodes) {
+        //暂时写死
+        BasicsDataExample dataExample = new BasicsDataExample();
+        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andDelStateEqualTo(2).andBasicsCodeIn(keyCodes);
+        return basicsDataMapper.selectByExample(dataExample);
+    }
+
+    @Override
     public void createBasics(String groupCode, String basicsName, String remark) {
-        BasicsDataParentCode parentCode = parentCodeMapper.selectByPrimaryKey(groupCode);
-        if(parentCode == null){
+        if(!BasicsDataParentEnum.allCodes().contains(groupCode)){
             throw new RuntimeException("无效的分组类型");
         }
         BasicsDataExample dataExample = new BasicsDataExample();
@@ -75,14 +82,26 @@ public class BasicsServiceImpl implements BasicsService {
     }
 
     @Override
-    public List<BasicsDataParentCode> allParentCode(){
-        return parentCodeMapper.selectByExample(new BasicsDataParentCodeExample());
+    public List<Map<String,String>> allParentCode(){
+        return BasicsDataParentEnum.allTypes();
     }
     private String getCode(String groupCode){
-        BasicsDataExample dataExample = new BasicsDataExample();
-        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode);
-        List<BasicsData> basicsData = basicsDataMapper.selectByExample(dataExample);
-        return basicsData.size() + 1 + "";
+        String dataCode = OrderNoUtils.getCode(6);
+        int i = 0;
+        while (true){
+            BasicsDataExample dataExample = new BasicsDataExample();
+            dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andBasicsCodeEqualTo(dataCode);
+            List<BasicsData> basicsData = basicsDataMapper.selectByExample(dataExample);
+            if(basicsData.isEmpty()){
+                break;
+            }
+            dataCode = OrderNoUtils.getCode(6);
+            i++;
+            if(i > 50){
+                throw new RuntimeException("编码重复");
+            }
+        }
+        return dataCode;
     }
 
     @Override

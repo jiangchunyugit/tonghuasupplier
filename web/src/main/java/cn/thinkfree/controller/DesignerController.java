@@ -4,12 +4,11 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.DesignerMsg;
-import cn.thinkfree.database.model.DesignerStyleConfig;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.vo.DesignerMsgVo;
+import cn.thinkfree.service.platform.vo.DesignerStyleConfigVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -91,36 +90,9 @@ public class DesignerController extends AbsBaseController {
     @ApiOperation("查询设计风格")
     @MyRespBody
     @RequestMapping(value = "designerStyle", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<List<DesignerStyleConfig>> queryDesignerStyle() {
-        List<DesignerStyleConfig> styleConfigs = designerService.queryDesignerStyle();
+    public MyRespBundle<List<DesignerStyleConfigVo>> queryDesignerStyle() {
+        List<DesignerStyleConfigVo> styleConfigs = designerService.queryDesignerStyle();
         return sendJsonData(ResultMessage.SUCCESS, styleConfigs);
-    }
-    @ApiOperation("创建设计风格")
-    @MyRespBody
-    @RequestMapping(value = "createDesignStyle", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle createDesignStyle(
-            @ApiParam(name = "styleCode", required = true, value = "设计风格编码") @RequestParam(name = "styleCode", required = true) String styleCode,
-            @ApiParam(name = "styleName", required = true, value = "设计风格名称") @RequestParam(name = "styleName", required = true) String styleName,
-            @ApiParam(name = "remark", required = true, value = "备注") @RequestParam(name = "remark", required = true) String remark) {
-        try {
-            designerService.createDesignStyle(styleCode, styleName, remark);
-        } catch (Exception e) {
-            return sendFailMessage(e.getMessage());
-        }
-        return sendSuccessMessage(null);
-    }
-
-    @ApiOperation("删除设计风格")
-    @MyRespBody
-    @RequestMapping(value = "delDesignStyle", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle delDesignStyle(
-            @ApiParam(name = "styleCode", required = true, value = "设计风格编码") @RequestParam(name = "styleCode", required = true) String styleCode) {
-        try {
-            designerService.delDesignStyle(styleCode);
-        } catch (Exception e) {
-            return sendFailMessage(e.getMessage());
-        }
-        return sendSuccessMessage(null);
     }
 
     @ApiOperation("编辑设计师信息")

@@ -117,6 +117,9 @@ public class ReflectUtils {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> List<T> getList(List<? extends Object> list, String key) {
+		if(list.isEmpty()){
+			return new ArrayList<>();
+		}
 		List<T> ts = new ArrayList<>();
 		for (Object obj : list) {
 			ts.add((T) getVal(obj, key));

@@ -10,6 +10,7 @@ import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -295,13 +296,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void createRole(String roleCode, String roleName, String remark) {
-        if (StringUtils.isBlank(roleCode)) {
-            throw new RuntimeException("角色编码不能为空");
-        }
+    public void createRole(String roleName, String remark) {
         if (StringUtils.isBlank(roleName)) {
             throw new RuntimeException("角色名称不能为空");
         }
+        String roleCode = getCode();
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
         roleSetExample.createCriteria().andIsDelEqualTo(2);
         roleSetExample.or().andRoleCodeEqualTo(roleCode);
@@ -319,6 +318,40 @@ public class EmployeeServiceImpl implements EmployeeService {
         userRoleSet.setRoleName(roleName);
         userRoleSet.setCf(remark);
         roleSetMapper.insertSelective(userRoleSet);
+    }
+
+    @Override
+    public void editRole(String roleCode, String roleName, String remark) {
+        UserRoleSetExample roleSetExample = new UserRoleSetExample();
+        roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+        if(roleSets.isEmpty()){
+            throw new RuntimeException("无效的角色编码");
+        }
+        UserRoleSet userRoleSet = roleSets.get(0);
+        userRoleSet.setRoleName(roleName);
+        userRoleSet.setCf(remark);
+        roleSetMapper.updateByPrimaryKeySelective(userRoleSet);
+    }
+
+    private String getCode(){
+        String roleCode = OrderNoUtils.getCode(6);
+        int i = 0;
+        while (true){
+            UserRoleSetExample roleSetExample = new UserRoleSetExample();
+            roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
+            List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+            if(roleSets.isEmpty()){
+                break;
+            }
+            roleCode = OrderNoUtils.getCode(6);
+            i ++;
+            if(i > 50){
+                throw new RuntimeException("角色编码重复");
+            }
+        }
+        return roleCode;
+
     }
 
     @Override
