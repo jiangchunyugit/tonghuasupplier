@@ -2,6 +2,7 @@ package cn.thinkfree.database.Param;
 
 import io.swagger.annotations.ApiParam;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 
@@ -9,7 +10,8 @@ public class SettlementRuleParam {
 
 	
 	
-	@ApiParam("审核状态 1 审核通过 2 审核拒绝") 
+	@ApiParam("审核状态 1 审核通过 2 审核拒绝")
+	@NotBlank(message = "审核状态不可为空")
 	private String auditStatus;
 	
 	
@@ -17,6 +19,7 @@ public class SettlementRuleParam {
 	private String auditCase;
 	
 	@ApiParam("结算规则编号")
+	@NotBlank(message = "结算规则编码不可为空")
 	private List<String> ruleNumbers;
 	
 	public String getAuditStatus() {

@@ -99,7 +99,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public AuditInfoVO findAuditStatus(String companyId) {
-		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(companyId);
+		Map<String, String> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("auditType", CompanyConstants.AuditType.JOINON.stringVal());
+		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
 		//TOdo
 		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
 		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
@@ -113,6 +116,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public CompanySubmitVo findCompanyInfo(String companyId) {
+		if(companyId == null){
+			return null;
+		}
 		CompanySubmitVo companySubmitVo = new CompanySubmitVo();
 
 		//查询companyInfo表：平台状态：platform_type=0;
@@ -120,12 +126,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
 		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
 				.andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-				.andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
+//				.andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
 				.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
 				.andPlatformTypeEqualTo(SysConstants.YesOrNo.NO.shortVal());
 
 		List<CompanyInfo> companyInfo = companyInfoMapper.selectByExample(companyInfoExample);
-		if(companyInfo.size() <= 0  && companyInfo.get(0) == null){
+		if(companyInfo.size() <= 0 || companyInfo.get(0) == null){
 			return null;
 		}
 		companySubmitVo.setCompanyInfo(companyInfo.get(0));
@@ -135,7 +141,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		companyInfoExpandExample.createCriteria().andCompanyIdEqualTo(companyId);
 		List<CompanyInfoExpand> companyInfoExpand = companyInfoExpandMapper.selectByExample(companyInfoExpandExample);
 
-		if(companyInfoExpand.size() > 0  && companyInfoExpand.get(0) != null){
+		if(companyInfoExpand.size() > 0) {
 			if(companyInfoExpand.get(0).getCompanyType() != null && StringUtils.isNotBlank(companyInfoExpand.get(0).getCompanyType().toString())) {
 				companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpand.get(0).getCompanyType().intValue()));
 			}
@@ -148,8 +154,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		PcCompanyFinancialExample pcCompanyFinancialExample = new PcCompanyFinancialExample();
 		pcCompanyFinancialExample.createCriteria().andCompanyIdEqualTo(companyId);
 		List<PcCompanyFinancial> companyFinancials = pcCompanyFinancialMapper.selectByExample(pcCompanyFinancialExample);
-		if(companyFinancials.size() > 0  && companyFinancials.get(0) != null){
-			companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+		if(companyFinancials.size() > 0){
+			if(companyFinancials.get(0) != null) {
+				companySubmitVo.setPcCompanyFinancial(companyFinancials.get(0));
+			}
 		}
 
 		return companySubmitVo;
@@ -416,8 +424,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			int flagon = pcAuditInfoMapper.insertSelective(record);
 		    
 			if(flag > 0 && applyFlag &&  flagon  > 0 ){
+				//todo 调取事件同步埃森哲
 				return "审核成功";
-				
 			}else{
 				return "审核失败";
 			}
@@ -445,4 +453,26 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	    //todo 合同状态修改待完成
 	    return null;
     }
+
+	@Override
+	public boolean isEdit(String companyId) {
+		PcAuditTemporaryInfoExample example = new PcAuditTemporaryInfoExample();
+		example.createCriteria().andCompanyIdEqualTo(companyId);
+		List<PcAuditTemporaryInfo> pcAuditTemporaryInfos = pcAuditTemporaryInfoMapper.selectByExample(example);
+		if(pcAuditTemporaryInfos.size() > 0){
+			PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfos.get(0);
+			if(AuditStatus.AuditPass.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus())){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public AuditInfoVO findTempAuditStatus(String companyId) {
+		Map<String, String> map = new HashMap<>();
+		map.put("companyId", companyId);
+		map.put("auditType", CompanyConstants.AuditType.CHANGE.stringVal());
+		return pcAuditInfoMapper.findTempAuditStatus(map);
+	}
 }

@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.SettlementRuleInfo;
 import cn.thinkfree.database.model.SettlementRuleInfoExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.settle.SettlementRuleContractVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface SettlementRuleInfoMapper {
@@ -61,4 +63,6 @@ public interface SettlementRuleInfoMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") SettlementRuleInfo record, @Param("example") SettlementRuleInfoExample example);
+
+    List<SettlementRuleContractVO> selectBycontract (SettlementRuleInfo record);
 }

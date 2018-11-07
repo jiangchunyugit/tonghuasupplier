@@ -57,7 +57,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         StoreInfoExample storeInfoExample = new StoreInfoExample();
         StoreInfoExample.Criteria criteria = storeInfoExample.createCriteria();
         criteria.andBusinessEntityIdEqualTo(id);
-        List<String> storeList = storeInfoMapper.selectByExample(storeInfoExample).stream().map(e->e.getName()).collect(Collectors.toList());
+        List<String> storeList = storeInfoMapper.selectByExample(storeInfoExample).stream().map(e->e.getStoreNm()).collect(Collectors.toList());
 
         // businessEntityVO
         BusinessEntityVO businessEntityVO = new BusinessEntityVO();

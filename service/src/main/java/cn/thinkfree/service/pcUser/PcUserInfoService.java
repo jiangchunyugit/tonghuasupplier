@@ -70,4 +70,12 @@ public interface PcUserInfoService {
      * @return
      */
     String updateAccountState(String id, Integer state);
+
+    /**
+     * 更新密码 - 初次登录重置
+     * @param id
+     * @param passWord
+     * @return
+     */
+    String updatePassWordForInit(String id, String passWord);
 }

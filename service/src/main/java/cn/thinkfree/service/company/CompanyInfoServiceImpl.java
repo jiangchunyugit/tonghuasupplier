@@ -1,13 +1,13 @@
 package cn.thinkfree.service.company;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
-import cn.thinkfree.database.vo.CompanyInfoSEO;
-import cn.thinkfree.database.vo.CompanyInfoVo;
-import cn.thinkfree.database.vo.StaffsVO;
-import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -17,8 +17,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CompanyInfoServiceImpl implements CompanyInfoService {
@@ -90,5 +92,28 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
     public CompanyInfoVo companyDetails(String companyId) {
 
         return companyInfoMapper.selectByCompanyId(companyId);
+    }
+
+    /**
+     * 获取公司信息根据公司名
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public List<SelectItem> listCompanyByLikeName(String name) {
+        if (StringUtils.isBlank(name)){
+            return Collections.EMPTY_LIST;
+        }
+        CompanyInfoExample condition = new CompanyInfoExample();
+
+        condition.createCriteria().andCompanyNameLike(name+"%")
+                .andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+//                .andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
+                .andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.code.toString())
+                .andPlatformTypeEqualTo(CompanyConstants.PlatformType.NORMAL.shortVal());
+        PageHelper.startPage(0,30);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(condition);
+        return companyInfos.stream().map(c->new SelectItem(c.getCompanyId(),c.getCompanyName())).collect(Collectors.toList());
     }
 }

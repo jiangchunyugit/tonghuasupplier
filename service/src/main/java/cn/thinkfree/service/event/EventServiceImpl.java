@@ -1,5 +1,6 @@
 package cn.thinkfree.service.event;
 
+import cn.thinkfree.core.event.AbsBaseEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ public class EventServiceImpl implements EventService {
      * @return
      */
     @Override
-    public String publish(BaseEvent event) {
+    public String publish(AbsBaseEvent event) {
         //TODO 事件追溯相关操作
         applicationContext.publishEvent(event);
         return "SUCCESS";

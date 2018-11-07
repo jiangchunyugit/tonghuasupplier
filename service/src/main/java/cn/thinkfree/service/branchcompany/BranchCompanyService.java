@@ -44,7 +44,7 @@ public interface BranchCompanyService {
      * @param id
      * @return
      */
-    BranchCompany branchCompanyById(Integer id);
+    BranchCompanyVO branchCompanyById(Integer id);
 
     /**
      * 分公司和其所属城市分站信息

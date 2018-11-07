@@ -32,7 +32,7 @@ public interface CloudService {
      * @return
      */
     RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
-      
+
       /**
        * 合同上传
        *  @param filepath

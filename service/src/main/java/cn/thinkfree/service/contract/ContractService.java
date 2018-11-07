@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.github.pagehelper.PageInfo;
 
+import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
@@ -74,7 +75,7 @@ public interface ContractService {
       * 
       * 根据合同编号和公司编号 生成合同
       * @param contractNumber
-      * @return map  code 0 成功  1 失败  mess 失败的原因
+      * @return
       */
       String createContractDoc(String contractNumber);
       
@@ -102,7 +103,6 @@ public interface ContractService {
        * @return list
        */
       Map<String,Object> getContractDetailInfo(String contractNumber,String companyId);
-      
       
       
 
@@ -149,4 +149,10 @@ public interface ContractService {
        */
       boolean insertRoadWorkOrderContract(String orderNumber,String companyId,Map<String,String> paramMap);
       
+      /**
+       * 根据公司编号查询公司合同
+       * @param  orderNumber
+       * @return list 
+       */
+      List<ContractInfo>  getEnterContractBycompanyId(String companyId);
 }

@@ -19,7 +19,17 @@ public class BranchCompanyVO extends BranchCompany {
     @ApiModelProperty("省份名称")
     private String provinceNm;
 
-//    /**
+    @ApiModelProperty("埃森哲分公司名称")
+    private String ebsCompanyNm;
+
+    public String getEbsCompanyNm() {
+        return ebsCompanyNm;
+    }
+
+    public void setEbsCompanyNm(String ebsCompanyNm) {
+        this.ebsCompanyNm = ebsCompanyNm;
+    }
+    //    /**
 //     * 城市分站list
 //     */
 //    @ApiModelProperty("分公司城市分站")

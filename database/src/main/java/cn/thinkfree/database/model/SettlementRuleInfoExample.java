@@ -1514,6 +1514,76 @@ public class SettlementRuleInfoExample extends cn.thinkfree.core.model.AbstractD
             addCriterion("fee_name not between", value1, value2, "feeName");
             return (Criteria) this;
         }
+
+        public Criteria andInvalidStatusIsNull() {
+            addCriterion("invalid_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusIsNotNull() {
+            addCriterion("invalid_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusEqualTo(String value) {
+            addCriterion("invalid_status =", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusNotEqualTo(String value) {
+            addCriterion("invalid_status <>", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusGreaterThan(String value) {
+            addCriterion("invalid_status >", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusGreaterThanOrEqualTo(String value) {
+            addCriterion("invalid_status >=", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusLessThan(String value) {
+            addCriterion("invalid_status <", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusLessThanOrEqualTo(String value) {
+            addCriterion("invalid_status <=", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusLike(String value) {
+            addCriterion("invalid_status like", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusNotLike(String value) {
+            addCriterion("invalid_status not like", value, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusIn(List<String> values) {
+            addCriterion("invalid_status in", values, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusNotIn(List<String> values) {
+            addCriterion("invalid_status not in", values, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusBetween(String value1, String value2) {
+            addCriterion("invalid_status between", value1, value2, "invalidStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvalidStatusNotBetween(String value1, String value2) {
+            addCriterion("invalid_status not between", value1, value2, "invalidStatus");
+            return (Criteria) this;
+        }
     }
 
     /**

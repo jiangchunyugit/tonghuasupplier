@@ -64,7 +64,7 @@
     <result column="account_name" jdbcType="VARCHAR" property="accountName" />
     <result column="card_name" jdbcType="VARCHAR" property="cardName" />
     <result column="account_branch_name" jdbcType="VARCHAR" property="accountBranchName" />
-    <result column="account_number" jdbcType="INTEGER" property="accountNumber" />
+    <result column="account_number" jdbcType="VARCHAR" property="accountNumber" />
     <result column="license_url" jdbcType="VARCHAR" property="licenseUrl" />
     <result column="account_area" jdbcType="VARCHAR" property="accountArea" />
     <result column="account_type" jdbcType="SMALLINT" property="accountType" />
@@ -227,7 +227,7 @@
       #{contactPhone,jdbcType=VARCHAR}, #{isTaxpayer,jdbcType=SMALLINT}, #{comapnyNature,jdbcType=SMALLINT}, 
       #{changeStatus,jdbcType=SMALLINT}, #{changeDate,jdbcType=TIMESTAMP}, #{accountProvince,jdbcType=VARCHAR}, 
       #{accountCity,jdbcType=VARCHAR}, #{accountDistrict,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, 
-      #{cardName,jdbcType=VARCHAR}, #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=INTEGER}, 
+      #{cardName,jdbcType=VARCHAR}, #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
       #{licenseUrl,jdbcType=VARCHAR}, #{accountArea,jdbcType=VARCHAR}, #{accountType,jdbcType=SMALLINT}, 
       #{taxpayerRegistrationNumber,jdbcType=VARCHAR})
   </insert>
@@ -604,7 +604,7 @@
         #{accountBranchName,jdbcType=VARCHAR},
       </if>
       <if test="accountNumber != null">
-        #{accountNumber,jdbcType=INTEGER},
+        #{accountNumber,jdbcType=VARCHAR},
       </if>
       <if test="licenseUrl != null">
         #{licenseUrl,jdbcType=VARCHAR},
@@ -812,7 +812,7 @@
         account_branch_name = #{record.accountBranchName,jdbcType=VARCHAR},
       </if>
       <if test="record.accountNumber != null">
-        account_number = #{record.accountNumber,jdbcType=INTEGER},
+        account_number = #{record.accountNumber,jdbcType=VARCHAR},
       </if>
       <if test="record.licenseUrl != null">
         license_url = #{record.licenseUrl,jdbcType=VARCHAR},
@@ -895,7 +895,7 @@
       account_name = #{record.accountName,jdbcType=VARCHAR},
       card_name = #{record.cardName,jdbcType=VARCHAR},
       account_branch_name = #{record.accountBranchName,jdbcType=VARCHAR},
-      account_number = #{record.accountNumber,jdbcType=INTEGER},
+      account_number = #{record.accountNumber,jdbcType=VARCHAR},
       license_url = #{record.licenseUrl,jdbcType=VARCHAR},
       account_area = #{record.accountArea,jdbcType=VARCHAR},
       account_type = #{record.accountType,jdbcType=SMALLINT},

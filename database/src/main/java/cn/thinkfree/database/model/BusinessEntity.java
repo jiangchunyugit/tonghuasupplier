@@ -119,7 +119,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="ebsidebsid")
+    @ApiModelProperty(value="ebsid")
     private Integer ebsid;
 
     /**
@@ -131,7 +131,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cityBranchEbsid所属城市分站ebsid")
+    @ApiModelProperty(value="站点id")
     private Integer cityBranchEbsid;
 
     /**
@@ -179,7 +179,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompEbsid所属分公司ebsid")
+    @ApiModelProperty(value="branchCompEbsid选择分公司id")
     private Integer branchCompEbsid;
 
     /**
