@@ -129,4 +129,14 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<Integer> getProjectNum(String userId);
+
+    /**
+     * 提醒支付量房费
+     * @param projectNo
+     * @param orderNo
+     * @param ownerId
+     * @param userId
+     * @return
+     */
+    MyRespBundle<String> remindPay(String projectNo, String orderNo, String ownerId, String userId);
 }

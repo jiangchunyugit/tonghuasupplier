@@ -7,6 +7,7 @@ import cn.thinkfree.database.model.AfConfigExample;
 import cn.thinkfree.database.model.AfConfigScheme;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.vo.AfConfigEditVO;
+import cn.thinkfree.database.vo.AfConfigListVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.*;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +46,8 @@ public class AfConfigServiceImpl implements AfConfigService {
     private AfConfigSchemeService configPlanService;
 
     @Override
-    public List<AfConfigVO> list(String schemeNo) {
+    public AfConfigListVO list(String schemeNo) {
+        AfConfigListVO configListVO = new AfConfigListVO();
         List<AfConfigVO> configVOs = new ArrayList<>();
         List<UserRoleSet> roles = roleService.findAll();
         List<AfConfig> configs = findAll();
@@ -72,7 +74,9 @@ public class AfConfigServiceImpl implements AfConfigService {
                 configVOs.add(configVO);
             }
         }
-        return configVOs;
+        configListVO.setConfigs(configVOs);
+        configListVO.setRoles(roles);
+        return configListVO;
     }
 
     /**

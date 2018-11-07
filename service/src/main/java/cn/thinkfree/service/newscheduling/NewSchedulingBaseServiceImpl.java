@@ -60,7 +60,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         }
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectSmallScheduling> list = projectSmallSchedulingMapper.selectByExample(projectSmallSchedulingExample);
-        List<ProjectSmallSchedulingVO> voList = BaseToVoUtils.getListVo(list, ProjectSmallSchedulingVO.class, BaseToVoUtils.getBaseSmallMap());
+        List<ProjectSmallSchedulingVO> voList = BaseToVoUtils.getListVo(list, ProjectSmallSchedulingVO.class);
         if (voList == null) {
             System.out.println("工具类转换失败!!");
         }
@@ -103,7 +103,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    public PageInfo<ProjectBigScheduling> listBigScheduling(SchedulingSeo schedulingSeo) {
+    public PageInfo<ProjectBigSchedulingVO> listBigScheduling(SchedulingSeo schedulingSeo) {
         ProjectBigSchedulingExample projectBigSchedulingExample = new ProjectBigSchedulingExample();
         projectBigSchedulingExample.setOrderByClause("create_time desc");
         ProjectBigSchedulingExample.Criteria criteria = projectBigSchedulingExample.createCriteria();
@@ -114,7 +114,8 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         }
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectBigScheduling> list = projectBigSchedulingMapper.selectByExample(projectBigSchedulingExample);
-        return new PageInfo<>(list);
+        List<ProjectBigSchedulingVO> listVo = BaseToVoUtils.getListVo(list, ProjectBigSchedulingVO.class);
+        return new PageInfo<>(listVo);
     }
 
     /**

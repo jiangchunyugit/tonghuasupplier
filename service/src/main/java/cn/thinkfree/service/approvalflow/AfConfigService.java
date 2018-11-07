@@ -2,9 +2,8 @@ package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.AfConfig;
 import cn.thinkfree.database.vo.AfConfigEditVO;
+import cn.thinkfree.database.vo.AfConfigListVO;
 import cn.thinkfree.database.vo.AfConfigVO;
-
-import java.util.List;
 
 /**
  * 审批流配置服务层
@@ -19,7 +18,7 @@ public interface AfConfigService {
      * @param schemeNo 方案编号
      * @return 所有审批流配置
      */
-    List<AfConfigVO> list(String schemeNo);
+    AfConfigListVO list(String schemeNo);
 
     /**
      * 审批流配置详情

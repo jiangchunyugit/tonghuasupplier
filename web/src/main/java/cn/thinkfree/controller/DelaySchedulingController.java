@@ -119,6 +119,7 @@ public class DelaySchedulingController extends AbsBaseController {
         params.put("list", projectList);
         //这里查询的是总页数
         String sheetTitle = "派单数据";
+        //表头
         String[] title = {"所属地区", "公司名称", "订单编号", "预约日期", "签约日期", "项目地址", "业主", "手机号码", "折后合同额", "已支付", "订单状态", "施工进度", "最近验收情况", "延期天数", "项目经理", "设计师"};
         List<Object> list = new ArrayList<Object>();
         ProjectOrderVO vo = new ProjectOrderVO();
@@ -144,7 +145,7 @@ public class DelaySchedulingController extends AbsBaseController {
                 }
         );
         byte b[] = ExcelUtil.export(sheetTitle, title, list);
-
+        //保存路径
         File f = new File("D:\\tmp\\" + sheetTitle + ".xls");
         try {
             FileUtils.writeByteArrayToFile(f, b, true);
@@ -268,6 +269,7 @@ public class DelaySchedulingController extends AbsBaseController {
         //这里查询的是所有的数据
         params.put("list", siteDetailsList);
         String sheetTitle = "施工工地数据";
+        //表头
         String[] title = {"订单编号", "地区", "公司名称", "开工日期", "竣工日期", "项目地址", "业主", "手机号码", "金额", "已支付", "施工进度", "项目经理", "设计师"};
         List<Object> list = new ArrayList<Object>();
         ConstructionSiteVO vo = new ConstructionSiteVO();
@@ -291,7 +293,7 @@ public class DelaySchedulingController extends AbsBaseController {
                 }
         );
         byte b[] = ExcelUtil.export(sheetTitle, title, list);
-
+        //保存路径
         File f = new File("D:\\tmp\\" + sheetTitle + ".xls");
         try {
             FileUtils.writeByteArrayToFile(f, b, true);
@@ -390,6 +392,7 @@ public class DelaySchedulingController extends AbsBaseController {
         //这里查询的是所有的数据
         params.put("list", siteDetailsList);
         String sheetTitle = "施工计划";
+        //表头
         String[] title = {"施工阶段", "施工项目", "计划开始时间", "计划结束时间", "实际开始时间", "实际结束时间"};
         List<Object> list = new ArrayList<Object>();
         ConstructionPlanVO vo = new ConstructionPlanVO();
@@ -405,7 +408,7 @@ public class DelaySchedulingController extends AbsBaseController {
                 }
         );
         byte b[] = ExcelUtil.export(sheetTitle, title, list);
-
+        //保存路径
         File f = new File("D:\\tmp\\" + sheetTitle + ".xls");
         try {
             FileUtils.writeByteArrayToFile(f, b, true);
