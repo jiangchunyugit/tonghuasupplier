@@ -1,19 +1,13 @@
 package cn.thinkfree.service.platform.basics.impl;
 
-import cn.thinkfree.database.mapper.AreaMapper;
-import cn.thinkfree.database.mapper.BasicsDataMapper;
-import cn.thinkfree.database.mapper.CityMapper;
-import cn.thinkfree.database.mapper.ProvinceMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.vo.CardTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -29,12 +23,66 @@ public class BasicsServiceImpl implements BasicsService {
     private AreaMapper areaMapper;
     @Autowired
     private BasicsDataMapper basicsDataMapper;
+    @Autowired
+    private BasicsDataParentCodeMapper parentCodeMapper;
 
-    private List<BasicsData> queryData(String type) {
+    @Override
+    public List<BasicsData> queryData(String groupCode) {
         //暂时写死
         BasicsDataExample dataExample = new BasicsDataExample();
-        dataExample.createCriteria().andBasicsGroupEqualTo(type);
+        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andDelStateEqualTo(2);
         return basicsDataMapper.selectByExample(dataExample);
+    }
+
+    @Override
+    public void createBasics(String groupCode, String basicsName, String remark) {
+        BasicsDataParentCode parentCode = parentCodeMapper.selectByPrimaryKey(groupCode);
+        if(parentCode == null){
+            throw new RuntimeException("无效的分组类型");
+        }
+        BasicsDataExample dataExample = new BasicsDataExample();
+        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andBasicsNameEqualTo(basicsName);
+        if(!basicsDataMapper.selectByExample(dataExample).isEmpty()){
+            BasicsData basicsData = new BasicsData();
+            basicsData.setDelState(2);
+            basicsData.setRemark(remark);
+            int res = basicsDataMapper.updateByExample(basicsData,dataExample);
+            //更新已删除的状态
+        }else{
+            String dataCode = getCode(groupCode);
+            BasicsData basicsData = new BasicsData();
+            basicsData.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            basicsData.setDelState(2);
+            basicsData.setRemark(remark);
+            basicsData.setCreateTime(new Date());
+            basicsData.setBasicsGroup(groupCode);
+            basicsData.setBasicsCode(dataCode);
+            basicsData.setBasicsName(basicsName);
+            int res = basicsDataMapper.insertSelective(basicsData);
+            //新增基础数据
+        }
+    }
+
+    @Override
+    public void delBasics(String dataId) {
+        if(basicsDataMapper.selectByPrimaryKey(dataId) == null){
+            throw new RuntimeException("无效的数据ID");
+        }
+        BasicsData basicsData = new BasicsData();
+        basicsData.setDelState(1);
+        basicsData.setId(dataId);
+        basicsDataMapper.updateByPrimaryKeySelective(basicsData);
+    }
+
+    @Override
+    public List<BasicsDataParentCode> allParentCode(){
+        return parentCodeMapper.selectByExample(new BasicsDataParentCodeExample());
+    }
+    private String getCode(String groupCode){
+        BasicsDataExample dataExample = new BasicsDataExample();
+        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode);
+        List<BasicsData> basicsData = basicsDataMapper.selectByExample(dataExample);
+        return basicsData.size() + 1 + "";
     }
 
     @Override

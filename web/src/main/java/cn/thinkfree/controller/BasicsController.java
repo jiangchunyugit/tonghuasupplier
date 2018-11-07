@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BasicsData;
+import cn.thinkfree.database.model.BasicsDataParentCode;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -61,6 +62,57 @@ public class BasicsController extends AbsBaseController {
     @RequestMapping(value = "cancelCons", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<BasicsData>> cancelCons() {
         return sendJsonData(ResultMessage.SUCCESS, basicsService.cancelCons());
+    }
+
+    @ApiOperation("查询设计师拒绝接单原因")
+    @MyRespBody
+    @RequestMapping(value = "cancelDesigner", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> cancelDesigner() {
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.queryData("CANCEL_DESIGNER"));
+    }
+
+    @ApiOperation("查询原因相关配置")
+    @MyRespBody
+    @RequestMapping(value = "queryReason", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<BasicsData>> queryReason(
+            @ApiParam(name = "groupCode", required = false, value = "分组类型，CANCEL_DESIGN_COMPANY:设计公司拒绝接单，CANCEL_PLATFORM:平台拒绝接单")
+            @RequestParam(name = "groupCode", required = false) String groupCode) {
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.queryData(groupCode));
+    }
+
+    @ApiOperation("获取所有数据编码")
+    @MyRespBody
+    @RequestMapping(value = "allParentCode", method = {RequestMethod.GET})
+    public MyRespBundle<List<BasicsDataParentCode>> allParentCode() {
+        return sendJsonData(ResultMessage.SUCCESS, basicsService.allParentCode());
+    }
+
+    @ApiOperation("创建户型结构，房屋类型，房屋属性，计费项目")
+    @MyRespBody
+    @RequestMapping(value = "createBasics", method = {RequestMethod.POST})
+    public MyRespBundle createBasicsData(
+            @ApiParam(name = "groupCode", required = false, value = "分组类型")@RequestParam(name = "groupCode", required = false) String groupCode,
+            @ApiParam(name = "basicsName", required = false, value = "数据名称：如：房屋类型，房屋属性")@RequestParam(name = "basicsName", required = false) String basicsName,
+            @ApiParam(name = "remark", required = false, value = "基础数据编码类型")@RequestParam(name = "remark", required = false) String remark){
+        try{
+            basicsService.createBasics(groupCode,basicsName,remark);
+            return sendSuccessMessage(null);
+        }catch (Exception e){
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("删除户型结构，房屋类型，房屋属性，计费项目")
+    @MyRespBody
+    @RequestMapping(value = "delBasicsData", method = {RequestMethod.POST})
+    public MyRespBundle delBasicsData(
+            @ApiParam(name = "dataId", required = false, value = "数据ID")@RequestParam(name = "dataId", required = false) String dataId){
+        try{
+            basicsService.delBasics(dataId);
+            return sendSuccessMessage(null);
+        }catch (Exception e){
+            return sendFailMessage(e.getMessage());
+        }
     }
 
     @ApiOperation("根据类型查询地区信息，先调用一下，看看，直接返回的listmap集合")

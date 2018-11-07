@@ -61,7 +61,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectSmallScheduling> list = projectSmallSchedulingMapper.selectByExample(projectSmallSchedulingExample);
         List<ProjectSmallSchedulingVO> voList = BaseToVoUtils.getListVo(list, ProjectSmallSchedulingVO.class, BaseToVoUtils.getBaseSmallMap());
-        if(voList == null){
+        if (voList == null) {
             System.out.println("工具类转换失败!!");
         }
         return new PageInfo<>(voList);
@@ -151,7 +151,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Transactional(rollbackFor = Exception.class)
     public String listShangHai(SchedulingSeo schedulingSeo) {
         //获取上海基础小排期信息
-        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(),Scheduling.LIMIT.getValue());
+        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(), Scheduling.LIMIT.getValue());
         JSONObject jsonObject = JSON.parseObject(result);
         JSONArray json = jsonObject.getJSONArray("data");
         String jsonString = JSONObject.toJSONString(json);
@@ -194,6 +194,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
 
     /**
      * 修改基础大排期
+     *
      * @param projectBigSchedulingVO
      * @return
      */
