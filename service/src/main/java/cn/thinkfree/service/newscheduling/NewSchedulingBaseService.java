@@ -36,7 +36,7 @@ public interface NewSchedulingBaseService {
      * @param schedulingSeo
      * @return
      */
-    PageInfo<ProjectBigScheduling> listBigScheduling(SchedulingSeo schedulingSeo);
+    PageInfo<ProjectBigSchedulingVO> listBigScheduling(SchedulingSeo schedulingSeo);
 
     /**
      * 关联小排期与大排期
