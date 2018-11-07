@@ -171,7 +171,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
-//        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         return RespData.success(playBigList);
@@ -190,12 +189,12 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.success("暂无修改");
         }
         String projectNo = bigList.get(0).getProjectNo();
-        if(!newOrderUserService.checkJurisdiction(projectNo,bigList.get(0).getUserId(),UserJobs.Foreman.roleCode)){
+        if (!newOrderUserService.checkJurisdiction(projectNo, bigList.get(0).getUserId(), UserJobs.Foreman.roleCode)) {
             return RespData.error("此操作者没有此项目编辑排期的权限!");
         }
         //将原数据置为失效
         Integer i = projectBigSchedulingDetailsMapper.updateByProjectNo(projectNo, Scheduling.INVALID_STATUS.getValue());
-        if (i == 0){
+        if (i == 0) {
             return RespData.error("确认排期失败,原因:原数据失效失败!");
         }
         for (ProjectBigSchedulingDetailsVO detailsVO : bigList) {
@@ -230,7 +229,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         detailsExample.setOrderByClause("big_sort asc");
         List<ProjectBigSchedulingDetails> allBigDetails = projectBigSchedulingDetailsMapper.selectByExample(detailsExample);
         for (ProjectBigSchedulingDetails schedulingDetails : allBigDetails) {
-            if (schedulingDetails.getBigSort().equals(bigSort)){
+            if (schedulingDetails.getBigSort().equals(bigSort)) {
                 bigSchedulingDetail = schedulingDetails;
             }
             if (schedulingDetails.getBigSort() > bigSort) {
@@ -272,6 +271,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
 
     /**
      * 开工申请
+     *
      * @param projectNo
      * @param bigSort
      * @return

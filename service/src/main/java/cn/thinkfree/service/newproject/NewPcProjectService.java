@@ -8,11 +8,13 @@ import java.util.List;
 
 /**
  * PC项目相关
+ *
  * @author gejiaming
  */
 public interface NewPcProjectService {
     /**
      * 获取Pc端项目详情
+     *
      * @param projectNo
      * @return
      */
@@ -20,6 +22,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--施工订单
+     *
      * @param projectNo
      * @return
      */
@@ -27,6 +30,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--设计信息
+     *
      * @param projectNo
      * @return
      */
@@ -34,6 +38,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--预交底信息
+     *
      * @param projectNo
      * @return
      */
@@ -41,6 +46,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--报价信息
+     *
      * @param projectNo
      * @return
      */
@@ -48,6 +54,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--合同信息
+     *
      * @param projectNo
      * @return
      */
@@ -55,6 +62,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--施工信息
+     *
      * @param projectNo
      * @return
      */
@@ -62,6 +70,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--结算管理
+     *
      * @param projectNo
      * @return
      */
@@ -69,6 +78,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--支付信息
+     *
      * @param projectNo
      * @return
      */
@@ -76,6 +86,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--评价管理
+     *
      * @param projectNo
      * @return
      */
@@ -83,6 +94,7 @@ public interface NewPcProjectService {
 
     /**
      * PC获取项目详情接口--发票管理
+     *
      * @param projectNo
      * @return
      */

@@ -40,6 +40,7 @@ public interface NewSchedulingService {
 
     /**
      * 获取验收阶段
+     *
      * @param projectNo
      * @return
      */
@@ -47,6 +48,7 @@ public interface NewSchedulingService {
 
     /**
      * 生成排期
+     *
      * @param projectNo
      * @param companyId
      * @return
@@ -55,6 +57,7 @@ public interface NewSchedulingService {
 
     /**
      * 确认排期
+     *
      * @param projectBigSchedulingDetailsVO
      * @return
      */
@@ -62,16 +65,19 @@ public interface NewSchedulingService {
 
     /**
      * 大阶段完成,添加大阶段完成时间
-     * @param projectNo
-     * @param bigSort
-     */
-    String completeBigScheduling(String projectNo,Integer bigSort);
-
-    /**
-     * 开工申请
+     *
      * @param projectNo
      * @param bigSort
      * @return
      */
-    String projectStart(String projectNo,Integer bigSort);
+    String completeBigScheduling(String projectNo, Integer bigSort);
+
+    /**
+     * 开工申请
+     *
+     * @param projectNo
+     * @param bigSort
+     * @return
+     */
+    String projectStart(String projectNo, Integer bigSort);
 }
