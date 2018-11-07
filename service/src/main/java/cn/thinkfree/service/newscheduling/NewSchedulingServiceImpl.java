@@ -8,6 +8,8 @@ import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
+import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
     @Autowired
     ProjectSchedulingMapper projectSchedulingMapper;
+    @Autowired
+    NewOrderUserService newOrderUserService;
 
 
     /**
@@ -167,7 +171,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
-//        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         return RespData.success(playBigList);
@@ -180,13 +183,20 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle confirmProjectScheduling(List<ProjectBigSchedulingDetailsVO> bigList) {
         if (bigList.isEmpty()) {
             return RespData.success("暂无修改");
         }
         String projectNo = bigList.get(0).getProjectNo();
+        if (!newOrderUserService.checkJurisdiction(projectNo, bigList.get(0).getUserId(), UserJobs.Foreman.roleCode)) {
+            return RespData.error("此操作者没有此项目编辑排期的权限!");
+        }
         //将原数据置为失效
         Integer i = projectBigSchedulingDetailsMapper.updateByProjectNo(projectNo, Scheduling.INVALID_STATUS.getValue());
+        if (i == 0) {
+            return RespData.error("确认排期失败,原因:原数据失效失败!");
+        }
         for (ProjectBigSchedulingDetailsVO detailsVO : bigList) {
             ProjectBigSchedulingDetails projectBigSchedulingDetails = BaseToVoUtils.getVo(detailsVO, ProjectBigSchedulingDetails.class);
             projectBigSchedulingDetails.setStatus(Scheduling.BASE_STATUS.getValue());
@@ -219,7 +229,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         detailsExample.setOrderByClause("big_sort asc");
         List<ProjectBigSchedulingDetails> allBigDetails = projectBigSchedulingDetailsMapper.selectByExample(detailsExample);
         for (ProjectBigSchedulingDetails schedulingDetails : allBigDetails) {
-            if (schedulingDetails.getBigSort().equals(bigSort)){
+            if (schedulingDetails.getBigSort().equals(bigSort)) {
                 bigSchedulingDetail = schedulingDetails;
             }
             if (schedulingDetails.getBigSort() > bigSort) {
@@ -261,6 +271,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
 
     /**
      * 开工申请
+     *
      * @param projectNo
      * @param bigSort
      * @return

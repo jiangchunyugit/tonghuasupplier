@@ -33,6 +33,7 @@
     <result column="contract_company_id" jdbcType="VARCHAR" property="contractCompanyId" />
     <result column="paid_amount" jdbcType="VARCHAR" property="paidAmount" />
     <result column="consumer_name" jdbcType="VARCHAR" property="consumerName" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -108,7 +109,7 @@
     id, type, from_orderid, actual_amount, integral, integral_amount, coupon, coupon_amount, 
     order_status, update_time, type_sub, company_id, project_no, order_stage, design_user_id, 
     total_amount, design_id, contract_type, style_type, construction_stage, is_end, signed_time, 
-    start_time, end_time, contract_company_id, paid_amount, consumer_name
+    start_time, end_time, contract_company_id, paid_amount, consumer_name, user_id
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.FundsOrderExample" resultMap="BaseResultMap">
     <!--
@@ -169,8 +170,8 @@
       total_amount, design_id, contract_type, 
       style_type, construction_stage, is_end, 
       signed_time, start_time, end_time, 
-      contract_company_id, paid_amount, consumer_name
-      )
+      contract_company_id, paid_amount, consumer_name, 
+      user_id)
     values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{fromOrderid,jdbcType=VARCHAR}, 
       #{actualAmount,jdbcType=VARCHAR}, #{integral,jdbcType=VARCHAR}, #{integralAmount,jdbcType=VARCHAR}, 
       #{coupon,jdbcType=VARCHAR}, #{couponAmount,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
@@ -179,8 +180,8 @@
       #{totalAmount,jdbcType=VARCHAR}, #{designId,jdbcType=VARCHAR}, #{contractType,jdbcType=VARCHAR}, 
       #{styleType,jdbcType=VARCHAR}, #{constructionStage,jdbcType=VARCHAR}, #{isEnd,jdbcType=VARCHAR}, 
       #{signedTime,jdbcType=VARCHAR}, #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, 
-      #{contractCompanyId,jdbcType=VARCHAR}, #{paidAmount,jdbcType=VARCHAR}, #{consumerName,jdbcType=VARCHAR}
-      )
+      #{contractCompanyId,jdbcType=VARCHAR}, #{paidAmount,jdbcType=VARCHAR}, #{consumerName,jdbcType=VARCHAR}, 
+      #{userId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.FundsOrder">
     <!--
@@ -270,6 +271,9 @@
       <if test="consumerName != null">
         consumer_name,
       </if>
+      <if test="userId != null">
+        user_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -352,6 +356,9 @@
       </if>
       <if test="consumerName != null">
         #{consumerName,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -453,6 +460,9 @@
       <if test="record.consumerName != null">
         consumer_name = #{record.consumerName,jdbcType=VARCHAR},
       </if>
+      <if test="record.userId != null">
+        user_id = #{record.userId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -490,7 +500,8 @@
       end_time = #{record.endTime,jdbcType=VARCHAR},
       contract_company_id = #{record.contractCompanyId,jdbcType=VARCHAR},
       paid_amount = #{record.paidAmount,jdbcType=VARCHAR},
-      consumer_name = #{record.consumerName,jdbcType=VARCHAR}
+      consumer_name = #{record.consumerName,jdbcType=VARCHAR},
+      user_id = #{record.userId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -580,6 +591,9 @@
       <if test="consumerName != null">
         consumer_name = #{consumerName,jdbcType=VARCHAR},
       </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -614,7 +628,8 @@
       end_time = #{endTime,jdbcType=VARCHAR},
       contract_company_id = #{contractCompanyId,jdbcType=VARCHAR},
       paid_amount = #{paidAmount,jdbcType=VARCHAR},
-      consumer_name = #{consumerName,jdbcType=VARCHAR}
+      consumer_name = #{consumerName,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

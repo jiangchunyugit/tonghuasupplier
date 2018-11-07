@@ -32,6 +32,7 @@ public interface NewSchedulingBaseService {
 
     /**
      * 获取基础大排期
+     *
      * @param schedulingSeo
      * @return
      */
@@ -39,6 +40,7 @@ public interface NewSchedulingBaseService {
 
     /**
      * 关联小排期与大排期
+     *
      * @param projectSmallSchedulingVO
      * @return
      */
@@ -46,6 +48,7 @@ public interface NewSchedulingBaseService {
 
     /**
      * 同步上海基础小排期
+     *
      * @param schedulingSeo
      * @return
      */
@@ -53,6 +56,7 @@ public interface NewSchedulingBaseService {
 
     /**
      * 修改基础大排期
+     *
      * @param projectBigSchedulingVO
      * @return
      */

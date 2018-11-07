@@ -5,6 +5,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.Value;
+
+import java.util.Date;
 
 /**
  * @author gejiaming
@@ -30,6 +33,10 @@ public class ProjectTitleVo {
     private Integer delay;
     @ApiModelProperty(value = "排期是否可以编辑(0,不可以 1,可以)")
     private Integer isConfirm;
+    @ApiModelProperty(value = "项目开始时间")
+    private Date projectStartTime;
+    @ApiModelProperty(value = "项目结束时间")
+    private Date projectEndTime;
 
 
 }

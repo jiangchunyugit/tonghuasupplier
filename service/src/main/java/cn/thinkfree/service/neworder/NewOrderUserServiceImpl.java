@@ -7,6 +7,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public String findRoleIdByProjectNoAndUserId(String projectNo, String userId) {
         OrderUser orderUser = findByProjectNoAndUserId(projectNo, userId);
-        return orderUser != null ? orderUser.getRoleId() : null;
+        return orderUser != null ? orderUser.getRoleCode() : null;
     }
 
     @Override
@@ -224,7 +225,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public OrderUser findByProjectNoAndRoleId(String projectNo, String roleId) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andOrderNoEqualTo(projectNo).andRoleIdEqualTo(roleId);
+        example.createCriteria().andOrderNoEqualTo(projectNo).andRoleCodeEqualTo(roleId);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example);
         return orderUsers != null && orderUsers.size() > 0 ? orderUsers.get(0) : null;
     }
@@ -455,5 +456,26 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     }
 
-
+    /**
+     * 根据项目编号,员工编号,员工
+     * 角色查看是否符合实际权限
+     *
+     * @param projectNo
+     * @param userId
+     * @param roleCode
+     * @return
+     */
+    @Override
+    public Boolean checkJurisdiction(String projectNo, String userId, String roleCode) {
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andProjectNoEqualTo(projectNo);
+        userCriteria.andUserIdEqualTo(userId);
+        userCriteria.andRoleCodeEqualTo(UserJobs.Foreman.roleCode);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

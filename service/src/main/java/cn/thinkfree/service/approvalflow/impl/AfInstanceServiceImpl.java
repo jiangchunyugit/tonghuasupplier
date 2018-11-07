@@ -88,7 +88,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             AfApprovalLogVO approvalLogVO = new AfApprovalLogVO();
 
             for (OrderUser orderUser : orderUsers) {
-                if (orderUser.getRoleId().equals(role.getRoleCode())) {
+                if (orderUser.getRoleCode().equals(role.getRoleCode())) {
                     approvalLogVO.setUserId(orderUser.getUserId());
                     break;
                 }
@@ -138,7 +138,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             UserRoleSet role = approvalRoles.get(index);
             AfApprovalLog approvalLog = null;
             for (OrderUser orderUser : orderUsers) {
-                if (role.getRoleCode().equals(orderUser.getRoleId())) {
+                if (role.getRoleCode().equals(orderUser.getRoleCode())) {
                     approvalLog = new AfApprovalLog();
                     approvalLog.setRoleId(role.getRoleCode());
                     approvalLog.setUserId(orderUser.getUserId());
@@ -180,7 +180,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             instance.setStatus(AfConstants.APPROVAL_STATUS_START);
         } else {
             instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
-            sendSuccessMessage(instance.getConfigSchemeNo());
+            sendSuccessMessage(projectNo, scheduleSort, instance.getConfigNo(), instance.getConfigSchemeNo());
         }
 
         insert(instance);
@@ -334,7 +334,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 // 结束审批流
                 instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
                 instance.setCurrentApprovalLogNo(null);
-                sendSuccessMessage(instance.getConfigSchemeNo());
+                sendSuccessMessage(instance.getProjectNo(), instance.getScheduleSort(), instance.getConfigNo(), instance.getConfigSchemeNo());
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
                 sendMessageToNext(nextApprovalLog.getUserId());
@@ -360,10 +360,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     /**
      * 发送审批成功消息
+     * @param configNo 审批流配置编号
      * @param configSchemeNo 审批流配置方案编号
      */
-    private void sendSuccessMessage(String configSchemeNo) {
-
+    private void sendSuccessMessage(String projectNo, Integer scheduleSort, String configNo, String configSchemeNo) {
+        if (AfConfigs.START_REPORT.configNo.equals(configNo)) {
+            schedulingService.projectStart(projectNo, scheduleSort);
+        } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(configNo)) {
+            schedulingService.completeBigScheduling(projectNo, scheduleSort);
+        }
     }
 
     /**
@@ -585,10 +590,35 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 //        }
         if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
             if (checkApplicationCount == checkReportCount) {
-                // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
-                addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                if (schedulingDetailsVOs.get(schedulingDetailsVOs.size() - 1).getBigSort().equals(scheduleSort)) {
+                    // 当前阶段为最后一个阶段
+                    if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
+                            && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                            && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+                        addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                    }
+                } else {
+                    // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
+                    addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                }
             }
         }
+    }
+
+    private long getCount(String projectNo, int status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
+        return instanceMapper.countByExample(example);
+    }
+
+    private boolean countEqual(String projectNo, String startConfigNo, String completeConfigNo, int status) {
+        return getCount(projectNo, startConfigNo, status) == getCount(projectNo, completeConfigNo, status);
+    }
+
+    private long getCount(String projectNo, String configNo, int status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo).andConfigNoEqualTo(configNo).andStatusEqualTo(status);
+        return instanceMapper.countByExample(example);
     }
 
     /**

@@ -14,6 +14,7 @@ import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -73,7 +74,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
      * @return
      */
     @Override
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize,String cityName) {
+    public MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
@@ -114,7 +115,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         // 延期天数
         List<ProjectScheduling> list4 = getdelayDay(listProjectNo);
         // 确认验收
-        Map<String,Integer> Map5 = getApprove(listProjectNo);
+        Map<String, Integer> Map5 = getApprove(listProjectNo);
         // 合同金额/时间
         List<FundsOrder> list6 = getFundsOrder(listProjectNo);
 
@@ -126,8 +127,8 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
             for (Project project : list1) {
                 if (constructionOrder.getProjectNo().equals(project.getProjectNo())) {
                     // 条件筛选 - 城市
-                    if (!StringUtils.isBlank(cityName)){
-                        if (!cityName.equals(project.getCity())){
+                    if (!StringUtils.isBlank(cityName)) {
+                        if (!cityName.equals(project.getCity())) {
                             continue continueOut;
                         }
                     }
@@ -172,32 +173,37 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
                 }
             }
             // 签约日期 已支付 应支付金额
-//            for (FundsOrder fundsOrder : list6){
-//                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())){
-//                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(),FORMAT));
-//                    constructionOrderListVo.setReducedContractAmount(fundsOrder.getActualAmount());
-//                    constructionOrderListVo.setHavePaid(fundsOrder.getPaidAmount());
-//                }
-//            }
+            for (FundsOrder fundsOrder : list6){
+                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())){
+                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(),FORMAT));
+                    constructionOrderListVo.setReducedContractAmount(fundsOrder.getActualAmount());
+                    constructionOrderListVo.setHavePaid(fundsOrder.getPaidAmount());
+                }
+            }
 
             // 最近验收情况14
-//           for (Map.Entry<String,Integer> map : Map5.entrySet()){
-//                if (constructionOrder.getProjectNo().equals(map.getKey())){
-//                    switch ()
-//                    constructionOrderListVo.setCheckCondition(map.getValue());
-//                }else {
-//                    constructionOrderListVo.setCheckCondition(0);
-//                }
-//           }
+            for (Map.Entry<String, Integer> map : Map5.entrySet()) {
+                if (constructionOrder.getProjectNo().equals(map.getKey())) {
+                    switch (map.getKey()) {
+                        case "1":
+                            constructionOrderListVo.setCheckCondition("通过");
+                        case "2":
+                            constructionOrderListVo.setCheckCondition("未通过");
+                        default:
+                            constructionOrderListVo.setCheckCondition("--");
+                    }
+                }
+            }
 
+            // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage==ConstructionStateEnum.STATE_530.getState()) {
+            if (stage == ConstructionStateEnum.STATE_530.getState()) {
                 waitExamine++;
             }
-            if (stage==ConstructionStateEnum.STATE_550.getState()) {
+            if (stage == ConstructionStateEnum.STATE_550.getState()) {
                 waitSign++;
             }
-            if ((stage >= ConstructionStateEnum.STATE_600.getState() && stage <= ConstructionStateEnum.STATE_690.getState())){
+            if ((stage >= ConstructionStateEnum.STATE_600.getState() && stage <= ConstructionStateEnum.STATE_690.getState())) {
                 waitPay++;
             }
 
@@ -258,7 +264,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
      */
     public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoIn(listProjectNo).andRoleIdEqualTo(role).andIsTransferEqualTo((short) 0);
+        example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
         List<OrderUser> list = orderUserMapper.selectByExample(example);
         List<Map<String, String>> listName = new ArrayList<>();
         for (OrderUser orderUser : list) {
