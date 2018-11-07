@@ -3,6 +3,7 @@ package cn.thinkfree.service.approvalflow.impl;
 import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.Role;
+import cn.thinkfree.core.exception.CommonException;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
@@ -59,6 +60,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
+        // TODO 测试用
+//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+//            LOGGER.error("无法发起审批");
+//            throw new CommonException(500, "无法发起审批");
+//        }
         AfInstanceDetailVO instanceDetailVO = new AfInstanceDetailVO();
         Project project = projectService.findByProjectNo(projectNo);
         if (project == null) {
@@ -118,7 +124,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark) {
-
+        // TODO 测试用
+//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+//            LOGGER.error("无法发起审批");
+//            throw new CommonException(500, "无法发起审批");
+//        }
         List<UserRoleSet> roles = roleService.findAll();
         AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
         if (approvalOrder == null) {
@@ -127,7 +137,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
         List<UserRoleSet> approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), roles);
         if (approvalRoles == null || approvalRoles.size() < 1) {
-            LOGGER.error("获取审批顺序出错approvalOrderNo:{}", approvalOrder.getApprovalOrderNo());
+            LOGGER.error("获取审批顺序出错，approvalOrderNo:{}", approvalOrder.getApprovalOrderNo());
             throw new RuntimeException();
         }
         List<AfApprovalLog> approvalLogs = new ArrayList<>(approvalRoles.size());
@@ -185,6 +195,86 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         insert(instance);
         approvalLogService.create(approvalLogs);
+    }
+
+    private boolean verifyStartApproval(String projectNo, String configNo, Integer scheduleSort) {
+        boolean result = false;
+        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
+        if (schedulingDetailsVOs != null && schedulingDetailsVOs.size() > 0) {
+            int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
+            if (projectCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && projectCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
+                if (AfConfigs.START_APPLICATION.configNo.equals(configNo)) {
+                    int status = getInstanceStatus(configNo, projectNo);
+                    if (status == AfConstants.APPROVAL_STATUS_BEFORE_START || status == AfConstants.APPROVAL_STATUS_FAIL){
+                        result = true;
+                    }
+                } else if (AfConfigs.START_REPORT.configNo.equals(configNo)) {
+                    int startApplicationStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
+                    if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                        int status = getInstanceStatus(configNo, projectNo);
+                        if (status == AfConstants.APPROVAL_STATUS_BEFORE_START || status == AfConstants.APPROVAL_STATUS_FAIL){
+                            result = true;
+                        }
+                    }
+                } else if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
+                    int preScheduleSortCompleteStatus = getPreScheduleSortCompleteStatus(projectNo, schedulingDetailsVOs, scheduleSort);
+                    if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                        int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
+                        if (scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_BEFORE_START || scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_FAIL) {
+                            result = true;
+                        }
+                    }
+                } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)) {
+                    int preScheduleSortCompleteStatus = getPreScheduleSortCompleteStatus(projectNo, schedulingDetailsVOs, scheduleSort);
+                    if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                        int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
+                        if (scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_BEFORE_START || scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_FAIL) {
+                            long checkApplicationCount = getCount(projectNo, AfConfigs.CHECK_APPLICATION.configNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+                            long checkReportSuccessCount = getCount(projectNo, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+                            long checkReportStartCount = getCount(projectNo, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_START);
+                            if (checkApplicationCount > checkReportSuccessCount + checkReportStartCount) {
+                                result = true;
+                            }
+                        }
+                    }
+                } else if (AfConfigs.PROBLEM_RECTIFICATION.configNo.equals(configNo)) {
+                    result = true;
+                } else if (AfConfigs.RECTIFICATION_COMPLETE.configNo.equals(configNo)) {
+                    long checkApplicationCount = getCount(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+                    long checkReportSuccessCount = getCount(projectNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+                    long checkReportStartCount = getCount(projectNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_START);
+                    if (checkApplicationCount > checkReportSuccessCount + checkReportStartCount) {
+                        result = true;
+                    }
+                } else if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)) {
+                    result = true;
+                } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)) {
+                    long checkApplicationCount = getCount(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+                    long checkReportSuccessCount = getCount(projectNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+                    long checkReportStartCount = getCount(projectNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_START);
+                    if (checkApplicationCount > checkReportSuccessCount + checkReportStartCount) {
+                        result = true;
+                    }
+                } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+                    result = true;
+                } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(configNo)) {
+                    int preScheduleSortCompleteStatus = getPreScheduleSortCompleteStatus(projectNo, schedulingDetailsVOs, scheduleSort);
+                    if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                        int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
+                        if (scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_BEFORE_START || scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_FAIL) {
+
+                            if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
+                                    && countEqual(projectNo, AfConfigs.CHECK_APPLICATION.configNo, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                                    && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                                    && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+                                result = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -294,8 +384,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Override
     public void approval(String instanceNo, String userId, Integer option, String remark) {
         if (option != AfConstants.OPTION_REFUSAL && option != AfConstants.OPTION_AGREE) {
-            LOGGER.error("未传入正确的参数，option:{}", option, new RuntimeException());
-            throw new RuntimeException();
+            LOGGER.error("未传入正确的参数，option:{}", option);
+            throw new CommonException(500, "未传入正确的参数");
         }
         if (option == AfConstants.OPTION_REFUSAL && StringUtils.isEmpty(remark)) {
             LOGGER.error("用户在拒绝的情况下必须写明原因");
