@@ -121,12 +121,15 @@ public class AppProjectController {
     }
 
 
-//    @RequestMapping(value = "",method = RequestMethod.POST)
-//    @ApiOperation(value = "")
-//    public MyRespBundle<> (@ApiParam(name = "",value = "") ){
-//
-//        return sendJsonData(ResultMessage.SUCCESS,);
-//    }
+    @RequestMapping(value = "remindPay",method = RequestMethod.POST)
+    @ApiOperation(value = "提醒支付量房费")
+    public MyRespBundle<String> remindPay(
+            @RequestParam("OrderNo") @ApiParam(name = "OrderNo", value = "订单号") String orderNo,
+            @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
+            @RequestParam("projectNo") @ApiParam(name = "ownerId", value = "业主id") String ownerId,
+            @RequestParam("projectNo") @ApiParam(name = "userId", value = "用户id") String userId){
+        return newProjectService.remindPay(projectNo,orderNo,ownerId,userId);
+    }
 
 
 }

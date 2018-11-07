@@ -544,8 +544,21 @@ public class NewProjectServiceImpl implements NewProjectService {
         constructionCriteria.andOrderNoEqualTo(orderNo);
         constructionCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
-
+        //TODO 取消订单找另外另个人要接口
 
         return null;
+    }
+
+    /**
+     * 提醒支付量房费
+     * @param projectNo
+     * @param orderNo
+     * @param ownerId
+     * @param userId
+     * @return
+     */
+    @Override
+    public MyRespBundle<String> remindPay(String projectNo, String orderNo, String ownerId, String userId) {
+        return RespData.success();
     }
 }
