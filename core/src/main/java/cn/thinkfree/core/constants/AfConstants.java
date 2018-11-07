@@ -10,6 +10,10 @@ package cn.thinkfree.core.constants;
 public class AfConstants {
 
     /**
+     * 审批流审批状态：未开始
+     */
+    public static final int APPROVAL_STATUS_BEFORE_START = 0;
+    /**
      * 审批流审批状态：正在进行中
      */
     public static final int APPROVAL_STATUS_START = 1;

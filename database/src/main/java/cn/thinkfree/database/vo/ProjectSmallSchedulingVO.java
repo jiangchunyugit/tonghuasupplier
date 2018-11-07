@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -11,77 +12,41 @@ import java.util.Date;
 @ApiModel(value = "ProjectSmallSchedulingVO,基础小排期详情")
 @Data
 public class ProjectSmallSchedulingVO {
-    /**
-     * 排序号
-     */
+    @ApiModelProperty(value = "排序号")
     private Integer sort;
-    /**
-     * 大排期序号
-     */
+    @ApiModelProperty(value = "大排期序号")
     private Integer parentSort;
-    /**
-     * 施工项ID
-     */
+    @ApiModelProperty(value = "施工项ID")
     private Long constructId;
-    /**
-     * 施工项类别
-     */
+    @ApiModelProperty(value = "施工项类别")
     private String constructCategory;
-    /**
-     * 施工项分类
-     */
+    @ApiModelProperty(value = "施工项分类")
     private String constructItem;
-    /**
-     * 施工项编码
-     */
+    @ApiModelProperty(value = "施工项编码")
     private String constructCode;
-    /**
-     * 施工项名称
-     */
+    @ApiModelProperty(value = "施工项名称")
     private String constructName;
-    /**
-     * 计量单位
-     */
+    @ApiModelProperty(value = "计量单位")
     private String unitCode;
-    /**
-     * 工艺材料简介
-     */
+    @ApiModelProperty(value = "工艺材料简介")
     private String desc;
-    /**
-     * 辅料名称规格
-     */
+    @ApiModelProperty(value = "辅料名称规格")
     private String assitSpec;
-    /**
-     * 验收标准
-     */
+    @ApiModelProperty(value = "验收标准")
     private String standard;
-    /**
-     * 标准出处
-     */
+    @ApiModelProperty(value = "标准出处")
     private String sourceOfStandard;
-    /**
-     * 施工项状态
-     */
+    @ApiModelProperty(value = "施工项状态")
     private Integer status;
-    /**
-     * 备注
-     */
+    @ApiModelProperty(value = "备注")
     private String remark;
-    /**
-     * 装饰公司
-     */
+    @ApiModelProperty(value = "装饰公司")
     private String decorateCompany;
-    /**
-     * 创建时间
-     */
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-    /**
-     * 更新时间
-     */
+    @ApiModelProperty(value = "更新时间")
     private Date updateTime;
-    /**
-     * 更新人
-     */
+    @ApiModelProperty(value = "更新人")
     private String updateBy;
 
 }
