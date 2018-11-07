@@ -5,7 +5,7 @@
     <result column="company_audit_type" jdbcType="VARCHAR" property="companyAuditType" />
   </resultMap>
 
-  <select id="findAuditStatus" resultMap="AuditInfoVO" parameterType="java.lang.String">
+  <select id="findAuditStatus" resultMap="AuditInfoVO" parameterType="java.util.Map">
     SELECT
 	auditInfo.id,
 	auditInfo.audit_type,
@@ -21,8 +21,27 @@ FROM
 	pc_audit_info auditInfo
 	LEFT JOIN company_info companyInfo ON auditInfo.company_id = companyInfo.company_id
 WHERE
-	auditInfo.company_id = #{companyId}
+	auditInfo.company_id = #{companyId} and auditInfo.audit_type = #{auditType}
 	AND auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
   </select>
+
+	<select id="findTempAuditStatus" resultMap="AuditInfoVO" parameterType="java.util.Map">
+		SELECT
+	auditInfo.id,
+	auditInfo.audit_type,
+	auditInfo.audit_level,
+	auditInfo.audit_persion,
+	auditInfo.audit_status,
+	auditInfo.audit_time,
+	auditInfo.company_id,
+	auditInfo.audit_case,
+	auditInfo.contract_number,
+	companyInfo.change_status company_audit_type
+FROM
+	pc_audit_info auditInfo
+	LEFT JOIN pc_audit_temporary_info companyInfo ON auditInfo.company_id = companyInfo.company_id
+	WHERE auditInfo.company_id = #{companyId} and auditInfo.audit_type = #{auditType}
+	and auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
+	</select>
 
 </mapper>

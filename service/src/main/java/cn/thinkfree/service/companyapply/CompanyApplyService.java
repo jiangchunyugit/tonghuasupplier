@@ -63,7 +63,7 @@ public interface CompanyApplyService {
      * @param pcApplyInfoSEO
      * @return
      */
-    boolean addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO);
+    String addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO);
 
     /**
      * 激活账户
@@ -84,4 +84,18 @@ public interface CompanyApplyService {
      * @param email
      */
     void sendMessage(String email);
+
+    /**
+     * 校验公司名称是否重复
+     * @param name
+     * @return
+     */
+    boolean checkCompanyName(String name);
+
+    /**
+     * 校验公司邮箱是否重复
+     * @param email
+     * @return
+     */
+    boolean checkEmail(String email);
 }

@@ -3,6 +3,7 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditInfoExample;
 import java.util.List;
+import java.util.Map;
 
 import cn.thinkfree.database.vo.AuditInfoVO;
 import org.apache.ibatis.annotations.Param;
@@ -59,8 +60,11 @@ public interface PcAuditInfoMapper {
 
     /**
      * 审批详情查询
-     * @param companyId
+     * @param map
      * @return
      */
-    AuditInfoVO findAuditStatus(String companyId);
+    AuditInfoVO findAuditStatus(Map<String, String> map);
+
+
+    AuditInfoVO findTempAuditStatus(Map<String, String> map);
 }
