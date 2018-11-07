@@ -109,6 +109,7 @@
         <!--<table tableName="build_pay_config" domainObjectName="BuildPayConfig"/>-->
         <!--<table tableName="build_scheme_config" domainObjectName="BuildSchemeConfig"/>-->
         <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
+        <!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->
         <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
         <!-- new approval flow end -->
     </context>

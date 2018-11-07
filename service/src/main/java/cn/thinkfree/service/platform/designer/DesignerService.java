@@ -131,4 +131,18 @@ public interface DesignerService {
      */
     void importDesign(MultipartFile designerFile, String optionId, String companyId);
 
+    /**
+     * 创建设计风格
+     *
+     * @param styleCode 风格编码
+     * @param styleName 风格名称
+     * @param remark    备注
+     */
+    void createDesignStyle(String styleCode, String styleName, String remark);
+
+    /**
+     * 删除设计风格
+     * @param styleCode
+     */
+    void delDesignStyle(String styleCode);
 }

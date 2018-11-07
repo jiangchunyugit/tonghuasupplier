@@ -285,9 +285,53 @@ public class DesignerServiceImpl implements DesignerService {
     @Override
     public List<DesignerStyleConfig> queryDesignerStyle() {
         DesignerStyleConfigExample configExample = new DesignerStyleConfigExample();
-        configExample.createCriteria();
+        configExample.createCriteria().andDelStateEqualTo(2);
         List<DesignerStyleConfig> styleConfigs = styleConfigMapper.selectByExample(configExample);
         return styleConfigs;
+    }
+
+    @Override
+    public void createDesignStyle(String styleCode, String styleName, String remark) {
+        DesignerStyleConfigExample configExample = new DesignerStyleConfigExample();
+        configExample.or().andStyleCodeEqualTo(styleCode);
+        configExample.or().andStyleNameEqualTo(styleName);
+        List<DesignerStyleConfig> styleConfigs = styleConfigMapper.selectByExample(configExample);
+        if(!styleConfigs.isEmpty()){
+            for (DesignerStyleConfig styleConfig : styleConfigs){
+                if(styleConfig.getDelState() == 2){
+                    throw new RuntimeException("数据重复");
+                }
+            }
+        }
+        configExample.clear();
+        configExample.createCriteria().andStyleNameEqualTo(styleName).andStyleCodeEqualTo(styleCode);
+        styleConfigs.clear();
+        if(!styleConfigMapper.selectByExample(configExample).isEmpty()){
+            DesignerStyleConfig styleConfig = new DesignerStyleConfig();
+            styleConfig.setDelState(2);
+            styleConfig.setRemark(remark);
+            int res = styleConfigMapper.updateByExample(styleConfig, configExample);
+            //更新状态为未删除
+        }else{
+            DesignerStyleConfig styleConfig = new DesignerStyleConfig();
+            styleConfig.setDelState(2);
+            styleConfig.setRemark(remark);
+            styleConfig.setStyleCode(styleCode);
+            styleConfig.setStyleName(styleName);
+            styleConfig.setStyleSort(999);
+            styleConfigMapper.insertSelective(styleConfig);
+            //新增配置
+        }
+    }
+
+    @Override
+    public void delDesignStyle(String styleCode) {
+        DesignerStyleConfigExample configExample = new DesignerStyleConfigExample();
+        configExample.createCriteria().andStyleCodeEqualTo(styleCode);
+        DesignerStyleConfig styleConfig = new DesignerStyleConfig();
+        styleConfig.setDelState(1);
+        int res = styleConfigMapper.updateByExample(styleConfig, configExample);
+        //更新状态为删除
     }
 
     /**

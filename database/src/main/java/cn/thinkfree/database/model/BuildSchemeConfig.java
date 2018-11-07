@@ -106,6 +106,7 @@ public class BuildSchemeConfig extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("是否启用，1启用，2不启用")
     private Integer isEnable;
 
     /**
@@ -117,6 +118,7 @@ public class BuildSchemeConfig extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("删除状态，1删除，2未删除")
     private Integer delState;
 
     /**

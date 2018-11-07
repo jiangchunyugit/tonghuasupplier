@@ -83,7 +83,7 @@ public class DesignerController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "queryCompanyId", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<EmployeeMsg>> queryDesignerByCompanyId(
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId){
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
         List<EmployeeMsg> employeeMsgs = designerService.queryDesignerByCompanyId(companyId);
         return sendJsonData(ResultMessage.SUCCESS, employeeMsgs);
     }
@@ -94,6 +94,33 @@ public class DesignerController extends AbsBaseController {
     public MyRespBundle<List<DesignerStyleConfig>> queryDesignerStyle() {
         List<DesignerStyleConfig> styleConfigs = designerService.queryDesignerStyle();
         return sendJsonData(ResultMessage.SUCCESS, styleConfigs);
+    }
+    @ApiOperation("创建设计风格")
+    @MyRespBody
+    @RequestMapping(value = "createDesignStyle", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle createDesignStyle(
+            @ApiParam(name = "styleCode", required = true, value = "设计风格编码") @RequestParam(name = "styleCode", required = true) String styleCode,
+            @ApiParam(name = "styleName", required = true, value = "设计风格名称") @RequestParam(name = "styleName", required = true) String styleName,
+            @ApiParam(name = "remark", required = true, value = "备注") @RequestParam(name = "remark", required = true) String remark) {
+        try {
+            designerService.createDesignStyle(styleCode, styleName, remark);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
+    }
+
+    @ApiOperation("删除设计风格")
+    @MyRespBody
+    @RequestMapping(value = "delDesignStyle", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle delDesignStyle(
+            @ApiParam(name = "styleCode", required = true, value = "设计风格编码") @RequestParam(name = "styleCode", required = true) String styleCode) {
+        try {
+            designerService.delDesignStyle(styleCode);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("编辑设计师信息")
@@ -108,8 +135,12 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "designerMoneyLow", required = true, value = "设计费最低") @RequestParam(name = "designerMoneyLow", required = true) String designerMoneyLow,
             @ApiParam(name = "designerMoneyHigh", required = true, value = "设计费最高") @RequestParam(name = "designerMoneyHigh", required = true) String designerMoneyHigh,
             @ApiParam(name = "masterStyle", required = true, value = "擅长风格") @RequestParam(name = "masterStyle", required = true) String masterStyle) {
-        designerService.editDesignerMsg(userId,tag,identity,workingTime,volumeRoomMoney,designerMoneyLow,designerMoneyHigh,masterStyle);
-        return sendJsonData(ResultMessage.SUCCESS, null);
+        try {
+            designerService.editDesignerMsg(userId, tag, identity, workingTime, volumeRoomMoney, designerMoneyLow, designerMoneyHigh, masterStyle);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("创建设计师信息")
@@ -125,9 +156,13 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "volumeRoomMoney", required = false, value = "量房费") @RequestParam(name = "volumeRoomMoney", required = false) String volumeRoomMoney,
             @ApiParam(name = "designerMoneyLow", required = false, value = "设计费最低") @RequestParam(name = "designerMoneyLow", required = false) String designerMoneyLow,
             @ApiParam(name = "designerMoneyHigh", required = false, value = "设计费最高") @RequestParam(name = "designerMoneyHigh", required = false) String designerMoneyHigh,
-            @ApiParam(name = "masterStyle", required = false, value = "擅长风格") @RequestParam(name = "masterStyle", required = false) String masterStyle){
-        designerService.createDesigner(phone,email,province,city,area,workingTime,masterStyle,volumeRoomMoney,designerMoneyLow,designerMoneyHigh);
-        return sendJsonData(ResultMessage.SUCCESS, null);
+            @ApiParam(name = "masterStyle", required = false, value = "擅长风格") @RequestParam(name = "masterStyle", required = false) String masterStyle) {
+        try {
+            designerService.createDesigner(phone, email, province, city, area, workingTime, masterStyle, volumeRoomMoney, designerMoneyLow, designerMoneyHigh);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("导入设计师")
@@ -136,9 +171,9 @@ public class DesignerController extends AbsBaseController {
     public MyRespBundle importDesign(
             @ApiParam(value = "设计师excel", required = true) @RequestParam(name = "designerFile", required = false) MultipartFile designerFile,
             @ApiParam(value = "操作人Id", required = true) @RequestParam(name = "optionId", required = false) String optionId,
-            @ApiParam(value = "所属公司Id", required = true) @RequestParam(name = "companyId", required = false) String companyId){
+            @ApiParam(value = "所属公司Id", required = true) @RequestParam(name = "companyId", required = false) String companyId) {
         try {
-            designerService.importDesign(designerFile,optionId,companyId);
+            designerService.importDesign(designerFile, optionId, companyId);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

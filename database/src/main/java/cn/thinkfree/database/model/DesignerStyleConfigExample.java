@@ -393,6 +393,136 @@ public class DesignerStyleConfigExample {
             addCriterion("style_sort not between", value1, value2, "styleSort");
             return (Criteria) this;
         }
+
+        public Criteria andDelStateIsNull() {
+            addCriterion("del_state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateIsNotNull() {
+            addCriterion("del_state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateEqualTo(Integer value) {
+            addCriterion("del_state =", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateNotEqualTo(Integer value) {
+            addCriterion("del_state <>", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateGreaterThan(Integer value) {
+            addCriterion("del_state >", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("del_state >=", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateLessThan(Integer value) {
+            addCriterion("del_state <", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateLessThanOrEqualTo(Integer value) {
+            addCriterion("del_state <=", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateIn(List<Integer> values) {
+            addCriterion("del_state in", values, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateNotIn(List<Integer> values) {
+            addCriterion("del_state not in", values, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateBetween(Integer value1, Integer value2) {
+            addCriterion("del_state between", value1, value2, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateNotBetween(Integer value1, Integer value2) {
+            addCriterion("del_state not between", value1, value2, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNull() {
+            addCriterion("remark is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIsNotNull() {
+            addCriterion("remark is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkEqualTo(String value) {
+            addCriterion("remark =", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotEqualTo(String value) {
+            addCriterion("remark <>", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThan(String value) {
+            addCriterion("remark >", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkGreaterThanOrEqualTo(String value) {
+            addCriterion("remark >=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThan(String value) {
+            addCriterion("remark <", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLessThanOrEqualTo(String value) {
+            addCriterion("remark <=", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkLike(String value) {
+            addCriterion("remark like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotLike(String value) {
+            addCriterion("remark not like", value, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkIn(List<String> values) {
+            addCriterion("remark in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotIn(List<String> values) {
+            addCriterion("remark not in", values, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkBetween(String value1, String value2) {
+            addCriterion("remark between", value1, value2, "remark");
+            return (Criteria) this;
+        }
+
+        public Criteria andRemarkNotBetween(String value1, String value2) {
+            addCriterion("remark not between", value1, value2, "remark");
+            return (Criteria) this;
+        }
     }
 
     /**
