@@ -8,7 +8,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * TODO
+ * 审批流配置
  *
  * @author song
  * @version 1.0

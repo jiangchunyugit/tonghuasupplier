@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
- * TODO
+ * 审批流发起菜单
  *
  * @author song
  * @version 1.0
