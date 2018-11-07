@@ -210,4 +210,15 @@ public interface NewOrderUserService {
      * @Param newDelay
      **/
     public void modifyDelayDay(String projectNo, Integer newDelay);
+
+    /**
+     * 根据项目编号,员工编号,员工
+     * 角色查看是否符合实际权限
+     *
+     * @param projectNo
+     * @param userId
+     * @param roleCode
+     * @return
+     */
+    Boolean checkJurisdiction(String projectNo,String userId,String roleCode);
 }

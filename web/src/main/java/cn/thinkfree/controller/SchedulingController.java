@@ -33,14 +33,14 @@ public class SchedulingController extends AbsBaseController {
     }
 
     @RequestMapping(value = "saveProjectScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "添加大排期")
+//    @ApiOperation(value = "添加大排期")
     public MyRespBundle saveProjectScheduling(@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
         String result = schedulingService.saveProjectScheduling(projectBigSchedulingDetailsVO);
         return sendSuccessMessage(result);
     }
 
     @RequestMapping(value = "deleteProjectScheduling", method = RequestMethod.POST)
-    @ApiOperation(value = "APP-删除大排期")
+//    @ApiOperation(value = "APP-删除大排期")
     public MyRespBundle deleteProjectScheduling(@ApiParam(name = "projectBigSchedulingDetailsVO",value = "大排期信息") ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO) {
         String result = schedulingService.deleteProjectScheduling(projectBigSchedulingDetailsVO);
         return sendSuccessMessage(result);

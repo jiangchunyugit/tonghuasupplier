@@ -9,6 +9,7 @@ import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     @Autowired
     ProjectSchedulingMapper projectSchedulingMapper;
     @Autowired
-    OrderUserMapper orderUserMapper;
+    NewOrderUserService newOrderUserService;
 
 
     /**
@@ -189,13 +190,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.success("暂无修改");
         }
         String projectNo = bigList.get(0).getProjectNo();
-        OrderUserExample userExample = new OrderUserExample();
-        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
-        userCriteria.andProjectNoEqualTo(projectNo);
-        userCriteria.andUserIdEqualTo(bigList.get(0).getUserId());
-        userCriteria.andRoleCodeEqualTo(UserJobs.Foreman.roleCode);
-        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
-        if(orderUsers.size()==0){
+        if(!newOrderUserService.checkJurisdiction(projectNo,bigList.get(0).getUserId(),UserJobs.Foreman.roleCode)){
             return RespData.error("此操作者没有此项目编辑排期的权限!");
         }
         //将原数据置为失效

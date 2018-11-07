@@ -53,5 +53,9 @@ public class ProjectVo {
     private List<ProjectOrderDetailVo> projectOrderDetailVoList;
     @ApiModelProperty(value = "消息内容")
     private String message = "消息内容";
+    @ApiModelProperty(value = "是否展示 拒绝接单 按钮")
+    private Boolean refuseButton;
+    @ApiModelProperty(value = "是否展示 立即接单 按钮")
+    private Boolean agreeButto;
 
 }
