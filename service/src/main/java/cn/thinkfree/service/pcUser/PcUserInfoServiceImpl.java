@@ -16,6 +16,8 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.account.AccountListVO;
+import cn.thinkfree.database.vo.account.AccountSEO;
 import cn.thinkfree.database.vo.account.AccountVO;
 import cn.thinkfree.database.vo.account.ThirdAccountVO;
 import cn.thinkfree.database.constants.UserRegisterType;
@@ -315,6 +317,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             accountVO.setCityBranch(cityBranch);
         }
 
+        // TODO 补充第三方数据
         ThirdAccountVO thirdAccountVO = new ThirdAccountVO();
         accountVO.setThirdAccount(thirdAccountVO);
 
@@ -394,6 +397,20 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         condition.createCriteria().andUserIdEqualTo(id);
         userRegisterMapper.updateByExampleSelective(update,condition);
         return "操作成功!";
+    }
+
+    /**
+     * 分页查询账号
+     *
+     * @param accountSEO
+     * @return
+     */
+    @Override
+    public PageInfo<AccountListVO> pageAccountVO(AccountSEO accountSEO) {
+
+        PageHelper.startPage(accountSEO.getPage(),accountSEO.getRows());
+        List<AccountListVO> result = pcUserInfoMapper.selectAccountListVO(accountSEO);
+        return new PageInfo<>(result);
     }
 
     /**

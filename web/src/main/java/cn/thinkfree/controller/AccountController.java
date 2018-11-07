@@ -350,15 +350,15 @@ public class AccountController extends AbsBaseController {
 
     /**
      * 账号管理--列表
-     * @param accountVO
+     * @param accountSEO
      * @return
      */
     @ApiOperation(value="前端-运营平台-账号管理", notes="账号管理列表")
     @GetMapping("/info")
     @MyRespBody
-    public MyRespBundle<AccountVO> accountList(AccountVO accountVO){
-        AccountVO result = pcUserInfoService.saveUserAccount(accountVO);
-        return sendJsonData(ResultMessage.SUCCESS,result);
+    public MyRespBundle<PageInfo<AccountListVO>> accountList(AccountSEO accountSEO){
+        PageInfo page = pcUserInfoService.pageAccountVO(accountSEO);
+        return sendJsonData(ResultMessage.SUCCESS,page);
     }
 
     /**

@@ -3,10 +3,7 @@ package cn.thinkfree.web.test;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.SystemRole;
-import cn.thinkfree.database.vo.account.AccountVO;
-import cn.thinkfree.database.vo.account.PermissionVO;
-import cn.thinkfree.database.vo.account.SystemResourceTreeVO;
-import cn.thinkfree.database.vo.account.SystemRoleVO;
+import cn.thinkfree.database.vo.account.*;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
 import org.junit.Assert;
@@ -363,6 +360,21 @@ public class AccountControllerTest extends AbsControllerTest {
                 .andReturn().getResponse().getContentAsString();
 
         MyRespBundle<Map<String,Object>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<Map<String,Object>>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"操作成功!");
+    }
+
+    @Test
+    public void infoList() throws Exception {
+
+        String rs = mvc.perform(get("/account/info")
+                .with(user(userVO))
+                .param("name","临时")
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<PageInfo<AccountListVO>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<PageInfo<AccountListVO>>>() {}.getType());
         Assert.assertEquals(rsb.getData(),"操作成功!");
     }
 
