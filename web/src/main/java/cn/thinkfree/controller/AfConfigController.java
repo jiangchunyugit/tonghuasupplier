@@ -6,6 +6,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.vo.AfConfigEditVO;
+import cn.thinkfree.database.vo.AfConfigListVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.AfConfigService;
 import io.swagger.annotations.*;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 审批流配置控制层
@@ -38,7 +38,7 @@ public class AfConfigController extends AbsBaseController {
     @MyRespBody
     @ApiOperation(value="前端-查询所有审批流-宋传让")
     @ApiParam(name = "schemeNo", value= "方案编号", required = true)
-    public MyRespBundle<List<AfConfigVO>> list(@RequestParam(name = "schemeNo") String schemeNo){
+    public MyRespBundle<AfConfigListVO> list(@RequestParam(name = "schemeNo") String schemeNo){
         LOGGER.info("请求参数，schemeNo:{}", schemeNo);
         return sendJsonData(ResultMessage.SUCCESS, configService.list(schemeNo));
     }
