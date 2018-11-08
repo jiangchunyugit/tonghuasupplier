@@ -4,8 +4,6 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.EmployeeMsg;
-import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
@@ -119,11 +117,25 @@ public class EmployeeController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "createRole", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle createRole(
+            @ApiParam(name = "roleName", required = false, value = "角色名称") @RequestParam(name = "roleName", required = false) String roleName,
+            @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
+        try {
+            employeeService.createRole(roleName, remark);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendJsonData(ResultMessage.SUCCESS, null);
+    }
+
+    @ApiOperation("编辑角色--->王玲组专用")
+    @MyRespBody
+    @RequestMapping(value = "editRole", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle editRole(
             @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
             @ApiParam(name = "roleName", required = false, value = "角色名称") @RequestParam(name = "roleName", required = false) String roleName,
             @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
-            employeeService.createRole(roleCode, roleName, remark);
+            employeeService.editRole(roleCode, roleName, remark);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

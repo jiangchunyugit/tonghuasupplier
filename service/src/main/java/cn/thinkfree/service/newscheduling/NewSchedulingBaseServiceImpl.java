@@ -70,28 +70,30 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     /**
      * 添加本地大排期
      *
-     * @param projectBigSchedulingVO
+     * @param projectBigSchedulingVOList
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String addBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
-        ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
-        projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
-        projectBigScheduling.setName(projectBigSchedulingVO.getName());
-        projectBigScheduling.setDescription(projectBigSchedulingVO.getDescription());
-        projectBigScheduling.setIsNew(projectBigSchedulingVO.getIsNew());
-        projectBigScheduling.setSquareMetreStart(projectBigSchedulingVO.getSquareMetreStart());
-        projectBigScheduling.setSquareMetreEnd(projectBigSchedulingVO.getSquareMetreEnd());
-        projectBigScheduling.setRoomNum(projectBigSchedulingVO.getRoomNum());
-        projectBigScheduling.setWorkload(projectBigSchedulingVO.getWorkload());
-        projectBigScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
-        projectBigScheduling.setCreateTime(new Date());
-        projectBigScheduling.setVersion(Scheduling.VERSION.getValue());
-        projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue());
-        int result = projectBigSchedulingMapper.insertSelective(projectBigScheduling);
-        if (result != Scheduling.INSERT_SUCCESS.getValue()) {
-            return "操作失败!";
+    public String addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
+        for (ProjectBigSchedulingVO projectBigSchedulingVO : projectBigSchedulingVOList) {
+            ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+            projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
+            projectBigScheduling.setName(projectBigSchedulingVO.getName());
+            projectBigScheduling.setDescription(projectBigSchedulingVO.getDescription());
+            projectBigScheduling.setIsNew(projectBigSchedulingVO.getIsNew());
+            projectBigScheduling.setSquareMetreStart(projectBigSchedulingVO.getSquareMetreStart());
+            projectBigScheduling.setSquareMetreEnd(projectBigSchedulingVO.getSquareMetreEnd());
+            projectBigScheduling.setRoomNum(projectBigSchedulingVO.getRoomNum());
+            projectBigScheduling.setWorkload(projectBigSchedulingVO.getWorkload());
+            projectBigScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
+            projectBigScheduling.setCreateTime(new Date());
+            projectBigScheduling.setVersion(Scheduling.VERSION.getValue());
+            projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue());
+            int result = projectBigSchedulingMapper.insertSelective(projectBigScheduling);
+            if (result != Scheduling.INSERT_SUCCESS.getValue()) {
+                return "操作失败!";
+            }
         }
         return "操作成功";
     }
@@ -103,7 +105,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    public PageInfo<ProjectBigScheduling> listBigScheduling(SchedulingSeo schedulingSeo) {
+    public PageInfo<ProjectBigSchedulingVO> listBigScheduling(SchedulingSeo schedulingSeo) {
         ProjectBigSchedulingExample projectBigSchedulingExample = new ProjectBigSchedulingExample();
         projectBigSchedulingExample.setOrderByClause("create_time desc");
         ProjectBigSchedulingExample.Criteria criteria = projectBigSchedulingExample.createCriteria();
@@ -114,7 +116,8 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         }
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectBigScheduling> list = projectBigSchedulingMapper.selectByExample(projectBigSchedulingExample);
-        return new PageInfo<>(list);
+        List<ProjectBigSchedulingVO> listVo = BaseToVoUtils.getListVo(list, ProjectBigSchedulingVO.class);
+        return new PageInfo<>(listVo);
     }
 
     /**

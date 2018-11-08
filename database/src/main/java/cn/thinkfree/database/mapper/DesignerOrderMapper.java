@@ -109,7 +109,13 @@ public interface DesignerOrderMapper {
      * @return
      */
     Integer selectProjectOrderCount(@Param("projectOrderVO")ProjectOrderVO projectOrderVO);
-
+    /**
+     * @Author jiang
+     * @Description 分页查询项目派单
+     * @Date
+     * @Param projectOrderVO
+     * @return
+     **/
     List<ProjectOrderVO> selectProjectOrderByPage(@Param("projectOrderVO") ProjectOrderVO projectOrderVO,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
 
     OrderPlayVo selectByProjectNoAndStatus(@Param("projectNo") String projectNo, @Param("status") Integer status);

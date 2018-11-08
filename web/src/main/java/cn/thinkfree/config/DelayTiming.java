@@ -1,19 +1,19 @@
-package cn.thinkfree.controller;
+package cn.thinkfree.config;
 
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
 import cn.thinkfree.database.mapper.ProjectSchedulingMapper;
-import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample;
+import cn.thinkfree.database.model.ProjectScheduling;
+import cn.thinkfree.database.model.ProjectSchedulingExample;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Auther: jiang
@@ -30,13 +30,13 @@ public class DelayTiming {
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
 
-    @Scheduled(cron = "0 0 1 * * ?")
+    @Scheduled(cron = "${schedules}")
     public void timing() {
         try {
             LOGGER.info("开始执行定时任务");
             ProjectBigSchedulingDetailsExample projectBigSchedulingDetailsExample = new ProjectBigSchedulingDetailsExample();
             //查询未完成的阶段项目
-            projectBigSchedulingDetailsExample.createCriteria().andIsCompletedEqualTo(0);
+            projectBigSchedulingDetailsExample.createCriteria().andIsCompletedEqualTo(0).andStatusEqualTo(1);
             List<ProjectBigSchedulingDetails> projectBigSchedulingDetails = projectBigSchedulingDetailsMapper.selectByExample(projectBigSchedulingDetailsExample);
             if (projectBigSchedulingDetails != null) {
                 Date currentDate = new Date();
@@ -54,15 +54,18 @@ public class DelayTiming {
                             Integer delay = projectScheduling.getDelay();
                             if (projectScheduling.getDelay() != null) {
                                 scheduling.setDelay(delay + 1);
-                            } else if (projectScheduling.getDelay() == null) {
+                            }
+                            //获取到的延期天数为空
+                            else if (projectScheduling.getDelay() == null) {
                                 scheduling.setDelay(1);
                             }
                             projectSchedulingMapper.updateByExampleSelective(scheduling, projectSchedulingExample);
                         } else if (projectSchedulings.size() > 1) {
+                            LOGGER.error("查询到对应项目不止一个");
                             throw new RuntimeException();
                         } else if (projectSchedulings.size() == 0) {
+                            LOGGER.error("查询到对应项目为空");
                             throw new RuntimeException();
-
                         }
                     }
                 });
