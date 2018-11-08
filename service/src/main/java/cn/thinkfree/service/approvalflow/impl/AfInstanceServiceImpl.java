@@ -50,13 +50,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Resource
     private RoleService roleService;
     @Resource
-    private AfApprovalOrderService approvalOrderService;
-    @Resource
     private AfConfigService configService;
     @Resource
     private NewSchedulingService schedulingService;
     @Resource
     private HttpLinks httpLinks;
+    @Resource
+    private AfConfigSchemeService configSchemeService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -72,20 +72,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
 
-        String customerId = project.getOwnerId();
-
-        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
-
-        List<UserRoleSet> roles = roleService.findAll();
-        AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
-        if (approvalOrder == null) {
+        List<UserRoleSet> allRoles = roleService.findAll();
+        String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+        if (configSchemeNo == null) {
             LOGGER.error("在项目projectNo：{}中，当前用户userId：{}，不具有发起审批流：{}的权限", projectNo, userId, configNo, projectNo);
             throw new RuntimeException();
         }
-        List<UserRoleSet> approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), roles);
-        if (approvalRoles == null) {
-            LOGGER.error("获取审批顺序出错approvalOrderNo:{}", approvalOrder.getApprovalOrderNo());
-            throw new RuntimeException();
+        List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configSchemeNo, allRoles);
+        if (approvalRoles == null || approvalRoles.size() < 1) {
+            // TODO
         }
 
         List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
@@ -112,6 +107,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
             approvalLogVOs.add(approvalLogVO);
         }
+        String customerId = project.getOwnerId();
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
         AfConfig config = configService.findByNo(configNo);
         instanceDetailVO.setConfigNo(configNo);
         instanceDetailVO.setConfigName(config.getName());
@@ -129,16 +126,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 //            LOGGER.error("无法发起审批");
 //            throw new CommonException(500, "无法发起审批");
 //        }
-        List<UserRoleSet> roles = roleService.findAll();
-        AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
-        if (approvalOrder == null) {
+        List<UserRoleSet> allRoles = roleService.findAll();
+        String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+        if (configSchemeNo == null) {
             LOGGER.error("在项目projectNo：{}中，当前用户userId：{}，不具有发起审批流：{}的权限", projectNo, userId, configNo, projectNo);
             throw new RuntimeException();
         }
-        List<UserRoleSet> approvalRoles = approvalRoleService.findByApprovalOrderNo(approvalOrder.getApprovalOrderNo(), roles);
+        List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configSchemeNo, allRoles);
         if (approvalRoles == null || approvalRoles.size() < 1) {
-            LOGGER.error("获取审批顺序出错，approvalOrderNo:{}", approvalOrder.getApprovalOrderNo());
-            throw new RuntimeException();
+            // TODO
         }
         List<AfApprovalLog> approvalLogs = new ArrayList<>(approvalRoles.size());
         List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
@@ -180,10 +176,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instance.setData(data);
         instance.setInstanceNo(instanceNo);
         instance.setScheduleSort(scheduleSort);
-        instance.setApprovalOrderNo(approvalOrder.getApprovalOrderNo());
         instance.setCreateUserId(userId);
         instance.setProjectNo(projectNo);
-        instance.setConfigSchemeNo(approvalOrder.getConfigSchemeNo());
+        instance.setConfigSchemeNo(configSchemeNo);
 
         if (approvalLogs.size() > 1) {
             instance.setCurrentApprovalLogNo(approvalLogs.get(1).getApprovalNo());
@@ -643,8 +638,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param userId 用户id
      */
     private void addStartMenu(List<AfStartMenuVO> startMenus, String projectNo, String configNo, String userId) {
-        AfApprovalOrder approvalOrder = approvalOrderService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
-        if (approvalOrder != null) {
+        String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
+        if (configSchemeNo != null) {
             AfStartMenuVO startMenuVO = createStartMenu(configNo);
             startMenus.add(startMenuVO);
         }

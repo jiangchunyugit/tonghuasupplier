@@ -10,7 +10,6 @@ import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigListVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.*;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,9 +40,9 @@ public class AfConfigServiceImpl implements AfConfigService {
     @Resource
     private RoleService roleService;
     @Resource
-    private AfApprovalOrderService approvalOrderService;
+    private AfApprovalRoleService approvalRoleService;
     @Resource
-    private AfConfigSchemeService configPlanService;
+    private AfConfigSchemeService configSchemeService;
 
     @Override
     public AfConfigListVO list(String schemeNo) {
@@ -51,30 +50,32 @@ public class AfConfigServiceImpl implements AfConfigService {
         List<AfConfigVO> configVOs = new ArrayList<>();
         List<UserRoleSet> roles = roleService.findAll();
         List<AfConfig> configs = findAll();
-        if (configs != null) {
-            for (AfConfig config : configs) {
+
+        List<AfConfigScheme> configSchemes = configSchemeService.findBySchemeNo(schemeNo);
+        if (configSchemes != null) {
+            for (AfConfigScheme configScheme : configSchemes) {
                 AfConfigVO configVO = new AfConfigVO();
-                if (StringUtils.isNotEmpty(schemeNo)) {
-                    List<AfConfigScheme> configPlans = configPlanService.findBySchemeNo(schemeNo);
-                    if (configPlans != null) {
-                        for (AfConfigScheme configPlan : configPlans) {
-                            if (config.getConfigNo().equals(configPlan.getConfigNo())) {
-                                List<List<UserRoleSet>> approvalOrders = approvalOrderService.findByConfigSchemeNo(configPlan.getConfigSchemeNo(), roles);
-                                List<UserRoleSet> subRoles = subRoleService.findByConfigSchemeNo(configPlan.getConfigSchemeNo(), roles);
-                                configVO.setSubRoles(subRoles);
-                                configVO.setApprovalOrders(approvalOrders);
-                                configVO.setDescribe(configPlan.getDescribe());
-                                break;
-                            }
-                        }
+
+                List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configScheme.getConfigSchemeNo(), roles);
+                List<UserRoleSet> subRoles = subRoleService.findByConfigSchemeNo(configScheme.getConfigSchemeNo(), roles);
+                configVO.setSubRoles(subRoles);
+                configVO.setSubRoles(approvalRoles);
+                configVO.setDescribe(configScheme.getDescribe());
+
+                for (AfConfig config : configs) {
+                    if (config.getConfigNo().equals(configScheme.getConfigNo())) {
+                        configVO.setName(config.getName());
+                        configVO.setConfigNo(config.getConfigNo());
+                        break;
                     }
                 }
-                configVO.setConfigNo(config.getConfigNo());
-                configVO.setName(config.getName());
+
                 configVOs.add(configVO);
             }
         }
-        configListVO.setConfigs(configVOs);
+
+        configListVO.setConfigs(configs);
+        configListVO.setConfigSchemes(configVOs);
         configListVO.setRoles(roles);
         return configListVO;
     }
@@ -105,13 +106,13 @@ public class AfConfigServiceImpl implements AfConfigService {
             LOGGER.error("未查询到审批流配置信息，configNo：{}", configNo);
             throw new RuntimeException();
         }
-        AfConfigScheme configPlan = configPlanService.findByConfigNoAndSchemeNo(configNo, schemeNo);
+        AfConfigScheme configPlan = configSchemeService.findByConfigNoAndSchemeNo(configNo, schemeNo);
 
         if (configPlan != null) {
             List<UserRoleSet> roles = roleService.findAll();
-            List<List<UserRoleSet>> approvalOrders = approvalOrderService.findByConfigSchemeNo(configPlan.getConfigSchemeNo(), roles);
+            List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configPlan.getConfigSchemeNo(), roles);
             List<UserRoleSet> subRoles = subRoleService.findByConfigSchemeNo(configPlan.getConfigSchemeNo(), roles);
-            configVO.setApprovalOrders(approvalOrders);
+            configVO.setApprovalRoles(approvalRoles);
             configVO.setSubRoles(subRoles);
             configVO.setDescribe(configPlan.getDescribe());
         }
@@ -130,8 +131,8 @@ public class AfConfigServiceImpl implements AfConfigService {
         }
         for (AfConfigVO configVO : configVOs) {
             String configSchemeNo = UniqueCodeGenerator.AF_CONFIG_SCHEME.getCode();
-            configPlanService.create(configSchemeNo, configVO.getConfigNo(), configEditVO.getSchemeNo(), configVO.getDescribe(), configEditVO.getUserId());
-            approvalOrderService.create(configSchemeNo, configVO.getApprovalOrders());
+            configSchemeService.create(configSchemeNo, configVO.getConfigNo(), configEditVO.getSchemeNo(), configVO.getDescribe(), configEditVO.getUserId());
+            approvalRoleService.create(configSchemeNo, configVO.getApprovalRoles());
             subRoleService.create(configSchemeNo, configVO.getSubRoles());
         }
     }

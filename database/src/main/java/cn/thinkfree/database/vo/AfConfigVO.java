@@ -23,8 +23,8 @@ public class AfConfigVO {
     private String name;
     @ApiModelProperty(value = "审批流配置描述")
     private String describe;
-    @ApiModelProperty(name = "审批顺序方案")
-    private List<List<UserRoleSet>> approvalOrders;
+    @ApiModelProperty(name = "审批角色顺序")
+    private List<UserRoleSet> approvalRoles;
     @ApiModelProperty(name = "订阅消息角色")
     private List<UserRoleSet> subRoles;
 }

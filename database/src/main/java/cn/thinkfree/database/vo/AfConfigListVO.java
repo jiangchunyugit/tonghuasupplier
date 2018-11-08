@@ -1,5 +1,6 @@
 package cn.thinkfree.database.vo;
 
+import cn.thinkfree.database.model.AfConfig;
 import cn.thinkfree.database.model.UserRoleSet;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,7 +19,9 @@ import java.util.List;
 @ApiModel("审批流配置列表与角色信息")
 public class AfConfigListVO {
     @ApiModelProperty("审批流配置信息")
-    private List<AfConfigVO> configs;
+    private List<AfConfig> configs;
+    @ApiModelProperty("审批流配置信息")
+    private List<AfConfigVO> configSchemes;
     @ApiModelProperty("所有角色信息")
     private List<UserRoleSet> roles;
 }
