@@ -303,6 +303,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         relationMap.add("44");
 		relationMap.add("1402");
 		companyListSEO.setRelationMap(relationMap);
+		if(StringUtils.isNotBlank(companyListSEO.getParam())){
+			companyListSEO.setParam("%"+companyListSEO.getParam()+"%");
+		}
 		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
 		List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
 		return new PageInfo<>(companyListVoList);
