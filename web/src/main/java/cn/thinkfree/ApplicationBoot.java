@@ -36,6 +36,7 @@ public class ApplicationBoot extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
+//        BasicConfigurator.configure();
         SpringApplication.run(ApplicationBoot.class, args);
     }
 
