@@ -193,11 +193,11 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         //添加表头
         List<String> titles = new ArrayList<>();
         titles.add("序号");
-        titles.add("testid");
+//        titles.add("testid");
         titles.add("结算规则编号");
         titles.add("结算规则名称");
         titles.add("结算规则有效期");
-        titles.add("test状态");
+//        titles.add("test状态");
         titles.add("创建时间");
         titles.add("创建人");
         titles.add("结算规则状态");
@@ -224,11 +224,11 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             BillCycleResult billCycleResult = this.billCycleConvert(list.get(i));
             row=new ArrayList<>();
             row.add(i+1);
-            row.add(list.get(i).getId());
+//            row.add(list.get(i).getId());
             row.add(list.get(i).getRuleNumber());
             row.add(list.get(i).getRuleName());
             row.add(DateUtils.dateToDateTime(list.get(i).getStartTime())+"———"+DateUtils.dateToDateTime(list.get(i).getEndTime()));
-            row.add(list.get(i).getStatus());
+//            row.add(list.get(i).getStatus());
             row.add(DateUtils.dateToDateTime(list.get(i).getCreateTime()));
             row.add(list.get(i).getCreateUser());
 //            row.add("有问题 待确认");
