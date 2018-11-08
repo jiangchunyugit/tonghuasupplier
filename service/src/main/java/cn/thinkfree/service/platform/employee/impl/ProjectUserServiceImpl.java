@@ -27,7 +27,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
 
     @Override
     public List<String> queryUserId(String projectNo, RoleFunctionEnum functionEnum) {
-        List<String> roleCodes = functionService.queryRoleCode(functionEnum);
+        List<String> roleCodes = functionService.queryRoleCodes(functionEnum);
         if(roleCodes.isEmpty()){
             return new ArrayList<>();
         }
@@ -48,7 +48,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
 
     @Override
     public void addUserId(String orderNo, String projectNo, String userId, RoleFunctionEnum functionEnum) {
-        String roleCode = queryUserIdOne(projectNo,functionEnum);
+        String roleCode = functionService.queryRoleCode(functionEnum);
         OrderUser orderUser = new OrderUser();
         orderUser.setCreateTime(new Date());
         orderUser.setProjectNo(projectNo);
@@ -60,7 +60,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
 
     @Override
     public void delUserRel(String orderNo, String projectNo, String userId, RoleFunctionEnum functionEnum) {
-        String roleCode = queryUserIdOne(projectNo,functionEnum);
+        String roleCode = functionService.queryRoleCode(functionEnum);
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andOrderNoEqualTo(orderNo).andProjectNoEqualTo(projectNo).andUserIdEqualTo(userId).andRoleCodeEqualTo(roleCode);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);

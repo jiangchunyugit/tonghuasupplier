@@ -49,7 +49,7 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
     }
 
     @Override
-    public List<String> queryRoleCode(RoleFunctionEnum functionEnum) {
+    public List<String> queryRoleCodes(RoleFunctionEnum functionEnum) {
         UserRoleFunRelExample roleFunRelExample = new UserRoleFunRelExample();
         roleFunRelExample.createCriteria().andFunctionItemNoEqualTo(functionEnum.getFunctionCode());
         List<UserRoleFunRel> funRels = roleFunRelMapper.selectByExample(roleFunRelExample);
@@ -58,6 +58,15 @@ public class RoleFunctionServiceImpl implements RoleFunctionService {
         }
         List<String> roleCodes = ReflectUtils.getList(funRels, "roleCode");
         return roleCodes;
+    }
+
+    @Override
+    public String queryRoleCode(RoleFunctionEnum functionEnum) {
+        List<String> roleCodes = queryRoleCodes(functionEnum);
+        if(!roleCodes.isEmpty()){
+            return roleCodes.get(0);
+        }
+        return null;
     }
 
     @Override

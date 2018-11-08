@@ -33,8 +33,15 @@ public interface RoleFunctionService {
      * @param functionEnum
      * @return
      */
-    List<String> queryRoleCode(RoleFunctionEnum functionEnum);
+    List<String> queryRoleCodes(RoleFunctionEnum functionEnum);
 
+    /**
+     * 根据权限枚举查询拥有该权限的角色信息
+     *
+     * @param functionEnum
+     * @return
+     */
+    String queryRoleCode(RoleFunctionEnum functionEnum);
     /**
      * 给某个角色赋予某种权限
      *
