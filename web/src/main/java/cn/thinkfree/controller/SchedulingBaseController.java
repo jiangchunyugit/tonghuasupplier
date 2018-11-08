@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author gejiaming
  */
@@ -46,8 +48,8 @@ public class SchedulingBaseController extends AbsBaseController {
 
     @RequestMapping(value = "addBigScheduling", method = RequestMethod.POST)
     @ApiOperation("施工阶段工期设置-添加基础大排期")
-    public MyRespBundle<String> addBigScheduling( @ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") ProjectBigSchedulingVO projectBigSchedulingVO) {
-        String result = schedulingBaseService.addBigScheduling(projectBigSchedulingVO);
+    public MyRespBundle<String> addBigScheduling(@RequestBody@ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
+        String result = schedulingBaseService.addBigScheduling(projectBigSchedulingVOList);
         return sendSuccessMessage(result);
     }
 

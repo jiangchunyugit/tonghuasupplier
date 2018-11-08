@@ -8,13 +8,17 @@ package cn.thinkfree.database.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * 项目详情
  */
 @ApiModel("项目施工节点")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProjectBigSchedulingVO {
 
     @ApiModelProperty("公司编号")

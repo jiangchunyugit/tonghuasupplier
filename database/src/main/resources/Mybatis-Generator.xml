@@ -96,7 +96,6 @@
         <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
         <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
         <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
-        <!--<table tableName="a_f_approval_order" domainObjectName="AfApprovalOrder"/>-->
         <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->
         <!--approval flow end-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->

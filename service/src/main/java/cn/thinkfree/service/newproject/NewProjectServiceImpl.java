@@ -1,5 +1,6 @@
 package cn.thinkfree.service.newproject;
 
+import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
@@ -13,9 +14,13 @@ import cn.thinkfree.service.constants.*;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.sun.xml.internal.bind.v2.TODO;
@@ -57,6 +62,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     ProjectStageLogMapper projectStageLogMapper;
     @Autowired
     DesignDispatchService designDispatchService;
+    @Autowired
+    CloudService cloudService;
 
 
     /**
@@ -538,12 +545,18 @@ public class NewProjectServiceImpl implements NewProjectService {
         designerCriteria.andOrderNoEqualTo(orderNo);
         designerCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState())) {
+            //如果设计订单完成,则请求施工订单更改状态
+            ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+            ConstructionOrderExample.Criteria constructionCriteria = constructionOrderExample.createCriteria();
+            constructionCriteria.andOrderNoEqualTo(orderNo);
+            constructionCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        } else {
+            designDispatchService.endOrder(projectNo, userId, cancelReason);
+        }
 
-        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
-        ConstructionOrderExample.Criteria constructionCriteria = constructionOrderExample.createCriteria();
-        constructionCriteria.andOrderNoEqualTo(orderNo);
-        constructionCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+
         //TODO 取消订单找另外另个人要接口
 
         return null;
@@ -551,14 +564,21 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 提醒支付量房费
+     *
      * @param projectNo
-     * @param orderNo
      * @param ownerId
      * @param userId
      * @return
      */
     @Override
-    public MyRespBundle<String> remindPay(String projectNo, String orderNo, String ownerId, String userId) {
+    public MyRespBundle<String> remindPay(String projectNo, String ownerId, String userId) {
+        String[] args = {ownerId};
+        String result = cloudService.remindConsumer(args, projectNo, "请支付量房费用", userId, 0, 2);
+        JSONObject jsonObject = JSON.parseObject(result);
+        Integer code = jsonObject.getInteger("code");
+        if (!code.equals(ErrorCode.OK.getCode())) {
+            return RespData.error("通知失败!");
+        }
         return RespData.success();
     }
 }

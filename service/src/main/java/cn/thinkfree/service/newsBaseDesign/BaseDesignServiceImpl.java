@@ -53,11 +53,26 @@ public class BaseDesignServiceImpl implements BaseDesignService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> addDesignGrade(DesignGradeVo designGradeVo) {
         if(designGradeVo != null){
-            DesignGrade designGrade = BaseToVoUtils.getVo(designGradeVo, DesignGrade.class);
-            designGrade.setStatus(Scheduling.BASE_STATUS.getValue());
-            int i = designGradeMapper.insertSelective(designGrade);
-            if(i == 0){
-                return RespData.error("添加失败!");
+            if(designGradeVo.getSort()==null){
+                DesignGradeExample example = new DesignGradeExample();
+                example.setOrderByClause("sort desc");
+                List<DesignGrade> designGrades = designGradeMapper.selectByExample(example);
+                DesignGrade designGrade = BaseToVoUtils.getVo(designGradeVo, DesignGrade.class);
+                designGrade.setStatus(Scheduling.BASE_STATUS.getValue());
+                designGrade.setSort(designGrades.get(0).getSort()+1);
+                int i = designGradeMapper.insertSelective(designGrade);
+                if(i == 0){
+                    return RespData.error("添加失败!");
+                }
+            }else {
+                DesignGrade designGrade = BaseToVoUtils.getVo(designGradeVo, DesignGrade.class);
+                DesignGradeExample example = new DesignGradeExample();
+                DesignGradeExample.Criteria criteria = example.createCriteria();
+                criteria.andSortEqualTo(designGrade.getSort());
+                int i = designGradeMapper.updateByExampleSelective(designGrade, example);
+                if(i == 0){
+                    return RespData.error("修改失败!");
+                }
             }
         }
         return RespData.success();
@@ -87,12 +102,29 @@ public class BaseDesignServiceImpl implements BaseDesignService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> addDesignLabel(DesignLabelVo designLabelVo) {
         if(designLabelVo != null){
-            DesignLabel designLabel = BaseToVoUtils.getVo(designLabelVo, DesignLabel.class);
-            designLabel.setStatus(Scheduling.BASE_STATUS.getValue());
-            int i = designLabelMapper.insertSelective(designLabel);
-            if(i == 0){
-                return RespData.error("添加失败!");
+            if (designLabelVo.getSort()==null){
+                DesignLabelExample example = new DesignLabelExample();
+                example.setOrderByClause("sort desc");
+                List<DesignLabel> designLabels = designLabelMapper.selectByExample(example);
+                DesignLabel designLabel = BaseToVoUtils.getVo(designLabelVo, DesignLabel.class);
+                designLabel.setStatus(Scheduling.BASE_STATUS.getValue());
+                designLabel.setSort(designLabels.get(0).getSort()+1);
+                int i = designLabelMapper.insertSelective(designLabel);
+                if(i == 0){
+                    return RespData.error("添加失败!");
+                }
+            }else {
+                DesignLabel designLabel = BaseToVoUtils.getVo(designLabelVo, DesignLabel.class);
+                DesignLabelExample example = new DesignLabelExample();
+                DesignLabelExample.Criteria criteria = example.createCriteria();
+                criteria.andSortEqualTo(designLabel.getSort());
+                int i = designLabelMapper.updateByExampleSelective(designLabel, example);
+                if(i == 0){
+                    return RespData.error("修改失败!");
+                }
             }
+
+
         }
         return RespData.success();
     }
@@ -106,11 +138,26 @@ public class BaseDesignServiceImpl implements BaseDesignService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> addDesignIntegral(GrowthValueIntegralVo growthValueIntegralVo) {
         if(growthValueIntegralVo != null){
-            GrowthValueIntegral growthValueIntegral = BaseToVoUtils.getVo(growthValueIntegralVo, GrowthValueIntegral.class);
-            growthValueIntegral.setStatus(Scheduling.BASE_STATUS.getValue());
-            int i = growthValueIntegralMapper.insertSelective(growthValueIntegral);
-            if(i == 0){
-                return RespData.error("添加失败!");
+            if (growthValueIntegralVo.getSort()==null){
+                GrowthValueIntegralExample example = new GrowthValueIntegralExample();
+                example.setOrderByClause("sort desc");
+                List<GrowthValueIntegral> growthValueIntegrals = growthValueIntegralMapper.selectByExample(example);
+                GrowthValueIntegral growthValueIntegral = BaseToVoUtils.getVo(growthValueIntegralVo, GrowthValueIntegral.class);
+                growthValueIntegral.setStatus(Scheduling.BASE_STATUS.getValue());
+                growthValueIntegral.setSort(growthValueIntegrals.get(0).getSort()+1);
+                int i = growthValueIntegralMapper.insertSelective(growthValueIntegral);
+                if(i == 0){
+                    return RespData.error("添加失败!");
+                }
+            }else {
+                GrowthValueIntegral growthValueIntegral = BaseToVoUtils.getVo(growthValueIntegralVo, GrowthValueIntegral.class);
+                GrowthValueIntegralExample example = new GrowthValueIntegralExample();
+                GrowthValueIntegralExample.Criteria criteria = example.createCriteria();
+                criteria.andSortEqualTo(growthValueIntegral.getSort());
+                int i = growthValueIntegralMapper.updateByExampleSelective(growthValueIntegral, example);
+                if (i == 0) {
+                    return RespData.error("修改失败!");
+                }
             }
         }
         return RespData.success();

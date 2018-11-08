@@ -35,7 +35,7 @@ public class PcDesignController {
 
     @RequestMapping(value = "addDesignGrade",method = RequestMethod.POST)
     @ApiOperation("添加设计师等级")
-    public MyRespBundle<String> addDesignGrade(@RequestBody@ApiParam(name = "designGrade",value = "设计师等级实体")DesignGradeVo designGradeVo){
+    public MyRespBundle<String> addDesignGrade(@ApiParam(name = "designGrade",value = "设计师等级实体")DesignGradeVo designGradeVo){
         return baseDesignService.addDesignGrade(designGradeVo);
     }
 
@@ -47,13 +47,13 @@ public class PcDesignController {
 
     @RequestMapping(value = "addDesignLabel",method = RequestMethod.POST)
     @ApiOperation("添加设计师标签")
-    public MyRespBundle<String> addDesignLabel(@RequestBody@ApiParam(name = "designLabel",value = "设计师标签实体")DesignLabelVo designLabelVo){
+    public MyRespBundle<String> addDesignLabel(@ApiParam(name = "designLabel",value = "设计师标签实体")DesignLabelVo designLabelVo){
         return baseDesignService.addDesignLabel(designLabelVo);
     }
 
     @RequestMapping(value = "addDesignIntegral",method = RequestMethod.POST)
     @ApiOperation("添加成长值与积分")
-    public MyRespBundle<String> addDesignIntegral(@RequestBody@ApiParam(name = "growthValueIntegral",value = "成长值与积分实体")GrowthValueIntegralVo growthValueIntegralVo){
+    public MyRespBundle<String> addDesignIntegral(@ApiParam(name = "growthValueIntegral",value = "成长值与积分实体")GrowthValueIntegralVo growthValueIntegralVo){
         return baseDesignService.addDesignIntegral(growthValueIntegralVo);
     }
 
