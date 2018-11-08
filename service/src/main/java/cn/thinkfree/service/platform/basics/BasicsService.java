@@ -1,8 +1,7 @@
 package cn.thinkfree.service.platform.basics;
 
 import cn.thinkfree.database.model.BasicsData;
-import cn.thinkfree.database.model.BasicsDataParentCode;
-import cn.thinkfree.service.platform.vo.CardTypeVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,10 @@ import java.util.Map;
 public interface BasicsService {
     /**
      * 查询所有数据编码
+     *
      * @return
      */
-    List<BasicsDataParentCode> allParentCode();
+    List<Map<String, String>> allParentCode();
 
     /**
      * 查询证件类型
@@ -62,16 +62,36 @@ public interface BasicsService {
     List<BasicsData> queryData(String groupCode);
 
     /**
+     * 根据分组类型查询基础配置信息
+     *
+     * @param groupCode 分支类型
+     * @param pageSize  每页多少条
+     * @param pageIndex 第几页
+     * @return
+     */
+    PageVo<List<BasicsData>> queryData(String groupCode, int pageSize, int pageIndex);
+
+    /**
+     * 根据分组类型查询基础配置信息
+     *
+     * @param groupCode 分支类型
+     * @return
+     */
+    List<BasicsData> queryData(String groupCode, List<String> keyCodes);
+
+    /**
      * 创建基础数据
      *
+     * @param dataId     数据唯一ID
      * @param groupCode  分组编码
      * @param basicsName 基础数据名称
      * @param remark     备注
      */
-    void createBasics(String groupCode, String basicsName, String remark);
+    void createBasics(String dataId, String groupCode, String basicsName, String remark);
 
     /**
      * 根据主键ID标记删除改基础数据
+     *
      * @param dataId
      */
     void delBasics(String dataId);

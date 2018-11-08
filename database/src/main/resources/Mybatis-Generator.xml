@@ -114,6 +114,7 @@
         <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
         <!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->
         <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
+        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
         <!-- new approval flow end -->
     </context>
 </generatorConfiguration>
