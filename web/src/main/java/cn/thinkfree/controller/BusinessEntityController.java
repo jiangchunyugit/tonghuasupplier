@@ -105,7 +105,6 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：删除")
     public MyRespBundle<String> businessEntityDelete(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         BusinessEntity businessEntity = new BusinessEntity();
         businessEntity.setId(id);
         businessEntity.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
@@ -124,7 +123,6 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：启用")
     public MyRespBundle<String> businessEntityEnable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         BusinessEntity businessEntity = new BusinessEntity();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
@@ -143,7 +141,6 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：禁用")
     public MyRespBundle<String> businessEntityDisable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         BusinessEntity businessEntity = new BusinessEntity();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Disable.shortVal());

@@ -16,16 +16,24 @@ public class PaymentProgramServiceImpl implements PaymentProgramService {
     PaymentProgramMapper paymentProgramMapper;
 
     @Override
-    public boolean addPaymentProgram(PaymentProgramVO paymentProgramVO) {
+    public boolean addOrUpdatePaymentProgram(PaymentProgram paymentProgram) {
 
-        if (paymentProgramVO != null && paymentProgramVO.getPaymentProgramList().size() > 0) {
+        if (paymentProgram != null) {
 
-            paymentProgramVO.getPaymentProgramList().forEach(e->{
-                e.setProgramCode(paymentProgramVO.getPaymentProgramCode());
-                paymentProgramMapper.insertSelective(e);
-            });
+            int flag;
+            if (paymentProgram.getId() != null) {
 
-            return true;
+                PaymentProgramExample paymentProgramExample = new PaymentProgramExample();
+                paymentProgramExample.createCriteria().andIdEqualTo(paymentProgram.getId());
+                flag = paymentProgramMapper.updateByExampleSelective(paymentProgram,paymentProgramExample);
+            } else {
+
+                flag = paymentProgramMapper.insertSelective(paymentProgram);
+            }
+
+            if (flag ==1) {
+                return true;
+            }
         }
         return false;
     }
