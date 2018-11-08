@@ -30,9 +30,5 @@ public interface CloudService {
      */
       RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 
-      /**
-       * 合同上传
-       *  @param filepath
-       */
-      public String uploadFile(String fileName);
+      
 }

@@ -5,7 +5,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -138,33 +142,6 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-	@Override
-	public String uploadFile(String fileName) {
-		// TODO Auto-generated method stub
-//      HttpHeaders headers = new HttpHeaders();
-//      headers.add("Authorization", "token");
-//      MediaType type = MediaType.parseMediaType("multipart/form-data");
-//      headers.setContentType(type);
-      File file  = new File(fileName);
-	   if(!file.exists()){
-	    	try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	   }
-	  List<File> files = new ArrayList<>();
-	  files.add(file);
-      MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
-	    form.add("files", null);
-//      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
-      RemoteResult<String>   result = invokeRemoteMethod(fileUploadUrl,form);
-      System.out.println("返回结果。。。"+result);
-        file.delete();
-		return null;
-	  }
-
-
+	
 
 }

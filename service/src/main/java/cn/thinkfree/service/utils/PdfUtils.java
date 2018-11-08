@@ -2,9 +2,10 @@ package cn.thinkfree.service.utils;
 
 import java.io.File;
 
+import javax.annotation.Resource;
+
 import org.jodconverter.DocumentConverter;
 import org.jodconverter.office.OfficeException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 把doc 转换为pdf文件
@@ -14,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class PdfUtils {
 
 	
-	@Autowired
+	@Resource
 	private DocumentConverter documentConverter;
 	
 	 /**
