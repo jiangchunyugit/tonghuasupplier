@@ -1,8 +1,10 @@
 package cn.thinkfree.service.branchcompany;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.BranchCompanyMapper;
 import cn.thinkfree.database.mapper.CityBranchMapper;
 import cn.thinkfree.database.model.*;
@@ -92,5 +94,25 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     @Override
     public List<CompanyRelationVO> companyRelationList() {
         return branchCompanyMapper.selectCompanyRelation();
+    }
+
+    @Override
+    public SiteInfo getSiteInfo() {
+
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+        if (userVO.getPcUserInfo() == null) {
+            return new SiteInfo();
+        }
+        short level = userVO.getPcUserInfo().getLevel();
+
+        if (UserLevel.Company_Admin.code == level || UserLevel.Company_Province.code == level ) {
+
+
+        } else {
+
+
+        }
+        return null;
     }
 }
