@@ -44,4 +44,9 @@ FROM
 	and auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
 	</select>
 
+	<select id="findAuditCase" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select * from pc_audit_info
+		where company_id = #{companyId}
+		and id in (select max(id) from pc_audit_info group by company_id)
+	</select>
 </mapper>

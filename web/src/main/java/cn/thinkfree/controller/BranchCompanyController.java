@@ -127,7 +127,6 @@ public class BranchCompanyController extends AbsBaseController{
     @ApiOperation(value="分公司站点：删除")
     public MyRespBundle<String> branchCompanyDelete(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
         branchCompany.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
@@ -146,7 +145,6 @@ public class BranchCompanyController extends AbsBaseController{
     @ApiOperation(value="分公司站点：启用")
     public MyRespBundle<String> branchCompanyEnable(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
         branchCompany.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
@@ -165,7 +163,6 @@ public class BranchCompanyController extends AbsBaseController{
     @ApiOperation(value="分公司站点：禁用")
     public MyRespBundle<PageInfo<String>> branchCompanyDisable(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
         branchCompany.setIsEnable(UserEnabled.Disable.shortVal());

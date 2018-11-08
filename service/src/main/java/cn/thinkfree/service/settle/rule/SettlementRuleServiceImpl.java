@@ -13,9 +13,11 @@ import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.settle.SettlementRuleContractVO;
 import cn.thinkfree.database.vo.settle.SettlementRuleSEO;
 import cn.thinkfree.database.vo.settle.SettlementRuleVO;
+import cn.thinkfree.service.constants.SettlementRuleStatus;
 import cn.thinkfree.service.constants.SettlementStatus;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,31 +41,14 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     PcAuditInfoMapper pcAuditInfoMapper;
 
     @Override
-    public PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO(SettlementRuleSEO rule) {
+    public PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO (SettlementRuleSEO rule) {
+
         PageHelper.startPage(rule.getPage(), rule.getRows());
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
         this.searchRef(example,rule);
         List<SettlementRuleInfo> list = settlementRuleInfoMapper.selectByExample(example);
 
-        for (SettlementRuleInfo e : list) {
-            if (!SettlementStatus.AuditCAN.getCode().equals(e.getStatus()) &&
-                    !SettlementStatus.CANDecline.getCode().equals(e.getStatus())) {
-
-                if (SettlementStatus.AuditPass.getCode().equals(e.getStatus())) {
-
-                    if (this.datecompare(e.getStartTime())>=0 && this.datecompare(e.getEndTime())<= 0){
-
-                        e.setStatus(SettlementStatus.Effective.getCode());
-                    } else if (this.datecompare(e.getStartTime())<=0) {
-
-                        e.setStatus(SettlementStatus.EffectiveWait.getCode());
-                    }
-                }else if (this.datecompare(e.getEndTime())>=0) {
-
-                    e.setStatus(SettlementStatus.Invalid.getCode());
-                }
-            }
-        }
+       this.resetStatus(list);
         printInfoMes("查询 结算比例数量 {}", list.size());
         return new PageInfo<>(list);
     }
@@ -76,7 +61,8 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     }
 
     @Override
-    public boolean insertOrupdateSettlementRule(SettlementRuleVO settlementRuleVO) {
+    public boolean insertOrupdateSettlementRule (SettlementRuleVO settlementRuleVO) {
+
         int flag = 0;
         if (settlementRuleVO != null) {
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
@@ -110,7 +96,8 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     }
 
     @Override
-    public boolean copySettlementRule(String ruleNumber) {
+    public boolean copySettlementRule (String ruleNumber) {
+
         if(!StringUtils.isEmpty(ruleNumber)){
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
             String auditPersion = userVO == null ? "" : userVO.getUsername();
@@ -135,7 +122,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
 
     @Override
-    public SettlementRuleVO getSettlementRule(String ruleNumber) {
+    public SettlementRuleVO getSettlementRule (String ruleNumber) {
 
         SettlementRuleVO settlementRuleVO = new SettlementRuleVO();
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
@@ -144,10 +131,10 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         SettlementRuleInfo rule = (list!=null && list.size() > 0)?list.get(0):null;
 
         if(rule != null && StringUtils.isNotBlank(rule.getFeeName())){
+
             Map<String, String> paream = getCostNames();
             //翻译
-            rule.setCollectionType(paream.get(rule.getFeeName()));
-
+            rule.setFeeName(paream.get(rule.getFeeName()));
             SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
             settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(rule.getId().toString());
             List<SettlementMethodInfo> settlementMethodInfos = settlementMethodInfoMapper.selectByExample(settlementMethodInfoExample);
@@ -167,7 +154,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
 
     @Override
-    public boolean cancellatSettlementRule(String ruleNumber) {
+    public boolean cancellatSettlementRule (String ruleNumber) {
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
         example.createCriteria().andRuleNumberEqualTo(ruleNumber);
         SettlementRuleInfo record = new SettlementRuleInfo();
@@ -181,7 +168,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     }
 
     @Override
-    public Map<String, String> getCostNames() {
+    public Map<String, String> getCostNames () {
         Map<String, String> map = new HashMap<>();
         map.put("01", "设计费");
         map.put("02", "施工费");
@@ -189,7 +176,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         return map;
     }
 
-    public synchronized static String getRuleNumber() {
+    public synchronized static String getRuleNumber () {
 
         Random random = new Random();
         DecimalFormat df = new DecimalFormat("00");
@@ -199,19 +186,26 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     }
 
     @Override
-    public void exportList(SettlementRuleSEO rule, HttpServletResponse response) {
+    public void exportList (SettlementRuleSEO rule, HttpServletResponse response) {
         ExcelData data = new ExcelData();
         String title = "合同信息数据";
         data.setName(title);
         //添加表头
         List<String> titles = new ArrayList<>();
-        titles.add("规则编号");
-        titles.add("规则名称");
-        titles.add("规则有效期");
+        titles.add("序号");
+//        titles.add("testid");
+        titles.add("结算规则编号");
+        titles.add("结算规则名称");
+        titles.add("结算规则有效期");
+//        titles.add("test状态");
         titles.add("创建时间");
         titles.add("创建人");
-        titles.add("规则状态");
-        titles.add("审核状态");
+        titles.add("结算规则状态");
+        titles.add("系统生成对账单时间");
+        titles.add("结算周期");
+        titles.add("结算办法");
+        titles.add("备注");
+//        titles.add("审核状态");
         data.setTitles(titles);
         //添加列
         List<List<Object>> rows = new ArrayList<>();
@@ -224,15 +218,25 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 //		for (int i = 0; i < list.size(); i++) {
 //			list.get(i).setStatus(status);(ContractStatus.getDesc(list.get(i).getContractStatus()));
 //		}
+        this.resetStatus(list);
         for(int i=0; i<list.size();i++){
+
+            BillCycleResult billCycleResult = this.billCycleConvert(list.get(i));
             row=new ArrayList<>();
+            row.add(i+1);
+//            row.add(list.get(i).getId());
             row.add(list.get(i).getRuleNumber());
             row.add(list.get(i).getRuleName());
-            row.add(DateUtils.dateToDateTime(list.get(i).getStartTime())+"———"+DateUtils.dateToDateTime(list.get(i).getStartTime()));
+            row.add(DateUtils.dateToDateTime(list.get(i).getStartTime())+"———"+DateUtils.dateToDateTime(list.get(i).getEndTime()));
+//            row.add(list.get(i).getStatus());
             row.add(DateUtils.dateToDateTime(list.get(i).getCreateTime()));
             row.add(list.get(i).getCreateUser());
-            row.add("有问题 待确认");
+//            row.add("有问题 待确认");
             row.add(SettlementStatus.getDesc(list.get(i).getStatus()));
+            row.add(billCycleResult.getCheckTime());
+            row.add(billCycleResult.getCycleTime());
+            row.add(billCycleResult.getSettlementMethod());
+            row.add(list.get(i).getRemark());
             rows.add(row);
         }
         data.setRows(rows);
@@ -359,5 +363,146 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             return true;
         }
         return false;
+    }
+
+    private void resetStatus(List<SettlementRuleInfo> list) {
+
+        for (SettlementRuleInfo e : list) {
+            if (!SettlementStatus.AuditCAN.getCode().equals(e.getStatus()) &&
+                    !SettlementStatus.CANDecline.getCode().equals(e.getStatus())) {
+
+                if (SettlementStatus.AuditPass.getCode().equals(e.getStatus())) {
+
+                    if (this.datecompare(e.getStartTime())>=0 && this.datecompare(e.getEndTime())<= 0){
+
+                        e.setStatus(SettlementStatus.Effective.getCode());
+                    } else if (this.datecompare(e.getStartTime())<=0) {
+
+                        e.setStatus(SettlementStatus.EffectiveWait.getCode());
+                    }else if (this.datecompare(e.getEndTime())>=0) {
+
+                        e.setStatus(SettlementStatus.Invalid.getCode());
+                    }
+                }else if (this.datecompare(e.getEndTime())>=0) {
+
+                    e.setStatus(SettlementStatus.Invalid.getCode());
+                }
+            }
+        }
+    }
+
+    /**
+     * 合同周期状态转换
+     * @param settlementRuleInfo
+     * @return
+     */
+    private BillCycleResult billCycleConvert(SettlementRuleInfo settlementRuleInfo) {
+
+        BillCycleResult billCycleResult = new BillCycleResult();
+
+        StringBuilder method = new StringBuilder();
+        billCycleResult.setCheckTime(DateUtils.dateToDateTime(settlementRuleInfo.getCheckingTime()));
+
+        if(SettlementRuleStatus.LastDaySettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
+            method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
+//            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
+
+        }else if (SettlementRuleStatus.NaturalMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
+
+            billCycleResult.setCycleTime(String.valueOf(settlementRuleInfo.getCycleStime().getDay()));
+            method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
+//            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
+        }
+        else if (SettlementRuleStatus.NextMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
+
+            billCycleResult.setCycleTime(String.valueOf(settlementRuleInfo.getCycleStime().getDay()));
+            method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
+//            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
+        } else if (SettlementRuleStatus.WeekSettlement.getCode().equals(settlementRuleInfo.getCycleType())){
+
+            method.append("每周");
+            method.append(this.weekConvert(Integer.valueOf(settlementRuleInfo.getCycleValue())));
+            method.append("结算");
+//            billCycleResult.setSettlementMethod("每周"+this.weekConvert(Integer.valueOf(settlementRuleInfo.getCycleValue()))+"结算");
+        } else if (SettlementRuleStatus.DaySettlement.getCode().equals(settlementRuleInfo.getCycleType())){
+
+            method.append("每");
+            method.append(this.weekConvert(Integer.valueOf(settlementRuleInfo.getCycleValue())));
+            method.append("天结算一次");
+//            billCycleResult.setSettlementMethod("每"+settlementRuleInfo.getCycleValue()+"结算一次");
+        }
+
+        billCycleResult.setSettlementMethod(method.toString());
+        return billCycleResult;
+    }
+
+    /**
+     * 星期转化
+     * @param number
+     * @return
+     */
+    private String weekConvert(Integer number) {
+
+        String day = "";
+        switch(number){
+            case 1:day="一";break;
+            case 2:day="二";break;
+            case 3:day="三";break;
+            case 4:day="四";break;
+            case 5:day="五";break;
+            case 6:day="六";break;
+            case 7:day="日";break;
+        }
+
+        return day;
+    }
+
+    class BillCycleResult{
+
+        /**
+         * 对账时间
+         */
+        private String checkTime;
+
+        /**
+         * 结算周期
+         */
+        private String cycleTime;
+
+        /**
+         * 结算方案
+         */
+        private String settlementMethod;
+
+//        public BillCycleResult (String checkTime,String cycleTime ,String settlementMethod){
+//
+//            this.checkTime = checkTime;
+//            this.cycleTime = cycleTime;
+//            this.settlementMethod = settlementMethod;
+//        }
+
+        public String getCheckTime() {
+            return checkTime;
+        }
+
+        public void setCheckTime(String checkTime) {
+            this.checkTime = checkTime;
+        }
+
+        public String getCycleTime() {
+            return cycleTime;
+        }
+
+        public void setCycleTime(String cycleTime) {
+            this.cycleTime = cycleTime;
+        }
+
+        public String getSettlementMethod() {
+            return settlementMethod;
+        }
+
+        public void setSettlementMethod(String settlementMethod) {
+            this.settlementMethod = settlementMethod;
+        }
     }
 }

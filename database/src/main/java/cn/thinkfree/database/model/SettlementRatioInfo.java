@@ -24,6 +24,7 @@ public class SettlementRatioInfo extends BaseModel {
     @ApiModelProperty(value="id主键")
     private Integer id;
 
+
     /**
      * Database Column Remarks:
      *   结算规则编码

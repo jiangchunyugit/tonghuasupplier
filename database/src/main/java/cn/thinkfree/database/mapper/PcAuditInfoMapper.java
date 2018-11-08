@@ -66,5 +66,17 @@ public interface PcAuditInfoMapper {
     AuditInfoVO findAuditStatus(Map<String, String> map);
 
 
+    /**
+     * 查询资质变更状态
+     * @param map
+     * @return
+     */
     AuditInfoVO findTempAuditStatus(Map<String, String> map);
+
+    /**
+     * 查询入驻公司审批原因
+     * @param companyId
+     * @return
+     */
+    PcAuditInfo findAuditCase(@Param(value = "companyId") String companyId);
 }

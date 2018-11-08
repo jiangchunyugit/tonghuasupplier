@@ -114,5 +114,30 @@ public class CompanyConstants{
         }
     }
 
+    /**
+     * 审核级别0初次审核1二级审核
+     */
+    public enum auditLevel{
+        /**
+         * 初次审核
+         */
+        JOINON(0,"初次审核"),
+        /**
+         * 二级审核
+         */
+        CONTRACT(1,"二级审核");
+
+        public final Integer code;
+        public final String mes;
+
+        auditLevel(Integer code ,String mes){
+            this.code = code;
+            this.mes = mes;
+        }
+        public String stringVal(){
+            return code.toString();
+        }
+    }
+
 }
 

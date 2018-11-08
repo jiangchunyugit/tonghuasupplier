@@ -37,8 +37,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("后什么台")
-                .description("从未见过如此厚颜无耻之人")
+                .title("居然之家运营后台")
+                .description("居然之家运营后台接口文档")
                 .contact(new Contact("x","x","x"))
                 .version("X")
                 .build();

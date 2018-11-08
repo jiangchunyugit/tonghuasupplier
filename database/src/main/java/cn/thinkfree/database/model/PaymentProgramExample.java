@@ -593,6 +593,126 @@ public class PaymentProgramExample extends cn.thinkfree.core.model.AbstractDataA
             addCriterion("mark not between", value1, value2, "mark");
             return (Criteria) this;
         }
+
+        public Criteria andIsEnableIsNull() {
+            addCriterion("is_enable is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableIsNotNull() {
+            addCriterion("is_enable is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableEqualTo(Short value) {
+            addCriterion("is_enable =", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableNotEqualTo(Short value) {
+            addCriterion("is_enable <>", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableGreaterThan(Short value) {
+            addCriterion("is_enable >", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableGreaterThanOrEqualTo(Short value) {
+            addCriterion("is_enable >=", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableLessThan(Short value) {
+            addCriterion("is_enable <", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableLessThanOrEqualTo(Short value) {
+            addCriterion("is_enable <=", value, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableIn(List<Short> values) {
+            addCriterion("is_enable in", values, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableNotIn(List<Short> values) {
+            addCriterion("is_enable not in", values, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableBetween(Short value1, Short value2) {
+            addCriterion("is_enable between", value1, value2, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEnableNotBetween(Short value1, Short value2) {
+            addCriterion("is_enable not between", value1, value2, "isEnable");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelIsNull() {
+            addCriterion("is_del is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelIsNotNull() {
+            addCriterion("is_del is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelEqualTo(Short value) {
+            addCriterion("is_del =", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelNotEqualTo(Short value) {
+            addCriterion("is_del <>", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelGreaterThan(Short value) {
+            addCriterion("is_del >", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelGreaterThanOrEqualTo(Short value) {
+            addCriterion("is_del >=", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelLessThan(Short value) {
+            addCriterion("is_del <", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelLessThanOrEqualTo(Short value) {
+            addCriterion("is_del <=", value, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelIn(List<Short> values) {
+            addCriterion("is_del in", values, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelNotIn(List<Short> values) {
+            addCriterion("is_del not in", values, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelBetween(Short value1, Short value2) {
+            addCriterion("is_del between", value1, value2, "isDel");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsDelNotBetween(Short value1, Short value2) {
+            addCriterion("is_del not between", value1, value2, "isDel");
+            return (Criteria) this;
+        }
     }
 
     /**

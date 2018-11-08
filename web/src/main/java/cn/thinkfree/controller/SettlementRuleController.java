@@ -29,7 +29,7 @@ import java.util.Map;
  * @date 2018-09-20
  * @author jiangchunyu
  */
-@Api(value = "前端使用---结算系统---结算规则设置---蒋春雨",description = "结算规则设置信息描述")
+@Api(value = "前端使用---结算系统---结算规则设置---蒋春雨",description = "前端使用---结算系统---结算规则设置---蒋春雨")
 @RestController
 @RequestMapping("/rule")
 public class SettlementRuleController extends AbsBaseController {
@@ -43,7 +43,7 @@ public class SettlementRuleController extends AbsBaseController {
      * @param settlementRuleSEO
      * @return
      */
-    @ApiOperation(value = "结算规则", notes = "根据一定条件获取分页结算规则记录")
+    @ApiOperation(value = "结算规则列表", notes = "根据一定条件获取分页结算规则记录")
     @GetMapping("/queryRulePage")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "分页查询结算规则")
@@ -70,7 +70,7 @@ public class SettlementRuleController extends AbsBaseController {
 
 
 
-    @ApiOperation(value = "结算规则", notes = "根据类型，和费用类型查找全部规则和方法")
+    @ApiOperation(value = "根据类型，和费用类型查找全部结算规则和方法", notes = "根据类型，和费用类型查找全部规则和方法")
     @GetMapping("/ruleContraList")
     @MyRespBody
     public MyRespBundle<List<SettlementRuleContractVO>> ruleContraList(@ApiParam("结算规则类型")@RequestParam String collectionType,
@@ -79,7 +79,6 @@ public class SettlementRuleController extends AbsBaseController {
         settlementRuleInfo.setCollectionType(collectionType);
         settlementRuleInfo.setFeeName(feeNm);
         List<SettlementRuleContractVO> settlementRuleContractVOS = settlementRuleService.getSettlementRuleContract(settlementRuleInfo);
-      int ad = 4;
        return sendJsonData(ResultMessage.SUCCESS,settlementRuleContractVOS);
     }
 
@@ -90,7 +89,7 @@ public class SettlementRuleController extends AbsBaseController {
      * @return
      */
 
-    @ApiOperation(value = "新增或者修改结算规则", notes = "新增或者修改结算规则")
+    @ApiOperation(value = "创建结算规则（collectionType代收款类型 0 代收款结算规则 1 平台结算规则）", notes = "新增或者修改结算规则")
     @PostMapping("/insertRule")
     @MyRespBody
     // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")

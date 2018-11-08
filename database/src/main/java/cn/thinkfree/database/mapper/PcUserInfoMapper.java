@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import cn.thinkfree.database.vo.PcUserInfoVo;
+import cn.thinkfree.database.vo.account.AccountListVO;
+import cn.thinkfree.database.vo.account.AccountSEO;
 import cn.thinkfree.database.vo.account.AccountVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -120,4 +122,11 @@ public interface PcUserInfoMapper {
      * @return
      */
     AccountVO selectAccountVOByID(String id);
+
+    /**
+     * 账号列表
+     * @param accountSEO
+     * @return
+     */
+    List<AccountListVO> selectAccountListVO(AccountSEO accountSEO);
 }

@@ -17,8 +17,8 @@ import java.util.Random;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +49,6 @@ import cn.thinkfree.database.model.OrderContract;
 import cn.thinkfree.database.model.OrderContractExample;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
@@ -63,7 +62,7 @@ import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
 import cn.thinkfree.service.utils.FreemarkerUtils;
-import cn.thinkfree.service.utils.WordUtil;
+import cn.thinkfree.service.utils.PdfUplodUtils;
 
 @Service
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
@@ -104,11 +103,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	
 	@Autowired
 	CloudService cloudService;
-	
-	/**
-	 * 保存路径
-	 */
-    private static String outPath = "D://11/";
+
+
+	@Value("${custom.cloud.fileUpload}")
+	private  String fileUploadUrl;
+
+	@Value("${custom.cloud.fileUpload.dir}")
+	private  String filePath;
 	
 
 
@@ -323,23 +324,50 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	public String createContractDoc(String contractNumber) {
         String url ="";//上传服务器返回地址
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-        Map<String,List<Map<String,Object>>> root=new HashMap<> ();//data数据
-        List<Map<String,Object>> reportresult =new ArrayList<>();
+        Map<String,Object> root=new HashMap<> ();//data数据
+        
 		ContractVo  vo  = new ContractVo();
 		vo.setContractNumber(contractNumber);
 		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo);//合同信息
 		CompanySubmitVo  companyInfo  = companySubmitService.findCompanyInfo((newVo.getCompanyId()));//公司信息
-		List<Map<String, Object>> list = getContractInfo(contractNumber, newVo, companyInfo);
-		reportresult.addAll(list);
-		root.put("reportresult", reportresult);
+		// 合同详情
+		String companyId = newVo.getCompanyId();
+		ContractTermsExample exp = new ContractTermsExample();
+		exp.createCriteria().andCompanyIdEqualTo(companyId).
+				andContractNumberEqualTo(contractNumber);
+		List<ContractTerms> list = pcContractTermsMapper.selectByExample(exp);
+        for (int i = 0; i < list.size(); i++) {
+        	root.put(list.get(i).getContractDictCode(),list.get(i).getContractValue());
+		}
+		//查询结算规则
+		ContractTermsChildExample example = new ContractTermsChildExample();
+		example.createCriteria().andCompanyIdEqualTo((newVo.getCompanyId())).andContractNumberEqualTo(contractNumber);
+		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
+		Map<Long, List<ContractTermsChild>> map2 = new LinkedHashMap<Long, List<ContractTermsChild>>();
+		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type");//根据类型分组
+		if(childList != null){
+			Map<String,List<ContractTermsChild>> ma = new HashMap<>();
+			for (int i = 0; i < childList.size(); i++) {
+				ContractTermsChildExample example1 = new ContractTermsChildExample();
+				example1.createCriteria().andCompanyIdEqualTo(companyId)
+						.andContractNumberEqualTo(contractNumber)
+						.andCostTypeEqualTo(childList.get(i).getCostType());
+				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample(example1);
+				root.put(childList.get(i).getCostType(), childListr);
+			}
+		}
 		//判断公司类型
 		if(companyInfo.getCompanyInfo().getRoleId().equals("BD")){//装修公司
-			url = FreemarkerUtils.savePdf(contractNumber,"0" , root);
-			//WordUtil.createWord(configurer,root, "/sj_ftl.xml", "", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
 
+			String filePath = FreemarkerUtils.savePdf(contractNumber,"0", root);
+          //上传
+			url = PdfUplodUtils.upload(filePath,fileUploadUrl);
+		     
 		}else if(companyInfo.getCompanyInfo().getRoleId().equals("SJ")){//设计公司
-			
-			//WordUtil.createWord(configurer,root, "/sj_ftl.xml", "http://localhost:7181/static/", companyInfo.getCompanyId()+"_"+sdf.format(new Date())+"入住合作合同.doc");
+
+			String filePath = FreemarkerUtils.savePdf(contractNumber,"1", root);
+			//上传
+			url = PdfUplodUtils.upload(filePath,fileUploadUrl);
 		}
 
 		return url;
@@ -535,7 +563,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		try {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("test", "测试");
-			//url = FreemarkerUtils.savePdf(contractNumber, type, map);
+			url = FreemarkerUtils.savePdf(contractNumber, type, map);
 
 		} catch (Exception e) {
 			printErrorMes("生成订单合同 系统错误{}", e.getMessage());

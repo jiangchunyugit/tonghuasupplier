@@ -1,8 +1,11 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import cn.thinkfree.database.vo.Severitys;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -24,6 +27,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="id自增id")
+    @NotNull(message = "编辑id不可为空",groups = {Severitys.Update.class})
     private Integer id;
 
     /**

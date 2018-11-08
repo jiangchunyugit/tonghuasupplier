@@ -25,7 +25,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cityBranch")
-@Api(value = "前端使用---城市分站---蒋春雨经营主体",description = "前端使用---城市分站---蒋春雨经营主体")
+@Api(value = "前端使用---城市分站---蒋春雨",description = "前端使用---城市分站---蒋春雨")
 public class CityBranchController extends AbsBaseController{
 
     @Autowired
@@ -37,7 +37,7 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/saveCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：创建分站")
-    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息")  @RequestParam CityBranchVO cityBranchVO){
+    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息")  CityBranchVO cityBranchVO){
         BeanValidator.validate(cityBranchVO, Severitys.Insert.class);
         int line = cityBranchService.addCityBranch(cityBranchVO);
         if(line > 0){
@@ -52,13 +52,26 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/updateCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：编辑分站")
-    public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息")@RequestBody CityBranchVO cityBranchVO){
+    public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息") CityBranchVO cityBranchVO){
         BeanValidator.validate(cityBranchVO, Severitys.Update.class);
         int line = cityBranchService.updateCityBranch(cityBranchVO);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
         }
         return sendJsonData(ResultMessage.FAIL, line);
+    }
+
+    /**
+     * 查询城市分站信息
+     */
+    @GetMapping(value = "/cityBranchlistByCompanyId")
+    @MyRespBody
+    @ApiOperation(value="城市分站：分站详情（根据分公司id进行分站联动查询）")
+    public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyId(@ApiParam("分公司id")Integer id){
+
+        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompany(id);
+
+        return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
     }
 
     /**
@@ -73,7 +86,6 @@ public class CityBranchController extends AbsBaseController{
 
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }
-
     /**
      * 查询城市分站信息
      */
@@ -117,7 +129,6 @@ public class CityBranchController extends AbsBaseController{
     @ApiOperation(value="城市分站：删除")
     public MyRespBundle<String> cityBranchDelete(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         CityBranch cityBranch = new CityBranch();
         cityBranch.setId(id);
         cityBranch.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
@@ -136,7 +147,6 @@ public class CityBranchController extends AbsBaseController{
     @ApiOperation(value="城市分站：启用")
     public MyRespBundle<String> cityBranchEnable(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         CityBranch cityBranch = new CityBranch();
         cityBranch.setId(id);
         cityBranch.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
@@ -155,7 +165,6 @@ public class CityBranchController extends AbsBaseController{
     @ApiOperation(value="城市分站：禁用")
     public MyRespBundle<String> cityBranchDisable(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
-        BeanValidator.validate(id, Severitys.Update.class);
         CityBranch cityBranch = new CityBranch();
         cityBranch.setId(id);
         cityBranch.setIsEnable(UserEnabled.Disable.shortVal());

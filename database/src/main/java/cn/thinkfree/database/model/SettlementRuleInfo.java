@@ -63,7 +63,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="startTime结算开始时间")
+    @ApiModelProperty(value="startTime结算有效开始时间")
     private Date startTime;
 
     /**
@@ -75,7 +75,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="endTime结算结束时间")
+    @ApiModelProperty(value="endTime结算有效结束时间")
     private Date endTime;
 
     /**
@@ -99,7 +99,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cycleStime开始时间")
+    @ApiModelProperty(value="cycleStime周期开始时间")
     private Date cycleStime;
 
     /**
@@ -111,7 +111,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cycleEtime结算时间")
+    @ApiModelProperty(value="cycleEtime周期结束时间")
     private Date cycleEtime;
 
     /**
@@ -123,7 +123,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cycleValue结算值 星期1-7/天")
+    @ApiModelProperty(value="cycleValue周期结算值 星期1-7/天")
     private String cycleValue;
 
     /**
@@ -207,7 +207,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="ruleType类型 0 代收款 1 平台费")
+    @ApiModelProperty(value="ruleType暂时废弃字段")
     private String ruleType;
 
     /**
@@ -267,7 +267,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="invalidStatus作废状态0未提交 1待审核 2审核通过 3审核未通过")
+    @ApiModelProperty(value="invalidStatus废弃字段")
     private String invalidStatus;
 
     /**

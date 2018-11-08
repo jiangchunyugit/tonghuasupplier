@@ -1,5 +1,6 @@
 package cn.thinkfree.service.paymentprogram;
 
+import cn.thinkfree.database.model.PaymentProgram;
 import cn.thinkfree.database.vo.PaymentProgramVO;
 
 public interface PaymentProgramService {
@@ -11,9 +12,10 @@ public interface PaymentProgramService {
     PaymentProgramVO getPaymentPrograms(PaymentProgramVO paymentProgramVO);
 
     /**
-     * 新增支付方案信息
-     * @param paymentProgramVO
+     * 新增或者编辑支付方案信息
+     * @param paymentProgram
      * @return
      */
-    boolean addPaymentProgram(PaymentProgramVO paymentProgramVO);
+    boolean addOrUpdatePaymentProgram(PaymentProgram paymentProgram);
+
 }
