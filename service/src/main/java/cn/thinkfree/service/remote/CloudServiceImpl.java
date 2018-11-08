@@ -2,16 +2,14 @@ package cn.thinkfree.service.remote;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.thinkfree.database.vo.remote.SyncTransactionVO;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -40,7 +38,7 @@ public class CloudServiceImpl implements CloudService {
     @Value("${custom.cloud.noticeShowUrl}")
     String noticeShowUrl;
     
-//    @Value("${custom.cloud.fileUpload}")
+    @Value("${custom.cloud.fileUpload}")
     private String fileUploadUrl;
     
     Integer SuccessCode = 1000;
@@ -144,59 +142,6 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-	@Override
-	public String uploadFile(String fileName) {
-		// TODO Auto-generated method stub
-//      HttpHeaders headers = new HttpHeaders();
-//      headers.add("Authorization", "token");
-//      MediaType type = MediaType.parseMediaType("multipart/form-data");
-//      headers.setContentType(type);
-      File file  = new File(fileName);
-	   if(!file.exists()){
-	    	try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	   }
-	  List<File> files = new ArrayList<>();
-	  files.add(file);
-      MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
-	    form.add("files", null);
-//      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
-      RemoteResult<String>   result = invokeRemoteMethod(fileUploadUrl,form);
-      System.out.println("返回结果。。。"+result);
-        file.delete();
-		return null;
-	  }
-
-    /**
-     * 同步公司信息
-     *
-     * @param syncTransactionVO
-     * @return
-     */
-    @Override
-    public RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO) {
-        MultiValueMap<String, Object> param = initParam();
-
-        param.add("address", syncTransactionVO.getAddress());
-        param.add("code",syncTransactionVO.getCode());
-        param.add("cwgsdm",syncTransactionVO.getCwgsdm());
-        param.add("gssh",syncTransactionVO.getGssh());
-        param.add("jc",syncTransactionVO.getJc());
-        param.add("name",syncTransactionVO.getName());
-        param.add("vendorCode",syncTransactionVO.getVendorCode());
-        RemoteResult<String> result = null;
-        try {
-            result = invokeRemoteMethod(sendNotice,param);
-        }catch (Exception e){
-            e.printStackTrace();
-            return buildFailResult();
-        }
-        return result;
-    }
-
+	
 
 }

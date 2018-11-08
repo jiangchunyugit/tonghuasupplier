@@ -7,12 +7,16 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.jodconverter.DocumentConverter;
+import org.jodconverter.office.OfficeException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
@@ -41,6 +45,10 @@ public class WordUtil {
     }
  
     /**
+	 * 保存路径
+	 */
+    private static String outPath = "D://11/";
+    /**
      * 生成word文件
      * @param dataMap word中需要展示的动态数据，用map集合来保存
      * @param templateName word模板名称，例如：test.ftl
@@ -50,22 +58,22 @@ public class WordUtil {
     @SuppressWarnings("unchecked")
     public static void createWord(FreeMarkerConfigurer configurer,Map dataMap,String templateName,String filePath,String fileName){
         try {
-            /*//创建配置实例
-            Configuration configuration = new Configuration();
+            //创建配置实例
+            Configuration configuration =configurer.getConfiguration();
  
             //设置编码
             configuration.setDefaultEncoding("UTF-8");
  
             //ftl模板文件
             //configuration.setClassForTemplateLoading(WordUtil.class,"/templates/");
-            configuration.setClassForTemplateLoading(WordUtil.class, "/template/");
+            configuration.setClassForTemplateLoading(WordUtil.class, "/templates/xml/");
             //获取模板
-            Template template = configuration.getTemplate(templateName);*/
+            Template template = configuration.getTemplate(templateName);
 
-            Template template = configurer.getConfiguration().getTemplate(templateName);
-            FreeMarkerTemplateUtils.processTemplateIntoString(template, dataMap);
+            filePath = outPath+"/data/"+File.separator+fileName;
+            
             //输出文件
-            File outFile = new File("/usr/local/data/"+File.separator+fileName);
+            File outFile = new File(filePath+".docx");
  
             //如果输出目标文件夹不存在，则创建
             if (!outFile.getParentFile().exists()){
@@ -75,13 +83,23 @@ public class WordUtil {
             //将模板和数据模型合并生成文件
             Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(outFile),"UTF-8"));
  
- 
             //生成文件
             template.process(dataMap, out);
  
             //关闭流
             out.flush();
             out.close();
+            
+//            //生成pdf
+//            File outpdfFile0 = new File(filePath+".docx");
+//            File targetFile = new File(filePath+".pdf");
+//			try {
+//				 documentConverter.convert(outpdfFile0).to(targetFile).execute();
+//				} catch (OfficeException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+			
         } catch (Exception e) {
             e.printStackTrace();
         }
