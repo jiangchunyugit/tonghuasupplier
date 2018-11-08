@@ -23,7 +23,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author ying007
@@ -48,15 +47,14 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 
     /**
      * 查询审批不通过的原因
-     * @param contractNumber
+     * @param companyId
      * @return
      */
-    //todo 方法有问题
     @RequestMapping(value = "/findAuditCase", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--设计/装饰公司--列表--状态--不通过原因--李阳")
-    public MyRespBundle<PcAuditInfo> findAuditCase(@ApiParam("合同编码")@RequestParam(value = "contractNumber") String contractNumber){
-        PcAuditInfo auditInfo = companySubmitService.findAuditCase(contractNumber);
+    public MyRespBundle<PcAuditInfo> findAuditCase(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
+        PcAuditInfo auditInfo = companySubmitService.findAuditCase(companyId);
         return sendJsonData(success, "操作成功", auditInfo);
     }
 
@@ -119,19 +117,14 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 
     /**
      * 入驻公司资质变更审批
-     * @param companyId
-     * @param auditStatus
-     * @param auditCase
+     * @param pcAuditInfo
      * @return
      */
     @ApiOperation(value = "前端--运营后台----公司详情--公司变更审批--李阳", notes = "运营审核")
     @PostMapping("/auditChangeCompany")
     @MyRespBody
-    public MyRespBundle<String> auditChangeCompany(
-            @ApiParam("公司编号")@RequestParam String companyId,
-            @ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
-            @ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
-        String msg = companySubmitService.auditChangeCompany(companyId,auditStatus,auditCase);
+    public MyRespBundle<String> auditChangeCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
+        String msg = companySubmitService.auditChangeCompany(pcAuditInfo);
         return sendJsonData(ResultMessage.SUCCESS, msg);
 
     }
@@ -162,12 +155,12 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     /**
      * 导出
      */
-    @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
-    @ExceptionHandler(value=Exception.class)
-    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--导出excel--李阳")
-    public void downLoad(HttpServletResponse response, @ApiParam("条件查询参数")CompanyListSEO companyListSEO){
-        companySubmitService.downLoad(response, companyListSEO);
-    }
+//    @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
+//    @ExceptionHandler(value=Exception.class)
+//    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--导出excel--李阳")
+//    public void downLoad(HttpServletResponse response, @ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+//        companySubmitService.downLoad(response, companyListSEO);
+//    }
 
     /**
      * 查看合同

@@ -169,16 +169,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
-        //公司名称校验
-        boolean cflag = companyApplyService.checkCompanyName(pcApplyInfoSEO.getCompanyName());
-        if(!cflag){
-            return "公司名称校验失败";
-        }
-        //公司邮箱地址校验
-        boolean eflag = companyApplyService.checkEmail(pcApplyInfoSEO.getEmail());
-        if(!eflag){
-            return "邮箱校验失败";
-        }
 
         Date date = new Date();
         //公司id

@@ -9,7 +9,7 @@ public class SettlementRatioParam {
 
 	
 	
-	@ApiParam("审核状态 1 审核通过 2 审核拒绝") 
+	@ApiParam("审核状态 2 审核通过 3 审核拒绝")
 	private String auditStatus;
 	
 	

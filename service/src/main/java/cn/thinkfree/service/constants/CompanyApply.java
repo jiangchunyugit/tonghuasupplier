@@ -17,7 +17,13 @@ public class CompanyApply {
         /**
          * 后台运营申请
          */
-        PCAPPLY(1,"后台运营申请");
+        PCAPPLY(1,"后台运营申请"),
+
+        /**
+         * 入驻公司申请
+         */
+        COMPANYAPPLY(2,"入驻公司申请");
+
         public final Integer code;
         public final String msg;
 

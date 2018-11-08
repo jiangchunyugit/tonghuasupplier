@@ -3,7 +3,6 @@ package cn.thinkfree.service.remote;
 import java.util.List;
 
 import cn.thinkfree.database.model.SystemMessage;
-import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 
 public interface CloudService {
 
@@ -31,16 +30,5 @@ public interface CloudService {
      */
       RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 
-      /**
-       * 合同上传
-       *  @param filepath
-       */
-      public String uploadFile(String fileName);
-
-    /**
-     * 同步公司信息
-     * @param syncTransactionVO
-     * @return
-     */
-      RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO);
+      
 }

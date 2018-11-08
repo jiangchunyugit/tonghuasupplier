@@ -1,5 +1,6 @@
 package cn.thinkfree.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -8,10 +9,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.core.annotation.MyRespBody;
@@ -28,6 +32,7 @@ import cn.thinkfree.service.settle.ratio.SettlementRatioService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponses;
 
 
 /**
@@ -154,8 +159,8 @@ public class SettlementRatioController extends AbsBaseController {
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
-    
-    
+
+
     
     /**
      * 获取费用名称
@@ -183,14 +188,14 @@ public class SettlementRatioController extends AbsBaseController {
     @PostMapping("/batchcCheckSettlementRatio")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算比例名称")
-    public MyRespBundle<String> batchcCheckSettlementRatio(SettlementRatioParam param){
+    public MyRespBundle<String> batchcCheckSettlementRatio( SettlementRatioParam param){
 
     	boolean  result= settlementRatioService.batchcCheckSettlementRatio(param.getRatioNumbers(),param.getAuditStatus(),param.getAuditCase());
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
-    
+
     /**
      * 根据结算比列类型 获取合同下拉列表
      * @author lvqidong
