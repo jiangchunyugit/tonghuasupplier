@@ -102,4 +102,18 @@ public interface CompanySubmitService {
      * @return
      */
     String joinSuccess(String companyId);
+
+    /**
+     * 是否可以编辑
+     * @param companyId
+     * @return
+     */
+    boolean isEdit(String companyId);
+
+    /**
+     * 入驻公司资质变更查询审批状态
+     * @param companyId
+     * @return
+     */
+    AuditInfoVO findTempAuditStatus(String companyId);
 }

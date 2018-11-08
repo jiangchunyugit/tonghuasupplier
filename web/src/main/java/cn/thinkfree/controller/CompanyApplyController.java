@@ -142,11 +142,8 @@ public class CompanyApplyController extends AbsBaseController {
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--添加账号--二次确认界面---确认(发送短信)--李阳")
     public MyRespBundle<String> addCompanyAdmin(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
-        boolean flag = companyApplyService.addCompanyAdmin(pcApplyInfoSEO);
-        if(flag){
-            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
-        }
-        return sendJsonData(ResultMessage.FAIL, "操作失败");
+        String flag = companyApplyService.addCompanyAdmin(pcApplyInfoSEO);
+        return sendJsonData(ResultMessage.SUCCESS, flag);
     }
 
     /**

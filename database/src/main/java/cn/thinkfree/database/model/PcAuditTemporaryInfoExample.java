@@ -4045,52 +4045,62 @@ public class PcAuditTemporaryInfoExample extends cn.thinkfree.core.model.Abstrac
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberEqualTo(Integer value) {
+        public Criteria andAccountNumberEqualTo(String value) {
             addCriterion("account_number =", value, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberNotEqualTo(Integer value) {
+        public Criteria andAccountNumberNotEqualTo(String value) {
             addCriterion("account_number <>", value, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberGreaterThan(Integer value) {
+        public Criteria andAccountNumberGreaterThan(String value) {
             addCriterion("account_number >", value, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberGreaterThanOrEqualTo(Integer value) {
+        public Criteria andAccountNumberGreaterThanOrEqualTo(String value) {
             addCriterion("account_number >=", value, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberLessThan(Integer value) {
+        public Criteria andAccountNumberLessThan(String value) {
             addCriterion("account_number <", value, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberLessThanOrEqualTo(Integer value) {
+        public Criteria andAccountNumberLessThanOrEqualTo(String value) {
             addCriterion("account_number <=", value, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberIn(List<Integer> values) {
+        public Criteria andAccountNumberLike(String value) {
+            addCriterion("account_number like", value, "accountNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountNumberNotLike(String value) {
+            addCriterion("account_number not like", value, "accountNumber");
+            return (Criteria) this;
+        }
+
+        public Criteria andAccountNumberIn(List<String> values) {
             addCriterion("account_number in", values, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberNotIn(List<Integer> values) {
+        public Criteria andAccountNumberNotIn(List<String> values) {
             addCriterion("account_number not in", values, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberBetween(Integer value1, Integer value2) {
+        public Criteria andAccountNumberBetween(String value1, String value2) {
             addCriterion("account_number between", value1, value2, "accountNumber");
             return (Criteria) this;
         }
 
-        public Criteria andAccountNumberNotBetween(Integer value1, Integer value2) {
+        public Criteria andAccountNumberNotBetween(String value1, String value2) {
             addCriterion("account_number not between", value1, value2, "accountNumber");
             return (Criteria) this;
         }

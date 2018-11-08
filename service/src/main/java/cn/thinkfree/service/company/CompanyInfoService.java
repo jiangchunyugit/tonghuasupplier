@@ -3,9 +3,11 @@ package cn.thinkfree.service.company;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CompanyInfoService {
     List<CompanyInfo> selectByCompany(UserVO userVO);
@@ -43,4 +45,11 @@ public interface CompanyInfoService {
      * @return
      */
     List<SelectItem> listCompanyByLikeName(String name);
+
+    /**
+     * 根据公司编号获取同步数据
+     * @param companyID
+     * @return
+     */
+    Optional<SyncTransactionVO> selectSyncDateByCompanyID(String companyID);
 }

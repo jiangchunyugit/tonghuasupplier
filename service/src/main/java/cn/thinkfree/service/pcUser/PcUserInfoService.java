@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.UserRegister;
 import cn.thinkfree.database.vo.MyPageHelper;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.account.AccountSEO;
 import cn.thinkfree.database.vo.account.AccountVO;
 import com.github.pagehelper.PageInfo;
 
@@ -78,4 +79,11 @@ public interface PcUserInfoService {
      * @return
      */
     String updatePassWordForInit(String id, String passWord);
+
+    /**
+     * 分页查询账号
+     * @param accountSEO
+     * @return
+     */
+    PageInfo pageAccountVO(AccountSEO accountSEO);
 }

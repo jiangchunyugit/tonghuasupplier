@@ -13,7 +13,12 @@ public enum AuditStatus {
     /**
      * 审批拒绝
      */
-    AuditDecline(0,"审批拒绝");
+    AuditDecline(0,"审批拒绝"),
+
+    /**
+     * 审批中
+     */
+    AUDITING(2,"审批中");
 
 
     public final Integer code;
