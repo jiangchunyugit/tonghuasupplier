@@ -105,16 +105,18 @@ public interface NewProjectService {
 
     /**
      * 取消订单
+     *
      * @param orderNo
      * @param projectNo
      * @param userId
      * @param cancelReason
      * @return
      */
-    MyRespBundle cancleOrder(String orderNo,String projectNo, String userId, String cancelReason);
+    MyRespBundle cancleOrder(String orderNo, String projectNo, String userId, String cancelReason);
 
     /**
      * APP-获取项目详情头接口
+     *
      * @param projectNo
      * @return
      */
@@ -122,8 +124,19 @@ public interface NewProjectService {
 
     /**
      * C/B-项目个数
+     *
      * @param userId
      * @return
      */
     MyRespBundle<Integer> getProjectNum(String userId);
+
+    /**
+     * 提醒支付量房费
+     * @param projectNo
+     * @param orderNo
+     * @param ownerId
+     * @param userId
+     * @return
+     */
+    MyRespBundle<String> remindPay(String projectNo, String orderNo, String ownerId, String userId);
 }

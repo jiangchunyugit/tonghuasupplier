@@ -42,7 +42,7 @@ public class ProjectBigSchedulingDetailsVO {
      *   计划开始时间
      */
     @ApiModelProperty(value = "计划开始时间")
-    private Date planSatrtTime;
+    private Date planStartTime;
     /**
      *   计划结束时间
      */
@@ -52,7 +52,7 @@ public class ProjectBigSchedulingDetailsVO {
      *   实际开始时间
      */
     @ApiModelProperty(value = "实际开始时间")
-    private Date actualSatrtTime;
+    private Date actualStartTime;
     /**
      *   实际结束时间
      */

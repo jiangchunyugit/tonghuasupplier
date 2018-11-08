@@ -6,6 +6,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BuildPayConfig;
 import cn.thinkfree.database.model.BuildSchemeConfig;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
@@ -42,8 +43,16 @@ public class BuildConfigController extends AbsBaseController {
     @ApiOperation("获取所有配置方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "allScheme", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<List<BuildSchemeConfig>> allScheme() {
-        return sendJsonData(ResultMessage.SUCCESS, buildConfigService.allBuildScheme());
+    public MyRespBundle<PageVo<List<BuildSchemeConfig>>> allScheme(
+            @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
+            @ApiParam(name = "schemeName", required = false, value = "施工方案名称") @RequestParam(name = "schemeName", required = false) String schemeName,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "cityStation", required = false, value = "城市站ID") @RequestParam(name = "cityStation", required = false) String cityStation,
+            @ApiParam(name = "storeNo", required = false, value = "门店ID") @RequestParam(name = "storeNo", required = false) String storeNo,
+            @ApiParam(name = "isEnable", required = false, value = "是否启用，-1全部，1启用，2不启用") @RequestParam(name = "isEnable", required = false, defaultValue = "-1") int isEnable,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        return sendJsonData(ResultMessage.SUCCESS, buildConfigService.allBuildScheme(schemeNo, schemeName, companyId, cityStation, storeNo, isEnable, pageSize, pageIndex));
     }
 
     @ApiOperation("创建施工方案====》运营后台====》施工配置")
@@ -155,7 +164,7 @@ public class BuildConfigController extends AbsBaseController {
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "schemeNo", required = false, value = "方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
             @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
-            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName){
+            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
             logger.info("公司选择方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.chooseScheme(companyId, schemeNo, optionUserId, optionUserName);
@@ -173,7 +182,7 @@ public class BuildConfigController extends AbsBaseController {
             @ApiParam(name = "companyId", required = false, value = "分公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "cityStation", required = false, value = "所属分站编号") @RequestParam(name = "cityStation", required = false) String cityStation,
             @ApiParam(name = "storeNo", required = false, value = "所属门店编号") @RequestParam(name = "storeNo", required = false) String storeNo) {
-        return sendJsonData(ResultMessage.SUCCESS, buildConfigService.queryScheme(searchKey,companyId,cityStation,storeNo));
+        return sendJsonData(ResultMessage.SUCCESS, buildConfigService.queryScheme(searchKey, companyId, cityStation, storeNo));
     }
 
     @ApiOperation("公司停用施工方案====》装饰后台====》施工配置")
@@ -182,7 +191,7 @@ public class BuildConfigController extends AbsBaseController {
     public MyRespBundle stopScheme(
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
-            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName){
+            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
             logger.info("公司停用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.stopScheme(companyId, optionUserId, optionUserName);

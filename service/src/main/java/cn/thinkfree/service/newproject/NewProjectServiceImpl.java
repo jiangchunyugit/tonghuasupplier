@@ -9,12 +9,10 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.database.vo.OrderDetailsVO;
-import cn.thinkfree.service.constants.ProjectDataStatus;
-import cn.thinkfree.service.constants.UserJobs;
-import cn.thinkfree.service.constants.UserRoleStatus;
-import cn.thinkfree.service.constants.UserStatus;
+import cn.thinkfree.service.constants.*;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
@@ -57,6 +55,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     NewOrderUserService newOrderUserService;
     @Autowired
     ProjectStageLogMapper projectStageLogMapper;
+    @Autowired
+    DesignDispatchService designDispatchService;
 
 
     /**
@@ -74,6 +74,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         PageInfo<ProjectVo> pageInfo = new PageInfo<>();
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
+        String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
         for (OrderUser orderUser : orderUsers) {
             list.add(orderUser.getProjectNo());
@@ -86,6 +87,13 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<ProjectVo> projectVoList = new ArrayList<>();
         for (Project project : projects) {
             ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
+            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getStateName(4))) {
+                projectVo.setAgreeButto(true);
+                projectVo.setRefuseButton(true);
+            } else {
+                projectVo.setAgreeButto(false);
+                projectVo.setRefuseButton(false);
+            }
             projectVo.setAddress(project.getAddressDetail());
             //添加业主信息
             PersionVo owner = new PersionVo();
@@ -212,7 +220,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
         //TODO 组合导航内容和颜色,正式时询问这些内容赋值规则
-        designerOrderDetailVo.setPlayTask("提交设计资料");
+        designerOrderDetailVo.setPlayTask(designDispatchService.showBtn(designerOrder.getOrderNo()));
 //        designerOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
         //TODO 添加是否可以取消,正式时询问这些内容赋值规则
         designerOrderDetailVo.setCancle(true);
@@ -247,8 +255,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
         constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
         constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
-        //TODO 组合导航内容和颜色,正式时询问这些内容赋值规则
-        constructionOrderDetailVo.setPlayTask("提交设计资料");
+//        //TODO 组合导航内容和颜色,正式时询问这些内容赋值规则
+//        constructionOrderDetailVo.setPlayTask("提交设计资料");
 //        constructionOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
         //TODO 添加是否可以取消,正式时询问这些内容赋值规则
         constructionOrderDetailVo.setCancle(true);
@@ -294,6 +302,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("项目不存在!!");
         }
         Project project = projects.get(0);
+        projectTitleVo.setProjectStartTime(project.getPlanStartTime());
+        projectTitleVo.setProjectEndTime(project.getPlanEndTime());
         projectTitleVo.setAddress(project.getAddressDetail());
         projectTitleVo.setProjectNo(projectNo);
         OrderPlayVo orderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
@@ -534,8 +544,21 @@ public class NewProjectServiceImpl implements NewProjectService {
         constructionCriteria.andOrderNoEqualTo(orderNo);
         constructionCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
-
+        //TODO 取消订单找另外另个人要接口
 
         return null;
+    }
+
+    /**
+     * 提醒支付量房费
+     * @param projectNo
+     * @param orderNo
+     * @param ownerId
+     * @param userId
+     * @return
+     */
+    @Override
+    public MyRespBundle<String> remindPay(String projectNo, String orderNo, String ownerId, String userId) {
+        return RespData.success();
     }
 }

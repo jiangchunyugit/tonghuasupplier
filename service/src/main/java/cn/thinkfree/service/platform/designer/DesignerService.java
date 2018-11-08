@@ -1,10 +1,9 @@
 package cn.thinkfree.service.platform.designer;
 
-import cn.thinkfree.database.model.DesignerMsg;
-import cn.thinkfree.database.model.DesignerStyleConfig;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.vo.DesignerMsgVo;
+import cn.thinkfree.service.platform.vo.DesignerStyleConfigVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -71,7 +70,7 @@ public interface DesignerService {
      * @param userId
      * @return
      */
-    List<DesignerStyleConfig> queryDesignerStyleByUserId(String userId);
+    List<DesignerStyleConfigVo> queryDesignerStyleByUserId(String userId);
 
     /**
      * 设计师排序
@@ -86,7 +85,7 @@ public interface DesignerService {
      *
      * @return
      */
-    List<DesignerStyleConfig> queryDesignerStyle();
+    List<DesignerStyleConfigVo> queryDesignerStyle();
 
     /**
      * 编辑设计师信息
@@ -130,5 +129,4 @@ public interface DesignerService {
      * @param companyId    操作人所属公司
      */
     void importDesign(MultipartFile designerFile, String optionId, String companyId);
-
 }

@@ -4,8 +4,6 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.EmployeeMsg;
-import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
@@ -13,6 +11,8 @@ import cn.thinkfree.service.platform.vo.RoleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping("employee")
 public class EmployeeController extends AbsBaseController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private EmployeeService employeeService;
 
@@ -103,8 +104,12 @@ public class EmployeeController extends AbsBaseController {
     @ApiOperation("查询所有角色--->谁用谁掉接口，无参数")
     @MyRespBody
     @RequestMapping(value = "queryRoles", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<List<RoleVo>> queryRoles() {
-        List<RoleVo> userRoleSets = employeeService.queryRoles();
+    public MyRespBundle<PageVo<List<RoleVo>>> queryRoles(
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey,
+            @ApiParam(name = "state", required = false, value = "状态，-1全部，1启用，2未启用，3禁用") @RequestParam(name = "state", required = false, defaultValue = "-1") int state,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        PageVo<List<RoleVo>> userRoleSets = employeeService.queryRoles(searchKey, state, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, userRoleSets);
     }
 
@@ -112,10 +117,25 @@ public class EmployeeController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "createRole", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle createRole(
-            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
-            @ApiParam(name = "roleName", required = false, value = "角色名称") @RequestParam(name = "roleName", required = false) String roleName) {
+            @ApiParam(name = "roleName", required = false, value = "角色名称") @RequestParam(name = "roleName", required = false) String roleName,
+            @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
-            employeeService.createRole(roleCode, roleName);
+            employeeService.createRole(roleName, remark);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendJsonData(ResultMessage.SUCCESS, null);
+    }
+
+    @ApiOperation("编辑角色--->王玲组专用")
+    @MyRespBody
+    @RequestMapping(value = "editRole", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle editRole(
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "roleName", required = false, value = "角色名称") @RequestParam(name = "roleName", required = false) String roleName,
+            @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
+        try {
+            employeeService.editRole(roleCode, roleName, remark);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -129,6 +149,20 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode) {
         try {
             employeeService.delRole(roleCode);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+        return sendJsonData(ResultMessage.SUCCESS, null);
+    }
+
+    @ApiOperation("启用/禁用角色--->王玲组专用")
+    @MyRespBody
+    @RequestMapping(value = "enableRole", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle enableRole(
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "state", required = false, value = "状态，1启用，2未启用，3禁用") @RequestParam(name = "state", required = false, defaultValue = "-1") int state) {
+        try {
+            employeeService.enableRole(roleCode, state);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -164,7 +198,7 @@ public class EmployeeController extends AbsBaseController {
     }
 
 
-    @ApiOperation("根据角色和公司ID查询员工信息--->公用")
+    @ApiOperation("根据角色和公司ID查询员工信息--->装饰公司/设计公司用")
     @MyRespBody
     @RequestMapping(value = "queryStaff", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<EmployeeMsgVo>>> queryStaff(
@@ -177,6 +211,24 @@ public class EmployeeController extends AbsBaseController {
             PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryEmployee(companyId, roleCode, searchKey, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("根据角色查询员工信息--->运营后台用")
+    @MyRespBody
+    @RequestMapping(value = "queryStaffByPlatform", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<EmployeeMsgVo>>> queryStaffByPlatform(
+            @ApiParam(name = "roleCode", required = false, value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey,
+            @ApiParam(name = "city", required = false, value = "城市编码") @RequestParam(name = "city", required = false) String city,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryStaffByPlatform(roleCode, searchKey, city, pageSize, pageIndex);
+            return sendJsonData(ResultMessage.SUCCESS, pageVo);
+        } catch (Exception e) {
+            logger.error("e:",e);
             return sendFailMessage(e.getMessage());
         }
     }

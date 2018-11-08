@@ -549,7 +549,7 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle endOrder(
             @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "reason", required = false, value = "项目编号") @RequestParam(name = "reason", required = false) String reason) {
+            @ApiParam(name = "reason", required = false, value = "终止的原因") @RequestParam(name = "reason", required = false) String reason) {
         try {
             designDispatchService.endOrder(projectNo, userId, reason);
         } catch (Exception e) {

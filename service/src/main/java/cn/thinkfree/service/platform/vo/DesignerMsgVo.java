@@ -1,8 +1,5 @@
 package cn.thinkfree.service.platform.vo;
 
-import cn.thinkfree.database.model.DesignerMsg;
-import cn.thinkfree.database.model.DesignerStyleConfig;
-import cn.thinkfree.database.model.EmployeeMsg;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;

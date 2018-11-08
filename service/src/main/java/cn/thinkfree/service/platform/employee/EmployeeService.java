@@ -58,9 +58,13 @@ public interface EmployeeService {
     /**
      * 查询角色信息
      *
+     * @param searchKey 搜索关键字
+     * @param state     角色状态，-1全部，1启用，2未启用
+     * @param pageSize  每页多少条
+     * @param pageIndex 第几页
      * @return
      */
-    List<RoleVo> queryRoles();
+    PageVo<List<RoleVo>> queryRoles(String searchKey, int state, int pageSize, int pageIndex);
 
     /**
      * 设置用户角色
@@ -82,10 +86,10 @@ public interface EmployeeService {
     /**
      * 创建角色
      *
-     * @param roleCode 角色编码
      * @param roleName 角色名称
+     * @param remark   备注
      */
-    void createRole(String roleCode, String roleName);
+    void createRole(String roleName, String remark);
 
     /**
      * 删除角色
@@ -93,6 +97,14 @@ public interface EmployeeService {
      * @param roleCode
      */
     void delRole(String roleCode);
+
+    /**
+     * 启用角色
+     *
+     * @param roleCode 角色编码
+     * @param state    1启用，2未启用，3禁用
+     */
+    void enableRole(String roleCode, int state);
 
     /**
      * 根据公司ID和角色编码，搜索条件查询员工信息
@@ -103,4 +115,24 @@ public interface EmployeeService {
      * @return
      */
     PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex);
+
+    /**
+     * 查询所有员工信息
+     *
+     * @param roleCode  角色编码
+     * @param searchKey 搜索关键字
+     * @param city      城市编码
+     * @param pageSize
+     * @param pageIndex
+     * @return
+     */
+    PageVo<List<EmployeeMsgVo>> queryStaffByPlatform(String roleCode, String searchKey, String city, int pageSize, int pageIndex);
+
+    /**
+     * 编辑角色编码
+     * @param roleCode
+     * @param roleName
+     * @param remark
+     */
+    void editRole(String roleCode, String roleName, String remark);
 }

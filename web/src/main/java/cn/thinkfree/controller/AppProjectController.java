@@ -31,9 +31,10 @@ public class AppProjectController {
         MyRespBundle<PageInfo<ProjectVo>> page = newProjectService.getAllProject(appProjectSEO);
         return page;
     }
+
     @RequestMapping(value = "getProjectNum", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目个数")
-    public MyRespBundle<Integer> getAllProject(@RequestParam("userId")@ApiParam(name = "userId", value = "用户编号,默认先写123456") String userId) {
+    public MyRespBundle<Integer> getAllProject(@RequestParam("userId") @ApiParam(name = "userId", value = "用户编号,默认先写123456") String userId) {
         return newProjectService.getProjectNum(userId);
     }
 
@@ -77,7 +78,7 @@ public class AppProjectController {
                                     @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
                                     @ApiParam(name = "userId", value = "用户编号") String userId,
                                     @ApiParam(name = "cancelReason", value = "取消原因") String cancelReason) {
-        return newProjectService.cancleOrder(orderNo,projectNo, userId, cancelReason);
+        return newProjectService.cancleOrder(orderNo, projectNo, userId, cancelReason);
     }
 
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
@@ -120,12 +121,15 @@ public class AppProjectController {
     }
 
 
-//    @RequestMapping(value = "",method = RequestMethod.POST)
-//    @ApiOperation(value = "")
-//    public MyRespBundle<> (@ApiParam(name = "",value = "") ){
-//
-//        return sendJsonData(ResultMessage.SUCCESS,);
-//    }
+    @RequestMapping(value = "remindPay",method = RequestMethod.POST)
+    @ApiOperation(value = "提醒支付量房费")
+    public MyRespBundle<String> remindPay(
+            @RequestParam("OrderNo") @ApiParam(name = "OrderNo", value = "订单号") String orderNo,
+            @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
+            @RequestParam("projectNo") @ApiParam(name = "ownerId", value = "业主id") String ownerId,
+            @RequestParam("projectNo") @ApiParam(name = "userId", value = "用户id") String userId){
+        return newProjectService.remindPay(projectNo,orderNo,ownerId,userId);
+    }
 
 
 }
