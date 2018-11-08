@@ -196,7 +196,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * @author lqd
      * @return Message
      */
-    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--合同条款设置--吕启栋", notes = "合同条款设置(设置合同条款需要查询字典接口)",consumes = "application/json")
+    @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--合同条款设置--吕启栋", notes = "合同条款设置(设置合同条款需要查询字典接口,paymentNumber为支付方案code)",consumes = "application/json")
     @PostMapping("/settingContractClause/{contractNumber}/{companyId}")
     @MyRespBody
     public MyRespBundle<String> settingContractClause(@PathVariable("contractNumber") String contractNumber,

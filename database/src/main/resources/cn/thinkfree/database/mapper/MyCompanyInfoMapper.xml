@@ -267,8 +267,8 @@
         AND info.role_id = #{roleId}
     </if>
     <if test="param != null and param != ''">
-        AND ( info.company_name = #{param} OR info.legal_name = #{param}
-        OR expand.contact_name = #{param} OR expand.contract_number = #{param} )
+        AND ( info.company_name like #{param} OR info.legal_name like #{param}
+        OR expand.contact_name like #{param} OR expand.contact_phone like #{param} )
     </if>
     <if test="auditStatus != null and auditStatus != ''">
         AND info.audit_status = #{auditStatus}
@@ -353,8 +353,8 @@
             AND info.role_id = #{roleId}
         </if>
         <if test="param != null and param != ''">
-            AND ( info.company_name = #{param} OR info.legal_name = #{param}
-            OR expand.contact_name = #{param} OR expand.contract_number = #{param} )
+            AND ( info.company_name like #{param} OR info.legal_name like #{param}
+            OR expand.contact_name like #{param} OR expand.contact_number like #{param} )
         </if>
         <if test="auditStatus != null and auditStatus != ''">
             AND info.audit_status = #{auditStatus}
