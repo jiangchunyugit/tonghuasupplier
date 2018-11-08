@@ -593,7 +593,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 .andRemindTimeGreaterThanOrEqualTo(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24));
         List<RemindOwnerLog> remindOwnerLogs = remindOwnerLogMapper.selectByExample(logExample);
         if (!remindOwnerLogs.isEmpty()) {
-            throw new RuntimeException("每24小时能只能提示一次~");
+            throw new RuntimeException("每24小时能只能提醒一次~");
         }
         String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
         if(ownerId == null){
@@ -746,7 +746,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (!project.getOwnerId().equals(userId)) {
             throw new RuntimeException("无权操作");
         }
-        checkOrderState(designerOrder, DesignStateEnum.STATE_330);
+        try{
+            checkOrderState(designerOrder, DesignStateEnum.STATE_330);
+        }catch (Exception e){
+            throw new RuntimeException("当前订单不可取消，如有疑问，请联系客服");
+        }
         DesignerOrder updateOrder = new DesignerOrder();
         //清空设计师ID
         updateOrder.setOrderStage(DesignStateEnum.STATE_330.getState());
