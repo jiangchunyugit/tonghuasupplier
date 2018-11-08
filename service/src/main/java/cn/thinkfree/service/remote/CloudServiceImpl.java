@@ -27,6 +27,8 @@ public class CloudServiceImpl implements CloudService {
     String noticeShowUrl;
     @Value("${shanghai.smallSchedulingUrl}")
     String smallSchedulingUrl;
+    @Value("${message.remindConsumerUrl}")
+    String remindConsumerUrl;
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -92,8 +94,13 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-    private String invokeRemoteJuRanMethod(String url, Integer status,Integer limit) {
-        String result = restTemplate.getForObject(url,String.class ,status,limit);
+    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit) {
+        String result = restTemplate.getForObject(url, String.class, status, limit);
+        return result;
+    }
+
+    private String invokeRemoteMessageMethod(String url,MultiValueMap<String, Object> param){
+        String result = restTemplate.postForObject(url, param, String.class);
         return result;
     }
 
@@ -136,15 +143,16 @@ public class CloudServiceImpl implements CloudService {
 
     /**
      * 与上海同步小排期
+     *
      * @param status
      * @param limit
      * @return
      */
     @Override
-    public String getBaseScheduling(Integer status,Integer limit) {
+    public String getBaseScheduling(Integer status, Integer limit) {
         String result = null;
         try {
-            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status,limit);
+            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -152,5 +160,32 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-
+    /**
+     * 给用户发消息
+     *
+     * @param userNo
+     * @param projectNo
+     * @param content
+     * @param senderId
+     * @param type
+     * @return
+     */
+    @Override
+    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId,Integer dynamicId, Integer type) {
+        MultiValueMap<String, Object> param = initParam();
+        param.add("userNo", userNo);
+        param.add("projectNo",projectNo );
+        param.add("content",content );
+        param.add("senderId", senderId);
+        param.add("dynamicId",dynamicId );
+        param.add("type",type );
+        String result = null;
+        try {
+            result = invokeRemoteMessageMethod(remindConsumerUrl, param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return result;
+    }
 }

@@ -17,4 +17,6 @@ public class GrowthValueIntegralVo {
     private Integer growthValueAward;
     @ApiModelProperty(value = "积分奖励")
     private Integer integralReward;
+    @ApiModelProperty(value = "状态(1,正常 2,无效)")
+    private Integer status;
 }

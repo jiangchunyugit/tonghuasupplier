@@ -13,5 +13,7 @@ public class DesignGradeVo {
     private String grade;
     @ApiModelProperty(value = "升级所需成长值")
     private Integer growthValue;
+    @ApiModelProperty(value = "状态(1,正常 2,无效)")
+    private Integer status;
 
 }
