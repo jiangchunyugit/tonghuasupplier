@@ -4,6 +4,8 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.constants.OneTrue;
+import cn.thinkfree.database.model.PaymentProgram;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.PaymentProgramVO;
 import cn.thinkfree.database.vo.Severitys;
@@ -15,23 +17,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/paymentProgramte")
-@Api(value = "编辑支付方案接口",description = "支付方案信息")
+@RequestMapping(value = "/paymentProgram")
+@Api(value = "前端使用---编辑支付方案---蒋春雨",description = "支付方案信息")
 public class PaymentProgramController extends AbsBaseController{
 
 
     @Autowired
     PaymentProgramService paymentProgramService;
     /**
-     * 新增支付方案
+     * 新增或者编辑支付方案
      */
     @PostMapping(value = "/savePaymentProgram")
     @MyRespBody
-    @ApiOperation(value="编辑支付方案接口：新增支付方案")
-    public MyRespBundle<String> savePaymentProgram(@ApiParam("支付方案信息")@RequestBody PaymentProgramVO paymentProgramVO){
+    @ApiOperation(value="保存或者编辑支付方案接口：保存或者编辑支付方案")
+    public MyRespBundle<String> savePaymentProgram(@ApiParam("支付方案信息") PaymentProgram paymentProgram){
 
-        BeanValidator.validate(paymentProgramVO, Severitys.Update.class);
-        if (paymentProgramService.addPaymentProgram(paymentProgramVO)) {
+        BeanValidator.validate(paymentProgram, Severitys.Update.class);
+        if (paymentProgramService.addOrUpdatePaymentProgram(paymentProgram)) {
 
             return sendJsonData(ResultMessage.SUCCESS,"操作成功");
         }
@@ -50,5 +52,18 @@ public class PaymentProgramController extends AbsBaseController{
         return sendJsonData(ResultMessage.SUCCESS,paymentProgramService.getPaymentPrograms(paymentProgramVO));
     }
 
+    @PostMapping(value = "/paymentProgramDelete")
+    @MyRespBody
+    @ApiOperation(value="支付方案：删除")
+    public MyRespBundle<String> paymentProgramDelete(@ApiParam("方案id")@RequestParam(value = "id") Integer id){
+
+        PaymentProgram paymentProgram = new PaymentProgram();
+        paymentProgram.setId(id);
+        paymentProgram.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
+        if(paymentProgramService.addOrUpdatePaymentProgram(paymentProgram)){
+            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
+    }
 }
 
