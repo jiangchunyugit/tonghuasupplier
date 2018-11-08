@@ -85,25 +85,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 //		}
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
 
-		for (SettlementRatioInfo e : list) {
-			if (!SettlementStatus.AuditCAN.getCode().equals(e.getStatus()) &&
-					!SettlementStatus.CANDecline.getCode().equals(e.getStatus())) {
-
-				if (SettlementStatus.AuditPass.getCode().equals(e.getStatus())) {
-
-					if (this.datecompare(e.getEffectStartTime())>=0 && this.datecompare(e.getEffectEndTime())<= 0){
-
-						e.setStatus(SettlementStatus.Effective.getCode());
-					} else if (this.datecompare(e.getEffectStartTime())<=0) {
-
-						e.setStatus(SettlementStatus.EffectiveWait.getCode());
-					}
-				}else if (this.datecompare(e.getEffectEndTime())>=0) {
-
-					e.setStatus(SettlementStatus.Invalid.getCode());
-				}
-			}
-		}
+		this.resetStatus(list);
 		printInfoMes("查询 结算比例数量 {}", list.size());
 		return new PageInfo<>(list);
 	}
@@ -122,13 +104,17 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
         data.setName(title);
         //添加表头
         List<String> titles = new ArrayList<>();
+        titles.add("序号");
         titles.add("比列编号");
         titles.add("比列名称");
         titles.add("比列有效期");
         titles.add("创建时间");
         titles.add("创建人");
         titles.add("比列状态");
-        titles.add("审核状态");
+//        titles.add("审核状态");
+        titles.add("备注");
+        titles.add("比例(%)");
+        titles.add("金额（元）");
         data.setTitles(titles);
         //添加列
         List<List<Object>> rows = new ArrayList<>();
@@ -166,18 +152,25 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 //			}
 //		}
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
+		this.resetStatus(list);
 //		for (int i = 0; i < list.size(); i++) {
 //			list.get(i).setStatus(status);(ContractStatus.getDesc(list.get(i).getContractStatus()));
 //		}
        for(int i=0; i<list.size();i++){
+
+
            row=new ArrayList<>();
+           row.add(i+1);
            row.add(list.get(i).getRatioNumber());
            row.add(list.get(i).getFeeName());
            row.add(DateUtils.dateToDateTime(list.get(i).getEffectStartTime())+"———"+DateUtils.dateToDateTime(list.get(i).getEffectStartTime()));
            row.add(DateUtils.dateToDateTime(list.get(i).getCreateTime()));
            row.add(list.get(i).getCreateUser());
-           row.add("有问题 待确认");
+//           row.add("有问题 待确认");
            row.add(SettlementStatus.getDesc(list.get(i).getStatus()));
+           row.add(list.get(i).getRemark());
+           row.add(list.get(i).getRatio());
+           row.add(list.get(i).getAmount());
            rows.add(row);
        }
         data.setRows(rows);
@@ -188,6 +181,29 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		} catch (Exception e) {
 			printErrorMes("结算比列导出异常",e.getMessage());
 		}		
+	}
+
+	private void resetStatus(List<SettlementRatioInfo> list) {
+
+		for (SettlementRatioInfo e : list) {
+			if (!SettlementStatus.AuditCAN.getCode().equals(e.getStatus()) &&
+					!SettlementStatus.CANDecline.getCode().equals(e.getStatus())) {
+
+				if (SettlementStatus.AuditPass.getCode().equals(e.getStatus())) {
+
+					if (this.datecompare(e.getEffectStartTime())>=0 && this.datecompare(e.getEffectEndTime())<= 0){
+
+						e.setStatus(SettlementStatus.Effective.getCode());
+					} else if (this.datecompare(e.getEffectStartTime())<=0) {
+
+						e.setStatus(SettlementStatus.EffectiveWait.getCode());
+					}
+				}else if (this.datecompare(e.getEffectEndTime())>=0) {
+
+					e.setStatus(SettlementStatus.Invalid.getCode());
+				}
+			}
+		}
 	}
 
 	@Override
@@ -305,7 +321,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	}
 
 	@Override
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	public boolean batchcCheckSettlementRatio(List<String> ratioNumbers,String auditStatus,String auditCase) {
 
 		
