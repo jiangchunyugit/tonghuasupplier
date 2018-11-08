@@ -115,11 +115,13 @@ public class BuildConfigController extends AbsBaseController {
     @ApiOperation("根据方案编号查询支付方案信息====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "payConfigBySchemeNo", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<List<BuildPayConfig>> payConfigBySchemeNo(
-            @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
+    public MyRespBundle<PageVo<List<BuildPayConfig>>> payConfigBySchemeNo(
+            @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             logger.info("根据方案编号查询支付方案信息：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
-            return sendJsonData(ResultMessage.SUCCESS, buildConfigService.payConfigBySchemeNo(schemeNo));
+            return sendJsonData(ResultMessage.SUCCESS, buildConfigService.payConfigBySchemeNo(schemeNo, pageSize, pageIndex));
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

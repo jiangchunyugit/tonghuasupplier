@@ -121,11 +121,19 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
-    public List<BuildPayConfig> payConfigBySchemeNo(String schemeNo) {
+    public PageVo<List<BuildPayConfig>> payConfigBySchemeNo(String schemeNo, int pageSize, int pageIndex) {
         checkScheme(schemeNo);
         BuildPayConfigExample configExample = new BuildPayConfigExample();
         configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateEqualTo(2);
-        return payConfigMapper.selectByExample(configExample);
+        long total = payConfigMapper.countByExample(configExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<BuildPayConfig> payConfigs = payConfigMapper.selectByExample(configExample);
+        PageVo<List<BuildPayConfig>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageIndex);
+        pageVo.setTotal(total);
+        pageVo.setData(payConfigs);
+        return pageVo;
     }
 
     @Override
