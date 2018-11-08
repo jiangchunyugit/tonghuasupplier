@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.PcUserInfoMapper">
+
+    <resultMap id="AccountListVO" type="cn.thinkfree.database.vo.account.AccountListVO">
+        <id column="id" property="id" />
+        <result column="name" property="name"/>
+        <result column="id" property="account"/>
+        <result column="dept" property="dept"/>
+        <result column="company_name" property="branchCompanyName"/>
+        <result column="city_branch_name" property="cityBranchCompanyName"/>
+        <result column="enabled" property="state"/>
+        <result column="create_time" property="createTime"/>
+        <result column="phone" property="phone"/>
+        <result column="email" property="email"/>
+        <result column="roles" property="roles"/>
+    </resultMap>
+
     <resultMap id="pcUserInfoVo" type="cn.thinkfree.database.vo.PcUserInfoVo" extends="BaseResultMap">
         <!--
           WARNING - @mbg.generated
@@ -205,6 +220,61 @@
         </trim>
     </insert>
 
+
+    <select id="selectAccountListVO" parameterType="cn.thinkfree.database.vo.account.AccountSEO" resultMap="AccountListVO">
+        SELECT
+            pc_user_info."name",
+            pc_user_info."id",
+            pc_user_info.create_time,
+            pc_user_info.enabled,
+            pc_user_info.email,
+            pc_user_info.phone,
+            pc_user_info.branch_company_id,
+            pc_user_info.city_branch_company_id,
+            pc_city_branch.city_branch_name,
+            pc_branch_company.company_name,
+            pc_ebs_user.dept,
+            (
+                  SELECT
+                    array_to_string(
+                      ARRAY (
+                        SELECT
+                          pc_system_role. NAME
+                        FROM
+                          pc_system_role pc_system_role
+                        JOIN pc_system_user_role pc_system_user_role ON pc_system_role.ID = pc_system_user_role.role_id
+                        AND pc_system_user_role.user_id = pc_user_info."id"
+                      ),
+                    ','
+                    )
+                ) AS roles
+        FROM
+            pc_user_info pc_user_info
+        JOIN pc_ebs_user pc_ebs_user on pc_user_info.third_id = pc_ebs_user."id"
+        LEFT JOIN pc_branch_company pc_branch_company on pc_branch_company."id" = pc_user_info.branch_company_id
+        LEFT JOIN pc_city_branch pc_city_branch on pc_city_branch."id" = pc_user_info.city_branch_company_id
+        WHERE pc_user_info.is_delete = 0
+
+        <if test="branchCompany != null and '' neq branchCompany ">
+            and pc_branch_company.id = #{branchCompany}
+        </if>
+        <if test="cityBranch != null and '' neq cityBranch">
+            and pc_city_branch.id = #{cityBranch}
+        </if>
+        <if test="dept != null and '' neq dept">
+            and pc_branch_company.id = #{dept}
+        </if>
+        <if test="name != null and '' neq name">
+
+            and
+            (pc_user_info.name like concat(#{name},'%')
+              or pc_user_info.phone like concat(#{name},'%')
+             )
+        </if>
+        <if test="state != null and '' neq state">
+            and pc_user_info.enabled = #{state}
+        </if>
+    </select>
     <!-- 查询账号详情  -->
     <select id="selectAccountVOByID">
 

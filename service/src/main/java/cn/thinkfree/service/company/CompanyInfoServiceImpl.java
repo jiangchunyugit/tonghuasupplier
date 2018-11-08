@@ -1,12 +1,15 @@
 package cn.thinkfree.service.company;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.database.vo.remote.SyncTransactionVO;
+import cn.thinkfree.service.businessentity.BusinessEntityService;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
@@ -20,6 +23,7 @@ import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +34,9 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Autowired
     CompanyUserSetMapper companyUserSetMapper;
+
+    @Autowired
+    BusinessEntityService businessEntityService;
     /**
      * 根据相关公司id查询公司信息
      * @param userVO
@@ -115,5 +122,36 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         PageHelper.startPage(0,30);
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(condition);
         return companyInfos.stream().map(c->new SelectItem(c.getCompanyId(),c.getCompanyName())).collect(Collectors.toList());
+    }
+
+    /**
+     * 根据公司编号获取同步数据
+     *
+     * @param companyID
+     * @return
+     */
+    @Override
+    public  Optional<SyncTransactionVO> selectSyncDateByCompanyID(String companyID) {
+
+        CompanyInfoExample condition = new CompanyInfoExample();
+        condition.createCriteria().andCompanyIdEqualTo(companyID);
+        List<CompanyInfo> companyInfoList = companyInfoMapper.selectByExample(condition);
+        if(companyInfoList.isEmpty() || companyInfoList.size() > 1){
+            return   Optional.ofNullable(null);
+        }
+        CompanyInfo companyInfo = companyInfoList.get(0);
+
+        SyncTransactionVO sync = new SyncTransactionVO();
+        sync.setAddress(companyInfo.getAddress());
+        sync.setName(companyInfo.getCompanyName());
+        sync.setJc(companyInfo.getCompanyName());
+        sync.setCode(companyID);
+        sync.setVendorCode(companyID);
+        sync.setGssh(companyInfo.getTaxCode());
+
+        // TODO 等待业务实体
+//        sync.setCwgsdm();
+
+        return Optional.ofNullable(sync);
     }
 }

@@ -29,6 +29,7 @@ public class CityBranch extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="自增id")
+    @NotNull(message = "编辑主键不可为空",groups = {Severitys.Update.class})
     private Integer id;
 
     /**

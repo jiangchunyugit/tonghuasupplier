@@ -49,7 +49,9 @@ public class CityBranchServiceImpl implements CityBranchService {
         // 通过分公司获取省份code
         BranchCompany branchCompany = new BranchCompany();
         branchCompany = branchCompanyMapper.selectByPrimaryKey(cityBranch.getBranchCompId());
-        cityBranch.setProvinceCode(branchCompany.getProvinceCode());
+        if (branchCompany != null) {
+            cityBranch.setProvinceCode(branchCompany.getProvinceCode());
+        }
         // todo 通过埃森哲城市分站获取城市code冗余
         int result = cityBranchMapper.insertSelective(cityBranch);
 
@@ -170,5 +172,14 @@ public class CityBranchServiceImpl implements CityBranchService {
     @Override
     public CityBranchVO cityBranchById(Integer id) {
         return cityBranchMapper.selectBranchDetails(id);
+    }
+
+    @Override
+    public List<CityBranch> cityBranchlistByCompany(Integer id) {
+
+        CityBranchExample cityBranchExample = new CityBranchExample();
+        cityBranchExample.createCriteria().andBranchCompIdEqualTo(id);
+
+        return cityBranchMapper.selectByExample(cityBranchExample);
     }
 }

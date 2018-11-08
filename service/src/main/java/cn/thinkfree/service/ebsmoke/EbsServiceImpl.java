@@ -1,5 +1,6 @@
 package cn.thinkfree.service.ebsmoke;
 
+import cn.thinkfree.database.mapper.BranchCompanyMapper;
 import cn.thinkfree.database.mapper.BusinessEntityMapper;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.ProvinceMapper;
@@ -23,6 +24,9 @@ public class EbsServiceImpl implements EbsService {
 
     @Autowired
     BusinessEntityMapper businessEntityMapper;
+
+    @Autowired
+    BranchCompanyMapper branchCompanyMapper;
 
     @Override
     public List<EbsMokeBranchCompany> ebsBranchCompanyList() {
@@ -75,7 +79,7 @@ public class EbsServiceImpl implements EbsService {
 
         List<EbsCityBranch> ebsCityBranches = new ArrayList<>();
         CityExample cityExample = new CityExample();
-        cityExample.createCriteria().andProvinceCodeEqualTo(String.valueOf(id));
+        cityExample.createCriteria().andProvinceCodeEqualTo(String.valueOf(branchCompanyMapper.selectByPrimaryKey(id).getProvinceCode()));
         cityMapper.selectByExample(cityExample).forEach(e->{
 
             EbsCityBranch ebsCityBranch = new EbsCityBranch();
