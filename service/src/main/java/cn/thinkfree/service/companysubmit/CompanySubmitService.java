@@ -17,10 +17,10 @@ public interface CompanySubmitService {
 
     /**
      * 查询审批不通过的原因
-     * @param contractNumber
+     * @param companyId
      * @return
      */
-    PcAuditInfo findAuditCase(String contractNumber);
+    PcAuditInfo findAuditCase(String companyId);
 
     /**
      * 审批详情查询
@@ -74,12 +74,10 @@ public interface CompanySubmitService {
 
     /**
      * 入驻公司资质变更审批
-     * @param companyId
-     * @param auditStatus
-     * @param auditCase
+     * @param pcAuditInfo
      * @return
      */
-    String auditChangeCompany(String companyId,String auditStatus, String auditCase);
+    String auditChangeCompany(PcAuditInfo pcAuditInfo);
 
     /**
      * 入驻公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口

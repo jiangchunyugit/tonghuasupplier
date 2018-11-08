@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
@@ -17,6 +18,7 @@ import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.ContractStatus;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +30,6 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
-import cn.thinkfree.database.mapper.CompanyInfoExpandMapper;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.MyContractInfoMapper;
-import cn.thinkfree.database.mapper.PcAuditInfoMapper;
-import cn.thinkfree.database.mapper.PcAuditTemporaryInfoMapper;
-import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.utils.ContractNum;
 import cn.thinkfree.service.utils.ExcelData;
@@ -70,6 +66,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Autowired
 	CompanySubmitService companySubmitService;
 
+	@Autowired
+	PcApplyInfoMapper pcApplyInfoMapper;
+
 	final static String TARGET = "static/";
 
 
@@ -85,15 +84,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
     @Override
-	public PcAuditInfo findAuditCase(String contractNumber) {
-		PcAuditInfoExample example = new PcAuditInfoExample();
-		example.createCriteria().andContractNumberEqualTo(contractNumber);
+	public PcAuditInfo findAuditCase(String companyId) {
+		PcAuditInfo pcAuditInfo = pcAuditInfoMapper.findAuditCase(companyId);
 
-		List<PcAuditInfo> pcAuditInfos = pcAuditInfoMapper.selectByExample(example);
-
-		if(pcAuditInfos.size() > 0){
-			return pcAuditInfos.get(0);
-		}
+//		if(pcAuditInfos.size() > 0){
+//			return pcAuditInfos.get(0);
+//		}
 		return null;
 	}
 
@@ -166,10 +162,30 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean changeCompanyInfo(CompanyTemporaryVo companyTemporaryVo) {
+		Date date = new Date();
 		PcAuditTemporaryInfo pcAuditTemporaryInfo = new PcAuditTemporaryInfo();
 		SpringBeanUtil.copy(companyTemporaryVo, pcAuditTemporaryInfo);
+		pcAuditTemporaryInfo.setCreateTime(date);
+		pcAuditTemporaryInfo.setUpdateTime(date);
+		pcAuditTemporaryInfo.setChangeDate(date);
 		int line = pcAuditTemporaryInfoMapper.insertSelective(pcAuditTemporaryInfo);
-		if(line > 0){
+
+		PcApplyInfo pcApplyInfo = new PcApplyInfo();
+		pcApplyInfo.setTransactType(SysConstants.YesOrNo.NO.shortVal());
+		pcApplyInfo.setCompanyId(pcAuditTemporaryInfo.getCompanyId());
+		pcApplyInfo.setApplyType(CompanyApply.applyTpye.COMPANYAPPLY.shortVal());
+		pcApplyInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+		pcApplyInfo.setApplyDate(date);
+		pcApplyInfo.setApplyThingType(CompanyApply.applyThinkType.APPLYCHANGE.shortVal());
+		pcApplyInfo.setAreaCode(pcAuditTemporaryInfo.getAreaCode());
+		pcApplyInfo.setCompanyName(pcAuditTemporaryInfo.getCompanyName());
+		pcApplyInfo.setCompanyRole(pcAuditTemporaryInfo.getRoleId());
+		pcApplyInfo.setProvinceCode(pcAuditTemporaryInfo.getProvinceCode());
+		pcApplyInfo.setCityCode(pcAuditTemporaryInfo.getCityCode());
+		pcApplyInfo.setContactName(pcAuditTemporaryInfo.getContactName());
+		pcApplyInfo.setContactPhone(pcAuditTemporaryInfo.getContactPhone());
+		int applyLine = pcApplyInfoMapper.insertSelective(pcApplyInfo);
+		if(line > 0 && applyLine > 0){
 			return true;
 		}
 		return false;
@@ -177,7 +193,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String auditChangeCompany(String companyId, String auditStatus, String auditCase) {
+	public String auditChangeCompany(PcAuditInfo pcAuditInfo) {
+		String companyId = pcAuditInfo.getCompanyId();
 		Date date = new Date();
 		//1：查询公司资质临时表
 		PcAuditTemporaryInfoExample example = new PcAuditTemporaryInfoExample();
@@ -185,11 +202,11 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		List<PcAuditTemporaryInfo>
 				pcAuditTemporaryInfo = pcAuditTemporaryInfoMapper.selectByExample(example);
 
-		//audit_type:审核状态 0通过  1不通过
-		if(SysConstants.YesOrNo.NO.toString().equals(auditStatus)){
+		//audit_type:审核状态 1通过  0不通过
+		if(AuditStatus.AuditPass.shortVal().equals(pcAuditInfo.getAuditStatus())){
 
 			//2：修改公司临时表状态：change_status:资质变更状态：0：审批成功 1：审批失败
-			pcAuditTemporaryInfo.get(0).setChangeStatus(SysConstants.YesOrNo.NO.shortVal());
+			pcAuditTemporaryInfo.get(0).setChangeStatus(Short.valueOf(AuditStatus.AuditPass.shortVal()));
 			int addLine = pcAuditTemporaryInfoMapper.updateByExampleSelective(pcAuditTemporaryInfo.get(0), example);
 			if(addLine <= 0){
 				return "审批失败";
@@ -236,8 +253,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
 			//添加审核记录表
-			PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), SysConstants.YesOrNo.YES.toString(), auditPersion, auditStatus, date,
-					companyId, auditCase, "");
+			PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
+					companyId, pcAuditInfo.getAuditCase(), "");
 
 			int flagi = pcAuditInfoMapper.insertSelective(record);
 			if(flagi <= 0){
@@ -251,11 +268,11 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
 			//添加审核记录表
-			PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), SysConstants.YesOrNo.YES.toString(), auditPersion, auditStatus, date,
-					companyId, auditCase, "");
+			PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
+					companyId, pcAuditInfo.getAuditCase(), "");
 			int line = pcAuditInfoMapper.insertSelective(record);
-			//2：修改公司临时表状态：change_status:资质变更状态：0：审批成功 1：审批失败
-			pcAuditTemporaryInfo.get(0).setChangeStatus(SysConstants.YesOrNo.YES.shortVal());
+			//2：修改公司临时表状态：change_status:资质变更状态：0：审批失败 1：审批成功
+			pcAuditTemporaryInfo.get(0).setChangeStatus(Short.valueOf(AuditStatus.AuditDecline.shortVal()));
 			int addLine = pcAuditTemporaryInfoMapper.updateByExampleSelective(pcAuditTemporaryInfo.get(0), example);
 			if(addLine <= 0 && line <= 0){
 				return "审批失败";
@@ -267,8 +284,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId) {
-		PcAuditTemporaryInfoExample example = new PcAuditTemporaryInfoExample();
-		example.createCriteria().andCompanyIdEqualTo(companyId);
 		PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfoMapper.findCompanyTemporaryInfo(companyId);
 		return pcAuditTemporaryInfo;
 	}
@@ -461,7 +476,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		List<PcAuditTemporaryInfo> pcAuditTemporaryInfos = pcAuditTemporaryInfoMapper.selectByExample(example);
 		if(pcAuditTemporaryInfos.size() > 0){
 			PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfos.get(0);
-			if(AuditStatus.AuditPass.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus())){
+			if(AuditStatus.AuditPass.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus()) || AuditStatus.AuditDecline.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus())){
 				return true;
 			}
 		}
