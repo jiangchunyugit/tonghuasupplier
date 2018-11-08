@@ -25,17 +25,18 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableAutoConfiguration
 @EnableWebMvc
 @EnableSwagger2
-@ComponentScan( basePackages = {"cn.thinkfree"} )
+@ComponentScan(basePackages = {"cn.thinkfree"})
 @MapperScan(basePackages = "cn.thinkfree.database.mapper")
 //@EnableFeignClients(basePackages = "cn.thinkfree.service.feign")
 public class ApplicationBoot extends SpringBootServletInitializer {
-    public static void main(String[] args) {
-        SpringApplication.run(ApplicationBoot.class, args);
-    }
     @Override//为了打包springboot项目
     protected SpringApplicationBuilder configure(
             SpringApplicationBuilder builder) {
         return builder.sources(this.getClass());
+    }
+
+    public static void main(String[] args) {
+        SpringApplication.run(ApplicationBoot.class, args);
     }
 
 //    @Bean

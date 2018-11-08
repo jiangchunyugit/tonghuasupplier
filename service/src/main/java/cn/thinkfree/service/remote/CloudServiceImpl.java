@@ -38,16 +38,15 @@ public class CloudServiceImpl implements CloudService {
     String sendNotice;
     @Value("${custom.cloud.noticeShowUrl}")
     String noticeShowUrl;
-//    @Value("${custom.cloud.fileUpload}")
-	private String fileUploadUrl;
+    @Value("${custom.cloud.fileUpload}")
+    private String fileUploadUrl;
 
     @Value("${custom.cloud.senEmail}")
     String sendEMail;
-    
-    Integer SuccessCode = 1000;	private String fileUploadUrl;    
-	@Value("${shanghai.smallSchedulingUrl}")
-    String smallSchedulingUrl;    
-	Integer SuccessCode = 1000;    Integer ProjectUpFailCode = 2005;
+    Integer SuccessCode = 1000;
+    @Value("${shanghai.smallSchedulingUrl}")
+    String smallSchedulingUrl;
+    Integer ProjectUpFailCode = 2005;
 
 
     private RemoteResult buildFailResult() {
@@ -110,8 +109,8 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-    private String invokeRemoteJuRanMethod(String url, Integer status,Integer limit) {
-        String result = restTemplate.getForObject(url,String.class ,status,limit);
+    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit) {
+        String result = restTemplate.getForObject(url, String.class, status, limit);
         return result;
     }
 
@@ -152,33 +151,6 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-@Override
-	public String uploadFile(String fileName) {
-		// TODO Auto-generated method stub
-//      HttpHeaders headers = new HttpHeaders();
-//      headers.add("Authorization", "token");
-//      MediaType type = MediaType.parseMediaType("multipart/form-data");
-//      headers.setContentType(type);
-      File file  = new File(fileName);
-	   if(!file.exists()){
-	    	try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	   }
-	  List<File> files = new ArrayList<>();
-	  files.add(file);
-      MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
-	    form.add("files", null);
-//      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
-      RemoteResult<String>   result = invokeRemoteMethod(fileUploadUrl,form);
-      System.out.println("返回结果。。。"+result);
-        file.delete();
-		return null;
-	  }
-
     /**
      * 同步公司信息
      *
@@ -190,16 +162,16 @@ public class CloudServiceImpl implements CloudService {
         MultiValueMap<String, Object> param = initParam();
 
         param.add("address", syncTransactionVO.getAddress());
-        param.add("code",syncTransactionVO.getCode());
-        param.add("cwgsdm",syncTransactionVO.getCwgsdm());
-        param.add("gssh",syncTransactionVO.getGssh());
-        param.add("jc",syncTransactionVO.getJc());
-        param.add("name",syncTransactionVO.getName());
-        param.add("vendorCode",syncTransactionVO.getVendorCode());
+        param.add("code", syncTransactionVO.getCode());
+        param.add("cwgsdm", syncTransactionVO.getCwgsdm());
+        param.add("gssh", syncTransactionVO.getGssh());
+        param.add("jc", syncTransactionVO.getJc());
+        param.add("name", syncTransactionVO.getName());
+        param.add("vendorCode", syncTransactionVO.getVendorCode());
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendNotice,param);
-        }catch (Exception e){
+            result = invokeRemoteMethod(sendNotice, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -220,8 +192,8 @@ public class CloudServiceImpl implements CloudService {
 
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendEMail,param);
-        }catch (Exception e){
+            result = invokeRemoteMethod(sendEMail, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -229,45 +201,49 @@ public class CloudServiceImpl implements CloudService {
     }
 
 
-}/**
+    /**
      * 与上海同步小排期
+     *
      * @param status
      * @param limit
      * @return
      */
     @Override
-    public String getBaseScheduling(Integer status,Integer limit) {
+    public String getBaseScheduling(Integer status, Integer limit) {
         String result = null;
         try {
-            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status,limit);
+            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
         }
         return result;
-    }@Override
-	public String uploadFile(String fileName) {
-		// TODO Auto-generated method stub
+    }
+
+    @Override
+    public String uploadFile(String fileName) {
+        // TODO Auto-generated method stub
 //      HttpHeaders headers = new HttpHeaders();
 //      headers.add("Authorization", "token");
 //      MediaType type = MediaType.parseMediaType("multipart/form-data");
 //      headers.setContentType(type);
-      File file  = new File(fileName);
-	   if(!file.exists()){
-	    	try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	   }
-	  List<File> files = new ArrayList<>();
-	  files.add(file);
-      MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
-	    form.add("files", null);
+        File file = new File(fileName);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        List<File> files = new ArrayList<>();
+        files.add(file);
+        MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
+        form.add("files", null);
 //      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
-      RemoteResult<String>   result = invokeRemoteMethod(fileUploadUrl,form);
-      System.out.println("返回结果。。。"+result);
+        RemoteResult<String> result = invokeRemoteMethod(fileUploadUrl, form);
+        System.out.println("返回结果。。。" + result);
         file.delete();
-		return null;
-	  }}
+        return null;
+    }
+}
