@@ -144,7 +144,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         //获取 审批信息
         PcAuditInfoExample autit = new PcAuditInfoExample();
-        autit.createCriteria().andContractNumberEqualTo(ruleNumber).andAuditTypeEqualTo("4");
+        autit.createCriteria().andContractNumberEqualTo(ruleNumber).andAuditTypeEqualTo("5");
         List<PcAuditInfo>  auList =  pcAuditInfoMapper.selectByExample(autit);
         settlementRuleVO.setAuditInfo(auList);
         return settlementRuleVO;
@@ -409,13 +409,13 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         }else if (SettlementRuleStatus.NaturalMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
 
-            billCycleResult.setCycleTime(String.valueOf(settlementRuleInfo.getCycleStime().getDay()));
+            billCycleResult.setCycleTime(settlementRuleInfo.getCycleStime()+"--"+settlementRuleInfo.getCycleStime());
             method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
 //            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
         }
         else if (SettlementRuleStatus.NextMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
 
-            billCycleResult.setCycleTime(String.valueOf(settlementRuleInfo.getCycleStime().getDay()));
+            billCycleResult.setCycleTime(settlementRuleInfo.getCycleStime()+"--"+settlementRuleInfo.getCycleStime());
             method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
 //            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
         } else if (SettlementRuleStatus.WeekSettlement.getCode().equals(settlementRuleInfo.getCycleType())){

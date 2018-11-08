@@ -12,8 +12,8 @@
     <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="cycle_type" jdbcType="VARCHAR" property="cycleType" />
-    <result column="cycle_stime" jdbcType="TIMESTAMP" property="cycleStime" />
-    <result column="cycle_etime" jdbcType="TIMESTAMP" property="cycleEtime" />
+    <result column="cycle_stime" jdbcType="VARCHAR" property="cycleStime" />
+    <result column="cycle_etime" jdbcType="VARCHAR" property="cycleEtime" />
     <result column="cycle_value" jdbcType="VARCHAR" property="cycleValue" />
     <result column="checking_time" jdbcType="TIMESTAMP" property="checkingTime" />
     <result column="create_user" jdbcType="VARCHAR" property="createUser" />
@@ -146,7 +146,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{collectionType,jdbcType=VARCHAR}, #{ruleName,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{cycleType,jdbcType=VARCHAR}, 
-      #{cycleStime,jdbcType=TIMESTAMP}, #{cycleEtime,jdbcType=TIMESTAMP}, #{cycleValue,jdbcType=VARCHAR}, 
+      #{cycleStime,jdbcType=VARCHAR}, #{cycleEtime,jdbcType=VARCHAR}, #{cycleValue,jdbcType=VARCHAR}, 
       #{checkingTime,jdbcType=TIMESTAMP}, #{createUser,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
       #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{ruleType,jdbcType=VARCHAR}, #{ruleNumber,jdbcType=VARCHAR}, #{companyCode,jdbcType=VARCHAR}, 
@@ -244,10 +244,10 @@
         #{cycleType,jdbcType=VARCHAR},
       </if>
       <if test="cycleStime != null">
-        #{cycleStime,jdbcType=TIMESTAMP},
+        #{cycleStime,jdbcType=VARCHAR},
       </if>
       <if test="cycleEtime != null">
-        #{cycleEtime,jdbcType=TIMESTAMP},
+        #{cycleEtime,jdbcType=VARCHAR},
       </if>
       <if test="cycleValue != null">
         #{cycleValue,jdbcType=VARCHAR},
@@ -326,10 +326,10 @@
         cycle_type = #{record.cycleType,jdbcType=VARCHAR},
       </if>
       <if test="record.cycleStime != null">
-        cycle_stime = #{record.cycleStime,jdbcType=TIMESTAMP},
+        cycle_stime = #{record.cycleStime,jdbcType=VARCHAR},
       </if>
       <if test="record.cycleEtime != null">
-        cycle_etime = #{record.cycleEtime,jdbcType=TIMESTAMP},
+        cycle_etime = #{record.cycleEtime,jdbcType=VARCHAR},
       </if>
       <if test="record.cycleValue != null">
         cycle_value = #{record.cycleValue,jdbcType=VARCHAR},
@@ -387,8 +387,8 @@
       start_time = #{record.startTime,jdbcType=TIMESTAMP},
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
       cycle_type = #{record.cycleType,jdbcType=VARCHAR},
-      cycle_stime = #{record.cycleStime,jdbcType=TIMESTAMP},
-      cycle_etime = #{record.cycleEtime,jdbcType=TIMESTAMP},
+      cycle_stime = #{record.cycleStime,jdbcType=VARCHAR},
+      cycle_etime = #{record.cycleEtime,jdbcType=VARCHAR},
       cycle_value = #{record.cycleValue,jdbcType=VARCHAR},
       checking_time = #{record.checkingTime,jdbcType=TIMESTAMP},
       create_user = #{record.createUser,jdbcType=VARCHAR},
