@@ -10,7 +10,7 @@ public class SettlementRuleParam {
 
 	
 	
-	@ApiParam("审核状态 1 审核通过 2 审核拒绝")
+	@ApiParam("审核状态 2审核通过 3审核拒绝")
 	@NotBlank(message = "审核状态不可为空")
 	private String auditStatus;
 	
