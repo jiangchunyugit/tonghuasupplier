@@ -37,4 +37,8 @@ public interface AfConfigSchemeService {
      */
     void create(String configSchemeNo, String configNo, String schemeNo, String describe, String userId);
 
+    String findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId);
+
+    AfConfigScheme findByConfigNoAndSchemeNoAndRoleId(String configNo, String schemeNo, String roleId);
+
 }

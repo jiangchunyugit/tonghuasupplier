@@ -4,6 +4,7 @@ import cn.thinkfree.database.mapper.AfConfigSchemeMapper;
 import cn.thinkfree.database.model.AfConfigScheme;
 import cn.thinkfree.database.model.AfConfigSchemeExample;
 import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,8 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
 
     @Resource
     private AfConfigSchemeMapper configSchemeMapper;
+    @Resource
+    private NewOrderUserService orderUserService;
 
 
     @Override
@@ -70,6 +73,23 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
         example.createCriteria().andConfigNoEqualTo(configNo).andSchemeNoEqualTo(schemeNo);
 
         configSchemeMapper.updateByExampleSelective(configScheme, example);
+    }
+
+    @Override
+    public String findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId) {
+        String schemeNo = "";
+        // TODO
+        String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
+        AfConfigScheme configScheme = findByConfigNoAndSchemeNoAndRoleId(configNo, schemeNo, roleId);
+        return configScheme != null ? configScheme.getConfigSchemeNo() : null;
+    }
+
+    @Override
+    public AfConfigScheme findByConfigNoAndSchemeNoAndRoleId(String configNo, String schemeNo, String roleId) {
+        AfConfigSchemeExample example = new AfConfigSchemeExample();
+        example.createCriteria().andConfigNoEqualTo(configNo).andSchemeNoEqualTo(schemeNo).andFirstRoleIdEqualTo(roleId);
+
+        return null;
     }
 
     private void insert(AfConfigScheme configScheme) {

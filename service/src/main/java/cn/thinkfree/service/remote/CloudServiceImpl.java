@@ -46,7 +46,10 @@ public class CloudServiceImpl implements CloudService {
     Integer SuccessCode = 1000;
     @Value("${shanghai.smallSchedulingUrl}")
     String smallSchedulingUrl;
-    Integer ProjectUpFailCode = 2005;
+	@Value("${message.remindConsumerUrl}")
+    String remindConsumerUrl;
+
+    Integer SuccessCode = 1000;    Integer ProjectUpFailCode = 2005;
 
 
     private RemoteResult buildFailResult() {
@@ -111,6 +114,11 @@ public class CloudServiceImpl implements CloudService {
 
     private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit) {
         String result = restTemplate.getForObject(url, String.class, status, limit);
+        return result;
+    }
+
+    private String invokeRemoteMessageMethod(String url,MultiValueMap<String, Object> param){
+        String result = restTemplate.postForObject(url, param, String.class);
         return result;
     }
 
@@ -220,7 +228,34 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
+/**
+     * 给用户发消息
+     *
+     * @param userNo
+     * @param projectNo
+     * @param content
+     * @param senderId
+     * @param type
+     * @return
+     */
     @Override
+    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId,Integer dynamicId, Integer type) {
+        MultiValueMap<String, Object> param = initParam();
+        param.add("userNo", userNo);
+        param.add("projectNo",projectNo );
+        param.add("content",content );
+        param.add("senderId", senderId);
+        param.add("dynamicId",dynamicId );
+        param.add("type",type );
+        String result = null;
+        try {
+            result = invokeRemoteMessageMethod(remindConsumerUrl, param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return result;
+    }	@Override
     public String uploadFile(String fileName) {
         // TODO Auto-generated method stub
 //      HttpHeaders headers = new HttpHeaders();
@@ -245,5 +280,4 @@ public class CloudServiceImpl implements CloudService {
         System.out.println("返回结果。。。" + result);
         file.delete();
         return null;
-    }
-}
+    }}

@@ -64,5 +64,16 @@ public interface CloudService {
      */
     String getBaseScheduling(Integer status,Integer limit);
 
+    /**
+     * 给用户发消息
+     * @param userNo
+     * @param projectNo
+     * @param content
+     * @param senderId
+     * @param type
+     * @return
+     */
+    String remindConsumer(String[] userNo, String projectNo,String content,String senderId,Integer dynamicId,Integer type);
+
 
 }

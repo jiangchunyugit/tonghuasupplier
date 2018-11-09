@@ -124,11 +124,10 @@ public class AppProjectController {
     @RequestMapping(value = "remindPay",method = RequestMethod.POST)
     @ApiOperation(value = "提醒支付量房费")
     public MyRespBundle<String> remindPay(
-            @RequestParam("OrderNo") @ApiParam(name = "OrderNo", value = "订单号") String orderNo,
-            @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
-            @RequestParam("projectNo") @ApiParam(name = "ownerId", value = "业主id") String ownerId,
-            @RequestParam("projectNo") @ApiParam(name = "userId", value = "用户id") String userId){
-        return newProjectService.remindPay(projectNo,orderNo,ownerId,userId);
+            @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号 测试用:1223098338391") String projectNo,
+            @RequestParam("ownerId") @ApiParam(name = "ownerId", value = "业主id 测试用:123456") String ownerId,
+            @RequestParam("userId") @ApiParam(name = "userId", value = "用户id 测试用: 123567") String userId){
+        return newProjectService.remindPay(projectNo,ownerId,userId);
     }
 
 
