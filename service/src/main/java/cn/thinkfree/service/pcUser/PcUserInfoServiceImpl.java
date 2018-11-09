@@ -165,7 +165,8 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         return false;
     }
 
-    private boolean isEnable(String name) {
+    @Override
+    public boolean isEnable(String name) {
         //判断输入的账号是否已经注册过
         List<String> phones = userRegisterMapper.findPhoneAll();
         boolean flag = phones.contains(name);

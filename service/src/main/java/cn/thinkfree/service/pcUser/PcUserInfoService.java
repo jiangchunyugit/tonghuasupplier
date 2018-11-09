@@ -86,4 +86,11 @@ public interface PcUserInfoService {
      * @return
      */
     PageInfo pageAccountVO(AccountSEO accountSEO);
+
+    /**
+     * 判断输入的账号是否已经注册过
+     * @param name
+     * @return
+     */
+    boolean isEnable(String name);
 }

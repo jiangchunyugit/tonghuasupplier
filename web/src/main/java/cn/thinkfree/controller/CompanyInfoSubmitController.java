@@ -204,9 +204,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     		@PathVariable("companyId") String companyId,
     		@ApiParam("合同条款key和value值")@RequestBody ContractClauseVO contractClausevo){
     	
-    	boolean  falg  =  contractService.insertContractClause(contractNumber, companyId, contractClausevo);
+    	boolean  flag  =  contractService.insertContractClause(contractNumber, companyId, contractClausevo);
     	 
-        return sendJsonData(ResultMessage.SUCCESS,falg);
+        return sendJsonData(ResultMessage.SUCCESS,flag);
     }
 
 
@@ -220,9 +220,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--公司详情--李阳", notes = "公司详情")
     @PostMapping("/companyDetails")
     @MyRespBody
-    public MyRespBundle<CompanyDetailsVO> companyDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
-    		@ApiParam("公司编号")@RequestParam String companyId){
-        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId);
+    public MyRespBundle<CompanyDetailsVO> companyDetails(@ApiParam("合同编号")@RequestParam(required = false) String contractNumber,
+    		@ApiParam("公司编号")@RequestParam String companyId, String auditType){
+        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId, auditType);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
@@ -251,8 +251,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      */
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--签约完成--李阳")
     @PostMapping("/signSuccess")
-    public MyRespBundle<String> signSuccess(@ApiParam("公司id")@RequestParam String companyId){
-        boolean flag  = companySubmitService.signSuccess(companyId);
+    public MyRespBundle<String> signSuccess(@ApiParam("公司id")@RequestParam String companyId,
+                                            @ApiParam("合同编号")@RequestParam String contractNumber){
+        boolean flag  = companySubmitService.signSuccess(companyId, contractNumber);
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS,"操作成功");
         }
