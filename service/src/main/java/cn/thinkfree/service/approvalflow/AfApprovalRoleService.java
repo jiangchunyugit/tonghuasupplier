@@ -15,23 +15,24 @@ import java.util.List;
 public interface AfApprovalRoleService {
     /**
      * 根据审批顺序编号获取审批角色
-     * @param approvalOrderNo 审批顺序编号
+     * @param configSchemeNo 审批方案编号
      * @param allRoles 所有角色信息
      * @return 审批角色信息
      */
-    List<UserRoleSet> findByApprovalOrderNo(String approvalOrderNo, List<UserRoleSet> allRoles);
+    List<UserRoleSet> findByConfigSchemeNo(String configSchemeNo, List<UserRoleSet> allRoles);
 
     /**
      * 创建审批角色
-     * @param approvalOrderNo 审批顺序编号
+     * @param configSchemeNo 审批方案编号
      * @param roles 审批角色信息
      */
-    void create(String approvalOrderNo, List<UserRoleSet> roles);
+    void create(String configSchemeNo, List<UserRoleSet> roles);
 
     /**
      * 根据审批顺序编号获取审批角色
-     * @param approvalOrderNo 审批顺序编号
+     * @param configSchemeNo 审批方案编号
      * @return 审批角色信息
      */
-    List<AfApprovalRole> findByApprovalOrderNo(String approvalOrderNo);
+    List<AfApprovalRole> findByConfigSchemeNo(String configSchemeNo);
+
 }

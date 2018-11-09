@@ -20,8 +20,8 @@ public class ProjectOrderDetailVo {
     private List<OrderTaskSortVo> orderTaskSortVoList;
     @ApiModelProperty(name = "taskStage",value = "任务阶段")
     private Integer taskStage;
-    @ApiModelProperty(name = "playTask",value = "展示内容-导航的内容-默认5个的")//TODO 展示内容-导航提示
-    private String playTask;
+    @ApiModelProperty(name = "playTask",value = "展示内容-导航的内容-LFFY(提醒支付量房费用),LFZL(提交量房资料),HTQY(发起合同签约),SJZL(提交设计资料),CKHT(查看合同)")
+    private List<String> playTask;
     @ApiModelProperty(name = "orderNo",value = "订单编号")
     private String orderNo;
     @ApiModelProperty(name = "orderType",value = "订单类型,1 设计订单, 2 施工订单")

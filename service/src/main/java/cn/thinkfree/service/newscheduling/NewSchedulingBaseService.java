@@ -7,6 +7,8 @@ import cn.thinkfree.database.vo.ProjectSmallSchedulingVO;
 import cn.thinkfree.database.vo.SchedulingSeo;
 import com.github.pagehelper.PageInfo;
 
+import java.util.List;
+
 /**
  * 排期基础信息
  *
@@ -25,20 +27,22 @@ public interface NewSchedulingBaseService {
     /**
      * 添加本地大排期
      *
-     * @param projectBigSchedulingVO
+     * @param projectBigSchedulingVOList
      * @return
      */
-    String addBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO);
+    String addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList);
 
     /**
      * 获取基础大排期
+     *
      * @param schedulingSeo
      * @return
      */
-    PageInfo<ProjectBigScheduling> listBigScheduling(SchedulingSeo schedulingSeo);
+    PageInfo<ProjectBigSchedulingVO> listBigScheduling(SchedulingSeo schedulingSeo);
 
     /**
      * 关联小排期与大排期
+     *
      * @param projectSmallSchedulingVO
      * @return
      */
@@ -46,6 +50,7 @@ public interface NewSchedulingBaseService {
 
     /**
      * 同步上海基础小排期
+     *
      * @param schedulingSeo
      * @return
      */
@@ -53,6 +58,7 @@ public interface NewSchedulingBaseService {
 
     /**
      * 修改基础大排期
+     *
      * @param projectBigSchedulingVO
      * @return
      */

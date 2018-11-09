@@ -724,6 +724,76 @@ public class AfConfigSchemeExample {
             addCriterion("usable not between", value1, value2, "usable");
             return (Criteria) this;
         }
+
+        public Criteria andFirstRoleIdIsNull() {
+            addCriterion("first_role_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdIsNotNull() {
+            addCriterion("first_role_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdEqualTo(String value) {
+            addCriterion("first_role_id =", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotEqualTo(String value) {
+            addCriterion("first_role_id <>", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdGreaterThan(String value) {
+            addCriterion("first_role_id >", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdGreaterThanOrEqualTo(String value) {
+            addCriterion("first_role_id >=", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdLessThan(String value) {
+            addCriterion("first_role_id <", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdLessThanOrEqualTo(String value) {
+            addCriterion("first_role_id <=", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdLike(String value) {
+            addCriterion("first_role_id like", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotLike(String value) {
+            addCriterion("first_role_id not like", value, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdIn(List<String> values) {
+            addCriterion("first_role_id in", values, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotIn(List<String> values) {
+            addCriterion("first_role_id not in", values, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdBetween(String value1, String value2) {
+            addCriterion("first_role_id between", value1, value2, "firstRoleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFirstRoleIdNotBetween(String value1, String value2) {
+            addCriterion("first_role_id not between", value1, value2, "firstRoleId");
+            return (Criteria) this;
+        }
     }
 
     /**

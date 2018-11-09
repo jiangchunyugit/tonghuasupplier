@@ -1,13 +1,12 @@
 package cn.thinkfree.service.platform.designer.impl;
 
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
-import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
-import cn.thinkfree.service.platform.vo.DesignerMsgVo;
-import cn.thinkfree.service.platform.vo.PageVo;
-import cn.thinkfree.service.platform.vo.UserMsgVo;
+import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.ExcelToListMap;
 import cn.thinkfree.service.utils.ReflectUtils;
@@ -42,8 +41,6 @@ public class DesignerServiceImpl implements DesignerService {
     @Autowired
     private DesignerStyleRelationMapper relationMapper;
     @Autowired
-    private DesignerStyleConfigMapper styleConfigMapper;
-    @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
     @Autowired
     private ProvinceMapper provinceMapper;
@@ -53,6 +50,8 @@ public class DesignerServiceImpl implements DesignerService {
     private AreaMapper areaMapper;
     @Autowired
     private UserCenterService userCenterService;
+    @Autowired
+    private BasicsService basicsService;
 
     /**
      * @param designerName          设计师用户名
@@ -205,7 +204,7 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsgVo.setVolumeRoomMoney(designerMsg.getVolumeRoomMoney().toString());
         designerMsgVo.setDesignerMoneyLow(designerMsg.getDesignerMoneyLow().toString());
         designerMsgVo.setDesignerMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
-        List<DesignerStyleConfig> styleConfigs = queryDesignerStyleByUserId(userId);
+        List<DesignerStyleConfigVo> styleConfigs = queryDesignerStyleByUserId(userId);
         List<String> styles = ReflectUtils.getList(styleConfigs,"styleName");
         designerMsgVo.setDesignerStyles(styles);
         return designerMsgVo;
@@ -248,16 +247,23 @@ public class DesignerServiceImpl implements DesignerService {
      * @return
      */
     @Override
-    public List<DesignerStyleConfig> queryDesignerStyleByUserId(String userId) {
+    public List<DesignerStyleConfigVo> queryDesignerStyleByUserId(String userId) {
         DesignerStyleRelationExample relationExample = new DesignerStyleRelationExample();
         relationExample.createCriteria().andDesignerIdEqualTo(userId);
         List<DesignerStyleRelation> designerStyleRelations = relationMapper.selectByExample(relationExample);
         if (!designerStyleRelations.isEmpty()) {
             List<String> styleCodes = ReflectUtils.getList(designerStyleRelations, "styleCode");
-            DesignerStyleConfigExample styleConfigExample = new DesignerStyleConfigExample();
-            styleConfigExample.createCriteria().andStyleCodeIn(styleCodes);
-            List<DesignerStyleConfig> designerStyleConfigs = styleConfigMapper.selectByExample(styleConfigExample);
-            return designerStyleConfigs;
+            List<BasicsData> basicsDatas = basicsService.queryData(BasicsDataParentEnum.DESIGN_STYLE.getCode(),styleCodes);
+            List<DesignerStyleConfigVo> styleConfigs = new ArrayList<>();
+            for (BasicsData basicsData : basicsDatas){
+                DesignerStyleConfigVo styleConfigVo = new DesignerStyleConfigVo();
+                styleConfigVo.setDelState(basicsData.getDelState());
+                styleConfigVo.setRemark(basicsData.getRemark());
+                styleConfigVo.setStyleCode(basicsData.getBasicsCode());
+                styleConfigVo.setStyleName(basicsData.getBasicsName());
+                styleConfigs.add(styleConfigVo);
+            }
+            return styleConfigs;
         }
         return new ArrayList<>();
     }
@@ -283,10 +289,17 @@ public class DesignerServiceImpl implements DesignerService {
      * @return
      */
     @Override
-    public List<DesignerStyleConfig> queryDesignerStyle() {
-        DesignerStyleConfigExample configExample = new DesignerStyleConfigExample();
-        configExample.createCriteria();
-        List<DesignerStyleConfig> styleConfigs = styleConfigMapper.selectByExample(configExample);
+    public List<DesignerStyleConfigVo> queryDesignerStyle() {
+        List<BasicsData> basicsDatas = basicsService.queryData(BasicsDataParentEnum.DESIGN_STYLE.getCode());
+        List<DesignerStyleConfigVo> styleConfigs = new ArrayList<>();
+        for (BasicsData basicsData : basicsDatas){
+            DesignerStyleConfigVo styleConfigVo = new DesignerStyleConfigVo();
+            styleConfigVo.setDelState(basicsData.getDelState());
+            styleConfigVo.setRemark(basicsData.getRemark());
+            styleConfigVo.setStyleCode(basicsData.getBasicsCode());
+            styleConfigVo.setStyleName(basicsData.getBasicsName());
+            styleConfigs.add(styleConfigVo);
+        }
         return styleConfigs;
     }
 

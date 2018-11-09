@@ -2,6 +2,7 @@ package cn.thinkfree.service.platform.build;
 
 import cn.thinkfree.database.model.BuildPayConfig;
 import cn.thinkfree.database.model.BuildSchemeConfig;
+import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
 
@@ -14,9 +15,18 @@ public interface BuildConfigService {
     /**
      * 获取所有施工配置方案
      *
+     * @param schemeNo
+     * @param schemeName
+     * @param companyId
+     * @param cityStation
+     * @param storeNo
+     * @param isEnable
+     * @param pageSize
+     * @param pageIndex
      * @return
      */
-    List<BuildSchemeConfig> allBuildScheme();
+    PageVo<List<BuildSchemeConfig>> allBuildScheme(String schemeNo, String schemeName, String companyId, String cityStation,
+                                                   String storeNo, int isEnable, int pageSize, int pageIndex);
 
     /**
      * 创建施工配置方案
@@ -55,10 +65,12 @@ public interface BuildConfigService {
     /**
      * 根据方案编号查询支付方案信息
      *
-     * @param schemeNo 方案编号
+     * @param schemeNo  方案编号
+     * @param pageSize  每页几条
+     * @param pageIndex 第几页
      * @return 支付方案列表
      */
-    List<BuildPayConfig> payConfigBySchemeNo(String schemeNo);
+    PageVo<List<BuildPayConfig>> payConfigBySchemeNo(String schemeNo, int pageSize, int pageIndex);
 
     /**
      * 保存支付方案
@@ -99,6 +111,7 @@ public interface BuildConfigService {
 
     /**
      * 根据条件查询施工方案
+     *
      * @param searchKey
      * @param companyId
      * @param cityStation
@@ -106,4 +119,5 @@ public interface BuildConfigService {
      * @return
      */
     List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo);
+
 }

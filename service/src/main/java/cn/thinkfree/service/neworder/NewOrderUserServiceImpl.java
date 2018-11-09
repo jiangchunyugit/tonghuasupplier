@@ -7,6 +7,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,19 +100,24 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                     EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
                     employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
                     List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
-                    employeeMsgs.forEach(employeeMsg -> {
-                        if (employeeMsg.getRoleCode().equals("CP")) {
-                            employeeInfoVO.setProjectManager(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CM")) {
-                            employeeInfoVO.setForeman(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CS")) {
-                            employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CQ")) {
-                            employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CD")) {
-                            employeeInfoVO.setDesigner(employeeMsg.getRealName());
-                        }
-                    });
+                    if(employeeMsgs != null){
+                        employeeMsgs.forEach(employeeMsg -> {
+                            if (employeeMsg.getRoleCode().equals("CP")) {
+                                employeeInfoVO.setProjectManager(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CM")) {
+                                employeeInfoVO.setForeman(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CS")) {
+                                employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CQ")) {
+                                employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CD")) {
+                                employeeInfoVO.setDesigner(employeeMsg.getRealName());
+                            }
+                        });
+                    }else {
+                        throw  new RuntimeException();
+                    }
+
                 }
 
         );
@@ -455,5 +461,26 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     }
 
-
+    /**
+     * 根据项目编号,员工编号,员工
+     * 角色查看是否符合实际权限
+     *
+     * @param projectNo
+     * @param userId
+     * @param roleCode
+     * @return
+     */
+    @Override
+    public Boolean checkJurisdiction(String projectNo, String userId, String roleCode) {
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andProjectNoEqualTo(projectNo);
+        userCriteria.andUserIdEqualTo(userId);
+        userCriteria.andRoleCodeEqualTo(UserJobs.Foreman.roleCode);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() > 0) {
+            return true;
+        }
+        return false;
+    }
 }

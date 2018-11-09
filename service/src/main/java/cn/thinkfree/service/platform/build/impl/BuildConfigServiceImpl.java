@@ -5,7 +5,9 @@ import cn.thinkfree.database.mapper.BuildSchemeCompanyRelMapper;
 import cn.thinkfree.database.mapper.BuildSchemeConfigMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.OrderNoUtils;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,10 +35,37 @@ public class BuildConfigServiceImpl implements BuildConfigService {
      * @return
      */
     @Override
-    public List<BuildSchemeConfig> allBuildScheme() {
+    public PageVo<List<BuildSchemeConfig>> allBuildScheme(String schemeNo, String schemeName, String companyId, String cityStation,
+                                                          String storeNo, int isEnable, int pageSize, int pageIndex) {
         BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
-        configExample.createCriteria().andDelStateEqualTo(2);
-        return schemeConfigMapper.selectByExample(configExample);
+        BuildSchemeConfigExample.Criteria criteria = configExample.createCriteria().andDelStateEqualTo(2);
+        if(StringUtils.isNotBlank(schemeNo)){
+            criteria.andSchemeNoLike("%" +schemeNo+ "%");
+        }
+        if(StringUtils.isNotBlank(schemeName)){
+            criteria.andSchemeNameLike("%" +schemeName+ "%");
+        }
+        if(StringUtils.isNotBlank(companyId)){
+            criteria.andCompanyIdEqualTo(companyId);
+        }
+        if(StringUtils.isNotBlank(cityStation)){
+            criteria.andCityStationEqualTo(cityStation);
+        }
+        if(StringUtils.isNotBlank(storeNo)){
+            criteria.andStoreNoEqualTo(storeNo);
+        }
+        if(isEnable == 1 || isEnable == 2){
+            criteria.andIsEnableEqualTo(isEnable);
+        }
+        long total = schemeConfigMapper.countByExample(configExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<BuildSchemeConfig> schemeConfigs = schemeConfigMapper.selectByExample(configExample);
+        PageVo<List<BuildSchemeConfig>> pageVo = new PageVo<>();
+        pageVo.setTotal(total);
+        pageVo.setData(schemeConfigs);
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
     }
 
     @Override
@@ -92,11 +121,19 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
-    public List<BuildPayConfig> payConfigBySchemeNo(String schemeNo) {
+    public PageVo<List<BuildPayConfig>> payConfigBySchemeNo(String schemeNo, int pageSize, int pageIndex) {
         checkScheme(schemeNo);
         BuildPayConfigExample configExample = new BuildPayConfigExample();
         configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateEqualTo(2);
-        return payConfigMapper.selectByExample(configExample);
+        long total = payConfigMapper.countByExample(configExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<BuildPayConfig> payConfigs = payConfigMapper.selectByExample(configExample);
+        PageVo<List<BuildPayConfig>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageIndex);
+        pageVo.setTotal(total);
+        pageVo.setData(payConfigs);
+        return pageVo;
     }
 
     @Override
