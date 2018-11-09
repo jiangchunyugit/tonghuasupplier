@@ -19,7 +19,6 @@ public class SettlementRuleParam {
 	private String auditCase;
 	
 	@ApiParam("结算规则编号")
-	@NotBlank(message = "结算规则编码不可为空")
 	private List<String> ruleNumbers;
 	
 	public String getAuditStatus() {
