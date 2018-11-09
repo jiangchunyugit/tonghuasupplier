@@ -57,18 +57,13 @@ public class AfConfigServiceImpl implements AfConfigService {
                 AfConfigVO configVO = new AfConfigVO();
 
                 List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configScheme.getConfigSchemeNo(), roles);
+                configVO.setApprovalRoles(approvalRoles);
+
                 List<UserRoleSet> subRoles = subRoleService.findByConfigSchemeNo(configScheme.getConfigSchemeNo(), roles);
                 configVO.setSubRoles(subRoles);
-                configVO.setSubRoles(approvalRoles);
-                configVO.setDescribe(configScheme.getDescribe());
 
-                for (AfConfig config : configs) {
-                    if (config.getConfigNo().equals(configScheme.getConfigNo())) {
-                        configVO.setName(config.getName());
-                        configVO.setConfigNo(config.getConfigNo());
-                        break;
-                    }
-                }
+                configVO.setDescribe(configScheme.getDescribe());
+                configVO.setConfigNo(configScheme.getConfigNo());
 
                 configVOs.add(configVO);
             }

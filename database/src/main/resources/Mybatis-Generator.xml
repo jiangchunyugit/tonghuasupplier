@@ -87,8 +87,8 @@
         <!--<table tableName="project_stage_log" domainObjectName="ProjectStageLog"/>-->
         <!--<table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>-->
         <!--<table tableName="design_grade" domainObjectName="DesignGrade"/>-->
-        <table tableName="design_label" domainObjectName="DesignLabel"/>
-        <table tableName="growth_value_integral" domainObjectName="GrowthValueIntegral"/>
+        <!--<table tableName="design_label" domainObjectName="DesignLabel"/>-->
+        <!--<table tableName="growth_value_integral" domainObjectName="GrowthValueIntegral"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
