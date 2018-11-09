@@ -178,6 +178,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     /**
      * 查询字典
      * @author lqd
+     *
      * @return Message
      * 
      */
@@ -235,7 +236,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/auditCompany")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> auditCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
+    public MyRespBundle<String> auditCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
         
     	 String  result = companySubmitService.auditContract(pcAuditInfo);
 
@@ -249,10 +250,13 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      *
      */
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--签约完成--李阳")
-    @PostMapping("/joinSuccess")
-    public MyRespBundle<String> joinSuccess(@ApiParam("公司id")@RequestParam String companyId){
-        String resMap  = companySubmitService.joinSuccess(companyId);
-        return sendJsonData(ResultMessage.SUCCESS,resMap);
+    @PostMapping("/signSuccess")
+    public MyRespBundle<String> signSuccess(@ApiParam("公司id")@RequestParam String companyId){
+        boolean flag  = companySubmitService.signSuccess(companyId);
+        if(flag){
+            return sendJsonData(ResultMessage.SUCCESS,"操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL,"操作失败");
     }
 
 

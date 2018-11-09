@@ -236,12 +236,14 @@
     create_time,
     company_id,
     contract_url,
-    contract_remark
+    contract_remark,
+    role_id
     FROM
     pc_contract_info
     WHERE
     id IN ( SELECT max( id ) FROM pc_contract_info GROUP BY company_id )
     ) contract ON info.company_id = contract.company_id
+    and contract.role_id = info.role_id
     WHERE info.company_classify = 2
     <if test="relationMap != null">
         and info.site_company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
@@ -336,6 +338,7 @@
         WHERE
         id IN ( SELECT max( id ) FROM pc_contract_info GROUP BY company_id )
         ) contract ON info.company_id = contract.company_id
+        and contract.role_id = info.role_id
         WHERE info.company_classify = 2
         <if test="relationMap != null">
             and info.site_company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">

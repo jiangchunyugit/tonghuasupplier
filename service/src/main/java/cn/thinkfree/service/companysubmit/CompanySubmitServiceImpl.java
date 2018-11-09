@@ -1,11 +1,7 @@
 package cn.thinkfree.service.companysubmit;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,6 +13,7 @@ import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.utils.CommonGroupUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +66,15 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Autowired
 	PcApplyInfoMapper pcApplyInfoMapper;
 
+	@Autowired
+    ContractTermsMapper pcContractTermsMapper;
+
+	@Autowired
+    ContractTermsChildMapper contractTermsChildMapper;
+
+	@Autowired
+	ContractInfoMapper contractInfoMappers;
+
 	final static String TARGET = "static/";
 
 
@@ -76,11 +82,45 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Override
 	public CompanyDetailsVO companyDetails(String contractNumber, String companyId) {
 		CompanyDetailsVO companyDetailsVO = new CompanyDetailsVO();
+		//公司详情
 		CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
 		companyDetailsVO.setCompanySubmitVO(companySubmitVo);
-        //todo 合同结算条款待完成
 
-		return null;
+		//合同条款
+        Map<String, Object> root = new HashMap<>();
+
+        ContractVo vo = new ContractVo();
+        vo.setContractNumber( contractNumber );
+        ContractVo	newVo = contractInfoMapper.selectContractBycontractNumber( vo );              /* 合同信息 */
+        CompanySubmitVo companyInfo	= companySubmitService.findCompanyInfo( (newVo.getCompanyId() ) );      /* 公司信息 */
+        /* 合同详情 */
+        ContractTermsExample exp = new ContractTermsExample();
+        exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
+        List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
+        for ( int i = 0; i < list.size(); i++ )
+        {
+            root.put( list.get( i ).getContractDictCode(), list.get( i ).getContractValue() );
+        }
+        /* 查询结算规则 */
+        ContractTermsChildExample example = new ContractTermsChildExample();
+        example.createCriteria().andCompanyIdEqualTo( (newVo.getCompanyId() ) ).andContractNumberEqualTo( contractNumber );
+        List<ContractTermsChild> childList	= contractTermsChildMapper.selectByExample( example );
+        Map<Long, List<ContractTermsChild> >	map2		= new LinkedHashMap<Long, List<ContractTermsChild> >();
+        CommonGroupUtils.listGroup2Map( childList, map2, ContractTermsChild.class, "cost_type" ); /* 根据类型分组 */
+        if ( childList != null )
+        {
+            Map<String, List<ContractTermsChild> > ma = new HashMap<>();
+            for ( int i = 0; i < childList.size(); i++ )
+            {
+                ContractTermsChildExample example1 = new ContractTermsChildExample();
+                example1.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber )
+                        .andCostTypeEqualTo( childList.get( i ).getCostType() );
+                List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample( example1 );
+                root.put( childList.get( i ).getCostType(), childListr );
+            }
+        }
+        companyDetailsVO.setContractTermsList(root);
+		return companyDetailsVO;
 	}
 
     @Override
@@ -99,7 +139,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		map.put("companyId", companyId);
 		map.put("auditType", CompanyConstants.AuditType.JOINON.stringVal());
 		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
-		//TOdo
+
 		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
 		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
 			auditInfoVO.setAuditCase("");
@@ -123,7 +163,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
 				.andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
 //				.andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
-				.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
+//				.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
 				.andPlatformTypeEqualTo(SysConstants.YesOrNo.NO.shortVal());
 
 		List<CompanyInfo> companyInfo = companyInfoMapper.selectByExample(companyInfoExample);
@@ -411,7 +451,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String auditContract(PcAuditInfo pcAuditInfo) {
+	public String auditContract(PcAuditInfoVO pcAuditInfo) {
 		Date date = new Date();
 		Map<String,String> map = new HashMap<>();
 
@@ -422,16 +462,16 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			//1.修改公司表
 			boolean applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString());
 
-			//todo 从登陆信息中获取公司类型
-			String contractNumber =ContractNum.getInstance().GenerateOrder("DB");
+			String contractNumber =ContractNum.getInstance().GenerateOrder(pcAuditInfo.getRoleId());
 		//	String contractNumber = String.valueOf(UUID.randomUUID());
 			
 			//2.修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝ContractStatus
-			ContractVo vo = new ContractVo();
-			vo.setCompanyId(companyId);
-			vo.setContractNumber(contractNumber);
-			vo.setContractStatus(ContractStatus.DraftStatus.shortVal());
-			int flag = contractInfoMapper.updateContractStatus(vo);
+			ContractInfo contractInfo = new ContractInfo();
+			contractInfo.setRoleId(pcAuditInfo.getRoleId());
+			contractInfo.setCompanyId(companyId);
+			contractInfo.setContractNumber(contractNumber);
+			contractInfo.setContractStatus(ContractStatus.DraftStatus.shortVal());
+			int flag = contractInfoMappers.insertSelective(contractInfo);
 			
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
@@ -465,23 +505,50 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
     @Override
-    public String joinSuccess(String companyId) {
+    public boolean signSuccess(String companyId) {
 	    boolean aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal());
 
-	    //todo 合同状态修改待完成
-	    return null;
+		ContractInfo contractInfo = new ContractInfo();
+		contractInfo.setCompanyId(companyId);
+		contractInfo.setContractStatus(ContractStatus.Waitdeposit.shortVal());
+		ContractInfoExample example = new ContractInfoExample();
+		example.createCriteria().andCompanyIdEqualTo(companyId);
+		int line = contractInfoMappers.updateByExampleSelective(contractInfo,example);
+		if(aLine && line > 0){
+			return true;
+		}
+	    return false;
     }
 
 	@Override
 	public boolean isEdit(String companyId) {
+		boolean flag = false;
+		boolean aflag = false;
+		CompanyInfoExample exampleC = new CompanyInfoExample();
+		exampleC.createCriteria().andCompanyIdEqualTo(companyId);
+		List<CompanyInfo>  companyInfos = companyInfoMapper.selectByExample(exampleC);
 		PcAuditTemporaryInfoExample example = new PcAuditTemporaryInfoExample();
 		example.createCriteria().andCompanyIdEqualTo(companyId);
 		List<PcAuditTemporaryInfo> pcAuditTemporaryInfos = pcAuditTemporaryInfoMapper.selectByExample(example);
+		//公司状态只有是入驻成功才可以编辑资质
+		if(companyInfos.size() > 0){
+			CompanyInfo companyInfo = companyInfos.get(0);
+			if(CompanyAuditStatus.SUCCESSJOIN.stringVal().equals(companyInfo.getAuditStatus())){
+				flag = true;
+			}
+		}
+		//如果资质变更表没有信息或者审批状态是通过或者未通过都可以对资质进行编辑
 		if(pcAuditTemporaryInfos.size() > 0){
 			PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfos.get(0);
 			if(AuditStatus.AuditPass.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus()) || AuditStatus.AuditDecline.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus())){
-				return true;
+				aflag = true;
 			}
+		}else if(pcAuditTemporaryInfos.size() == 0){
+			aflag = true;
+		}
+
+		if(flag && aflag){
+			return true;
 		}
 		return false;
 	}
