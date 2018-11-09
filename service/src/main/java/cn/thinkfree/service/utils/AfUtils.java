@@ -39,10 +39,12 @@ public class AfUtils {
         Map date = (Map) responseMap.get("data");
         String username = (String) date.get("nickName");
         String headPortrait = (String) date.get("headPortraits");
+        String phone = (String) date.get("phone");
         AfUserDTO userDTO = new AfUserDTO();
         userDTO.setUserId(userId);
         userDTO.setUsername(username);
         userDTO.setHeadPortrait(headPortrait);
+        userDTO.setPhone(phone);
         return userDTO;
     }
 }
