@@ -267,14 +267,21 @@ public class DateUtil {
         if(date1 == null || date2 == null){
             return 0;
         }
-        return (int) (((date2.getTime() - date1.getTime()) % (1000*3600*24)) / (1000*3600));
+        BigDecimal bigDecimalOne = new BigDecimal(date2.getTime() - date1.getTime());
+        BigDecimal bigDecimalTwo = new BigDecimal(1000 * 3600 * 24);
+        if(date2.getTime()<date1.getTime()){
+            return 0;
+        }
+        int i = bigDecimalOne.divide(bigDecimalTwo, 0, BigDecimal.ROUND_UP).intValue();
+        return i;
     }
 
 
     public static void main(String[] args) {
         Date date1 = formateToDate("2018-08-09 00:00:00", FORMAT);
-        Date date2 = formateToDate("2018-08-11 00:00:00", FORMAT);
-        System.out.println(daysCalculate(date1, date2));
+        Date date2 = formateToDate("2018-08-01 00:00:01", FORMAT);
+        int i = differentHoursByMillisecond(date1, date2);
+        System.out.println(i);
     }
 
 }
