@@ -52,6 +52,9 @@ public class BaseDesignServiceImpl implements BaseDesignService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> addDesignGrade(DesignGradeVo designGradeVo) {
+        if(designGradeVo.getGrade()==null||designGradeVo.getGrowthValue()==null){
+            return RespData.error("参数为null!!");
+        }
         if(designGradeVo != null){
             if(designGradeVo.getSort()==null){
                 DesignGradeExample example = new DesignGradeExample();

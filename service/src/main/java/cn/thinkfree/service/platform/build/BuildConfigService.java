@@ -65,10 +65,12 @@ public interface BuildConfigService {
     /**
      * 根据方案编号查询支付方案信息
      *
-     * @param schemeNo 方案编号
+     * @param schemeNo  方案编号
+     * @param pageSize  每页几条
+     * @param pageIndex 第几页
      * @return 支付方案列表
      */
-    List<BuildPayConfig> payConfigBySchemeNo(String schemeNo);
+    PageVo<List<BuildPayConfig>> payConfigBySchemeNo(String schemeNo, int pageSize, int pageIndex);
 
     /**
      * 保存支付方案
@@ -117,4 +119,5 @@ public interface BuildConfigService {
      * @return
      */
     List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo);
+
 }

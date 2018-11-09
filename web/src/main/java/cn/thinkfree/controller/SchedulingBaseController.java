@@ -38,7 +38,7 @@ public class SchedulingBaseController extends AbsBaseController {
     }
 
     @RequestMapping(value = "listShangHai", method = RequestMethod.POST)
-    @ApiOperation(value = "基础施工项同步(同步上海)-同步上海基础小排期")
+    @ApiOperation(value = "基础施工项同步(同步)-同步上海基础小排期")
     public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listShangHai( @ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo) {
 //        PageInfo<ProjectSmallSchedulingVO> pageInfo = schedulingBaseService.listShangHai(schedulingSeo);
 //        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
@@ -62,15 +62,15 @@ public class SchedulingBaseController extends AbsBaseController {
 
     @RequestMapping(value = "updateSmallScheduling", method = RequestMethod.POST)
     @ApiOperation(value = "施工项关联(修改)-关联小排期与大排期")
-    public MyRespBundle<String> updateSmallScheduling(@ApiParam(name = "projectSmallSchedulingVO", value = "小排期实体") ProjectSmallSchedulingVO projectSmallSchedulingVO) {
-        String result = schedulingBaseService.updateSmallScheduling(projectSmallSchedulingVO);
+    public MyRespBundle<String> updateSmallScheduling(@ApiParam(name = "projectSmallSchedulingVO", value = "小排期实体") List<ProjectSmallSchedulingVO> projectSmallSchedulingVOList) {
+        String result = schedulingBaseService.updateSmallScheduling(projectSmallSchedulingVOList);
         return sendSuccessMessage(result);
     }
 
     @RequestMapping(value = "updateBigScheduling", method = RequestMethod.POST)
     @ApiOperation(value = "阶段验收配置(修改)-修改基础大排期")
-    public MyRespBundle<String> updateBigScheduling( @ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") ProjectBigSchedulingVO projectBigSchedulingVO) {
-        return schedulingBaseService.updateBigScheduling(projectBigSchedulingVO);
+    public MyRespBundle<String> updateBigScheduling( @ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
+        return schedulingBaseService.updateBigScheduling(projectBigSchedulingVOList);
     }
 
 }

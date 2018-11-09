@@ -6,6 +6,11 @@
     <classPathEntry
             location="src/main/resources/edb-jdbc16.jar"/>
     <context id="context1">
+        <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
+        <plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
+        </plugin>
         <!-- 该死的注释 -->
         <commentGenerator>
             <property name="addRemarkComments" value="true"/>
@@ -28,6 +33,8 @@
             <property name="trimStrings" value="true"/>
             <property name="useActualColumnNames" value="false"/>
             <property name="rootClass" value="cn.thinkfree.core.model.BaseModel"/>
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
 
         </javaModelGenerator>
         <!-- XML-->
@@ -41,12 +48,13 @@
                 targetProject="src/main/java/"
                 type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>
-        <!-- 表-->
+        </javaClientGenerator>        <!-- 表-->
+        <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
+        <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
-        <!--<table tableName="company_info" domainObjectName="CompanyInfo"/>-->
+        <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->
         <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
         <!--<table tableName="pre_project_company_set" domainObjectName="PreProjectCompanySet"/>-->
         <!--<table tableName="pre_project_construction" domainObjectName="PreProjectConstruction" />-->
@@ -62,6 +70,19 @@
         <!--<table tableName="user_login_log" domainObjectName="UserLoginLog" />-->
         <!--<table tableName="user_role" domainObjectName="UserRole"/>-->
         <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
+        <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
+        <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
+        <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
+        <!--<table tableName="company_info_expand" domainObjectName="CompanyInfoExpand"/>-->
+        <!--<table tableName="pc_apply_info" domainObjectName="PcApplyInfo"/>-->
+        <!--<table tableName="pc_company_financial" domainObjectName="PcCompanyFinancial"/>-->
+        <!--<table tableName="pc_audit_info" domainObjectName="PcAuditInfo"/>-->
+        <!--<table tableName="pc_contract_template" domainObjectName="PcContractTemplate"/>-->
+        <!--<table tableName="pc_contract_template_category" domainObjectName="PcContractTemplateCategory"/>-->
+        <!--<table tableName="pc_contract_template_dict" domainObjectName="PcContractTemplateDict"/>-->
+        <!--<table tableName="pc_contract_terms" domainObjectName="PcContractTerms"/>-->
+        <!--<table tableName="pc_contract_info" domainObjectName="PcContractInfo"/>-->
+        <!-- 权限相关 S-->
         <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
         <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
         <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
@@ -69,6 +90,17 @@
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
         <!--<table tableName="d_housing_status" domainObjectName="HousingStatus"/>-->
         <!--<table tableName="d_project_type" domainObjectName="ProjectType"/>-->
+        <!--<table tableName="pc_system_permission" domainObjectName="SystemPermission"/>-->
+        <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
+        <!--<table tableName="pc_system_role" domainObjectName="SystemRole"/>-->
+        <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
+        <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
+        <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
+        <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
+        <!-- 权限相关 E-->
+        <!--<table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo"/>-->
+        <!--<table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo"/>-->
+        <!--<table tableName="pc_settlement_rule_info" domainObjectName="SettlementRuleInfo"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
@@ -111,9 +143,7 @@
         <!--<table tableName="build_pay_config" domainObjectName="BuildPayConfig"/>-->
         <!--<table tableName="build_scheme_config" domainObjectName="BuildSchemeConfig"/>-->
         <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
-        <!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->
-        <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
-        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
+<!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
         <!-- new approval flow end -->
     </context>
 </generatorConfiguration>
