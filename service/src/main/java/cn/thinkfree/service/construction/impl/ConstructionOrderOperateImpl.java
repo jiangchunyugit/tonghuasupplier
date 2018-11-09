@@ -3,17 +3,22 @@ package cn.thinkfree.service.construction.impl;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.AfUserDTO;
+import cn.thinkfree.database.vo.EmployeeInfoVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.github.pagehelper.PageHelper;
@@ -60,6 +65,9 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
 
     @Autowired
     FundsOrderMapper fundsOrderMapper;
+
+    @Autowired
+    DesignerOrderMapper designerOrderMapper;
 
     @Resource
     private HttpLinks httpLinks;
@@ -393,6 +401,115 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
 
         return RespData.success(constructionOrderManageVo);
     }
+    /**
+     * @Author jiang
+     * @Description 工地详情信息
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo) {
+        SiteDetailsVo siteDetailsVo = new SiteDetailsVo();
+        ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
+        projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
+        if(projectSchedulings.size() == 1){
+            ProjectScheduling projectScheduling = projectSchedulings.get(0);
+            //项目编号
+            siteDetailsVo.setProjectNo(projectNo);
+            //开工时间
+            siteDetailsVo.setStartDates(projectScheduling.getStartTime());
+            //竣工时间
+            siteDetailsVo.setCompletionDays(projectScheduling.getEndTime());
+            //工期
+            Long day=(projectScheduling.getEndTime().getTime()-projectScheduling.getStartTime().getTime())/(24*60*60*1000);
+            siteDetailsVo.setDuration(day.intValue());
+            //施工进度
+            siteDetailsVo.setConstructionSchedule(projectScheduling.getRate().intValue());
+            //延期天数
+            siteDetailsVo.setDeferredDays(projectScheduling.getDelay());
+        }
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        designerOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.size()==1){
+            DesignerOrder designerOrder = designerOrders.get(0);
+            //订单编号
+            siteDetailsVo.setOrderNo(designerOrder.getOrderNo());
+            //订单类型
+            siteDetailsVo.setOrderType(designerOrder.getStyleType());
+        }
+
+
+        //业主
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(siteDetailsVo.getProjectNo());
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+        //业主
+        siteDetailsVo.setOwner(customerInfo.getUsername());
+        //手机号码
+        siteDetailsVo.setPhone(customerInfo.getPhone());
+        //项目地址
+        siteDetailsVo.setProjectAddress(projects.get(0).getAddressDetail());
+
+        //合同
+        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+       if(constructionOrders.size()==1){
+           ConstructionOrder constructionOrder = constructionOrders.get(0);
+           //合同款
+           siteDetailsVo.setContractFunds(constructionOrder.getMoney());
+       }
+        FundsOrderExample example = new FundsOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
+        if(list.size() ==1){
+            FundsOrder fundsOrder = list.get(0);
+            //已付款
+            siteDetailsVo.setPaid(fundsOrder.getPaidAmount());
+            //待付款
+            siteDetailsVo.setPendingPayment(fundsOrder.getActualAmount());
+        }
+
+        //EmployeeInfoVO employeeInfoVO = new EmployeeInfoVO();
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        List<EmployeeInfoVO> lists = new ArrayList<>();
+        orderUsers.forEach((user) ->
+                {
+                    EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+                    employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
+                    List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+                    employeeMsgs.forEach(employeeMsg -> {
+                        String roleCode = employeeMsg.getRoleCode();
+                        if (roleCode != null) {
+                            if ("CP".equals(roleCode)) {
+                                //项目经理
+                                siteDetailsVo.setProjectManager(employeeMsg.getRealName());
+                            } else if ("CM".equals(roleCode)) {
+                                //工长
+                                siteDetailsVo.setForeman(employeeMsg.getRealName());
+                            } else if ("CS".equals(roleCode)) {
+                                //管家
+                                siteDetailsVo.setHousekeeper(employeeMsg.getRealName());
+                            }else if ("CD".equals(roleCode)) {
+                                //设计师
+                                siteDetailsVo.setDesignerName(employeeMsg.getRealName());
+                            }
+                        }
+                    });
+                }
+
+        );
+
+
+        return RespData.success(siteDetailsVo);
+    }
+
     //查询合同
     private List<ConstructionOrder> getMoney(List<String> listOrdertNo) {
         ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();

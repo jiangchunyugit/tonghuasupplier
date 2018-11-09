@@ -208,6 +208,7 @@ public class ExampleController extends AbsBaseController {
 //    	   contractService.createOrderContract("11233333", "11111122", "1");
 //    	 String url =  contractService.getPdfUrlByOrderNumber("111111");
         contractService.createContractDoc("HT2018080710405900001");
+        
     }
 
     @GetMapping("/test")

@@ -2,7 +2,6 @@ package cn.thinkfree.service.utils;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,7 +35,6 @@ public class ExcelToListMap {
      * @param sheet
      * @return
      */
-    @NotNull
     private static Map<Integer, TableTitle> getIntegerStringMap(List<TableTitle> tableTitles, Sheet sheet) {
         Map<Integer, TableTitle> titleIndexMap = new HashMap<>();
         Map<String, TableTitle> tableTitleMap = new HashMap<>();
@@ -70,7 +68,7 @@ public class ExcelToListMap {
         Map<String, String> map = new HashMap<>();
         for (int i = 0; i < row.getLastCellNum(); i++) {
             Cell cell = row.getCell(i);
-            cell.setCellType(CellType.STRING);
+            cell.setCellType(Cell.CELL_TYPE_STRING);
             String content = cell.getStringCellValue();
             TableTitle tableTitle = titleIndexMap.get(i);
             if (tableTitle == null) {

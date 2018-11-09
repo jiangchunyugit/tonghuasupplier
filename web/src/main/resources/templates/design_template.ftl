@@ -10,7 +10,6 @@
     body {
         font-family: SimSun;
     }
-
     .text-algin {
         text-align: center;
     }

@@ -954,6 +954,76 @@ public class ProjectDataExample {
             addCriterion("file_name not between", value1, value2, "fileName");
             return (Criteria) this;
         }
+
+        public Criteria andCaseIdIsNull() {
+            addCriterion("case_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdIsNotNull() {
+            addCriterion("case_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdEqualTo(String value) {
+            addCriterion("case_id =", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotEqualTo(String value) {
+            addCriterion("case_id <>", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdGreaterThan(String value) {
+            addCriterion("case_id >", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdGreaterThanOrEqualTo(String value) {
+            addCriterion("case_id >=", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdLessThan(String value) {
+            addCriterion("case_id <", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdLessThanOrEqualTo(String value) {
+            addCriterion("case_id <=", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdLike(String value) {
+            addCriterion("case_id like", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotLike(String value) {
+            addCriterion("case_id not like", value, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdIn(List<String> values) {
+            addCriterion("case_id in", values, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotIn(List<String> values) {
+            addCriterion("case_id not in", values, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdBetween(String value1, String value2) {
+            addCriterion("case_id between", value1, value2, "caseId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCaseIdNotBetween(String value1, String value2) {
+            addCriterion("case_id not between", value1, value2, "caseId");
+            return (Criteria) this;
+        }
     }
 
     /**

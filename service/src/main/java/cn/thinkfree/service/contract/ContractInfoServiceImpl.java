@@ -31,8 +31,11 @@ import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.contract.ContractCostVo;
+import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
+import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.ExcelData;
@@ -76,6 +79,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	CompanyPaymentMapper companyPaymentMapper;
 
 	@Autowired
+	CompanyApplyService companyApplyService;
+
+	@Autowired
 	ProvinceMapper provinceMapper;
 
 	@Autowired
@@ -86,7 +92,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	private String fileUploadUrl;
 
 	@Value( "${custom.cloud.fileUpload.dir}" )
-	private String filePath;
+	private String filePathDir;
 
 	
 	
@@ -302,7 +308,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 	@Override
-	public String createContractDoc( String contractNumber )
+	public String createContractDoc( String contractNumber)
 	{
 		String	url	= "";                                                                   /* 上传服务器返回地址 */
 		SimpleDateFormat sdf	= new SimpleDateFormat( "yyyy-MM-dd" );
@@ -340,27 +346,32 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 		}
 		/* 判断公司类型 */
-		if ( companyInfo.getCompanyInfo().getRoleId().equals( "BD" ) )          /* 装修公司 */
+		if ( companyInfo.getCompanyInfo().getRoleId().equals( "BD" ) ) /* 装修公司 */
 
 		{
 			try {
-				String filePath = FreemarkerUtils.savePdf( contractNumber, "0", root );
+				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "0", root );
 				/* 上传 */
 				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
 			} catch (Exception e) {
 				e.printStackTrace();
-				System.out.println(e);
+				printErrorMes("生成pdf合同发生错误", e.getMessage());
 			}
 			
-		} else if ( companyInfo.getCompanyInfo().getRoleId().equals( "SJ" ) )   /* 设计公司 */
+		} else if ( companyInfo.getCompanyInfo().getRoleId().equals( "SJ" ) )/* 设计公司 */
 
 		{
-			String filePath = FreemarkerUtils.savePdf( contractNumber, "1", root );
-			/* 上传 */
-			url = PdfUplodUtils.upload( filePath, fileUploadUrl );
+			try {
+				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
+				/* 上传 */
+				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
+			} catch (Exception e) {
+				e.printStackTrace();
+				printErrorMes("生成pdf合同发生错误", e.getMessage());
+			}
 		}
 
-		return(url);
+		return  url;
 	}
 
 
@@ -423,7 +434,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			rmap.put( "designCastList", ma.get( "01" ) );   /* 设计费结算比例 */
 			rmap.put( "productCastLis", ma.get( "02" ) );   /* 产品费结算比例 */
 			rmap.put( "roadWorkCastLis", ma.get( "03" ) );  /* 施工费结算比例 */
-		} else if ( roleType.equals( "BD" ) )                   /* 装饰公司 */
+		} else if ( roleType.equals( "BD" ) ) /* 装饰公司 */
 
 		{
 			if ( list != null & list.size() > 0 )
@@ -467,6 +478,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public boolean insertContractClause( String contractNumber, String companyId, ContractClauseVO contractClausevo )
 	{
+
+	try {
+
+
 		if ( contractClausevo.getParamMap() != null )
 		{
 			Iterator<Map.Entry<String, String> > entries = contractClausevo.getParamMap().entrySet().iterator();
@@ -519,7 +534,23 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 			}
 		}
-		return(true);
+
+		//修改合同状态
+		ContractInfo record = new ContractInfo();
+		record.setContractStatus(ContractStatus.WaitAudit.shortVal());
+		record.setCompanyId(companyId);
+		record.setContractNumber(contractNumber);
+		ContractInfoExample example = new ContractInfoExample();
+		example.createCriteria().andCompanyIdEqualTo(companyId).
+		andContractNumberEqualTo(contractNumber);
+		cxcontractInfoMapper.updateByExampleSelective(record, example);
+		//修改公司状态
+		companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal());
+	} catch (Exception e) {
+		printErrorMes("设置合同条款服务异常 {}"+ e.getMessage());
+		return false;
+	}
+		return  true;
 	}
 
 
@@ -616,6 +647,63 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		}
 		return(false);
 	}
+
+	@Transactional
+	@Override
+	public boolean createOrderContract(String orderNumber) {
+		try {
+			// 订单合同
+			OrderContractExample record = new OrderContractExample();
+			record.createCriteria().andOrderNumberEqualTo(orderNumber);
+			List<OrderContract> list = orderContractMapper.selectByExample(record);
+			OrderContract contrat = list.get(0);
+
+			Map<String, Object> root = new HashMap<>();
+			// 查询合同信息
+			ContractTermsExample exp = new ContractTermsExample();
+			exp.createCriteria().andContractNumberEqualTo(orderNumber);
+			List<ContractTerms> listTerm = pcContractTermsMapper.selectByExample(exp);
+			for (int i = 0; i < list.size(); i++) {
+				root.put(listTerm.get(i).getContractDictCode(), listTerm.get(i).getContractValue());
+			}
+
+			String pdfUrl = "";
+
+			if (contrat.getContractType().equals("02")) {
+
+				try {
+					String filePath = FreemarkerUtils.savePdf(filePathDir + orderNumber, "2", root);
+					/* 上传 */
+					pdfUrl = PdfUplodUtils.upload(filePath, fileUploadUrl);
+				} catch (Exception e) {
+					e.printStackTrace();
+					printErrorMes("生成pdf合同发生错误", e.getMessage());
+				}
+
+			} else if (contrat.getContractType().equals("03")) {
+
+				try {
+					String filePath = FreemarkerUtils.savePdf(filePathDir + orderNumber, "3", root);
+					/* 上传 */
+					pdfUrl = PdfUplodUtils.upload(filePath, fileUploadUrl);
+				} catch (Exception e) {
+					e.printStackTrace();
+					printErrorMes("生成pdf合同发生错误", e.getMessage());
+				}
+			}
+			OrderContract recordu = new OrderContract();
+			recordu.setConractUrlPdf(pdfUrl);
+			OrderContractExample example = new OrderContractExample();
+			example.createCriteria().andOrderNumberEqualTo(orderNumber);
+			orderContractMapper.updateByExampleSelective(recordu, example);
+		} catch (Exception e) {
+			printErrorMes("生成订单合同{}",orderNumber,"系统异常 {}"+e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+
 
 
 	@Override
@@ -734,6 +822,144 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		}
 		return(list);
 	}
+
+
+	@Override
+	public List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber) {
+
+		// 更加合同编号查询入住公司合同类型
+		ContractVo vo = new ContractVo();
+		vo.setContractNumber(contractNumber);
+		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo); /* 合同信息 */
+		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(newVo.getCompanyId()); /* 公司信息 */
+		/* 合同详情 */
+		String companyId = newVo.getCompanyId();
+		ContractTermsExample exp = new ContractTermsExample();
+		exp.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+		List<ContractTerms> list = pcContractTermsMapper.selectByExample(exp);
+
+		Map<String, String> dbmap = new HashMap<>();
+
+		for (int i = 0; i < list.size(); i++) {
+			dbmap.put(list.get(i).getContractDictCode(), list.get(i).getContractValue());
+		}
+		/* 查询结算规则 */
+		Map<String, List<ContractTermsChild>> ma = new HashMap<>();
+		ContractTermsChildExample example = new ContractTermsChildExample();
+		example.createCriteria().andCompanyIdEqualTo((newVo.getCompanyId())).andContractNumberEqualTo(contractNumber);
+		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
+		Map<Long, List<ContractTermsChild>> map2 = new LinkedHashMap<Long, List<ContractTermsChild>>();
+		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type"); /* 根据类型分组 */
+		if (childList != null) {
+			for (int i = 0; i < childList.size(); i++) {
+				ContractTermsChildExample example1 = new ContractTermsChildExample();
+				example1.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
+						.andCostTypeEqualTo(childList.get(i).getCostType());
+				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample(example1);
+				ma.put(childList.get(i).getCostType(), childListr);
+			}
+		}
+		// 判断公司类型
+		Map<String, String> costTypeMap = getCostNames(companyInfo.getCompanyInfo().getRoleId());
+
+		List<ContractCostVo> resList = new ArrayList<>();
+
+		if (companyInfo.getCompanyInfo().getRoleId().equals("BD")) {
+			for (String key : costTypeMap.keySet()) {
+				if (key.toString().equals("01")) {// 平台服务
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c08")));
+					resList.add(costVo0);
+				} else if (key.toString().equals("02")) {
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c11")));
+					costVo0.setList(ma.get(key));
+					resList.add(costVo0);
+				} else if (key.toString().equals("03")) {
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c12")));
+					resList.add(costVo0);
+					costVo0.setList(ma.get(key));
+				} else if (key.toString().equals("04")) {
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c15")));
+					costVo0.setList(ma.get(key));
+				}
+			}
+
+		} else if (companyInfo.getCompanyInfo().getRoleId().equals("DB")) {
+
+			for (String key : costTypeMap.keySet()) {
+				if (key.toString().equals("01")) {// 平台服务
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setList(ma.get(key));
+					resList.add(costVo0);
+				} else if (key.toString().equals("02")) {
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c11")));
+					resList.add(costVo0);
+				} else if (key.toString().equals("03")) {// 结算比例
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c12")));
+					resList.add(costVo0);
+					costVo0.setList(ma.get(key));
+				} else if (key.toString().equals("04")) {
+					ContractCostVo costVo0 = new ContractCostVo();
+					costVo0.setCostCode(key.toString());
+					costVo0.setCostName(costTypeMap.get(key));
+					costVo0.setCostValue(String.valueOf(dbmap.get("c15")));
+					costVo0.setList(ma.get(key));
+				}
+			}
+		}
+
+		return resList;
+	}
+
+//String sr [] = {"平台服务费-01","产品服务费-02","施工管理费-03","设计费-04","保证金-04"};
+	@Override
+	public Map<String,String> getCostNames(String type) {
+
+		Map<String,String> resMap = new HashMap<>();
+
+		if(type.equals(CompanyType.BD.name())){
+			resMap.put("01", "平台服务费");
+			resMap.put("02", "产品服务费");
+			resMap.put("03", "施工管理费");
+			resMap.put("04", "设计费");
+			resMap.put("05", "保证金");
+//			resMap.put("06", "一次性保证金");
+//			resMap.put("07", "尾款比例");
+		}else if(type.equals(CompanyType.BD.name())){
+			resMap.put("01", "平台服务费");
+			resMap.put("02", "结算周期");
+			resMap.put("03", "结算比例");;
+			resMap.put("04", "保证金");
+//			resMap.put("06", "一次性保证金");
+//			resMap.put("07", "尾款比例");
+		}
+
+		return resMap;
+	}
+
+
+
+
+
 
 	/**
 	 * 获取远程推送信息

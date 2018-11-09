@@ -83,7 +83,7 @@ public enum ConstructionStateEnumB {
     /**
      * 消费者- 订单完成
      */
-    STATE_700(700, "支付尾款", "已完成", "已完成", "已完成", "已完成", new Integer[]{710}),
+    STATE_700(700, "支付尾款", "已完成", "已完成", "已完成", "已完成", new Integer[]{}),
 
     //TODO
     /**
@@ -100,7 +100,7 @@ public enum ConstructionStateEnumB {
     /**
      *  消费者 支付未开工逆向
      */
-    STATE_730(730, "支付尾款", "已完成", "已完成", "已完成", "已完成", new Integer[]{}),
+    STATE_730(730, "审核通过", "已完成", "已完成", "已完成", "已完成", new Integer[]{}),
 
 
     /**

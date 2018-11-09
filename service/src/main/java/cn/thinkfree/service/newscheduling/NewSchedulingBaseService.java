@@ -43,10 +43,10 @@ public interface NewSchedulingBaseService {
     /**
      * 关联小排期与大排期
      *
-     * @param projectSmallSchedulingVO
+     * @param projectSmallSchedulingVOList
      * @return
      */
-    String updateSmallScheduling(ProjectSmallSchedulingVO projectSmallSchedulingVO);
+    String updateSmallScheduling(List<ProjectSmallSchedulingVO> projectSmallSchedulingVOList);
 
     /**
      * 同步上海基础小排期
@@ -59,8 +59,8 @@ public interface NewSchedulingBaseService {
     /**
      * 修改基础大排期
      *
-     * @param projectBigSchedulingVO
+     * @param projectBigSchedulingVOList
      * @return
      */
-    MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO);
+    MyRespBundle<String> updateBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList);
 }
