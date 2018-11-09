@@ -69,5 +69,14 @@ public class ConstructionOrderListVo {
     @ApiModelProperty("设计师17")
     private String designerName;
 
+    @ApiModelProperty("竣工日期18")
+    private Date completionDays;
+
+    @ApiModelProperty("合同额19")
+    private String ContractAmount;
+
+    @ApiModelProperty("开工日期20")
+    private Date StartDates;
+
 
 }

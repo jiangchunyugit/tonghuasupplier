@@ -254,73 +254,73 @@ public class AfApprovalRoleExample {
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoIsNull() {
-            addCriterion("approval_order_no is null");
+        public Criteria andConfigSchemeNoIsNull() {
+            addCriterion("config_scheme_no is null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoIsNotNull() {
-            addCriterion("approval_order_no is not null");
+        public Criteria andConfigSchemeNoIsNotNull() {
+            addCriterion("config_scheme_no is not null");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoEqualTo(String value) {
-            addCriterion("approval_order_no =", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoEqualTo(String value) {
+            addCriterion("config_scheme_no =", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoNotEqualTo(String value) {
-            addCriterion("approval_order_no <>", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoNotEqualTo(String value) {
+            addCriterion("config_scheme_no <>", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoGreaterThan(String value) {
-            addCriterion("approval_order_no >", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoGreaterThan(String value) {
+            addCriterion("config_scheme_no >", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoGreaterThanOrEqualTo(String value) {
-            addCriterion("approval_order_no >=", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoGreaterThanOrEqualTo(String value) {
+            addCriterion("config_scheme_no >=", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoLessThan(String value) {
-            addCriterion("approval_order_no <", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoLessThan(String value) {
+            addCriterion("config_scheme_no <", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoLessThanOrEqualTo(String value) {
-            addCriterion("approval_order_no <=", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoLessThanOrEqualTo(String value) {
+            addCriterion("config_scheme_no <=", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoLike(String value) {
-            addCriterion("approval_order_no like", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoLike(String value) {
+            addCriterion("config_scheme_no like", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoNotLike(String value) {
-            addCriterion("approval_order_no not like", value, "approvalOrderNo");
+        public Criteria andConfigSchemeNoNotLike(String value) {
+            addCriterion("config_scheme_no not like", value, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoIn(List<String> values) {
-            addCriterion("approval_order_no in", values, "approvalOrderNo");
+        public Criteria andConfigSchemeNoIn(List<String> values) {
+            addCriterion("config_scheme_no in", values, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoNotIn(List<String> values) {
-            addCriterion("approval_order_no not in", values, "approvalOrderNo");
+        public Criteria andConfigSchemeNoNotIn(List<String> values) {
+            addCriterion("config_scheme_no not in", values, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoBetween(String value1, String value2) {
-            addCriterion("approval_order_no between", value1, value2, "approvalOrderNo");
+        public Criteria andConfigSchemeNoBetween(String value1, String value2) {
+            addCriterion("config_scheme_no between", value1, value2, "configSchemeNo");
             return (Criteria) this;
         }
 
-        public Criteria andApprovalOrderNoNotBetween(String value1, String value2) {
-            addCriterion("approval_order_no not between", value1, value2, "approvalOrderNo");
+        public Criteria andConfigSchemeNoNotBetween(String value1, String value2) {
+            addCriterion("config_scheme_no not between", value1, value2, "configSchemeNo");
             return (Criteria) this;
         }
 

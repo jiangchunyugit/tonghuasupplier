@@ -100,19 +100,24 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                     EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
                     employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
                     List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
-                    employeeMsgs.forEach(employeeMsg -> {
-                        if (employeeMsg.getRoleCode().equals("CP")) {
-                            employeeInfoVO.setProjectManager(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CM")) {
-                            employeeInfoVO.setForeman(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CS")) {
-                            employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CQ")) {
-                            employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
-                        } else if (employeeMsg.getRoleCode().equals("CD")) {
-                            employeeInfoVO.setDesigner(employeeMsg.getRealName());
-                        }
-                    });
+                    if(employeeMsgs != null){
+                        employeeMsgs.forEach(employeeMsg -> {
+                            if (employeeMsg.getRoleCode().equals("CP")) {
+                                employeeInfoVO.setProjectManager(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CM")) {
+                                employeeInfoVO.setForeman(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CS")) {
+                                employeeInfoVO.setHousekeeper(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CQ")) {
+                                employeeInfoVO.setQualityInspection(employeeMsg.getRealName());
+                            } else if (employeeMsg.getRoleCode().equals("CD")) {
+                                employeeInfoVO.setDesigner(employeeMsg.getRealName());
+                            }
+                        });
+                    }else {
+                        throw  new RuntimeException();
+                    }
+
                 }
 
         );

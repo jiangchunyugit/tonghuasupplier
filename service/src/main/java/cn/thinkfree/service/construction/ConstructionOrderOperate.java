@@ -14,4 +14,12 @@ public interface ConstructionOrderOperate {
      * @return
      */
     MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize,String cityName);
+    /**
+     * @Author jiang
+     * @Description 工地管理接口-列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(int pageNum, int pageSize, String cityName);
 }

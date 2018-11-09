@@ -6,6 +6,9 @@ import cn.thinkfree.database.model.AfApprovalRole;
 import cn.thinkfree.database.model.AfApprovalRoleExample;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.approvalflow.AfApprovalRoleService;
+import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
+import cn.thinkfree.service.approvalflow.RoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,18 +31,22 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
 
     @Resource
     private AfApprovalRoleMapper approvalRoleMapper;
+    @Resource
+    private RoleService roleService;
+    @Resource
+    private AfConfigSchemeService configSchemeService;
 
     @Override
-    public List<AfApprovalRole> findByApprovalOrderNo(String approvalOrderNo) {
+    public List<AfApprovalRole> findByConfigSchemeNo(String configSchemeNo) {
         AfApprovalRoleExample example = new AfApprovalRoleExample();
-        example.createCriteria().andApprovalOrderNoEqualTo(approvalOrderNo);
+        example.createCriteria().andConfigSchemeNoEqualTo(configSchemeNo);
         example.setOrderByClause("sort asc");
         return approvalRoleMapper.selectByExample(example);
     }
 
     @Override
-    public List<UserRoleSet> findByApprovalOrderNo(String approvalOrderNo, List<UserRoleSet> allRoles) {
-        List<AfApprovalRole> approvalRoles = findByApprovalOrderNo(approvalOrderNo);
+    public List<UserRoleSet> findByConfigSchemeNo(String configSchemeNo, List<UserRoleSet> allRoles) {
+        List<AfApprovalRole> approvalRoles = findByConfigSchemeNo(configSchemeNo);
         return getRoles(approvalRoles, allRoles);
     }
 
@@ -71,12 +78,12 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
     }
 
     @Override
-    public void create(String approvalOrderNo, List<UserRoleSet> roles) {
+    public void create(String configSchemeNo, List<UserRoleSet> roles) {
         if (roles != null) {
             AfApprovalRole approvalRole;
             for (int index = 0; index < roles.size(); index++){
                 approvalRole = new AfApprovalRole();
-                approvalRole.setApprovalOrderNo(approvalOrderNo);
+                approvalRole.setConfigSchemeNo(configSchemeNo);
                 approvalRole.setRoleId(roles.get(index).getRoleCode());
                 approvalRole.setSort(index);
                 insert(approvalRole);
