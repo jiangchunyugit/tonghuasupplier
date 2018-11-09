@@ -464,15 +464,26 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 			String contractNumber =ContractNum.getInstance().GenerateOrder(pcAuditInfo.getRoleId());
 		//	String contractNumber = String.valueOf(UUID.randomUUID());
+			int flag = 0;
 			
 			//2.修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝ContractStatus
-			ContractInfo contractInfo = new ContractInfo();
-			contractInfo.setRoleId(pcAuditInfo.getRoleId());
-			contractInfo.setCompanyId(companyId);
-			contractInfo.setContractNumber(contractNumber);
-			contractInfo.setContractStatus(ContractStatus.DraftStatus.shortVal());
-			int flag = contractInfoMappers.insertSelective(contractInfo);
-			
+				ContractInfo contractInfo = new ContractInfo();
+				contractInfo.setRoleId(pcAuditInfo.getRoleId());
+				contractInfo.setCompanyId(companyId);
+				contractInfo.setContractNumber(contractNumber);
+				contractInfo.setContractStatus(ContractStatus.DraftStatus.shortVal());
+				contractInfo.setCreateTime(date);
+				ContractInfoExample example = new ContractInfoExample();
+				example.createCriteria().andCompanyIdEqualTo(companyId);
+			    List<ContractInfo>	list = contractInfoMappers.selectByExample(example);
+				if(list == null || list.size() == 0 ){
+					
+				  flag = contractInfoMappers.insertSelective(contractInfo);
+				  
+				}else {
+					
+					flag = 1;
+				}
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
 			//3.添加审核记录表
