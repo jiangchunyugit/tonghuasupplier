@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.BranchCompany;
 import cn.thinkfree.database.vo.BranchCompanySEO;
 import cn.thinkfree.database.vo.BranchCompanyVO;
 import cn.thinkfree.database.vo.CompanyRelationVO;
+import cn.thinkfree.database.vo.SiteInfo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -51,4 +52,10 @@ public interface BranchCompanyService {
      * @return
      */
     List<CompanyRelationVO> companyRelationList();
+
+    /**
+     * 权限站点信息
+     * @return
+     */
+    SiteInfo getSiteInfo();
 }

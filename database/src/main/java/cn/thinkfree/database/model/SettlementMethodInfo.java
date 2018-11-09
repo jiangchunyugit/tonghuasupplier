@@ -44,7 +44,7 @@ public class SettlementMethodInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="orderCode订单code")
+    @ApiModelProperty(value="订单编码（量房已确认）")
     private String orderCode;
 
     /**
@@ -80,7 +80,7 @@ public class SettlementMethodInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="ruleCode结算规则code")
+    @ApiModelProperty(value="结算规则编码(关联结算规则表)")
     private String ruleCode;
 
     /**

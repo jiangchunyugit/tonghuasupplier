@@ -1,3 +1,4 @@
+
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
@@ -6,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -64,6 +66,7 @@ public class SettlementRuleInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="startTime结算有效开始时间")
+    @NotNull(message = "开始时间不可为空" ,groups = {Severitys.Insert.class})
     private Date startTime;
 
     /**
@@ -76,6 +79,7 @@ public class SettlementRuleInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="endTime结算有效结束时间")
+    @NotNull(message = "结束时间不可为空" ,groups = {Severitys.Insert.class})
     private Date endTime;
 
     /**
@@ -100,7 +104,7 @@ public class SettlementRuleInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="cycleStime周期开始时间")
-    private Date cycleStime;
+    private String cycleStime;
 
     /**
      * Database Column Remarks:
@@ -112,7 +116,7 @@ public class SettlementRuleInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="cycleEtime周期结束时间")
-    private Date cycleEtime;
+    private String cycleEtime;
 
     /**
      * Database Column Remarks:
@@ -422,7 +426,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    public Date getCycleStime() {
+    public String getCycleStime() {
         return cycleStime;
     }
 
@@ -434,7 +438,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setCycleStime(Date cycleStime) {
+    public void setCycleStime(String cycleStime) {
         this.cycleStime = cycleStime;
     }
 
@@ -446,7 +450,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    public Date getCycleEtime() {
+    public String getCycleEtime() {
         return cycleEtime;
     }
 
@@ -458,7 +462,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setCycleEtime(Date cycleEtime) {
+    public void setCycleEtime(String cycleEtime) {
         this.cycleEtime = cycleEtime;
     }
 

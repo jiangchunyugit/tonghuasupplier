@@ -45,6 +45,56 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         PageHelper.startPage(rule.getPage(), rule.getRows());
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
+//        SettlementRuleInfoExample.Criteria criteria = example.createCriteria();
+//        if(!StringUtils.isBlank(rule.getRuleNumber())){
+//            criteria.andRuleNumberLike("%"+rule.getRuleNumber()+"%");
+//        }
+//        if(!StringUtils.isBlank(rule.getRuleName())){
+//            criteria.andRuleNameLike("%"+rule.getRuleName()+"%");
+//        }
+//        if(!StringUtils.isBlank(rule.getCreateUser())){
+//            criteria.andCreateUserLike("%"+rule.getCreateUser()+"%");
+//        }
+//        if(rule.getStartTime() !=null && !StringUtils.isBlank(rule.getStartTime()+"")){
+//            criteria.andStartTimeGreaterThanOrEqualTo(rule.getStartTime());
+//        }
+//        if(rule.getEndTime() != null && !StringUtils.isBlank(rule.getEndTime()+"")){
+//            criteria.andEndTimeLessThanOrEqualTo(rule.getEndTime());
+//        }
+//
+//        if(!StringUtils.isEmpty(rule.getRuleStatus())){
+//            //1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
+//
+//            // 生效
+//            if(SettlementStatus.Effective.getCode().equals(rule.getRuleStatus())){
+//                criteria
+//                        .andStatusEqualTo(SettlementStatus.AuditPass.getCode())
+//                        .andStartTimeLessThanOrEqualTo(new Date())
+//                        .andEndTimeGreaterThanOrEqualTo(new Date());
+//                // 失效
+//            }else if(SettlementStatus.Invalid.getCode().equals(rule.getRuleStatus())){
+//                criteria
+//                        .andEndTimeLessThan(new Date());
+//                // 待生效
+//            }else if(SettlementStatus.EffectiveWait.getCode().equals(rule.getRuleStatus())){
+//                criteria
+//                        .andStartTimeGreaterThan(new Date())
+//                        .andStatusEqualTo(SettlementStatus.AuditPass.getCode());
+//                // 已作废
+//            }else if(SettlementStatus.AuditCAN.getCode().equals(rule.getRuleStatus())){
+//                criteria
+//                        .andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
+//                // 申请作废
+//            }else if (SettlementStatus.CANDecline.getCode().equals(rule.getRuleStatus())){
+//                criteria
+//                        .andStatusEqualTo(SettlementStatus.CANDecline.getCode());
+//
+//                // 待审核
+//            }else if (SettlementStatus.AuditWait.getCode().equals(rule.getRuleStatus())){
+//                criteria
+//                        .andStatusEqualTo(SettlementStatus.AuditWait.getCode());
+//            }
+//        }
         this.searchRef(example,rule);
         List<SettlementRuleInfo> list = settlementRuleInfoMapper.selectByExample(example);
 
@@ -80,7 +130,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                     flag = settlementRuleInfoMapper.insertSelective(settlementRuleVO);
                     settlementRuleVO.getSettlementMethodInfos().forEach(e -> {
 
-                        e.setRuleCode(settlementRuleVO.getId().toString());
+                        e.setRuleCode(settlementRuleVO.getRuleNumber());
                         settlementMethodInfoMapper.insertSelective(e);
                     });
                 } catch (Exception e) {
@@ -104,13 +154,24 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             SettlementRuleInfoExample example = new SettlementRuleInfoExample();
             example.createCriteria().andRuleNumberEqualTo(ruleNumber);
             List<SettlementRuleInfo>  list = settlementRuleInfoMapper.selectByExample(example);
-            SettlementRuleInfo ralio = list.get(0);
-            ralio.setId(null);
-            ralio.setRuleNumber(getRuleNumber());
-            ralio.setCreateTime(new Date());
-            ralio.setUpdateTime(new Date());
-            ralio.setCreateUser(auditPersion);
-            int  falg = settlementRuleInfoMapper.insertSelective(ralio);
+            SettlementRuleInfo rule = list.get(0);
+            rule.setId(null);
+            rule.setRuleNumber(getRuleNumber());
+            rule.setCreateTime(new Date());
+            rule.setUpdateTime(new Date());
+            rule.setCreateUser(auditPersion);
+            int  falg = settlementRuleInfoMapper.insertSelective(rule);
+
+            SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
+            settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(ruleNumber);
+            List<SettlementMethodInfo> settlementMethodInfos = settlementMethodInfoMapper.selectByExample(settlementMethodInfoExample);
+
+            for (SettlementMethodInfo settlementMethodInfo : settlementMethodInfos) {
+
+                settlementMethodInfo.setId(null);
+                settlementMethodInfo.setRuleCode(rule.getRuleNumber());
+                settlementMethodInfoMapper.insertSelective(settlementMethodInfo);
+            }
             if(falg > 0 ){
                 return true;
             }else{
@@ -136,7 +197,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             //翻译
             rule.setFeeName(paream.get(rule.getFeeName()));
             SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
-            settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(rule.getId().toString());
+            settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(rule.getRuleNumber());
             List<SettlementMethodInfo> settlementMethodInfos = settlementMethodInfoMapper.selectByExample(settlementMethodInfoExample);
             SpringBeanUtil.copy(rule,settlementRuleVO);
             settlementRuleVO.setSettlementMethodInfos(settlementMethodInfos);
@@ -144,7 +205,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         //获取 审批信息
         PcAuditInfoExample autit = new PcAuditInfoExample();
-        autit.createCriteria().andContractNumberEqualTo(ruleNumber).andAuditTypeEqualTo("4");
+        autit.createCriteria().andContractNumberEqualTo(ruleNumber).andAuditTypeEqualTo("5");
         List<PcAuditInfo>  auList =  pcAuditInfoMapper.selectByExample(autit);
         settlementRuleVO.setAuditInfo(auList);
         return settlementRuleVO;
@@ -275,16 +336,18 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             if (settlementRuleInfo == null) {
                 return false;
             }
+            recordT.setStatus(auditStatus);
             if (settlementRuleInfo.getStatus().equals(SettlementStatus.CANDecline.getCode())) {
 
                 if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
 
                  recordT.setStatus(SettlementStatus.AuditCAN.getCode());
                 } else {
-                    recordT.setStatus(auditStatus);
+                    recordT.setStatus(SettlementStatus.AuditPass.getCode());
                 }
-            } else {
-                recordT.setStatus(auditStatus);
+            } else if (auditStatus.equals(SettlementStatus.AuditDecline.getCode())){
+
+                recordT.setStatus(SettlementStatus.AuditCAN.getCode());
             }
             settlementRuleInfoMapper.updateByExampleSelective(recordT, example);
             return true;
@@ -294,52 +357,53 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     private void searchRef (SettlementRuleInfoExample example,SettlementRuleSEO rule) {
 
+        SettlementRuleInfoExample.Criteria criteria  = example.createCriteria();
+
         if(!StringUtils.isBlank(rule.getRuleNumber())){
-            example.createCriteria().andRuleNumberLike("%"+rule.getRuleNumber()+"%");
+            criteria.andRuleNumberLike("%"+rule.getRuleNumber()+"%");
         }
         if(!StringUtils.isBlank(rule.getRuleName())){
-            example.createCriteria().andRuleNameLike("%"+rule.getRuleName()+"%");
+            criteria.andRuleNameLike("%"+rule.getRuleName()+"%");
         }
         if(!StringUtils.isBlank(rule.getCreateUser())){
-            example.createCriteria().andCreateUserLike("%"+rule.getCreateUser()+"%");
+            criteria.andCreateUserLike("%"+rule.getCreateUser()+"%");
         }
         if(rule.getStartTime() !=null && !StringUtils.isBlank(rule.getStartTime()+"")){
-            example.createCriteria().andStartTimeGreaterThanOrEqualTo(rule.getStartTime());
+            criteria.andStartTimeGreaterThanOrEqualTo(rule.getStartTime());
         }
         if(rule.getEndTime() != null && !StringUtils.isBlank(rule.getEndTime()+"")){
-            example.createCriteria().andEndTimeLessThanOrEqualTo(rule.getEndTime());
+            criteria.andEndTimeLessThanOrEqualTo(rule.getEndTime());
         }
 
         if(!StringUtils.isEmpty(rule.getRuleStatus())){
             //1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
-
             // 生效
             if(SettlementStatus.Effective.getCode().equals(rule.getRuleStatus())){
-                example.createCriteria()
+                criteria
                         .andStatusEqualTo(SettlementStatus.AuditPass.getCode())
                         .andStartTimeLessThanOrEqualTo(new Date())
                         .andEndTimeGreaterThanOrEqualTo(new Date());
             // 失效
             }else if(SettlementStatus.Invalid.getCode().equals(rule.getRuleStatus())){
-                example.createCriteria()
+                criteria
                         .andEndTimeLessThan(new Date());
             // 待生效
             }else if(SettlementStatus.EffectiveWait.getCode().equals(rule.getRuleStatus())){
-                example.createCriteria()
+                criteria
                         .andStartTimeGreaterThan(new Date())
                         .andStatusEqualTo(SettlementStatus.AuditPass.getCode());
             // 已作废
             }else if(SettlementStatus.AuditCAN.getCode().equals(rule.getRuleStatus())){
-                example.createCriteria()
+                criteria
                         .andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
             // 申请作废
             }else if (SettlementStatus.CANDecline.getCode().equals(rule.getRuleStatus())){
-                example.createCriteria()
+                criteria
                         .andStatusEqualTo(SettlementStatus.CANDecline.getCode());
 
             // 待审核
             }else if (SettlementStatus.AuditWait.getCode().equals(rule.getRuleStatus())){
-                example.createCriteria()
+                criteria
                         .andStatusEqualTo(SettlementStatus.AuditWait.getCode());
             }
         }
@@ -349,6 +413,40 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     public List<SettlementRuleContractVO> getSettlementRuleContract(SettlementRuleInfo settlementRuleInfo) {
 
         return settlementRuleInfoMapper.selectBycontract(settlementRuleInfo);
+    }
+
+    @Override
+    public boolean updateSettlementRule(SettlementRuleVO settlementRuleVO) {
+
+        int flag = 0;
+        if (settlementRuleVO != null && StringUtils.isNotBlank(settlementRuleVO.getRuleNumber())) {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            String auditPersion = userVO == null ? "" : userVO.getUsername();
+
+            SettlementRuleInfoExample example = new SettlementRuleInfoExample();
+            example.createCriteria().andRuleNumberEqualTo(settlementRuleVO.getRuleNumber());
+            SettlementRuleInfo record = new SettlementRuleInfo();
+
+            SpringBeanUtil.copy(settlementRuleVO,record);
+            record.setCreateTime(new Date());
+            record.setUpdateTime(new Date());
+            record.setCreateUser(auditPersion);
+            // 新增未待审核
+            record.setStatus(SettlementStatus.AuditWait.getCode());
+            record.setRuleNumber(getRuleNumber());
+            flag = settlementRuleInfoMapper.updateByExampleSelective(record,example);
+            settlementRuleVO.getSettlementMethodInfos().forEach(e -> {
+
+                SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
+                settlementMethodInfoExample.createCriteria().andIdEqualTo(e.getId());
+                e.setRuleCode(record.getRuleNumber());
+                settlementMethodInfoMapper.updateByExampleSelective(e,settlementMethodInfoExample);
+            });
+            if (flag > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -409,13 +507,13 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         }else if (SettlementRuleStatus.NaturalMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
 
-            billCycleResult.setCycleTime(String.valueOf(settlementRuleInfo.getCycleStime().getDay()));
+            billCycleResult.setCycleTime(settlementRuleInfo.getCycleStime()+"--"+settlementRuleInfo.getCycleStime());
             method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
 //            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
         }
         else if (SettlementRuleStatus.NextMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
 
-            billCycleResult.setCycleTime(String.valueOf(settlementRuleInfo.getCycleStime().getDay()));
+            billCycleResult.setCycleTime(settlementRuleInfo.getCycleStime()+"--"+settlementRuleInfo.getCycleStime());
             method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
 //            billCycleResult.setSettlementMethod(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
         } else if (SettlementRuleStatus.WeekSettlement.getCode().equals(settlementRuleInfo.getCycleType())){

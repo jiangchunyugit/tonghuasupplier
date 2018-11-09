@@ -44,7 +44,7 @@ public class SettlementRuleController extends AbsBaseController {
      * @return
      */
     @ApiOperation(value = "结算规则列表", notes = "根据一定条件获取分页结算规则记录")
-    @GetMapping("/queryRulePage")
+    @PostMapping("/queryRulePage")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "分页查询结算规则")
     public MyRespBundle<SystemPermission> queryRulePage(SettlementRuleSEO settlementRuleSEO){
@@ -98,6 +98,19 @@ public class SettlementRuleController extends AbsBaseController {
         BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
 
         boolean  result= settlementRuleService.insertOrupdateSettlementRule(settlementRuleVO);
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    @ApiOperation(value = "查看作废---提交结算规则", notes = "编辑结算规则")
+    @PostMapping("/updateRule")
+    @MyRespBody
+    // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
+    public MyRespBundle<String> updateRule(@ApiParam("结算规则信息")   SettlementRuleVO settlementRuleVO){
+
+        BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
+
+        boolean  result= settlementRuleService.updateSettlementRule(settlementRuleVO);
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }

@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
+import java.util.Map;
 
 @ApiModel("公司详情")
 public class CompanyDetailsVO {
@@ -18,7 +19,7 @@ public class CompanyDetailsVO {
      * 结算比例信息
      */
     @ApiModelProperty(value = "结算比例信息")
-    private List<ContractTerms> contractTermsList;
+    private Map<String, Object> contractTermsList;
 
     public CompanySubmitVo getCompanySubmitVO() {
         return companySubmitVO;
@@ -28,11 +29,11 @@ public class CompanyDetailsVO {
         this.companySubmitVO = companySubmitVO;
     }
 
-    public List<ContractTerms> getContractTermsList() {
+    public Map<String, Object> getContractTermsList() {
         return contractTermsList;
     }
 
-    public void setContractTermsList(List<ContractTerms> contractTermsList) {
+    public void setContractTermsList(Map<String, Object> contractTermsList) {
         this.contractTermsList = contractTermsList;
     }
 }

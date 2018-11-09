@@ -43,7 +43,7 @@ public interface CompanySubmitService {
      * 
      */
     
-    String  auditContract(PcAuditInfo pcAuditInfo);
+    String  auditContract(PcAuditInfoVO pcAuditInfo);
 
     /**
      * 公司列表
@@ -99,7 +99,7 @@ public interface CompanySubmitService {
      * @param companyId
      * @return
      */
-    String joinSuccess(String companyId);
+    boolean signSuccess(String companyId);
 
     /**
      * 是否可以编辑
