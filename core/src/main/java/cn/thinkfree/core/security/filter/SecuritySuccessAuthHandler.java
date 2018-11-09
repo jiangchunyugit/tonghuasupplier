@@ -7,7 +7,6 @@ import cn.thinkfree.core.event.model.UserLoginAfter;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.utils.JwtUtils;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,12 +16,10 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,7 +63,6 @@ public class SecuritySuccessAuthHandler
         userModel.put("createTime",(user.getCreateTime() !=null) ?user.getCreateTime().getTime() : null);
         result.put("userModel",userModel);
         String token = jwtUtils.generateToken(user);
-        System.out.println(token);
         result.put("token","Bearer "+token);
 
         sendAjaxResult(request,response,result);

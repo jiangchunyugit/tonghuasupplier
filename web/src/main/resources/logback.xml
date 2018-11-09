@@ -24,13 +24,13 @@
 	</appender>
 
 
-	<logger name="org.springframework" level="DEBUG" />
-    <logger name="org.springframework.web" level="DEBUG" />
-	<logger name="druid.sql.Connection" level="INFO" />
-    <logger name="org.mybatis" level="DEBUG"/>
-	<logger name="org.springframework.jms" level="trace" additivity="false"/>
-	<logger name="org.apache.activemq" level="trace" additivity="false" />
-	<logger name="cn.thinkfree" level="DEBUG"/>
+	<!--<logger name="org.springframework" level="DEBUG" />-->
+    <!--<logger name="org.springframework.web" level="DEBUG" />-->
+	<!--<logger name="druid.sql.Connection" level="INFO" />-->
+    <!--<logger name="org.mybatis" level="DEBUG"/>-->
+	<!--<logger name="org.springframework.jms" level="trace" additivity="false"/>-->
+	<!--<logger name="org.apache.activemq" level="trace" additivity="false" />-->
+	<!--<logger name="cn.thinkfree" level="DEBUG"/>-->
 
 	<root level="DEBUG">
 		<appender-ref ref="Console" />

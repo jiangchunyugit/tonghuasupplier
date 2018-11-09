@@ -3,8 +3,13 @@ package cn.thinkfree.service.approvalflow.impl;
 import cn.thinkfree.database.mapper.AfConfigSchemeMapper;
 import cn.thinkfree.database.model.AfConfigScheme;
 import cn.thinkfree.database.model.AfConfigSchemeExample;
+import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
+import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,10 +28,14 @@ import java.util.List;
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(AfConfigSchemeServiceImpl.class);
+
     @Resource
     private AfConfigSchemeMapper configSchemeMapper;
     @Resource
     private NewOrderUserService orderUserService;
+    @Resource
+    private NewOrderService orderService;
 
 
     @Override
@@ -77,8 +86,16 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
 
     @Override
     public String findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId) {
-        String schemeNo = "";
-        // TODO
+        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
+        if (constructionOrder == null) {
+            LOGGER.error("未查询到订单，projectNo：{}", projectNo);
+            throw new RuntimeException();
+        }
+        String schemeNo = constructionOrder.getSchemeNo();
+        if (StringUtils.isEmpty(schemeNo)) {
+            LOGGER.error("项目未配置审批方案，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
         String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
         AfConfigScheme configScheme = findByConfigNoAndSchemeNoAndRoleId(configNo, schemeNo, roleId);
         return configScheme != null ? configScheme.getConfigSchemeNo() : null;
@@ -87,9 +104,9 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
     @Override
     public AfConfigScheme findByConfigNoAndSchemeNoAndRoleId(String configNo, String schemeNo, String roleId) {
         AfConfigSchemeExample example = new AfConfigSchemeExample();
-        example.createCriteria().andConfigNoEqualTo(configNo).andSchemeNoEqualTo(schemeNo).andFirstRoleIdEqualTo(roleId);
-
-        return null;
+        example.createCriteria().andConfigNoEqualTo(configNo).andSchemeNoEqualTo(schemeNo).andFirstRoleIdEqualTo(roleId).andUsableEqualTo(1);
+        List<AfConfigScheme> configSchemes = configSchemeMapper.selectByExample(example);
+        return configSchemes != null && configSchemes.size() > 0 ? configSchemes.get(0) : null;
     }
 
     private void insert(AfConfigScheme configScheme) {

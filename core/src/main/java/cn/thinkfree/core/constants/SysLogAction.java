@@ -11,7 +11,8 @@ public enum  SysLogAction {
     QUERY(3,"查询"),
     DEL(4,"删除"),
     CHANGE_STATE(5,"改变状态"),
-    EDIT(6,"编辑");
+    EDIT(6,"编辑"),
+    GRANT(7,"授予");
 
     public final String mes;
     public final Integer code;
@@ -19,4 +20,6 @@ public enum  SysLogAction {
         this.code = code;
         this.mes = mes;
     }
+
+
 }

@@ -49,7 +49,7 @@
 
     <select id="findPhoneAll" resultType="java.lang.String">
 
-        select phone from user_register
+        select phone from user_register where is_delete = 0
     </select>
 
     <insert id="insertOnlyONe" parameterType="cn.thinkfree.database.model.UserRegister">

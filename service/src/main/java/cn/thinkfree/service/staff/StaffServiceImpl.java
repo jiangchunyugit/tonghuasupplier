@@ -11,7 +11,6 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.UserNoUtils;
-import com.edb.util.PSQLException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +25,6 @@ import java.util.List;
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
 import cn.thinkfree.database.mapper.PreProjectUserRoleMapper;
 import cn.thinkfree.database.vo.UserVO;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 
 
 @Service
@@ -81,7 +79,6 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
     public String insetCompanyUser(CompanyUserSet companyUserSet) {
         //判断输入的手机号码是否已经注册过
         List<String> phones = companyUserSetMapper.listAlreadyUsedPhone();
-        // TODO 临时增加业主手机号判断
         phones.addAll(consumerSetMapper.listAlreadyUsedPhone());
         boolean flag = phones.contains(companyUserSet.getPhone());
         if(flag){
@@ -235,7 +232,7 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
      * @return
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public boolean updateIsJob(String userId){
         //修改注册表is_delete
         UserRegister userRegister = new UserRegister();

@@ -6,6 +6,7 @@ import cn.thinkfree.database.model.UserLoginLog;
 import cn.thinkfree.service.user.UserService;
 import com.google.common.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -34,6 +35,9 @@ public class MyEventListener {
     public void init(){
         MyEventBus.getInstance().register(this);
     }
+    
+   
+
 
 
 }
