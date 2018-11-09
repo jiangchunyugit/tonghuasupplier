@@ -81,13 +81,11 @@ public class AppProjectController {
         return newProjectService.cancleOrder(orderNo, projectNo, userId, cancelReason);
     }
 
-    @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
+    /*@RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
     @ApiOperation(value = "APP-确认资料")
-    public MyRespBundle<String> confirmVolumeRoomData(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ") String projectNo,
-            @RequestParam(name = "category") @ApiParam(name = "category", value = "项目编号,测试请用 ") Integer category) {
-        return newProjectService.confirmVolumeRoomData(projectNo, category);
-    }
+    public MyRespBundle<String> confirmVolumeRoomData( @ApiParam(name = "dataVo", value = "确认资料 ") DataVo dataVo) {
+        return newProjectService.confirmVolumeRoomData(dataVo);
+    }*/
 
     @RequestMapping(value = "getProjectUsers", method = RequestMethod.POST)
     @ApiOperation("批量获取人员信息")
@@ -121,13 +119,13 @@ public class AppProjectController {
     }
 
 
-    @RequestMapping(value = "remindPay",method = RequestMethod.POST)
+    @RequestMapping(value = "remindPay", method = RequestMethod.POST)
     @ApiOperation(value = "提醒支付量房费")
     public MyRespBundle<String> remindPay(
             @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号 测试用:1223098338391") String projectNo,
             @RequestParam("ownerId") @ApiParam(name = "ownerId", value = "业主id 测试用:123456") String ownerId,
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户id 测试用: 123567") String userId){
-        return newProjectService.remindPay(projectNo,ownerId,userId);
+            @RequestParam("userId") @ApiParam(name = "userId", value = "用户id 测试用: 123567") String userId) {
+        return newProjectService.remindPay(projectNo, ownerId, userId);
     }
 
 

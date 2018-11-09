@@ -80,7 +80,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
         List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configSchemeNo, allRoles);
         if (approvalRoles == null || approvalRoles.size() < 1) {
-            // TODO
+            LOGGER.error("未查询到审批角色信息，configSchemeNo：{}", configSchemeNo);
+            throw new RuntimeException();
         }
 
         List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);

@@ -4,7 +4,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import com.github.pagehelper.PageInfo;
-
+import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 
 public interface ConstructionOrderOperate {
 
@@ -22,4 +22,6 @@ public interface ConstructionOrderOperate {
      * @return
      **/
     MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(int pageNum, int pageSize, String cityName);
+
+    MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo);
 }
