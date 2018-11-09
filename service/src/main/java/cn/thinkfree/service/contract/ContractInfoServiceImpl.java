@@ -322,7 +322,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 	@Override
-	public String createContractDoc( String contractNumber )
+	public String createContractDoc( String contractNumber)
 	{
 		String	url	= "";                                                                   /* 上传服务器返回地址 */
 		SimpleDateFormat sdf	= new SimpleDateFormat( "yyyy-MM-dd" );
@@ -364,7 +364,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		{
 			try {
-				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
+				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "0", root );
 				/* 上传 */
 				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
 			} catch (Exception e) {
@@ -641,7 +641,64 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		}
 		return(false);
 	}
+	
+	@Transactional
+	@Override
+	public boolean createOrderContract(String orderNumber) {
+		try {
+			// 订单合同
+			OrderContractExample record = new OrderContractExample();
+			record.createCriteria().andOrderNumberEqualTo(orderNumber);
+			List<OrderContract> list = orderContractMapper.selectByExample(record);
+			OrderContract contrat = list.get(0);
 
+			Map<String, Object> root = new HashMap<>();
+			// 查询合同信息
+			ContractTermsExample exp = new ContractTermsExample();
+			exp.createCriteria().andContractNumberEqualTo(orderNumber);
+			List<ContractTerms> listTerm = pcContractTermsMapper.selectByExample(exp);
+			for (int i = 0; i < list.size(); i++) {
+				root.put(listTerm.get(i).getContractDictCode(), listTerm.get(i).getContractValue());
+			}
+
+			String pdfUrl = "";
+
+			if (contrat.getContractType().equals("02")) {
+
+				try {
+					String filePath = FreemarkerUtils.savePdf(filePathDir + orderNumber, "2", root);
+					/* 上传 */
+					pdfUrl = PdfUplodUtils.upload(filePath, fileUploadUrl);
+				} catch (Exception e) {
+					e.printStackTrace();
+					printErrorMes("生成pdf合同发生错误", e.getMessage());
+				}
+
+			} else if (contrat.getContractType().equals("03")) {
+
+				try {
+					String filePath = FreemarkerUtils.savePdf(filePathDir + orderNumber, "3", root);
+					/* 上传 */
+					pdfUrl = PdfUplodUtils.upload(filePath, fileUploadUrl);
+				} catch (Exception e) {
+					e.printStackTrace();
+					printErrorMes("生成pdf合同发生错误", e.getMessage());
+				}
+			}
+			OrderContract recordu = new OrderContract();
+			recordu.setConractUrlPdf(pdfUrl);
+			OrderContractExample example = new OrderContractExample();
+			example.createCriteria().andOrderNumberEqualTo(orderNumber);
+			orderContractMapper.updateByExampleSelective(recordu, example);
+		} catch (Exception e) {
+			printErrorMes("生成订单合同{}",orderNumber,"系统异常 {}"+e.getMessage());
+			return false;
+		}
+		return true;
+	}
+
+	
+	
 
 	@Override
 	public String getPdfUrlByOrderNumber( String orderNumber )
@@ -655,7 +712,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		return( (list != null && list.size() > 0) ? list.get( 0 ).getConractUrlPdf() : "");
 	}
 
-
+	
 	/**
 	 * 获取6-10 的随机位数数字
 	 *
@@ -892,4 +949,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		
 		return resMap;
 	}
+
+
+	
+
+
 }
