@@ -258,9 +258,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
             schedulingCriteria.andProjectNoEqualTo(projectNo);
             schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-            List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
-            ProjectScheduling scheduling = projectSchedulings.get(0);
-            projectScheduling.setDelay(scheduling.getDelay() + 1);
+            //修改延期时间
+            projectScheduling.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingDetail.getPlanEndTime(),new Date()));
             int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
             if (result == 0) {
                 return "修改延期时间失败!";

@@ -123,24 +123,26 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     /**
      * 关联小排期与大排期
      *
-     * @param projectSmallSchedulingVO
+     * @param projectSmallSchedulingVOList
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String updateSmallScheduling(ProjectSmallSchedulingVO projectSmallSchedulingVO) {
-        if (projectSmallSchedulingVO.getSort() == null || projectSmallSchedulingVO.getParentSort() == null) {
-            return "请选择施工阶段!!";
-        }
-        ProjectSmallScheduling projectSmallScheduling = new ProjectSmallScheduling();
-        projectSmallScheduling.setParentSort(projectSmallSchedulingVO.getParentSort());
-        ProjectSmallSchedulingExample example = new ProjectSmallSchedulingExample();
-        ProjectSmallSchedulingExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-        criteria.andSortEqualTo(projectSmallSchedulingVO.getSort());
-        int result = projectSmallSchedulingMapper.updateByExampleSelective(projectSmallScheduling, example);
-        if (result != Scheduling.INSERT_SUCCESS.getValue()) {
-            return "操作失败!";
+    public String updateSmallScheduling(List<ProjectSmallSchedulingVO> projectSmallSchedulingVOList) {
+        for (ProjectSmallSchedulingVO projectSmallSchedulingVO:projectSmallSchedulingVOList){
+            if (projectSmallSchedulingVO.getSort() == null || projectSmallSchedulingVO.getParentSort() == null) {
+                return "请选择施工阶段!!";
+            }
+            ProjectSmallScheduling projectSmallScheduling = new ProjectSmallScheduling();
+            projectSmallScheduling.setParentSort(projectSmallSchedulingVO.getParentSort());
+            ProjectSmallSchedulingExample example = new ProjectSmallSchedulingExample();
+            ProjectSmallSchedulingExample.Criteria criteria = example.createCriteria();
+            criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+            criteria.andSortEqualTo(projectSmallSchedulingVO.getSort());
+            int result = projectSmallSchedulingMapper.updateByExampleSelective(projectSmallScheduling, example);
+            if (result != Scheduling.INSERT_SUCCESS.getValue()) {
+                return "操作失败!";
+            }
         }
         return "操作成功";
     }
@@ -198,22 +200,24 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     /**
      * 修改基础大排期
      *
-     * @param projectBigSchedulingVO
+     * @param projectBigSchedulingVOList
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
-        ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
-        projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getCheck());
-        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
-        ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
-        criteria.andCompanyIdEqualTo(projectBigSchedulingVO.getCompanyId());
-        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-        criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
-        int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
-        if (i != Scheduling.INSERT_SUCCESS.getValue()) {
-            return RespData.error("操作失败!");
+    public MyRespBundle<String> updateBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
+        for (ProjectBigSchedulingVO projectBigSchedulingVO:projectBigSchedulingVOList){
+            ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+            projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getCheck());
+            ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+            ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
+            criteria.andCompanyIdEqualTo(projectBigSchedulingVO.getCompanyId());
+            criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+            criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
+            int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
+            if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+                return RespData.error("操作失败!");
+            }
         }
         return RespData.success();
     }
