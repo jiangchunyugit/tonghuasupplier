@@ -55,8 +55,8 @@ import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.database.vo.contract.ContractCostChildVo;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
+import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyType;
@@ -101,6 +101,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	CompanyPaymentMapper companyPaymentMapper;
+	
+	@Autowired
+	CompanyApplyService companyApplyService;
 
 	@Value( "${custom.cloud.fileUpload}" )
 	private String fileUploadUrl;
@@ -492,6 +495,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public boolean insertContractClause( String contractNumber, String companyId, ContractClauseVO contractClausevo )
 	{
+		
+	try {
+		
+	
 		if ( contractClausevo.getParamMap() != null )
 		{
 			Iterator<Map.Entry<String, String> > entries = contractClausevo.getParamMap().entrySet().iterator();
@@ -544,7 +551,23 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 			}
 		}
-		return(true);
+		
+		//修改合同状态
+		ContractInfo record = new ContractInfo();
+		record.setContractStatus(ContractStatus.WaitAudit.shortVal());
+		record.setCompanyId(companyId);
+		record.setContractNumber(contractNumber);
+		ContractInfoExample example = new ContractInfoExample();
+		example.createCriteria().andCompanyIdEqualTo(companyId).
+		andContractNumberEqualTo(contractNumber);
+		cxcontractInfoMapper.updateByExampleSelective(record, example);
+		//修改公司状态
+		companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal());
+	} catch (Exception e) {
+		printErrorMes("设置合同条款服务异常 {}"+ e.getMessage());
+		return false;
+	}
+		return  true;
 	}
 
 

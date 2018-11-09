@@ -27,7 +27,7 @@ public interface MyContractInfoMapper {
 	 * @author lvqidong
      *  @date 2018-09-20 
 	 */
-	@AuthAnnotation()
+	//@AuthAnnotation()
 	public  List<ContractVo>  selectContractPage(ContractSEO secVo);
 	
 	

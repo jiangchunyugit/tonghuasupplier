@@ -31,6 +31,7 @@ import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -48,6 +49,9 @@ public class ContractController extends AbsBaseController{
 	
 	@Autowired
 	ContractService contractService;
+	
+	@Autowired
+	ContractTemplateService contractTemplateService;
 	
 	/**
      * 财务审核入驻合同列表
@@ -91,7 +95,7 @@ public class ContractController extends AbsBaseController{
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
     public MyRespBundle<String> audit(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId,
-    		@ApiParam("审批状态 0 代表通过 1 拒绝 ")@RequestParam String auditStatus,
+    		@ApiParam("审批状态 1代表通过 0 拒绝 ")@RequestParam String auditStatus,
     		@ApiParam("审核成功或者失败的原因 ")@RequestParam String auditCase){
         
     	 boolean flag = contractService.auditContract(contractNumber, companyId,auditStatus,auditCase);
@@ -226,7 +230,22 @@ public class ContractController extends AbsBaseController{
     	return sendJsonData(ResultMessage.SUCCESS,flag);
     }
     
+    /**
+     * 
+     * 合同字典
+     * 
+     */
+    @ApiOperation(value = "B端--施工合同输入--吕启栋", notes = "合同字典  0 入住设计公司 1 入住装饰公司 2 设计公司C-B 3 装饰公司C-B")
+    @PostMapping("/ContractDic")
+    @MyRespBody
+    public MyRespBundle<Map<String,String>> ContractDic(
+    		@RequestParam String type){
 
+    	Map<String,String> map = contractTemplateService.queryContractDic(type);
+
+    	return sendJsonData(ResultMessage.SUCCESS,map);
+    }
+    
 
     /**
      * 
