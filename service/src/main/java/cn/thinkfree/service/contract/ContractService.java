@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.data.redis.connection.ReactiveSetCommands.SInterCommand;
+
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.ContractInfo;
@@ -12,6 +14,7 @@ import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
+import cn.thinkfree.database.vo.contract.ContractCostVo;
 
 public interface ContractService {
 
@@ -155,4 +158,24 @@ public interface ContractService {
        * @return list 
        */
       List<ContractInfo>  getEnterContractBycompanyId(String companyId);
+      
+      
+      /**
+       * 根据 合同编写 提供合同设置比例值
+       * @param  contractNumber
+       * @retuen list 
+       * @author lvqidong
+       */
+      
+      List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber);
+      
+      
+    /**
+     * 根据公司类型 获取费用名称 和 code
+     * @
+     * type 0 设计 1装饰
+     * 
+     */
+     public Map<String,String> getCostNames(String type);
+      
 }
