@@ -93,7 +93,7 @@ public class HomeStylerServiceImpl extends AbsLogPrinter implements HomeStylerSe
     }
 
     private String convertUrl(String url){
-//        url ="https://3d.homestyler.com/cn/?assetId=3a477ee0-5210-4c26-9707-0df911104a87";
-        return url.replace(templateUrl,"");
+
+        return findCaseID(url.replace(templateUrl,""));
     }
 }

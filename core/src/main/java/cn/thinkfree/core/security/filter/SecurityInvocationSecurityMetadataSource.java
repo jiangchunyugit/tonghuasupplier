@@ -2,7 +2,6 @@ package cn.thinkfree.core.security.filter;
 
 import cn.thinkfree.core.security.dao.SecurityResourceDao;
 import cn.thinkfree.core.security.filter.util.SecurityUrlTrustHolder;
-import cn.thinkfree.core.security.filter.util.SecurityUserTrustListHolder;
 import cn.thinkfree.core.security.model.SecurityResource;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
@@ -50,6 +49,7 @@ import java.util.stream.Collectors;
 	  * @return
 	  * @throws IllegalArgumentException
 	  */
+	 @Override
 	 public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		 String url = ((FilterInvocation)object).getRequestUrl();
 		 url = url.replaceAll("/\\d{1,}","/{id}");
