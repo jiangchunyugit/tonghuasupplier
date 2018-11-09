@@ -34,6 +34,10 @@
     <result column="paid_amount" jdbcType="VARCHAR" property="paidAmount" />
     <result column="consumer_name" jdbcType="VARCHAR" property="consumerName" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="project_addr" jdbcType="VARCHAR" property="projectAddr" />
+    <result column="has_paid" jdbcType="VARCHAR" property="hasPaid" />
+    <result column="has_invoice" jdbcType="VARCHAR" property="hasInvoice" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -109,7 +113,8 @@
     id, type, from_orderid, actual_amount, integral, integral_amount, coupon, coupon_amount, 
     order_status, update_time, type_sub, company_id, project_no, order_stage, design_user_id, 
     total_amount, design_id, contract_type, style_type, construction_stage, is_end, signed_time, 
-    start_time, end_time, contract_company_id, paid_amount, consumer_name, user_id
+    start_time, end_time, contract_company_id, paid_amount, consumer_name, user_id, project_addr, 
+    has_paid, has_invoice, company_name
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.FundsOrderExample" resultMap="BaseResultMap">
     <!--
@@ -171,7 +176,8 @@
       style_type, construction_stage, is_end, 
       signed_time, start_time, end_time, 
       contract_company_id, paid_amount, consumer_name, 
-      user_id)
+      user_id, project_addr, has_paid, 
+      has_invoice, company_name)
     values (#{id,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{fromOrderid,jdbcType=VARCHAR}, 
       #{actualAmount,jdbcType=VARCHAR}, #{integral,jdbcType=VARCHAR}, #{integralAmount,jdbcType=VARCHAR}, 
       #{coupon,jdbcType=VARCHAR}, #{couponAmount,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
@@ -181,7 +187,8 @@
       #{styleType,jdbcType=VARCHAR}, #{constructionStage,jdbcType=VARCHAR}, #{isEnd,jdbcType=VARCHAR}, 
       #{signedTime,jdbcType=VARCHAR}, #{startTime,jdbcType=VARCHAR}, #{endTime,jdbcType=VARCHAR}, 
       #{contractCompanyId,jdbcType=VARCHAR}, #{paidAmount,jdbcType=VARCHAR}, #{consumerName,jdbcType=VARCHAR}, 
-      #{userId,jdbcType=VARCHAR})
+      #{userId,jdbcType=VARCHAR}, #{projectAddr,jdbcType=VARCHAR}, #{hasPaid,jdbcType=VARCHAR}, 
+      #{hasInvoice,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.FundsOrder">
     <!--
@@ -274,6 +281,18 @@
       <if test="userId != null">
         user_id,
       </if>
+      <if test="projectAddr != null">
+        project_addr,
+      </if>
+      <if test="hasPaid != null">
+        has_paid,
+      </if>
+      <if test="hasInvoice != null">
+        has_invoice,
+      </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -359,6 +378,18 @@
       </if>
       <if test="userId != null">
         #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="projectAddr != null">
+        #{projectAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="hasPaid != null">
+        #{hasPaid,jdbcType=VARCHAR},
+      </if>
+      <if test="hasInvoice != null">
+        #{hasInvoice,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -463,6 +494,18 @@
       <if test="record.userId != null">
         user_id = #{record.userId,jdbcType=VARCHAR},
       </if>
+      <if test="record.projectAddr != null">
+        project_addr = #{record.projectAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hasPaid != null">
+        has_paid = #{record.hasPaid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.hasInvoice != null">
+        has_invoice = #{record.hasInvoice,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyName != null">
+        company_name = #{record.companyName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -501,7 +544,11 @@
       contract_company_id = #{record.contractCompanyId,jdbcType=VARCHAR},
       paid_amount = #{record.paidAmount,jdbcType=VARCHAR},
       consumer_name = #{record.consumerName,jdbcType=VARCHAR},
-      user_id = #{record.userId,jdbcType=VARCHAR}
+      user_id = #{record.userId,jdbcType=VARCHAR},
+      project_addr = #{record.projectAddr,jdbcType=VARCHAR},
+      has_paid = #{record.hasPaid,jdbcType=VARCHAR},
+      has_invoice = #{record.hasInvoice,jdbcType=VARCHAR},
+      company_name = #{record.companyName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -594,6 +641,18 @@
       <if test="userId != null">
         user_id = #{userId,jdbcType=VARCHAR},
       </if>
+      <if test="projectAddr != null">
+        project_addr = #{projectAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="hasPaid != null">
+        has_paid = #{hasPaid,jdbcType=VARCHAR},
+      </if>
+      <if test="hasInvoice != null">
+        has_invoice = #{hasInvoice,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        company_name = #{companyName,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -629,7 +688,11 @@
       contract_company_id = #{contractCompanyId,jdbcType=VARCHAR},
       paid_amount = #{paidAmount,jdbcType=VARCHAR},
       consumer_name = #{consumerName,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=VARCHAR}
+      user_id = #{userId,jdbcType=VARCHAR},
+      project_addr = #{projectAddr,jdbcType=VARCHAR},
+      has_paid = #{hasPaid,jdbcType=VARCHAR},
+      has_invoice = #{hasInvoice,jdbcType=VARCHAR},
+      company_name = #{companyName,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
