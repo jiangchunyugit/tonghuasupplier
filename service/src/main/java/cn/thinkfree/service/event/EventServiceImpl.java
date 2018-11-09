@@ -1,7 +1,10 @@
 package cn.thinkfree.service.event;
 
 import cn.thinkfree.core.event.AbsBaseEvent;
+import cn.thinkfree.core.event.BaseEvent;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -9,9 +12,15 @@ import javax.annotation.Resource;
 @Service
 public class EventServiceImpl implements EventService {
 
+    private ApplicationEventPublisher applicationEventPublisher;
     //上下文对象
-    @Resource
-    private ApplicationContext applicationContext;
+    @Autowired
+    public EventServiceImpl(ApplicationEventPublisher applicationEventPublisher) {
+
+//        super(applicationEventPublisher);
+        System.out.println(applicationEventPublisher);
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 
     /**
      * 发布事件
@@ -20,9 +29,9 @@ public class EventServiceImpl implements EventService {
      * @return
      */
     @Override
-    public String publish(AbsBaseEvent event) {
+    public String publish(BaseEvent event) {
         //TODO 事件追溯相关操作
-        applicationContext.publishEvent(event);
+        applicationEventPublisher.publishEvent(event);
         return "SUCCESS";
     }
 }

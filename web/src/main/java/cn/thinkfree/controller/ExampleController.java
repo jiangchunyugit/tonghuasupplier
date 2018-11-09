@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.event.sync.CompanyJoin;
+import cn.thinkfree.service.event.EventService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -65,7 +67,8 @@ public class ExampleController extends AbsBaseController {
     @Autowired
     RestTemplate restTemplate;
     
-  
+    @Autowired
+    EventService eventService;
 
 
    @Autowired
@@ -204,6 +207,11 @@ public class ExampleController extends AbsBaseController {
 //    	   contractService.createOrderContract("11233333", "11111122", "1");
 //    	 String url =  contractService.getPdfUrlByOrderNumber("111111");
         contractService.createContractDoc("HT2018080710405900001");
+    }
+
+    @GetMapping("/test")
+    public void test(){
+        eventService.publish(new CompanyJoin("BD2018080710405900001"));
     }
 
 }

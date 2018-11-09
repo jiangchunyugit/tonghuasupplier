@@ -1,6 +1,7 @@
 package cn.thinkfree.service.event;
 
 import cn.thinkfree.core.event.AbsBaseEvent;
+import cn.thinkfree.core.event.BaseEvent;
 
 /**
  * 事件服务
@@ -12,5 +13,5 @@ public interface  EventService {
      * @param event
      * @return
      */
-    String publish( AbsBaseEvent event);
+    String publish( BaseEvent event);
 }

@@ -2,7 +2,7 @@ package cn.thinkfree.core.event;
 
 import cn.thinkfree.core.model.BaseModel;
 
-public abstract class AbsBaseEvent extends BaseModel {
+public abstract class AbsBaseEvent extends BaseModel implements BaseEvent {
 
 
     /**

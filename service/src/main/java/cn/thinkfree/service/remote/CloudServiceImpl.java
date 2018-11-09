@@ -45,6 +45,9 @@ public class CloudServiceImpl implements CloudService {
 
     @Value("${custom.cloud.senEmail}")
     String sendEMail;
+
+    @Value("${custom.cloud.syncMerchantUrl}")
+    String syncMerchantUrl;
     
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -116,6 +119,15 @@ public class CloudServiceImpl implements CloudService {
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
+    private RemoteResult<String> invokeRemoteMethodForJson(String url, HttpEntity<String> param) {
+        String result  = restTemplate.postForObject(url, param, String.class);
+        RemoteResult remoteResult = new RemoteResult();
+        System.out.println(result);
+//        result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
+//        return result;
+        return null;
+    }
+
 
     private MultiValueMap<String, Object> initParam() {
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
@@ -182,18 +194,26 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO) {
-        MultiValueMap<String, Object> param = initParam();
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
 
         param.add("address", syncTransactionVO.getAddress());
         param.add("code",syncTransactionVO.getCode());
-        param.add("cwgsdm",syncTransactionVO.getCwgsdm());
+        param.add("cwgsdm",105); // syncTransactionVO.getCwgsdm()
         param.add("gssh",syncTransactionVO.getGssh());
         param.add("jc",syncTransactionVO.getJc());
         param.add("name",syncTransactionVO.getName());
         param.add("vendorCode",syncTransactionVO.getVendorCode());
-        RemoteResult<String> result = null;
+        syncTransactionVO.setCwgsdm(105);
+        String body = new Gson().toJson(syncTransactionVO);
+        System.out.println(body);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        RemoteResult<String > result = null;
         try {
-            result = invokeRemoteMethod(sendNotice,param);
+            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
+//            result = invokeRemoteMethod(syncMerchantUrl,param);
         }catch (Exception e){
             e.printStackTrace();
             return buildFailResult();
