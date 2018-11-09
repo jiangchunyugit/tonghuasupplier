@@ -9,10 +9,12 @@ import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
@@ -75,12 +77,15 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Autowired
 	ContractInfoMapper contractInfoMappers;
 
+	@Autowired
+	ContractService contractService;
+
 	final static String TARGET = "static/";
 
 
 
 	@Override
-	public CompanyDetailsVO companyDetails(String contractNumber, String companyId) {
+	public CompanyDetailsVO companyDetails(String contractNumber, String companyId, String auditType) {
 		CompanyDetailsVO companyDetailsVO = new CompanyDetailsVO();
 		//公司详情
 		CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
@@ -94,32 +99,17 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         ContractVo	newVo = contractInfoMapper.selectContractBycontractNumber( vo );              /* 合同信息 */
         CompanySubmitVo companyInfo	= companySubmitService.findCompanyInfo( (newVo.getCompanyId() ) );      /* 公司信息 */
         /* 合同详情 */
-        ContractTermsExample exp = new ContractTermsExample();
-        exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-        List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
-        for ( int i = 0; i < list.size(); i++ )
-        {
-            root.put( list.get( i ).getContractDictCode(), list.get( i ).getContractValue() );
-        }
-        /* 查询结算规则 */
-        ContractTermsChildExample example = new ContractTermsChildExample();
-        example.createCriteria().andCompanyIdEqualTo( (newVo.getCompanyId() ) ).andContractNumberEqualTo( contractNumber );
-        List<ContractTermsChild> childList	= contractTermsChildMapper.selectByExample( example );
-        Map<Long, List<ContractTermsChild> >	map2		= new LinkedHashMap<Long, List<ContractTermsChild> >();
-        CommonGroupUtils.listGroup2Map( childList, map2, ContractTermsChild.class, "cost_type" ); /* 根据类型分组 */
-        if ( childList != null )
-        {
-            Map<String, List<ContractTermsChild> > ma = new HashMap<>();
-            for ( int i = 0; i < childList.size(); i++ )
-            {
-                ContractTermsChildExample example1 = new ContractTermsChildExample();
-                example1.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber )
-                        .andCostTypeEqualTo( childList.get( i ).getCostType() );
-                List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample( example1 );
-                root.put( childList.get( i ).getCostType(), childListr );
-            }
-        }
-        companyDetailsVO.setContractTermsList(root);
+		List<ContractCostVo> contractCostVos = contractService.queryListContractCostVoBycontractNumber(contractNumber);
+        companyDetailsVO.setContractTermsList(contractCostVos);
+
+        //审批信息
+		PcAuditInfoExample autit = new PcAuditInfoExample();
+		autit.createCriteria().andCompanyIdEqualTo(companyId)
+				.andContractNumberEqualTo(contractNumber).andAuditTypeEqualTo(auditType);
+
+		autit.setOrderByClause("create_time desc");
+		List<PcAuditInfo>  auList =  pcAuditInfoMapper.selectByExample(autit);
+		companyDetailsVO.setPcAuditInfo(auList);
 		return companyDetailsVO;
 	}
 
@@ -404,8 +394,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         //1.更新表company_info
         int ci = updateCompanyInfo(companySubmitVo, date);
 
-        //2.插入表pc_company_financial
-        int pcf = addFinancial(companySubmitVo, date);
+        //2.更新表pc_company_financial
+        int pcf = updateFinancial(companySubmitVo, date);
 
         //3.更新表company_info_expand
         int cie = updateCompanyExpand(companySubmitVo, date);
@@ -427,11 +417,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         return companyInfoExpandMapper.updateByExampleSelective(companyInfoExpand,companyInfoExpandExample);
     }
 
-    private int addFinancial(CompanySubmitVo companySubmitVo, Date date) {
+    private int updateFinancial(CompanySubmitVo companySubmitVo, Date date) {
 
         PcCompanyFinancial pcCompanyFinancial = companySubmitVo.getPcCompanyFinancial();
         pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
-        pcCompanyFinancial.setCreateTime(date);
         pcCompanyFinancial.setUpdateTime(date);
         return pcCompanyFinancialMapper.insertSelective(pcCompanyFinancial);
     }
@@ -505,14 +494,15 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
     @Override
-    public boolean signSuccess(String companyId) {
+    public boolean signSuccess(String companyId, String contractNumber) {
 	    boolean aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal());
 
 		ContractInfo contractInfo = new ContractInfo();
 		contractInfo.setCompanyId(companyId);
+		contractInfo.setContractNumber(contractNumber);
 		contractInfo.setContractStatus(ContractStatus.Waitdeposit.shortVal());
 		ContractInfoExample example = new ContractInfoExample();
-		example.createCriteria().andCompanyIdEqualTo(companyId);
+		example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
 		int line = contractInfoMappers.updateByExampleSelective(contractInfo,example);
 		if(aLine && line > 0){
 			return true;
