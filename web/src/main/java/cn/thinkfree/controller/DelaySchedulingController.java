@@ -1,5 +1,6 @@
 package cn.thinkfree.controller;
 
+import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
@@ -11,6 +12,7 @@ import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewDelaySchedulingService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.ExcelUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -465,6 +467,15 @@ public class DelaySchedulingController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, params);
     }
 
+    @ApiOperation("设计合同管理列表接口---->")
+    @MyRespBody
+    @RequestMapping(value = "getDesignContractList", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<DesignContractVO>>> getDesignContractList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+                                                      @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
+                                                      @RequestParam(required = false) @ApiParam(value = "项目编号 1223098338391")  String projectNo){
+
+        return sendJsonData(ResultMessage.SUCCESS,newOrderUserService.getDesignContractListss(pageNum,pageSize,projectNo));
+    }
 
 
 
