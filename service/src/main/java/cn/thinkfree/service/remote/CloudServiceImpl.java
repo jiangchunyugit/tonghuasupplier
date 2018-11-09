@@ -43,7 +43,6 @@ public class CloudServiceImpl implements CloudService {
 
     @Value("${custom.cloud.senEmail}")
     String sendEMail;
-    Integer SuccessCode = 1000;
     @Value("${shanghai.smallSchedulingUrl}")
     String smallSchedulingUrl;
 	@Value("${message.remindConsumerUrl}")
