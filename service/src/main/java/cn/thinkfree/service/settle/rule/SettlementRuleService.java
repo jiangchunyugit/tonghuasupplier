@@ -79,4 +79,10 @@ public interface SettlementRuleService {
 
     List<SettlementRuleContractVO> getSettlementRuleContract(SettlementRuleInfo settlementRuleInfo);
 
+    /**
+     *
+     * 编辑作废 结算规则
+     * @return boolean
+     */
+    boolean updateSettlementRule(SettlementRuleVO settlementRuleVO);
 }
