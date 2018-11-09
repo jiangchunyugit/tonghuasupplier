@@ -113,7 +113,8 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
 
 
         }
-        return new SiteInfo("山西分公司","山西省分公司","大同分站","黎明","18848867895",
-                "liming@hotumail.com","山西分公司");
+//        return new SiteInfo("山西分公司","山西省分公司","大同分站","黎明","18848867895",
+//                "liming@hotumail.com","山西分公司");
+        return  null;
     }
 }

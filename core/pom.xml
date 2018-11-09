@@ -84,15 +84,15 @@
 
         <!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
         <!--<dependency>-->
-            <!--<groupId>com.google.zxing</groupId>-->
-            <!--<artifactId>core</artifactId>-->
-            <!--<version>3.3.3</version>-->
+        <!--<groupId>com.google.zxing</groupId>-->
+        <!--<artifactId>core</artifactId>-->
+        <!--<version>3.3.3</version>-->
         <!--</dependency>-->
         <!--&lt;!&ndash; https://mvnrepository.com/artifact/com.google.zxing/javase &ndash;&gt;-->
         <!--<dependency>-->
-            <!--<groupId>com.google.zxing</groupId>-->
-            <!--<artifactId>javase</artifactId>-->
-            <!--<version>3.3.3</version>-->
+        <!--<groupId>com.google.zxing</groupId>-->
+        <!--<artifactId>javase</artifactId>-->
+        <!--<version>3.3.3</version>-->
         <!--</dependency>-->
 
 
@@ -111,21 +111,20 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.mybatis.generator</groupId>-->
-            <!--<artifactId>mybatis-generator-core</artifactId>-->
+        <!--<groupId>org.mybatis.generator</groupId>-->
+        <!--<artifactId>mybatis-generator-core</artifactId>-->
         <!--</dependency>-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.2.35</version>
         </dependency>
- 
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.6</version>
         </dependency>
-
 
 
     </dependencies>

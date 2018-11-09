@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -71,6 +72,8 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
     @Autowired
     ProjectDocumentMapper projectDocumentMapper;
+    @Resource
+    private ProjectMapper projectMapper;
 
 
 
@@ -93,6 +96,23 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
             return new IndexProjectReportVO().init();
         }
         return indexProjectReportVO;
+    }
+
+
+    @Override
+    public Project findByProjectNo(String projectNo) {
+        ProjectExample example = new ProjectExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        return projects != null && projects.size() > 0 ? projects.get(0) : null;
+    }
+
+    @Override
+    public String getHouseType(Project project) {
+        int room = project.getHouseRoom();
+        int office = project.getHouseOffice();
+        int toilet = project.getHouseToilet();
+        return room + "室" + office + "厅" + toilet + "卫";
     }
 
     /**

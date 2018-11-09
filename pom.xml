@@ -98,19 +98,19 @@
             </dependency>
 
             <!--<dependency>-->
-                <!--<groupId>org.slf4j</groupId>-->
-                <!--<artifactId>slf4j-api</artifactId>-->
-                <!--<version>${slf4j.version}</version>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>slf4j-api</artifactId>-->
+            <!--<version>${slf4j.version}</version>-->
             <!--</dependency>-->
             <!--<dependency>-->
-                <!--<groupId>org.slf4j</groupId>-->
-                <!--<artifactId>jcl-over-slf4j</artifactId>-->
-                <!--<version>${slf4j.version}</version>-->
+            <!--<groupId>org.slf4j</groupId>-->
+            <!--<artifactId>jcl-over-slf4j</artifactId>-->
+            <!--<version>${slf4j.version}</version>-->
             <!--</dependency>-->
             <!--<dependency>-->
-                <!--<groupId>ch.qos.logback</groupId>-->
-                <!--<artifactId>logback-classic</artifactId>-->
-                <!--<version>1.3.0-alpha4</version>-->
+            <!--<groupId>ch.qos.logback</groupId>-->
+            <!--<artifactId>logback-classic</artifactId>-->
+            <!--<version>1.3.0-alpha4</version>-->
             <!--</dependency>-->
 
 
@@ -125,7 +125,6 @@
                 <artifactId>druid</artifactId>
                 <version>1.0.29</version>
             </dependency>
-
 
 
             <dependency>
@@ -179,31 +178,27 @@
                 <artifactId>mybatis-generator-maven-plugin</artifactId>
                 <version>${mybatis.generator.version}</version>
             </dependency>
-<!--excel start-->
+            <!--excel start-->
 
-         <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-base</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-web</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.afterturn</groupId>
-            <artifactId>easypoi-annotation</artifactId>
-            <version>3.0.3</version>
-        </dependency>
-<!--excel end-->    
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-base</artifactId>
+                <version>3.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-web</artifactId>
+                <version>3.0.3</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.afterturn</groupId>
+                <artifactId>easypoi-annotation</artifactId>
+                <version>3.0.3</version>
+            </dependency>
+            <!--excel end-->
         </dependencies>
 
     </dependencyManagement>
-
-
-
-
 
 
     <build>

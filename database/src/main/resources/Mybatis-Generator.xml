@@ -4,15 +4,15 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <classPathEntry
-            location="src/main/resources/edb-jdbc16.jar" />
-    <context id="context1"  >
+            location="src/main/resources/edb-jdbc16.jar"/>
+    <context id="context1">
         <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
         <plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">
-            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel" />
-            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty" />
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
         </plugin>
         <!-- 该死的注释 -->
-        <commentGenerator  >
+        <commentGenerator>
             <property name="addRemarkComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>
@@ -20,7 +20,7 @@
         <jdbcConnection driverClass="com.edb.Driver"
                         connectionURL="jdbc:edb://rm-2zea5t7it298uz8786o.ppas.rds.aliyuncs.com:3432/easy_home"
                         userId="think"
-                        password="Rexrobin@519" />
+                        password="Rexrobin@519"/>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
@@ -28,28 +28,27 @@
 
         <!-- Model-->
         <javaModelGenerator targetPackage="cn.thinkfree.database.model"
-                            targetProject="src/main/java/" >
+                            targetProject="src/main/java/">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
             <property name="useActualColumnNames" value="false"/>
             <property name="rootClass" value="cn.thinkfree.core.model.BaseModel"/>
-            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel" />
-            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty" />
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
 
         </javaModelGenerator>
         <!-- XML-->
         <sqlMapGenerator targetPackage="cn.thinkfree.database.mapper"
-                         targetProject="src/main/resources" >
+                         targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <!--<javaClientGenerator-->
-                <!--targetPackage="cn.thinkfree.database.mapper"-->
-                <!--targetProject="src/main/java/"-->
-                <!--type="XMLMAPPER" >-->
-            <!--<property name="enableSubPackages" value="false"/>-->
-        <!--</javaClientGenerator>-->
-        <!-- 表-->
+        <javaClientGenerator
+                targetPackage="cn.thinkfree.database.mapper"
+                targetProject="src/main/java/"
+                type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>        <!-- 表-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
@@ -97,10 +96,54 @@
         <!--<table tableName="pc_system_role_permission" domainObjectName="SystemRolePermission"/>-->
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
         <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
-        <table tableName="user_role_set" domainObjectName="UserRoleSet" />
+        <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
         <!-- 权限相关 E-->
-        <table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo" />
-        <table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo" />
-        <table tableName="pc_settlement_rule_info" domainObjectName="SettlementRuleInfo" />
+        <!--<table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo"/>-->
+        <!--<table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo"/>-->
+        <!--<table tableName="pc_settlement_rule_info" domainObjectName="SettlementRuleInfo"/>-->
+        <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
+        <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
+        <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
+        <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
+        <!--Scheduling start-->
+        <!--<table tableName="project" domainObjectName="Project"/>-->
+        <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
+        <!--<table tableName="designer_order" domainObjectName="DesignerOrder"/>-->
+        <!--<table tableName="order_apply_refund" domainObjectName="OrderApplyRefund"/>-->
+        <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
+        <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
+        <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
+        <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
+        <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
+        <!--<table tableName="project_quotation_log" domainObjectName="ProjectQuotationLog"/>-->
+        <!--<table tableName="project_stage_log" domainObjectName="ProjectStageLog"/>-->
+        <!--<table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>-->
+        <!--<table tableName="design_grade" domainObjectName="DesignGrade"/>-->
+        <table tableName="design_label" domainObjectName="DesignLabel"/>
+        <table tableName="growth_value_integral" domainObjectName="GrowthValueIntegral"/>
+        <!--Scheduling end-->
+        <!--approval flow start-->
+        <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
+        <!--<table tableName="a_f_config_scheme" domainObjectName="AfConfigScheme"/>-->
+        <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
+        <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
+        <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
+        <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->
+        <!--approval flow end-->
+        <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
+        <!--<table tableName="designer_style_config" domainObjectName="DesignerStyleConfig"/>-->
+        <!--<table tableName="designer_style_relation" domainObjectName="DesignerStyleRelation"/>-->
+        <!--<table tableName="employee_msg" domainObjectName="EmployeeMsg"/>-->
+        <!--<table tableName="employee_apply_log" domainObjectName="EmployeeApplyLog"/>-->
+        <!--<table tableName="option_log" domainObjectName="OptionLog"/>-->
+        <!--<table tableName="remind_owner_log" domainObjectName="RemindOwnerLog"/>-->
+        <!--<table tableName="apply_refund_log" domainObjectName="ApplyRefundLog"/>-->
+        <!--<table tableName="apply_refund_option_log" domainObjectName="ApplyRefundOptionLog"/>-->
+        <!--<table tableName="reserve_project" domainObjectName="ReserveProject"/>-->
+        <!--<table tableName="build_pay_config" domainObjectName="BuildPayConfig"/>-->
+        <!--<table tableName="build_scheme_config" domainObjectName="BuildSchemeConfig"/>-->
+        <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
+<!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
+        <!-- new approval flow end -->
     </context>
 </generatorConfiguration>

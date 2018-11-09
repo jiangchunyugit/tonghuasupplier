@@ -36,25 +36,26 @@ public class CloudServiceImpl implements CloudService {
     String sendSmsUrl;
     @Value("${custom.cloud.sendNotice}")
     String sendNotice;
-
     @Value("${custom.cloud.noticeShowUrl}")
     String noticeShowUrl;
-    
-//    @Value("${custom.cloud.fileUpload}")
+    @Value("${custom.cloud.fileUpload}")
     private String fileUploadUrl;
 
     @Value("${custom.cloud.senEmail}")
     String sendEMail;
+    @Value("${shanghai.smallSchedulingUrl}")
+    String smallSchedulingUrl;
+	@Value("${message.remindConsumerUrl}")
+    String remindConsumerUrl;
 
     @Value("${custom.cloud.syncMerchantUrl}")
     String syncMerchantUrl;
-    
+
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
 
 
-
-    private RemoteResult buildFailResult(){
+    private RemoteResult buildFailResult() {
         RemoteResult remoteResult = new RemoteResult();
         remoteResult.setIsComplete(Boolean.FALSE);
         return remoteResult;
@@ -66,7 +67,7 @@ public class CloudServiceImpl implements CloudService {
 
         MultiValueMap<String, Object> param = initParam();
         param.add("projectNo", projectNo);
-        param.add("state",status);
+        param.add("state", status);
 
 
         RemoteResult<String> result = null;
@@ -76,7 +77,7 @@ public class CloudServiceImpl implements CloudService {
             System.out.println(result);
             result.setIsComplete(SuccessCode.equals(result.getCode()));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -95,13 +96,13 @@ public class CloudServiceImpl implements CloudService {
 
         MultiValueMap<String, Object> param = initParam();
         param.add("phone", phone);
-        param.add("activationCode",activeCode);
+        param.add("activationCode", activeCode);
 
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendSmsUrl,param);
+            result = invokeRemoteMethod(sendSmsUrl, param);
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -109,13 +110,23 @@ public class CloudServiceImpl implements CloudService {
     }
 
     private RemoteResult<String> invokeRemoteMethod(String url, MultiValueMap<String, Object> param) {
-        RemoteResult<String> result  = restTemplate.postForObject(url, param, RemoteResult.class);
+        RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
 
+    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit) {
+        String result = restTemplate.getForObject(url, String.class, status, limit);
+        return result;
+    }
+
+    private String invokeRemoteMessageMethod(String url,MultiValueMap<String, Object> param){
+        String result = restTemplate.postForObject(url, param, String.class);
+        return result;
+    }
+
     private RemoteResult<String> invokeRemoteMethod(String url, HttpEntity<MultiValueMap> param) {
-        RemoteResult<String> result  = restTemplate.postForObject(url, param, RemoteResult.class);
+        RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
@@ -136,55 +147,29 @@ public class CloudServiceImpl implements CloudService {
 
     /**
      * 发送公告
+     *
      * @param systemMessage 公告主键
-     * @param receive  接收人
+     * @param receive       接收人
      * @return
      */
     @Override
     public RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive) {
         MultiValueMap<String, Object> param = initParam();
         param.add("content", systemMessage.getContent());
-        param.add("skipUrl",noticeShowUrl+systemMessage.getId());
-        param.add("title",systemMessage.getTitle());
-        param.add("companyNo",systemMessage.getCompanyId());
-        param.add("senderNo",systemMessage.getSendUserId());
-        param.add("userNo",receive);
+        param.add("skipUrl", noticeShowUrl + systemMessage.getId());
+        param.add("title", systemMessage.getTitle());
+        param.add("companyNo", systemMessage.getCompanyId());
+        param.add("senderNo", systemMessage.getSendUserId());
+        param.add("userNo", receive);
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendNotice,param);
-        }catch (Exception e){
+            result = invokeRemoteMethod(sendNotice, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
         return result;
     }
-
-	@Override
-	public String uploadFile(String fileName) {
-		// TODO Auto-generated method stub
-//      HttpHeaders headers = new HttpHeaders();
-//      headers.add("Authorization", "token");
-//      MediaType type = MediaType.parseMediaType("multipart/form-data");
-//      headers.setContentType(type);
-      File file  = new File(fileName);
-	   if(!file.exists()){
-	    	try {
-				file.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	   }
-	  List<File> files = new ArrayList<>();
-	  files.add(file);
-      MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
-	    form.add("files", null);
-//      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
-      RemoteResult<String>   result = invokeRemoteMethod(fileUploadUrl,form);
-      System.out.println("返回结果。。。"+result);
-        file.delete();
-		return null;
-	  }
 
     /**
      * 同步公司信息
@@ -235,8 +220,8 @@ public class CloudServiceImpl implements CloudService {
 
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendEMail,param);
-        }catch (Exception e){
+            result = invokeRemoteMethod(sendEMail, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -244,4 +229,75 @@ public class CloudServiceImpl implements CloudService {
     }
 
 
-}
+    /**
+     * 与上海同步小排期
+     *
+     * @param status
+     * @param limit
+     * @return
+     */
+    @Override
+    public String getBaseScheduling(Integer status, Integer limit) {
+        String result = null;
+        try {
+            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return result;
+    }
+
+/**
+     * 给用户发消息
+     *
+     * @param userNo
+     * @param projectNo
+     * @param content
+     * @param senderId
+     * @param type
+     * @return
+     */
+    @Override
+    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId,Integer dynamicId, Integer type) {
+        MultiValueMap<String, Object> param = initParam();
+        param.add("userNo", userNo);
+        param.add("projectNo",projectNo );
+        param.add("content",content );
+        param.add("senderId", senderId);
+        param.add("dynamicId",dynamicId );
+        param.add("type",type );
+        String result = null;
+        try {
+            result = invokeRemoteMessageMethod(remindConsumerUrl, param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return result;
+    }	@Override
+    public String uploadFile(String fileName) {
+        // TODO Auto-generated method stub
+//      HttpHeaders headers = new HttpHeaders();
+//      headers.add("Authorization", "token");
+//      MediaType type = MediaType.parseMediaType("multipart/form-data");
+//      headers.setContentType(type);
+        File file = new File(fileName);
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        List<File> files = new ArrayList<>();
+        files.add(file);
+        MultiValueMap<String, Object> form = new LinkedMultiValueMap<>();
+        form.add("files", null);
+//      HttpEntity<MultiValueMap > requestEnullntity = new HttpEntity<>(form);
+        RemoteResult<String> result = invokeRemoteMethod(fileUploadUrl, form);
+        System.out.println("返回结果。。。" + result);
+        file.delete();
+        return null;
+    }}

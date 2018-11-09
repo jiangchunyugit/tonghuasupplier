@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.ConstructionOrderMapper">
+
+  <!--阶段详情展示-->
+  <select id="selectStageDetailsList" resultType="cn.thinkfree.database.vo.StageDetailsVO">
+            SELECT
+            s.stage AS stage,
+            s.create_time AS createTime
+            FROM construction_order c
+            LEFT JOIN project_stage_log s ON s.order_no=c.order_no
+            WHERE c.project_no=#{projectNo} AND s.type =#{type}
+  </select>
+
+  <!--根据项目编号查询订单信息-->
+  <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
+    SELECT
+      order_stage as taskStage,
+      order_no as orderNo,
+      type as styleType
+    FROM
+      construction_order
+    WHERE
+      project_no = #{projectNo}
+  </select>
+
+    <select id="selectByProjectNoAndStatus" resultType="cn.thinkfree.database.appvo.OrderPlayVo">
+        SELECT
+          ci.company_name AS constructionCompany,
+          ps.task_num taskNum,
+          deso.money as cost,
+          ps.delay delay,
+          ps.is_confirm isConfirm
+        FROM
+            construction_order deso
+        LEFT JOIN company_info ci ON deso.company_id = ci.company_id
+        LEFT JOIN project_scheduling ps ON ps.project_no=deso.project_no
+        WHERE
+            deso.project_no=#{projectNo}
+            AND
+            deso.status=#{status}
+    </select>
+
+    <select id="selectConstructionOrderVo" resultType="cn.thinkfree.database.pcvo.ConstructionOrderVO">
+        SELECT
+          co.order_no orderNo,
+          co.create_time createTime,
+          co.close_time closeTime,
+          co.order_stage orderStage,
+          pro.order_source orderSource,
+          pro.owner_id ownerId,
+          pro.address_detail addressDetail,
+          pro.house_type houseType,
+          pro.decoration_budget decorationBudget,
+          pro.house_room houseRoom,
+          pro.house_office houseOffice,
+          pro.house_toilet houseToilet,
+          pro.area area,
+          pro.style style,
+        pro.reference_scheme referenceScheme,
+          co.remark remark
+        FROM
+          construction_order co
+        LEFT JOIN project pro ON co.project_no=pro.project_no
+        WHERE
+          co.project_no=#{projectNo}
+    </select>
+</mapper>

@@ -49,6 +49,7 @@ import java.util.stream.Collectors;
 	  * @return
 	  * @throws IllegalArgumentException
 	  */
+	 @Override
 	 public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		 String url = ((FilterInvocation)object).getRequestUrl();
 		 url = url.replaceAll("/\\d{1,}","/{id}");

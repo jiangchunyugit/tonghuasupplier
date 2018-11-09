@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.ProjectMapper">
+
+    <!--订单详情-->
+    <select id="selectOrderDetails" resultType="cn.thinkfree.database.vo.OrderDetailsVO">
+          SELECT
+              p.address,
+              i.company_name,
+              c.order_no,
+              c.close_time,
+              c.construction_stage,
+              c.order_stage,
+              p.order_source,
+              u.name,
+
+              p.address_detail,
+              u.phone,
+              p.house_type,
+              p.decoration_budget,
+              p.house_room,
+              p.house_office,
+              p.house_toilet,
+              p.balcony,
+              p.area,
+              p.style,
+              p.reference_scheme,
+              o.remark,
+              o.type,
+              p.plan_start_time,
+              p.plan_end_time,
+              c.construction_stage,
+              c.money
+
+              FROM   project p
+              LEFT JOIN design_order o ON o.project_no=p.project_no
+              LEFT JOIN construction_order c ON c.project_no=p.project_no
+              LEFT JOIN company_info i ON i.company_id = p.company_id
+              LEFT JOIN  pc_user_info  u ON  u.id=p.owner_id
+          WHERE p.project_no=#{projectNo} AND p.status=#{status}
+
+  </select>
+
+    <!--分页查询施工工地-->
+    <select id="selectSiteDetailsByPage" resultType="cn.thinkfree.database.vo.ConstructionSiteVO">
+
+        SELECT
+        o.order_no AS orderNo,
+        p.address AS address,
+        i.company_name AS companyName,
+        p.address_detail AS addressDetail,
+        co.money AS reducedContractAmount,
+        o.order_stage AS orderStage,
+        b.big_name AS constructionProgress,
+        b.actual_satrt_time AS startTime,
+        b.actual_end_time AS endTime,
+        FROM
+        project p
+        LEFT JOIN construction_order co ON co.project_no = p.project_no
+        LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
+        LEFT JOIN company_info i ON i.company_id = p.company_id
+        LEFT JOIN designer_order o ON o .project_no = p.project_no
+        WHERE
+        p.project_no=#{constructionSiteVO.projectNo} AND p.status=#{constructionSiteVO.status}
+        ORDER BY p.create_time DESC
+        <if test="pageSize != null">
+            limit #{pageSize} offset #{pageNum}
+        </if>
+    </select>
+
+    <!--查询施工工地总页数-->
+    <select id="selectSiteDetailsCount" resultType="java.lang.Integer">
+
+  	       SELECT
+               count(1)
+            FROM
+                project p
+            LEFT JOIN construction_order co ON co.project_no = p.project_no
+            LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
+            LEFT JOIN company_info i ON i.company_id = p.company_id
+            LEFT JOIN designer_order o ON o .project_no = p.project_no
+            WHERE
+        p.project_no=#{constructionSiteVO.projectNo} AND p.status=#{constructionSiteVO.status}
+
+  </select>
+
+    <!--分页查询工地详情-->
+    <select id="selectSiteByPage" resultType="cn.thinkfree.database.vo.SiteDetailsVO">
+        SELECT
+        p.stage AS stage,
+        b.big_name AS constructionProject,
+        b.plan_satrt_time AS startTime,
+        b.plan_end_time AS endTime,
+        b.is_need_check AS isAcceptance,
+
+        b.remark AS textDetails
+        FROM project p
+        LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
+        WHERE
+        p.project_no=#{siteDetailsVO.projectNo} AND p.status=#{siteDetailsVO.status}
+        ORDER BY p.create_time DESC
+        <if test="pageSize != null">
+            limit #{pageSize} offset #{pageNum}
+        </if>
+
+    </select>
+
+    <!--查询工地总页数-->
+    <select id="selectSiteCount" resultType="java.lang.Integer">
+    SELECT
+  count(1)
+    FROM project p
+    LEFT JOIN project_big_scheduling_details b ON b.project_no = p.project_no
+    WHERE
+    p.project_no=#{siteDetailsVO.projectNo} AND p.status=#{siteDetailsVO.status}
+  </select>
+
+</mapper>

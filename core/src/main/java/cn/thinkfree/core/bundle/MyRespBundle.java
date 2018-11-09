@@ -1,5 +1,7 @@
 package cn.thinkfree.core.bundle;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 自定义出参封装
  */
@@ -8,23 +10,28 @@ public class MyRespBundle<T> {
     /**
      * code
      */
+    @ApiModelProperty("返回的code码")
     private Integer code;
     /**
      * 消息
      */
+    @ApiModelProperty("错误信息")
     private String message;
 //    private Map<String,Object> datas;
     /**
      * 版本号
      */
+    @ApiModelProperty("版本")
     private String version;
     /**
      * 数据
      */
+    @ApiModelProperty("业务数据")
     private T data;
     /**
      * 时间戳
      */
+    @ApiModelProperty("时间")
     private Long timestamp;
 
 

@@ -1,9 +1,6 @@
 package cn.thinkfree.service.project;
 
-import cn.thinkfree.database.model.PreProjectGuide;
-import cn.thinkfree.database.model.PreProjectGuideExample;
-import cn.thinkfree.database.model.PreProjectMaterial;
-import cn.thinkfree.database.model.ProjectDocument;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +18,19 @@ public interface ProjectService {
     IndexProjectReportVO countProjectReportVO(List<String> companyRelationMap);
 
 
+    /**
+     * 根据项目编号查询项目信息
+     * @param projectNo 项目编号
+     * @return 项目信息
+     */
+    Project findByProjectNo(String projectNo);
 
+    /**
+     * 根据项目信息获取房屋类型
+     * @param project 项目信息
+     * @return 房屋类型
+     */
+    String getHouseType(Project project);
 
     /**
      * 分页查询项目信息
