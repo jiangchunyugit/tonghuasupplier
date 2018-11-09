@@ -78,6 +78,7 @@ public interface ContractService {
       * 
       * 根据合同编号和公司编号 生成合同
       * @param contractNumber
+      * @param 
       * @return
       */
       String createContractDoc(String contractNumber);
@@ -122,6 +123,13 @@ public interface ContractService {
        * @auditStatus 0 不通过  1 通过
        */
       boolean auditStatusOrderContract(String orderNumber,String auditStatus);
+      
+      
+      /**
+       * 财务审核通过 生成合同pdf
+       * 
+       */
+      boolean createOrderContract(String orderNumber);
       
       /**
        * 根据订单号获取
