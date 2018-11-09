@@ -2,9 +2,11 @@ package cn.thinkfree.service.contract;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.vo.remote.SyncContractVO;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.ContractInfo;
@@ -155,4 +157,11 @@ public interface ContractService {
        * @return list 
        */
       List<ContractInfo>  getEnterContractBycompanyId(String companyId);
+
+    /**
+     * 获取远程推送信息
+     * @param contractNumber
+     * @return
+     */
+    Optional<SyncContractVO> selectSyncDateByContractNumber(String contractNumber);
 }

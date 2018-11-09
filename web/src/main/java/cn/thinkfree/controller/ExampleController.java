@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.thinkfree.database.event.sync.CompanyJoin;
+import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.service.event.EventService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,7 +212,10 @@ public class ExampleController extends AbsBaseController {
 
     @GetMapping("/test")
     public void test(){
-        eventService.publish(new CompanyJoin("BD2018080710405900001"));
+
+//        eventService.publish(new CompanyJoin("BD2018080710405900001"));
+        eventService.publish(new FinishContract("SJHT201811091623204760001"));
+
     }
 
 }

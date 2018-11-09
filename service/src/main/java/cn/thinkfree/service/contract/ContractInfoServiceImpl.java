@@ -4,18 +4,15 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.service.constants.CompanyFinancialType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,27 +26,6 @@ import com.github.pagehelper.PageInfo;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.CompanyPaymentMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
-import cn.thinkfree.database.mapper.ContractTermsChildMapper;
-import cn.thinkfree.database.mapper.ContractTermsMapper;
-import cn.thinkfree.database.mapper.MyContractInfoMapper;
-import cn.thinkfree.database.mapper.OrderContractMapper;
-import cn.thinkfree.database.mapper.PcAuditInfoMapper;
-import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyPayment;
-import cn.thinkfree.database.model.ContractInfo;
-import cn.thinkfree.database.model.ContractInfoExample;
-import cn.thinkfree.database.model.ContractTerms;
-import cn.thinkfree.database.model.ContractTermsChild;
-import cn.thinkfree.database.model.ContractTermsChildExample;
-import cn.thinkfree.database.model.ContractTermsExample;
-import cn.thinkfree.database.model.OrderContract;
-import cn.thinkfree.database.model.OrderContractExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
@@ -98,6 +74,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	CompanyPaymentMapper companyPaymentMapper;
+
+	@Autowired
+	ProvinceMapper provinceMapper;
+
+	@Autowired
+	CityMapper cityMapper;
+
 
 	@Value( "${custom.cloud.fileUpload}" )
 	private String fileUploadUrl;
@@ -750,5 +733,59 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			list.addAll( cxcontractInfoMapper.selectByExample( example ) );
 		}
 		return(list);
+	}
+
+	/**
+	 * 获取远程推送信息
+	 *
+	 * @param contractNumber
+	 * @return
+	 */
+	@Override
+	public Optional<SyncContractVO> selectSyncDateByContractNumber(String contractNumber) {
+
+		ContractInfo contractInfo = contractInfoMapper.selectOneByExample(contractNumber);
+		SyncContractVO result = new SyncContractVO();
+		result.setHth(contractNumber);
+		result.setHtyxq_START(contractInfo.getStartTime()!= null? contractInfo.getStartTime().toInstant().toString():"");
+		result.setHtyxq_END(contractInfo.getEndTime()!= null? contractInfo.getEndTime().toInstant().toString():"");
+
+		PcCompanyFinancialExample pcCompanyFinancialExample = new PcCompanyFinancialExample();
+		pcCompanyFinancialExample.createCriteria().andCompanyIdEqualTo(contractInfo.getCompanyId());
+		List<PcCompanyFinancial> companyFinancialList = pcCompanyFinancialMapper.selectByExample(pcCompanyFinancialExample);
+
+		// 银行信息
+		if(companyFinancialList.stream().filter(f-> CompanyFinancialType.BANK.shortVal().equals(f.getAccountType())).findFirst().isPresent()){
+			PcCompanyFinancial pcCompanyFinancial = companyFinancialList.stream()
+					.filter(f-> CompanyFinancialType.BANK.shortVal().equals(f.getAccountType())).findFirst().get();
+			result.setFkyhzh(pcCompanyFinancial.getAccountNumber());
+			result.setFkkhh(pcCompanyFinancial.getAccountName());
+			result.setFkyhhm(pcCompanyFinancial.getCardName());
+		}
+		// 居然金融
+		if(companyFinancialList.stream().filter(f-> CompanyFinancialType.JURAN.shortVal().equals(f.getAccountType())).findFirst().isPresent()){
+			PcCompanyFinancial pcCompanyFinancial = companyFinancialList.stream()
+					.filter(f-> CompanyFinancialType.JURAN.shortVal().equals(f.getAccountType())).findFirst().get();
+			result.setJrdzzh(pcCompanyFinancial.getAccountNumber());
+		}
+		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+		companyInfoExample.createCriteria().andCompanyIdEqualTo(contractInfo.getCompanyId());
+		List<CompanyInfo> companyInfoList = companyInfoMapper.selectByExample(companyInfoExample);
+		if(!companyInfoList.isEmpty() || companyInfoList.size() == 1){
+			CompanyInfo companyInfo = companyInfoList.get(0);
+			// 编码
+			result.setGhdwdm(companyInfo.getCompanyId());
+			// 名称
+			result.setGhdwmc(companyInfo.getCompanyName());
+			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));
+			result.setCity(cityMapper.convertCodeToName(companyInfo.getCityCode()));
+			result.setFddm(companyInfo.getSiteCompanyId());
+			// TODO 需要埃森哲数据 经营主体编码
+			result.setGsdm(105);
+		}
+		// 10 有效 20无效
+		result.setStatus("10");
+
+		return Optional.of(result);
 	}
 }
