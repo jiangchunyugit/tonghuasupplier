@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 
 public interface CloudService {
@@ -83,4 +84,10 @@ public interface CloudService {
      * @return
      */
     RemoteResult<String> syncContract(SyncContractVO syncContractVO);
+
+    /**
+     * 同步订单信息
+     * @param syncOrderVO
+     */
+    RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO);
 }

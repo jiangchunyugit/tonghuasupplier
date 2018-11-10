@@ -165,7 +165,8 @@ public class UserVO extends SecurityUser {
 
     @Override
     public String getPhone() {
-        return pcUserInfo.getPhone();
+
+        return userRegister.getPhone();
     }
 
     @Override
@@ -175,7 +176,7 @@ public class UserVO extends SecurityUser {
 
     @Override
     public Date getCreateTime() {
-        return pcUserInfo.getCreateTime();
+        return userRegister.getRegisterTime();
     }
 
     @Override

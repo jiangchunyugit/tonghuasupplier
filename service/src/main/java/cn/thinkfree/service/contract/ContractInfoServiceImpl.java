@@ -9,9 +9,11 @@ import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.constants.CompanyFinancialType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -956,9 +958,38 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		return resMap;
 	}
 
+	/**
+	 * 查询订单同步数据
+	 *
+	 * @param contractID
+	 * @return
+	 */
+	@Override
+	public Optional<SyncOrderVO> selectSyncDateByOrder(String contractID) {
+		ContractInfo contractInfo = contractInfoMapper.selectOneByExample(contractID);
+		SyncOrderVO result = new SyncOrderVO();
+
+		if(contractInfo != null){
+			result.setSignedTime(contractInfo.getSignedTime() != null ? contractInfo.getSignedTime().toInstant().toString() : "");
+			result.setStartTime(contractInfo.getStartTime() != null ? contractInfo.getStartTime().toInstant().toString() : "");
+			result.setEndTime(contractInfo.getEndTime() != null ? contractInfo.getEndTime().toInstant().toString() : "");
+
+		}
+
+		CompanyInfo companyInfo = companyInfoMapper.selectByCompanyId(contractInfo.getCompanyId());
+		if(companyInfo != null){
+			result.setCompanyId(companyInfo.getCompanyId());
+			result.setCompanyName(companyInfo.getCompanyName());
+
+		}
+
+		result.setType(SyncOrderEnum.Type.Contract.code.toString());
+		result.setTypeSub(SyncOrderEnum.SubType.deposit.code.toString());
+		result.setContractType(SyncOrderEnum.ContractType.Full.code.toString());
 
 
-
+		return Optional.ofNullable(result);
+	}
 
 
 	/**

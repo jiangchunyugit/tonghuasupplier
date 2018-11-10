@@ -12,14 +12,19 @@ public class SendValidateCode extends AbsBaseEvent {
      */
     private String source;
     /**
-     * 手机号
+     * 手机号 或邮箱
      */
-    private String phone;
+    private String target;
 
     /**
      * 验证码
      */
     private String code;
+
+    /**
+     * 是否手机端 如果不是则是邮箱
+     */
+    private Boolean isPhone;
 
 
     public SendValidateCode() {
@@ -27,8 +32,15 @@ public class SendValidateCode extends AbsBaseEvent {
 
     public SendValidateCode(String source, String phone, String code) {
         this.source = source;
-        this.phone = phone;
+        this.target = phone;
         this.code = code;
+        this.isPhone = false;
+    }
+    public SendValidateCode(String source, String phone, String code,Boolean isPhone) {
+        this.source = source;
+        this.target = phone;
+        this.code = code;
+        this.isPhone = isPhone;
     }
 
     /**
@@ -41,11 +53,15 @@ public class SendValidateCode extends AbsBaseEvent {
         return source;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getTarget() {
+        return target;
     }
 
     public String getCode() {
         return code;
+    }
+
+    public Boolean getIsPhone(){
+        return isPhone;
     }
 }

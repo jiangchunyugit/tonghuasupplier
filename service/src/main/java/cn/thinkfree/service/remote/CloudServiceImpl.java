@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -53,6 +54,9 @@ public class CloudServiceImpl implements CloudService {
     String syncMerchantUrl;
     @Value("${custom.cloud.syncContractUrl}")
     String syncContractUrl;
+    @Value("${custom.cloud.syncOrderUrl}")
+    String syncOrderUrl;
+
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -98,9 +102,10 @@ public class CloudServiceImpl implements CloudService {
     public RemoteResult<String> sendSms(String phone, String activeCode) {
 
         MultiValueMap<String, Object> param = initParam();
-        param.add("phone", phone);
-        param.add("activationCode", activeCode);
-
+//        param.add("phone", phone);
+//        param.add("activationCode", activeCode);
+        param.add("telephone", phone);
+        param.add("code", activeCode);
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(sendSmsUrl, param);
@@ -208,8 +213,10 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> sendEmail(String email, String templateCode, String para) {
-        MultiValueMap param = initParam();
-
+        MultiValueMap<String, Object> param = initParam();
+        param.add("recipientAddress",email);
+        param.add("templateNo",templateCode);
+        param.add("tplContent",para);
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(sendEMail, param);
@@ -281,7 +288,6 @@ public class CloudServiceImpl implements CloudService {
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
         String body = new GsonBuilder().serializeNulls().create().toJson(syncContractVO);
-        System.out.println(body);
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         RemoteResult<String > result = null;
         try {
@@ -291,7 +297,30 @@ public class CloudServiceImpl implements CloudService {
             e.printStackTrace();
             return buildFailResult();
         }
-        return null;
+        return result;
+    }
+
+    /**
+     * 同步订单信息
+     *
+     * @param syncOrderVO
+     */
+    @Override
+    public RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO) {
+        MultiValueMap<String, Object> param = initParam();
+        Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
+
+        param.setAll(gson.fromJson(gson.toJson(syncOrderVO),Map.class));
+
+        RemoteResult<String> result = null;
+        try {
+            result = invokeRemoteMethod(syncOrderUrl, param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+
     }
 
     @Override

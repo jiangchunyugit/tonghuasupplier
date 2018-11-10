@@ -1,21 +1,21 @@
 package cn.thinkfree.service.event.listener;
 
-import cn.thinkfree.core.event.AbsBaseEvent;
 import cn.thinkfree.core.logger.AbsLogPrinter;
-import cn.thinkfree.database.event.account.ResetPassWord;
 import cn.thinkfree.database.event.sync.CompanyJoin;
+import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.event.sync.FinishContract;
-import cn.thinkfree.database.model.PcCompanyFinancial;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import cn.thinkfree.service.company.CompanyInfoService;
 import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.remote.CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.Optional;
@@ -34,6 +34,10 @@ public class RemoteSyncListener extends AbsLogPrinter {
 
     @Autowired
     ContractService contractService;
+
+    @Autowired
+    EventService eventService;
+
     /**
      * 公司资质确认后
      * @param companyJoin
@@ -67,7 +71,26 @@ public class RemoteSyncListener extends AbsLogPrinter {
         if(flag.isPresent()){
             cloudService.syncContract(flag.get());
         }
+
     }
+
+    /**
+     * 订单创建之后
+     * @param createOrder
+     */
+    @EventListener
+    public void CreateOrderAfter(CreateOrder createOrder){
+
+        Optional<SyncOrderVO> syncOrderVO = contractService.selectSyncDateByOrder(createOrder.getSource());
+        if(syncOrderVO.isPresent()){
+            cloudService.syncOrder(syncOrderVO.get());
+        }
+
+
+    }
+
+
+
 
     @EventListener
     public void system(ApplicationEvent applicationEvent){

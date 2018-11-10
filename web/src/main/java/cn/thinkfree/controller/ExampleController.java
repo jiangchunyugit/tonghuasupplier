@@ -11,7 +11,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.event.SendValidateCode;
+import cn.thinkfree.database.event.account.AccountCreate;
+import cn.thinkfree.database.event.account.ResetPassWord;
 import cn.thinkfree.database.event.sync.CompanyJoin;
+import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.service.event.EventService;
 import org.apache.commons.io.output.ByteArrayOutputStream;
@@ -215,8 +219,19 @@ public class ExampleController extends AbsBaseController {
     public void test(){
 
 //        eventService.publish(new CompanyJoin("BD2018080710405900001"));
-        eventService.publish(new FinishContract("SJHT201811091623204760001"));
+//        eventService.publish(new FinishContract("SJHT201811091623204760001"));
+        eventService.publish(new CreateOrder("SJHT201811091623204760001"));
 
+    }
+    @GetMapping("/send")
+    public void send(){
+
+//        eventService.publish(new CompanyJoin("BD2018080710405900001"));
+//        eventService.publish(new FinishContract("SJHT201811091623204760001"));
+
+        eventService.publish(new AccountCreate("${code}","530495062@qq.com","${pwd}","${name}"));
+        eventService.publish(new ResetPassWord( "530495062@qq.com","530495062@qq.com","${pwd}"));
+        eventService.publish(new SendValidateCode( "530495062@qq.com","530495062@qq.com","${code}"));
     }
 
 }

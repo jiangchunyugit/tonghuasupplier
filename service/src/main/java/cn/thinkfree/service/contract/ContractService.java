@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import org.springframework.data.redis.connection.ReactiveSetCommands.SInterCommand;
 
 import com.github.pagehelper.PageInfo;
@@ -193,6 +194,12 @@ public interface ContractService {
      * type 0 设计 1装饰
      *
      */
-     public Map<String,String> getCostNames(String type);
+      Map<String,String> getCostNames(String type);
 
+    /**
+     * 查询订单同步数据
+     * @param contractID
+     * @return
+     */
+    Optional<SyncOrderVO> selectSyncDateByOrder(String contractID);
 }
