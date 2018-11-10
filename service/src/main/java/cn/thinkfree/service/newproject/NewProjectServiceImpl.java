@@ -399,7 +399,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-//            urlDetailVo.setUploadTime(projectData.getUploadTime());
+            urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
             urlList.add(urlDetailVo);
         }
         return RespData.success(urlList);

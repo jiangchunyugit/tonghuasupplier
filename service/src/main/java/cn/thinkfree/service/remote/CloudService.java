@@ -1,9 +1,9 @@
 package cn.thinkfree.service.remote;
 
-import java.util.List;
-
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
+
+import java.util.List;
 
 public interface CloudService {
 
@@ -34,38 +34,44 @@ public interface CloudService {
      */
     RemoteResult<String> sendNotice(SystemMessage systemMessage, List<String> receive);
 
-      /**
-       * 合同上传
-       *  @param filepath
-       */
-      public String uploadFile(String fileName);
+    /**
+     * 合同上传
+     *
+     * @param filepath
+     */
+    public String uploadFile(String fileName);
 
     /**
      * 同步公司信息
+     *
      * @param syncTransactionVO
      * @return
      */
-      RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO);
+    RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO);
 
 
     /**
      * 发送邮件
+     *
      * @param email
      * @param templateCode
      * @param para
      * @return
      */
-      RemoteResult<String> sendEmail(String email,String templateCode,String para);
+    RemoteResult<String> sendEmail(String email, String templateCode, String para);
+
     /**
      * 与上海同步小排期
+     *
      * @param status
      * @param limit
      * @return
      */
-    String getBaseScheduling(Integer status,Integer limit);
+    String getBaseScheduling(Integer status, Integer limit, String smallSchedulingUrl);
 
     /**
      * 给用户发消息
+     *
      * @param userNo
      * @param projectNo
      * @param content
@@ -73,7 +79,7 @@ public interface CloudService {
      * @param type
      * @return
      */
-    String remindConsumer(String[] userNo, String projectNo,String content,String senderId,Integer dynamicId,Integer type);
+    String remindConsumer(String[] userNo, String projectNo, String content, String senderId, Integer dynamicId, Integer type);
 
 
 }
