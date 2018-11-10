@@ -59,7 +59,7 @@ public interface ContractTemplateService {
      * 上传
      * 
      */
-    boolean uploadFile(String type,MultipartFile  file);
+    boolean uploadFile(String type,String  fileUrl);
     
     
     

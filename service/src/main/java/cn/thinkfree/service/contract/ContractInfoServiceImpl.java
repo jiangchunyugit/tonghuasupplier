@@ -49,6 +49,7 @@ import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.OrderContract;
 import cn.thinkfree.database.model.OrderContractExample;
 import cn.thinkfree.database.model.PcAuditInfo;
+import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractClauseVO;
@@ -59,6 +60,7 @@ import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
+import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.utils.CommonGroupUtils;
@@ -208,7 +210,26 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			/* 财务审核通过生成合同 */
 			String pdfUrl = this.createContractDoc( contractNumber );
 			vo.setContractUrl( pdfUrl );
-		} else {                                                        /* 财务审核不通过 */
+			
+			//判断公司类型是设计 或 装饰  或  设计装饰
+			CompanyInfo con = companyInfoMapper.findByCompanyId(companyId);
+			String roleLent []  = con.getRoleId().split(",");
+			if(roleLent.length > 1){
+				 //判断审核表中2级审核通过记录大于2条
+				PcAuditInfoExample example = new PcAuditInfoExample();
+				example.createCriteria().andAuditStatusEqualTo(AuditStatus.AuditPass.shortVal()).
+				andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
+				.andAuditTypeEqualTo(CompanyConstants.AuditType.CONTRACT.stringVal())
+				.andAuditLevelEqualTo(CompanyConstants.auditLevel.CONTRACT.stringVal());
+				 List<PcAuditInfo>  auditlist = 	pcAuditInfoMapper.selectByExample(example);
+				 if(auditlist.size() >= 2){
+					 companyInfoMapper.updateauditStatus( companyInfo );
+				 }
+			}else{
+				companyInfoMapper.updateauditStatus( companyInfo );
+			}
+		} else {                                                  /* 财务审核不通过 */    
+			                                                   
 			companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
 		}
 		ContractInfoExample example = new ContractInfoExample();
@@ -217,7 +238,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		contractInfo.setContractStatus( vo.getContractStatus() );
 		contractInfo.setContractUrl( vo.getContractUrl() );
 		int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
-		int flagT = companyInfoMapper.updateauditStatus( companyInfo );
+		
+		
 		UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 		String	auditPersion = userVO == null ? "" : userVO.getUsername();
 		/* 添加审核记录表 */
@@ -225,7 +247,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 						      contractNumber );
 		int flagon = pcAuditInfoMapper.insertSelective( record );
 
-		if ( flag > 0 && flagT > 0 && flagon > 0 )
+		if ( flag > 0  && flagon > 0 )
 		{
 			return true;
 		}
@@ -237,12 +259,17 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public boolean ackEarnestMoney( String contractNumber, String companyId )
 	{
-		/* 修改公司表 */
-		CompanyInfo companyInfo = new CompanyInfo();
-		companyInfo.setCompanyId( companyId );
-		companyInfo.setAuditStatus( "6" ); /* 确认已交保证金 */
-		int flag = companyInfoMapper.updateauditStatus( companyInfo );
-		if ( flag > 0 )
+		//修改合同状态
+		ContractInfo record = new ContractInfo();
+		record.setContractStatus(ContractStatus.suredeposit.shortVal());
+
+		ContractInfoExample example = new ContractInfoExample();
+		example.createCriteria().andCompanyIdEqualTo(companyId).
+		andContractNumberEqualTo(contractNumber);
+		int flag = cxcontractInfoMapper.updateByExampleSelective(record, example);
+		//修改公司状态
+		boolean flagOn = 	companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSJOIN.stringVal());
+		if ( flag > 0 && flagOn == true )
 		{
 			return true;
 		}
@@ -367,9 +394,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		{
 			try {
-				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "0", root );
+				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
 				/* 上传 */
 				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
+
 			} catch (Exception e) {
 				e.printStackTrace();
 				printErrorMes("生成pdf合同发生错误", e.getMessage());
@@ -379,7 +407,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			
 		{
 			try {
-				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
+				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "0", root );
 				/* 上传 */
 				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
 			} catch (Exception e) {

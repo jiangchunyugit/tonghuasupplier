@@ -50,7 +50,7 @@ public class FreemarkerUtils {
 		} else if (type.equals("3")) {//装饰业务方向
 			fltName = "constructionContract.ftl";
 		}
-		fltName = "template.ftl";
+		//fltName = "template.ftl";
 		URL fileResource = FreemarkerUtils.class.getResource("/templates");
 		File baseDir = new File(fileResource.getFile());
 		if (baseDir == null || !baseDir.isDirectory() || globalMap == null || fltName == null || "".equals(fltName)) {
