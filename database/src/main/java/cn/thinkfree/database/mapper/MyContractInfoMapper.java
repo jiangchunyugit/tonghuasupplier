@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import java.util.List;
 
 import cn.thinkfree.database.annotation.AuthAnnotation;
+import cn.thinkfree.database.model.ContractInfo;
+import cn.thinkfree.database.model.ContractInfoExample;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 
@@ -27,7 +29,7 @@ public interface MyContractInfoMapper {
 	 * @author lvqidong
      *  @date 2018-09-20 
 	 */
-	@AuthAnnotation()
+	//@AuthAnnotation()
 	public  List<ContractVo>  selectContractPage(ContractSEO secVo);
 	
 	
@@ -38,6 +40,8 @@ public interface MyContractInfoMapper {
 	 * @return
 	 */
 	public ContractVo selectContractBycontractNumber(ContractVo contractVo);
-	
-	
+
+	List<ContractInfo> selectByExample(ContractInfoExample example);
+
+	ContractInfo  selectOneByExample(String code);
 }

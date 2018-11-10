@@ -22,6 +22,12 @@ FROM
 	LEFT JOIN company_info companyInfo ON auditInfo.company_id = companyInfo.company_id
 WHERE
 	auditInfo.company_id = #{companyId} and auditInfo.audit_type = #{auditType}
+	  <if test="contractNumber != null and contractNumber != ''">
+		  and auditInfo.contract_number = #{contractNumber}
+	  </if>
+	  <if test="auditLevel != null and auditLevel != ''">
+		  and auditInfo.audit_level = #{auditLevel}
+	  </if>
 	AND auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
   </select>
 

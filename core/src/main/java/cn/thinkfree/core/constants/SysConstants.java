@@ -74,5 +74,26 @@ public class SysConstants {
         }
     }
 
+    /**
+     * 邮件模板
+     */
+    public enum EmailTemplate{
+        /**
+         * 用户注册
+         */
+        register("001"),
+        /**
+         * 激活邮箱
+         */
+        activation("002"),
+        join("003"),
+        resetPwd("004");
+
+        public String code;
+        EmailTemplate(String code) {
+            this.code = code;
+        }
+    }
+
 
 }

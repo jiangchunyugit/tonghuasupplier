@@ -595,52 +595,62 @@ public class SettlementRuleInfoExample extends cn.thinkfree.core.model.AbstractD
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeEqualTo(Date value) {
+        public Criteria andCycleStimeEqualTo(String value) {
             addCriterion("cycle_stime =", value, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeNotEqualTo(Date value) {
+        public Criteria andCycleStimeNotEqualTo(String value) {
             addCriterion("cycle_stime <>", value, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeGreaterThan(Date value) {
+        public Criteria andCycleStimeGreaterThan(String value) {
             addCriterion("cycle_stime >", value, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andCycleStimeGreaterThanOrEqualTo(String value) {
             addCriterion("cycle_stime >=", value, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeLessThan(Date value) {
+        public Criteria andCycleStimeLessThan(String value) {
             addCriterion("cycle_stime <", value, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeLessThanOrEqualTo(Date value) {
+        public Criteria andCycleStimeLessThanOrEqualTo(String value) {
             addCriterion("cycle_stime <=", value, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeIn(List<Date> values) {
+        public Criteria andCycleStimeLike(String value) {
+            addCriterion("cycle_stime like", value, "cycleStime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCycleStimeNotLike(String value) {
+            addCriterion("cycle_stime not like", value, "cycleStime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCycleStimeIn(List<String> values) {
             addCriterion("cycle_stime in", values, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeNotIn(List<Date> values) {
+        public Criteria andCycleStimeNotIn(List<String> values) {
             addCriterion("cycle_stime not in", values, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeBetween(Date value1, Date value2) {
+        public Criteria andCycleStimeBetween(String value1, String value2) {
             addCriterion("cycle_stime between", value1, value2, "cycleStime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleStimeNotBetween(Date value1, Date value2) {
+        public Criteria andCycleStimeNotBetween(String value1, String value2) {
             addCriterion("cycle_stime not between", value1, value2, "cycleStime");
             return (Criteria) this;
         }
@@ -655,52 +665,62 @@ public class SettlementRuleInfoExample extends cn.thinkfree.core.model.AbstractD
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeEqualTo(Date value) {
+        public Criteria andCycleEtimeEqualTo(String value) {
             addCriterion("cycle_etime =", value, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeNotEqualTo(Date value) {
+        public Criteria andCycleEtimeNotEqualTo(String value) {
             addCriterion("cycle_etime <>", value, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeGreaterThan(Date value) {
+        public Criteria andCycleEtimeGreaterThan(String value) {
             addCriterion("cycle_etime >", value, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeGreaterThanOrEqualTo(Date value) {
+        public Criteria andCycleEtimeGreaterThanOrEqualTo(String value) {
             addCriterion("cycle_etime >=", value, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeLessThan(Date value) {
+        public Criteria andCycleEtimeLessThan(String value) {
             addCriterion("cycle_etime <", value, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeLessThanOrEqualTo(Date value) {
+        public Criteria andCycleEtimeLessThanOrEqualTo(String value) {
             addCriterion("cycle_etime <=", value, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeIn(List<Date> values) {
+        public Criteria andCycleEtimeLike(String value) {
+            addCriterion("cycle_etime like", value, "cycleEtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCycleEtimeNotLike(String value) {
+            addCriterion("cycle_etime not like", value, "cycleEtime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCycleEtimeIn(List<String> values) {
             addCriterion("cycle_etime in", values, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeNotIn(List<Date> values) {
+        public Criteria andCycleEtimeNotIn(List<String> values) {
             addCriterion("cycle_etime not in", values, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeBetween(Date value1, Date value2) {
+        public Criteria andCycleEtimeBetween(String value1, String value2) {
             addCriterion("cycle_etime between", value1, value2, "cycleEtime");
             return (Criteria) this;
         }
 
-        public Criteria andCycleEtimeNotBetween(Date value1, Date value2) {
+        public Criteria andCycleEtimeNotBetween(String value1, String value2) {
             addCriterion("cycle_etime not between", value1, value2, "cycleEtime");
             return (Criteria) this;
         }

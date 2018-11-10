@@ -57,9 +57,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private  OrderContractMapper orderContractMapper;
 
     @Override
-    public List<OrderUser> findByProjectNo(String orderNo) {
+    public List<OrderUser> findByProjectNo(String projectNo) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoEqualTo(orderNo);
+        example.createCriteria().andProjectNoEqualTo(projectNo);
         return orderUserMapper.selectByExample(example);
     }
 
@@ -533,6 +533,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
+        if(designContractVO.getContractStatus() == 1){
+            designContractVO.setFlag("1");
+        }else{
+            designContractVO.setFlag("0");
+        }
         List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
         for (DesignContractVO vo :voList){
             //业主

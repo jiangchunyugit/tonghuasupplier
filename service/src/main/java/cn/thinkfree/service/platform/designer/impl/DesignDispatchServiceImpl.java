@@ -1,6 +1,5 @@
 package cn.thinkfree.service.platform.designer.impl;
 
-import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
@@ -12,10 +11,12 @@ import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.*;
-import cn.thinkfree.service.utils.*;
+import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.ExcelUtil;
+import cn.thinkfree.service.utils.OrderNoUtils;
+import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -173,7 +174,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param msgVoMap               用户信息
      * @return
      */
-    @NotNull
     private DesignerOrderVo getDesignerOrderVo(int stateType, Map<String, DesignerStyleConfigVo> designerStyleConfigMap, DesignerOrder DesignerOrder,
                                                Project project, Map<String, UserMsgVo> msgVoMap) {
         DesignerOrderVo DesignerOrderVo = new DesignerOrderVo();

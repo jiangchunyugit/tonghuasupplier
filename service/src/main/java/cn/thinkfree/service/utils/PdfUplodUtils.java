@@ -73,6 +73,7 @@ public class PdfUplodUtils  {
             } finally {
                 response.close();
             }
+
         } catch (ClientProtocolException e) {
             e.printStackTrace();
             LOGGER.error(e.getMessage());

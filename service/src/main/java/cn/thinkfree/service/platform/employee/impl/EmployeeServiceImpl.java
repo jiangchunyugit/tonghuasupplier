@@ -1,6 +1,9 @@
 package cn.thinkfree.service.platform.employee.impl;
 
-import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.mapper.CompanyInfoMapper;
+import cn.thinkfree.database.mapper.EmployeeApplyLogMapper;
+import cn.thinkfree.database.mapper.EmployeeMsgMapper;
+import cn.thinkfree.database.mapper.UserRoleSetMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
@@ -12,10 +15,8 @@ import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -520,7 +521,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return pageVo;
     }
 
-    @NotNull
     private EmployeeMsgVo getEmployeeMsgVo(String roleName, Map<String, BasicsData> cardTypeMap, Map<String, BasicsData> countryCodeMap,
                                            EmployeeMsg employeeMsg, UserMsgVo userMsgVo) {
         EmployeeMsgVo msgVo = new EmployeeMsgVo();

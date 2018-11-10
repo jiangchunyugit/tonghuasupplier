@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
@@ -36,7 +35,6 @@ public class ApplicationBoot extends SpringBootServletInitializer {
     }
 
     public static void main(String[] args) {
-//        BasicConfigurator.configure();
         SpringApplication.run(ApplicationBoot.class, args);
     }
 

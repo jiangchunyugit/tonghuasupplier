@@ -16,6 +16,10 @@ public class FinishContract extends AbsBaseEvent {
      */
     @Override
     public String getSource() {
-        return null;
+        return source;
+    }
+
+    public FinishContract(String source) {
+        this.source = source;
     }
 }

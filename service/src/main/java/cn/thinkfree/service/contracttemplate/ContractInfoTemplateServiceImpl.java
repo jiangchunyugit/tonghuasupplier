@@ -7,11 +7,8 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
 import cn.thinkfree.database.mapper.ContractTemplateMapper;
 import cn.thinkfree.database.model.ContractTemplate;
@@ -99,12 +96,12 @@ public class ContractInfoTemplateServiceImpl implements ContractTemplateService 
 
 	
 	@Override
-	public boolean uploadFile(String type, MultipartFile file) {
-		//生成pdf 返回url 
-		String url = WebFileUtil.fileCopy("static/contractTemplate/", file);//上传合同模板
+	public boolean uploadFile(String type,String fileUrl ) {
+//		//生成pdf 返回url 
+//		String url = WebFileUtil.fileCopy("static/contractTemplate/", file);//上传合同模板
 		ContractTemplate record = new ContractTemplate();
 		record.setContractTpType(type);
-		record.setUploadUrl(url);
+		record.setUploadUrl(fileUrl);
 		record.setPdfUrl("static/contract/template/pdf/"+type+".pdf");
 		record.setUpdateTime(new Date());
 		ContractTemplateExample example = new ContractTemplateExample();

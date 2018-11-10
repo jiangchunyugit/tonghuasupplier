@@ -17,7 +17,18 @@ public class AccountCreate extends AbsBaseEvent {
      */
     private String password;
 
-    public AccountCreate(){}
+    /**
+     * 用户名称
+     */
+    private String userName;
+
+    public AccountCreate(String userCode, String phone, String password, String name){
+        super();
+        this.source = userCode;
+        this.email = phone;
+        this.password = password;
+        this.userName = name;
+    }
 
     public AccountCreate(String userCode){
         super();
@@ -47,4 +58,7 @@ public class AccountCreate extends AbsBaseEvent {
         return password;
     }
 
+    public String getUserName() {
+        return userName;
+    }
 }

@@ -1,6 +1,8 @@
 package cn.thinkfree.service.remote;
 
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 
 import java.util.List;
@@ -82,4 +84,16 @@ public interface CloudService {
     String remindConsumer(String[] userNo, String projectNo, String content, String senderId, Integer dynamicId, Integer type);
 
 
+    /**
+     * 同步合同信息
+     * @param syncContractVO
+     * @return
+     */
+    RemoteResult<String> syncContract(SyncContractVO syncContractVO);
+
+    /**
+     * 同步订单信息
+     * @param syncOrderVO
+     */
+    RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO);
 }

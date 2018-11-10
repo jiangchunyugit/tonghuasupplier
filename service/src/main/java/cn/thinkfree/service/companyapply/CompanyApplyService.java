@@ -7,6 +7,8 @@ import cn.thinkfree.database.vo.PcApplyInfoSEO;
 import cn.thinkfree.database.vo.PcApplyInfoVo;
 import com.github.pagehelper.PageInfo;
 
+import java.util.Map;
+
 
 /**
  * @author ying007
@@ -63,7 +65,7 @@ public interface CompanyApplyService {
      * @param pcApplyInfoSEO
      * @return
      */
-    String addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO);
+    Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO);
 
     /**
      * 激活账户

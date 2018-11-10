@@ -172,5 +172,13 @@ public class BranchCompanyController extends AbsBaseController{
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
+
+    @GetMapping(value = "/siteInfo")
+    @MyRespBody
+    @ApiOperation(value = "(权限)运营平台---站点信息")
+    public MyRespBundle<SiteInfo> siteInfo() {
+
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getSiteInfo());
+    }
 }
 

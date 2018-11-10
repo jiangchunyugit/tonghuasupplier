@@ -82,4 +82,11 @@ public interface CityMapper {
 
      */
     int updateByPrimaryKey(City record);
+
+    /**
+     * 转换编号为名称
+     * @param cityCode
+     * @return
+     */
+    String convertCodeToName(Short cityCode);
 }

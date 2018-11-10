@@ -1,8 +1,6 @@
 package cn.thinkfree.service.utils;
 
 
-import com.alibaba.fastjson.JSONObject;
-import jdk.internal.util.xml.impl.Input;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -15,7 +13,6 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 
 

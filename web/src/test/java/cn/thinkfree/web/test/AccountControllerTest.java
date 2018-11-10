@@ -195,7 +195,7 @@ public class AccountControllerTest extends AbsControllerTest {
     }
     @Test
     public void detailRole() throws Exception {
-        String rs = mvc.perform(get("/account/role/6")
+        String rs = mvc.perform(get("/account/role/4")
                 .with(user(userVO))
         )
                 .andExpect(status().isOk())

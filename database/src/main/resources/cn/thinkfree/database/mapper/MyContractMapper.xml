@@ -138,6 +138,12 @@
 <!--       </if> -->
 <!--     </trim> -->
 <!--   </insert> -->
+    <select id="selectOneByExample" parameterType="java.lang.String" resultType="cn.thinkfree.database.model.ContractInfo">
 
+        select
+         *
+        from pc_contract_info
+        where contract_number = #{code}
+    </select>
    
 </mapper>
