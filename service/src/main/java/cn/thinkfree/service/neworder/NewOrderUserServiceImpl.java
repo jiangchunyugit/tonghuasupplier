@@ -524,6 +524,43 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         return pageVo;
     }
 
+    /**
+     * @Author jiang
+     * @Description 合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
+        List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
+        for (DesignContractVO vo :voList){
+            //业主
+            ProjectExample projectExample = new ProjectExample();
+            projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+            //业主
+            vo.setOwnerName(customerInfo.getUsername());
+            //手机号码
+            vo.setOwnerPhone(customerInfo.getPhone());
+            if(vo.getAuditType() != null){
+                if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
+                    vo.setContractStatus(1);//生效
+                }else {
+                    vo.setContractStatus(0);//不生效
+
+                }
+            }
+        }
+        return voList;
+    }
+
+    @Override
+    public Integer queryContractCount(DesignContractVO designContractVO) {
+        return designerOrderMapper.selectContractCount(designContractVO);
+    }
+
 
     @Override
     public MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum, Integer pageSize, String companyId) {

@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -475,6 +472,50 @@ public class DelaySchedulingController extends AbsBaseController {
                                                       @RequestParam(required = false) @ApiParam(value = "项目编号 1223098338391")  String projectNo){
 
         return sendJsonData(ResultMessage.SUCCESS,newOrderUserService.getDesignContractListss(pageNum,pageSize,projectNo));
+    }
+
+    @ApiOperation("测试接口---->")
+    @MyRespBody
+    @RequestMapping(value = "test", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<DesignContractVO> test(@RequestParam(defaultValue = "1") @ApiParam(value = "页码",required = true) int pageNum,
+                                                                              @RequestParam (defaultValue = "10")@ApiParam(value = "每页条数",required = true) int pageSize,
+                                                                              @RequestParam(required = false) @ApiParam(value = "公司编码 (必传)BD2018080710405900001")  String companyId,
+                                                                              @RequestParam(required = false) @ApiParam(value = "项目编号")  String orderNo,
+                                                                              @RequestParam(required = false) @ApiParam(value = "合同编号")  String contractNo,
+                                                                              @RequestParam(required = false) @ApiParam(value = "订单来源")  Integer orderSource,
+                                                                              @RequestParam(required = false) @ApiParam(value = "订单所在地")  String orderAddress,
+                                                                              @RequestParam(required = false) @ApiParam(value = "合同状态")  Integer contractStatus,
+                                                                              @RequestParam(required = false) @ApiParam(value = "签约时间区间开始") Date startSign,
+                                                                              @RequestParam(required = false) @ApiParam(value = "签约时间区间结束") Date endSign,
+                                                                              @RequestParam(required = false) @ApiParam(value = "业主信息") String ownerName
+
+
+
+    )
+    {
+        DesignContractVO designContractVO = new DesignContractVO();
+        designContractVO.setCompanyId(companyId);
+        designContractVO.setContractNo(contractNo);
+        designContractVO.setOrderNo(orderNo);
+        designContractVO.setOrderSource(orderSource);
+        designContractVO.setOrderAddress(orderAddress);
+        designContractVO.setContractStatus(contractStatus);
+        designContractVO.setStartSign(startSign);
+        designContractVO.setEndSign(endSign);
+        designContractVO.setOwnerName(ownerName);
+        if (null == companyId || "".equals(companyId)) {
+            return sendJsonData(ResultMessage.ERROR, "公司编码为空");
+        }
+        Map<String, Object> params = new HashMap<>();
+        List<DesignContractVO> acceptanceResultsList = new ArrayList<>();
+        acceptanceResultsList = newOrderUserService.queryContractByPage(designContractVO, (pageNum - 1) * pageSize, pageSize);
+        //这里查询的是所有的数据
+        params.put("list", acceptanceResultsList);
+        //这里查询的是总页数
+        params.put("total", newOrderUserService.queryContractCount(designContractVO));
+        params.put("pageSize", pageSize);
+        params.put("pageNum", pageNum);
+        return sendJsonData(ResultMessage.SUCCESS, params);
     }
 
 
