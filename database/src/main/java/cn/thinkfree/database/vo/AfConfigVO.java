@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.UserRoleSet;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Data
 @ApiModel(value = "审批流配置")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AfConfigVO {
     @ApiModelProperty(value = "审批流配置编号")
     private String configNo;

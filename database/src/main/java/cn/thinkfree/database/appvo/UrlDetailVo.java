@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -17,24 +18,13 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UrlDetailVo {
-    /**
-     * 地址
-     */
-    @ApiModelProperty(value = "地址")
-    private String url;
-    /**
-     * 上传时间
-     */
-    @ApiModelProperty(value = "上传时间")
-    private Date uploadTime;
-    /**
-     * 名字
-     */
-    @ApiModelProperty(value = "名字")
+    @ApiModelProperty(value = "效果图地址")
+    private String imgUrl;
+    @ApiModelProperty(value = "全景图地址")
+    private String photo360Url;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "效果图时间--上传时间")
+    private String uploadTime;
+    @ApiModelProperty(value = "资料名字")
     private String name;
-    /**
-     * 文件类型
-     */
-    @ApiModelProperty(value = "文件类型")
-    private Integer fileType;
 }

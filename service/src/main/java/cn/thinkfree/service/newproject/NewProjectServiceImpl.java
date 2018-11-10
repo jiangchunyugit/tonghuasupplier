@@ -230,7 +230,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //TODO 添加是否可以取消,正式时询问这些内容赋值规则
         designerOrderDetailVo.setCancle(true);
         //存放订单类型
-        designerOrderDetailVo.setOrderType(ProjectDataStatus.DESIGN_STATUS.getValue());
+        designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         List<PersionVo> persionList = new ArrayList<>();
@@ -335,7 +335,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andTypeEqualTo(ProjectDataStatus.DESIGN_STATUS.getValue());
+        List<Integer> categoryList = new ArrayList<>();
+        categoryList.add(ProjectDataStatus.EFFECT_STATUS.getValue());
+        categoryList.add(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
+        criteria.andCategoryIn(categoryList);
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
         List<DataDetailVo> dataDetailVoList = new ArrayList<>();
         Set<Integer> set = new HashSet<>();
@@ -351,14 +354,16 @@ public class NewProjectServiceImpl implements NewProjectService {
                     if (projectData.getFileType().equals(ProjectDataStatus.FILE_PNG.getValue())) {
                         UrlDetailVo urlDetailVo = new UrlDetailVo();
                         detailVo.setConfirm(projectData.getIsConfirm());
-                        detailVo.setCategory(projectData.getCategory());
                         detailVo.setUploadTime(projectData.getUploadTime());
-                        urlDetailVo.setUrl(projectData.getUrl());
+                        detailVo.setCategory(projectData.getCategory());
+                        urlDetailVo.setImgUrl(projectData.getUrl());
+                        urlDetailVo.setPhoto360Url(projectData.getPhotoPanoramaUrl());
+                        urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
                         urlList.add(urlDetailVo);
                         urlStringList.add(projectData.getUrl());
                     }
-                    if (projectData.getFileType().equals(ProjectDataStatus.FILE_THIRD.getValue())) {
-                        detailVo.setThirdUrl(projectData.getUrl());
+                    if(!projectData.getPhotoPanoramaUrl().isEmpty()){
+                        detailVo.setThirdUrl(projectData.getPhotoPanoramaUrl());
                     }
                     if (projectData.getFileType().equals(ProjectDataStatus.FILE_PDF.getValue())) {
                         detailVo.setPdfUrl(projectData.getUrl());
@@ -390,9 +395,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
         for (ProjectData projectData : projectDataList) {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
-            urlDetailVo.setUrl(projectData.getUrl());
+            urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-            urlDetailVo.setUploadTime(projectData.getUploadTime());
+            urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
             urlList.add(urlDetailVo);
         }
         return RespData.success(urlList);
@@ -415,9 +420,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
         for (ProjectData projectData : projectDataList) {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
-            urlDetailVo.setUrl(projectData.getUrl());
+            urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-            urlDetailVo.setUploadTime(projectData.getUploadTime());
+//            urlDetailVo.setUploadTime(projectData.getUploadTime());
             urlList.add(urlDetailVo);
         }
         return RespData.success(urlList);
@@ -426,24 +431,44 @@ public class NewProjectServiceImpl implements NewProjectService {
     /**
      * 确认资料
      *
-     * @param projectNo
-     * @param category
+     * @param dataVo
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle<String> confirmVolumeRoomData(String projectNo, Integer category) {
-        ProjectData projectData = new ProjectData();
-        projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
-        projectData.setConfirmTime(new Date());
-        ProjectDataExample example = new ProjectDataExample();
-        ProjectDataExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(projectNo);
-        criteria.andCategoryEqualTo(category);
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExampleSelective(projectData, example);
-        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("确认失败!");
+    public MyRespBundle<String> confirmVolumeRoomData(CaseDataVo dataVo) {
+        if (dataVo.getUserId().isEmpty()) {
+            return RespData.error("请给userid赋值");
+        }
+        EmployeeMsgExample example = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(dataVo.getUserId());
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(example);
+        if (employeeMsgs.size() == 0) {
+            return RespData.error("查无此设计师!");
+        }
+        if (dataVo.getType()==null){
+            return RespData.error("请选择资料类型");
+        }
+        for (UrlDetailVo urlDetailVo : dataVo.getDataList()) {
+            ProjectData projectData = new ProjectData();
+            projectData.setFileType(ProjectDataStatus.FILE_PNG.getValue());
+            projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
+            projectData.setType(dataVo.getType());
+            projectData.setCategory(dataVo.getCategory());
+            projectData.setProjectNo(dataVo.getProjectNo());
+            projectData.setCaseId(dataVo.getCaseId());
+            projectData.setFileName(urlDetailVo.getName());
+            projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+            projectData.setUrl(urlDetailVo.getImgUrl());
+            projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
+            if (DateUtil.getNewDate(dataVo.getCaseUploadTime()) != null) {
+                projectData.setUploadTime(DateUtil.getNewDate(dataVo.getCaseUploadTime()));
+            }
+            int i = projectDataMapper.insertSelective(projectData);
+            if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                return RespData.error("确认失败!");
+            }
         }
         return RespData.success();
     }
