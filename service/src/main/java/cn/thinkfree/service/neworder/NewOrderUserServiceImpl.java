@@ -533,6 +533,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
+        if(designContractVO.getContractStatus() == 1){
+            designContractVO.setFlag("1");
+        }else{
+            designContractVO.setFlag("0");
+        }
         List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
         for (DesignContractVO vo :voList){
             //业主
