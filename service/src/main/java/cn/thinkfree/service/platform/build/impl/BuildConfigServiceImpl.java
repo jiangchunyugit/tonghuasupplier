@@ -238,4 +238,11 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         }
         return schemeConfigMapper.selectByExample(configExample);
     }
+
+    @Override
+    public List<BuildPayConfig> queryPayScheme(String schemeNo) {
+        BuildPayConfigExample configExample = new BuildPayConfigExample();
+        configExample.createCriteria().andSchemeNoEqualTo(schemeNo);
+        return payConfigMapper.selectByExample(configExample);
+    }
 }

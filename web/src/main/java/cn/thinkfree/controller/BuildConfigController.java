@@ -202,4 +202,16 @@ public class BuildConfigController extends AbsBaseController {
             return sendSuccessMessage(e.getMessage());
         }
     }
+
+    @ApiOperation("根据施工方案编号")
+    @ResponseBody
+    @RequestMapping(value = "queryPayScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle queryPayScheme(
+            @ApiParam(name = "schemeNo", required = false, value = "方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo){
+        try {
+            return sendJsonData(ResultMessage.SUCCESS,buildConfigService.queryPayScheme(schemeNo));
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
 }

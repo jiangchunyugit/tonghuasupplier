@@ -120,4 +120,11 @@ public interface BuildConfigService {
      */
     List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo);
 
+    /**
+     * 根据方案编号查询支付方案列表
+     * @param schemeNo 方案编号
+     * @return
+     */
+    List<BuildPayConfig> queryPayScheme(String schemeNo);
+
 }
