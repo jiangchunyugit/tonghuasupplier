@@ -53,9 +53,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private ProjectSchedulingMapper projectSchedulingMapper;
 
     @Override
-    public List<OrderUser> findByProjectNo(String orderNo) {
+    public List<OrderUser> findByProjectNo(String projectNo) {
         OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoEqualTo(orderNo);
+        example.createCriteria().andProjectNoEqualTo(projectNo);
         return orderUserMapper.selectByExample(example);
     }
 
