@@ -50,4 +50,6 @@ public class DesignContractVO {
     @ApiModelProperty("审批状态：0：不通过 1：通过")
     private Integer auditType;
 
+    private String  flag;
+
 }
