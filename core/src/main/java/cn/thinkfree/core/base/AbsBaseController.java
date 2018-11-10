@@ -92,7 +92,7 @@ public abstract class AbsBaseController extends AbsLogPrinter {
     protected MyRespBundle initResult(Integer code, String message){
         MyRespBundle myRespBundle = new MyRespBundle();
         myRespBundle.setCode(code);
-        myRespBundle.setMessage(SUCCESS.message);
+        myRespBundle.setMessage(message);
         myRespBundle.setData(message);
         myRespBundle.setTimestamp(Instant.now().toEpochMilli());
         return myRespBundle;
