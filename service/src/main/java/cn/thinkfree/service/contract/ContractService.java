@@ -2,9 +2,11 @@ package cn.thinkfree.service.contract;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.vo.remote.SyncContractVO;
 import org.springframework.data.redis.connection.ReactiveSetCommands.SInterCommand;
 
 import com.github.pagehelper.PageInfo;
@@ -78,7 +80,7 @@ public interface ContractService {
       * 
       * 根据合同编号和公司编号 生成合同
       * @param contractNumber
-      * @param 
+      * @param
       * @return
       */
       String createContractDoc(String contractNumber);
@@ -124,13 +126,13 @@ public interface ContractService {
        */
       boolean auditStatusOrderContract(String orderNumber,String auditStatus);
       
-      
+
       /**
        * 财务审核通过 生成合同pdf
-       * 
+       *
        */
       boolean createOrderContract(String orderNumber);
-      
+
       /**
        * 根据订单号获取
        * @param  orderNumber 
@@ -166,24 +168,31 @@ public interface ContractService {
        * @return list 
        */
       List<ContractInfo>  getEnterContractBycompanyId(String companyId);
-      
-      
+
+    /**
+     * 获取远程推送信息
+     * @param contractNumber
+     * @return
+     */
+    Optional<SyncContractVO> selectSyncDateByContractNumber(String contractNumber);
+
+
       /**
        * 根据 合同编写 提供合同设置比例值
        * @param  contractNumber
-       * @retuen list 
+       * @retuen list
        * @author lvqidong
        */
-      
+
       List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber);
-      
-      
+
+
     /**
      * 根据公司类型 获取费用名称 和 code
      * @
      * type 0 设计 1装饰
-     * 
+     *
      */
      public Map<String,String> getCostNames(String type);
-      
+
 }

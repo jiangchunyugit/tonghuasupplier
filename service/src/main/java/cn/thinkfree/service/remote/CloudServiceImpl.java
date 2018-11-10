@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -50,6 +51,8 @@ public class CloudServiceImpl implements CloudService {
 
     @Value("${custom.cloud.syncMerchantUrl}")
     String syncMerchantUrl;
+    @Value("${custom.cloud.syncContractUrl}")
+    String syncContractUrl;
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -134,8 +137,7 @@ public class CloudServiceImpl implements CloudService {
         String result  = restTemplate.postForObject(url, param, String.class);
         RemoteResult remoteResult = new RemoteResult();
         System.out.println(result);
-//        result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
-//        return result;
+        // TODO 确认是否完成
         return null;
     }
 
@@ -182,18 +184,8 @@ public class CloudServiceImpl implements CloudService {
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
-        MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
-
-        param.add("address", syncTransactionVO.getAddress());
-        param.add("code",syncTransactionVO.getCode());
-        param.add("cwgsdm",105); // syncTransactionVO.getCwgsdm()
-        param.add("gssh",syncTransactionVO.getGssh());
-        param.add("jc",syncTransactionVO.getJc());
-        param.add("name",syncTransactionVO.getName());
-        param.add("vendorCode",syncTransactionVO.getVendorCode());
         syncTransactionVO.setCwgsdm(105);
-        String body = new Gson().toJson(syncTransactionVO);
-        System.out.println(body);
+        String body = new GsonBuilder().serializeNulls().create().toJson(syncTransactionVO);
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         RemoteResult<String > result = null;
         try {
@@ -275,7 +267,34 @@ public class CloudServiceImpl implements CloudService {
             return "";
         }
         return result;
-    }	@Override
+    }
+
+    /**
+     * 同步合同信息
+     *
+     * @param syncContractVO
+     * @return
+     */
+    @Override
+    public RemoteResult<String> syncContract(SyncContractVO syncContractVO) {
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        String body = new GsonBuilder().serializeNulls().create().toJson(syncContractVO);
+        System.out.println(body);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        RemoteResult<String > result = null;
+        try {
+            result = invokeRemoteMethodForJson(syncContractUrl,requestEntity);
+//            result = invokeRemoteMethod(syncMerchantUrl,param);
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return null;
+    }
+
+    @Override
     public String uploadFile(String fileName) {
         // TODO Auto-generated method stub
 //      HttpHeaders headers = new HttpHeaders();

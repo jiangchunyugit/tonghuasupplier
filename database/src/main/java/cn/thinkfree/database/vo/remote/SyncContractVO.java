@@ -29,8 +29,8 @@ public class SyncContractVO extends BaseModel {
     private int gsdm;
     private String hth;
     private String hth_OLD;
-    private Date htyxq_END;
-    private Date htyxq_START;
+    private String htyxq_END;
+    private String htyxq_START;
     private String jrdzzh;
     private String province;
     private String status;
@@ -123,19 +123,19 @@ public class SyncContractVO extends BaseModel {
         this.hth_OLD = hth_OLD;
     }
 
-    public Date getHtyxq_END() {
+    public String getHtyxq_END() {
         return htyxq_END;
     }
 
-    public void setHtyxq_END(Date htyxq_END) {
+    public void setHtyxq_END(String htyxq_END) {
         this.htyxq_END = htyxq_END;
     }
 
-    public Date getHtyxq_START() {
+    public String getHtyxq_START() {
         return htyxq_START;
     }
 
-    public void setHtyxq_START(Date htyxq_START) {
+    public void setHtyxq_START(String htyxq_START) {
         this.htyxq_START = htyxq_START;
     }
 
@@ -161,5 +161,23 @@ public class SyncContractVO extends BaseModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public SyncContractVO() {
+       this.fddm ="";
+        this.fkkhh="";
+        this.fkkhhbh=0;
+        this.fkyhhm="";
+        this.fkyhzh="";
+        this.ghdwdm="";
+        this.ghdwmc="";
+        this.gsdm=0;
+        this.hth="";
+        this.hth_OLD="";
+        this.htyxq_END="";
+        this.htyxq_START="";
+        this.jrdzzh="";
+        this.province="";
+        this.status="";
     }
 }

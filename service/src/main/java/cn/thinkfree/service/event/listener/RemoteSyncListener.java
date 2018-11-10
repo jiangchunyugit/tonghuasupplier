@@ -4,8 +4,12 @@ import cn.thinkfree.core.event.AbsBaseEvent;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.event.account.ResetPassWord;
 import cn.thinkfree.database.event.sync.CompanyJoin;
+import cn.thinkfree.database.event.sync.FinishContract;
+import cn.thinkfree.database.model.PcCompanyFinancial;
+import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import cn.thinkfree.service.company.CompanyInfoService;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.remote.CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
@@ -27,6 +31,9 @@ public class RemoteSyncListener extends AbsLogPrinter {
 
     @Autowired
     CompanyInfoService companyInfoService;
+
+    @Autowired
+    ContractService contractService;
     /**
      * 公司资质确认后
      * @param companyJoin
@@ -45,13 +52,25 @@ public class RemoteSyncListener extends AbsLogPrinter {
 
     }
 
-//    @EventListener
-//    public void test(AbsBaseEvent event){
-//        System.out.println("bug");
-//    }
+    /**
+     *  合同完成之后
+     *  1.推送合同主体
+     *  2.推送结算信息
+     * @param finishContract
+     */
+//    @TransactionalEventListener
+//    @Async
+    @EventListener
+    public void finishContractAfter(FinishContract finishContract){
+
+        Optional<SyncContractVO> flag = contractService.selectSyncDateByContractNumber(finishContract.getSource());
+        if(flag.isPresent()){
+            cloudService.syncContract(flag.get());
+        }
+    }
 
     @EventListener
-    public void feiqi(ApplicationEvent applicationEvent){
+    public void system(ApplicationEvent applicationEvent){
         System.out.println(applicationEvent);
     }
 

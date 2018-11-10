@@ -82,4 +82,11 @@ public interface ProvinceMapper {
 
      */
     int updateByPrimaryKey(Province record);
+
+    /**
+     * 转换编码到名称
+     * @param provinceCode
+     * @return
+     */
+    String convertCodeToName(Short provinceCode);
 }
