@@ -10,6 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,8 +55,7 @@ public class AppProjectController {
     @RequestMapping(value = "getDesignData", method = RequestMethod.POST)
     @ApiOperation(value = "APP-获取设计资料")
     public MyRespBundle<DataVo> getDesignData(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
-        MyRespBundle<DataVo> dataVo = newProjectService.getDesignData(projectNo);
-        return dataVo;
+        return newProjectService.getDesignData(projectNo);
     }
 
     @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
@@ -81,15 +81,15 @@ public class AppProjectController {
         return newProjectService.cancleOrder(orderNo, projectNo, userId, cancelReason);
     }
 
-    /*@RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
+    @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
     @ApiOperation(value = "APP-确认资料")
-    public MyRespBundle<String> confirmVolumeRoomData( @ApiParam(name = "dataVo", value = "确认资料 ") DataVo dataVo) {
+    public MyRespBundle<String> confirmVolumeRoomData( @RequestBody  @ApiParam(name = "dataVo", value = "确认资料 ") CaseDataVo dataVo) {
         return newProjectService.confirmVolumeRoomData(dataVo);
-    }*/
+    }
 
     @RequestMapping(value = "getProjectUsers", method = RequestMethod.POST)
     @ApiOperation("批量获取人员信息")
-    public MyRespBundle<List<UserVo>> getProjectUsers(@RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 1223098338391") String projectNo) {
+    public MyRespBundle<List<UserVo>> getProjectUsers( @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 1223098338391") String projectNo) {
         return newProjectService.getProjectUsers(projectNo);
     }
 
