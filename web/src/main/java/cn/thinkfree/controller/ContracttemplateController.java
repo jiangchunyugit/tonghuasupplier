@@ -10,26 +10,17 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ResourceUtils;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import cn.thinkfree.core.annotation.AppParameter;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
-import cn.thinkfree.core.bundle.MyRequBundle;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ContractTemplate;
@@ -159,16 +150,17 @@ public class ContracttemplateController extends AbsBaseController{
 
     /**
      * 上传合同
+     * @ApiParam("附件")@AppParameter @RequestParam("file") MultipartFile file
      */
     @ApiOperation(value = "前端--运营后台--上传合同模板--吕启栋", notes = "根据合同类型添加合同模板数据(修改完合同模板返回合同模板pdf路径和上传时间)")
     @PostMapping("/uploadTemplate")
     @MyRespBody
     
     public MyRespBundle<String>  uploadTemplate(
-    		@ApiParam("合同类型0设计公司合同 1装修公司合同 2设计业主合同 3装修业主合同") @RequestParam String type,
-    		@ApiParam("附件")@AppParameter @RequestParam("file") MultipartFile file){
+    		@ApiParam("合同类型0设计公司合同 1装修公司合同 2设计业主合同 3装修业主合同") @RequestParam String type,String fileUrl
+    		){
     	
-    	boolean flag = contractTemplateService.uploadFile(type,file);
+    	boolean flag = contractTemplateService.uploadFile(type,fileUrl);
     	
         return sendJsonData(ResultMessage.SUCCESS,true);
     }
