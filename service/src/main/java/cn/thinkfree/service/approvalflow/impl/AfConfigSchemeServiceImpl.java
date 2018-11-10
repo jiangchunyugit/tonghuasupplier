@@ -4,6 +4,8 @@ import cn.thinkfree.database.mapper.AfConfigSchemeMapper;
 import cn.thinkfree.database.model.AfConfigScheme;
 import cn.thinkfree.database.model.AfConfigSchemeExample;
 import cn.thinkfree.database.model.ConstructionOrder;
+import cn.thinkfree.database.model.UserRoleSet;
+import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -54,17 +56,20 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
     }
 
     @Override
-    public void create(String configSchemeNo, String configNo, String schemeNo, String describe, String userId) {
+    public void create(String schemeNo, String userId, String configSchemeNo, AfConfigVO configVO) {
         AfConfigScheme configScheme = new AfConfigScheme();
-        configScheme.setConfigNo(configNo);
+        configScheme.setConfigNo(configVO.getConfigNo());
         configScheme.setConfigSchemeNo(configSchemeNo);
         configScheme.setCreateTime(new Date());
         configScheme.setCreateUserId(userId);
         configScheme.setSchemeNo(schemeNo);
         configScheme.setUsable(1);
-        configScheme.setDescribe(describe);
+        configScheme.setDescribe(configVO.getDescribe());
 
-        delete(configNo, schemeNo);
+        List<UserRoleSet> approvalRoles = configVO.getApprovalRoles();
+        configScheme.setFirstRoleId(approvalRoles.get(0).getRoleCode());
+
+        delete(configVO.getConfigNo(), schemeNo);
 
         insert(configScheme);
     }

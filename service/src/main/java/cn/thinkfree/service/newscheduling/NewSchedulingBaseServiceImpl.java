@@ -156,9 +156,12 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Transactional(rollbackFor = Exception.class)
     public String listShangHai(SchedulingSeo schedulingSeo) {
         //获取上海基础小排期信息
-        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(), Scheduling.LIMIT.getValue());
+        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(), Scheduling.LIMIT.getValue(),schedulingSeo.getCompanyId());
         JSONObject jsonObject = JSON.parseObject(result);
         JSONArray json = jsonObject.getJSONArray("data");
+        if(json.size()==0){
+            return "上海暂无此公司的施工基础信息!";
+        }
         String jsonString = JSONObject.toJSONString(json);
         List<ProjectSmallScheduling> smallList = JSONObject.parseArray(jsonString, ProjectSmallScheduling.class);
         if (smallList.size() == Scheduling.INSERT_FAILD.getValue()) {

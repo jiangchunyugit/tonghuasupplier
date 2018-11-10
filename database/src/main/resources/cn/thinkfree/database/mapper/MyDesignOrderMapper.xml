@@ -77,4 +77,73 @@
             AND
             deso.status=#{status}
     </select>
+
+    <!--分页查询设计合同-->
+    <select id="selectContractByPage" resultType="cn.thinkfree.database.vo.DesignContractVO">
+        SELECT
+        dor.order_no AS orderNo,
+        p.project_no AS projectNo,
+        P .order_source AS orderSource,
+        P .province AS orderAddress,
+        po.contract_number AS contractNo,
+        po.sign_time AS signingTime,
+        po.audit_type AS auditType
+        FROM
+        designer_order dor
+        LEFT JOIN project P ON P .project_no = dor.project_no
+        LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
+        WHERE
+        dor.company_id = #{designContractVO.companyId}
+        <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
+            and po.contract_number like CONCAT('%',#{designContractVO.contractNo},'%' )
+        </if>
+        <if test="designContractVO.orderNo!=null and designContractVO.orderNo!=''">
+            and dor.order_no like CONCAT('%',#{designContractVO.orderNo},'%' )
+        </if>
+        <if test="designContractVO.orderSource!=null and designContractVO.orderSource!=''">
+            and P .order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
+        </if>
+        <if test="designContractVO.orderAddress!=null and designContractVO.orderAddress!=''">
+            and P .province like CONCAT('%',#{designContractVO.orderAddress},'%' )
+        </if>
+        <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
+            and P .po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
+        </if>
+        <if test="designContractVO.startSign != null and designContractVO.startSign != ''">AND po.sign_time <![CDATA[>=]]> #{designContractVO.startSign}</if>
+        <if test="designContractVO.endSign != null and designContractVO.endSign != ''">AND po.sign_time <![CDATA[<=]]>#{designContractVO.endSign}</if>
+
+        ORDER BY dor.create_time DESC
+        <if test="pageSize != null">
+            limit #{pageSize} offset #{pageNum}
+        </if>
+    </select>
+
+    <!--查询合同总条数-->
+    <select id="selectContractCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        designer_order dor
+        LEFT JOIN project P ON P .project_no = dor.project_no
+        LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
+        WHERE
+        dor.company_id = #{designContractVO.companyId}
+        <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
+            and po.contract_number like CONCAT('%',#{designContractVO.contractNo},'%' )
+        </if>
+        <if test="designContractVO.orderNo!=null and designContractVO.orderNo!=''">
+            and dor.order_no like CONCAT('%',#{designContractVO.orderNo},'%' )
+        </if>
+        <if test="designContractVO.orderSource!=null and designContractVO.orderSource!=''">
+            and P .order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
+        </if>
+        <if test="designContractVO.orderAddress!=null and designContractVO.orderAddress!=''">
+            and P .province like CONCAT('%',#{designContractVO.orderAddress},'%' )
+        </if>
+        <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
+            and P .po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
+        </if>
+        <if test="designContractVO.startSign != null and designContractVO.startSign != ''">AND po.sign_time <![CDATA[>=]]> #{designContractVO.startSign}</if>
+        <if test="designContractVO.endSign != null and designContractVO.endSign != ''">AND po.sign_time <![CDATA[<=]]>#{designContractVO.endSign}</if>
+    </select>
 </mapper>

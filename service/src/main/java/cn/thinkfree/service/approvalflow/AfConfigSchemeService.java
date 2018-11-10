@@ -1,6 +1,7 @@
 package cn.thinkfree.service.approvalflow;
 
 import cn.thinkfree.database.model.AfConfigScheme;
+import cn.thinkfree.database.vo.AfConfigVO;
 
 import java.util.List;
 
@@ -29,13 +30,12 @@ public interface AfConfigSchemeService {
 
     /**
      * 创建审批流配置方案
-     * @param configSchemeNo 审批流配置方案编号
-     * @param configNo 审批流配置编号
      * @param schemeNo 方案编号
-     * @param describe 描述
      * @param userId 用户编号
+     * @param configSchemeNo 审批流配置方案编号
+     * @param configVO 审批流配置
      */
-    void create(String configSchemeNo, String configNo, String schemeNo, String describe, String userId);
+    void create(String schemeNo, String userId, String configSchemeNo, AfConfigVO configVO);
 
     String findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId);
 

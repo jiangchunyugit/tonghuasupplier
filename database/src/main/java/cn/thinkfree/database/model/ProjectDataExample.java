@@ -1024,6 +1024,76 @@ public class ProjectDataExample {
             addCriterion("case_id not between", value1, value2, "caseId");
             return (Criteria) this;
         }
+
+        public Criteria andPhotoPanoramaUrlIsNull() {
+            addCriterion("photo_panorama_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlIsNotNull() {
+            addCriterion("photo_panorama_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlEqualTo(String value) {
+            addCriterion("photo_panorama_url =", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlNotEqualTo(String value) {
+            addCriterion("photo_panorama_url <>", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlGreaterThan(String value) {
+            addCriterion("photo_panorama_url >", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("photo_panorama_url >=", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlLessThan(String value) {
+            addCriterion("photo_panorama_url <", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlLessThanOrEqualTo(String value) {
+            addCriterion("photo_panorama_url <=", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlLike(String value) {
+            addCriterion("photo_panorama_url like", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlNotLike(String value) {
+            addCriterion("photo_panorama_url not like", value, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlIn(List<String> values) {
+            addCriterion("photo_panorama_url in", values, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlNotIn(List<String> values) {
+            addCriterion("photo_panorama_url not in", values, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlBetween(String value1, String value2) {
+            addCriterion("photo_panorama_url between", value1, value2, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPhotoPanoramaUrlNotBetween(String value1, String value2) {
+            addCriterion("photo_panorama_url not between", value1, value2, "photoPanoramaUrl");
+            return (Criteria) this;
+        }
     }
 
     /**

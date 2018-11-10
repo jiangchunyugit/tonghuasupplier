@@ -84,9 +84,15 @@ public class DateUtil {
      * @throws ParseException
      * @Description 传入一个 "2017-10-12 00:00:00"格式的时间点,返回一个 "2017-10-12"的时间
      */
-    public static Date getNewDate(String strDate) throws ParseException {
-        Date toDate = SDF_TWO.parse(strDate);
-        Date newDate = SDF.parse(SDF.format(toDate));
+    public static Date getNewDate(String strDate){
+        Date newDate = null;
+        try {
+            Date toDate = SDF_TWO.parse(strDate);
+            newDate = SDF.parse(SDF.format(toDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
         return newDate;
     }
 

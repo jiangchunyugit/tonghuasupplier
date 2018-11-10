@@ -26,12 +26,10 @@ public interface NewProjectService {
 
     /**
      * 确认资料
-     *
-     * @param projectNo
-     * @param category
+     * @param dataVo
      * @return
      */
-    MyRespBundle<String> confirmVolumeRoomData(String projectNo, Integer category);
+    MyRespBundle<String> confirmVolumeRoomData(CaseDataVo dataVo);
 
     /**
      * 获取设计资料

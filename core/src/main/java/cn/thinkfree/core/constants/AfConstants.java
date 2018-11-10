@@ -66,4 +66,6 @@ public class AfConstants {
      * 审批操作：拒绝
      */
     public static final int OPTION_REFUSAL = 0;
+
+    public static final int CONFIG_TYPE_COUNT = 10;
 }

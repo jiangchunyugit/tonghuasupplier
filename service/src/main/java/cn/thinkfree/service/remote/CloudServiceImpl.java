@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import cn.thinkfree.database.vo.remote.SyncContractVO;
-import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,16 +45,8 @@ public class CloudServiceImpl implements CloudService {
     String sendEMail;
     @Value("${shanghai.smallSchedulingUrl}")
     String smallSchedulingUrl;
-	@Value("${message.remindConsumerUrl}")
+    @Value("${message.remindConsumerUrl}")
     String remindConsumerUrl;
-
-    @Value("${custom.cloud.syncMerchantUrl}")
-    String syncMerchantUrl;
-    @Value("${custom.cloud.syncContractUrl}")
-    String syncContractUrl;
-    @Value("${custom.cloud.syncOrderUrl}")
-    String syncOrderUrl;
-
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -102,10 +92,9 @@ public class CloudServiceImpl implements CloudService {
     public RemoteResult<String> sendSms(String phone, String activeCode) {
 
         MultiValueMap<String, Object> param = initParam();
-//        param.add("phone", phone);
-//        param.add("activationCode", activeCode);
-        param.add("telephone", phone);
-        param.add("code", activeCode);
+        param.add("phone", phone);
+        param.add("activationCode", activeCode);
+
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(sendSmsUrl, param);
@@ -123,12 +112,12 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit) {
-        String result = restTemplate.getForObject(url, String.class, status, limit);
+    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit, String decorateCompany) {
+        String result = restTemplate.getForObject(url, String.class, status, limit, decorateCompany);
         return result;
     }
 
-    private String invokeRemoteMessageMethod(String url,MultiValueMap<String, Object> param){
+    private String invokeRemoteMessageMethod(String url, MultiValueMap<String, Object> param) {
         String result = restTemplate.postForObject(url, param, String.class);
         return result;
     }
@@ -138,14 +127,6 @@ public class CloudServiceImpl implements CloudService {
         result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
         return result;
     }
-    private RemoteResult<String> invokeRemoteMethodForJson(String url, HttpEntity<String> param) {
-        String result  = restTemplate.postForObject(url, param, String.class);
-        RemoteResult remoteResult = new RemoteResult();
-        System.out.println(result);
-        // TODO 确认是否完成
-        return null;
-    }
-
 
     private MultiValueMap<String, Object> initParam() {
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();
@@ -186,17 +167,19 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        syncTransactionVO.setCwgsdm(105);
-        String body = new GsonBuilder().serializeNulls().create().toJson(syncTransactionVO);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
-        RemoteResult<String > result = null;
+        MultiValueMap<String, Object> param = initParam();
+
+        param.add("address", syncTransactionVO.getAddress());
+        param.add("code", syncTransactionVO.getCode());
+        param.add("cwgsdm", syncTransactionVO.getCwgsdm());
+        param.add("gssh", syncTransactionVO.getGssh());
+        param.add("jc", syncTransactionVO.getJc());
+        param.add("name", syncTransactionVO.getName());
+        param.add("vendorCode", syncTransactionVO.getVendorCode());
+        RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
-//            result = invokeRemoteMethod(syncMerchantUrl,param);
-        }catch (Exception e){
+            result = invokeRemoteMethod(sendNotice, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -213,10 +196,8 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> sendEmail(String email, String templateCode, String para) {
-        MultiValueMap<String, Object> param = initParam();
-        param.add("recipientAddress",email);
-        param.add("templateNo",templateCode);
-        param.add("tplContent",para);
+        MultiValueMap param = initParam();
+
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(sendEMail, param);
@@ -236,10 +217,10 @@ public class CloudServiceImpl implements CloudService {
      * @return
      */
     @Override
-    public String getBaseScheduling(Integer status, Integer limit) {
+    public String getBaseScheduling(Integer status, Integer limit, String decorateCompany) {
         String result = null;
         try {
-            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit);
+            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit, decorateCompany);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -247,7 +228,7 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-/**
+    /**
      * 给用户发消息
      *
      * @param userNo
@@ -258,14 +239,14 @@ public class CloudServiceImpl implements CloudService {
      * @return
      */
     @Override
-    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId,Integer dynamicId, Integer type) {
+    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId, Integer dynamicId, Integer type) {
         MultiValueMap<String, Object> param = initParam();
         param.add("userNo", userNo);
-        param.add("projectNo",projectNo );
-        param.add("content",content );
+        param.add("projectNo", projectNo);
+        param.add("content", content);
         param.add("senderId", senderId);
-        param.add("dynamicId",dynamicId );
-        param.add("type",type );
+        param.add("dynamicId", dynamicId);
+        param.add("type", type);
         String result = null;
         try {
             result = invokeRemoteMessageMethod(remindConsumerUrl, param);
@@ -274,53 +255,6 @@ public class CloudServiceImpl implements CloudService {
             return "";
         }
         return result;
-    }
-
-    /**
-     * 同步合同信息
-     *
-     * @param syncContractVO
-     * @return
-     */
-    @Override
-    public RemoteResult<String> syncContract(SyncContractVO syncContractVO) {
-        HttpHeaders headers = new HttpHeaders();
-        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
-        headers.setContentType(type);
-        String body = new GsonBuilder().serializeNulls().create().toJson(syncContractVO);
-        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
-        RemoteResult<String > result = null;
-        try {
-            result = invokeRemoteMethodForJson(syncContractUrl,requestEntity);
-//            result = invokeRemoteMethod(syncMerchantUrl,param);
-        }catch (Exception e){
-            e.printStackTrace();
-            return buildFailResult();
-        }
-        return result;
-    }
-
-    /**
-     * 同步订单信息
-     *
-     * @param syncOrderVO
-     */
-    @Override
-    public RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO) {
-        MultiValueMap<String, Object> param = initParam();
-        Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
-
-        param.setAll(gson.fromJson(gson.toJson(syncOrderVO),Map.class));
-
-        RemoteResult<String> result = null;
-        try {
-            result = invokeRemoteMethod(syncOrderUrl, param);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return buildFailResult();
-        }
-        return result;
-
     }
 
     @Override
@@ -348,4 +282,5 @@ public class CloudServiceImpl implements CloudService {
         System.out.println("返回结果。。。" + result);
         file.delete();
         return null;
-    }}
+    }
+}
