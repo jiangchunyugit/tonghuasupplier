@@ -43,4 +43,6 @@ public class ProjectBigSchedulingVO {
     private Integer workload;
     @ApiModelProperty("是否需要验收")
     private Integer check;
+    @ApiModelProperty("验收名称")
+    private String rename;
 }
