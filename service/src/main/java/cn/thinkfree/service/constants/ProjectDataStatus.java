@@ -29,9 +29,13 @@ public enum ProjectDataStatus {
      */
     DESIGN_STATUS(1,"设计订单type"),
     /**
+     *
+     */
+    EFFECT_STATUS(1,"效果图资料"),
+    /**
      *施工订单type
      */
-    CONSTRUCTION_STATUS(2,"施工订单type"),
+    CONSTRUCTION_STATUS(2,"施工订单type/施工图资料"),
     /**
      *报价单type
      */

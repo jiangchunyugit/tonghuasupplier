@@ -1,6 +1,8 @@
 package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.core.base.RespData;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
@@ -8,17 +10,17 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 项目用户关系服务层
@@ -38,7 +40,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Autowired(required = false)
     private PreProjectGuideMapper preProjectGuideMapper;
     @Autowired(required = false)
-    private DesignerOrderMapper DesignerOrderMapper;
+    private DesignerOrderMapper designerOrderMapper;
     @Autowired
     private ProjectMapper projectMapper;
     @Autowired
@@ -51,6 +53,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private HttpLinks httpLinks;
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
+    @Autowired
+    private  OrderContractMapper orderContractMapper;
 
     @Override
     public List<OrderUser> findByProjectNo(String projectNo) {
@@ -129,7 +133,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         String nickName = (String) result.get("nickName");
         String phone = (String) result.get("phone");
         */
-        List<ProjectOrderVO> projectOrderList = DesignerOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
+        List<ProjectOrderVO> projectOrderList = designerOrderMapper.selectProjectOrderByPage(projectOrderVO, pageNum, pageSize);
         projectOrderList.forEach((projectOrder) -> {
             projectOrder.setProjectManager(employeeInfoVO.getProjectManager());
             projectOrder.setDesignerName(employeeInfoVO.getDesigner());
@@ -150,7 +154,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public Integer queryProjectOrderCount(ProjectOrderVO projectOrderVO) {
         projectOrderVO.setStatus(1);
-        return DesignerOrderMapper.selectProjectOrderCount(projectOrderVO);
+        return designerOrderMapper.selectProjectOrderCount(projectOrderVO);
     }
 
     /**
@@ -168,7 +172,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
         DesignerOrderExample example = new DesignerOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
-        return DesignerOrderMapper.updateByExampleSelective(DesignerOrder, example);
+        return designerOrderMapper.updateByExampleSelective(DesignerOrder, example);
     }
 
     /**
@@ -248,7 +252,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         DesignerOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
         DesignerOrderExample example = new DesignerOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
-        return DesignerOrderMapper.updateByExampleSelective(DesignerOrder, example);
+        return designerOrderMapper.updateByExampleSelective(DesignerOrder, example);
     }
 
     /**
@@ -482,5 +486,130 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             return true;
         }
         return false;
+    }
+
+    /**
+     * @Author jiang
+     * @Description 设计合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+
+    @Override
+    public PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId) {
+        List<DesignContractVO> designContractVOs = new ArrayList<>();
+        for(int i = 0; i < 10; i++) {
+            DesignContractVO vo = new DesignContractVO();
+            vo.setContractStatus(1);
+            vo.setContractAmount(11);
+            vo.setSigningTime(new Date());
+            vo.setContractNo("测试");
+            vo.setOrderSource(1);
+            vo.setOrderAddress("北京");
+            vo.setOrderNo("11111");
+            vo.setOwnerName("张三");
+            vo.setOwnerPhone("18223364014");
+            vo.setProjectNo("11111");
+            vo.setSort(1);
+            vo.setSunOrderNo("11212");
+            designContractVOs.add(vo);
+
+        }
+        PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(10);
+        pageVo.setPageIndex(pageNum);
+        pageVo.setData(designContractVOs);
+        return pageVo;
+    }
+
+    /**
+     * @Author jiang
+     * @Description 合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
+        List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
+        for (DesignContractVO vo :voList){
+            //业主
+            ProjectExample projectExample = new ProjectExample();
+            projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+            //业主
+            vo.setOwnerName(customerInfo.getUsername());
+            //手机号码
+            vo.setOwnerPhone(customerInfo.getPhone());
+            if(vo.getAuditType() != null){
+                if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
+                    vo.setContractStatus(1);//生效
+                }else {
+                    vo.setContractStatus(0);//不生效
+
+                }
+            }
+        }
+        return voList;
+    }
+
+    @Override
+    public Integer queryContractCount(DesignContractVO designContractVO) {
+        return designerOrderMapper.selectContractCount(designContractVO);
+    }
+
+
+    @Override
+    public MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum, Integer pageSize, String companyId) {
+        PageHelper.startPage(pageNum, pageSize);
+        PageInfo<DesignContractVO> pageInfo = new PageInfo<>();
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        List<DesignContractVO> voList = new ArrayList<>();
+        designerOrderExample.createCriteria().andCompanyIdEqualTo(companyId).andStatusEqualTo(1);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.size()>0){
+            for (DesignerOrder or:designerOrders){
+                DesignContractVO designContractVO = new DesignContractVO();
+                //订单编号
+                designContractVO.setOrderNo(or.getOrderNo());
+                //项目编号
+                designContractVO.setProjectNo(or.getProjectNo());
+                ProjectExample projectExample = new ProjectExample();
+                projectExample.createCriteria().andProjectNoEqualTo(or.getProjectNo());
+                List<Project> projects = projectMapper.selectByExample(projectExample);
+               if(projects.size()>0){
+                   for (Project pr:projects){
+
+                       designContractVO.setOrderAddress(pr.getProvince());
+                       designContractVO.setOrderSource(pr.getOrderSource());
+                       AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+                       //业主
+                       designContractVO.setOwnerName(customerInfo.getUsername());
+                       //手机号码
+                       designContractVO.setOwnerPhone(customerInfo.getPhone());
+                   }
+               }
+                OrderContractExample orderContractExample = new OrderContractExample();
+                orderContractExample.createCriteria().andOrderNumberEqualTo(designContractVO.getOrderNo());
+                List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+                if(orderContracts.size()>0){
+                    for(OrderContract ord:orderContracts){
+                        designContractVO.setContractNo(ord.getContractNumber());
+                        designContractVO.setSigningTime(ord.getSignTime());
+                       /* if(ord.getSignTime().after(new Date())&&ord.getAuditType()){
+
+                        }*/
+                        designContractVO.setContractAmount(11);
+                        designContractVO.setContractStatus(1);
+                    }
+                }
+                voList.add(designContractVO);
+            }
+        }
+
+        return RespData.success(voList);
     }
 }
