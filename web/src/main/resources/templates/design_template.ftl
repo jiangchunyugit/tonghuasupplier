@@ -65,12 +65,12 @@
     <h1 class="text-algin">“居然设计家”平台入驻合作合同（2018版）</h1>
     <div>
         <h4 class="inline-block">甲方： </h4>
-        <p class="placeholder"></p>
+        <p class="placeholder">${c01}</p>
         <h4 class="inline-block">（以下简称甲方）</h4>
     </div>
     <div>
         <h4 class="inline-block">乙方： </h4>
-        <p class="placeholder"></p>
+        <p class="placeholder">${c02}</p>
         <h4 class="inline-block">（以下简称乙方）</h4>
     </div>
     <section class='indent'>
@@ -87,7 +87,7 @@
         甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。
     </section>
     <section class='indent'>
-        甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自<p class="placeholderT"></p>年<p class="placeholderT"></p>月<p class="placeholderT"></p>日至<p class="placeholderT"></p>年 <p class="placeholderT"></p>月<p class="placeholderT"></p>日。乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
+        甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自<p class="placeholderT">${c03?datetime('yyyy')}</p>年<p class="placeholderT">${c03?datetime('MM')}</p>月<p class="placeholderT">${c03?datetime('dd')}</p>日至<p class="placeholderT">${c04?datetime('yyyy')}</p>年 <p class="placeholderT">${c04?datetime('MM')}</p>月<p class="placeholderT">${c04?datetime('dd')}</p>日。乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
     </section>
     <section class='indent'>
         乙方指定返设计款、产品服务费、施工管理费等其他相关款项的账户信息为：
@@ -96,19 +96,19 @@
         <tr>
             <td>
                 <h4 class="inline-block">户名：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c05}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">开户行：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c06}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">账号：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c07}</p>
             </td>
         </tr>
     </table>
@@ -135,7 +135,7 @@
         7. 甲方为平台的客户提供含“先行赔付”在内的居然之家所有服务承诺。
     </section>
     <section class='indent'>
-        8. 甲方收取乙方与甲方客户签订的《设计合同》总额的 <p class="placeholderT">10 % </p> 作为平台服务管理费。
+        8. 甲方收取乙方与甲方客户签订的《设计合同》总额的 <p class="placeholderT">${c08}% </p> 作为平台服务管理费。
     </section>
     <h4>三、乙方义务</h4>
     <section class='indent'>
@@ -157,10 +157,10 @@
         6. 严禁乙方与甲方客户进行场外交易，否则视同乙方违约并终止合同。
     </section>
     <section class='indent'>
-        7. 乙方应向客户积极推荐居然设计家合作品牌产品，凡签订《设计合同》的客户，乙方应保证客户在平台购买的主材及家具配饰单平米造价不低于<p class="placeholderT"></p>元/平米。
+        7. 乙方应向客户积极推荐居然设计家合作品牌产品，凡签订《设计合同》的客户，乙方应保证客户在平台购买的主材及家具配饰单平米造价不低于<p class="placeholderT">${c09}</p>元/平米。
     </section>
     <section class='indent'>
-        8. 乙方须依照《设计合同》约定内容配合<p class="placeholderT">5</p>次以上现场施工服务。
+        8. 乙方须依照《设计合同》约定内容配合<p class="placeholderT">${c10}</p>次以上现场施工服务。
     </section>
     <h4>四、结算办法</h4>
     <section class='indent'>
@@ -182,10 +182,10 @@
         </ul>
     </section>
     <section class='indent'>
-        4. 甲方向乙方支付客户施工竣工结算额（不含管理费及税金）<p class="placeholderT">5%</p>的施工管理费，甲方分两次与乙方结算施工管理费款项。
+        4. 甲方向乙方支付客户施工竣工结算额（不含管理费及税金）<p class="placeholderT">${c12}</p>的施工管理费，甲方分两次与乙方结算施工管理费款项。
     </section>
     <section class='indent'>
-        4.1在客户《施工合同》首期款付款到账后的次月内向乙方支付施工合同折税后的合同额的<p class="placeholderT">3%</p>
+        4.1在客户《施工合同》首期款付款到账后的次月内向乙方支付施工合同折税后的合同额的<p class="placeholderT">${c12}%</p>
     </section>
     <section class='indent'>
         5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">2%</p>作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：

@@ -112,7 +112,7 @@ public class ContractController extends AbsBaseController{
     @ApiOperation(value = "前端--运营后台--财务确认保证金--吕启栋", notes = "财务保证金收到后确认保证金")
     @PostMapping("/ackEarnestMoney")
     @MyRespBody
-    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "确认保证金信息")
+   // @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "确认保证金信息")
     public MyRespBundle<String> ackEarnestMoney(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
     	

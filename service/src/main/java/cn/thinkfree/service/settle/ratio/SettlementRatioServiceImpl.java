@@ -399,7 +399,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 			String ratio = list.get(i).getRatio();
 			if(!StringUtils.isEmpty(ratio)){
 				resList.add(ratio);
-			}else if(!StringUtils.isEmpty(ratio)){
+			}else{// (!StringUtils.isEmpty(ratio)){
 				resList.add(amount);
 			}
 		}

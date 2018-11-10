@@ -14,11 +14,6 @@ import java.util.List;
  */
 @Api(value = "公司资质所有信息")
 public class CompanySubmitVo {
-    /**
-     * 公司资质相关文件
-     */
-//    @ApiModelProperty("公司资质图片")
-//    private CompanySubmitFileVo companySubmitFileVo;
 
     /**
      * 公司表

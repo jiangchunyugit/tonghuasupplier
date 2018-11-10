@@ -10,12 +10,15 @@ import cn.thinkfree.database.vo.CompanyApplySEO;
 import cn.thinkfree.database.vo.PcApplyInfoSEO;
 import cn.thinkfree.database.vo.PcApplyInfoVo;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
+import cn.thinkfree.service.pcUser.PcUserInfoService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 /**
  * @author ying007
@@ -30,6 +33,7 @@ public class CompanyApplyController extends AbsBaseController {
 
     @Autowired
     CompanyApplyService companyApplyService;
+
 
 
     /**
@@ -52,7 +56,7 @@ public class CompanyApplyController extends AbsBaseController {
     @RequestMapping(value = "/applyThink", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="前端--设计/装饰公司管理中心--设计/装饰公司入驻--入驻申请--注：添加公司申请事项-->0：入驻，1：资质变更 2:续约--李阳")
-    public MyRespBundle<String> applyThink(@ApiParam("申请信息")@RequestBody PcApplyInfoSEO pcApplyInfoSEO){
+    public MyRespBundle<String> applyThink(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
         boolean flag = companyApplyService.addApplyInfo(pcApplyInfoSEO);
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
@@ -141,9 +145,9 @@ public class CompanyApplyController extends AbsBaseController {
     @RequestMapping(value = "/addCompanyAdmin", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--添加账号--二次确认界面---确认(发送短信)--李阳")
-    public MyRespBundle<String> addCompanyAdmin(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
-        String flag = companyApplyService.addCompanyAdmin(pcApplyInfoSEO);
-        return sendJsonData(ResultMessage.SUCCESS, flag);
+    public MyRespBundle<Map<String, Object>> addCompanyAdmin(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
+        Map<String, Object> map = companyApplyService.addCompanyAdmin(pcApplyInfoSEO);
+        return sendJsonData(ResultMessage.SUCCESS, map);
     }
 
     /**
