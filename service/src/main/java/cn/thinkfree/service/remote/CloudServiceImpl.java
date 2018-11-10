@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -47,6 +49,13 @@ public class CloudServiceImpl implements CloudService {
     String smallSchedulingUrl;
     @Value("${message.remindConsumerUrl}")
     String remindConsumerUrl;
+
+    @Value("${custom.cloud.syncMerchantUrl}")
+    String syncMerchantUrl;
+    @Value("${custom.cloud.syncContractUrl}")
+    String syncContractUrl;
+    @Value("${custom.cloud.syncOrderUrl}")
+    String syncOrderUrl;
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -281,6 +290,60 @@ public class CloudServiceImpl implements CloudService {
         RemoteResult<String> result = invokeRemoteMethod(fileUploadUrl, form);
         System.out.println("返回结果。。。" + result);
         file.delete();
+        return null;
+    }
+
+    /**
+     * 同步合同信息
+     *
+     * @param syncContractVO
+     * @return
+     */
+    @Override
+    public RemoteResult<String> syncContract(SyncContractVO syncContractVO) {
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        String body = new GsonBuilder().serializeNulls().create().toJson(syncContractVO);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        RemoteResult<String > result = null;
+        try {
+            result = invokeRemoteMethodForJson(syncContractUrl,requestEntity);
+//            result = invokeRemoteMethod(syncMerchantUrl,param);
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+    }
+
+    /**
+     * 同步订单信息
+     *
+     * @param syncOrderVO
+     */
+    @Override
+    public RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO) {
+        MultiValueMap<String, Object> param = initParam();
+        Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
+
+        param.setAll(gson.fromJson(gson.toJson(syncOrderVO),Map.class));
+
+        RemoteResult<String> result = null;
+        try {
+            result = invokeRemoteMethod(syncOrderUrl, param);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+
+    }
+    private RemoteResult<String> invokeRemoteMethodForJson(String url, HttpEntity<String> param) {
+        String result  = restTemplate.postForObject(url, param, String.class);
+        RemoteResult remoteResult = new RemoteResult();
+        System.out.println(result);
+        // TODO 确认是否完成
         return null;
     }
 }
