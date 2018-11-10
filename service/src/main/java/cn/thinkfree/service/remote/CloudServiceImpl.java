@@ -45,10 +45,11 @@ public class CloudServiceImpl implements CloudService {
     String sendEMail;
     @Value("${shanghai.smallSchedulingUrl}")
     String smallSchedulingUrl;
-	@Value("${message.remindConsumerUrl}")
+    @Value("${message.remindConsumerUrl}")
     String remindConsumerUrl;
 
-    Integer SuccessCode = 1000;    Integer ProjectUpFailCode = 2005;
+    Integer SuccessCode = 1000;
+    Integer ProjectUpFailCode = 2005;
 
 
     private RemoteResult buildFailResult() {
@@ -111,12 +112,12 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit) {
-        String result = restTemplate.getForObject(url, String.class, status, limit);
+    private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit, String decorateCompany) {
+        String result = restTemplate.getForObject(url, String.class, status, limit, decorateCompany);
         return result;
     }
 
-    private String invokeRemoteMessageMethod(String url,MultiValueMap<String, Object> param){
+    private String invokeRemoteMessageMethod(String url, MultiValueMap<String, Object> param) {
         String result = restTemplate.postForObject(url, param, String.class);
         return result;
     }
@@ -216,10 +217,10 @@ public class CloudServiceImpl implements CloudService {
      * @return
      */
     @Override
-    public String getBaseScheduling(Integer status, Integer limit) {
+    public String getBaseScheduling(Integer status, Integer limit, String decorateCompany) {
         String result = null;
         try {
-            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit);
+            result = invokeRemoteJuRanMethod(smallSchedulingUrl, status, limit, decorateCompany);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
@@ -227,7 +228,7 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
-/**
+    /**
      * 给用户发消息
      *
      * @param userNo
@@ -238,14 +239,14 @@ public class CloudServiceImpl implements CloudService {
      * @return
      */
     @Override
-    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId,Integer dynamicId, Integer type) {
+    public String remindConsumer(String[] userNo, String projectNo, String content, String senderId, Integer dynamicId, Integer type) {
         MultiValueMap<String, Object> param = initParam();
         param.add("userNo", userNo);
-        param.add("projectNo",projectNo );
-        param.add("content",content );
+        param.add("projectNo", projectNo);
+        param.add("content", content);
         param.add("senderId", senderId);
-        param.add("dynamicId",dynamicId );
-        param.add("type",type );
+        param.add("dynamicId", dynamicId);
+        param.add("type", type);
         String result = null;
         try {
             result = invokeRemoteMessageMethod(remindConsumerUrl, param);
@@ -254,7 +255,9 @@ public class CloudServiceImpl implements CloudService {
             return "";
         }
         return result;
-    }	@Override
+    }
+
+    @Override
     public String uploadFile(String fileName) {
         // TODO Auto-generated method stub
 //      HttpHeaders headers = new HttpHeaders();
@@ -279,4 +282,5 @@ public class CloudServiceImpl implements CloudService {
         System.out.println("返回结果。。。" + result);
         file.delete();
         return null;
-    }}
+    }
+}
