@@ -17,7 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static cn.thinkfree.core.constants.AfConstants.CONFIG_TYPE_COUNT;
 
 /**
  * 审批流配置服务层
@@ -57,18 +61,13 @@ public class AfConfigServiceImpl implements AfConfigService {
                 AfConfigVO configVO = new AfConfigVO();
 
                 List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configScheme.getConfigSchemeNo(), roles);
+                configVO.setApprovalRoles(approvalRoles);
+
                 List<UserRoleSet> subRoles = subRoleService.findByConfigSchemeNo(configScheme.getConfigSchemeNo(), roles);
                 configVO.setSubRoles(subRoles);
-                configVO.setSubRoles(approvalRoles);
-                configVO.setDescribe(configScheme.getDescribe());
 
-                for (AfConfig config : configs) {
-                    if (config.getConfigNo().equals(configScheme.getConfigNo())) {
-                        configVO.setName(config.getName());
-                        configVO.setConfigNo(config.getConfigNo());
-                        break;
-                    }
-                }
+                configVO.setDescribe(configScheme.getDescribe());
+                configVO.setConfigNo(configScheme.getConfigNo());
 
                 configVOs.add(configVO);
             }
@@ -125,15 +124,65 @@ public class AfConfigServiceImpl implements AfConfigService {
     @Override
     public void edit(AfConfigEditVO configEditVO) {
         List<AfConfigVO> configVOs = configEditVO.getConfigVOs();
+
+        verifyApprovalConfig(configVOs);
+
+        for (AfConfigVO configVO : configVOs) {
+            String configSchemeNo = UniqueCodeGenerator.AF_CONFIG_SCHEME.getCode();
+            configSchemeService.create(configEditVO.getSchemeNo(), configEditVO.getUserId(), configSchemeNo, configVO);
+            approvalRoleService.create(configSchemeNo, configVO.getApprovalRoles());
+            subRoleService.create(configSchemeNo, configVO.getSubRoles());
+        }
+    }
+
+    private void verifyApprovalConfig(List<AfConfigVO> configVOs) {
         if (configVOs == null || configVOs.isEmpty()) {
             LOGGER.error("审批流配置为空");
             throw new RuntimeException();
         }
+
+        Map<String, Object> typeCount = new HashMap<>(10);
+        Object object = new Object();
         for (AfConfigVO configVO : configVOs) {
-            String configSchemeNo = UniqueCodeGenerator.AF_CONFIG_SCHEME.getCode();
-            configSchemeService.create(configSchemeNo, configVO.getConfigNo(), configEditVO.getSchemeNo(), configVO.getDescribe(), configEditVO.getUserId());
-            approvalRoleService.create(configSchemeNo, configVO.getApprovalRoles());
-            subRoleService.create(configSchemeNo, configVO.getSubRoles());
+            typeCount.put(configVO.getConfigNo(), object);
+
+            List<UserRoleSet> approvalRoles = configVO.getApprovalRoles();
+            if (approvalRoles == null || approvalRoles.isEmpty()) {
+                LOGGER.error("未设置审批角色");
+                throw new RuntimeException();
+            }
+
+            for (int i = 0; i < approvalRoles.size(); i++) {
+                for (int j = i + 1; j < approvalRoles.size(); j++) {
+                    if (approvalRoles.get(i).getRoleCode().equals(approvalRoles.get(j).getRoleCode())) {
+                        LOGGER.error("审批列表包含相同角色");
+                        throw new RuntimeException();
+                    }
+                }
+            }
+
+            List<UserRoleSet> subRoles = configVO.getSubRoles();
+            if (subRoles != null) {
+                for (UserRoleSet subRole : subRoles) {
+                    if (subRole.getRoleCode().equals(approvalRoles.get(0).getRoleCode())) {
+                        LOGGER.error("订阅角色包含发起角色");
+                        throw new RuntimeException();
+                    }
+                }
+
+                for (int i = 0; i < subRoles.size(); i++) {
+                    for (int j = i + 1; j < subRoles.size(); j++) {
+                        if (subRoles.get(i).getRoleCode().equals(subRoles.get(j).getRoleCode())) {
+                            LOGGER.error("订阅列表包含相同角色");
+                            throw new RuntimeException();
+                        }
+                    }
+                }
+            }
+        }
+        if (typeCount.size() < CONFIG_TYPE_COUNT) {
+            LOGGER.error("审批流种类配置不全");
+            throw new RuntimeException();
         }
     }
 }

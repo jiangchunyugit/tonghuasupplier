@@ -1,7 +1,9 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
 import java.util.Map;
@@ -221,4 +223,17 @@ public interface NewOrderUserService {
      * @return
      */
     Boolean checkJurisdiction(String projectNo,String userId,String roleCode);
+    /**
+     * @Author jiang
+     * @Description 设计合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum,Integer pageSize ,String companyId);
+    PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId);
+
+    List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
+
+    Integer queryContractCount(DesignContractVO designContractVO);
 }

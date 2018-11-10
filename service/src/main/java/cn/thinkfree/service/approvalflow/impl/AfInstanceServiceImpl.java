@@ -57,6 +57,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private HttpLinks httpLinks;
     @Resource
     private AfConfigSchemeService configSchemeService;
+    @Resource
+    private AfSubRoleService subRoleService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -80,7 +82,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
         List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configSchemeNo, allRoles);
         if (approvalRoles == null || approvalRoles.size() < 1) {
-            // TODO
+            LOGGER.error("未查询到审批角色信息，configSchemeNo：{}", configSchemeNo);
+            throw new RuntimeException();
         }
 
         List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
@@ -134,10 +137,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
         List<UserRoleSet> approvalRoles = approvalRoleService.findByConfigSchemeNo(configSchemeNo, allRoles);
         if (approvalRoles == null || approvalRoles.size() < 1) {
-            // TODO
+            LOGGER.error("未查询到审批角色信息，configSchemeNo：{}", configSchemeNo);
+            throw new RuntimeException();
         }
         List<AfApprovalLog> approvalLogs = new ArrayList<>(approvalRoles.size());
         List<OrderUser> orderUsers = orderUserService.findByProjectNo(projectNo);
+        if (orderUsers == null || orderUsers.isEmpty()) {
+            LOGGER.error("未获取到项目用户信息，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
 
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
         for (int index = 0; index < approvalRoles.size(); index++) {
@@ -151,7 +159,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     approvalLog.setInstanceNo(instanceNo);
                     approvalLog.setApprovalNo(UniqueCodeGenerator.AF_APPROVAL_LOG.getCode());
                     approvalLog.setIsApproval(0);
-                    approvalLog.setSort(index + 1);
+                    approvalLog.setSort(index);
                     approvalLog.setConfigNo(configNo);
                     approvalLog.setProjectNo(projectNo);
                     approvalLog.setScheduleSort(scheduleSort);
@@ -180,12 +188,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instance.setProjectNo(projectNo);
         instance.setConfigSchemeNo(configSchemeNo);
 
+        sendMessageToSub(configSchemeNo, orderUsers);
+
         if (approvalLogs.size() > 1) {
             instance.setCurrentApprovalLogNo(approvalLogs.get(1).getApprovalNo());
             instance.setStatus(AfConstants.APPROVAL_STATUS_START);
+            sendMessageToNext(approvalLogs.get(1).getUserId());
         } else {
             instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
-            sendSuccessMessage(projectNo, scheduleSort, instance.getConfigNo(), instance.getConfigSchemeNo());
+            executeSuccessAction(projectNo, scheduleSort, instance.getConfigNo(), instance.getConfigSchemeNo());
         }
 
         insert(instance);
@@ -321,7 +332,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
 
             if (approvalLog.getIsApproval() == 1) {
-                if (approvalLog.getSort() == 1) {
+                if (approvalLog.getSort() == 0) {
                     approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_START);
                 } else if (approvalLog.getOption() == 1){
                     approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_AGREE);
@@ -419,7 +430,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 // 结束审批流
                 instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
                 instance.setCurrentApprovalLogNo(null);
-                sendSuccessMessage(instance.getProjectNo(), instance.getScheduleSort(), instance.getConfigNo(), instance.getConfigSchemeNo());
+                executeSuccessAction(instance.getProjectNo(), instance.getScheduleSort(), instance.getConfigNo(), instance.getConfigSchemeNo());
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
                 sendMessageToNext(nextApprovalLog.getUserId());
@@ -444,11 +455,35 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     /**
+     * 给订阅者发布消息
+     * @param configSchemeNo 订阅者
+     */
+    private void sendMessageToSub(String configSchemeNo, List<OrderUser> orderUsers) {
+        List<AfSubRole> subRoles = subRoleService.findByConfigSchemeNo(configSchemeNo);
+        if (subRoles != null) {
+            for (AfSubRole subRole : subRoles) {
+                String userId = null;
+                for (OrderUser orderUser : orderUsers) {
+                    if (subRole.getRoleId().equals(orderUser.getRoleCode())) {
+                        userId = orderUser.getUserId();
+                        break;
+                    }
+                }
+                if (userId == null) {
+                    LOGGER.error("在项目，projectNo:{},中未查询到角色，roleId：{}", orderUsers.get(0), subRole.getRoleId());
+                    throw new RuntimeException();
+                }
+                // TODO
+            }
+        }
+    }
+
+    /**
      * 发送审批成功消息
      * @param configNo 审批流配置编号
      * @param configSchemeNo 审批流配置方案编号
      */
-    private void sendSuccessMessage(String projectNo, Integer scheduleSort, String configNo, String configSchemeNo) {
+    private void executeSuccessAction(String projectNo, Integer scheduleSort, String configNo, String configSchemeNo) {
         if (AfConfigs.START_REPORT.configNo.equals(configNo)) {
             schedulingService.projectStart(projectNo, scheduleSort);
         } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(configNo)) {

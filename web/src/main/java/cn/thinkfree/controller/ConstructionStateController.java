@@ -9,6 +9,7 @@ import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.ConstructionStateVo;
+import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -76,11 +77,19 @@ public class ConstructionStateController extends AbsBaseController {
     @ApiOperation("工地管理接口---->孙宇专用")
     @MyRespBody
     @RequestMapping(value = "getConstructionSiteList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
-                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
+    public MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(@RequestParam @ApiParam(value = "页码",required = true) Integer pageNum,
+                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) Integer pageSize,
                                                                            @RequestParam(required = false) @ApiParam(value = "城市名称")  String cityName){
 
         return constructionOrderOperate.getConstructionSiteList(pageNum,pageSize,cityName);
+    }
+
+    @ApiOperation("工地详情信息接口---->孙宇专用")
+    @MyRespBody
+    @RequestMapping(value = "getSiteDetails", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<SiteDetailsVo> getSiteDetails(@RequestParam(required = false) @ApiParam(value = "项目编号 1223098338391")  String projectNo){
+
+        return constructionOrderOperate.getSiteDetails(projectNo);
     }
 
 }

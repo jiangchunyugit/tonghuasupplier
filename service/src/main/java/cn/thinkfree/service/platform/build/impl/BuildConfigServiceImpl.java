@@ -58,7 +58,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
             criteria.andIsEnableEqualTo(isEnable);
         }
         long total = schemeConfigMapper.countByExample(configExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<BuildSchemeConfig> schemeConfigs = schemeConfigMapper.selectByExample(configExample);
         PageVo<List<BuildSchemeConfig>> pageVo = new PageVo<>();
         pageVo.setTotal(total);
