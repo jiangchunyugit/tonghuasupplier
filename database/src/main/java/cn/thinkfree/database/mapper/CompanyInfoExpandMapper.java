@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.CompanyInfoExpand;
 import cn.thinkfree.database.model.CompanyInfoExpandExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.CompanyInfoExpandVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface CompanyInfoExpandMapper {
@@ -82,4 +84,12 @@ public interface CompanyInfoExpandMapper {
 
      */
     int updateByPrimaryKey(CompanyInfoExpand record);
+
+
+    /**
+     * 查询公司信息
+     * @param companyId
+     * @return
+     */
+    CompanyInfoExpandVO findCompanyExpand(String companyId);
 }

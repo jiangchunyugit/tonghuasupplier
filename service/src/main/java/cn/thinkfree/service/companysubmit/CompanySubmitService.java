@@ -42,8 +42,8 @@ public interface CompanySubmitService {
      * @author lvqidong
      * 
      */
-    
-    String  auditContract(PcAuditInfoVO pcAuditInfo);
+
+    Map<String,Object>  auditContract(PcAuditInfoVO pcAuditInfo);
 
     /**
      * 公司列表

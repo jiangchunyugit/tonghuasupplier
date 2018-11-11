@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PcCompanyFinancialMapper">
+  <resultMap id="CompanyFinancialVO" type="cn.thinkfree.database.vo.CompanyFinancialVO" extends="BaseResultMap">
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+    <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+    <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+  </resultMap>
+
+  <sql id="Base_Column_List_VO">
+    financial.id, financial.account_province, financial.account_city, financial.account_district,
+    financial.account_name, financial.card_name,
+    financial.account_branch_name,
+    financial.account_number, financial.create_time, financial.update_time,
+    financial.company_id, financial.license_url, account_area,
+    financial.account_type, financial.taxpayer_registration_number
+  </sql>
+
+  <select id="findPcCompanyFinancialByCompanyId" parameterType="java.lang.String" resultMap="BaseResultMap">
+  
+  select * from pc_company_financial where company_id = #{companyId}
+  
+  </select>
+
+  <select id="findFinancialVOByCompanyId" parameterType="java.lang.String" resultMap="CompanyFinancialVO">
+select <include refid="Base_Column_List_VO" />,
+    province.province_name, city.city_name, area.area_name
+from pc_company_financial financial
+left join province province on financial.account_province = province.province_code
+left join city city on financial.account_city = city.city_code
+left join area area on financial.account_area = area.area_code
+where financial.company_id = #{companyId}
+  </select>
+</mapper>

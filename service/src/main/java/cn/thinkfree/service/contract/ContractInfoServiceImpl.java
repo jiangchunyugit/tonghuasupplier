@@ -15,6 +15,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.constants.CompanyFinancialType;
+import cn.thinkfree.service.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,11 +40,6 @@ import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
-import cn.thinkfree.service.utils.CommonGroupUtils;
-import cn.thinkfree.service.utils.ExcelData;
-import cn.thinkfree.service.utils.ExcelUtils;
-import cn.thinkfree.service.utils.FreemarkerUtils;
-import cn.thinkfree.service.utils.PdfUplodUtils;
 
 @Service
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
@@ -476,7 +472,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	@Transactional
+	@Transactional(rollbackFor = Exception.class)
 	@Override
 	public boolean insertContractClause( String contractNumber, String companyId, ContractClauseVO contractClausevo )
 	{
@@ -542,6 +538,19 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setContractStatus(ContractStatus.WaitAudit.shortVal());
 		record.setCompanyId(companyId);
 		record.setContractNumber(contractNumber);
+		//合同期限
+		if(StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))){
+			Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
+			record.setStartTime(startTime);
+		}else{
+			return false;
+		}
+		if(StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))){
+			Date endTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
+			record.setEndTime(endTime);
+		}else{
+			return false;
+		}
 		ContractInfoExample example = new ContractInfoExample();
 		example.createCriteria().andCompanyIdEqualTo(companyId).
 		andContractNumberEqualTo(contractNumber);
