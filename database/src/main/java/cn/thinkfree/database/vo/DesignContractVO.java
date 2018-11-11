@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Auther: jiang
@@ -18,23 +20,23 @@ import java.util.Date;
 @ApiModel("设计合同列表")
 public class DesignContractVO {
     @ApiModelProperty("公司编码")
-    private  String companyId;
+    private String companyId;
     @ApiModelProperty("项目编号")
-    private  String projectNo;
+    private String projectNo;
     @ApiModelProperty("序号")
-    private  Integer sort;
+    private Integer sort;
     @ApiModelProperty("合同编号")
-    private  String contractNo;
+    private String contractNo;
     @ApiModelProperty("订单编号")
-    private  String orderNo;
+    private String orderNo;
     @ApiModelProperty("子订单编号")
-    private  String sunOrderNo;
+    private String sunOrderNo;
     @ApiModelProperty("签约时间")
     private Date signingTime;
     @ApiModelProperty("签约时间区间开始")
-    private Date startSign;
+    private String startSign;
     @ApiModelProperty("签约时间区间结束")
-    private Date endSign;
+    private String endSign;
     @ApiModelProperty("订单来源(1,天猫 2,线下)")
     private Integer orderSource;
     @ApiModelProperty("订单所在地")
@@ -49,7 +51,8 @@ public class DesignContractVO {
     private Integer contractStatus;
     @ApiModelProperty("审批状态：0：不通过 1：通过")
     private Integer auditType;
+    @ApiModelProperty("合同状态(模糊条件)：0：不通过 1：通过")
+    private String flag;
 
-    private String  flag;
 
 }

@@ -108,14 +108,18 @@
         <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
             and po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
         </if>
-        <if test="designContractVO.startSign != null and designContractVO.startSign != ''">AND po.sign_time <![CDATA[>=]]> #{designContractVO.startSign}</if>
-        <if test="designContractVO.endSign != null and designContractVO.endSign != ''">AND po.sign_time <![CDATA[<=]]>#{designContractVO.endSign}</if>
+        <if test="designContractVO.startSign != null and designContractVO.startSign != ''">
+            AND po.sign_time <![CDATA[>=]]> #{designContractVO.startSign}
+        </if>
+        <if test="designContractVO.endSign != null and designContractVO.endSign != ''">
+            AND po.sign_time <![CDATA[<=]]>#{designContractVO.endSign}
+        </if>
         <if test="designContractVO.flag!=null and designContractVO.flag !='' ">
-            <if test="designContractVO.flag == '1'">
-                and po.audit_type = 1 and po.sign_time <![CDATA[>=]]> now()
+            <if test='designContractVO.flag == "1" '>
+                and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
             </if>
-            <if test="designContractVO.flag == '0'">
-                and ( po.audit_type = 0 or po.sign_time <![CDATA[ < ]]> now() )
+            <if test='designContractVO.flag == "0" ' >
+                and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
             </if>
         </if>
         ORDER BY dor.create_time DESC
@@ -151,5 +155,13 @@
         </if>
         <if test="designContractVO.startSign != null and designContractVO.startSign != ''">AND po.sign_time <![CDATA[>=]]> #{designContractVO.startSign}</if>
         <if test="designContractVO.endSign != null and designContractVO.endSign != ''">AND po.sign_time <![CDATA[<=]]>#{designContractVO.endSign}</if>
+        <if test="designContractVO.flag!=null and designContractVO.flag !='' ">
+            <if test="designContractVO.flag == '1'">
+                and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
+            </if>
+            <if test="designContractVO.flag == '0'" >
+                and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
+            </if>
+        </if>
     </select>
 </mapper>

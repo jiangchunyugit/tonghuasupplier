@@ -485,9 +485,10 @@ public class DelaySchedulingController extends AbsBaseController {
                                                                               @RequestParam(required = false) @ApiParam(value = "订单来源")  Integer orderSource,
                                                                               @RequestParam(required = false) @ApiParam(value = "订单所在地")  String orderAddress,
                                                                               @RequestParam(required = false) @ApiParam(value = "合同状态")  Integer contractStatus,
-                                                                              @RequestParam(required = false) @ApiParam(value = "签约时间区间开始") Date startSign,
-                                                                              @RequestParam(required = false) @ApiParam(value = "签约时间区间结束") Date endSign,
-                                                                              @RequestParam(required = false) @ApiParam(value = "业主信息") String ownerName
+                                                                              @RequestParam(required = false) @ApiParam(value = "签约时间区间开始") String startSign,
+                                                                              @RequestParam(required = false) @ApiParam(value = "签约时间区间结束") String endSign,
+                                                                              @RequestParam(required = false) @ApiParam(value = "业主信息") String ownerName,
+                                                                              @RequestParam(required = false) @ApiParam(value = "合同状态模糊") String flag
 
 
 
@@ -503,6 +504,7 @@ public class DelaySchedulingController extends AbsBaseController {
         designContractVO.setStartSign(startSign);
         designContractVO.setEndSign(endSign);
         designContractVO.setOwnerName(ownerName);
+        designContractVO.setFlag(flag);
         if (null == companyId || "".equals(companyId)) {
             return sendJsonData(ResultMessage.ERROR, "公司编码为空");
         }

@@ -533,22 +533,22 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
-        if(designContractVO.getContractStatus() == 1){
-            designContractVO.setFlag("1");
+   /*     if(designContractVO.getContractStatus() == 1){
+            designContractVO.setFlag(designContractVO.getFlag());
         }else{
-            designContractVO.setFlag("0");
-        }
+            designContractVO.setFlag(designContractVO.getFlag());
+        }*/
         List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
         for (DesignContractVO vo :voList){
             //业主
             ProjectExample projectExample = new ProjectExample();
             projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
             List<Project> projects = projectMapper.selectByExample(projectExample);
-            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+/*            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
             //业主
             vo.setOwnerName(customerInfo.getUsername());
             //手机号码
-            vo.setOwnerPhone(customerInfo.getPhone());
+            vo.setOwnerPhone(customerInfo.getPhone());*/
             if(vo.getAuditType() != null){
                 if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
                     vo.setContractStatus(1);//生效
