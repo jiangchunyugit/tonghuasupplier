@@ -110,7 +110,6 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         projectBigSchedulingExample.setOrderByClause("create_time desc");
         ProjectBigSchedulingExample.Criteria criteria = projectBigSchedulingExample.createCriteria();
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         if (StringUtils.isNotBlank(schedulingSeo.getCompanyId())) {
             criteria.andCompanyIdEqualTo(schedulingSeo.getCompanyId());
         }

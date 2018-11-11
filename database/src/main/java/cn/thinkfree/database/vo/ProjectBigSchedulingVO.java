@@ -45,4 +45,8 @@ public class ProjectBigSchedulingVO {
     private Integer check;
     @ApiModelProperty("验收名称")
     private String rename;
+    @ApiModelProperty(value = "该项目所使用的方案编号")
+    private String schemeNo;
+    @ApiModelProperty(value = "是否包含闭水试验(1,包含 2,不包含)")
+    private Integer isWaterTest;
 }
