@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.SettlementRuleInfoMapper">
+  <resultMap id="RuleWithMethodBaseResultMap" type="cn.thinkfree.database.vo.settle.SettlementRuleContractVO" extends="BaseResultMap">
+
+    <collection property="settlementMethod" ofType="cn.thinkfree.database.model.SettlementMethodInfo"
+                column="rule_number" javaType="java.util.ArrayList" select="getSettlementMethod">
+    </collection>
+  </resultMap>
+
+  <resultMap id="settlementMethodResultMap" type="cn.thinkfree.database.model.SettlementMethodInfo">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="settlement_term" jdbcType="VARCHAR" property="settlementTerm" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+    <result column="scale_describe" jdbcType="VARCHAR" property="scaleDescribe" />
+    <result column="scale_value" jdbcType="VARCHAR" property="scaleValue" />
+    <result column="rule_code" jdbcType="VARCHAR" property="ruleCode" />
+  </resultMap>
+
+  <select id="selectBycontract" resultMap="RuleWithMethodBaseResultMap" parameterType="cn.thinkfree.database.model.SettlementRuleInfo">
+
+    SELECT
+    *
+    FROM
+    pc_settlement_rule_info
+    WHERE
+    start_time &lt;= now( ) AND end_time &gt;= now( )
+    AND collection_type =  #{collectionType,jdbcType=VARCHAR}
+    AND fee_name = #{feeName,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getSettlementMethod" resultMap="settlementMethodResultMap" parameterType="java.lang.String">
+
+    SELECT
+	*
+    FROM
+        pc_settlement_method_info
+    WHERE
+        rule_code = #{rule_number,jdbcType=VARCHAR}
+  </select>
+</mapper>
