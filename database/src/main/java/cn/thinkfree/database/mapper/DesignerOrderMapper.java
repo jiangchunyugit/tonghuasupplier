@@ -7,6 +7,7 @@ import cn.thinkfree.database.model.DesignerOrderExample;
 import java.util.List;
 
 import cn.thinkfree.database.vo.AcceptanceResultsVO;
+import cn.thinkfree.database.vo.ConstructionContractVO;
 import cn.thinkfree.database.vo.DesignContractVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import org.apache.ibatis.annotations.Param;
@@ -126,4 +127,6 @@ public interface DesignerOrderMapper {
     List<DesignContractVO> selectContractByPage(@Param("designContractVO") DesignContractVO designContractVO, @Param("pageNum") Integer pageNum, @Param("pageSize") Integer pageSize);
 
     Integer selectContractCount(@Param("designContractVO") DesignContractVO designContractVO);
+
+
 }

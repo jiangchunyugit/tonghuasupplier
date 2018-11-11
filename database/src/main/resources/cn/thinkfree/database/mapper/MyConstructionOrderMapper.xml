@@ -65,4 +65,99 @@
         WHERE
           co.project_no=#{projectNo}
     </select>
+
+
+    <!--施工合同列表-->
+    <select id="selectConstructionContractByPage" resultType="cn.thinkfree.database.vo.ConstructionContractVO">
+        SELECT
+        dor.order_no AS sunOrderNo,
+        p.project_no AS projectNo,
+        P .order_source AS orderSource,
+        P .province AS orderAddress,
+        po.contract_number AS contractNo,
+        po.sign_time AS signingTime,
+        po.audit_type AS auditType
+        FROM
+        construction_order dor
+        LEFT JOIN project P ON P .project_no = dor.project_no
+        LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
+        WHERE
+        dor.company_id = #{constructionContractVO.companyId}
+        <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
+            and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
+        </if>
+        <if test="constructionContractVO.orderNo!=null and constructionContractVO.orderNo!=''">
+            and dor.order_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
+        </if>
+        <if test="constructionContractVO.orderSource!=null and constructionContractVO.orderSource!=''">
+            and P .order_source like CONCAT('%',#{constructionContractVO.orderSource},'%' )
+        </if>
+        <if test="constructionContractVO.orderAddress!=null and constructionContractVO.orderAddress!=''">
+            and P .province like CONCAT('%',#{constructionContractVO.orderAddress},'%' )
+        </if>
+        <if test="constructionContractVO.auditType!=null and constructionContractVO.auditType!=''">
+            and po.audit_type like CONCAT('%',#{constructionContractVO.auditType},'%' )
+        </if>
+        <if test="constructionContractVO.startSign != null and constructionContractVO.startSign != ''">
+            AND po.sign_time <![CDATA[>=]]> #{constructionContractVO.startSign}
+        </if>
+        <if test="constructionContractVO.endSign != null and constructionContractVO.endSign != ''">
+            AND po.sign_time <![CDATA[<=]]>#{constructionContractVO.endSign}
+        </if>
+        <if test="constructionContractVO.flag!=null and constructionContractVO.flag !='' ">
+            <if test='constructionContractVO.flag == "1" '>
+                and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
+            </if>
+            <if test='constructionContractVO.flag == "0" ' >
+                and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
+            </if>
+        </if>
+        ORDER BY dor.create_time DESC
+        <if test="pageSize != null">
+            limit #{pageSize} offset #{pageNum}
+        </if>
+
+    </select>
+
+    <!--查询总页数-->
+    <select id="selectconstructionContractVOCount" resultType="java.lang.Integer">
+        SELECT
+        count(1)
+        FROM
+        construction_order dor
+        LEFT JOIN project P ON P .project_no = dor.project_no
+        LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
+        WHERE
+        dor.company_id = #{constructionContractVO.companyId}
+        <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
+            and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
+        </if>
+        <if test="constructionContractVO.orderNo!=null and constructionContractVO.orderNo!=''">
+            and dor.order_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
+        </if>
+        <if test="constructionContractVO.orderSource!=null and constructionContractVO.orderSource!=''">
+            and P .order_source like CONCAT('%',#{constructionContractVO.orderSource},'%' )
+        </if>
+        <if test="constructionContractVO.orderAddress!=null and constructionContractVO.orderAddress!=''">
+            and P .province like CONCAT('%',#{constructionContractVO.orderAddress},'%' )
+        </if>
+        <if test="constructionContractVO.auditType!=null and constructionContractVO.auditType!=''">
+            and po.audit_type like CONCAT('%',#{constructionContractVO.auditType},'%' )
+        </if>
+        <if test="constructionContractVO.startSign != null and constructionContractVO.startSign != ''">
+            AND po.sign_time <![CDATA[>=]]> #{constructionContractVO.startSign}
+        </if>
+        <if test="constructionContractVO.endSign != null and constructionContractVO.endSign != ''">
+            AND po.sign_time <![CDATA[<=]]>#{constructionContractVO.endSign}
+        </if>
+        <if test="constructionContractVO.flag!=null and constructionContractVO.flag !='' ">
+            <if test='constructionContractVO.flag == "1" '>
+                and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
+            </if>
+            <if test='constructionContractVO.flag == "0" ' >
+                and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
+            </if>
+        </if>
+    </select>
+
 </mapper>
