@@ -80,7 +80,7 @@
     <!--分页查询设计合同-->
     <select id="selectContractByPage" resultType="cn.thinkfree.database.vo.DesignContractVO">
         SELECT
-        dor.order_no AS orderNo,
+        dor.order_no AS sunOrderNo,
         p.project_no AS projectNo,
         P .order_source AS orderSource,
         P .province AS orderAddress,

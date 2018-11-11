@@ -232,7 +232,13 @@ public interface NewOrderUserService {
      **/
     MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum,Integer pageSize ,String companyId);
     PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId);
-
+    /**
+     * @Author jiang
+     * @Description 设计合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
     PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
 
     Integer queryContractCount(DesignContractVO designContractVO);

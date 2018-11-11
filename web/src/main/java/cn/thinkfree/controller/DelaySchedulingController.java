@@ -508,15 +508,6 @@ public class DelaySchedulingController extends AbsBaseController {
         if (null == companyId || "".equals(companyId)) {
             return sendJsonData(ResultMessage.ERROR, "公司编码为空");
         }
-        Map<String, Object> params = new HashMap<>();
-        List<DesignContractVO> acceptanceResultsList = new ArrayList<>();
-       // acceptanceResultsList = newOrderUserService.queryContractByPage(designContractVO, (pageNum - 1) * pageSize, pageSize);
-        //这里查询的是所有的数据
-        /*params.put("list", acceptanceResultsList);*/
-        //这里查询的是总页数
-        params.put("total", newOrderUserService.queryContractCount(designContractVO));
-/*        params.put("pageSize", pageSize);
-        params.put("pageNum", pageNum);*/
         return sendJsonData(ResultMessage.SUCCESS, newOrderUserService.queryContractByPage(designContractVO, (pageNum - 1) * pageSize, pageSize));
     }
 
