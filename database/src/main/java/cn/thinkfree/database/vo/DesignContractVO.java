@@ -25,21 +25,21 @@ public class DesignContractVO {
     private String projectNo;
     @ApiModelProperty("序号")
     private Integer sort;
-    @ApiModelProperty("合同编号")
+    @ApiModelProperty("合同编号(模糊条件)")
     private String contractNo;
-    @ApiModelProperty("订单编号")
+    @ApiModelProperty("订单编号(模糊条件)")
     private String orderNo;
     @ApiModelProperty("子订单编号")
     private String sunOrderNo;
     @ApiModelProperty("签约时间")
     private Date signingTime;
-    @ApiModelProperty("签约时间区间开始")
+    @ApiModelProperty("签约时间区间开始(模糊条件)")
     private String startSign;
-    @ApiModelProperty("签约时间区间结束")
+    @ApiModelProperty("签约时间区间结束(模糊条件)")
     private String endSign;
-    @ApiModelProperty("订单来源(1,天猫 2,线下)")
+    @ApiModelProperty("订单来源(模糊条件)(1,天猫 2,线下)")
     private Integer orderSource;
-    @ApiModelProperty("订单所在地")
+    @ApiModelProperty("订单所在地(模糊条件)")
     private String orderAddress;
     @ApiModelProperty("业主姓名")
     private String ownerName;
