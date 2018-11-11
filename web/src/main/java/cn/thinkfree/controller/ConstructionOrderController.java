@@ -43,22 +43,5 @@ public class ConstructionOrderController extends AbsBaseController {
         return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize,cityName);
     }
 
-    @ApiOperation("工地管理接口---->孙宇专用")
-    @MyRespBody
-    @RequestMapping(value = "getConstructionSiteList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(@RequestParam @ApiParam(value = "页码",required = true) Integer pageNum,
-                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) Integer pageSize,
-                                                                           @RequestParam(required = false) @ApiParam(value = "城市名称")  String cityName){
-
-        return constructionOrderOperate.getConstructionSiteList(pageNum,pageSize,cityName);
-    }
-
-    @ApiOperation("工地详情信息接口---->孙宇专用")
-    @MyRespBody
-    @RequestMapping(value = "getSiteDetails", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<SiteDetailsVo> getSiteDetails(@RequestParam(required = false) @ApiParam(value = "项目编号 1223098338391")  String projectNo){
-
-        return constructionOrderOperate.getSiteDetails(projectNo);
-    }
 
 }

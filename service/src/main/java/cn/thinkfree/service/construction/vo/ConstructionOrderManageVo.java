@@ -1,7 +1,6 @@
 package cn.thinkfree.service.construction.vo;
 
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -26,14 +25,7 @@ public class ConstructionOrderManageVo {
     @ApiModelProperty("订单个数")
     private Integer orderNum;
 
-    @ApiModelProperty("总页数")
-    private Integer countPageNum;
-
     @ApiModelProperty("城市列表")
     private List<ConstructionCityVo> cityList;
-
-    @ApiModelProperty("订单列表")
-    private List<ConstructionOrderListVo> orderList;
-
 
 }

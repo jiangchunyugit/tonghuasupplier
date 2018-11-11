@@ -1,6 +1,7 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import com.github.pagehelper.PageInfo;
@@ -14,14 +15,13 @@ public interface ConstructionOrderOperate {
      * @return
      */
     MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize,String cityName);
-    /**
-     * @Author jiang
-     * @Description 工地管理接口-列表
-     * @Date
-     * @Param
-     * @return
-     **/
-    MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(int pageNum, int pageSize, String cityName);
 
-    MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo);
+    /**
+     *  订单列表
+     * @param pageNum
+     * @param pageSize
+     * @param cityName
+     * @return
+     */
+    MyRespBundle<ConstructionOrderCommonVo> getOrderList(int pageNum, int pageSize, String cityName);
 }
