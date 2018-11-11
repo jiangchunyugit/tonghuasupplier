@@ -233,7 +233,7 @@ public interface NewOrderUserService {
     MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum,Integer pageSize ,String companyId);
     PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId);
 
-    List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
+    PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
 
     Integer queryContractCount(DesignContractVO designContractVO);
 }

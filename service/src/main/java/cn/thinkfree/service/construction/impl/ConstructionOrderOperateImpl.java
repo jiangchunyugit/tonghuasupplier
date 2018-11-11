@@ -46,6 +46,12 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         return RespData.success(constructionOrderCommonVo);
     }
 
+    @Override
+    public MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(int pageNum, int pageSize, String cityName) {
+        return null;
+    }
+
+
     /**
      * 施工订单管理-列表
      * 运营后台
