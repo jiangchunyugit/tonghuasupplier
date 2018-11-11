@@ -464,20 +464,20 @@ public class DelaySchedulingController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, params);
     }
 
-    @ApiOperation("设计合同管理列表接口---->")
+    @ApiOperation("设计合同moek---->")
     @MyRespBody
-    @RequestMapping(value = "getDesignContractList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<PageVo<List<DesignContractVO>>> getDesignContractList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+    @RequestMapping(value = "getDesign", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<DesignContractVO>>> getDesign(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
                                                       @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
                                                       @RequestParam(required = false) @ApiParam(value = "项目编号 1223098338391")  String projectNo){
 
         return sendJsonData(ResultMessage.SUCCESS,newOrderUserService.getDesignContractListss(pageNum,pageSize,projectNo));
     }
 
-    @ApiOperation("测试接口---->")
+    @ApiOperation("设计合同管理列表接口---->")
     @MyRespBody
-    @RequestMapping(value = "test", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<DesignContractVO> test(@RequestParam(defaultValue = "1") @ApiParam(value = "页码",required = true) int pageNum,
+    @RequestMapping(value = "getDesignContractList", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<DesignContractVO> getDesignContractList(@RequestParam(defaultValue = "1") @ApiParam(value = "页码",required = true) int pageNum,
                                                                               @RequestParam (defaultValue = "10")@ApiParam(value = "每页条数",required = true) int pageSize,
                                                                               @RequestParam(required = false) @ApiParam(value = "公司编码 (必传)BD2018080710405900001")  String companyId,
                                                                               @RequestParam(required = false) @ApiParam(value = "项目编号")  String orderNo,
