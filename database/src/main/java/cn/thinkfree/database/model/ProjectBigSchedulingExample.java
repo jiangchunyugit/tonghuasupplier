@@ -1134,6 +1134,136 @@ public class ProjectBigSchedulingExample {
             addCriterion("room_num not between", value1, value2, "roomNum");
             return (Criteria) this;
         }
+
+        public Criteria andSchemeNoIsNull() {
+            addCriterion("scheme_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoIsNotNull() {
+            addCriterion("scheme_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoEqualTo(String value) {
+            addCriterion("scheme_no =", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotEqualTo(String value) {
+            addCriterion("scheme_no <>", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoGreaterThan(String value) {
+            addCriterion("scheme_no >", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoGreaterThanOrEqualTo(String value) {
+            addCriterion("scheme_no >=", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoLessThan(String value) {
+            addCriterion("scheme_no <", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoLessThanOrEqualTo(String value) {
+            addCriterion("scheme_no <=", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoLike(String value) {
+            addCriterion("scheme_no like", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotLike(String value) {
+            addCriterion("scheme_no not like", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoIn(List<String> values) {
+            addCriterion("scheme_no in", values, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotIn(List<String> values) {
+            addCriterion("scheme_no not in", values, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoBetween(String value1, String value2) {
+            addCriterion("scheme_no between", value1, value2, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotBetween(String value1, String value2) {
+            addCriterion("scheme_no not between", value1, value2, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestIsNull() {
+            addCriterion("is_water_test is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestIsNotNull() {
+            addCriterion("is_water_test is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestEqualTo(Integer value) {
+            addCriterion("is_water_test =", value, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestNotEqualTo(Integer value) {
+            addCriterion("is_water_test <>", value, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestGreaterThan(Integer value) {
+            addCriterion("is_water_test >", value, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestGreaterThanOrEqualTo(Integer value) {
+            addCriterion("is_water_test >=", value, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestLessThan(Integer value) {
+            addCriterion("is_water_test <", value, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestLessThanOrEqualTo(Integer value) {
+            addCriterion("is_water_test <=", value, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestIn(List<Integer> values) {
+            addCriterion("is_water_test in", values, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestNotIn(List<Integer> values) {
+            addCriterion("is_water_test not in", values, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestBetween(Integer value1, Integer value2) {
+            addCriterion("is_water_test between", value1, value2, "isWaterTest");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsWaterTestNotBetween(Integer value1, Integer value2) {
+            addCriterion("is_water_test not between", value1, value2, "isWaterTest");
+            return (Criteria) this;
+        }
     }
 
     /**

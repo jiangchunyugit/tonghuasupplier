@@ -69,7 +69,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         checkCompanyExit(companyId);
         if (employeeApplyState == 4) {
-            dissolutionApply(userId, employeeApplyState, applyLog, companyId);
+            dissolutionApply(userId, employeeApplyState, companyId);
         } else if (employeeApplyState == 1) {
             EmployeeMsg employeeMsg = checkEmployeeMsg(userId);
             if (Arrays.asList(new Integer[]{3, 4, 5}).contains(employeeMsg.getEmployeeApplyState())) {
@@ -113,7 +113,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMsg;
     }
 
-    private void dissolutionApply(String userId, int employeeApplyState, EmployeeApplyLog applyLog, String companyId) {
+    private void dissolutionApply(String userId, int employeeApplyState, String companyId) {
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -122,7 +122,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMsg.setEmployeeApplyState(employeeApplyState);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
         logger.info("更新用户申请状态：res={}", res);
-        applyLog = new EmployeeApplyLog();
+        EmployeeApplyLog applyLog = new EmployeeApplyLog();
         applyLog.setApplyTime(new Date());
         //设置3个小时后失效
         applyLog.setInvalidTime(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3));
@@ -352,7 +352,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         }
         return roleCode;
-
     }
 
     @Override
@@ -533,7 +532,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         BasicsData countryCode = countryCodeMap.get(employeeMsg.getCountryCode());
         msgVo.setRealName(employeeMsg.getRealName());
         msgVo.setUserId(employeeMsg.getUserId());
-        msgVo.setCompanyName("这里是公司名称");
+        String companyId = employeeMsg.getCompanyId();
+        if(StringUtils.isNotBlank(companyId)){
+            CompanyInfo companyInfo = checkCompanyExit(companyId);
+            msgVo.setCompanyName(companyInfo.getCompanyName());
+        }
         //1未绑定，2已绑定，3实名认证审核中，4审核不通过
         int bindCompanyState = 1;
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
@@ -588,12 +591,14 @@ public class EmployeeServiceImpl implements EmployeeService {
      *
      * @param companyId 公司ID
      */
-    private void checkCompanyExit(String companyId) {
-//        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-//        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2")).andAuditStatusEqualTo("7");
-//        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
-//        if(companyInfos.isEmpty()){
-//            throw new RuntimeException("没有查询到该公司");
-//        }
+    private CompanyInfo checkCompanyExit(String companyId) {
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2"))
+                .andIsCheckEqualTo(Short.parseShort("1")).andAuditStatusEqualTo("8");
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        if(companyInfos.isEmpty()){
+            throw new RuntimeException("没有查询到该公司");
+        }
+        return companyInfos.get(0);
     }
 }

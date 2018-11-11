@@ -159,7 +159,19 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("公司选择方案====》装饰后台====》施工配置")
+    @ApiOperation("根据项目编号查询支付方案信息")
+    @ResponseBody
+    @RequestMapping(value = "queryPayScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle queryPayScheme(
+            @ApiParam(name = "projectNo", required = false, value = "方案编号") @RequestParam(name = "projectNo", required = false) String projectNo){
+        try {
+            return sendJsonData(ResultMessage.SUCCESS,buildConfigService.queryPayScheme(projectNo));
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("装饰后台====》公司选择方案====》施工配置")
     @ResponseBody
     @RequestMapping(value = "chooseScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle chooseScheme(
@@ -176,7 +188,7 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
-    @ApiOperation("查询施工方案方案====》装饰后台====》施工配置")
+    @ApiOperation("装饰后台====》查询施工方案方案====》施工配置")
     @ResponseBody
     @RequestMapping(value = "queryScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<BuildSchemeConfig>> queryScheme(
@@ -187,7 +199,7 @@ public class BuildConfigController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, buildConfigService.queryScheme(searchKey, companyId, cityStation, storeNo));
     }
 
-    @ApiOperation("公司停用施工方案====》装饰后台====》施工配置")
+    @ApiOperation("装饰后台====》公司停用施工方案====》施工配置")
     @ResponseBody
     @RequestMapping(value = "stopScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle stopScheme(
@@ -198,18 +210,6 @@ public class BuildConfigController extends AbsBaseController {
             logger.info("公司停用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.stopScheme(companyId, optionUserId, optionUserName);
             return sendSuccessMessage(null);
-        } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
-        }
-    }
-
-    @ApiOperation("根据施工方案编号")
-    @ResponseBody
-    @RequestMapping(value = "queryPayScheme", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle queryPayScheme(
-            @ApiParam(name = "schemeNo", required = false, value = "方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo){
-        try {
-            return sendJsonData(ResultMessage.SUCCESS,buildConfigService.queryPayScheme(schemeNo));
         } catch (Exception e) {
             return sendSuccessMessage(e.getMessage());
         }

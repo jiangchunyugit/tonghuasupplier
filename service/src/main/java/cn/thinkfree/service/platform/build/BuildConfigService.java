@@ -122,9 +122,9 @@ public interface BuildConfigService {
 
     /**
      * 根据方案编号查询支付方案列表
-     * @param schemeNo 方案编号
+     * @param projectNo 方案编号
      * @return
      */
-    List<BuildPayConfig> queryPayScheme(String schemeNo);
+    List<BuildPayConfig> queryPayScheme(String projectNo);
 
 }

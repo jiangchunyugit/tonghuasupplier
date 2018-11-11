@@ -3,8 +3,11 @@ package cn.thinkfree.service.platform.build.impl;
 import cn.thinkfree.database.mapper.BuildPayConfigMapper;
 import cn.thinkfree.database.mapper.BuildSchemeCompanyRelMapper;
 import cn.thinkfree.database.mapper.BuildSchemeConfigMapper;
+import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import com.github.pagehelper.PageHelper;
@@ -29,6 +32,8 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     private BuildPayConfigMapper payConfigMapper;
     @Autowired
     private BuildSchemeCompanyRelMapper companyRelMapper;
+    @Autowired
+    private ConstructionOrderMapper constructionOrderMapper;
 
     /**
      * 查询所有施工配置方案
@@ -229,6 +234,15 @@ public class BuildConfigServiceImpl implements BuildConfigService {
 
     @Override
     public List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo) {
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("companyId不能为空");
+        }
+        if(StringUtils.isBlank(cityStation)){
+            throw new RuntimeException("cityStation不能为空");
+        }
+        if(StringUtils.isBlank(storeNo)){
+            throw new RuntimeException("storeNo不能为空");
+        }
         BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
         BuildSchemeConfigExample.Criteria criteria = configExample.createCriteria();
         criteria.andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo).andDelStateEqualTo(2).andIsEnableEqualTo(1);
@@ -240,7 +254,15 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
-    public List<BuildPayConfig> queryPayScheme(String schemeNo) {
+    public List<BuildPayConfig> queryPayScheme(String projectNo) {
+        ConstructionOrderExample orderExample = new ConstructionOrderExample();
+        orderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(orderExample);
+        if(constructionOrders.isEmpty()){
+            throw new RuntimeException("没有查询到该项目");
+        }
+        ConstructionOrder constructionOrder = constructionOrders.get(0);
+        String schemeNo = constructionOrder.getSchemeNo();
         BuildPayConfigExample configExample = new BuildPayConfigExample();
         configExample.createCriteria().andSchemeNoEqualTo(schemeNo);
         return payConfigMapper.selectByExample(configExample);
