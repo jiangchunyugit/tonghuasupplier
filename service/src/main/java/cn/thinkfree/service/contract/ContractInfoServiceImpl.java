@@ -4,17 +4,19 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
-import cn.thinkfree.database.constants.SyncOrderEnum;
-import cn.thinkfree.database.mapper.*;
-import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.remote.SyncContractVO;
-import cn.thinkfree.database.vo.remote.SyncOrderVO;
-import cn.thinkfree.service.constants.CompanyFinancialType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,15 +30,47 @@ import com.github.pagehelper.PageInfo;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.constants.SyncOrderEnum;
+import cn.thinkfree.database.mapper.CityMapper;
+import cn.thinkfree.database.mapper.CompanyInfoMapper;
+import cn.thinkfree.database.mapper.CompanyPaymentMapper;
+import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.ContractTermsChildMapper;
+import cn.thinkfree.database.mapper.ContractTermsMapper;
+import cn.thinkfree.database.mapper.MyContractInfoMapper;
+import cn.thinkfree.database.mapper.OrderContractMapper;
+import cn.thinkfree.database.mapper.PcAuditInfoMapper;
+import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
+import cn.thinkfree.database.mapper.ProvinceMapper;
+import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.CompanyInfoExample;
+import cn.thinkfree.database.model.CompanyPayment;
+import cn.thinkfree.database.model.ContractInfo;
+import cn.thinkfree.database.model.ContractInfoExample;
+import cn.thinkfree.database.model.ContractTerms;
+import cn.thinkfree.database.model.ContractTermsChild;
+import cn.thinkfree.database.model.ContractTermsChildExample;
+import cn.thinkfree.database.model.ContractTermsExample;
+import cn.thinkfree.database.model.OrderContract;
+import cn.thinkfree.database.model.OrderContractExample;
+import cn.thinkfree.database.model.PcAuditInfo;
+import cn.thinkfree.database.model.PcAuditInfoExample;
+import cn.thinkfree.database.model.PcCompanyFinancial;
+import cn.thinkfree.database.model.PcCompanyFinancialExample;
 import cn.thinkfree.database.vo.CompanySubmitVo;
 import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
+import cn.thinkfree.database.vo.contract.ContractDetailsVo;
+import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
+import cn.thinkfree.service.constants.CompanyConstants;
+import cn.thinkfree.service.constants.CompanyFinancialType;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.utils.CommonGroupUtils;
@@ -236,14 +270,25 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 	@Override
-	public List<Map<String, Object> > contractDetails( String contractNumber, String companyId )
+	public ContractDetailsVo contractDetails( String contractNumber, String companyId )
 	{
+		
+		ContractDetailsVo resVo = new ContractDetailsVo();
 		ContractVo vo = new ContractVo();
 		vo.setContractNumber( contractNumber );
 		ContractVo			newVo		= contractInfoMapper.selectContractBycontractNumber( vo );      /* 合同信息 */
-		CompanySubmitVo			companyInfo	= companySubmitService.findCompanyInfo( newVo.getCompanyId() ); /* 公司信息 */
-		List<Map<String, Object> >	list		= getContractInfo( contractNumber, newVo, companyInfo );
-		return(list);
+//		CompanySubmitVo			companyInfo	= companySubmitService.findCompanyInfo( newVo.getCompanyId() ); /* 公司信息 */
+//		List<Map<String, Object> >	list		= getContractInfo( contractNumber, newVo, companyInfo );
+		PcAuditInfoExample autit = new PcAuditInfoExample();
+	    autit.createCriteria().andCompanyIdEqualTo(companyId)
+	        .andContractNumberEqualTo(contractNumber);
+				//.andAuditTypeEqualTo(CompanyConstants.AuditType.CONTRACT.stringVal());
+	    autit.setOrderByClause("create_time desc");
+	    List<PcAuditInfo>  auList =  pcAuditInfoMapper.selectByExample(autit);
+	    resVo.setList(auList);
+	    resVo.setVo(newVo);
+	    
+		return  resVo;
 	}
 
 

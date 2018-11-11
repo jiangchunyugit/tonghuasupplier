@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,15 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.core.annotation.MyRespBody;
-import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.constants.SysLogAction;
-import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
+import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
@@ -128,11 +127,11 @@ public class ContractController extends AbsBaseController{
      * @return Message
      */
     @ApiOperation(value = "前端--运营后台--合同详情--吕启栋", notes = "合同详情")
-    @PostMapping("/contractDetails")
+    @GetMapping("/contractDetails")
     @MyRespBody
-    public MyRespBundle<List<Map<String,Object>> > contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
+    public MyRespBundle<ContractDetailsVo> contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-    	List<Map<String,Object>>  jbj =  contractService.contractDetails(contractNumber, companyId);
+    	ContractDetailsVo  jbj =  contractService.contractDetails(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
