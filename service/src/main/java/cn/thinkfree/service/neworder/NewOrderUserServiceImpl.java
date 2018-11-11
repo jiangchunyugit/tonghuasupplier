@@ -532,7 +532,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      * @return
      **/
     @Override
-    public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
+    public PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
    /*     if(designContractVO.getContractStatus() == 1){
             designContractVO.setFlag(designContractVO.getFlag());
         }else{
@@ -558,7 +558,12 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                 }
             }
         }
-        return voList;
+        PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(designerOrderMapper.selectContractCount(designContractVO));
+        pageVo.setPageIndex(pageNum);
+        pageVo.setData(voList);
+        return pageVo;
     }
 
     @Override
