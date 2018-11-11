@@ -14,6 +14,7 @@ import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
+import cn.thinkfree.service.construction.OrderListService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.SiteDetailsVo;
@@ -75,6 +76,10 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
     public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 
+    @Autowired
+    OrderListService orderListService;
+
+
     /**
      * 施工订单管理-列表
      * 运营后台
@@ -115,17 +120,17 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         }
 
         // 所属地区 & 项目地址 & 预约日期
-        List<Project> list1 = getProjectInfo(listProjectNo);
+        List<Project> list1 = orderListService.getProjectInfo(listProjectNo);
         // 项目经理
-        List<Map<String, String>> list2 = getEmployeeInfo(listProjectNo, "CP");
+        List<Map<String, String>> list2 = orderListService.getEmployeeInfo(listProjectNo, "CP");
         // 设计师
-        List<Map<String, String>> list3 = getEmployeeInfo(listProjectNo, "CD");
+        List<Map<String, String>> list3 = orderListService.getEmployeeInfo(listProjectNo, "CD");
         // 延期天数
-        List<ProjectScheduling> list4 = getdelayDay(listProjectNo);
+        List<ProjectScheduling> list4 = orderListService.getdelayDay(listProjectNo);
         // 确认验收
-        Map<String, Integer> Map5 = getApprove(listProjectNo);
+        Map<String, Integer> Map5 = orderListService.getApprove(listProjectNo);
         // 合同金额/时间
-        List<FundsOrder> list6 = getFundsOrder(listProjectNo);
+        List<FundsOrder> list6 = orderListService.getFundsOrder(listProjectNo);
 
         continueOut:
         for (ConstructionOrder constructionOrder : list) {
@@ -166,10 +171,10 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
                 }
             }
             // 公司名称
-            constructionOrderListVo.setCompanyName(getCompanyInfo(constructionOrder.getCompanyId()));
+            constructionOrderListVo.setCompanyName(orderListService.getCompanyInfo(constructionOrder.getCompanyId()));
 
             // 施工阶段
-            constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
+            constructionOrderListVo.setConstructionProgress(orderListService.getContstructionStage(constructionOrder.getConstructionStage()));
 
             // 订单状态
             constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 1));
@@ -181,9 +186,9 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
                 }
             }
             // 签约日期 已支付 应支付金额
-            for (FundsOrder fundsOrder : list6){
-                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())){
-                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(),FORMAT));
+            for (FundsOrder fundsOrder : list6) {
+                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())) {
+                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(), FORMAT));
                     constructionOrderListVo.setReducedContractAmount(fundsOrder.getActualAmount());
                     constructionOrderListVo.setHavePaid(fundsOrder.getPaidAmount());
                 }
@@ -274,20 +279,20 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         }
 
         // 所属地区 & 项目地址 & 预约日期
-        List<Project> list1 = getProjectInfo(listProjectNo);
+        List<Project> list1 = orderListService.getProjectInfo(listProjectNo);
         // 项目经理
-        List<Map<String, String>> list2 = getEmployeeInfo(listProjectNo, "CP");
+        List<Map<String, String>> list2 = orderListService.getEmployeeInfo(listProjectNo, "CP");
         // 设计师
-        List<Map<String, String>> list3 = getEmployeeInfo(listProjectNo, "CD");
+        List<Map<String, String>> list3 = orderListService.getEmployeeInfo(listProjectNo, "CD");
         // 延期天数
-        List<ProjectScheduling> list4 = getdelayDay(listProjectNo);
+        List<ProjectScheduling> list4 = orderListService.getdelayDay(listProjectNo);
         // 确认验收
-        Map<String, Integer> Map5 = getApprove(listProjectNo);
+        Map<String, Integer> Map5 = orderListService.getApprove(listProjectNo);
         // 合同金额/时间
-        List<FundsOrder> list6 = getFundsOrder(listProjectNo);
-        List<ProjectScheduling> list7 = getProjectScheduling(listProjectNo);
+        List<FundsOrder> list6 = orderListService.getFundsOrder(listProjectNo);
+        List<ProjectScheduling> list7 = orderListService.getProjectScheduling(listProjectNo);
         //合同额
-        List<ConstructionOrder> list8 = getMoney(listOrdertNo);
+        List<ConstructionOrder> list8 = orderListService.getMoney(listOrdertNo);
         continueOut:
         for (ConstructionOrder constructionOrder : list) {
             ConstructionOrderListVo constructionOrderListVo = new ConstructionOrderListVo();
@@ -327,10 +332,10 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
                 }
             }
             // 公司名称
-            constructionOrderListVo.setCompanyName(getCompanyInfo(constructionOrder.getCompanyId()));
+            constructionOrderListVo.setCompanyName(orderListService.getCompanyInfo(constructionOrder.getCompanyId()));
 
             // 施工阶段
-            constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
+            constructionOrderListVo.setConstructionProgress(orderListService.getContstructionStage(constructionOrder.getConstructionStage()));
 
             // 订单状态
             constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 1));
@@ -344,15 +349,15 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
                 }
             }
             // 签约日期 已支付 应支付金额
-            for (FundsOrder fundsOrder : list6){
-                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())){
-                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(),FORMAT));
+            for (FundsOrder fundsOrder : list6) {
+                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())) {
+                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(), FORMAT));
                     constructionOrderListVo.setReducedContractAmount(fundsOrder.getActualAmount());
                     constructionOrderListVo.setHavePaid(fundsOrder.getPaidAmount());
                 }
             }
             //合同金额
-            for (ConstructionOrder co :list8){
+            for (ConstructionOrder co : list8) {
                 constructionOrderListVo.setContractAmount(co.getMoney().toString());
             }
 
@@ -401,12 +406,13 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
 
         return RespData.success(constructionOrderManageVo);
     }
+
     /**
+     * @return
      * @Author jiang
      * @Description 工地详情信息
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo) {
@@ -414,7 +420,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
         projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
-        if(projectSchedulings.size() == 1){
+        if (projectSchedulings.size() == 1) {
             ProjectScheduling projectScheduling = projectSchedulings.get(0);
             //项目编号
             siteDetailsVo.setProjectNo(projectNo);
@@ -423,7 +429,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
             //竣工时间
             siteDetailsVo.setCompletionDays(projectScheduling.getEndTime());
             //工期
-            Long day=(projectScheduling.getEndTime().getTime()-projectScheduling.getStartTime().getTime())/(24*60*60*1000);
+            Long day = (projectScheduling.getEndTime().getTime() - projectScheduling.getStartTime().getTime()) / (24 * 60 * 60 * 1000);
             siteDetailsVo.setDuration(day.intValue());
             //施工进度
             siteDetailsVo.setConstructionSchedule(projectScheduling.getRate().intValue());
@@ -433,7 +439,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         designerOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.size()==1){
+        if (designerOrders.size() == 1) {
             DesignerOrder designerOrder = designerOrders.get(0);
             //订单编号
             siteDetailsVo.setOrderNo(designerOrder.getOrderNo());
@@ -458,15 +464,15 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
         constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
-       if(constructionOrders.size()==1){
-           ConstructionOrder constructionOrder = constructionOrders.get(0);
-           //合同款
-           siteDetailsVo.setContractFunds(constructionOrder.getMoney());
-       }
+        if (constructionOrders.size() == 1) {
+            ConstructionOrder constructionOrder = constructionOrders.get(0);
+            //合同款
+            siteDetailsVo.setContractFunds(constructionOrder.getMoney());
+        }
         FundsOrderExample example = new FundsOrderExample();
         example.createCriteria().andProjectNoEqualTo(projectNo);
         List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
-        if(list.size() ==1){
+        if (list.size() == 1) {
             FundsOrder fundsOrder = list.get(0);
             //已付款
             siteDetailsVo.setPaid(fundsOrder.getPaidAmount());
@@ -496,7 +502,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
                             } else if ("CS".equals(roleCode)) {
                                 //管家
                                 siteDetailsVo.setHousekeeper(employeeMsg.getRealName());
-                            }else if ("CD".equals(roleCode)) {
+                            } else if ("CD".equals(roleCode)) {
                                 //设计师
                                 siteDetailsVo.setDesignerName(employeeMsg.getRealName());
                             }
@@ -509,135 +515,4 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
 
         return RespData.success(siteDetailsVo);
     }
-
-    //查询合同
-    private List<ConstructionOrder> getMoney(List<String> listOrdertNo) {
-        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
-        constructionOrderExample.createCriteria().andOrderNoIn(listOrdertNo);
-        return constructionOrderMapper.selectByExample(constructionOrderExample);
-    }
-
-    //查询竣工
-    private List<ProjectScheduling> getProjectScheduling(List<String> listProjectNo) {
-        ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
-        projectSchedulingExample.createCriteria().andProjectNoIn(listProjectNo);
-        return projectSchedulingMapper.selectByExample(projectSchedulingExample);
-    }
-
-    /**
-     * 查询项目信息
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public List<Project> getProjectInfo(List<String> listProjectNo) {
-        ProjectExample example = new ProjectExample();
-        example.createCriteria().andProjectNoIn(listProjectNo);
-        return projectMapper.selectByExample(example);
-    }
-
-    /**
-     * 查询用户信息 -用户中心接口
-     *
-     * @param userId
-     * @return
-     */
-    public PersionVo getOwnerId(String userId) {
-        PersionVo owner = new PersionVo();
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("userId", userId);
-        requestMap.put("roleId", "CC");
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsg(), requestMap);
-        Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
-        owner.setName(responseMap.get("nickName").toString());
-        owner.setPhone(responseMap.get("phone").toString());
-        return owner;
-    }
-
-    /**
-     * 设计师 & 项目经理
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
-        OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
-        List<OrderUser> list = orderUserMapper.selectByExample(example);
-        List<Map<String, String>> listName = new ArrayList<>();
-        for (OrderUser orderUser : list) {
-            EmployeeMsgExample example2 = new EmployeeMsgExample();
-            example2.createCriteria().andUserIdEqualTo(orderUser.getUserId()).andRoleCodeEqualTo(role).andEmployeeStateEqualTo(1);
-            List<EmployeeMsg> listEm = employeeMsgMapper.selectByExample(example2);
-            for (EmployeeMsg employeeMsg : listEm) {
-                Map<String, String> map = new HashMap<>();
-                map.put("projectNo", orderUser.getProjectNo());
-                map.put("name", employeeMsg.getRealName());
-                listName.add(map);
-            }
-        }
-        return listName;
-    }
-
-    /**
-     * 公司名称
-     * TODO 批量
-     *
-     * @param companyId
-     * @return
-     */
-    public String getCompanyInfo(String companyId) {
-        String companyName = constructionOrderMapper.getCompanyName(companyId);
-        return companyName;
-    }
-
-    /**
-     * 查询 施工阶段
-     *
-     * @param stage
-     * @return
-     */
-    public String getContstructionStage(int stage) {
-        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
-        example.createCriteria().andSortEqualTo(stage);
-        List<ProjectBigScheduling> list = projectBigSchedulingMapper.selectByExample(example);
-        return list.get(0).getName();
-    }
-
-    /**
-     * 查询 延期天数
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public List<ProjectScheduling> getdelayDay(List<String> listProjectNo) {
-        ProjectSchedulingExample example = new ProjectSchedulingExample();
-        example.createCriteria().andProjectNoIn(listProjectNo);
-        return projectSchedulingMapper.selectByExample(example);
-    }
-
-    /**
-     * 查询 延期天数
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public Map<String, Integer> getApprove(List<String> listProjectNo) {
-        return afInstanceService.getProjectCheckResult(listProjectNo);
-    }
-
-    /**
-     * 查询 延期天数
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public List<FundsOrder> getFundsOrder(List<String> listProjectNo) {
-        FundsOrderExample example = new FundsOrderExample();
-        example.createCriteria().andProjectNoIn(listProjectNo);
-        List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
-        return list;
-    }
-
-
 }
