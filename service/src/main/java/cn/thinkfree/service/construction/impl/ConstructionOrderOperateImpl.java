@@ -20,14 +20,12 @@ import java.util.*;
 @Service
 public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
 
-
     @Autowired
     OrderListCommonService orderListCommonService;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     CommonService commonService;
-
 
     /**
      * 订单列表
@@ -53,13 +51,12 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
 
 
     /**
-     * 施工订单管理-列表
-     * 运营后台
-     *
+     * 施工订单列表统计
      * @return
      */
+
     @Override
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
+    public MyRespBundle<ConstructionOrderManageVo> getOrderNum() {
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
@@ -88,8 +85,4 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         constructionOrderManageVo.setWaitPay(waitPay);
         return RespData.success(constructionOrderManageVo);
     }
-
-
-
-
 }

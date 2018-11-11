@@ -6,9 +6,8 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
-import cn.thinkfree.service.construction.vo.ConstructionStateVo;
-import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,11 +35,19 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("运营平台接口---->孙宇专用")
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+    public MyRespBundle<ConstructionOrderCommonVo> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
                                                                            @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
                                                                            @RequestParam(required = false) @ApiParam(value = "城市名称")  String cityName){
 
-        return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize,cityName);
+        return constructionOrderOperate.getOrderList(pageNum,pageSize,cityName);
+    }
+
+    @ApiOperation("运营平台接口---->孙宇专用")
+    @MyRespBody
+    @RequestMapping(value = "getOperateNum", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<ConstructionOrderManageVo> getOperateNum(){
+
+        return constructionOrderOperate.getOrderNum();
     }
 
 

@@ -10,11 +10,10 @@ import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 public interface ConstructionOrderOperate {
 
     /**
-     * 施工订单管理-列表
-     * 运营后台
+     * 施工订单列表统计
      * @return
      */
-    MyRespBundle<ConstructionOrderManageVo> getConstructionOrderList(int pageNum, int pageSize,String cityName);
+    MyRespBundle<ConstructionOrderManageVo> getOrderNum();
 
     /**
      *  订单列表
