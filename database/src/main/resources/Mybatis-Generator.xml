@@ -6,11 +6,11 @@
     <classPathEntry
             location="src/main/resources/edb-jdbc16.jar"/>
     <context id="context1">
-        <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
-        <plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">
-            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
-            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
-        </plugin>
+        <!--<plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>-->
+        <!--<plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">-->
+            <!--<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>-->
+            <!--<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>-->
+        <!--</plugin>-->
         <!-- 该死的注释 -->
         <commentGenerator>
             <property name="addRemarkComments" value="true"/>
@@ -112,9 +112,10 @@
         <!--<table tableName="order_apply_refund" domainObjectName="OrderApplyRefund"/>-->
         <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
         <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
+        <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
-        <table tableName="project_data" domainObjectName="ProjectData"/>
+        <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
         <!--<table tableName="project_quotation_log" domainObjectName="ProjectQuotationLog"/>-->
         <!--<table tableName="project_stage_log" domainObjectName="ProjectStageLog"/>-->
         <!--<table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>-->
@@ -143,7 +144,9 @@
         <!--<table tableName="build_pay_config" domainObjectName="BuildPayConfig"/>-->
         <!--<table tableName="build_scheme_config" domainObjectName="BuildSchemeConfig"/>-->
         <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
-<!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
+        <!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->
+        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
         <!-- new approval flow end -->
+        <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
     </context>
 </generatorConfiguration>

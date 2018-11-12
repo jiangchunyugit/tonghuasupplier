@@ -47,4 +47,13 @@ public class PageVo<T> {
     public int getPageIndex() {
         return pageIndex;
     }
+
+    public static <T> PageVo<T> def(T t){
+        PageVo<T> pageVo = new PageVo<>();
+        pageVo.setPageSize(10);
+        pageVo.setPageIndex(1);
+        pageVo.setTotal(0);
+        pageVo.setData(t);
+        return pageVo;
+    }
 }

@@ -232,8 +232,22 @@ public interface NewOrderUserService {
      **/
     MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum,Integer pageSize ,String companyId);
     PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId);
-
-    List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 设计合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
 
     Integer queryContractCount(DesignContractVO designContractVO);
+    /**
+     * @Author jiang
+     * @Description 施工合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int i, int pageSize);
 }

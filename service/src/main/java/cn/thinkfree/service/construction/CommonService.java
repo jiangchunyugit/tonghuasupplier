@@ -46,23 +46,6 @@ public class CommonService extends AbsBaseController {
 
 
     /**
-     * 查询操作角色 是否有变更状态的权限
-     */
-    public boolean queryIsState(String projectNo, String role) {
-        ConstructionOrderExample example = new ConstructionOrderExample();
-        example.createCriteria().andProjectNoEqualTo(projectNo);
-        List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
-        if (constructionOrderList.isEmpty()) {
-            return false;
-        }
-        if (ConstructionStateEnum.queryIsState(role)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
      * 更新状态值 By projectNo
      */
     public boolean updateStateCode(String projectNo, int stateCode) {
@@ -88,6 +71,23 @@ public class CommonService extends AbsBaseController {
         constructionOrder.setOrderStage(stateCode);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
         if (isUpdate == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 查询操作角色 是否有变更状态的权限
+     */
+    public boolean queryIsState(String projectNo, String role) {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
+        if (constructionOrderList.isEmpty()) {
+            return false;
+        }
+        if (ConstructionStateEnum.queryIsState(role)) {
             return true;
         } else {
             return false;

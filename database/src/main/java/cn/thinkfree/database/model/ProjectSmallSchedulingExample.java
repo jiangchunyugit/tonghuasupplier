@@ -1444,6 +1444,76 @@ public class ProjectSmallSchedulingExample {
             addCriterion("construct_id not between", value1, value2, "constructId");
             return (Criteria) this;
         }
+
+        public Criteria andSchemeNoIsNull() {
+            addCriterion("scheme_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoIsNotNull() {
+            addCriterion("scheme_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoEqualTo(String value) {
+            addCriterion("scheme_no =", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotEqualTo(String value) {
+            addCriterion("scheme_no <>", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoGreaterThan(String value) {
+            addCriterion("scheme_no >", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoGreaterThanOrEqualTo(String value) {
+            addCriterion("scheme_no >=", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoLessThan(String value) {
+            addCriterion("scheme_no <", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoLessThanOrEqualTo(String value) {
+            addCriterion("scheme_no <=", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoLike(String value) {
+            addCriterion("scheme_no like", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotLike(String value) {
+            addCriterion("scheme_no not like", value, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoIn(List<String> values) {
+            addCriterion("scheme_no in", values, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotIn(List<String> values) {
+            addCriterion("scheme_no not in", values, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoBetween(String value1, String value2) {
+            addCriterion("scheme_no between", value1, value2, "schemeNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andSchemeNoNotBetween(String value1, String value2) {
+            addCriterion("scheme_no not between", value1, value2, "schemeNo");
+            return (Criteria) this;
+        }
     }
 
     /**

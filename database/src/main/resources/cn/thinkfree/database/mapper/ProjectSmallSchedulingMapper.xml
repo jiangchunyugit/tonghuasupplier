@@ -25,6 +25,7 @@
     <result column="version" jdbcType="INTEGER" property="version" />
     <result column="predecessor_small_sort" jdbcType="INTEGER" property="predecessorSmallSort" />
     <result column="construct_id" jdbcType="BIGINT" property="constructId" />
+    <result column="scheme_no" jdbcType="VARCHAR" property="schemeNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -99,7 +100,7 @@
     -->
     id, company_id, sort, construct_category, construct_item, construct_code, construct_name, 
     unit_code, parent_sort, description, assit_spec, standard, source_of_standard, remarks, 
-    status, create_time, version, predecessor_small_sort, construct_id
+    status, create_time, version, predecessor_small_sort, construct_id, scheme_no
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.ProjectSmallSchedulingExample" resultMap="BaseResultMap">
     <!--
@@ -158,14 +159,14 @@
       description, assit_spec, standard, 
       source_of_standard, remarks, status, 
       create_time, version, predecessor_small_sort, 
-      construct_id)
+      construct_id, scheme_no)
     values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, 
       #{constructCategory,jdbcType=VARCHAR}, #{constructItem,jdbcType=VARCHAR}, #{constructCode,jdbcType=VARCHAR}, 
       #{constructName,jdbcType=VARCHAR}, #{unitCode,jdbcType=VARCHAR}, #{parentSort,jdbcType=INTEGER}, 
       #{description,jdbcType=VARCHAR}, #{assitSpec,jdbcType=VARCHAR}, #{standard,jdbcType=VARCHAR}, 
       #{sourceOfStandard,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{version,jdbcType=INTEGER}, #{predecessorSmallSort,jdbcType=INTEGER}, 
-      #{constructId,jdbcType=BIGINT})
+      #{constructId,jdbcType=BIGINT}, #{schemeNo,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ProjectSmallScheduling">
     <!--
@@ -231,6 +232,9 @@
       <if test="constructId != null">
         construct_id,
       </if>
+      <if test="schemeNo != null">
+        scheme_no,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -289,6 +293,9 @@
       </if>
       <if test="constructId != null">
         #{constructId,jdbcType=BIGINT},
+      </if>
+      <if test="schemeNo != null">
+        #{schemeNo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -366,6 +373,9 @@
       <if test="record.constructId != null">
         construct_id = #{record.constructId,jdbcType=BIGINT},
       </if>
+      <if test="record.schemeNo != null">
+        scheme_no = #{record.schemeNo,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -395,7 +405,8 @@
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       version = #{record.version,jdbcType=INTEGER},
       predecessor_small_sort = #{record.predecessorSmallSort,jdbcType=INTEGER},
-      construct_id = #{record.constructId,jdbcType=BIGINT}
+      construct_id = #{record.constructId,jdbcType=BIGINT},
+      scheme_no = #{record.schemeNo,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -461,6 +472,9 @@
       <if test="constructId != null">
         construct_id = #{constructId,jdbcType=BIGINT},
       </if>
+      <if test="schemeNo != null">
+        scheme_no = #{schemeNo,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -487,7 +501,8 @@
       create_time = #{createTime,jdbcType=TIMESTAMP},
       version = #{version,jdbcType=INTEGER},
       predecessor_small_sort = #{predecessorSmallSort,jdbcType=INTEGER},
-      construct_id = #{constructId,jdbcType=BIGINT}
+      construct_id = #{constructId,jdbcType=BIGINT},
+      scheme_no = #{schemeNo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

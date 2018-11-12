@@ -255,22 +255,22 @@ public enum ConstructionStateEnumB {
      * 根据状态 & 角色 - 查询当前状态说明
      *
      * @param state
-     * @param role
+     * @param type
      * @return
      */
-    public static String queryStateByRole(int state, String role) {
+    public static String queryStateByRole(Integer state, int type) {
         ConstructionStateEnumB[] stateEnums = ConstructionStateEnumB.values();
         for (ConstructionStateEnumB constructionStateEnum : stateEnums) {
             if (constructionStateEnum.state == state) {
-                switch (role) {
-                    case "platform":
+                switch (type) {
+                    case 1:
                         return constructionStateEnum.statePlatform;
-                    case "consumer":
-                        return constructionStateEnum.stateConsumer;
-                    case "constructionCompany":
+                    case 2:
                         return constructionStateEnum.stateConstructionCompany;
-                    case "constructor":
+                    case 3:
                         return constructionStateEnum.stateConstructor;
+                    case 4:
+                        return constructionStateEnum.stateConsumer;
                     default:
                         return null;
                 }

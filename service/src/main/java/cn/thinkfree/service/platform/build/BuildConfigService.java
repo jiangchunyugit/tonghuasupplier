@@ -2,6 +2,7 @@ package cn.thinkfree.service.platform.build;
 
 import cn.thinkfree.database.model.BuildPayConfig;
 import cn.thinkfree.database.model.BuildSchemeConfig;
+import cn.thinkfree.service.platform.vo.CompanySchemeVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
@@ -122,9 +123,28 @@ public interface BuildConfigService {
 
     /**
      * 根据方案编号查询支付方案列表
-     * @param schemeNo 方案编号
+     *
+     * @param projectNo 方案编号
      * @return
      */
-    List<BuildPayConfig> queryPayScheme(String schemeNo);
+    List<BuildPayConfig> queryPayScheme(String projectNo);
 
+    /**
+     * 装饰公司启用施工方案
+     *
+     * @param companyId      公司ID
+     * @param schemeNo       方案编号
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人姓名
+     */
+    void companyEnableScheme(String companyId, String schemeNo, String optionUserId, String optionUserName);
+
+    /**
+     * 根据公司ID查询公司选择的施工方案
+     *
+     * @param companyId
+     * @param pageSize
+     * @param pageIndex
+     */
+    PageVo<List<CompanySchemeVo>> queryByCompanyId(String companyId, int pageSize, int pageIndex);
 }

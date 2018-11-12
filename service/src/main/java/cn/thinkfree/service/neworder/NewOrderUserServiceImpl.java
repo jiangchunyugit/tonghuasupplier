@@ -35,7 +35,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     private static final MyLogger LOGGER = new MyLogger(NewOrderUserService.class);
 
-    @Resource
+    @Autowired
     private OrderUserMapper orderUserMapper;
     @Autowired(required = false)
     private PreProjectGuideMapper preProjectGuideMapper;
@@ -532,23 +532,18 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      * @return
      **/
     @Override
-    public List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
-        if(designContractVO.getContractStatus() == 1){
-            designContractVO.setFlag("1");
-        }else{
-            designContractVO.setFlag("0");
-        }
+    public PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
         List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
         for (DesignContractVO vo :voList){
             //业主
             ProjectExample projectExample = new ProjectExample();
             projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
             List<Project> projects = projectMapper.selectByExample(projectExample);
-            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+/*            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
             //业主
             vo.setOwnerName(customerInfo.getUsername());
             //手机号码
-            vo.setOwnerPhone(customerInfo.getPhone());
+            vo.setOwnerPhone(customerInfo.getPhone());*/
             if(vo.getAuditType() != null){
                 if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
                     vo.setContractStatus(1);//生效
@@ -558,12 +553,53 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                 }
             }
         }
-        return voList;
+        PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(designerOrderMapper.selectContractCount(designContractVO));
+        pageVo.setPageIndex(pageNum);
+        pageVo.setData(voList);
+        return pageVo;
     }
 
     @Override
     public Integer queryContractCount(DesignContractVO designContractVO) {
         return designerOrderMapper.selectContractCount(designContractVO);
+    }
+    /**
+     * @Author jiang
+     * @Description 施工合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int pageNum, int pageSize) {
+        List<ConstructionContractVO> voList = constructionOrderMapper.selectConstructionContractByPage( constructionContractVO,  pageNum,  pageSize);
+        for (ConstructionContractVO vo :voList){
+            //业主
+            ProjectExample projectExample = new ProjectExample();
+            projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+/*            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+            //业主
+            vo.setOwnerName(customerInfo.getUsername());
+            //手机号码
+            vo.setOwnerPhone(customerInfo.getPhone());*/
+            if(vo.getAuditType() != null){
+                if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
+                    vo.setContractStatus(1);//生效
+                }else {
+                    vo.setContractStatus(0);//不生效
+
+                }
+            }
+        }
+        PageVo<List<ConstructionContractVO>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(constructionOrderMapper.selectconstructionContractVOCount(constructionContractVO));
+        pageVo.setPageIndex(pageNum);
+        pageVo.setData(voList);
+        return pageVo;
     }
 
 

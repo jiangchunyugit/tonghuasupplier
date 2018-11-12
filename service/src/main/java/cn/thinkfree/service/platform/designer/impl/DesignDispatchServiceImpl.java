@@ -1,5 +1,6 @@
 package cn.thinkfree.service.platform.designer.impl;
 
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
@@ -45,6 +46,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private RemindOwnerLogMapper remindOwnerLogMapper;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     private UserCenterService userService;
     @Autowired
@@ -322,15 +325,15 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         constructionOrder.setCreateTime(new Date());
         constructionOrder.setProjectNo(projectNo);
         constructionOrder.setStatus(1);
-        DesignerOrder designerOrders = queryDesignerOrder(projectNo);
+        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_500.getState());
         // 1小包，2大包
         if (project.getContractType() == 2) {
+            DesignerOrder designerOrders = queryDesignerOrder(projectNo);
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
-            //TODO 待添加状态
+            constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_520.getState());
         }
-
-        //constructionOrderMapper.insertSelective(constructionOrder);
+        constructionOrderMapper.insertSelective(constructionOrder);
     }
 
     /**
@@ -625,6 +628,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = stateEnum.getLogText();
         saveOptionLog(designerOrder.getOrderNo(), optionId, optionName, remark);
         saveLog(stateEnum.getState(), project);
+        //订单交易完成
+        if(orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()){
+            createConstructionOrder(projectNo);
+        }
     }
 
     @Override
@@ -645,6 +652,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //记录操作日志
         saveOptionLog(designerOrder.getOrderNo(), optionId, optionName, reason);
         saveLog(stateEnum.getState(), project);
+        //订单交易完成
+        if(orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()){
+            createConstructionOrder(projectNo);
+        }
     }
 
     @Override
@@ -705,6 +716,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = stateEnum.getLogText();
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", remark);
         saveLog(stateEnum.getState(), project);
+        //订单交易完成
+        if(stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210){
+            createConstructionOrder(project.getProjectNo());
+        }
     }
 
 

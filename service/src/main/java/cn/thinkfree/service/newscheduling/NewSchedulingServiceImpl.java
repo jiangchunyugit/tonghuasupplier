@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.thinkfree.service.utils.DateUtil;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 正常排期操作
@@ -48,18 +45,78 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      *
      * @param projectNo
      */
+//    @Override
+//    @Transactional(rollbackFor = {Exception.class})
+//    public MyRespBundle createScheduling(String projectNo, String companyId) {
+//
+//        //获取报价基础信息
+//        Set<Integer> bigSortSet = projectQuotationLogMapper.selectByProjectNo(projectNo);
+//        //获取项目信息
+//        ProjectExample example = new ProjectExample();
+//        ProjectExample.Criteria criteria = example.createCriteria();
+//        criteria.andProjectNoEqualTo(projectNo);
+//        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//        List<Project> projects = projectMapper.selectByExample(example);
+//        Project project = projects.get(0);
+//        //获取排期基础数据
+//        ProjectBigSchedulingExample example1 = new ProjectBigSchedulingExample();
+//        ProjectBigSchedulingExample.Criteria criteria1 = example1.createCriteria();
+//        criteria1.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//        List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example1);
+//        Date bigStartTime = project.getPlanStartTime();
+//        Collections.sort(projectBigSchedulings);
+//        //生成排期
+//        for (ProjectBigScheduling bigScheduling : projectBigSchedulings) {
+//            ProjectBigSchedulingDetails details = new ProjectBigSchedulingDetails();
+//            details.setCompanyId(companyId);
+//            details.setProjectNo(projectNo);
+//            details.setBigSort(bigScheduling.getSort());
+//            details.setBigName(bigScheduling.getName());
+//            details.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+//            details.setCreateTime(new Date());
+//            details.setIsCompleted(Scheduling.COMPLETED_NO.getValue());
+//            details.setIsAdd(Scheduling.ADD_NO.getValue());
+//            details.setIsChange(Scheduling.CHANGE_NUM.getValue());
+//            details.setSubmitNum(Scheduling.SUBMIT_NUM.getValue());
+//            details.setIsNeedCheck(bigScheduling.getIsNeedCheck());
+//            details.setIsAdopt(Scheduling.CHECK_NO.getValue());
+//            details.setVersion(bigScheduling.getVersion());
+//            details.setRenameBig(bigScheduling.getRename());
+//            if (bigSortSet.contains(bigScheduling.getSort())) {
+//                details.setPlanStartTime(bigStartTime);
+//                details.setPlanEndTime(DateUtil.getDate(bigStartTime, bigScheduling.getWorkload()));
+//                bigStartTime = DateUtil.getDate(bigStartTime, bigScheduling.getWorkload());
+//                details.setIsMatching(Scheduling.MATCHING_YES.getValue());
+//            } else {
+//                details.setPlanStartTime(bigStartTime);
+//                details.setPlanEndTime(bigStartTime);
+//                details.setIsMatching(Scheduling.MATHCHING_NO.getValue());
+//            }
+//            int i = projectBigSchedulingDetailsMapper.insertSelective(details);
+//            if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+//                return RespData.error("生成排期失败!!");
+//            }
+//        }
+//        return RespData.success();
+//    }
+
+    /**
+     * 根据项目编号生成排期
+     *
+     * @param projectNo
+     */
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public MyRespBundle createScheduling(String projectNo, String companyId) {
-
-        //获取报价基础信息
-        Set<Integer> bigSortSet = projectQuotationLogMapper.selectByProjectNo(projectNo);
         //获取项目信息
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return RespData.error("无此项目");
+        }
         Project project = projects.get(0);
         //获取排期基础数据
         ProjectBigSchedulingExample example1 = new ProjectBigSchedulingExample();
@@ -67,7 +124,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria1.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example1);
         Date bigStartTime = project.getPlanStartTime();
-        Collections.sort(projectBigSchedulings);
+//        Collections.sort(projectBigSchedulings);
         //生成排期
         for (ProjectBigScheduling bigScheduling : projectBigSchedulings) {
             ProjectBigSchedulingDetails details = new ProjectBigSchedulingDetails();
@@ -85,7 +142,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             details.setIsAdopt(Scheduling.CHECK_NO.getValue());
             details.setVersion(bigScheduling.getVersion());
             details.setRenameBig(bigScheduling.getRename());
-            if (bigSortSet.contains(bigScheduling.getSort())) {
+       /*     if (bigSortSet.contains(bigScheduling.getSort())) {
                 details.setPlanStartTime(bigStartTime);
                 details.setPlanEndTime(DateUtil.getDate(bigStartTime, bigScheduling.getWorkload()));
                 bigStartTime = DateUtil.getDate(bigStartTime, bigScheduling.getWorkload());
@@ -94,7 +151,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
                 details.setPlanStartTime(bigStartTime);
                 details.setPlanEndTime(bigStartTime);
                 details.setIsMatching(Scheduling.MATHCHING_NO.getValue());
-            }
+            }*/
             int i = projectBigSchedulingDetailsMapper.insertSelective(details);
             if (i != Scheduling.INSERT_SUCCESS.getValue()) {
                 return RespData.error("生成排期失败!!");
@@ -259,7 +316,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             schedulingCriteria.andProjectNoEqualTo(projectNo);
             schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
             //修改延期时间
-            projectScheduling.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingDetail.getPlanEndTime(),new Date()));
+            projectScheduling.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingDetail.getPlanEndTime(), new Date()));
             int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
             if (result == 0) {
                 return "修改延期时间失败!";
@@ -289,5 +346,27 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return "修改排期实际开始时间失败!";
         }
         return "修改成功";
+    }
+
+    /**
+     * 提供PC合同处获取验收阶段
+     *
+     * @param orderNo
+     * @param type
+     * @return
+     */
+    @Override
+    public MyRespBundle<List<String>> getPcCheckStage(String orderNo, Integer type) {
+        List<String> stageList = new ArrayList<>();
+        if (type.equals(Scheduling.INVALID_STATUS.getValue())) {
+            stageList = projectBigSchedulingDetailsMapper.selectConstructionByOrderNo(orderNo);
+        }
+        if (type.equals(Scheduling.BASE_STATUS.getValue())) {
+            stageList = projectBigSchedulingDetailsMapper.selectDesignerByOrderNo(orderNo);
+        }
+        if (stageList.size() == Scheduling.MATHCHING_NO.getValue()) {
+            return RespData.error("此订单号未有与之匹配的验收信息!");
+        }
+        return RespData.success(stageList);
     }
 }
