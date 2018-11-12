@@ -49,7 +49,7 @@ public class DesignContractVO {
     private Integer contractAmount;
     @ApiModelProperty("合同状态 0不生效 1生效")
     private Integer contractStatus;
-    @ApiModelProperty("审批状态：0：不通过 1：通过")
+    @ApiModelProperty("审批状态：0：不通过 1：通过2：审核中")
     private Integer auditType;
     @ApiModelProperty("合同状态(模糊条件)：0：不通过 1：通过")
     private String flag;
