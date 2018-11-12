@@ -489,6 +489,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(configNo)) {
             schedulingService.completeBigScheduling(projectNo, scheduleSort);
         }
+
+        createPdf(projectNo, configNo, scheduleSort);
+    }
+
+    private void createPdf(String projectNo, String configNo, Integer scheduleSort) {
+//        FreemarkerUtils.savePdf();
     }
 
     /**

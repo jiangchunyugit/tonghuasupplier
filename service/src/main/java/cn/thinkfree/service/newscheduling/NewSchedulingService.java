@@ -49,11 +49,10 @@ public interface NewSchedulingService {
     /**
      * 生成排期
      *
-     * @param projectNo
-     * @param companyId
+     * @param orderNo
      * @return
      */
-    MyRespBundle createScheduling(String projectNo, String companyId);
+    MyRespBundle createScheduling(String orderNo);
 
     /**
      * 确认排期
