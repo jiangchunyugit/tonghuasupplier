@@ -58,6 +58,15 @@ public class UserVO extends SecurityUser {
      */
     private Boolean isRoot = Boolean.FALSE;
 
+    /**
+     * 用户类型
+     */
+    private UserRegisterType type ;
+
+    public void setType(UserRegisterType type) {
+        this.type = type;
+    }
+
     public Boolean isRoot() {
         return isRoot;
     }

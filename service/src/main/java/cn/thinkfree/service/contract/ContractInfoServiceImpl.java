@@ -202,63 +202,63 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	/**
-	 *
-	 * 财务审核的时候要 修改公司表的状态 修改合同表 添加审核记录表
-	 *
-	 * @author lvqidong 公司入驻状态 0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金 6入驻成功
-	 */
-	@Override
-	@Transactional
-	public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase )
-	{
-		/* 修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝 */
-		ContractVo vo = new ContractVo();
-		vo.setCompanyId( companyId );
-		vo.setContractNumber( contractNumber );
-		if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) ) /*  */
-		{
-			vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
-		} else {
-			vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
-		}
-		/* 修改公司表 */
-		CompanyInfo companyInfo = new CompanyInfo();
-		companyInfo.setCompanyId( companyId );
+    /**
+     *
+     * 财务审核的时候要 修改公司表的状态 修改合同表 添加审核记录表
+     *
+     * @author lvqidong 公司入驻状态 0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金 6入驻成功
+     */
+    @Override
+    @Transactional
+    public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase )
+    {
+        Date date = new Date();
+        /* 修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝 */
+        ContractVo vo = new ContractVo();
+        vo.setCompanyId( companyId );
+        vo.setContractNumber( contractNumber );
+        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) ) /*  */
+        {
+            vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
+        } else {
+            vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
+        }
+        /* 修改公司表 */
+        CompanyInfo companyInfo = new CompanyInfo();
+        companyInfo.setCompanyId( companyId );
 
-		if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) )   /* 财务审核通过 */
-		{
-			companyInfo.setAuditStatus( CompanyAuditStatus.SUCCESSCHECK.stringVal() );
-			/* 财务审核通过生成合同 */
-			String pdfUrl = this.createContractDoc( contractNumber );
-			vo.setContractUrl( pdfUrl );
-			vo.setSignedTime(DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
-			//推送数据
-			eventService.publish((BaseEvent) new MarginContractEvent(contractNumber));
-		} else {                                                        /* 财务审核不通过 */
-			companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
-		}
-		ContractInfoExample example = new ContractInfoExample();
-		example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-		ContractInfo contractInfo = new ContractInfo();
-		contractInfo.setContractStatus( vo.getContractStatus() );
-		contractInfo.setContractUrl( vo.getContractUrl() );
-		int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
-		int flagT = companyInfoMapper.updateauditStatus( companyInfo );
-		UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-		String	auditPersion = userVO == null ? "" : userVO.getUsername();
-		/* 添加审核记录表 */
-		PcAuditInfo record = new PcAuditInfo( "1", "2", auditPersion, auditStatus, new Date(), companyId, auditCase,
-						      contractNumber );
-		int flagon = pcAuditInfoMapper.insertSelective( record );
+        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) )   /* 财务审核通过 */
+        {
+            companyInfo.setAuditStatus( CompanyAuditStatus.SUCCESSCHECK.stringVal() );
+            /* 财务审核通过生成合同 */
+            String pdfUrl = this.createContractDoc( contractNumber );
+            vo.setContractUrl( pdfUrl );
+            vo.setSignedTime(DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+        } else {                                                        /* 财务审核不通过 */
+            companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
+        }
+        ContractInfoExample example = new ContractInfoExample();
+        example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
+        ContractInfo contractInfo = new ContractInfo();
+        contractInfo.setContractStatus( vo.getContractStatus() );
+        contractInfo.setContractUrl( vo.getContractUrl() );
+        int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
+        int flagT = companyInfoMapper.updateauditStatus( companyInfo );
+        UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        String	auditPersion = userVO == null ? "" : userVO.getUsername();
+        String	auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+        /* 添加审核记录表 */
+        PcAuditInfo record = new PcAuditInfo( "1", "2", auditPersion, auditStatus, new Date(), companyId, auditCase,
+                contractNumber, date, auditAccount);
+        int flagon = pcAuditInfoMapper.insertSelective( record );
 
-		if ( flag > 0 && flagT > 0 && flagon > 0 )
-		{
-			return true;
-		}
+        if ( flag > 0 && flagT > 0 && flagon > 0 )
+        {
+            return true;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 
 	@Override

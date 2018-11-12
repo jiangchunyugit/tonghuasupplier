@@ -60,7 +60,6 @@ public class DateUtil {
             String newTime = strTime + " " + pointTime;
             newDate = SDF_TWO.parse(newTime);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return newDate;

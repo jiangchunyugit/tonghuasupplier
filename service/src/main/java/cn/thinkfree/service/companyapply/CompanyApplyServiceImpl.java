@@ -1,6 +1,7 @@
 package cn.thinkfree.service.companyapply;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
@@ -19,8 +20,11 @@ import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.catalina.manager.util.SessionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,7 +75,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     CompanyUserMapper companyUserMapper;
 
     @Autowired
-    UserInfoMapper userInfoMapper;
+    PcUserInfoMapper pcUserInfoMapper;
+
+    @Autowired
+    PcAuditInfoMapper pcAuditInfoMapper;
+
 
     /**
      * 更新公司入驻状态
@@ -190,6 +198,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         Map<String, Object> map = new HashMap<>();
         Date date = new Date();
@@ -287,28 +296,43 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         //TODO 插入pc_user_info？？？
         CompanyUser companyUser = new CompanyUser();
         companyUser.setEmpName(pcApplyInfoSEO.getContactName());
-        companyUser.setIsJob(SysConstants.YesOrNo.YES.toString());
+        companyUser.setEmpNumber(pcApplyInfoSEO.getCompanyId());
+        companyUser.setIsJob(SysConstants.YesOrNo.YES.shortVal().toString());
         companyUser.setMobile(pcApplyInfoSEO.getContactPhone());
         companyUser.setEmail(pcApplyInfoSEO.getEmail());
         companyUser.setCreateTime(date);
         companyUser.setUpdateTime(date);
         companyUser.setCompanyId(pcApplyInfoSEO.getCompanyId());
-        companyUser.setStatus(SysConstants.YesOrNo.YES.toString());
-        companyUserMapper.insertSelective(companyUser);
+        companyUser.setStatus(SysConstants.YesOrNo.YES.shortVal().toString());
+        int uLine = companyUserMapper.insertSelective(companyUser);
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setCompanyId(pcApplyInfoSEO.getCompanyId());
-        userInfo.setUserId(pcApplyInfoSEO.getCompanyId());
+        //插入pcUserINfo
+        PcUserInfo userInfo = new PcUserInfo();
+        userInfo.setId(pcApplyInfoSEO.getCompanyId());
+        userInfo.setName(pcApplyInfoSEO.getContactName());
         userInfo.setPhone(pcApplyInfoSEO.getEmail());
+        userInfo.setCreator(SessionUserDetailsUtil.getLoginUserName());
+        userInfo.setEnabled(SysConstants.YesOrNo.YES.shortVal());
+        userInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userInfo.setCityBranchCompanyId(pcApplyInfoSEO.getCityBranchCompanyId());
+        userInfo.setBranchCompanyId(pcApplyInfoSEO.getBranchCompanyId());
+        userInfo.setRootCompanyId(pcApplyInfoSEO.getCompanyId());
+        userInfo.setProvince(pcApplyInfoSEO.getProvinceCode().toString());
+        userInfo.setCity(pcApplyInfoSEO.getCityCode().toString());
+        userInfo.setArea(pcApplyInfoSEO.getAreaCode().toString());
         userInfo.setCreateTime(new Date());
+        userInfo.setEmail(pcApplyInfoSEO.getEmail());
+        int userLine = pcUserInfoMapper.insertSelective(userInfo);
 
-        userInfo.setIsAuth(SysConstants.YesOrNo.YES.shortVal());
-        userInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
-        userInfo.setName(pcApplyInfoSEO.getCompanyName());
-        int userLine = userInfoMapper.insertSelective(userInfo);
+        //插入审批表
+        String auditPersion = userVO ==null?"":userVO.getUsername();
+        String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
+        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
+                companyId, "", "", date, auditAccount);
+        int line = pcAuditInfoMapper.insertSelective(record);
         //TODO：添加账号发送短信 and 发送邮件
 
-        if(infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0 && userLine > 0){
+        if(line > 0 && infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0 && userLine > 0 && uLine > 0){
             map.put("code",true);
             map.put("msg","操作成功");
             return map;
