@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiParam;
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.io.ResolverUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -32,7 +33,7 @@ import java.util.logging.Logger;
  * @author gejiaming
  */
 @Api(tags = "PC-运营平台-施工平台相关")
-@RestController
+@Controller
 @RequestMapping(value = "delayScheduling")
 public class DelaySchedulingController extends AbsBaseController {
     @Autowired

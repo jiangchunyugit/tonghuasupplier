@@ -35,7 +35,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     private static final MyLogger LOGGER = new MyLogger(NewOrderUserService.class);
 
-    @Resource
+    @Autowired
     private OrderUserMapper orderUserMapper;
     @Autowired(required = false)
     private PreProjectGuideMapper preProjectGuideMapper;

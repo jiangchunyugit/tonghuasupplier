@@ -6,6 +6,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BuildPayConfig;
 import cn.thinkfree.database.model.BuildSchemeConfig;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.platform.vo.CompanySchemeVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -163,9 +164,9 @@ public class BuildConfigController extends AbsBaseController {
     @ResponseBody
     @RequestMapping(value = "queryPayScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle queryPayScheme(
-            @ApiParam(name = "projectNo", required = false, value = "方案编号") @RequestParam(name = "projectNo", required = false) String projectNo){
+            @ApiParam(name = "projectNo", required = false, value = "方案编号") @RequestParam(name = "projectNo", required = false) String projectNo) {
         try {
-            return sendJsonData(ResultMessage.SUCCESS,buildConfigService.queryPayScheme(projectNo));
+            return sendJsonData(ResultMessage.SUCCESS, buildConfigService.queryPayScheme(projectNo));
         } catch (Exception e) {
             return sendSuccessMessage(e.getMessage());
         }
@@ -210,6 +211,37 @@ public class BuildConfigController extends AbsBaseController {
             logger.info("公司停用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.stopScheme(companyId, optionUserId, optionUserName);
             return sendSuccessMessage(null);
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("装饰后台====》公司启用用施工方案====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "companyEnableScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle companyEnableScheme(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "schemeNo", required = false, value = "方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
+            @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
+        try {
+            logger.info("公司启用用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
+            buildConfigService.companyEnableScheme(companyId, schemeNo, optionUserId, optionUserName);
+            return sendSuccessMessage(null);
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("装饰后台====》查询公司配置的施工方案====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "queryByCompanyId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<CompanySchemeVo>>> queryByCompanyId(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            return sendJsonData(ResultMessage.SUCCESS,buildConfigService.queryByCompanyId(companyId, pageSize, pageIndex));
         } catch (Exception e) {
             return sendSuccessMessage(e.getMessage());
         }
