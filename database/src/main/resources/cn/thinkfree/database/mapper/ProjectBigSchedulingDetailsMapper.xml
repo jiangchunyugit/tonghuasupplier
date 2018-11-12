@@ -587,4 +587,24 @@
     WHERE
         pd.project_no = #{projectNo}
   </update>
+
+  <select id="selectConstructionByOrderNo" resultType="java.lang.String">
+    SELECT
+        pd.rename_big
+    FROM
+        project_big_scheduling_details pd
+    LEFT JOIN construction_order co ON pd.project_no = co.project_no
+    WHERE
+        co.order_no = #{orderNo}
+  </select>
+
+  <select id="selectDesignerByOrderNo" resultType="java.lang.String">
+    SELECT
+    pd.rename_big
+    FROM
+    project_big_scheduling_details pd
+    LEFT JOIN designer_order co ON pd.project_no = co.project_no
+    WHERE
+    co.order_no = #{orderNo}
+  </select>
 </mapper>

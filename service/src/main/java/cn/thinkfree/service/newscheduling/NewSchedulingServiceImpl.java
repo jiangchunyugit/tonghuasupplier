@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.thinkfree.service.utils.DateUtil;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 正常排期操作
@@ -117,7 +114,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<Project> projects = projectMapper.selectByExample(example);
-        if(projects.size()==0){
+        if (projects.size() == 0) {
             return RespData.error("无此项目");
         }
         Project project = projects.get(0);
@@ -319,7 +316,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             schedulingCriteria.andProjectNoEqualTo(projectNo);
             schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
             //修改延期时间
-            projectScheduling.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingDetail.getPlanEndTime(),new Date()));
+            projectScheduling.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingDetail.getPlanEndTime(), new Date()));
             int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
             if (result == 0) {
                 return "修改延期时间失败!";
@@ -349,5 +346,27 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return "修改排期实际开始时间失败!";
         }
         return "修改成功";
+    }
+
+    /**
+     * 提供PC合同处获取验收阶段
+     *
+     * @param orderNo
+     * @param type
+     * @return
+     */
+    @Override
+    public MyRespBundle<List<String>> getPcCheckStage(String orderNo, Integer type) {
+        List<String> stageList = new ArrayList<>();
+        if (type.equals(Scheduling.INVALID_STATUS.getValue())) {
+            stageList = projectBigSchedulingDetailsMapper.selectConstructionByOrderNo(orderNo);
+        }
+        if (type.equals(Scheduling.BASE_STATUS.getValue())) {
+            stageList = projectBigSchedulingDetailsMapper.selectDesignerByOrderNo(orderNo);
+        }
+        if (stageList.size() == Scheduling.MATHCHING_NO.getValue()) {
+            return RespData.error("此订单号未有与之匹配的验收信息!");
+        }
+        return RespData.success(stageList);
     }
 }

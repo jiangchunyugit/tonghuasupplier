@@ -144,4 +144,18 @@ public interface ProjectBigSchedulingDetailsMapper {
      * @return
      */
     Integer updateByProjectNo(@Param("projectNo") String projectNo,@Param("status")Integer status);
+
+    /**
+     * 根据订单编号获取验收阶段
+     * @param orderNo
+     * @return
+     */
+    List<String> selectConstructionByOrderNo(@Param("orderNo") String orderNo);
+
+    /**
+     * 根据订单编号获取验收阶段
+     * @param orderNo
+     * @return
+     */
+    List<String> selectDesignerByOrderNo(@Param("orderNo")String orderNo);
 }
