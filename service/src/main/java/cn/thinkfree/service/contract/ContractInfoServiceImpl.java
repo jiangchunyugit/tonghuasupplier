@@ -9,7 +9,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -28,10 +27,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
+import cn.thinkfree.core.event.BaseEvent;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
+import cn.thinkfree.database.event.MarginContractEvent;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.CompanyPaymentMapper;
@@ -70,10 +71,10 @@ import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.AuditStatus;
-import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.constants.CompanyFinancialType;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.ExcelData;
@@ -125,6 +126,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
 	CityMapper cityMapper;
 
+    @Autowired
+    EventService eventService;
 
 	@Value( "${custom.cloud.fileUpload}" )
 	private String fileUploadUrl;
@@ -230,6 +233,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			String pdfUrl = this.createContractDoc( contractNumber );
 			vo.setContractUrl( pdfUrl );
 			vo.setSignedTime(DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+			//推送数据
+			eventService.publish((BaseEvent) new MarginContractEvent(contractNumber));
 		} else {                                                        /* 财务审核不通过 */
 			companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
 		}
@@ -743,9 +748,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			Map<String, Object> root = new HashMap<>();
 			// 查询合同信息
 			ContractTermsExample exp = new ContractTermsExample();
-			exp.createCriteria().andContractNumberEqualTo(orderNumber);
+			exp.createCriteria().andContractNumberEqualTo(contrat.getContractNumber());
 			List<ContractTerms> listTerm = pcContractTermsMapper.selectByExample(exp);
-			for (int i = 0; i < list.size(); i++) {
+			for (int i = 0; i < listTerm.size(); i++) {
 				root.put(listTerm.get(i).getContractDictCode(), listTerm.get(i).getContractValue());
 			}
 
