@@ -3,6 +3,9 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
+import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
@@ -250,4 +253,28 @@ public interface NewOrderUserService {
      * @return
      **/
     PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int i, int pageSize);
+    /**
+     * @Author jiang
+     * @Description 工地信息详情
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo);
+    /**
+     * @Author jiang
+     * @Description 施工工地列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<ConstructionOrderCommonVo> getConstructionSiteList(int pageNum, int pageSize, String cityName);
+    /**
+     * @Author jiang
+     * @Description 施工工地进度数量
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<ConstructionStageNunVO> getScheduleNum();
 }
