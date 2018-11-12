@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -206,6 +207,7 @@ public class CloudServiceImpl implements CloudService {
         return result;
     }
 
+
     /**
      * 发送邮件
      *
@@ -300,4 +302,26 @@ public class CloudServiceImpl implements CloudService {
         System.out.println("返回结果。。。" + result);
         file.delete();
         return null;
-    }}
+    }
+
+    @Override
+    public RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO) {
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+
+        String body = new Gson().toJson(marginContractVO);
+        System.out.println(body);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        RemoteResult<String > result = null;
+        try {
+            //todo jiangchunyu  更换路径
+            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+    }
+}

@@ -3,6 +3,7 @@ package cn.thinkfree.service.remote;
 import java.util.List;
 
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 
 public interface CloudService {
@@ -46,6 +47,12 @@ public interface CloudService {
      * @return
      */
       RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO);
+
+    /**
+     * 同步合同信息（后台jiangchunyu提供）
+     * @return
+     */
+    RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO);
 
 
     /**
