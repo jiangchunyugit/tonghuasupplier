@@ -155,12 +155,19 @@ public class UserVO extends SecurityUser {
     }
 
     public String getCompanyID(){
+        // TODO 分站信息待定
         return companyInfo.getCompanyId();
     }
 
     @Override
     public String getName() {
-        return pcUserInfo.getName();
+        if(pcUserInfo!=null){
+            return pcUserInfo.getName();
+        }
+        if(companyUser != null){
+            return companyUser.getEmpName();
+        }
+        return "";
     }
 
     @Override
