@@ -66,19 +66,15 @@ public class SchedulingController extends AbsBaseController {
         return schedulingService.createScheduling(projectNo, companyId);
     }
 
-//    @RequestMapping(value = "aa",method = RequestMethod.POST)
-//    @ApiOperation("完工测试")
-//    public MyRespBundle aa(
-//            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 ") String projectNo,
-//            @RequestParam(name = "bigSort") @ApiParam(name = "bigSort", value = "大阶段序号 ") Integer bigSort ){
-//        return sendSuccessMessage(schedulingService.projectStart(projectNo,bigSort));
-//    }
+    @RequestMapping(value = "getPcCheckStage",method = RequestMethod.POST)
+    @ApiOperation("提供PC合同处获取验收阶段")
+    public MyRespBundle<List<String>> getPcCheckStage(
+            @RequestParam(name = "orderNo") @ApiParam(name = "orderNo", value = "订单编号 测试用 1223081",required = true) String orderNo,
+            @RequestParam(name = "type") @ApiParam(name = "type", value = "订单类型 1,设计订单  2,施工订单  测试用2",required = true) Integer type ){
+        return schedulingService.getPcCheckStage(orderNo,type);
+
+    }
 
 
-//    @ApiOperation(value = "获取甘特图")
-//    @RequestMapping(value = "gantt", method = RequestMethod.POST)
-//    public Meta<GanttDto> getGantt(@PathVariable(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo) {
-//        return iGanttService.getGantt(projectNo);
-//    }
 
 }
