@@ -3,6 +3,7 @@ package cn.thinkfree.service.user.strategy.build;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.model.SecurityUser;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
@@ -57,6 +58,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
     @Override
     public SecurityUser build(String userID) {
          UserVO userVO = new UserVO();
+         userVO.setType(UserRegisterType.Platform);
          UserRegister userRegister = (UserRegister) ThreadLocalHolder.get();
          userVO.setUserRegister(userRegister);
 

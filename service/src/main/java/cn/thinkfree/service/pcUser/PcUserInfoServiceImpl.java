@@ -288,7 +288,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         List<SystemRole> roles = accountVO.getRoles();
         saveUserRole(userCode,roles);
 
-        AccountCreate accountCreate = new AccountCreate(userCode,account.getPhone(),password,userInfo.getName());
+        AccountCreate accountCreate = new AccountCreate(userCode,userInfo.getPhone(),password,userInfo.getName(),true);
         eventService.publish(accountCreate);
         return accountVO;
     }
