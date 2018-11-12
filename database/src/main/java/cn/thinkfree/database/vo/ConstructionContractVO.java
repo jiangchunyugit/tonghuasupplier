@@ -4,21 +4,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Auther: jiang
- * @Date: 2018/11/9 15:36
- * @Description: 设计合同列表
+ * @Date: 2018/11/11 17:37
+ * @Description:
  */
 @Getter
 @Setter
-@ApiModel("设计合同列表")
-public class DesignContractVO {
+@ApiModel("施工合同列表")
+public class ConstructionContractVO {
     @ApiModelProperty("公司编码")
     private String companyId;
     @ApiModelProperty("项目编号")
@@ -53,6 +50,4 @@ public class DesignContractVO {
     private Integer auditType;
     @ApiModelProperty("合同状态(模糊条件)：0：不通过 1：通过")
     private String flag;
-
-
 }

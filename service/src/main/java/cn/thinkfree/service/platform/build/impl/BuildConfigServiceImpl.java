@@ -8,16 +8,20 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
+import cn.thinkfree.service.platform.vo.CompanySchemeVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.OrderNoUtils;
+import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xusonghui
@@ -199,18 +203,13 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         if(StringUtils.isBlank(optionUserName)){
             throw new RuntimeException("操作人名称不能为空");
         }
-        BuildSchemeCompanyRelExample companyRelExample = new BuildSchemeCompanyRelExample();
-        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId);
-        BuildSchemeCompanyRel schemeCompanyRel = new BuildSchemeCompanyRel();
-        schemeCompanyRel.setIsEable(2);
-        companyRelMapper.updateByExampleSelective(schemeCompanyRel,companyRelExample);
         BuildSchemeCompanyRel companyRel = new BuildSchemeCompanyRel();
         companyRel.setBuildSchemeNo(schemeNo);
         companyRel.setCompanyId(companyId);
         companyRel.setOptionUserId(optionUserId);
         companyRel.setOptionUserName(optionUserName);
         companyRel.setCreateTime(new Date());
-        companyRel.setIsEable(1);
+        companyRel.setIsEable(2);
         companyRelMapper.insertSelective(companyRel);
     }
 
@@ -266,5 +265,71 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         BuildPayConfigExample configExample = new BuildPayConfigExample();
         configExample.createCriteria().andSchemeNoEqualTo(schemeNo);
         return payConfigMapper.selectByExample(configExample);
+    }
+    @Transactional(rollbackFor = {Exception.class})
+    @Override
+    public void companyEnableScheme(String companyId, String schemeNo, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if(StringUtils.isBlank(optionUserId)){
+            throw new RuntimeException("操作人ID不能为空");
+        }
+        if(StringUtils.isBlank(optionUserName)){
+            throw new RuntimeException("操作人名称不能为空");
+        }
+        BuildSchemeCompanyRelExample companyRelExample = new BuildSchemeCompanyRelExample();
+        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId);
+        BuildSchemeCompanyRel schemeCompanyRel = new BuildSchemeCompanyRel();
+        schemeCompanyRel.setIsEable(2);
+        companyRelMapper.updateByExampleSelective(schemeCompanyRel,companyRelExample);
+
+        companyRelExample = new BuildSchemeCompanyRelExample();
+        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId).andBuildSchemeNoEqualTo(schemeNo);
+        schemeCompanyRel = new BuildSchemeCompanyRel();
+        schemeCompanyRel.setIsEable(1);
+        companyRelMapper.updateByExampleSelective(schemeCompanyRel,companyRelExample);
+    }
+
+    @Override
+    public PageVo<List<CompanySchemeVo>> queryByCompanyId(String companyId, int pageSize, int pageIndex) {
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        BuildSchemeCompanyRelExample companyRelExample = new BuildSchemeCompanyRelExample();
+        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId).andDelStateEqualTo(2);
+        long total = companyRelMapper.countByExample(companyRelExample);
+        PageHelper.startPage(pageIndex,pageSize);
+        List<BuildSchemeCompanyRel> companyRels = companyRelMapper.selectByExample(companyRelExample);
+        if(companyRels.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> schemeNos = ReflectUtils.getList(companyRels,"buildSchemeNo");
+        BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
+        configExample.createCriteria().andSchemeNoIn(schemeNos);
+        List<BuildSchemeConfig> schemeConfigs = schemeConfigMapper.selectByExample(configExample);
+        Map<String,BuildSchemeConfig> schemeConfigMap = ReflectUtils.listToMap(schemeConfigs,"schemeNo");
+        List<CompanySchemeVo> schemeVos = new ArrayList<>();
+        for(BuildSchemeCompanyRel companyRel : companyRels){
+            BuildSchemeConfig schemeConfig = schemeConfigMap.get(companyRel.getBuildSchemeNo());
+            if(schemeConfig == null){
+                continue;
+            }
+            CompanySchemeVo schemeVo = new CompanySchemeVo();
+            schemeVo.setCityStation(schemeConfig.getCityStation());
+            schemeVo.setCompanyId(schemeConfig.getCompanyId());
+            schemeVo.setIsEnable(companyRel.getIsEable());
+            schemeVo.setSchemeName(schemeConfig.getSchemeName());
+            schemeVo.setSchemeNo(schemeConfig.getSchemeNo());
+            schemeVo.setRemark(schemeConfig.getRemark());
+            schemeVo.setStoreNo(schemeConfig.getStoreNo());
+            schemeVos.add(schemeVo);
+        }
+        PageVo<List<CompanySchemeVo>> pageVo = new PageVo<>();
+        pageVo.setData(schemeVos);
+        pageVo.setTotal(total);
+        pageVo.setPageIndex(pageIndex);
+        pageVo.setPageSize(pageSize);
+        return pageVo;
     }
 }

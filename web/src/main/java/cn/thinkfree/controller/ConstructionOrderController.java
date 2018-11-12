@@ -6,9 +6,8 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
-import cn.thinkfree.service.construction.vo.ConstructionStateVo;
-import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -36,29 +35,20 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("运营平台接口---->孙宇专用")
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+    public MyRespBundle<ConstructionOrderCommonVo> getConstructionInfoList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
                                                                            @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
                                                                            @RequestParam(required = false) @ApiParam(value = "城市名称")  String cityName){
 
-        return constructionOrderOperate.getConstructionOrderList(pageNum,pageSize,cityName);
+        return constructionOrderOperate.getOrderList(pageNum,pageSize,cityName);
     }
 
-    @ApiOperation("工地管理接口---->孙宇专用")
+    @ApiOperation("运营平台接口---->孙宇专用")
     @MyRespBody
-    @RequestMapping(value = "getConstructionSiteList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(@RequestParam @ApiParam(value = "页码",required = true) Integer pageNum,
-                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) Integer pageSize,
-                                                                           @RequestParam(required = false) @ApiParam(value = "城市名称")  String cityName){
+    @RequestMapping(value = "getOperateNum", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<ConstructionOrderManageVo> getOperateNum(){
 
-        return constructionOrderOperate.getConstructionSiteList(pageNum,pageSize,cityName);
+        return constructionOrderOperate.getOrderNum();
     }
 
-    @ApiOperation("工地详情信息接口---->孙宇专用")
-    @MyRespBody
-    @RequestMapping(value = "getSiteDetails", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<SiteDetailsVo> getSiteDetails(@RequestParam(required = false) @ApiParam(value = "项目编号 1223098338391")  String projectNo){
-
-        return constructionOrderOperate.getSiteDetails(projectNo);
-    }
 
 }

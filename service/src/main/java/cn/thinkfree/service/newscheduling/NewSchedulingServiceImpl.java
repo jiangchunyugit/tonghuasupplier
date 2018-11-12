@@ -127,7 +127,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria1.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example1);
         Date bigStartTime = project.getPlanStartTime();
-        Collections.sort(projectBigSchedulings);
+//        Collections.sort(projectBigSchedulings);
         //生成排期
         for (ProjectBigScheduling bigScheduling : projectBigSchedulings) {
             ProjectBigSchedulingDetails details = new ProjectBigSchedulingDetails();

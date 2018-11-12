@@ -7,6 +7,7 @@ import cn.thinkfree.database.model.ConstructionOrderExample;
 import java.util.List;
 
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
+import cn.thinkfree.database.vo.ConstructionContractVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
 import org.apache.ibatis.annotations.Param;
@@ -140,4 +141,7 @@ public interface ConstructionOrderMapper {
     ConstructionOrderVO selectConstructionOrderVo(@Param("projectNo") String projectNo);
 
     String getCompanyName(@Param("companyId") String companyId);
+    List<ConstructionContractVO> selectConstructionContractByPage(@Param("constructionContractVO") ConstructionContractVO constructionContractVO, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    Integer selectconstructionContractVOCount(@Param("constructionContractVO") ConstructionContractVO constructionContractVO);
 }
