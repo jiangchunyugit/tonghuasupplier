@@ -224,8 +224,9 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	public Map<String, String> getCostNames() {
 		Map<String, String> map = new HashMap<>();
 		map.put("01", "设计费");
-		map.put("02", "施工费");
-		map.put("03", "测试费");
+		map.put("02", "产品服务费");
+		map.put("03", "施工管理费");
+		map.put("04", "合同保证金");
 		return map;
 	}
 
