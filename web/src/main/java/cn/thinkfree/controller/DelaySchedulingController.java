@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  * @author gejiaming
  */
 @Api(tags = "PC-运营平台-施工平台相关")
-@Controller
+@RestController
 @RequestMapping(value = "delayScheduling")
 public class DelaySchedulingController extends AbsBaseController {
     @Autowired
