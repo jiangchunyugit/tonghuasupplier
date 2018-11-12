@@ -12,4 +12,6 @@ import lombok.Data;
 public class SchedulingSeo extends AbsPageSearchCriteria {
     @ApiModelProperty(name = "companyId",value = "公司编号")
     private String companyId;
+    @ApiModelProperty(value = "该项目所使用的方案编号")
+    private String schemeNo;
 }
