@@ -236,9 +236,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/auditCompany")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> auditCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
-        
-    	 String  result = companySubmitService.auditContract(pcAuditInfo);
+    public MyRespBundle<Map<String,Object>> auditCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
+
+        Map<String,Object> result = companySubmitService.auditContract(pcAuditInfo);
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
