@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -404,6 +405,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		if ( companyInfo.getCompanyInfo().getRoleId().equals( "BD" ) ) /* 装修公司 */
 
 		{
+			//特殊处理
 			try {
 				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
 				/* 上传 */
@@ -416,6 +418,18 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		} else if ( companyInfo.getCompanyInfo().getRoleId().equals( "SJ" ) )/* 设计公司 */
 
 		{
+			if(!StringUtils.isEmpty(newVo.getSignedTime())) {
+				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));//合同生效时间
+			}else{
+				root.put("signedTime","");
+			}
+			if(root.get("c03") != null && !String.valueOf(root.get("c03")).equals("")){//合同开始时间
+			 root.put("startTime",DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd")) ;//合同开始时间
+			}
+			if(root.get("c04") != null && !String.valueOf(root.get("c04")).equals("")){
+				root.put("endTime",DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd")) ;//合同结束时间
+			}
+			
 			try {
 				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "0", root );
 				/* 上传 */
@@ -639,7 +653,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		ContractTermsExample exp = new ContractTermsExample();
 		/* 判断公司类型 */
 		exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-
+		exp.setOrderByClause(" contract_dict_code ");
 		List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
 
 		if ( list.size() == 0 && companyInfo != null )
@@ -686,6 +700,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setCteateTime( new Date() );
 		record.setUpdateTime( new Date() );
 		record.setOrderNumber( orderNumber );
+		record.setContractType("2");
 		/* record.setConractUrlPdf(url); */
 		orderContractMapper.insertSelective( record );
 		return(contractNumber);
