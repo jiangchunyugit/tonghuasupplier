@@ -195,7 +195,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         PersionVo owner = new PersionVo();
         try {
 //            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(),ProjectDataStatus.OWNER.getDescription() );//正式时打开
-            Map userName1 = newOrderUserService.getUserName("CC1810301612170000C", "C");
+            Map userName1 = newOrderUserService.getUserName("CC1810301612170000C", "CC");
             //TODO 正式时打开
             owner.setPhone(userName1.get("phone").toString());
             owner.setName(userName1.get("nickName").toString());
