@@ -3,6 +3,7 @@ package cn.thinkfree.database.vo;
 import cn.thinkfree.database.model.PcApplyInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.checkerframework.checker.units.qual.A;
 
 /**
  * @author ying007
@@ -22,8 +23,30 @@ public class PcApplyInfoSEO extends PcApplyInfo {
     @ApiModelProperty("验证码")
     private String verifyCode;
 
-    @ApiModelProperty("站点公司id")
+    @ApiModelProperty("站点公司id，门店id")
     private String siteCompanyId;
+
+    @ApiModelProperty(value = "分公司id")
+    private String branchCompanyId;
+
+    @ApiModelProperty(value = "城市分站")
+    private String cityBranchCompanyId;
+
+    public String getBranchCompanyId() {
+        return branchCompanyId;
+    }
+
+    public void setBranchCompanyId(String branchCompanyId) {
+        this.branchCompanyId = branchCompanyId;
+    }
+
+    public String getCityBranchCompanyId() {
+        return cityBranchCompanyId;
+    }
+
+    public void setCityBranchCompanyId(String cityBranchCompanyId) {
+        this.cityBranchCompanyId = cityBranchCompanyId;
+    }
 
     public String getSiteCompanyId() {
         return siteCompanyId;

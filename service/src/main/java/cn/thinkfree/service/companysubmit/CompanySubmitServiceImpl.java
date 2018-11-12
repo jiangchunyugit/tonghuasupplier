@@ -15,7 +15,7 @@ import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.contract.ContractService;
-import cn.thinkfree.service.utils.CommonGroupUtils;
+import cn.thinkfree.service.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +30,6 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.service.constants.CompanyConstants;
-import cn.thinkfree.service.utils.ContractNum;
-import cn.thinkfree.service.utils.ExcelData;
-import cn.thinkfree.service.utils.ExcelUtils;
 
 /**
  * @author ying007
@@ -89,27 +86,43 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 
 	@Override
-	public CompanyDetailsVO companyDetails(String contractNumber, String companyId, String auditType) {
+	public CompanyDetailsVO companyDetails(String contractNumber, String companyId, String auditType, String applyDate) {
 		CompanyDetailsVO companyDetailsVO = new CompanyDetailsVO();
 		//公司详情
 		CompanySubmitVo companySubmitVo = companySubmitService.findCompanyInfo(companyId);
 		companyDetailsVO.setCompanySubmitVO(companySubmitVo);
 
-        /* 合同信息 */
-        ContractVo vo = new ContractVo();
-        vo.setContractNumber( contractNumber );
-        ContractVo	newVo = contractInfoMapper.selectContractBycontractNumber( vo );
-        companyDetailsVO.setContractVo(newVo);
-
-        /* 合同详情 */
-		List<ContractCostVo> contractCostVos = contractService.queryListContractCostVoBycontractNumber(contractNumber);
-        companyDetailsVO.setContractTermsList(contractCostVos);
+		List<String> list = new ArrayList<>();
+		list.add(auditType);
+		list.add(CompanyConstants.AuditType.ENTRY.stringVal());
 
         //审批信息
 		PcAuditInfoExample autit = new PcAuditInfoExample();
-		autit.createCriteria().andCompanyIdEqualTo(companyId)
-				.andContractNumberEqualTo(contractNumber).andAuditTypeEqualTo(auditType);
+		if(CompanyConstants.AuditType.JOINON.stringVal().equals(auditType)){
+			autit.createCriteria().andCompanyIdEqualTo(companyId)
+					.andAuditTypeIn(list);
+		}else{
+			autit.createCriteria().andCompanyIdEqualTo(companyId)
+					.andAuditTypeEqualTo(auditType).andAuditTimeGreaterThan(DateUtils.strToDate(applyDate));
+		}
 
+		if(StringUtils.isNotBlank(contractNumber)){
+			/* 合同详情 */
+			List<ContractCostVo> contractCostVos = contractService.queryListContractCostVoBycontractNumber(contractNumber);
+			companyDetailsVO.setContractTermsList(contractCostVos);
+
+			/* 合同信息 */
+			ContractVo vo = new ContractVo();
+			vo.setContractNumber( contractNumber );
+			ContractVo	newVo = contractInfoMapper.selectContractBycontractNumber( vo );
+			companyDetailsVO.setContractVo(newVo);
+
+			//审批信息
+			autit.createCriteria().andContractNumberEqualTo(contractNumber);
+		}else{
+			companyDetailsVO.setContractTermsList(null);
+			companyDetailsVO.setContractVo(null);
+		}
 		autit.setOrderByClause("create_time desc");
 		List<PcAuditInfo>  auList =  pcAuditInfoMapper.selectByExample(autit);
 		companyDetailsVO.setPcAuditInfo(auList);
@@ -124,7 +137,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 //		if(pcAuditInfos.size() > 0){
 //			return pcAuditInfos.get(0);
 //		}
-		return null;
+		return pcAuditInfo;
 	}
 
 	@Override
@@ -141,7 +154,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
 			auditInfoVO.setCompanyAuditName("资质审核中");
 		}
-		return null;
+		return auditInfoVO;
 	}
 
 	@Override
@@ -269,9 +282,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			//运营审核通过添加一条审批记录
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
+			String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 			//添加审核记录表
 			PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
-					companyId, pcAuditInfo.getAuditCase(), "");
+					companyId, pcAuditInfo.getAuditCase(), "", date, auditAccount);
 
 			int flagi = pcAuditInfoMapper.insertSelective(record);
 			if(flagi <= 0){
@@ -284,9 +298,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
+			String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 			//添加审核记录表
 			PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
-					companyId, pcAuditInfo.getAuditCase(), "");
+					companyId, pcAuditInfo.getAuditCase(), "", date, auditAccount);
 			int line = pcAuditInfoMapper.insertSelective(record);
 			//2：修改公司临时表状态：change_status:资质变更状态：0：审批失败 1：审批成功
 			pcAuditTemporaryInfo.get(0).setChangeStatus(Short.valueOf(AuditStatus.AuditDecline.shortVal()));
@@ -484,9 +499,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 				}
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
+			String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 			//3.添加审核记录表
-			PcAuditInfo record = new PcAuditInfo(pcAuditInfo.getAuditType(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
-					companyId, pcAuditInfo.getAuditCase(), contractNumber);
+			PcAuditInfo record = new PcAuditInfo(pcAuditInfo.getAuditType(), CompanyConstants.auditLevel.JOINON.stringVal(), auditPersion, pcAuditInfo.getAuditStatus(), date,
+					companyId, pcAuditInfo.getAuditCase(), contractNumber, date, auditAccount);
 			
 			int flagon = pcAuditInfoMapper.insertSelective(record);
 		    
@@ -505,9 +521,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO ==null?"":userVO.getUsername();
+			String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 			//添加审核记录表
-			PcAuditInfo record = new PcAuditInfo(pcAuditInfo.getAuditType(), pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
-					companyId, pcAuditInfo.getAuditCase(), "");
+			PcAuditInfo record = new PcAuditInfo(pcAuditInfo.getAuditType(),  CompanyConstants.auditLevel.JOINON.stringVal(), auditPersion, pcAuditInfo.getAuditStatus(), date,
+					companyId, pcAuditInfo.getAuditCase(), "",date , auditAccount);
 		    int line = pcAuditInfoMapper.insertSelective(record);
 		    if(applyFlag && line > 0){
 				map.put("code", true);

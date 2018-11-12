@@ -591,6 +591,7 @@ public class AccountController extends AbsBaseController {
         result.put("face",userVO.getUserRegister().getHeadPortraits());
         result.put("name",userVO.getName());
         result.put("first",userService.isFirstLogin());
+        result.put("companyId", userVO.getCompanyID());
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
