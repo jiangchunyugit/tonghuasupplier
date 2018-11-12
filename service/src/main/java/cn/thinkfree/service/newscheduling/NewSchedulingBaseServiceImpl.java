@@ -75,9 +75,13 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public String addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
+    public MyRespBundle<String> addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
         for (ProjectBigSchedulingVO projectBigSchedulingVO : projectBigSchedulingVOList) {
+            if (projectBigSchedulingVO.getSchemeNo()==null||projectBigSchedulingVO.getSchemeNo().isEmpty()){
+                return RespData.error("请给"+projectBigSchedulingVO.getName()+"的schemo_no赋值");
+            }
             ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+            projectBigScheduling.setSchemeNo(projectBigSchedulingVO.getSchemeNo());
             projectBigScheduling.setSort(projectBigSchedulingVO.getSort());
             projectBigScheduling.setName(projectBigSchedulingVO.getName());
             projectBigScheduling.setDescription(projectBigSchedulingVO.getDescription());
@@ -92,10 +96,10 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
             projectBigScheduling.setIsNeedCheck(Scheduling.INVALID_STATUS.getValue());
             int result = projectBigSchedulingMapper.insertSelective(projectBigScheduling);
             if (result != Scheduling.INSERT_SUCCESS.getValue()) {
-                return "操作失败!";
+                return RespData.error("操作失败!");
             }
         }
-        return "操作成功";
+        return RespData.success();
     }
 
     /**
@@ -105,18 +109,24 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      * @return
      */
     @Override
-    public PageInfo<ProjectBigSchedulingVO> listBigScheduling(SchedulingSeo schedulingSeo) {
+    public MyRespBundle<PageInfo<ProjectBigSchedulingVO>> listBigScheduling(SchedulingSeo schedulingSeo) {
+        if(schedulingSeo==null){
+            return RespData.error("请检查上传参数");
+        }
+        PageInfo pageInfo = new PageInfo<>();
         ProjectBigSchedulingExample projectBigSchedulingExample = new ProjectBigSchedulingExample();
         projectBigSchedulingExample.setOrderByClause("create_time desc");
         ProjectBigSchedulingExample.Criteria criteria = projectBigSchedulingExample.createCriteria();
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-        if (StringUtils.isNotBlank(schedulingSeo.getCompanyId())) {
-            criteria.andCompanyIdEqualTo(schedulingSeo.getCompanyId());
+        if(schedulingSeo.getSchemeNo()==null||schedulingSeo.getSchemeNo().isEmpty()){
+            return RespData.error("请上传案例编号");
         }
+        criteria.andSchemeNoEqualTo(schedulingSeo.getSchemeNo());
         PageHelper.startPage(schedulingSeo.getPage(), schedulingSeo.getRows());
         List<ProjectBigScheduling> list = projectBigSchedulingMapper.selectByExample(projectBigSchedulingExample);
         List<ProjectBigSchedulingVO> listVo = BaseToVoUtils.getListVo(list, ProjectBigSchedulingVO.class);
-        return new PageInfo<>(listVo);
+        pageInfo.setList(listVo);
+        return RespData.success(pageInfo);
     }
 
     /**
@@ -170,6 +180,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         List<ProjectSmallScheduling> oldList = projectSmallSchedulingMapper.selectByStatus(Scheduling.BASE_STATUS.getValue());
         if (smallList.size() != oldList.size()) {
             Integer oldVersion = 0;
+            Integer sort = 1;
             if (oldList.size() > 0) {
                 for (ProjectSmallScheduling old : oldList) {
                     oldVersion = old.getVersion();
@@ -188,6 +199,8 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
             for (ProjectSmallScheduling small : smallList) {
                 //添加版本
                 small.setVersion(oldVersion + 1);
+                small.setSort(sort);
+                sort++;
                 int i = projectSmallSchedulingMapper.insertSelective(small);
                 if (i != Scheduling.INSERT_SUCCESS.getValue()) {
                     return "操作失败!";
@@ -202,25 +215,28 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     /**
      * 修改基础大排期
      *
-     * @param projectBigSchedulingVOList
+     * @param projectBigSchedulingVO
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle<String> updateBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
-        for (ProjectBigSchedulingVO projectBigSchedulingVO:projectBigSchedulingVOList){
+    public MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
+            if (projectBigSchedulingVO.getSchemeNo().isEmpty()){
+                return RespData.error("请上传案例编号");
+            }
             ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
-            projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getCheck());
+            projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
+            projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
+            projectBigScheduling.setIsWaterTest(projectBigSchedulingVO.getIsWaterTest());
             ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
             ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
-            criteria.andCompanyIdEqualTo(projectBigSchedulingVO.getCompanyId());
             criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
             criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
+            criteria.andSchemeNoEqualTo(projectBigSchedulingVO.getSchemeNo());
             int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
             if (i != Scheduling.INSERT_SUCCESS.getValue()) {
                 return RespData.error("操作失败!");
             }
-        }
         return RespData.success();
     }
 }
