@@ -231,7 +231,7 @@ public class DateUtil {
      * @param pattern
      * @return
      */
-    private static String formartDate(Date date, String pattern) {
+    public static String formartDate(Date date, String pattern) {
         SimpleDateFormat fmt = new SimpleDateFormat(pattern);
         return fmt.format(date);
     }
