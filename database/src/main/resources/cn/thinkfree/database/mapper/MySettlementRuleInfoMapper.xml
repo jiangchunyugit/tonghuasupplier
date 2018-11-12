@@ -36,6 +36,7 @@
     FROM
         pc_settlement_method_info
     WHERE
-        rule_code = #{rule_number,jdbcType=VARCHAR}
+        rule_code = #{rule_number
+        ,jdbcType=VARCHAR}
   </select>
 </mapper>

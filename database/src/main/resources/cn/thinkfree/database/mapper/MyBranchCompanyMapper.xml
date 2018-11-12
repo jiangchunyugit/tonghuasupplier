@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.BranchCompanyMapper">
+
+  <resultMap id="branchCompanyPageResultMap" type="cn.thinkfree.database.vo.BranchCompanyVO" extends="BaseResultMap">
+
+    <result column="province_name" jdbcType="VARCHAR" property="provinceNm" />
+  </resultMap>
+
+  <resultMap id="companyRelationResultMap" type="cn.thinkfree.database.vo.CompanyRelationVO" extends="BaseResultMap">
+    <collection property="cityBranchList" ofType="cn.thinkfree.database.model.CityBranch" javaType="java.util.ArrayList" select="getCityBranchs"
+                column="id">
+    </collection>
+  </resultMap>
+
+  <resultMap id="cityBranchResultMap" type="cn.thinkfree.database.model.CityBranch">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="legal_name" jdbcType="VARCHAR" property="legalName" />
+    <result column="legal_phone" jdbcType="VARCHAR" property="legalPhone" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="is_del" jdbcType="SMALLINT" property="isDel" />
+    <result column="is_enable" jdbcType="SMALLINT" property="isEnable" />
+    <result column="city_branch_name" jdbcType="VARCHAR" property="cityBranchName" />
+    <result column="city_branch_ebsid" jdbcType="INTEGER" property="cityBranchEbsid" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="mark" jdbcType="VARCHAR" property="mark" />
+    <result column="branch_comp_ebsid" jdbcType="INTEGER" property="branchCompEbsid" />
+    <result column="branch_comp_id" jdbcType="INTEGER" property="branchCompId" />
+    <result column="province_code" jdbcType="SMALLINT" property="provinceCode" />
+    <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
+  </resultMap>
+
+  <select id="selectCompanyRelation" parameterType="java.lang.Integer" resultMap="companyRelationResultMap">
+    SELECT
+	*
+    FROM
+	pc_branch_company
+  </select>
+
+  <select id="getCityBranchs" resultMap="cityBranchResultMap" parameterType="java.lang.Integer">
+    SELECT
+	*
+    FROM
+	pc_city_branch
+    WHERE
+	branch_comp_id = #{id,jdbcType=INTEGER}
+  </select>
+  <!--分页查询-->
+  <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.BranchCompanySEO" resultMap="branchCompanyPageResultMap">
+    SELECT
+    pbc.*,
+    p.province_name
+    FROM
+    pc_branch_company pbc
+    LEFT JOIN province p ON pbc.province_code = p.province_code
+    <where>
+       is_del = 2
+      <if test="branchCompanyName != null and branchCompanyName != ''">
+        and company_name = #{branchCompanyName}
+      </if>
+      <if test="legalName != null and legalName != ''">
+        and (legal_name like #{legalName} OR legal_phone = #{legalName})
+      </if>
+      <if test="isEnable != null and isEnable != ''">
+        and is_enable = #{isEnable}
+      </if>
+      order by to_char(create_time, 'YYYY/MM/DD')
+    </where>
+  </select>
+
+  <select id="selectBranchCompanyWithPro" parameterType="java.lang.Integer" resultMap="branchCompanyPageResultMap">
+    SELECT
+    pbc.*,
+    p.province_name
+    FROM
+    pc_branch_company pbc
+    LEFT JOIN province p ON pbc.province_code = p.province_code
+    <where>
+      pbc.id = #{id,jdbcType=INTEGER}
+    </where>
+  </select>
+</mapper>
