@@ -1,6 +1,8 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import io.swagger.models.auth.In;
+
 import java.util.Date;
 
 /**
@@ -216,7 +218,7 @@ public class ProjectSmallScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    private Long constructId;
+    private Integer constructId;
 
     /**
      * Database Column Remarks:
@@ -669,7 +671,7 @@ public class ProjectSmallScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public Long getConstructId() {
+    public Integer getConstructId() {
         return constructId;
     }
 
@@ -681,7 +683,7 @@ public class ProjectSmallScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setConstructId(Long constructId) {
+    public void setConstructId(Integer constructId) {
         this.constructId = constructId;
     }
 

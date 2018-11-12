@@ -30,7 +30,7 @@ public interface NewSchedulingBaseService {
      * @param projectBigSchedulingVOList
      * @return
      */
-    String addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList);
+    MyRespBundle<String> addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList);
 
     /**
      * 获取基础大排期
@@ -38,7 +38,7 @@ public interface NewSchedulingBaseService {
      * @param schedulingSeo
      * @return
      */
-    PageInfo<ProjectBigSchedulingVO> listBigScheduling(SchedulingSeo schedulingSeo);
+    MyRespBundle<PageInfo<ProjectBigSchedulingVO>> listBigScheduling(SchedulingSeo schedulingSeo);
 
     /**
      * 关联小排期与大排期
@@ -62,5 +62,5 @@ public interface NewSchedulingBaseService {
      * @param projectBigSchedulingVOList
      * @return
      */
-    MyRespBundle<String> updateBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList);
+    MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVOList);
 }
