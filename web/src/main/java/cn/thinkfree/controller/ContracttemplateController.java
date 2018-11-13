@@ -219,7 +219,6 @@ public class ContracttemplateController extends AbsBaseController{
 					try {
 						file = ResourceUtils.getFile(ResourceUtils.CLASSPATH_URL_PREFIX + "static/contract/template/pdf/"+type+".pdf");
 					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
     	            if (file.exists()) {
@@ -277,7 +276,6 @@ public class ContracttemplateController extends AbsBaseController{
 				encodedfileName = new String(fileName.getBytes("GBK"), "ISO8859-1");
 				 response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
            

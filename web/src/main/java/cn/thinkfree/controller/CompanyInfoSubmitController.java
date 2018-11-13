@@ -221,8 +221,10 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/companyDetails")
     @MyRespBody
     public MyRespBundle<CompanyDetailsVO> companyDetails(@ApiParam("合同编号")@RequestParam(required = false) String contractNumber,
-    		@ApiParam("公司编号")@RequestParam String companyId, String auditType){
-        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId, auditType);
+    		@ApiParam("公司编号")@RequestParam String companyId,
+            @ApiParam("审核类型0入驻 1合同 2变更 3续签4结算比例 5结算规则")@RequestParam String auditType,
+            @ApiParam("除入驻外需要传申请时间")@RequestParam(required = false) String applyDate){
+        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId, auditType, applyDate);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
@@ -236,9 +238,9 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/auditCompany")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> auditCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
-        
-    	 String  result = companySubmitService.auditContract(pcAuditInfo);
+    public MyRespBundle<Map<String,Object>> auditCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
+
+        Map<String,Object> result = companySubmitService.auditContract(pcAuditInfo);
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }

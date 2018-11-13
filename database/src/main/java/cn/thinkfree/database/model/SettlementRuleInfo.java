@@ -271,7 +271,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="invalidStatus废弃字段")
+    @ApiModelProperty(value="invalidStatus废弃标签 1 作废")
     private String invalidStatus;
 
     /**

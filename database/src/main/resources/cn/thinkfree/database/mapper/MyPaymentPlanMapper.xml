@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.PaymentPlanMapper">
+  <resultMap id="PaymentPlanDetailsResultMap" type="cn.thinkfree.database.vo.PaymentPlanVO" extends="BaseResultMap">
+
+    <collection property="paymentPrograms" ofType="cn.thinkfree.database.model.PaymentProgram">
+      <result column="program_id" jdbcType="INTEGER" property="id" />
+      <result column="progress_name" jdbcType="VARCHAR" property="progressName" />
+      <result column="construction_state" jdbcType="VARCHAR" property="constructionState" />
+      <result column="time_limit" jdbcType="INTEGER" property="timeLimit" />
+      <result column="program_mark" jdbcType="VARCHAR" property="mark" />
+      <result column="program_enable" jdbcType="SMALLINT" property="isEnable" />
+    </collection>
+  </resultMap>
+
+  <select id="paymentPlanDetails" parameterType="java.lang.String" resultMap="PaymentPlanDetailsResultMap">
+
+    SELECT
+	a.*,
+	b.id AS program_id,
+	b.progress_name,
+	b.is_enable as program_enable,
+	b.construction_state,
+	b.time_limit,
+	b.mark AS program_mark
+FROM
+	pc_payment_plan A
+	LEFT JOIN pc_payment_program b ON A.program_code = b.program_code
+	AND b.is_del = 2
+WHERE
+	A.program_code = #{paymentCode}
+
+  </select>
+
+    <select id="test">
+        SELECT
+	a.*,
+	b.id AS program_id,
+	b.progress_name,
+	b.is_enable AS program_enable,
+	b.construction_state,
+	b.time_limit,
+	b.mark AS program_mark,
+	psi.store_nm,
+	pcb.id AS city_id,
+	pcb.city_branch_name,
+	pbc.id AS branch_company_id,
+	pbc.company_name
+FROM
+	pc_payment_plan A
+	LEFT JOIN pc_payment_program b ON A.program_code = b.program_code
+	LEFT JOIN pc_store_info psi ON a.store_code = psi.id
+	LEFT JOIN pc_city_branch pcb ON psi.city_branch_id = pcb.id
+	LEFT JOIN pc_branch_company pbc ON pcb.branch_comp_id = pbc.id
+	AND b.is_del = 2
+WHERE
+	A.program_code = 200147
+    </select>
+</mapper>

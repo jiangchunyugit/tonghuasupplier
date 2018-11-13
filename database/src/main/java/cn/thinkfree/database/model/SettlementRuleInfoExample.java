@@ -54,8 +54,9 @@ public class SettlementRuleInfoExample extends cn.thinkfree.core.model.AbstractD
      * This method corresponds to the database table pc_settlement_rule_info
      *
      * @mbg.generated
+     * @param id_desc
      */
-    public String getOrderByClause() {
+    public String getOrderByClause(String id_desc) {
         return orderByClause;
     }
 

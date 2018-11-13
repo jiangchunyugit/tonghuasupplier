@@ -100,7 +100,22 @@ public class CompanyConstants{
         /**
          * 续签
          */
-        RENEW(3,"续签");
+        RENEW(3,"续签"),
+
+        /**
+         * 4结算比例
+         */
+        SETTLEMENTPRO(4, "结算比例"),
+
+        /**
+         * 5结算规则
+         */
+        SETTLEMENTRULE(5, "结算规则"),
+
+        /**
+         * 6:创建账号(录入）
+         */
+        ENTRY(6, "创建账号(录入）");
 
         public final Integer code;
         public final String mes;

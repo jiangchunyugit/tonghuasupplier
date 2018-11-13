@@ -1,5 +1,6 @@
 package cn.thinkfree.database.vo;
 
+import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.ContractTerms;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
@@ -19,12 +20,14 @@ public class CompanyDetailsVO {
      */
     @ApiModelProperty(value = "公司信息")
     private CompanySubmitVo companySubmitVO;
-
     /**
      * 结算比例信息
      */
     @ApiModelProperty(value = "结算比例信息")
     private List<ContractCostVo> contractTermsList;
+
+    @ApiModelProperty(value = "合同信息")
+    private ContractVo ContractVo;
 
     public CompanySubmitVo getCompanySubmitVO() {
         return companySubmitVO;
@@ -49,4 +52,13 @@ public class CompanyDetailsVO {
     public void setPcAuditInfo(List<PcAuditInfo> pcAuditInfo) {
         this.pcAuditInfo = pcAuditInfo;
     }
+
+    public cn.thinkfree.database.vo.ContractVo getContractVo() {
+        return ContractVo;
+    }
+
+    public void setContractVo(cn.thinkfree.database.vo.ContractVo contractVo) {
+        ContractVo = contractVo;
+    }
+
 }

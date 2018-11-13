@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,15 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.core.annotation.MyRespBody;
-import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.constants.SysLogAction;
-import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
+import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import io.swagger.annotations.Api;
@@ -128,11 +127,11 @@ public class ContractController extends AbsBaseController{
      * @return Message
      */
     @ApiOperation(value = "前端--运营后台--合同详情--吕启栋", notes = "合同详情")
-    @PostMapping("/contractDetails")
+    @GetMapping("/contractDetails")
     @MyRespBody
-    public MyRespBundle<List<Map<String,Object>> > contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
+    public MyRespBundle<ContractDetailsVo> contractDetails(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
-    	List<Map<String,Object>>  jbj =  contractService.contractDetails(contractNumber, companyId);
+    	ContractDetailsVo  jbj =  contractService.contractDetails(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 
@@ -203,7 +202,7 @@ public class ContractController extends AbsBaseController{
      */
 
     @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
-    @PostMapping("/insertDesignOrderContract/{orderNumber}{companyId}")
+    @PostMapping("/insertDesignOrderContract/{orderNumber}/{companyId}")
     @MyRespBody
     public MyRespBundle<String> insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
     		@PathVariable("companyId") String companyId,
@@ -269,15 +268,14 @@ public class ContractController extends AbsBaseController{
      * @param companyId
      * @author lvqidong
      */
-    @ApiOperation(value = "前端--B端--入住协议列表--吕启栋", notes = "根据订单编号获取施工或订单合同pdf")
+    @ApiOperation(value = "前端--B端--入住协议列表--吕启栋", notes = "入住协议 ")
     @PostMapping("/enterAgreementContract")
     @MyRespBody
     public MyRespBundle<List<ContractInfo>> enterAgreementContract(@ApiParam("公司编号")@RequestParam String companyId){
 
-//    	List<ContractInfo> resList =  contractService.getEnterContractBycompanyId(companyId);
+    	List<ContractInfo> resList =  contractService.getEnterContractBycompanyId(companyId);
 
-//        return sendJsonData(ResultMessage.SUCCESS,resList);
-        return null;
+       return sendJsonData(ResultMessage.SUCCESS,resList);
     }
 
 
