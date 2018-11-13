@@ -44,8 +44,8 @@ public class AccountListener extends AbsLogPrinter {
         para.put("pwd",accountCreate.getPassword());
         para.put("http", UserLoginUrl);
         if(accountCreate.isPhone()){
-            // TODO 运营平台开通后需要短信提醒
-//            cloudService.sendSms()
+            cloudService.sendCreateAccountNotice(accountCreate.getEmail()
+                    ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
         }else{
             cloudService.sendEmail(accountCreate.getEmail(),
                     SysConstants.EmailTemplate.join.code,

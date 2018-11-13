@@ -103,4 +103,12 @@ public interface CloudService {
      * @return
      */
     RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO);
+
+    /**
+     * 发送账号创建短信
+     * @param phone
+     * @param para
+     * @return
+     */
+    RemoteResult<String> sendCreateAccountNotice(String phone, String para);
 }
