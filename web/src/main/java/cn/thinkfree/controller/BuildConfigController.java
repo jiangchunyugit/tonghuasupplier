@@ -216,6 +216,23 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("装饰后台====》公司删除施工方案====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "companyDelScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle companyDelScheme(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "optionUserId", required = false, value = "操作人ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
+            @ApiParam(name = "optionUserName", required = false, value = "操作人ID") @RequestParam(name = "optionUserName", required = false) String optionUserName,
+            @ApiParam(name = "schemeNo", required = false, value = "方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
+        try {
+            logger.info("公司停用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
+            buildConfigService.companyDelScheme(companyId, optionUserId, optionUserName, schemeNo);
+            return sendSuccessMessage(null);
+        } catch (Exception e) {
+            return sendSuccessMessage(e.getMessage());
+        }
+    }
+
     @ApiOperation("装饰后台====》公司启用用施工方案====》施工配置")
     @ResponseBody
     @RequestMapping(value = "companyEnableScheme", method = {RequestMethod.POST, RequestMethod.GET})
