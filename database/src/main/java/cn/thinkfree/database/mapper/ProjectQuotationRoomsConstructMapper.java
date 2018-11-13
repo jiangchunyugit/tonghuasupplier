@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.ProjectQuotationRoomsConstruct;
 import cn.thinkfree.database.model.ProjectQuotationRoomsConstructExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.BasisConstructionVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface ProjectQuotationRoomsConstructMapper {
@@ -93,4 +95,13 @@ public interface ProjectQuotationRoomsConstructMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(ProjectQuotationRoomsConstruct record);
+
+    /**
+     * @Author jiang
+     * @Description 基础施工保价
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<BasisConstructionVO> selectBasisConstructionByProjectNo(@Param("projectNo") String projectNo,@Param("roomType") String roomType,@Param("status") Integer status);
 }
