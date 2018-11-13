@@ -40,7 +40,7 @@ public class DecorationOrderOperateImpl implements DecorationOrderOperate {
     public MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(int pageNum, int pageSize) {
         PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getDecorateOrderList(pageNum,pageSize);
         ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
-        constructionOrderCommonVo.setCountPageNum(pageInfo.getSize());
+        constructionOrderCommonVo.setCountPageNum(pageInfo.getTotal());
         constructionOrderCommonVo.setOrderList(pageInfo.getList());
         return RespData.success(constructionOrderCommonVo);
     }

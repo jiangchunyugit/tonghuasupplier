@@ -13,6 +13,7 @@ import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -79,14 +80,18 @@ public class OrderListCommonService {
      */
     public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
 
+
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
+        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
+
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
         example.createCriteria().andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
+        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -196,6 +201,8 @@ public class OrderListCommonService {
             listVo.add(constructionOrderListVo);
         }
         pageInfo.setList(listVo);
+        Page p = (Page) pageInfo2.getList();
+        pageInfo.setTotal(p.getPages());
         return pageInfo;
     }
 
@@ -211,12 +218,16 @@ public class OrderListCommonService {
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
+        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
+
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
         example.createCriteria().andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
+
+        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -319,7 +330,10 @@ public class OrderListCommonService {
 
             listVo.add(constructionOrderListVo);
         }
+
         pageInfo.setList(listVo);
+        Page p = (Page) pageInfo2.getList();
+        pageInfo.setTotal(p.getPages());
         return pageInfo;
     }
 
@@ -340,6 +354,8 @@ public class OrderListCommonService {
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<DecorationOrderListVo> pageInfo = new PageInfo<>();
+        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
+
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
         example.createCriteria().andStatusEqualTo(1);
@@ -456,6 +472,8 @@ public class OrderListCommonService {
             listVo.add(decorationOrderListVo);
         }
         pageInfo.setList(listVo);
+        Page p = (Page) pageInfo2.getList();
+        pageInfo.setTotal(p.getPages());
         return pageInfo;
     }
 
