@@ -912,13 +912,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 	@Override
-	public List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber) {
+	public List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber, String roleId) {
 
 		// 更加合同编号查询入住公司合同类型
 		ContractVo vo = new ContractVo();
 		vo.setContractNumber(contractNumber);
 		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo); /* 合同信息 */
-		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(newVo.getCompanyId()); /* 公司信息 */
+//		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(newVo.getCompanyId()); /* 公司信息 */
 		/* 合同详情 */
 		String companyId = newVo.getCompanyId();
 		ContractTermsExample exp = new ContractTermsExample();
@@ -947,11 +947,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 		}
 		// 判断公司类型
-		Map<String, String> costTypeMap = getCostNames(companyInfo.getCompanyInfo().getRoleId());
+		Map<String, String> costTypeMap = getCostNames(roleId);
 
 		List<ContractCostVo> resList = new ArrayList<>();
 
-		if (companyInfo.getCompanyInfo().getRoleId().equals("BD")) {
+		if ("SJ".equals(roleId)) {
 			for (String key : costTypeMap.keySet()) {
 				if (key.toString().equals("01")) {// 平台服务
 					ContractCostVo costVo0 = new ContractCostVo();
@@ -982,7 +982,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 			}
 
-		} else if (companyInfo.getCompanyInfo().getRoleId().equals("DB")) {
+		} else if ("DB".equals(roleId)) {
 
 			for (String key : costTypeMap.keySet()) {
 				if (key.toString().equals("01")) {// 平台服务
@@ -1023,7 +1023,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		Map<String,String> resMap = new HashMap<>();
 
-		if(type.equals(CompanyType.BD.name())){
+		if(type.equals(CompanyType.SJ.name())){
 			resMap.put("01", "平台服务费");
 			resMap.put("02", "产品服务费");
 			resMap.put("03", "施工管理费");
