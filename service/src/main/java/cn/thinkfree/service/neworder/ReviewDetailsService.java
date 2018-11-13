@@ -69,4 +69,25 @@ public interface ReviewDetailsService {
      * @return
      */
     MyRespBundle<List<QuotationVo>> getPriceDetail(String projectNo);
+
+    /**
+     * 删除软装
+     * @param id
+     * @return
+     */
+    MyRespBundle<String> delSoftQuote(String id);
+
+    /**
+     * 删除硬装
+     * @param id
+     * @return
+     */
+    MyRespBundle<String> delHardQuote(String id);
+
+    /**
+     * 删除基础施工项
+     * @param id
+     * @return
+     */
+    MyRespBundle<String> delBasisConstruction(String id);
 }

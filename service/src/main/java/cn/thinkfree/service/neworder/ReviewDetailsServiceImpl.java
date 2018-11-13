@@ -11,6 +11,7 @@ import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @Auther: jiang
@@ -84,39 +86,31 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> saveSoftQuote(SoftQuoteVO softQuoteVO) {
-        Integer money = 0;
-        ProjectQuotationRoomsSoftDecoration projectQuotationRoomsSoftDecoration = BaseToVoUtils.getVo(softQuoteVO, ProjectQuotationRoomsSoftDecoration.class);
-        ProjectQuotationRoomsSoftDecorationExample example = new ProjectQuotationRoomsSoftDecorationExample();
-        ProjectQuotationRoomsSoftDecorationExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(softQuoteVO.getProjectNo());
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andRoomTypeEqualTo(softQuoteVO.getRoomType());
-        //基础保价
-        if (softQuoteVO.getIsAdd().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            projectQuotationRoomsSoftDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
-            int i = projectQuotationRoomsSoftConstructMapper.insertSelective(projectQuotationRoomsSoftDecoration);
+        ProjectQuotationRoomsSoftDecoration decoration = new ProjectQuotationRoomsSoftDecoration();
+        decoration.setProjectNo(softQuoteVO.getProjectNo());
+        decoration.setRoomType(softQuoteVO.getRoomType());
+        decoration.setBrand(softQuoteVO.getBrand());
+        decoration.setMaterialName(softQuoteVO.getMaterialName());
+        decoration.setModel(softQuoteVO.getModel());
+        decoration.setSpec(softQuoteVO.getSpec());
+        decoration.setUnitPrice(softQuoteVO.getUnitPrice());
+        decoration.setUsedQuantity(softQuoteVO.getUsedQuantity());
+        //硬件保价
+        if (StringUtils.isBlank(softQuoteVO.getId())) {
+            decoration.setStatus(1);
+            decoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            int i = projectQuotationRoomsSoftConstructMapper.insertSelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败");
             }
-            money = softQuoteVO.getUsedQuantity() * softQuoteVO.getUnitPrice();
-        }
-        if (softQuoteVO.getIsDelete().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            money = softQuoteVO.getUsedQuantity() * softQuoteVO.getUnitPrice() * (-1);
-            ProjectQuotationRoomsSoftDecoration hardDecoration = new ProjectQuotationRoomsSoftDecoration();
-            hardDecoration.setStatus(ProjectDataStatus.INVALID_STATUS.getValue());
-            int i = projectQuotationRoomsSoftConstructMapper.updateByExampleSelective(hardDecoration, example);
-            if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
-                return RespData.error("删除失败");
-            }
-        }
-        if (softQuoteVO.getIsEdit().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            int i = projectQuotationRoomsSoftConstructMapper.updateByExampleSelective(projectQuotationRoomsSoftDecoration, example);
+        }else if (StringUtils.isNotBlank(softQuoteVO.getId())) {
+            decoration.setId(softQuoteVO.getId());
+            int i = projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("修改失败");
             }
-            money = softQuoteVO.getUsedQuantity() * softQuoteVO.getUnitPrice();
         }
-        Boolean result = updateRoom(money, 2, softQuoteVO.getProjectNo(), softQuoteVO.getRoomType());
+        Boolean result = updateRoom(decoration.getProjectNo());
         if(!result){
             return RespData.error("修改房间总表总价失败");
         }
@@ -132,40 +126,33 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Param
      **/
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> saveHardQuote(HardQuoteVO hardQuoteVO) {
-        Integer money = 0;
-        ProjectQuotationRoomsHardDecoration projectQuotationRoomsHardConstruct = BaseToVoUtils.getVo(hardQuoteVO, ProjectQuotationRoomsHardDecoration.class);
-        ProjectQuotationRoomsHardDecorationExample example = new ProjectQuotationRoomsHardDecorationExample();
-        ProjectQuotationRoomsHardDecorationExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(hardQuoteVO.getProjectNo());
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andRoomTypeEqualTo(hardQuoteVO.getRoomType());
+        ProjectQuotationRoomsHardDecoration decoration = new ProjectQuotationRoomsHardDecoration();
+        decoration.setProjectNo(hardQuoteVO.getProjectNo());
+        decoration.setRoomType(hardQuoteVO.getRoomType());
+        decoration.setBrand(hardQuoteVO.getBrand());
+        decoration.setMaterialName(hardQuoteVO.getMaterialName());
+        decoration.setModel(hardQuoteVO.getModel());
+        decoration.setSpec(hardQuoteVO.getSpec());
+        decoration.setUnitPrice(hardQuoteVO.getUnitPrice());
+        decoration.setUsedQuantity(hardQuoteVO.getUsedQuantity());
         //硬件保价
-        if (hardQuoteVO.getIsAdd().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            projectQuotationRoomsHardConstruct.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
-            money = hardQuoteVO.getUsedQuantity() * hardQuoteVO.getUnitPrice();
-            int i = projectQuotationRoomsHardConstructMapper.insertSelective(projectQuotationRoomsHardConstruct);
+        if (StringUtils.isBlank(hardQuoteVO.getId())) {
+            decoration.setStatus(1);
+            decoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            int i = projectQuotationRoomsHardConstructMapper.insertSelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败");
             }
-        }
-        if (hardQuoteVO.getIsDelete().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            money = hardQuoteVO.getUsedQuantity() * hardQuoteVO.getUnitPrice() * (-1);
-            ProjectQuotationRoomsHardDecoration hardDecoration = new ProjectQuotationRoomsHardDecoration();
-            hardDecoration.setStatus(ProjectDataStatus.INVALID_STATUS.getValue());
-            int i = projectQuotationRoomsHardConstructMapper.updateByExampleSelective(hardDecoration, example);
-            if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
-                return RespData.error("删除失败");
-            }
-        }
-        if (hardQuoteVO.getIsEdit().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            money = hardQuoteVO.getUsedQuantity() * hardQuoteVO.getUnitPrice();
-            int i = projectQuotationRoomsHardConstructMapper.updateByExampleSelective(projectQuotationRoomsHardConstruct, example);
+        }else if (StringUtils.isNotBlank(hardQuoteVO.getId())) {
+            decoration.setId(hardQuoteVO.getId());
+            int i = projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("修改失败");
             }
         }
-        Boolean result = updateRoom(money, 3, hardQuoteVO.getProjectNo(), hardQuoteVO.getRoomType());
+        Boolean result = updateRoom(decoration.getProjectNo());
         if(!result){
             return RespData.error("修改房间总表总价失败");
         }
@@ -180,46 +167,77 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Param
      **/
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> saveBasisConstructionVO(BasisConstructionVO basisConstructionVO) {
-        Integer money = 0;
-        ProjectQuotationRoomsConstruct projectQuotationRoomsConstruct = BaseToVoUtils.getVo(basisConstructionVO, ProjectQuotationRoomsConstruct.class);
-        ProjectQuotationRoomsConstructExample example = new ProjectQuotationRoomsConstructExample();
-        ProjectQuotationRoomsConstructExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(basisConstructionVO.getProjectNo());
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andRoomTypeEqualTo(basisConstructionVO.getRoomType());
+        ProjectQuotationRoomsConstruct construct = new ProjectQuotationRoomsConstruct();
+        construct.setProjectNo(basisConstructionVO.getProjectNo());
+        construct.setRoomType(basisConstructionVO.getRoomType());
+        construct.setConstructCode(basisConstructionVO.getConstructCode());
+        construct.setConstructName(basisConstructionVO.getConstructName());
+        construct.setCustomerPrice(basisConstructionVO.getUnitPrice());
+        construct.setUnitPrice(basisConstructionVO.getUnitPrice());
+        construct.setUsedQuantity(basisConstructionVO.getUsedQuantity());
         //基础保价
-        if (basisConstructionVO.getIsAdd().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            money = basisConstructionVO.getUsedQuantity() * basisConstructionVO.getUnitPrice();
-            projectQuotationRoomsConstruct.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
-            int i = projectQuotationRoomsConstructMapper.insertSelective(projectQuotationRoomsConstruct);
+        if (StringUtils.isBlank(basisConstructionVO.getId())) {
+            construct.setStatus(1);
+            construct.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            int i = projectQuotationRoomsConstructMapper.insertSelective(construct);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败");
             }
         }
-        if (basisConstructionVO.getIsDelete().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            money = basisConstructionVO.getUsedQuantity() * basisConstructionVO.getUnitPrice() * (-1);
-            ProjectQuotationRoomsConstruct hardDecoration = new ProjectQuotationRoomsConstruct();
-            hardDecoration.setStatus(ProjectDataStatus.INVALID_STATUS.getValue());
-            int i = projectQuotationRoomsConstructMapper.updateByExampleSelective(hardDecoration, example);
-            if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
-                return RespData.error("删除失败");
-            }
-        }
-        if (basisConstructionVO.getIsEdit().equals(ProjectDataStatus.BASE_STATUS.getValue())) {
-            money = basisConstructionVO.getUsedQuantity() * basisConstructionVO.getUnitPrice();
-            int i = projectQuotationRoomsConstructMapper.updateByExampleSelective(projectQuotationRoomsConstruct, example);
+        if (StringUtils.isNotBlank(basisConstructionVO.getId())) {
+            construct.setId(basisConstructionVO.getId());
+            int i = projectQuotationRoomsConstructMapper.updateByPrimaryKeySelective(construct);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("修改失败");
             }
         }
-        Boolean result = updateRoom(money, 1, basisConstructionVO.getProjectNo(), basisConstructionVO.getRoomType());
+        Boolean result = updateRoom(basisConstructionVO.getProjectNo());
         if(!result){
             return RespData.error("修改房间总表总价失败");
         }
         return RespData.success();
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> delBasisConstruction(String id) {
+        ProjectQuotationRoomsConstruct construct = projectQuotationRoomsConstructMapper.selectByPrimaryKey(id);
+        if(construct == null){
+            return RespData.error("无效的数据");
+        }
+        construct.setStatus(2);
+        projectQuotationRoomsConstructMapper.updateByPrimaryKeySelective(construct);
+        updateRoom(construct.getProjectNo());
+        return RespData.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> delHardQuote(String id) {
+        ProjectQuotationRoomsHardDecoration hardDecoration = projectQuotationRoomsHardConstructMapper.selectByPrimaryKey(id);
+        if(hardDecoration == null){
+            return RespData.error("无效的数据");
+        }
+        hardDecoration.setStatus(2);
+        projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(hardDecoration);
+        updateRoom(hardDecoration.getProjectNo());
+        return RespData.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle<String> delSoftQuote(String id) {
+        ProjectQuotationRoomsSoftDecoration softDecoration = projectQuotationRoomsSoftConstructMapper.selectByPrimaryKey(id);
+        if(softDecoration == null){
+            return RespData.error("无效的数据");
+        }
+        softDecoration.setStatus(2);
+        projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(softDecoration);
+        updateRoom(softDecoration.getProjectNo());
+        return RespData.success();
+    }
 
     /**
      * 获取精准报价审核结果
@@ -257,12 +275,27 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         hardCriteria.andProjectNoEqualTo(projectNo);
         hardCriteria.andRoomTypeEqualTo(roomType);
-        List<ProjectQuotationRoomsHardDecoration> projectQuotationRoomsHardDecorations = projectQuotationRoomsHardConstructMapper.selectByExample(hardDecorationExample);
-        List<HardQuoteVO> listVo = BaseToVoUtils.getListVo(projectQuotationRoomsHardDecorations, HardQuoteVO.class);
-        if (listVo.size() > 0) {
-            for (HardQuoteVO vo : listVo) {
-                vo.setTotalPrice(vo.getUnitPrice() * vo.getUsedQuantity());
+        List<ProjectQuotationRoomsHardDecoration> decorations = projectQuotationRoomsHardConstructMapper.selectByExample(hardDecorationExample);
+        List<HardQuoteVO> listVo = new ArrayList<>();
+        for(ProjectQuotationRoomsHardDecoration decoration : decorations){
+            HardQuoteVO quoteVO = new HardQuoteVO();
+            quoteVO.setUnitPrice(decoration.getUnitPrice());
+            quoteVO.setUsedQuantity(decoration.getUsedQuantity());
+            quoteVO.setBrand(decoration.getBrand());
+            quoteVO.setModel(decoration.getModel());
+            quoteVO.setProjectNo(decoration.getProjectNo());
+            quoteVO.setRoomType(decoration.getRoomType());
+            quoteVO.setSpec(decoration.getSpec());
+            quoteVO.setMaterialName(decoration.getMaterialName());
+            quoteVO.setId(decoration.getId());
+            if(quoteVO.getUnitPrice() == null){
+                quoteVO.setUnitPrice(BigDecimal.ZERO);
             }
+            if(quoteVO.getUsedQuantity() == null){
+                quoteVO.setUsedQuantity(0);
+            }
+            quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
+            listVo.add(quoteVO);
         }
         return listVo;
     }
@@ -280,12 +313,27 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         hardCriteria.andProjectNoEqualTo(projectNo);
         hardCriteria.andRoomTypeEqualTo(roomType);
-        List<ProjectQuotationRoomsSoftDecoration> projectQuotationRoomsSoftDecorations = projectQuotationRoomsSoftConstructMapper.selectByExample(softDecorationExample);
-        List<SoftQuoteVO> listVo = BaseToVoUtils.getListVo(projectQuotationRoomsSoftDecorations, SoftQuoteVO.class);
-        if (listVo.size() > 0) {
-            for (SoftQuoteVO vo : listVo) {
-                vo.setTotalPrice(vo.getUnitPrice() * vo.getUsedQuantity());
+        List<ProjectQuotationRoomsSoftDecoration> decorations = projectQuotationRoomsSoftConstructMapper.selectByExample(softDecorationExample);
+        List<SoftQuoteVO> listVo = new ArrayList<>();
+        for(ProjectQuotationRoomsSoftDecoration decoration : decorations){
+            SoftQuoteVO quoteVO = new SoftQuoteVO();
+            quoteVO.setUnitPrice(decoration.getUnitPrice());
+            quoteVO.setUsedQuantity(decoration.getUsedQuantity());
+            quoteVO.setBrand(decoration.getBrand());
+            quoteVO.setModel(decoration.getModel());
+            quoteVO.setProjectNo(decoration.getProjectNo());
+            quoteVO.setRoomType(decoration.getRoomType());
+            quoteVO.setSpec(decoration.getSpec());
+            quoteVO.setMaterialName(decoration.getMaterialName());
+            quoteVO.setId(decoration.getId());
+            if(quoteVO.getUnitPrice() == null){
+                quoteVO.setUnitPrice(BigDecimal.ZERO);
             }
+            if(quoteVO.getUsedQuantity() == null){
+                quoteVO.setUsedQuantity(0);
+            }
+            quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
+            listVo.add(quoteVO);
         }
         return listVo;
     }
@@ -302,8 +350,26 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         hardCriteria.andProjectNoEqualTo(projectNo);
         hardCriteria.andRoomTypeEqualTo(roomType);
-        List<ProjectQuotationRoomsConstruct> projectQuotationRoomsConstruct = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
-        List<BasisConstructionVO> listVo = BaseToVoUtils.getListVo(projectQuotationRoomsConstruct, BasisConstructionVO.class);
+        List<ProjectQuotationRoomsConstruct> constructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
+        List<BasisConstructionVO> listVo = new ArrayList<>();
+        for(ProjectQuotationRoomsConstruct construct : constructs){
+            BasisConstructionVO constructionVO = new BasisConstructionVO();
+            constructionVO.setProjectNo(construct.getProjectNo());
+            constructionVO.setRoomType(construct.getRoomType());
+            constructionVO.setUnitPrice(construct.getUnitPrice());
+            constructionVO.setUsedQuantity(construct.getUsedQuantity());
+            constructionVO.setConstructCode(construct.getConstructCode());
+            constructionVO.setConstructName(construct.getConstructName());
+            constructionVO.setId(construct.getId());
+            if(constructionVO.getUnitPrice() == null){
+                constructionVO.setUnitPrice(BigDecimal.ZERO);
+            }
+            if(constructionVO.getUsedQuantity() == null){
+                constructionVO.setUsedQuantity(0);
+            }
+            constructionVO.setTotalPrice(constructionVO.getUnitPrice().multiply(new BigDecimal(constructionVO.getUsedQuantity())));
+            listVo.add(constructionVO);
+        }
         return listVo;
     }
 
@@ -313,32 +379,64 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     /**
      * 修改房屋相应类型的总报价
      *
-     * @param money
-     * @param type  1,基础施工项  2,软装  3,硬装
      * @return
      */
-    public Boolean updateRoom(Integer money, Integer type, String projectNo, String roomType) {
-        ProjectQuotationRooms rooms = new ProjectQuotationRooms();
+    public Boolean updateRoom(String projectNo) {
         ProjectQuotationRoomsExample roomsExample = new ProjectQuotationRoomsExample();
-        ProjectQuotationRoomsExample.Criteria roomsCriteria = roomsExample.createCriteria();
-        roomsCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        roomsCriteria.andProjectNoEqualTo(projectNo);
-        roomsCriteria.andRoomTypeEqualTo(roomType);
-        List<ProjectQuotationRooms> projectQuotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
-        ProjectQuotationRooms room = projectQuotationRooms.get(0);
-        if (type == 1) {
-            rooms.setConstructsPrice(money + room.getConstructsPrice());
-        }
-        if (type == 2) {
-            rooms.setSoftMaterialPrice(money + room.getConstructsPrice());
-        }
-        if (type == 3) {
-            rooms.setHardMaterialPrice(money + room.getConstructsPrice());
-        }
-        int i = projectQuotationRoomsMapper.updateByExampleSelective(rooms, roomsExample);
-        if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+        roomsExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ProjectQuotationRooms> quotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
+        if(quotationRooms.isEmpty()){
             return false;
         }
+        ProjectQuotationRooms rooms = quotationRooms.get(0);
+        BigDecimal sumCons = getSumCons(projectNo);
+        BigDecimal sumSoft = getSumSoft(projectNo);
+        BigDecimal sumHard = getSumHard(projectNo);
+        rooms.setConstructsPrice(sumCons);
+        rooms.setSoftMaterialPrice(sumSoft);
+        rooms.setHardMaterialPrice(sumHard);
+        rooms.setTotalPrice(sumCons.add(sumHard).add(sumSoft));
+        projectQuotationRoomsMapper.updateByPrimaryKeySelective(rooms);
         return true;
+    }
+
+    private BigDecimal getSumCons(String projectNo) {
+        ProjectQuotationRoomsConstructExample constructExample = new ProjectQuotationRoomsConstructExample();
+        constructExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        List<ProjectQuotationRoomsConstruct> roomsConstructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
+        BigDecimal sumCons = BigDecimal.ZERO;
+        for(ProjectQuotationRoomsConstruct roomsConstruct : roomsConstructs){
+            if(roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null){
+                continue;
+            }
+            sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
+        }
+        return sumCons;
+    }
+    private BigDecimal getSumSoft(String projectNo) {
+        ProjectQuotationRoomsSoftDecorationExample decorationExample = new ProjectQuotationRoomsSoftDecorationExample();
+        decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        List<ProjectQuotationRoomsSoftDecoration> roomsConstructs = projectQuotationRoomsSoftConstructMapper.selectByExample(decorationExample);
+        BigDecimal sumCons = BigDecimal.ZERO;
+        for(ProjectQuotationRoomsSoftDecoration roomsConstruct : roomsConstructs){
+            if(roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null){
+                continue;
+            }
+            sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
+        }
+        return sumCons;
+    }
+    private BigDecimal getSumHard(String projectNo) {
+        ProjectQuotationRoomsHardDecorationExample decorationExample = new ProjectQuotationRoomsHardDecorationExample();
+        decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        List<ProjectQuotationRoomsHardDecoration> roomsConstructs = projectQuotationRoomsHardConstructMapper.selectByExample(decorationExample);
+        BigDecimal sumCons = BigDecimal.ZERO;
+        for(ProjectQuotationRoomsHardDecoration roomsConstruct : roomsConstructs){
+            if(roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null){
+                continue;
+            }
+            sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
+        }
+        return sumCons;
     }
 }

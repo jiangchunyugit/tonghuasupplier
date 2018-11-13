@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -53,18 +54,21 @@ public class ReviewDetailsController extends AbsBaseController {
             @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
             @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
             @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
-            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
+            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") BigDecimal unitPrice,
             @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
-            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice) {
+            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") BigDecimal totalPrice,
+            @RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
         SoftQuoteVO softQuoteVO = new SoftQuoteVO();
         softQuoteVO.setProjectNo(projectNo);
         softQuoteVO.setRoomType(roomType);
         softQuoteVO.setBrand(brand);
         softQuoteVO.setModel(model);
+        softQuoteVO.setMaterialName(materialName);
         softQuoteVO.setSpec(spec);
         softQuoteVO.setUnitPrice(unitPrice);
         softQuoteVO.setUsedQuantity(usedQuantity);
         softQuoteVO.setTotalPrice(totalPrice);
+        softQuoteVO.setId(id);
         return reviewDetailsService.saveSoftQuote(softQuoteVO);
     }
 
@@ -84,18 +88,21 @@ public class ReviewDetailsController extends AbsBaseController {
             @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
             @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
             @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
-            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
+            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") BigDecimal unitPrice,
             @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
-            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice) {
+            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") BigDecimal totalPrice,
+            @RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
         HardQuoteVO hardQuoteVO = new HardQuoteVO();
         hardQuoteVO.setProjectNo(projectNo);
         hardQuoteVO.setRoomType(roomType);
         hardQuoteVO.setBrand(brand);
+        hardQuoteVO.setMaterialName(materialName);
         hardQuoteVO.setModel(model);
         hardQuoteVO.setSpec(spec);
         hardQuoteVO.setUnitPrice(unitPrice);
         hardQuoteVO.setUsedQuantity(usedQuantity);
         hardQuoteVO.setTotalPrice(totalPrice);
+        hardQuoteVO.setId(id);
         return reviewDetailsService.saveHardQuote(hardQuoteVO);
     }
 
@@ -109,20 +116,65 @@ public class ReviewDetailsController extends AbsBaseController {
      **/
     @RequestMapping(value = "saveBasisConstruction", method = RequestMethod.POST)
     @ApiOperation(value = "新增施工保价")
-    public MyRespBundle<String> saveBasisConstruction(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                      @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
-                                                      @RequestParam(name = "constructCode") @ApiParam(value = "项目名称", name = "constructCode") String constructCode,
-                                                      @RequestParam(name = "constructName") @ApiParam(value = "项目说明", name = "constructName") String constructName,
-                                                      @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
-                                                      @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
-                                                      @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice) {
+    public MyRespBundle<String> saveBasisConstruction(
+            @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
+            @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+            @RequestParam(name = "constructCode") @ApiParam(value = "项目名称", name = "constructCode") String constructCode,
+            @RequestParam(name = "constructName") @ApiParam(value = "项目说明", name = "constructName") String constructName,
+            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") BigDecimal unitPrice,
+            @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
+            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") BigDecimal totalPrice,
+            @RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
         BasisConstructionVO basisConstructionVO = new BasisConstructionVO();
         basisConstructionVO.setProjectNo(projectNo);
         basisConstructionVO.setRoomType(roomType);
         basisConstructionVO.setUnitPrice(unitPrice);
         basisConstructionVO.setUsedQuantity(usedQuantity);
         basisConstructionVO.setTotalPrice(totalPrice);
+        basisConstructionVO.setConstructName(constructName);
+        basisConstructionVO.setConstructCode(constructCode);
+        basisConstructionVO.setId(id);
         return reviewDetailsService.saveBasisConstructionVO(basisConstructionVO);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 新增软装保价
+     * @Date
+     * @Param
+     **/
+    @RequestMapping(value = "delSoftQuote", method = RequestMethod.POST)
+    @ApiOperation(value = "删除软装保价", notes = "")
+    public MyRespBundle<String> delSoftQuote(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
+        return reviewDetailsService.delSoftQuote(id);
+    }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 新增硬装保价
+     * @Date
+     * @Param
+     **/
+    @RequestMapping(value = "delHardQuote", method = RequestMethod.POST)
+    @ApiOperation(value = "删除硬装保价", notes = "")
+    public MyRespBundle<String> delHardQuote(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
+        return reviewDetailsService.delHardQuote(id);
+    }
+
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description 新增基础施工保价
+     * @Date
+     * @Param
+     **/
+    @RequestMapping(value = "delBasisConstruction", method = RequestMethod.POST)
+    @ApiOperation(value = "删除施工保价")
+    public MyRespBundle<String> delBasisConstruction(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
+        return reviewDetailsService.delBasisConstruction(id);
     }
 
 }
