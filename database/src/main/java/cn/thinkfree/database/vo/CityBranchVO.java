@@ -16,26 +16,36 @@ public class CityBranchVO extends CityBranch {
     /**
      * 所属分公司名称
      */
-    @ApiModelProperty("选择分公司")
+    @ApiModelProperty("分公司名称")
     private String branchCompanyNm;
 
-    @ApiModelProperty("选择城市站点")
-    private String ebsCityBranchNm;
+    @ApiModelProperty("城市名称")
+    private String cityNm;
 
-    public String getEbsCityBranchNm() {
-        return ebsCityBranchNm;
+    public String getCityNm() {
+        return cityNm;
     }
 
-    public void setEbsCityBranchNm(String ebsCityBranchNm) {
-        this.ebsCityBranchNm = ebsCityBranchNm;
+    public void setCityNm(String cityNm) {
+        this.cityNm = cityNm;
     }
+    //    @ApiModelProperty("选择城市站点")
+//    private String ebsCityBranchNm;
 
-    /**
+//    public String getEbsCityBranchNm() {
+//        return ebsCityBranchNm;
+//    }
+//
+//    public void setEbsCityBranchNm(String ebsCityBranchNm) {
+//        this.ebsCityBranchNm = ebsCityBranchNm;
+//    }
 
-     * 店面list
-     */
-    @ApiModelProperty("店面信息")
-    private List<StoreInfoVO> storeInfoVOList;
+//    /**
+//
+//     * 店面list
+//     */
+//    @ApiModelProperty("店面信息")
+//    private List<StoreInfoVO> storeInfoVOList;
 
 //    @ApiModelProperty("所属城市分站账号信息")
 //    private List<PcUserInfo> pcUserInfoList;
@@ -56,11 +66,11 @@ public class CityBranchVO extends CityBranch {
         this.branchCompanyNm = branchCompanyNm;
     }
 
-    public List<StoreInfoVO> getStoreInfoVOList() {
-        return storeInfoVOList;
-    }
-
-    public void setStoreInfoVOList(List<StoreInfoVO> storeInfoVOList) {
-        this.storeInfoVOList = storeInfoVOList;
-    }
+//    public List<StoreInfoVO> getStoreInfoVOList() {
+//        return storeInfoVOList;
+//    }
+//
+//    public void setStoreInfoVOList(List<StoreInfoVO> storeInfoVOList) {
+//        this.storeInfoVOList = storeInfoVOList;
+//    }
 }
