@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -72,7 +71,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
 
     @Autowired
     ProjectDocumentMapper projectDocumentMapper;
-    @Resource
+    @Autowired
     private ProjectMapper projectMapper;
 
 
