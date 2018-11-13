@@ -4,10 +4,10 @@ import cn.thinkfree.database.mapper.UserRoleSetMapper;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.database.model.UserRoleSetExample;
 import cn.thinkfree.service.approvalflow.RoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional(rollbackFor = RuntimeException.class)
 public class RoleServiceImpl implements RoleService {
 
-    @Resource
+    @Autowired
     private UserRoleSetMapper userRoleSetMapper;
 
     @Override
