@@ -7,7 +7,9 @@ import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.model.CityBranchExample;
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.HrOrganizationEntity;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.storeinfo.StoreInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,9 +24,8 @@ import static java.util.stream.Collectors.toList;
 public class CompanyAdminRelationStrategy implements RelationStrategy {
 
 
-
     @Autowired
-    CityBranchMapper cityBranchMapper;
+    StoreInfoService storeInfoService;
 
     /**
      * 构建关系图
@@ -34,11 +35,7 @@ public class CompanyAdminRelationStrategy implements RelationStrategy {
      */
     @Override
     public List<String> build(UserVO userVO) {
-
-        CityBranchExample condition = new CityBranchExample();
-        condition.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal());
-        List<CityBranch> cityBranches = cityBranchMapper.selectByExample(condition);
-        return cityBranches.stream().map(c->String.valueOf(c.getId()) ).collect(toList());
-
+        List<HrOrganizationEntity> hrOrganizationEntities = storeInfoService.getHrOrganizationEntity();
+        return hrOrganizationEntities.stream().map(HrOrganizationEntity::getOrganizationId).collect(toList());
     }
 }

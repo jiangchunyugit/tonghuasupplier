@@ -6,20 +6,21 @@ import cn.thinkfree.database.mapper.BranchCompanyMapper;
 import cn.thinkfree.database.mapper.CityBranchMapper;
 import cn.thinkfree.database.model.BranchCompany;
 import cn.thinkfree.database.model.CityBranch;
+import cn.thinkfree.database.model.StoreInfo;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.storeinfo.StoreInfoService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class CompanyCityRelationStrategy implements RelationStrategy {
 
     @Autowired
-    BranchCompanyMapper branchCompanyMapper;
-    @Autowired
-    CityBranchMapper cityBranchMapper;
+    StoreInfoService storeInfoService;
 
     /**
      * 构建关系图
@@ -29,10 +30,9 @@ public class CompanyCityRelationStrategy implements RelationStrategy {
      */
     @Override
     public List<String> build(UserVO userVO) {
-        BranchCompany branchCompany = branchCompanyMapper.selectByPrimaryKey(Integer.valueOf(userVO.getPcUserInfo().getBranchCompanyId()));
-        userVO.setBranchCompany(branchCompany);
-        CityBranch cityBranch = cityBranchMapper.selectByPrimaryKey(Integer.valueOf(userVO.getPcUserInfo().getCityBranchCompanyId()));
-        userVO.setCityBranch(cityBranch);
-        return Lists.newArrayList(userVO.getPcUserInfo().getCityBranchCompanyId());
+        return storeInfoService.storeInfoListByCityId(Integer.valueOf(userVO.getPcUserInfo().getCityBranchCompanyId()))
+                .stream()
+                .map(StoreInfo::getStoreId)
+                .collect(Collectors.toList());
     }
 }
