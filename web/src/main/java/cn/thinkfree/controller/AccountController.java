@@ -30,8 +30,8 @@ import java.util.*;
 /**
  * 账号相关
  */
-@ApiOperation("账号,角色,权限,资源")
-@Api("账号,角色,权限,资源")
+//@ApiOperation("账号,角色,权限,资源")
+@Api(tags="账号,角色,权限,资源")
 @RestController
 @RequestMapping("/account")
 public class AccountController extends AbsBaseController {
@@ -65,9 +65,7 @@ public class AccountController extends AbsBaseController {
      * @param permissionVO 权限
      * @return
      */
-    @ApiImplicitParams(
-            @ApiImplicitParam(name = "creatorName",value = "创建人姓名",paramType = "query",dataType = "String")
-    )
+
     @ApiOperation(value="前端-运营平台-权限管理-创建权限", notes="新增权限")
     @PostMapping("/permission")
     @MyRespBody
@@ -101,6 +99,12 @@ public class AccountController extends AbsBaseController {
      * @param id 主键
      * @return
      */
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id",value = "权限主键",paramType = "path",dataType = "String"),
+            @ApiImplicitParam(name = "token",value = "用户令牌",paramType = "header",dataType = "String")
+
+    })
+    @ApiResponse(code = 200,message = "操作成功",response = PermissionVO.class)
     @ApiOperation(value="前端-运营平台-权限管理-权限详情", notes="权限详情")
     @GetMapping("/permission/{id}")
     @MyRespBody
