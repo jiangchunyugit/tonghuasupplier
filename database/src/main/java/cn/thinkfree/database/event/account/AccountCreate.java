@@ -22,17 +22,29 @@ public class AccountCreate extends AbsBaseEvent {
      */
     private String userName;
 
+    private Boolean isPhone;
+
     public AccountCreate(String userCode, String phone, String password, String name){
         super();
         this.source = userCode;
         this.email = phone;
         this.password = password;
         this.userName = name;
+        this.isPhone = false;
+    }
+    public AccountCreate(String userCode, String phone, String password, String name,Boolean isPhone){
+        super();
+        this.source = userCode;
+        this.email = phone;
+        this.password = password;
+        this.userName = name;
+        this.isPhone = isPhone;
     }
 
     public AccountCreate(String userCode){
         super();
         this.source = userCode;
+        this.isPhone = false;
     }
 
     public AccountCreate(String userCode, String phone, String password) {
@@ -40,6 +52,7 @@ public class AccountCreate extends AbsBaseEvent {
         this.source = userCode;
         this.email = phone;
         this.password = password;
+        this.isPhone = false;
     }
 
     /**
@@ -60,5 +73,8 @@ public class AccountCreate extends AbsBaseEvent {
 
     public String getUserName() {
         return userName;
+    }
+    public Boolean isPhone(){
+        return isPhone;
     }
 }

@@ -5,6 +5,7 @@ import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.utils.LogUtil;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.EnterPriseUserVO;
@@ -53,6 +54,7 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
     @Override
     public SecurityUser build(String userID) {
         UserVO userVO = new EnterPriseUserVO();
+        userVO.setType(UserRegisterType.Enterprise);
         UserRegister userRegister = (UserRegister) ThreadLocalHolder.get();
         userVO.setUserRegister(userRegister);
         completionDetailInfo(userVO,userID);

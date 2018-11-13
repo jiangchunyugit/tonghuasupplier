@@ -269,7 +269,6 @@ public class CloudServiceImpl implements CloudService {
 
     @Override
     public String uploadFile(String fileName) {
-        // TODO Auto-generated method stub
 //      HttpHeaders headers = new HttpHeaders();
 //      headers.add("Authorization", "token");
 //      MediaType type = MediaType.parseMediaType("multipart/form-data");
@@ -279,7 +278,6 @@ public class CloudServiceImpl implements CloudService {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
