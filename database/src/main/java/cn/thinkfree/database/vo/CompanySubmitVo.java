@@ -19,19 +19,19 @@ public class CompanySubmitVo {
      * 公司表
      */
     @ApiModelProperty("公司资质信息")
-    private CompanyInfo companyInfo;
+    private CompanyInfoVo companyInfo;
 
     /**
      * 公司拓展表
      */
     @ApiModelProperty("公司资质拓展信息")
-    private CompanyInfoExpand companyInfoExpand;
+    private CompanyInfoExpandVO companyInfoExpand;
 
     /**
      * 对公账信息
      */
     @ApiModelProperty("公司资质账户信息")
-    private PcCompanyFinancial pcCompanyFinancial;
+    private CompanyFinancialVO pcCompanyFinancial;
 
     /**
      * 公司类型  比如：有限公司，集体公司
@@ -47,30 +47,29 @@ public class CompanySubmitVo {
         this.companyTypeName = companyTypeName;
     }
 
-    public CompanyInfo getCompanyInfo() {
+    public CompanyInfoVo getCompanyInfo() {
         return companyInfo;
     }
 
-    public void setCompanyInfo(CompanyInfo companyInfo) {
+    public void setCompanyInfo(CompanyInfoVo companyInfo) {
         this.companyInfo = companyInfo;
     }
 
-    public CompanyInfoExpand getCompanyInfoExpand() {
+    public CompanyInfoExpandVO getCompanyInfoExpand() {
         return companyInfoExpand;
     }
 
-    public void setCompanyInfoExpand(CompanyInfoExpand companyInfoExpand) {
+    public void setCompanyInfoExpand(CompanyInfoExpandVO companyInfoExpand) {
         this.companyInfoExpand = companyInfoExpand;
     }
 
-    public PcCompanyFinancial getPcCompanyFinancial() {
+    public CompanyFinancialVO getPcCompanyFinancial() {
         return pcCompanyFinancial;
     }
 
-    public void setPcCompanyFinancial(PcCompanyFinancial pcCompanyFinancial) {
+    public void setPcCompanyFinancial(CompanyFinancialVO pcCompanyFinancial) {
         this.pcCompanyFinancial = pcCompanyFinancial;
     }
-
 
     @Override
     public String toString() {
@@ -78,6 +77,7 @@ public class CompanySubmitVo {
                 "companyInfo=" + companyInfo +
                 ", companyInfoExpand=" + companyInfoExpand +
                 ", pcCompanyFinancial=" + pcCompanyFinancial +
+                ", companyTypeName='" + companyTypeName + '\'' +
                 '}';
     }
 }

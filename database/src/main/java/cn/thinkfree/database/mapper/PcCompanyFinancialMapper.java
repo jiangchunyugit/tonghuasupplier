@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PcCompanyFinancial;
 import cn.thinkfree.database.model.PcCompanyFinancialExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.CompanyFinancialVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PcCompanyFinancialMapper {
@@ -64,4 +66,11 @@ public interface PcCompanyFinancialMapper {
      */
     
     PcCompanyFinancial findPcCompanyFinancialByCompanyId(String companyId);
+
+    /**
+     * 查询账号信息
+     * @return
+     */
+    CompanyFinancialVO findFinancialVOByCompanyId(String companyId);
+
 }

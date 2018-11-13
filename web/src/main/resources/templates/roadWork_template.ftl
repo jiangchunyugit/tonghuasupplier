@@ -66,12 +66,12 @@
     <h1 class="text-algin">“居然设计家”平台入驻合作合同（2018版）</h1>
     <div>
         <h4 class="inline-block">甲方：</h4>
-        <p class="placeholder"></p>
+        <p class="placeholder">${c01}</p>
         <span>(以下简称甲方)</span>
     </div>
     <div>
         <h4 class="inline-block">乙方：</h4>
-        <p class="placeholder"></p>
+        <p class="placeholder">${c02}<</p>
         <span>(以下简称乙方)</span>
     </div>
     <section class='indent'>
@@ -91,32 +91,31 @@
         <tr>
             <td>
                 <h4 class="inline-block">企   业   法   人：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c03}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">劳 务 分 包 资 质 证 书 号 码：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c04}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">发   证   机   关：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c05}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">资 质 专 业 及 等 级：</h4>
-                <p class="placeholderT"></p>
+                <p class="placeholderT">${c06}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">复 审 时 间 及 有 效 期：</h4>
-                <p class="placeholder"></p>
-                <span>m²</span>
+                <p class="placeholder">${c07}</p>
             </td>
         </tr>
         <tr>
@@ -141,7 +140,7 @@
         </tr>
     </table>
     <section class='indent'>
-        合作期限自<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日至<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日。乙方在经营过程中，乙方应本着诚信原则为甲方客户提供服务。
+        合作期限自<p class="placeholderK">${c08}</p><p class="placeholderK"></p>至<p class="placeholderK">${c09}</p>。乙方在经营过程中，乙方应本着诚信原则为甲方客户提供服务。
     </section>
     <section class='indent'>
         乙方指定返施工款等其他相关款项的账户信息为：
@@ -150,19 +149,19 @@
         <tr>
             <td>
                 <h4 class="inline-block">户名：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c10}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">开户行：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c11}</p>
             </td>
         </tr>
         <tr>
             <td>
                 <h4 class="inline-block">账号：</h4>
-                <p class="placeholder"></p>
+                <p class="placeholder">${c12}</p>
             </td>
         </tr>
     </table>
@@ -180,7 +179,7 @@
         4. 甲方为平台的客户提供含“先行赔付”在内的居然之家所有服务承诺。
     </section>
     <section class='indent'>
-        5. 甲方收取乙方与甲方客户签订的《家庭居室装饰装修施工合同》总额的<p class="placeholderK">7%</p>
+        5. 甲方收取乙方与甲方客户签订的《家庭居室装饰装修施工合同》总额的<p class="placeholderK">${c16}</p>
         作为平台服务管理费。
     </section>
     <section class='indent'>
@@ -297,7 +296,7 @@
     <table>
         <tr>
             <td>
-                <span>（1）签约平台合作合同时一次性缴纳<p class="placeholderK"></p>万的质量保证金，</span>
+                <span>（1）签约平台合作合同时一次性缴纳<p class="placeholderK">${c17}</p>万的质量保证金，</span>
             </td>
         </tr>
         <tr>
@@ -381,7 +380,7 @@
         2.本合同生效期间，乙方不得与其他平台公司合作。
     </section>
     <section class='indent'>
-        3.本合同有效期为<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日至<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日。本合同到期后，若甲乙双方未续签协议，乙方应对已施工未完工工程继续履行施工责任，对已完工工程履行保修责任。
+        3.本合同有效期为<p class="placeholderK">${(c08?string("yyyy-MM-dd"))!}</p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日至<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日。本合同到期后，若甲乙双方未续签协议，乙方应对已施工未完工工程继续履行施工责任，对已完工工程履行保修责任。
     </section>
     <section class='indent'>
         4.本合同一式四份，甲两份，乙方两份，自双方签字盖章之日生效。

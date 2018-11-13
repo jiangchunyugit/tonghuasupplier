@@ -79,9 +79,9 @@ import java.time.Instant;
 			String url = httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), "");
 			logger.info("用户 " + SessionUserDetailsUtil.getLoginUserName() + "，From IP:" + SecurityRequestUtil.getRequestIp(httpRequest) + "。尝试访问未授权(或者) URI:" + url);
 //			if (SecurityRequestUtil.isAjax(httpRequest)) {
-				MyRespBundle<String> myRespBundle =buildErrorResp();
+				MyRespBundle<String> myRespBundle = buildErrorResp();
 				httpResponse.setHeader("Content-Type","application/json; charset=utf-8");
-				httpResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
+				httpResponse.setStatus(HttpServletResponse.SC_OK);
 				httpResponse.getWriter().write(new Gson().toJson(myRespBundle));
 //			} else {
 //				httpResponse.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);

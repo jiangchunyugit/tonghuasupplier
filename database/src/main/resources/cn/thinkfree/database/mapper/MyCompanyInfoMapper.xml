@@ -24,6 +24,16 @@
         <result column="contract_number" jdbcType="VARCHAR" property="contractNumber" />
         <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     </resultMap>
+
+    <sql id="Base_Column_List_VO">
+        info.id, info.company_id, info.company_name, info.role_id, info.province_code, info.address, info.legal_name, info.legal_phone,
+        info.legal_id_card, info.business_code, info.organization_code, info.tax_code, info.is_check, info.create_time,
+        info.phone, info.business_photo_url, info.work_photo_url, info.deposit_money, info.lbs, info.is_delete, info.city_code,
+        info.area_code, info.telephone, info.content, info.audit_status, info.lefal_card_up_url, info.lefal_card_down_url,
+        info.work_card_from, info.work_card_indate, info.update_time, info.work_code, info.company_classify, info.site_company_id,
+        info.business_type, info.platform_type
+    </sql>
+
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
       select
         company_id
@@ -111,16 +121,14 @@
 
     </select>
 
-    <select id="selectByCompanyId" parameterType="string" resultMap="CompanyInfoVo">
-        select info.lbs,info.address,info.company_name,info.company_id,
-        info.telephone,info.legal_name,info.legal_phone,info.city_code,
-        info.province_code,info.area_code,
+    <select id="selectByCompanyId" parameterType="java.lang.String" resultMap="CompanyInfoVo">
+        select <include refid="Base_Column_List_VO" />,
         province.province_name, city.city_name, area.area_name,info.role_id
         from company_info info left join province province on
         info.province_code = province.province_code left join
         city city on info.city_code = city.city_code left join
         area area on info.area_code = area.area_code
-        where info.company_id = #{companyId}
+        where info.is_delete = 2 and info.platform_type = 0 and info.company_id = #{companyId}
 
     </select>
     
@@ -225,7 +233,7 @@
     ) branch ON info.site_company_id = branch.id
     LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
     LEFT JOIN user_role_set role ON info.role_id = role.role_code
-    inner JOIN (
+    left JOIN (
     SELECT
     id,
     contract_number,

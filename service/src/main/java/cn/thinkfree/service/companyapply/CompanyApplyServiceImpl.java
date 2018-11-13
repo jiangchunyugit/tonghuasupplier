@@ -1,23 +1,30 @@
 package cn.thinkfree.service.companyapply;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.CompanyClassify;
+import cn.thinkfree.database.event.account.AccountCreate;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.catalina.manager.util.SessionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,6 +64,22 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Autowired
     PcUserInfoService pcUserInfoService;
+
+    @Autowired
+    RedisService redisService;
+
+    @Autowired
+    EventService eventService;
+
+    @Autowired
+    CompanyUserMapper companyUserMapper;
+
+    @Autowired
+    PcUserInfoMapper pcUserInfoMapper;
+
+    @Autowired
+    PcAuditInfoMapper pcAuditInfoMapper;
+
 
     /**
      * 更新公司入驻状态
@@ -112,8 +135,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Override
     public void sendMessage(String email) {
-        String activeCode = RandomNumUtils.random(4);
-        //TODO 发送邮件
+        redisService.saveVerificationCode(email);
     }
 
     /**
@@ -176,9 +198,27 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         Map<String, Object> map = new HashMap<>();
         Date date = new Date();
+        if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getCompanyName())){
+            boolean name = companyApplyService.checkCompanyName(pcApplyInfoSEO.getCompanyName());
+            if(name){
+                map.put("code",false);
+                map.put("msg","公司名称已被注册！");
+                return map;
+            }
+        }
+        boolean pcflag = pcUserInfoService.isEnable(pcApplyInfoSEO.getEmail());
+        if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getEmail())){
+            boolean email = companyApplyService.checkEmail(pcApplyInfoSEO.getEmail());
+            if(email || pcflag){
+                map.put("code",false);
+                map.put("msg","邮箱已被注册！");
+                return map;
+            }
+        }
         //公司id
 //        String companyId = generateCompanyId(pcApplyInfoSEO.getCompanyRole());
         String companyId = pcApplyInfoSEO.getCompanyId();
@@ -235,37 +275,67 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             example.createCriteria().andIdEqualTo(pcApplyInfoSEO.getId());
             applyLine = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfoSEO, example);
         }
-        //判断phone不能重复
-        boolean flag = pcUserInfoService.isEnable(pcApplyInfoSEO.getEmail());
         int registerLine = 0;
         //插入注册表
-        if(!flag){
-            UserRegister userRegister = new UserRegister();
-            userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
-            userRegister.setRegisterTime(date);
-            userRegister.setUpdateTime(date);
-            userRegister.setType(UserRegisterType.Enterprise.shortVal());
-            MultipleMd5 md5 = new MultipleMd5();
-            if(pcApplyInfoSEO.getPassword() == null){
-                pcApplyInfoSEO.setPassword("123456");
-            }
-            userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
-
-            userRegister.setPhone(pcApplyInfoSEO.getEmail());
-            userRegister.setUserId(companyId);
-            registerLine = userRegisterMapper.insertSelective(userRegister);
-        }else{
-            map.put("code",true);
-            map.put("msg","邮箱已被注册！");
+        UserRegister userRegister = new UserRegister();
+        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userRegister.setRegisterTime(date);
+        userRegister.setUpdateTime(date);
+        userRegister.setType(UserRegisterType.Enterprise.shortVal());
+        MultipleMd5 md5 = new MultipleMd5();
+        if(pcApplyInfoSEO.getPassword() == null){
+            pcApplyInfoSEO.setPassword("123456");
         }
+        userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
+
+        userRegister.setPhone(pcApplyInfoSEO.getEmail());
+        userRegister.setUserId(companyId);
+        registerLine = userRegisterMapper.insertSelective(userRegister);
+
 
         //TODO 插入pc_user_info？？？
+        CompanyUser companyUser = new CompanyUser();
+        companyUser.setEmpName(pcApplyInfoSEO.getContactName());
+        companyUser.setEmpNumber(pcApplyInfoSEO.getCompanyId());
+        companyUser.setIsJob(SysConstants.YesOrNo.YES.shortVal().toString());
+        companyUser.setMobile(pcApplyInfoSEO.getContactPhone());
+        companyUser.setEmail(pcApplyInfoSEO.getEmail());
+        companyUser.setCreateTime(date);
+        companyUser.setUpdateTime(date);
+        companyUser.setCompanyId(pcApplyInfoSEO.getCompanyId());
+        companyUser.setStatus(SysConstants.YesOrNo.YES.shortVal().toString());
+        int uLine = companyUserMapper.insertSelective(companyUser);
 
+        //插入pcUserINfo
+        PcUserInfo userInfo = new PcUserInfo();
+        userInfo.setId(pcApplyInfoSEO.getCompanyId());
+        userInfo.setName(pcApplyInfoSEO.getContactName());
+        userInfo.setPhone(pcApplyInfoSEO.getEmail());
+        userInfo.setCreator(SessionUserDetailsUtil.getLoginUserName());
+        userInfo.setEnabled(SysConstants.YesOrNo.YES.shortVal());
+        userInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userInfo.setCityBranchCompanyId(pcApplyInfoSEO.getCityBranchCompanyId());
+        userInfo.setBranchCompanyId(pcApplyInfoSEO.getBranchCompanyId());
+        userInfo.setRootCompanyId(pcApplyInfoSEO.getCompanyId());
+        userInfo.setProvince(pcApplyInfoSEO.getProvinceCode().toString());
+        userInfo.setCity(pcApplyInfoSEO.getCityCode().toString());
+        userInfo.setArea(pcApplyInfoSEO.getAreaCode().toString());
+        userInfo.setCreateTime(new Date());
+        userInfo.setEmail(pcApplyInfoSEO.getEmail());
+        int userLine = pcUserInfoMapper.insertSelective(userInfo);
+
+        //插入审批表
+        String auditPersion = userVO ==null?"":userVO.getUsername();
+        String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
+        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
+                companyId, "", "", date, auditAccount);
+        int line = pcAuditInfoMapper.insertSelective(record);
         //TODO：添加账号发送短信 and 发送邮件
 
-        if(infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0){
+        if(line > 0 && infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0 && userLine > 0 && uLine > 0){
             map.put("code",true);
             map.put("msg","操作成功");
+            return map;
         }
         map.put("code",false);
         map.put("msg","操作失败");
@@ -295,21 +365,22 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addApplyInfo(PcApplyInfoSEO pcApplyInfoSEO) {
-        //TODO 校验验证码
+        String vc = redisService.validate(pcApplyInfoSEO.getEmail(), pcApplyInfoSEO.getVerifyCode());
+//        if(vc.contains("成功")){
+            PcApplyInfo pcApplyInfo = new PcApplyInfo();
 
-        PcApplyInfo pcApplyInfo = new PcApplyInfo();
-
-        SpringBeanUtil.copy(pcApplyInfoSEO,pcApplyInfo);
-        Date date = new Date();
-        pcApplyInfo.setApplyDate(date);
-        //是否办理
-        pcApplyInfo.setTransactType(SysConstants.YesOrNo.NO.shortVal());
-        //是否删除
-        pcApplyInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
-        int line = pcApplyInfoMapper.insertSelective(pcApplyInfo);
-        if(line > 0){
-            return true;
-        }
+            SpringBeanUtil.copy(pcApplyInfoSEO,pcApplyInfo);
+            Date date = new Date();
+            pcApplyInfo.setApplyDate(date);
+            //是否办理
+            pcApplyInfo.setTransactType(SysConstants.YesOrNo.NO.shortVal());
+            //是否删除
+            pcApplyInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+            int line = pcApplyInfoMapper.insertSelective(pcApplyInfo);
+            if(line > 0){
+                return true;
+            }
+//        }
         return false;
     }
 

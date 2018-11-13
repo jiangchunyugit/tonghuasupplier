@@ -87,7 +87,10 @@
         甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。
     </section>
     <section class='indent'>
-        甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自<p class="placeholderT">${c03?datetime('yyyy')}</p>年<p class="placeholderT">${c03?datetime('MM')}</p>月<p class="placeholderT">${c03?datetime('dd')}</p>日至<p class="placeholderT">${c04?datetime('yyyy')}</p>年 <p class="placeholderT">${c04?datetime('MM')}</p>月<p class="placeholderT">${c04?datetime('dd')}</p>日。乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
+        甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自
+        <p class="placeholderT">${startTime?string('yyyy')}</p>年<p class="placeholderT">${startTime?string('MM')}</p>月<p class="placeholderT">${startTime?string('dd')}</p>日
+            至<p class="placeholderT">${endTime?string('yyyy')}</p>年 <p class="placeholderT">${endTime?string('MM')}</p>月<p class="placeholderT">${endTime?string('dd')}</p>日。
+            乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
     </section>
     <section class='indent'>
         乙方指定返设计款、产品服务费、施工管理费等其他相关款项的账户信息为：
@@ -225,7 +228,8 @@
         3. 对本协议的所有修正、更改或补充均应以书面形式作为本协议的附件或补充协议。本协议的附件及补充协议作为本协议不可分割的一部分，与本协议具有同等法律效力。
     </section>
     <section class='indent'>
-        4. 本协议一式三份，甲方两份，乙方一份。本协议生效日期 <p class="placeholderT"></p>年<p class="placeholderT"></p>月<p class="placeholderT"></p>日。
+        4. 本协议一式三份，甲方两份，乙方一份。本协议生效日期 <p class="placeholderT">${signedTime?string('yyyy')}</p>年<p class="placeholderT">${signedTime?string('MM')}</p>月
+        <p class="placeholderT">${signedTime?string('dd')}</p>日。
     </section>
     <div>
         <span>甲方（盖章）/法人代表签字：</span>

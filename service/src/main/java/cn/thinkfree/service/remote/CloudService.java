@@ -1,6 +1,7 @@
 package cn.thinkfree.service.remote;
 
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
@@ -96,4 +97,10 @@ public interface CloudService {
      * @param syncOrderVO
      */
     RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO);
+
+    /**
+     * 同步合同信息（后台jiangchunyu提供）
+     * @return
+     */
+    RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO);
 }

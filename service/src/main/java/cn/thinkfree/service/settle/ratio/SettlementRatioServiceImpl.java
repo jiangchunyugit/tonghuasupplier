@@ -50,42 +50,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		PageHelper.startPage(ratio.getPage(), ratio.getRows());
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
 		this.searchRef(example,ratio);
-//		if(!StringUtils.isBlank(ratio.getRatioNumber())){
-//			example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%");
-//		}
-//		if(!StringUtils.isBlank(ratio.getRatioName())){
-//			example.createCriteria().andFeeNameLike("%"+ratio.getRatioName()+"%");
-//		}
-//		if(!StringUtils.isBlank(ratio.getCreateUser())){
-//			example.createCriteria().andCreateUserLike("%"+ratio.getCreateUser()+"%");
-//		}
-//		if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
-//			example.createCriteria().andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
-//		}
-//		if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
-//			example.createCriteria().andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
-//		}
-//		if(!StringUtils.isBlank(ratio.getAuditStatus())){
-//			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
-//		}
-//		if(!StringUtils.isBlank(ratio.getRatioStatus())){
-//			if(ratio.getRatioStatus().equals("0")){//0生效 1失效 2作废 3未生效
-//				example.createCriteria()
-//				.andEffectStartTimeGreaterThanOrEqualTo(new Date())
-//				.andEffectEndTimeLessThanOrEqualTo(new Date());
-//			}else if(ratio.getRatioStatus().equals("1")){
-//				 example.createCriteria()
-//				.andEffectStartTimeLessThan(new Date())
-//				.andEffectEndTimeGreaterThan(new Date());
-//			}else if(ratio.getRatioStatus().equals("2")){
-//				 example.createCriteria().andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
-//			}else if(ratio.getRatioStatus().equals("3")){
-//				 example.createCriteria().andStatusEqualTo(SettlementStatus.AuditWait.getCode());
-//			}
-//		}
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
-
-		this.resetStatus(list);
 		printInfoMes("查询 结算比例数量 {}", list.size());
 		return new PageInfo<>(list);
 	}
@@ -111,7 +76,6 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
         titles.add("创建时间");
         titles.add("创建人");
         titles.add("比列状态");
-//        titles.add("审核状态");
         titles.add("备注");
         titles.add("比例(%)");
         titles.add("金额（元）");
@@ -122,43 +86,8 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		PageHelper.startPage(ratio.getPage(), ratio.getRows());
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
 		this.searchRef(example,ratio);
-//		if(!StringUtils.isBlank(ratio.getRatioNumber())){
-//			example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%");
-//		}
-//		else if(!StringUtils.isBlank(ratio.getRatioName())){
-//			example.createCriteria().andFeeNameLike("%"+ratio.getRatioName()+"%");
-//		}else if(!StringUtils.isBlank(ratio.getCreateUser())){
-//			example.createCriteria().andCreateUserLike("%"+ratio.getCreateUser()+"%");
-//		}else if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
-//			example.createCriteria().andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
-//		}else if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
-//			example.createCriteria().andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
-//		}else if(!StringUtils.isBlank(ratio.getAuditStatus())){
-//			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
-//		}
-//		if(!StringUtils.isBlank(ratio.getRatioStatus())){
-//			if(ratio.getRatioStatus().equals("0")){//0生效 1失效 2作废 3未生效
-//				example.createCriteria()
-//						.andEffectStartTimeGreaterThanOrEqualTo(new Date())
-//						.andEffectEndTimeLessThanOrEqualTo(new Date());
-//			}else if(ratio.getRatioStatus().equals("1")){
-//				example.createCriteria()
-//						.andEffectStartTimeLessThan(new Date())
-//						.andEffectEndTimeGreaterThan(new Date());
-//			}else if(ratio.getRatioStatus().equals("2")){
-//				example.createCriteria().andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
-//			}else if(ratio.getRatioStatus().equals("3")){
-//				example.createCriteria().andStatusEqualTo(SettlementStatus.AuditWait.getCode());
-//			}
-//		}
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
-		this.resetStatus(list);
-//		for (int i = 0; i < list.size(); i++) {
-//			list.get(i).setStatus(status);(ContractStatus.getDesc(list.get(i).getContractStatus()));
-//		}
        for(int i=0; i<list.size();i++){
-
-
            row=new ArrayList<>();
            row.add(i+1);
            row.add(list.get(i).getRatioNumber());
@@ -166,7 +95,6 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
            row.add(DateUtils.dateToDateTime(list.get(i).getEffectStartTime())+"———"+DateUtils.dateToDateTime(list.get(i).getEffectStartTime()));
            row.add(DateUtils.dateToDateTime(list.get(i).getCreateTime()));
            row.add(list.get(i).getCreateUser());
-//           row.add("有问题 待确认");
            row.add(SettlementStatus.getDesc(list.get(i).getStatus()));
            row.add(list.get(i).getRemark());
            row.add(list.get(i).getRatio());
@@ -183,32 +111,8 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		}		
 	}
 
-	private void resetStatus(List<SettlementRatioInfo> list) {
-
-		for (SettlementRatioInfo e : list) {
-			if (!SettlementStatus.AuditCAN.getCode().equals(e.getStatus()) &&
-					!SettlementStatus.CANDecline.getCode().equals(e.getStatus())) {
-
-				if (SettlementStatus.AuditPass.getCode().equals(e.getStatus())) {
-
-					if (this.datecompare(e.getEffectStartTime())>=0 && this.datecompare(e.getEffectEndTime())<= 0){
-
-						e.setStatus(SettlementStatus.Effective.getCode());
-					} else if (this.datecompare(e.getEffectStartTime())<=0) {
-
-						e.setStatus(SettlementStatus.EffectiveWait.getCode());
-					}
-				}else if (this.datecompare(e.getEffectEndTime())>=0) {
-
-					e.setStatus(SettlementStatus.Invalid.getCode());
-				}
-			}
-		}
-	}
-
 	@Override
 	public boolean insertOrupdateSettlementRatio(SettlementRatioInfo settlementRatioSEO) {
-
 
 		int flag = 0;
 		if (settlementRatioSEO != null) {
@@ -220,7 +124,16 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 				settlementRatioSEO.setCreateTime(new Date());
 				settlementRatioSEO.setUpdateTime(new Date());
 				settlementRatioSEO.setCreateUser(auditPersion);
-				settlementRatioSEO.setStatus(SettlementStatus.AuditWait.getCode());// 新增未待审核
+				// 新增未待审核
+				// 当前时间大于结束时间作废
+				if (this.datecompare(settlementRatioSEO.getEffectEndTime())>0) {
+
+					settlementRatioSEO.setStatus(SettlementStatus.AuditCAN.getCode());
+				} else {
+
+					settlementRatioSEO.setStatus(SettlementStatus.AuditWait.getCode());
+				}
+				// 新增未待审核
 				settlementRatioSEO.setRatioNumber(getRatioNumber());
 				try {
 					flag = settlementRatioInfoMapper.insertSelective(settlementRatioSEO);
@@ -230,6 +143,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 			} else {
 				settlementRatioSEO.setUpdateTime(new Date());
 				settlementRatioSEO.setCreateUser(auditPersion);
+				settlementRatioSEO.setStatus(SettlementStatus.AuditWait.getCode());
 				try {
 					SettlementRatioInfoExample example = new SettlementRatioInfoExample();
 					example.createCriteria().andRatioNumberEqualTo(settlementRatioSEO.getRatioNumber());
@@ -246,8 +160,6 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 
 		return false;
 	}
-	
-	
 
 	@Override
 	public boolean copySettlementRatio(String ratioNumber) {
@@ -273,7 +185,6 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		return false;
 	}
 
-	
 	@Override
 	public SettlementRatioAudit getSettlementRatio(String ratioNumber) {
 		
@@ -294,17 +205,15 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		res.setAuditInfo(auList);
 		return res;
 	}
-	
-	
-	
-	
+
 	@Override
 	public boolean cancelledSettlementRatio(String ratioNumber) {
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
 		example.createCriteria().andRatioNumberEqualTo(ratioNumber);
 		SettlementRatioInfo record = new SettlementRatioInfo();
-		record.setStatus(SettlementStatus.AuditCAN.getCode());//作废
-	    int  falg = 	settlementRatioInfoMapper.updateByExampleSelective(record, example);
+		record.setStatus(SettlementStatus.AuditCAN.getCode());
+		//作废
+	    int  falg = settlementRatioInfoMapper.updateByExampleSelective(record, example);
 	    if(falg >  0 ){
 			return true;
 		}
@@ -315,8 +224,9 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	public Map<String, String> getCostNames() {
 		Map<String, String> map = new HashMap<>();
 		map.put("01", "设计费");
-		map.put("02", "施工费");
-		map.put("03", "测试费");
+		map.put("02", "产品服务费");
+		map.put("03", "施工管理费");
+		map.put("04", "合同保证金");
 		return map;
 	}
 
@@ -324,16 +234,16 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	@Transactional(rollbackFor = Exception.class)
 	public boolean batchcCheckSettlementRatio(List<String> ratioNumbers,String auditStatus,String auditCase) {
 
-		
 		for (int i = 0; i < ratioNumbers.size(); i++) {
 				//添加审核记录表
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 				String auditPersion = userVO == null ? "" : userVO.getUsername();
+				String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 				String companyId = userVO==null?"":userVO.getCompanyID();
 				String ratioNumber = String.valueOf(ratioNumbers.get(i));
 				PcAuditInfo record = new PcAuditInfo("4", "2",
 						auditPersion, auditStatus, new Date(),
-						companyId, auditCase, String.valueOf(ratioNumbers.get(i)));
+						companyId, auditCase, String.valueOf(ratioNumbers.get(i)), new Date(), auditAccount);
 				//插入审核记录
 				pcAuditInfoMapper.insertSelective(record);
 				//修改状态
@@ -346,19 +256,29 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 			if (settlementRatioInfo == null) {
 				return false;
 			}
+			// 待审核，申请作废，审批
 			if (settlementRatioInfo.getStatus().equals(SettlementStatus.CANDecline.getCode())) {
-
 				if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
-
 					recordT.setStatus(SettlementStatus.AuditCAN.getCode());
 				} else {
-					recordT.setStatus(auditStatus);
+					recordT.setStatus(SettlementStatus.AuditPass.getCode());
 				}
-			} else {
-				recordT.setStatus(auditStatus);
+			} else if (settlementRatioInfo.getStatus().equals(SettlementStatus.AuditWait.getCode())){
+				if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
+					// 没到有效期 待生效
+					if (this.datecompare(settlementRatioInfo.getEffectStartTime())<0) {
+						recordT.setStatus(SettlementStatus.EffectiveWait.getCode());
+					}
+					// 在有效期 生效
+					if (this.datecompare(settlementRatioInfo.getEffectStartTime())>=0 && this.datecompare(settlementRatioInfo.getEffectEndTime())<= 0) {
+						recordT.setStatus(SettlementStatus.Effective.getCode());
+					}
+				} else {
+					recordT.setStatus(SettlementStatus.AuditCAN.getCode());
+				}
 			}
-				settlementRatioInfoMapper.updateByExampleSelective(recordT, example);
-				return true;
+			settlementRatioInfoMapper.updateByExampleSelective(recordT, example);
+			return true;
 		}
 		return false;
 	}
@@ -367,7 +287,6 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	
 	/**
 	 * 获取6-10 的随机位数数字
-	 * @param length	想要生成的长度
 	 * @return result
 	 */
 	public synchronized static String getRatioNumber() {
@@ -406,7 +325,6 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		return resList;
 	}
 
-
 	private void searchRef (SettlementRatioInfoExample example,SettlementRatioSEO ratio) {
 
 		if(!StringUtils.isBlank(ratio.getRatioNumber())){
@@ -427,36 +345,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 
 		if(!StringUtils.isEmpty(ratio.getRatioStatus())){
 			//1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
-
-			// 生效
-			if(SettlementStatus.Effective.getCode().equals(ratio.getRatioStatus())){
-				example.createCriteria()
-						.andStatusEqualTo(SettlementStatus.AuditPass.getCode())
-						.andEffectStartTimeLessThanOrEqualTo(new Date())
-						.andEffectEndTimeGreaterThanOrEqualTo(new Date());
-				// 失效
-			}else if(SettlementStatus.Invalid.getCode().equals(ratio.getRatioStatus())){
-				example.createCriteria()
-						.andEffectEndTimeLessThan(new Date());
-				// 待生效
-			}else if(SettlementStatus.EffectiveWait.getCode().equals(ratio.getRatioStatus())){
-				example.createCriteria()
-						.andEffectEndTimeLessThan(new Date())
-						.andStatusEqualTo(SettlementStatus.AuditPass.getCode());
-				// 已作废
-			}else if(SettlementStatus.AuditCAN.getCode().equals(ratio.getRatioStatus())){
-				example.createCriteria()
-						.andStatusEqualTo(SettlementStatus.AuditCAN.getCode());
-				// 申请作废
-			}else if (SettlementStatus.CANDecline.getCode().equals(ratio.getRatioStatus())){
-				example.createCriteria()
-						.andStatusEqualTo(SettlementStatus.CANDecline.getCode());
-
-				// 待审核
-			}else if (SettlementStatus.AuditWait.getCode().equals(ratio.getRatioStatus())){
-				example.createCriteria()
-						.andStatusEqualTo(SettlementStatus.AuditWait.getCode());
-			}
+			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
 		}
 	}
 

@@ -15,7 +15,7 @@
     <select id="findById" resultMap="PcApplyInfoVo" parameterType="int">
         select info.id, info.company_id, info.apply_type, info.apply_date, info.apply_thing_type, info.company_role, info.company_name,
         info.city_code, info.area_code, info.province_code, info.contact_name, info.contact_phone, info.is_delete,
-		role.role_name, province.province_name, city.city_name, area.area_name, info.transact_type
+		role.role_name, province.province_name, city.city_name, area.area_name, info.transact_type, info.email
         from pc_apply_info info
         left join user_role_set role on info.company_role = role_code
         left join province province on info.province_code = province.province_code
