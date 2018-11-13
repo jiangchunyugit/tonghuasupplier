@@ -48,6 +48,8 @@ public class CloudServiceImpl implements CloudService {
     String sendEMail;
     @Value("${shanghai.smallSchedulingUrl}")
     String smallSchedulingUrl;
+    @Value("${shanghai.priceUrl}")
+    String priceUrl;
     @Value("${message.remindConsumerUrl}")
     String remindConsumerUrl;
 
@@ -124,6 +126,11 @@ public class CloudServiceImpl implements CloudService {
 
     private String invokeRemoteJuRanMethod(String url, Integer status, Integer limit, String decorateCompany) {
         String result = restTemplate.getForObject(url, String.class, status, limit, decorateCompany);
+        return result;
+    }
+
+    private String invokeRemoteShangHaiPriceMethod(String url) {
+        String result = restTemplate.getForObject(url, String.class);
         return result;
     }
 
@@ -363,6 +370,23 @@ public class CloudServiceImpl implements CloudService {
         }catch (Exception e){
             e.printStackTrace();
             return buildFailResult();
+        }
+        return result;
+    }
+
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    @Override
+    public String getShangHaiPriceDetail(String designId) {
+        String result = null;
+        try {
+            result = invokeRemoteShangHaiPriceMethod(priceUrl+designId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
         }
         return result;
     }

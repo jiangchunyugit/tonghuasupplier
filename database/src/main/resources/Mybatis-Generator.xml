@@ -124,8 +124,8 @@
         <!--<table tableName="project_quotation" domainObjectName="ProjectQuotation"/>-->
         <!--<table tableName="project_quotation_rooms" domainObjectName="ProjectQuotationRooms"/>-->
         <!--<table tableName="project_quotation_rooms_construct" domainObjectName="ProjectQuotationRoomsConstruct"/>-->
-        <!--<table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardConstruct"/>-->
-        <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftConstruct"/>-->
+        <!--<table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardDecoration"/>-->
+        <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftDecoration"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->

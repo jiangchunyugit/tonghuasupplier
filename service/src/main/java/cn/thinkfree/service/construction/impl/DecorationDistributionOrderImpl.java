@@ -49,9 +49,9 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
      * @return
      */
     @Override
-    public MyRespBundle<DecorationOrderCommonVo> getOrderList(int pageNum, int pageSize, String projectNo, String appointmentTime,
+    public MyRespBundle<DecorationOrderCommonVo> getOrderList(String companyNo,int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                               String addressDetail, String owner, String phone, String orderStage) {
-        PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(pageNum,pageSize,projectNo,appointmentTime,
+        PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(companyNo,pageNum,pageSize,projectNo,appointmentTime,
                  addressDetail, owner,phone,orderStage);
         DecorationOrderCommonVo decorationOrderCommonVo = new DecorationOrderCommonVo();
         decorationOrderCommonVo.setCountPageNum(pageInfo.getSize());
@@ -184,7 +184,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
 
         // 改变订单状态
         MyRespBundle<String> r = constructionStateServiceB.constructionState(orderNo,1);
-        if (ResultMessage.SUCCESS.code.equals(r.getCode())){
+        if (!ResultMessage.SUCCESS.code.equals(r.getCode())){
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能分配施工人员");
         }
 
