@@ -8,6 +8,7 @@ import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.mapper.OrderUserMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.OtherService;
 import cn.thinkfree.service.construction.vo.PrecisionPriceVo;
 import com.github.pagehelper.Page;
@@ -37,6 +38,9 @@ public class OtherServiceImpl implements OtherService {
     @Autowired
     EmployeeMsgMapper employeeMsgMapper;
 
+    @Autowired
+    OrderListCommonService orderListCommonService;
+
     /**
      * 精准报价
      * @param companyNo
@@ -57,7 +61,7 @@ public class OtherServiceImpl implements OtherService {
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
-        example.createCriteria().andStatusEqualTo(1);
+        example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<PrecisionPriceVo> listVo = new ArrayList<>();
@@ -76,10 +80,10 @@ public class OtherServiceImpl implements OtherService {
         }
 
         // 所属地区 & 项目地址 & 预约日期
-        List<Project> list1 = getProjectInfo(listProjectNo);
+        List<Project> list1 = orderListCommonService.getProjectInfo(listProjectNo);
 
         // 设计师
-        List<Map<String, String>> list2 = getEmployeeInfo(listProjectNo, "CD");
+        List<Map<String, String>> list2 = orderListCommonService.getEmployeeInfo(listProjectNo, "CD");
 
         continueOut:
         for (ConstructionOrder constructionOrder : list) {
@@ -109,44 +113,4 @@ public class OtherServiceImpl implements OtherService {
         pageInfo.setTotal(p.getPages());
         return RespData.success(pageInfo);
     }
-
-
-    /**
-     * 查询项目信息
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public List<Project> getProjectInfo(List<String> listProjectNo) {
-        ProjectExample example = new ProjectExample();
-        example.createCriteria().andProjectNoIn(listProjectNo);
-        return projectMapper.selectByExample(example);
-    }
-
-
-    /**
-     * 设计师
-     *
-     * @param listProjectNo
-     * @return
-     */
-    public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
-        OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
-        List<OrderUser> list = orderUserMapper.selectByExample(example);
-        List<Map<String, String>> listName = new ArrayList<>();
-        for (OrderUser orderUser : list) {
-            EmployeeMsgExample example2 = new EmployeeMsgExample();
-            example2.createCriteria().andUserIdEqualTo(orderUser.getUserId()).andRoleCodeEqualTo(role).andEmployeeStateEqualTo(1);
-            List<EmployeeMsg> listEm = employeeMsgMapper.selectByExample(example2);
-            for (EmployeeMsg employeeMsg : listEm) {
-                Map<String, String> map = new HashMap<>();
-                map.put("projectNo", orderUser.getProjectNo());
-                map.put("name", employeeMsg.getRealName());
-                listName.add(map);
-            }
-        }
-        return listName;
-    }
-
 }
