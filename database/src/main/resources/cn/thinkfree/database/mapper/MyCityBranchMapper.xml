@@ -6,6 +6,7 @@
     <!--分公司名称VO-->
     <resultMap id="CityBranchListResultMap" type="cn.thinkfree.database.vo.CityBranchVO" extends="BaseResultMap">
         <result column="company_name" jdbcType="VARCHAR" property="branchCompanyNm" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityNm" />
     </resultMap>
 
     <!--店面信息VO-->
@@ -50,7 +51,19 @@
     </select>
 
     <!--查看城市分站详细信息带有店面信息-->
-    <select id="selectBranchDetails" parameterType="java.lang.Integer" resultMap="BranchDetailsResultMap">
+    <select id="selectBranchDetails" parameterType="java.lang.Integer" resultMap="CityBranchListResultMap">
+        SELECT
+        pcb.*,
+        pbc.company_name,
+        C.city_name
+        FROM
+        pc_city_branch pcb
+        LEFT JOIN pc_branch_company pbc ON pbc.ID = pcb.branch_comp_id
+        LEFT JOIN city C ON C.city_code = pcb.city_code
+        WHERE
+        pcb.ID =#{id,jdbcType=INTEGER}
+    </select>
+    <select id="selectBranchDetails_bk" parameterType="java.lang.Integer" resultMap="CityBranchListResultMap">
         SELECT
             pcb.*,
             pbc.company_name,

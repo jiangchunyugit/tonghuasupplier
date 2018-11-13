@@ -18,6 +18,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 分公司（省分站）
+ */
 @Service
 public class BranchCompanyServiceImpl implements BranchCompanyService {
 
@@ -84,11 +89,9 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     }
 
     @Override
-    public BranchCompanyVO branchCompanyById(Integer id) {
+    public BranchCompany branchCompanyById(Integer id) {
 
-        BranchCompanyVO branchCompanyVO = new BranchCompanyVO();
-        SpringBeanUtil.copy(branchCompanyMapper.selectByPrimaryKey(id),branchCompanyVO);
-        return branchCompanyVO;
+        return branchCompanyMapper.selectByPrimaryKey(id);
     }
 
     @Override
@@ -99,6 +102,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     @Override
     public SiteInfo getSiteInfo() {
 
+        // todo jiangchunyu
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         if (userVO.getPcUserInfo() == null) {

@@ -113,8 +113,8 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="选择城市站点id")
-    @NotNull(message = "埃森哲城市分站不可为空",groups = {Severitys.Insert.class})
+    @ApiModelProperty(value="埃森哲数据作废")
+//    @NotNull(message = "埃森哲城市分站不可为空",groups = {Severitys.Insert.class})
     private Integer cityBranchEbsid;
 
     /**
@@ -150,7 +150,7 @@ public class CityBranch extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="埃森哲分公司id")
+    @ApiModelProperty(value="埃森哲数据作废")
     private Integer branchCompEbsid;
 
     /**
@@ -188,6 +188,7 @@ public class CityBranch extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="cityCode城市编码")
+    @NotNull(message = "城市code不可为空",groups = {Severitys.Insert.class})
     private Short cityCode;
 
     /**
