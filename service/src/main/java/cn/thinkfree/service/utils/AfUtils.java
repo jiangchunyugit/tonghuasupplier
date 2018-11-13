@@ -234,4 +234,17 @@ public class AfUtils {
             return super.getElementResult();
         }
     }
+
+    public static void sendChangeMoney(String url, String orderNo, String money, String remark) {
+        Map<String, String> requestMap = new HashMap<>(2);
+        requestMap.put("contractId", orderNo);
+        requestMap.put("feeAmount", money);
+        requestMap.put("feeName", "变更单");
+        requestMap.put("remark", remark);
+        LOGGER.info("获取用户信息，requestMap：{}", JSONUtil.bean2JsonStr(requestMap));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(url, requestMap);
+        LOGGER.info("获取用户信息， httpRespMsg：{}", JSONUtil.bean2JsonStr(httpRespMsg));
+        Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
+        LOGGER.info("获取用户信息， responseMap：{}", JSONUtil.bean2JsonStr(responseMap));
+    }
 }

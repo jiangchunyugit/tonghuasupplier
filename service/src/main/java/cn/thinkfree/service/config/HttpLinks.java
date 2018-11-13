@@ -19,4 +19,12 @@ public class HttpLinks {
      * 获取用户信息链接
      */
     private String userCenterGetUserMsg;
+    /**
+     * 发送变更单金额
+     */
+    private String createFee;
+    /**
+     * 发送审批消息
+     */
+    private String messageSave;
 }
