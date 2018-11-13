@@ -704,63 +704,63 @@ public class ProjectQuotationRoomsConstructExample {
             return (Criteria) this;
         }
 
-        public Criteria andLimitIsNull() {
-            addCriterion("limit is null");
+        public Criteria andLimitsIsNull() {
+            addCriterion("limits is null");
             return (Criteria) this;
         }
 
-        public Criteria andLimitIsNotNull() {
-            addCriterion("limit is not null");
+        public Criteria andLimitsIsNotNull() {
+            addCriterion("limits is not null");
             return (Criteria) this;
         }
 
-        public Criteria andLimitEqualTo(Integer value) {
-            addCriterion("limit =", value, "limit");
+        public Criteria andLimitsEqualTo(Integer value) {
+            addCriterion("limits =", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitNotEqualTo(Integer value) {
-            addCriterion("limit <>", value, "limit");
+        public Criteria andLimitsNotEqualTo(Integer value) {
+            addCriterion("limits <>", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitGreaterThan(Integer value) {
-            addCriterion("limit >", value, "limit");
+        public Criteria andLimitsGreaterThan(Integer value) {
+            addCriterion("limits >", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitGreaterThanOrEqualTo(Integer value) {
-            addCriterion("limit >=", value, "limit");
+        public Criteria andLimitsGreaterThanOrEqualTo(Integer value) {
+            addCriterion("limits >=", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitLessThan(Integer value) {
-            addCriterion("limit <", value, "limit");
+        public Criteria andLimitsLessThan(Integer value) {
+            addCriterion("limits <", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitLessThanOrEqualTo(Integer value) {
-            addCriterion("limit <=", value, "limit");
+        public Criteria andLimitsLessThanOrEqualTo(Integer value) {
+            addCriterion("limits <=", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitIn(List<Integer> values) {
-            addCriterion("limit in", values, "limit");
+        public Criteria andLimitsIn(List<Integer> values) {
+            addCriterion("limits in", values, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitNotIn(List<Integer> values) {
-            addCriterion("limit not in", values, "limit");
+        public Criteria andLimitsNotIn(List<Integer> values) {
+            addCriterion("limits not in", values, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitBetween(Integer value1, Integer value2) {
-            addCriterion("limit between", value1, value2, "limit");
+        public Criteria andLimitsBetween(Integer value1, Integer value2) {
+            addCriterion("limits between", value1, value2, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitNotBetween(Integer value1, Integer value2) {
-            addCriterion("limit not between", value1, value2, "limit");
+        public Criteria andLimitsNotBetween(Integer value1, Integer value2) {
+            addCriterion("limits not between", value1, value2, "limits");
             return (Criteria) this;
         }
 

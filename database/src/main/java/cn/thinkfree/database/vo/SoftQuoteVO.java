@@ -32,4 +32,10 @@ public class SoftQuoteVO {
     private Integer usedQuantity;
     @ApiModelProperty("总价")
     private Integer totalPrice;
+    @ApiModelProperty(value = "0,否 1,是")
+    private Integer isDelete = 0;
+    @ApiModelProperty(value = "0,否 1,是")
+    private Integer isAdd = 0;
+    @ApiModelProperty(value = "0,否 1,是")
+    private Integer isEdit = 0;
 }

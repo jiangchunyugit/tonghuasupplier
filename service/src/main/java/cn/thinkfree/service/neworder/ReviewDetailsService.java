@@ -1,5 +1,7 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
@@ -43,7 +45,7 @@ public interface ReviewDetailsService {
      * @Param
      * @return
      **/
-    List<SoftQuoteVO> saveSoftQuote(SoftQuoteVO softQuoteVO);
+    MyRespBundle<String> saveSoftQuote(SoftQuoteVO softQuoteVO);
     /**
      * @Author jiang
      * @Description 新增硬保价
@@ -51,7 +53,7 @@ public interface ReviewDetailsService {
      * @Param
      * @return
      **/
-    List<HardQuoteVO> saveHardQuote(HardQuoteVO hardQuoteVO);
+    MyRespBundle<String> saveHardQuote(HardQuoteVO hardQuoteVO);
     /**
      * @Author jiang
      * @Description 新增施工基础保价
@@ -59,5 +61,12 @@ public interface ReviewDetailsService {
      * @Param
      * @return
      **/
-    List<BasisConstructionVO> saveBasisConstructionVO(BasisConstructionVO basisConstructionVO);
+    MyRespBundle<String> saveBasisConstructionVO(BasisConstructionVO basisConstructionVO);
+
+    /**
+     * 获取精准报价
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<List<QuotationVo>> getPriceDetail(String projectNo);
 }

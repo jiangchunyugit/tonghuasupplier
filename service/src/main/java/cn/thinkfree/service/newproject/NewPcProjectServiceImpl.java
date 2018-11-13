@@ -11,7 +11,9 @@ import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.neworder.ReviewDetailsService;
 import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -65,6 +67,10 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     ProjectQuotationRoomsHardDecorationMapper hardDecorationMapper;
     @Autowired
     ProjectQuotationRoomsSoftDecorationMapper softDecorationMapper;
+    @Autowired
+    ProjectQuotationCheckMapper checkMapper;
+    @Autowired
+    ReviewDetailsService reviewDetailsService;
 
 
     /**
@@ -194,19 +200,6 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     }
 
     /**
-     * PC获取项目详情接口--支付信息
-     *
-     * @param projectNo
-     * @return
-     */
-    @Override
-    public MyRespBundle<PaymentVo> getPcProjectPayment(String projectNo) {
-        //组合支付信息
-        PaymentVo paymentVo;
-        return null;
-    }
-
-    /**
      * PC获取项目详情接口--评价管理
      *
      * @param projectNo
@@ -323,4 +316,6 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         return RespData.success();
     }
+
+
 }

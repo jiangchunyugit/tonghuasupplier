@@ -15,7 +15,7 @@ public interface DecorationDistributionOrder {
      *
      * @return
      */
-    MyRespBundle<DecorationOrderCommonVo> getOrderList(int pageNum, int pageSize, String projectNo, String appointmentTime,
+    MyRespBundle<DecorationOrderCommonVo> getOrderList(String companyNo,int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                        String addressDetail, String owner, String phone, String orderStage);
 
     /**

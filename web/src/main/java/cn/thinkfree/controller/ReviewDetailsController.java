@@ -3,6 +3,7 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
@@ -23,98 +24,38 @@ import java.util.List;
  * @Date: 2018/11/13 10:24
  * @Description: 审核详情页
  */
-@Api(tags = "审核详情页")
+@Api(tags = "PC-精准报价相关接口")
 @RestController
 @RequestMapping(value = "reviewDetails")
 public class ReviewDetailsController extends AbsBaseController {
     @Autowired
     private ReviewDetailsService reviewDetailsService;
-    /**
-     * @return
-     * @Author jiang
-     * @Description 基础施工详情
-     * @Date
-     * @Param
-     **/
-    @RequestMapping(value = "getBasisConstruction", method = RequestMethod.POST)
-    @ApiOperation(value = "基础施工详情", notes = "")
-    public MyRespBundle<BasisConstructionVO> getBasisConstruction(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                                  @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType) {
-        if (null == projectNo || "".equals(projectNo)) {
-            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
-        }
-        if (null == roomType || "".equals(roomType)) {
-            return sendJsonData(ResultMessage.ERROR, "房间类型为空");
-        }
-        List<BasisConstructionVO> basisConstructionVOList = reviewDetailsService.getBasisConstruction(projectNo,roomType);
-        return sendJsonData(ResultMessage.SUCCESS, basisConstructionVOList);
+
+    @RequestMapping(value = "getPriceDetail", method = {RequestMethod.GET, RequestMethod.POST})
+    @ApiOperation("获取精准报价")
+    public MyRespBundle<List<QuotationVo>> getPriceDetail(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号  1223098338391", name = "projectNo") String projectNo) {
+        return reviewDetailsService.getPriceDetail(projectNo);
     }
 
     /**
      * @return
      * @Author jiang
-     * @Description 硬装保价详情
-     * @Date
-     * @Param
-     **/
-    @RequestMapping(value = "getHardQuote", method = RequestMethod.POST)
-    @ApiOperation(value = "硬装保价详情", notes = "")
-    public MyRespBundle<HardQuoteVO> getHardQuote(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                  @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType) {
-        if (null == projectNo || "".equals(projectNo)) {
-            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
-        }
-        if (null == roomType || "".equals(roomType)) {
-            return sendJsonData(ResultMessage.ERROR, "房间类型为空");
-        }
-        List<HardQuoteVO> hardQuoteVOList = reviewDetailsService.getHardQuote(projectNo,roomType);
-        return sendJsonData(ResultMessage.SUCCESS, hardQuoteVOList);
-    }
-
-    /**
-     * @return
-     * @Author jiang
-     * @Description 软装保价详情
-     * @Date
-     * @Param
-     **/
-    @RequestMapping(value = "getSoftQuote", method = RequestMethod.POST)
-    @ApiOperation(value = "软装保价详情", notes = "")
-    public MyRespBundle<SoftQuoteVO> getSoftQuote(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                  @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType) {
-        if (null == projectNo || "".equals(projectNo)) {
-            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
-        }
-        if (null == roomType || "".equals(roomType)) {
-            return sendJsonData(ResultMessage.ERROR, "房间类型为空");
-        }
-        List<SoftQuoteVO> softQuoteVOList = reviewDetailsService.getSoftQuote(projectNo,roomType);
-        return sendJsonData(ResultMessage.SUCCESS, softQuoteVOList);
-    }
-
-    /**
-     * @return
-     * @Author jiang
-     * @Description 软装保价详情
+     * @Description 新增软装保价
      * @Date
      * @Param
      **/
     @RequestMapping(value = "saveSoftQuote", method = RequestMethod.POST)
     @ApiOperation(value = "新增软装保价", notes = "")
-    public MyRespBundle<SoftQuoteVO> saveSoftQuote(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                   @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
-                                                   @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
-                                                   @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
-                                                   @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
-                                                   @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
-                                                   @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
-                                                   @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice){
-        if (null == projectNo || "".equals(projectNo)) {
-            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
-        }
-        if (null == roomType || "".equals(roomType)) {
-            return sendJsonData(ResultMessage.ERROR, "房间类型为空");
-        }
+    public MyRespBundle<String> saveSoftQuote(
+            @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
+            @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+            @RequestParam(name = "materialName") @ApiParam(value = "产品名称", name = "materialName") String materialName,
+            @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
+            @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
+            @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
+            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
+            @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
+            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice) {
         SoftQuoteVO softQuoteVO = new SoftQuoteVO();
         softQuoteVO.setProjectNo(projectNo);
         softQuoteVO.setRoomType(roomType);
@@ -124,34 +65,28 @@ public class ReviewDetailsController extends AbsBaseController {
         softQuoteVO.setUnitPrice(unitPrice);
         softQuoteVO.setUsedQuantity(usedQuantity);
         softQuoteVO.setTotalPrice(totalPrice);
-        List<SoftQuoteVO> softQuoteVOList = reviewDetailsService.saveSoftQuote(softQuoteVO);
-        return sendJsonData(ResultMessage.SUCCESS, softQuoteVOList);
+        return reviewDetailsService.saveSoftQuote(softQuoteVO);
     }
-
 
     /**
      * @return
      * @Author jiang
-     * @Description 硬装保价详情
+     * @Description 新增硬装保价
      * @Date
      * @Param
      **/
     @RequestMapping(value = "saveHardQuote", method = RequestMethod.POST)
     @ApiOperation(value = "新增硬装保价", notes = "")
-    public MyRespBundle<HardQuoteVO> saveHardQuote(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                   @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
-                                                   @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
-                                                   @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
-                                                   @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
-                                                   @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
-                                                   @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
-                                                   @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice){
-        if (null == projectNo || "".equals(projectNo)) {
-            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
-        }
-        if (null == roomType || "".equals(roomType)) {
-            return sendJsonData(ResultMessage.ERROR, "房间类型为空");
-        }
+    public MyRespBundle<String> saveHardQuote(
+            @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
+            @RequestParam(name = "materialName") @ApiParam(value = "产品名称", name = "materialName") String materialName,
+            @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+            @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
+            @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
+            @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
+            @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
+            @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
+            @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice) {
         HardQuoteVO hardQuoteVO = new HardQuoteVO();
         hardQuoteVO.setProjectNo(projectNo);
         hardQuoteVO.setRoomType(roomType);
@@ -161,42 +96,33 @@ public class ReviewDetailsController extends AbsBaseController {
         hardQuoteVO.setUnitPrice(unitPrice);
         hardQuoteVO.setUsedQuantity(usedQuantity);
         hardQuoteVO.setTotalPrice(totalPrice);
-        List<HardQuoteVO> hardQuoteVOList = reviewDetailsService.saveHardQuote(hardQuoteVO);
-        return sendJsonData(ResultMessage.SUCCESS, hardQuoteVOList);
+        return reviewDetailsService.saveHardQuote(hardQuoteVO);
     }
 
 
     /**
      * @return
      * @Author jiang
-     * @Description 新增施工保价
+     * @Description 新增基础施工保价
      * @Date
      * @Param
      **/
     @RequestMapping(value = "saveBasisConstruction", method = RequestMethod.POST)
-    @ApiOperation(value = "新增施工保价", notes = "")
-    public MyRespBundle<BasisConstructionVO> saveBasisConstruction(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
-                                                   @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
-                                                   @RequestParam(name = "constructCode") @ApiParam(value = "项目名称", name = "constructCode") String constructCode,
-                                                   @RequestParam(name = "constructName") @ApiParam(value = "项目说明", name = "constructName") String constructName,
-                                                   @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
-                                                   @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
-                                                   @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice){
-        if (null == projectNo || "".equals(projectNo)) {
-            return sendJsonData(ResultMessage.ERROR, "项目编号为空");
-        }
-        if (null == roomType || "".equals(roomType)) {
-            return sendJsonData(ResultMessage.ERROR, "房间类型为空");
-        }
+    @ApiOperation(value = "新增施工保价")
+    public MyRespBundle<String> saveBasisConstruction(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
+                                                      @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+                                                      @RequestParam(name = "constructCode") @ApiParam(value = "项目名称", name = "constructCode") String constructCode,
+                                                      @RequestParam(name = "constructName") @ApiParam(value = "项目说明", name = "constructName") String constructName,
+                                                      @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") Integer unitPrice,
+                                                      @RequestParam(name = "usedQuantity") @ApiParam(value = "数量", name = "usedQuantity") Integer usedQuantity,
+                                                      @RequestParam(name = "totalPrice") @ApiParam(value = "房间类型", name = "totalPrice") Integer totalPrice) {
         BasisConstructionVO basisConstructionVO = new BasisConstructionVO();
         basisConstructionVO.setProjectNo(projectNo);
         basisConstructionVO.setRoomType(roomType);
-
         basisConstructionVO.setUnitPrice(unitPrice);
         basisConstructionVO.setUsedQuantity(usedQuantity);
         basisConstructionVO.setTotalPrice(totalPrice);
-        List<BasisConstructionVO> hardQuoteVOList = reviewDetailsService.saveBasisConstructionVO(basisConstructionVO);
-        return sendJsonData(ResultMessage.SUCCESS, hardQuoteVOList);
+        return reviewDetailsService.saveBasisConstructionVO(basisConstructionVO);
     }
 
 }
