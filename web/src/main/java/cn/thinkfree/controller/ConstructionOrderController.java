@@ -7,6 +7,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.*;
 import cn.thinkfree.service.construction.impl.ConstrutionDistributionOrderImpl;
 import cn.thinkfree.service.construction.vo.*;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -42,6 +43,9 @@ public class ConstructionOrderController extends AbsBaseController {
     @Autowired
     DecorationOrderOperate decorationOrderOperate;
 
+    @Autowired
+    OtherService otherService;
+
 
 
 
@@ -66,7 +70,7 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("运营平台接口（施工派单-公司列表接口-含搜索公司）---->孙宇专用")
     @MyRespBody
     @RequestMapping(value = "getCityList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<DistributionOrderCityVo> getCityList(@RequestParam(required = false) @ApiParam(value = "公司名称")   String companyName){
+    public MyRespBundle<List<DistributionOrderCityVo>> getCityList(@RequestParam(required = false) @ApiParam(value = "公司名称")   String companyName){
 
         return construtionDistributionOrder.getCityList(companyName);
     }
@@ -142,5 +146,14 @@ public class ConstructionOrderController extends AbsBaseController {
         return decorationOrderOperate.getDecorationtOrderNum();
     }
 
+    @ApiOperation("装饰平台接口（精准报价列表）---->松辉专用")
+    @MyRespBody
+    @RequestMapping(value = "getPrecisionPriceList", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageInfo<PrecisionPriceVo>> getPrecisionPriceList(@RequestParam @ApiParam(value = "公司编号",required = true) String companyNo,
+                                                                          @RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+                                                                          @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
+
+        return otherService.getPrecisionPriceList(companyNo,pageNum,pageSize);
+    }
 
 }

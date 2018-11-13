@@ -184,7 +184,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
 
         // 改变订单状态
         MyRespBundle<String> r = constructionStateServiceB.constructionState(orderNo,1);
-        if (ResultMessage.SUCCESS.code.equals(r.getCode())){
+        if (!ResultMessage.SUCCESS.code.equals(r.getCode())){
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能分配施工人员");
         }
 
