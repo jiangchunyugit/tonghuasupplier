@@ -4,17 +4,21 @@ import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.exception.CommonException;
+import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.config.PdfConfig;
+import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
+import cn.thinkfree.service.utils.HttpUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +63,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfConfigSchemeService configSchemeService;
     @Autowired
     private AfSubRoleService subRoleService;
+    @Autowired
+    private NewOrderService orderService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -187,16 +193,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instance.setCreateUserId(userId);
         instance.setProjectNo(projectNo);
         instance.setConfigSchemeNo(configSchemeNo);
+        instance.setRemark(remark);
 
-        sendMessageToSub(configSchemeNo, orderUsers);
+        sendMessageToSub(configSchemeNo, projectNo, userId, orderUsers);
 
         if (approvalLogs.size() > 1) {
             instance.setCurrentApprovalLogNo(approvalLogs.get(1).getApprovalNo());
             instance.setStatus(AfConstants.APPROVAL_STATUS_START);
-            sendMessageToNext(approvalLogs.get(1).getUserId());
+            sendMessageToNext(projectNo, userId, approvalLogs.get(1).getUserId());
         } else {
             instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
-            executeSuccessAction(projectNo, scheduleSort, instance.getConfigNo(), instance.getConfigSchemeNo());
+            executeSuccessAction(instance);
         }
 
         insert(instance);
@@ -430,10 +437,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 // 结束审批流
                 instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
                 instance.setCurrentApprovalLogNo(null);
-                executeSuccessAction(instance.getProjectNo(), instance.getScheduleSort(), instance.getConfigNo(), instance.getConfigSchemeNo());
+                executeSuccessAction(instance);
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
-                sendMessageToNext(nextApprovalLog.getUserId());
+                sendMessageToNext(instance.getProjectNo(), userId, nextApprovalLog.getUserId());
             }
         } else {
             // 不同意
@@ -448,19 +455,25 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     /**
      * 给下一个审批人发送审批消息
-     * @param userId 审批人编号
+     * @param projectNo 项目编号
+     * @param sendUserId 发送消息用户
+     * @param subUserId 订阅消息用户
      */
-    private void sendMessageToNext(String userId) {
-
+    private void sendMessageToNext(String projectNo, String sendUserId, String subUserId) {
+        sendMessage(projectNo, sendUserId, subUserId, "有新的表单需要您审批！");
     }
 
     /**
      * 给订阅者发布消息
-     * @param configSchemeNo 订阅者
+     * @param projectNo 项目编号
+     * @param configSchemeNo 配置方案编号
+     * @param sendUserId 发送消息用户
+     * @param orderUsers 项目角色关系
      */
-    private void sendMessageToSub(String configSchemeNo, List<OrderUser> orderUsers) {
+    private void sendMessageToSub(String projectNo, String configSchemeNo, String sendUserId, List<OrderUser> orderUsers) {
         List<AfSubRole> subRoles = subRoleService.findByConfigSchemeNo(configSchemeNo);
-        if (subRoles != null) {
+        List<String> subUserIds = new ArrayList<>();
+        if (subRoles != null && !subRoles.isEmpty()) {
             for (AfSubRole subRole : subRoles) {
                 String userId = null;
                 for (OrderUser orderUser : orderUsers) {
@@ -473,28 +486,63 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     LOGGER.error("在项目，projectNo:{},中未查询到角色，roleId：{}", orderUsers.get(0), subRole.getRoleId());
                     throw new RuntimeException();
                 }
-                // TODO
+                subUserIds.add(userId);
             }
+            sendMessage(projectNo, sendUserId, subUserIds, "您有新的审批!");
         }
+    }
+
+    private void sendMessage(String projectNo, String sendUserId, String subUserId, String content) {
+        List<String> subUserIds = new ArrayList<>(1);
+        subUserIds.add(subUserId);
+        sendMessage(projectNo, sendUserId, subUserIds, content);
+    }
+
+    private void sendMessage(String projectNo, String sendUserId, List<String> subUserIds, String content) {
+        Map<String, String> requestMsg = new HashMap<>();
+        requestMsg.put("projectNo", projectNo);
+//        requestMsg.put("userNo", JSONUtil.bean2JsonStr(subUserIds));
+//        requestMsg.put("senderId", sendUserId);
+        requestMsg.put("userNo", "[123567]");
+        requestMsg.put("senderId", "123456");
+        requestMsg.put("content", content);
+        requestMsg.put("dynamicId", "0");
+        requestMsg.put("type", "3");
+        LOGGER.info("发送审批消息：requestMsg：{}", requestMsg);
+        HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
+        LOGGER.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
+        // TODO 错误判断
     }
 
     /**
      * 发送审批成功消息
-     * @param configNo 审批流配置编号
-     * @param configSchemeNo 审批流配置方案编号
+     * @param instance 审批流实例
      */
-    private void executeSuccessAction(String projectNo, Integer scheduleSort, String configNo, String configSchemeNo) {
-        if (AfConfigs.START_REPORT.configNo.equals(configNo)) {
-            schedulingService.projectStart(projectNo, scheduleSort);
-        } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(configNo)) {
-            schedulingService.completeBigScheduling(projectNo, scheduleSort);
+    private void executeSuccessAction(AfInstance instance) {
+        if (AfConfigs.START_REPORT.configNo.equals(instance.getConfigNo())) {
+            schedulingService.projectStart(instance.getProjectNo(), instance.getScheduleSort());
+        } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getProjectNo())) {
+            schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
+        } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
+            // TODO 发送变更金额
+//            sendChangeMoney(instance.getProjectNo(), instance.getData(), instance.getRemark());
         }
 
-        createPdf(projectNo, configNo, scheduleSort);
+        createPdf(instance.getProjectNo(), instance.getConfigNo(), instance.getScheduleSort());
+    }
+
+    private void sendChangeMoney(String projectNo, String data, String remark) {
+        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
+        String orderNo = constructionOrder.getOrderNo();
+
+        Map dataMap = JSONUtil.json2Bean(data, Map.class);
+        String money = (String) dataMap.get("money");
+
+        AfUtils.sendChangeMoney(httpLinks.getCreateFee(), orderNo, money, "+" + remark);
     }
 
     private void createPdf(String projectNo, String configNo, Integer scheduleSort) {
-//        FreemarkerUtils.savePdf();
+//        AfUtils.createPdf()
     }
 
     /**
