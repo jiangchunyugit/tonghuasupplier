@@ -211,6 +211,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         designCriteria.andProjectNoEqualTo(projectNo);
         designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("查无此设计订单");
+        }
         DesignerOrder designerOrder = designerOrders.get(0);
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放阶段信息
@@ -233,6 +236,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        if(designOrderPlayVo == null){
+            return RespData.error("设计订单的公司不存在!");
+        }
         List<PersionVo> persionList = new ArrayList<>();
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
         try {

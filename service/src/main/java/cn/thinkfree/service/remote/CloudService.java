@@ -103,4 +103,11 @@ public interface CloudService {
      * @return
      */
     RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO);
+
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    String getShangHaiPriceDetail(String designId);
 }
