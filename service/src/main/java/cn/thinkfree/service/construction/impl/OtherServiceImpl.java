@@ -64,6 +64,9 @@ public class OtherServiceImpl implements OtherService {
         example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        if (list.size() <= 0){
+            return RespData.error(ResultMessage.ERROR.code, "公司编号不符");
+        }
         List<PrecisionPriceVo> listVo = new ArrayList<>();
         pageInfo2.setList(list);
 
