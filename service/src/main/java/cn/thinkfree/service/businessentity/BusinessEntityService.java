@@ -15,12 +15,12 @@ public interface BusinessEntityService {
     /**
      * 添加经营主体
      */
-    int addBusinessEntity(BusinessEntity businessEntity);
+    int addBusinessEntity(BusinessEntityVO businessEntityVO);
 
     /**
      * 修改经营主体信息
      */
-    int updateBusinessEntity(BusinessEntity businessEntity);
+    int updateBusinessEntity(BusinessEntityVO businessEntityVO);
 
     /**
      * 查询经营主体信息

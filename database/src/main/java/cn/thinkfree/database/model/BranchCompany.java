@@ -40,7 +40,7 @@ public class BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="companyName分站名称")
+    @ApiModelProperty(value="companyName省分站名称")
     @NotBlank(message = "分公司名称不能为空",groups = {Severitys.Insert.class})
     private String companyName;
 
@@ -54,6 +54,7 @@ public class BranchCompany extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="provinceCode省份编码")
+    @NotNull(message = "省份code不能为空",groups = {Severitys.Insert.class})
     private Short provinceCode;
 
     /**
@@ -137,8 +138,8 @@ public class BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompEbsid选择分公司id")
-    @NotNull(message = "分公司ebsid",groups = {Severitys.Insert.class})
+    @ApiModelProperty(value="埃森哲字段暂时作废")
+//    @NotNull(message = "分公司ebsid",groups = {Severitys.Insert.class})
     private Integer branchCompEbsid;
 
     /**
