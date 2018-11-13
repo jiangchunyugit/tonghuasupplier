@@ -233,18 +233,20 @@ public class BuildConfigServiceImpl implements BuildConfigService {
 
     @Override
     public List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo) {
-        if(StringUtils.isBlank(companyId)){
-            throw new RuntimeException("companyId不能为空");
-        }
-        if(StringUtils.isBlank(cityStation)){
-            throw new RuntimeException("cityStation不能为空");
-        }
-        if(StringUtils.isBlank(storeNo)){
-            throw new RuntimeException("storeNo不能为空");
-        }
+//        if(StringUtils.isBlank(companyId)){
+//            throw new RuntimeException("companyId不能为空");
+//        }
+//        if(StringUtils.isBlank(cityStation)){
+//            throw new RuntimeException("cityStation不能为空");
+//        }
+//        if(StringUtils.isBlank(storeNo)){
+//            throw new RuntimeException("storeNo不能为空");
+//        }
         BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
         BuildSchemeConfigExample.Criteria criteria = configExample.createCriteria();
-        criteria.andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo).andDelStateEqualTo(2).andIsEnableEqualTo(1);
+        criteria
+//                .andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo)
+                .andDelStateEqualTo(2).andIsEnableEqualTo(1);
         if(StringUtils.isBlank(searchKey)){
             criteria.andSchemeNameLike("%" + searchKey + "%");
             criteria.andSchemeNoLike("%" + searchKey + "%");

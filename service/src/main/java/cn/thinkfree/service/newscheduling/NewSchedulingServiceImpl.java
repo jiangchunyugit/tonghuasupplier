@@ -31,8 +31,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     @Autowired
     ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
     @Autowired
-    ProjectQuotationLogMapper projectQuotationLogMapper;
-    @Autowired
     ProjectMapper projectMapper;
     @Autowired
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
