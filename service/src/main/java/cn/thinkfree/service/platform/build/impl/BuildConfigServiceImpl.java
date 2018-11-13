@@ -247,7 +247,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         criteria
 //                .andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo)
                 .andDelStateEqualTo(2).andIsEnableEqualTo(1);
-        if(StringUtils.isBlank(searchKey)){
+        if(StringUtils.isNotBlank(searchKey)){
             criteria.andSchemeNameLike("%" + searchKey + "%");
             criteria.andSchemeNoLike("%" + searchKey + "%");
         }
