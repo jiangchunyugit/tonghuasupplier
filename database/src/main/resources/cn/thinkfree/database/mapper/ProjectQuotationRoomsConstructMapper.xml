@@ -380,4 +380,18 @@
       project_no = #{projectNo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectBasisConstructionByProjectNo" resultType="cn.thinkfree.database.vo.BasisConstructionVO">
+          SELECT
+            rc.project_no AS projectNo,
+            rc.unit_price AS unitPrice,
+            rc.used_quantity AS quantity,
+            pq.construction_total_price totalPrice
+        FROM
+            project_quotation_rooms_construct rc
+        LEFT JOIN project_quotation pq ON pq.project_no = rc.project_no
+        WHERE
+            rc.project_no = #{projectNo}
+        AND rc.status = #{status} AND rc.room_type = #{roomType}
+  </select>
 </mapper>
