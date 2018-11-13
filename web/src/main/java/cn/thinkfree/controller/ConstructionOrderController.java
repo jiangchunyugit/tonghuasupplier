@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  *  施工状态相关接口
  */
-@Api(value = "施工订单相关API接口---->孙宇/迎喜专用", tags = "施工订单相关API接口---->孙宇专用")
+@Api(value = "施工订单相关API接口", tags = "施工订单相关API接口---->孙宇/迎喜专用")
 @Controller
 @RequestMapping("construction")
 public class ConstructionOrderController extends AbsBaseController {
