@@ -42,6 +42,8 @@ public class DictionaryServiceImpl implements DictionaryService {
 //    @Autowired
 //    SystemResourceMapper systemResourceMapper;
 
+    @Autowired
+    HrPeopleEntityMapper hrPeopleEntityMapper;
 
     /**
      * 查询所有省份
@@ -167,6 +169,19 @@ public class DictionaryServiceImpl implements DictionaryService {
                     .andProvinceCodeEqualTo(cityCode.shortValue());
         }
         return null;
+    }
+
+    /**
+     * 根据条件查询埃森哲数据
+     *
+     * @param condition
+     * @return
+     */
+    @Override
+    public List<HrPeopleEntity> findThirdPeople(String condition) {
+        HrPeopleEntityExample peopleEntityExample = new HrPeopleEntityExample();
+        peopleEntityExample.createCriteria().andPeopleNameLike(condition+"%");
+        return hrPeopleEntityMapper.selectByExample(peopleEntityExample);
     }
 
 //    /**

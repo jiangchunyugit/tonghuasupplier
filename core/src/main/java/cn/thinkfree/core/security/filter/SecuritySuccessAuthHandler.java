@@ -9,6 +9,8 @@ import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.utils.JwtUtils;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class SecuritySuccessAuthHandler
@@ -35,6 +38,12 @@ public class SecuritySuccessAuthHandler
 
     @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    RedisTemplate redisTemplate;
+
+    @Value("${custom.userService.useCache}")
+    Boolean useCache;
 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws ServletException, IOException {
@@ -52,8 +61,10 @@ public class SecuritySuccessAuthHandler
             return;
         }
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
+
         MyEventBus.getInstance().publicEvent(
                 new UserLoginAfter(user.getUsername(),user.getPhone(),SecurityRequestUtil.getRequestIp(request)));
+        cacheUserVO(user);
 //        sendAjaxResult(request,response);
         Map<String, Object> result = new HashMap<String, Object>();
         Map<String,Object> userModel = new HashMap<>();
@@ -69,6 +80,16 @@ public class SecuritySuccessAuthHandler
 //        saveMessage(request, result);
 //        request.getRequestDispatcher("/index").forward(request, response);
 
+    }
+
+    /**
+     * 存入缓存
+     * @param user
+     */
+    private void cacheUserVO(SecurityUser user) {
+        if(useCache){
+            redisTemplate.opsForValue().set(user.getPhone(),user,12, TimeUnit.HOURS);
+        }
     }
 
     /**

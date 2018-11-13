@@ -78,7 +78,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
      * @param userID
      */
     private void completionThirdUserInfo(UserVO userVO, String userID) {
-
+        //TODO 处理埃森哲数据
     }
 
     /**
