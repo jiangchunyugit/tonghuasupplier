@@ -108,7 +108,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 		if(StringUtils.isNotBlank(contractNumber)){
 			/* 合同详情 */
-			List<ContractCostVo> contractCostVos = contractService.queryListContractCostVoBycontractNumber(contractNumber);
+			List<ContractCostVo> contractCostVos = contractService.queryListContractCostVoBycontractNumber(contractNumber, companySubmitVo.getCompanyInfo().getRoleId());
 			companyDetailsVO.setContractTermsList(contractCostVos);
 
 			/* 合同信息 */
@@ -145,13 +145,25 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		Map<String, String> map = new HashMap<>();
 		map.put("companyId", companyId);
 		map.put("auditType", CompanyConstants.AuditType.JOINON.stringVal());
-		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
 
+		CompanyInfo companyInfo = companyInfoMapper.selectByCompanyId(companyId);
+
+		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
+		if(auditInfoVO == null){
+			auditInfoVO = new AuditInfoVO();
+			auditInfoVO.setCompanyAuditName("资质审核中");
+			return auditInfoVO;
+		}
 		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
-		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
-			auditInfoVO.setAuditCase("");
+		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(companyInfo.getAuditStatus())){
 			auditInfoVO.setCompanyAuditName("签约完成");
-		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
+		}else if(CompanyAuditStatus.FAILAUDIT.stringVal().equals(companyInfo.getAuditStatus())){
+			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILAUDIT.mes);
+
+		}else if(CompanyAuditStatus.FAILCHECK.stringVal().equals(companyInfo.getAuditStatus())){
+			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILCHECK.mes);
+
+		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(companyInfo.getAuditStatus())){
 			auditInfoVO.setCompanyAuditName("资质审核中");
 		}
 		return auditInfoVO;
