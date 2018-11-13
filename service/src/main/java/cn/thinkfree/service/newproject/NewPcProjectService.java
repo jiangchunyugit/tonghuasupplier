@@ -99,4 +99,11 @@ public interface NewPcProjectService {
      * @return
      */
     MyRespBundle<InvoiceVo> getPcProjectInvoice(String projectNo);
+
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    MyRespBundle getShangHaiPriceDetail(String designId,String projectNo);
 }
