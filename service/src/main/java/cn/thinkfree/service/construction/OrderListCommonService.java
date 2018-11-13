@@ -1,7 +1,9 @@
 package cn.thinkfree.service.construction;
 
 
+import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
@@ -79,7 +81,6 @@ public class OrderListCommonService {
      * @return
      */
     public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
-
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
@@ -210,11 +211,15 @@ public class OrderListCommonService {
     /**
      * 施工订单 (装饰公司)
      *
+     * @param companyNo
      * @param pageNum
      * @param pageSize
      * @return
      */
-    public PageInfo<ConstructionOrderListVo> getDecorateOrderList(int pageNum, int pageSize) {
+    public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo,int pageNum, int pageSize) {
+        if (StringUtils.isBlank(companyNo)){
+            RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+        }
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
@@ -222,7 +227,7 @@ public class OrderListCommonService {
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
-        example.createCriteria().andStatusEqualTo(1);
+        example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
@@ -349,16 +354,19 @@ public class OrderListCommonService {
      * @param orderStage
      * @return
      */
-    public PageInfo<DecorationOrderListVo> getDecorationOrderList(int pageNum, int pageSize, String projectNo, String appointmentTime,
+    public PageInfo<DecorationOrderListVo> getDecorationOrderList(String companyNo,int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                                   String addressDetail, String owner, String phone, String orderStage) {
 
+        if (StringUtils.isBlank(companyNo)){
+            RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+        }
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<DecorationOrderListVo> pageInfo = new PageInfo<>();
         PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
-        example.createCriteria().andStatusEqualTo(1);
+        example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         if (!StringUtils.isBlank(projectNo)){
             example.createCriteria().andProjectNoEqualTo(projectNo);

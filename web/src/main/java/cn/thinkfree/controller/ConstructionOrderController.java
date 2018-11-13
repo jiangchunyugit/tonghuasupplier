@@ -84,7 +84,8 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("装饰平台接口（施工派单-给员工-含搜索）---->迎喜专用")
     @MyRespBody
     @RequestMapping(value = "decorationOrderList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<DecorationOrderCommonVo> getOrderList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+    public MyRespBundle<DecorationOrderCommonVo> getOrderList(@RequestParam @ApiParam(value = "公司编号",required = true) String companyNo,
+                                                              @RequestParam @ApiParam(value = "页码",required = true) int pageNum,
                                                               @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize,
                                                               @RequestParam(required = false) @ApiParam(value = "项目编号")  String projectNo,
                                                               @RequestParam(required = false) @ApiParam(value = "预约时间")  String appointmentTime,
@@ -93,7 +94,7 @@ public class ConstructionOrderController extends AbsBaseController {
                                                               @RequestParam(required = false) @ApiParam(value = "业主电话")  String phone,
                                                               @RequestParam(required = false) @ApiParam(value = "订单状态")  String orderStage){
 
-        return decorationDistributionOrder.getOrderList(pageNum,pageSize, projectNo, appointmentTime,addressDetail,owner,phone,orderStage);
+        return decorationDistributionOrder.getOrderList(companyNo,pageNum,pageSize, projectNo, appointmentTime,addressDetail,owner,phone,orderStage);
     }
 
     @ApiOperation("装饰平台接口（施工派单-给员工-数码统计）---->迎喜专用")
@@ -126,10 +127,11 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("装饰平台接口（获取施工订单列表）---->迎喜专用")
     @MyRespBody
     @RequestMapping(value = "getDecorationOrderList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(@RequestParam @ApiParam(value = "页码",required = true) int pageNum,
-                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
+    public MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(@RequestParam @ApiParam(value = "公司编号",required = true) String companyNo,
+                                                                          @RequestParam @ApiParam(value = "页码",required = true) int pageNum,
+                                                                          @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
 
-        return decorationOrderOperate.getDecorationOrderList(pageNum,pageSize);
+        return decorationOrderOperate.getDecorationOrderList(companyNo,pageNum,pageSize);
     }
 
     @ApiOperation("装饰平台接口（获取施工订单统计）---->迎喜专用")
