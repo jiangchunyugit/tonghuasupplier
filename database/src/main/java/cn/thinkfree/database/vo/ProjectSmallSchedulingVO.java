@@ -17,7 +17,7 @@ public class ProjectSmallSchedulingVO {
     @ApiModelProperty(value = "大排期序号")
     private Integer parentSort;
     @ApiModelProperty(value = "施工项ID")
-    private Long constructId;
+    private Integer constructId;
     @ApiModelProperty(value = "施工项类别")
     private String constructCategory;
     @ApiModelProperty(value = "施工项分类")

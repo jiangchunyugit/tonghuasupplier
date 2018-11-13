@@ -594,6 +594,66 @@ public class BuildSchemeCompanyRelExample {
             addCriterion("is_eable not between", value1, value2, "isEable");
             return (Criteria) this;
         }
+
+        public Criteria andDelStateIsNull() {
+            addCriterion("del_state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateIsNotNull() {
+            addCriterion("del_state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateEqualTo(Integer value) {
+            addCriterion("del_state =", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateNotEqualTo(Integer value) {
+            addCriterion("del_state <>", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateGreaterThan(Integer value) {
+            addCriterion("del_state >", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("del_state >=", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateLessThan(Integer value) {
+            addCriterion("del_state <", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateLessThanOrEqualTo(Integer value) {
+            addCriterion("del_state <=", value, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateIn(List<Integer> values) {
+            addCriterion("del_state in", values, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateNotIn(List<Integer> values) {
+            addCriterion("del_state not in", values, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateBetween(Integer value1, Integer value2) {
+            addCriterion("del_state between", value1, value2, "delState");
+            return (Criteria) this;
+        }
+
+        public Criteria andDelStateNotBetween(Integer value1, Integer value2) {
+            addCriterion("del_state not between", value1, value2, "delState");
+            return (Criteria) this;
+        }
     }
 
     /**

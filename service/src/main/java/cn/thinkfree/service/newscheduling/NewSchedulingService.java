@@ -49,11 +49,10 @@ public interface NewSchedulingService {
     /**
      * 生成排期
      *
-     * @param projectNo
-     * @param companyId
+     * @param orderNo
      * @return
      */
-    MyRespBundle createScheduling(String projectNo, String companyId);
+    MyRespBundle createScheduling(String orderNo);
 
     /**
      * 确认排期
@@ -80,4 +79,12 @@ public interface NewSchedulingService {
      * @return
      */
     String projectStart(String projectNo, Integer bigSort);
+
+    /**
+     * 提供PC合同处获取验收阶段
+     * @param orderNo
+     * @param type
+     * @return
+     */
+    MyRespBundle<List<String>> getPcCheckStage(String orderNo,Integer type);
 }

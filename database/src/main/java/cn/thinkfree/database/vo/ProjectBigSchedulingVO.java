@@ -42,7 +42,7 @@ public class ProjectBigSchedulingVO {
     @ApiModelProperty("工程量")
     private Integer workload;
     @ApiModelProperty("是否需要验收")
-    private Integer check;
+    private Integer isNeedCheck;
     @ApiModelProperty("验收名称")
     private String rename;
     @ApiModelProperty(value = "该项目所使用的方案编号")

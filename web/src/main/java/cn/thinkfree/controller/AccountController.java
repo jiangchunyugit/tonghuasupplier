@@ -21,10 +21,7 @@ import cn.thinkfree.service.companyuser.CompanyUserService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.user.UserService;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +31,7 @@ import java.util.*;
  * 账号相关
  */
 @ApiOperation("账号,角色,权限,资源")
+@Api("账号,角色,权限,资源")
 @RestController
 @RequestMapping("/account")
 public class AccountController extends AbsBaseController {
@@ -67,6 +65,9 @@ public class AccountController extends AbsBaseController {
      * @param permissionVO 权限
      * @return
      */
+    @ApiImplicitParams(
+            @ApiImplicitParam(name = "creatorName",value = "创建人姓名",paramType = "query",dataType = "String")
+    )
     @ApiOperation(value="前端-运营平台-权限管理-创建权限", notes="新增权限")
     @PostMapping("/permission")
     @MyRespBody
@@ -85,6 +86,7 @@ public class AccountController extends AbsBaseController {
      * @param permissionSEO
      * @return
      */
+    @ApiResponse(code = 200,message = "操作成功",response = PermissionVO.class)
     @ApiOperation(value="前端-运营平台-权限管理", notes="权限列表")
     @GetMapping("/permission")
     @MyRespBody
@@ -370,7 +372,7 @@ public class AccountController extends AbsBaseController {
     @PostMapping("/info")
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新建账号")
-    public MyRespBundle<AccountVO> account(AccountVO accountVO){
+    public MyRespBundle<AccountVO> account(@RequestBody  AccountVO accountVO){
         AccountVO result = pcUserInfoService.saveUserAccount(accountVO);
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
@@ -591,6 +593,7 @@ public class AccountController extends AbsBaseController {
         result.put("face",userVO.getUserRegister().getHeadPortraits());
         result.put("name",userVO.getName());
         result.put("first",userService.isFirstLogin());
+        result.put("companyId", userVO.getCompanyID());
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 

@@ -6,18 +6,16 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
-import cn.thinkfree.database.vo.remote.SyncContractVO;
-import cn.thinkfree.database.vo.remote.SyncOrderVO;
-import org.springframework.data.redis.connection.ReactiveSetCommands.SInterCommand;
-
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractClauseVO;
-import cn.thinkfree.database.vo.ContractDetails;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
+import cn.thinkfree.database.vo.contract.ContractDetailsVo;
+import cn.thinkfree.database.vo.remote.SyncContractVO;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 
 public interface ContractService {
 
@@ -64,7 +62,7 @@ public interface ContractService {
   	 * @param ContractSEO
   	 * @return String mess
   	 */
-    List<Map<String,Object>>   contractDetails(String contractNumber,String companyId);
+    ContractDetailsVo  contractDetails(String contractNumber,String companyId);
      
      
     

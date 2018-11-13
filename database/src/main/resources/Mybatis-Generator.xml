@@ -112,16 +112,20 @@
         <!--<table tableName="order_apply_refund" domainObjectName="OrderApplyRefund"/>-->
         <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
         <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
-        <table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>
+        <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
         <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
-        <!--<table tableName="project_quotation_log" domainObjectName="ProjectQuotationLog"/>-->
         <!--<table tableName="project_stage_log" domainObjectName="ProjectStageLog"/>-->
         <!--<table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>-->
         <!--<table tableName="design_grade" domainObjectName="DesignGrade"/>-->
         <!--<table tableName="design_label" domainObjectName="DesignLabel"/>-->
         <!--<table tableName="growth_value_integral" domainObjectName="GrowthValueIntegral"/>-->
+        <!--<table tableName="project_quotation" domainObjectName="ProjectQuotation"/>-->
+        <!--<table tableName="project_quotation_rooms" domainObjectName="ProjectQuotationRooms"/>-->
+        <!--<table tableName="project_quotation_rooms_construct" domainObjectName="ProjectQuotationRoomsConstruct"/>-->
+        <!--<table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardConstruct"/>-->
+        <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftConstruct"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
@@ -144,7 +148,9 @@
         <!--<table tableName="build_pay_config" domainObjectName="BuildPayConfig"/>-->
         <!--<table tableName="build_scheme_config" domainObjectName="BuildSchemeConfig"/>-->
         <!--<table tableName="basics_data" domainObjectName="BasicsData"/>-->
-<!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
+        <!--<table tableName="basics_data_parent_code" domainObjectName="BasicsDataParentCode"/>-->
+        <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
         <!-- new approval flow end -->
+        <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
     </context>
 </generatorConfiguration>

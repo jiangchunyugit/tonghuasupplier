@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
@@ -268,7 +269,6 @@ public class CloudServiceImpl implements CloudService {
 
     @Override
     public String uploadFile(String fileName) {
-        // TODO Auto-generated method stub
 //      HttpHeaders headers = new HttpHeaders();
 //      headers.add("Authorization", "token");
 //      MediaType type = MediaType.parseMediaType("multipart/form-data");
@@ -278,7 +278,6 @@ public class CloudServiceImpl implements CloudService {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -345,5 +344,26 @@ public class CloudServiceImpl implements CloudService {
         System.out.println(result);
         // TODO 确认是否完成
         return null;
+    }
+
+    @Override
+    public RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO) {
+
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+
+        String body = new Gson().toJson(marginContractVO);
+        System.out.println(body);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
+        RemoteResult<String > result = null;
+        try {
+            //todo jiangchunyu  更换路径
+//            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
+        }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
     }
 }

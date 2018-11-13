@@ -60,7 +60,6 @@ public class DateUtil {
             String newTime = strTime + " " + pointTime;
             newDate = SDF_TWO.parse(newTime);
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return newDate;
@@ -231,7 +230,7 @@ public class DateUtil {
      * @param pattern
      * @return
      */
-    private static String formartDate(Date date, String pattern) {
+    public static String formartDate(Date date, String pattern) {
         SimpleDateFormat fmt = new SimpleDateFormat(pattern);
         return fmt.format(date);
     }

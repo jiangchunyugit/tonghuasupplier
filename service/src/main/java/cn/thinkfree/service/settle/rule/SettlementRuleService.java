@@ -10,6 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 20181109
+ * @Description 规则接口
+ */
 public interface SettlementRuleService {
 
     /**
@@ -77,6 +82,11 @@ public interface SettlementRuleService {
      */
     boolean  batchcCheckSettlementRule(List<String> ruleNumbers, String auditStatus, String auditCase);
 
+    /**
+     * 合同获取规则
+     * @param settlementRuleInfo
+     * @return
+     */
     List<SettlementRuleContractVO> getSettlementRuleContract(SettlementRuleInfo settlementRuleInfo);
 
     /**

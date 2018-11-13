@@ -7,9 +7,11 @@ import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
+import cn.thinkfree.database.event.account.AccountCreate;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,9 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 
 	@Autowired
 	UserRegisterMapper userRegisterMapper;
+
+	@Autowired
+	EventService eventService;
 
 	MyLogger logger = LogUtil.getLogger(getClass());
 	
@@ -92,8 +97,7 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 					String password = AccountHelper.createUserPassWord();
 					account.setPassword(new MultipleMd5().encode(password));
 					userRegisterMapper.insertSelective(account);
-					//TODO 发布新增账号事件
-
+					eventService.publish(new AccountCreate(account.getUserId(),account.getPhone(),password,saveObj.getEmpName()));
 			}else{
 
 				companyUser.getCompanyUser().setUpdateTime(new Date());

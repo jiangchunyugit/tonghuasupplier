@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.CityBranchMapper">
+
+
+    <!--分公司名称VO-->
+    <resultMap id="CityBranchListResultMap" type="cn.thinkfree.database.vo.CityBranchVO" extends="BaseResultMap">
+        <result column="company_name" jdbcType="VARCHAR" property="branchCompanyNm" />
+    </resultMap>
+
+    <!--店面信息VO-->
+    <resultMap id="BranchDetailsResultMap" type="cn.thinkfree.database.vo.CityBranchVO" extends="CityBranchListResultMap">
+        <collection property="storeInfoVOList" ofType="cn.thinkfree.database.vo.StoreInfoVO">
+            <id column="storeInfoId" jdbcType="INTEGER" property="id" />
+            <result column="city_branch_id" jdbcType="INTEGER" property="cityBranchId" />
+            <result column="store_nm" jdbcType="VARCHAR" property="storeNm" />
+            <result column="business_entity_id" jdbcType="INTEGER" property="businessEntityId" />
+            <result column="entity_name" jdbcType="VARCHAR" property="businessEntityNm" />
+        </collection>
+    </resultMap>
+
+    <!--带有省份，城市VO-->
+    <resultMap id="CityBranchWithProCitResultMap" type="cn.thinkfree.database.vo.CityBranchWtihProCitVO" extends="BaseResultMap">
+        <result column="province_name" jdbcType="VARCHAR" property="provinceNm" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityNm" />
+    </resultMap>
+
+    <!--分页查询城市分站信息-->
+    <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.CityBranchSEO" resultMap="CityBranchListResultMap">
+        SELECT
+        pcb.*,pbc.company_name
+        FROM
+        pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_comp_id = pbc.id
+        <where>
+          pcb.is_del = 2
+          <if test="branchCompanyId != null and branchCompanyId != ''">
+            and pcb.branch_comp_id = #{branchCompanyId}
+          </if>
+          <if test="cityCode != null and cityCode != ''">
+            and pcb.city_code = #{cityCode}
+          </if>
+          <if test="legalName != null and legalName != ''">
+            and (pcb.legal_name like #{legalName} OR pcb.legal_phone = #{legalName})
+          </if>
+          <if test="isEnable != null and isEnable != ''">
+            and pcb.is_enable = #{isEnable}
+          </if>
+          order by to_char(pcb.create_time, 'YYYY/MM/DD')
+        </where>
+    </select>
+
+    <!--查看城市分站详细信息带有店面信息-->
+    <select id="selectBranchDetails" parameterType="java.lang.Integer" resultMap="BranchDetailsResultMap">
+        SELECT
+            pcb.*,
+            pbc.company_name,
+            psi.ID AS storeInfoId,
+            psi.city_branch_id,
+            psi.store_nm,
+            psi.business_entity_id,
+            pbe.entity_name
+        FROM
+          pc_city_branch pcb
+        LEFT JOIN pc_branch_company pbc ON pbc.ID = pcb.branch_comp_id
+        LEFT JOIN pc_store_info psi ON psi.city_branch_id = #{id,jdbcType=INTEGER}
+        LEFT JOIN pc_business_entity pbe ON psi.business_entity_id = pbe.ID
+        WHERE
+	      pcb.ID = #{id,jdbcType=INTEGER}
+    </select>
+
+    <!--查看城市分站详细信息带有省份城市名称-->
+    <select id="selectCityBranchWithProCit" parameterType="java.lang.Integer" resultMap="CityBranchWithProCitResultMap">
+        SELECT
+            pcb.*,
+            p.province_name,
+            c.city_name
+        FROM
+            pc_city_branch pcb
+            LEFT JOIN province p ON pcb.province_code = p.province_code
+            LEFT JOIN city c ON pcb.city_code = c.city_code
+        WHERE
+            pcb.is_del = 2 AND
+            pcb.branch_comp_id = #{id,jdbcType=INTEGER}
+    </select>
+
+</mapper>

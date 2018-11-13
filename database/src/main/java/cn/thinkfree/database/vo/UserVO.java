@@ -58,6 +58,15 @@ public class UserVO extends SecurityUser {
      */
     private Boolean isRoot = Boolean.FALSE;
 
+    /**
+     * 用户类型
+     */
+    private UserRegisterType type ;
+
+    public void setType(UserRegisterType type) {
+        this.type = type;
+    }
+
     public Boolean isRoot() {
         return isRoot;
     }
@@ -155,12 +164,19 @@ public class UserVO extends SecurityUser {
     }
 
     public String getCompanyID(){
+        // TODO 分站信息待定
         return companyInfo.getCompanyId();
     }
 
     @Override
     public String getName() {
-        return pcUserInfo.getName();
+        if(pcUserInfo!=null){
+            return pcUserInfo.getName();
+        }
+        if(companyUser != null){
+            return companyUser.getEmpName();
+        }
+        return "";
     }
 
     @Override

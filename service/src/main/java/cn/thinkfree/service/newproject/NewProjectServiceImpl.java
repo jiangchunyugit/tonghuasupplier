@@ -201,7 +201,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             owner.setName(userName1.get("nickName").toString());
         } catch (Exception e) {
             e.printStackTrace();
-            log.info("调取人员信息失败!");
+            return RespData.error("调取人员信息失败!");
         }
         projectVo.setOwner(owner);
 

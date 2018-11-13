@@ -3,6 +3,9 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.OrderUser;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
+import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 
 import java.util.List;
@@ -232,8 +235,46 @@ public interface NewOrderUserService {
      **/
     MyRespBundle<List<DesignContractVO>> getDesignContractList(Integer pageNum,Integer pageSize ,String companyId);
     PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId);
-
-    List<DesignContractVO> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
+    /**
+     * @Author jiang
+     * @Description 设计合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize);
 
     Integer queryContractCount(DesignContractVO designContractVO);
+    /**
+     * @Author jiang
+     * @Description 施工合同列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int i, int pageSize);
+    /**
+     * @Author jiang
+     * @Description 工地信息详情
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo);
+    /**
+     * @Author jiang
+     * @Description 施工工地列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<ConstructionOrderCommonVo> getConstructionSiteList(int pageNum, int pageSize, String cityName);
+    /**
+     * @Author jiang
+     * @Description 施工工地进度数量
+     * @Date
+     * @Param
+     * @return
+     **/
+    MyRespBundle<ConstructionStageNunVO> getScheduleNum();
 }

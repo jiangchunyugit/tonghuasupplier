@@ -19,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,7 +63,7 @@ public class OrderListCommonService {
     @Autowired
     DesignerOrderMapper designerOrderMapper;
 
-    @Resource
+    @Autowired
     private HttpLinks httpLinks;
 
     public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
