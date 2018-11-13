@@ -4,10 +4,10 @@ import cn.thinkfree.database.mapper.AfApprovalLogMapper;
 import cn.thinkfree.database.model.AfApprovalLog;
 import cn.thinkfree.database.model.AfApprovalLogExample;
 import cn.thinkfree.service.approvalflow.AfApprovalLogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfApprovalLogServiceImpl implements AfApprovalLogService {
 
-    @Resource
+    @Autowired
     private AfApprovalLogMapper approvalLogMapper;
 
 

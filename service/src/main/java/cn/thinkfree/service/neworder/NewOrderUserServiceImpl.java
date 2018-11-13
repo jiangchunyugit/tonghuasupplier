@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -56,7 +55,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
-    @Resource
+    @Autowired
     private HttpLinks httpLinks;
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
