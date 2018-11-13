@@ -89,7 +89,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         UserLoginLogExample loginLogExample = new UserLoginLogExample();
         loginLogExample.createCriteria().andUserIdEqualTo(userID);
         List<UserLoginLog> logs = userLoginLogMapper.selectByExample(loginLogExample);
-        return logs.isEmpty() ? "Y":"N";
+        return logs.size() == 1 ? "Y":"N";
     }
 
 
