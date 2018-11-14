@@ -169,9 +169,9 @@
     <section class='indent'>
         1. 甲方在对应《设计合同》收到客户支付相应设计费后分三次与乙方结算设计费款项，分别为：
         <ul class="list">
-            <li>客户确认3D方案后，平台与乙方结算设计费总额的50%；</li>
-            <li>客户确认施工图纸、预算清单后，平台与乙方结算设计费总额的30%</li>
-            <li>客户确认施工完毕后，平台与乙方结算设计费总额的20%。</li>
+             <#list code04 as c>
+               <li>${c.costName}  ${c.costValue}%；</li>
+             </#list>
         </ul>
     </section>
     <section class='indent'>
@@ -180,8 +180,11 @@
     <section class='indent'>
         3. 甲方向乙方支付客户采购产品实交款总额<p class="placeholderT">10%</p>的产品服务费，甲方分两次与乙方结算产品服务费款项。
         <ul class="list">
-            <li>甲方在客户与商家签订正式订单并全额付款后向乙方支付产品实交款总额3%的首款。</li>
-            <li>甲方在商家为客户配送产品完成且客户确认验收后向乙方支付产品实交款总额7%的尾款。</li>
+            <ul class="list">
+             <#list code02 as c>
+                 <li>${c.costName}  ${c.costValue}%；</li>
+             </#list>
+            </ul>
         </ul>
     </section>
     <section class='indent'>
@@ -191,11 +194,12 @@
         4.1在客户《施工合同》首期款付款到账后的次月内向乙方支付施工合同折税后的合同额的<p class="placeholderT">${c12}%</p>
     </section>
     <section class='indent'>
-        5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">2%</p>作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：
+        5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">${c12}</p>
+        作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：
         <ul class="list">
-            <li>客户评分总分达到5分，则甲方向乙方支付全额 2%的施工管理费尾款；</li>
-            <li>客户评分总分达到4分，则甲方向乙方返还全额 1%的施工管理费尾款；</li>
-            <li>客户评分总分未达4分，甲方不向乙方支付该项目的施工管理费尾款。</li>
+             <#list code03 as c>
+                 <li>${c.costName}  ${c.costValue}%；</li>
+             </#list>
         </ul>
     </section>
     <section class='indent'>
