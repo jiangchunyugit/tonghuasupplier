@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * @Auther: jiang
  * @Date: 2018/11/13 10:49
@@ -16,6 +18,8 @@ import lombok.Setter;
 public class HardQuoteVO {
     @ApiModelProperty("项目编号")
     private String projectNo;
+    @ApiModelProperty("房屋名称")
+    private String roomName;
     @ApiModelProperty("房间类型")
     private String roomType;
     @ApiModelProperty("产品名称")
@@ -27,9 +31,11 @@ public class HardQuoteVO {
     @ApiModelProperty("规格")
     private String spec;
     @ApiModelProperty("单价")
-    private Integer unitPrice;
+    private BigDecimal unitPrice;
     @ApiModelProperty("数量")
     private Integer usedQuantity;
     @ApiModelProperty("总价")
-    private Integer totalPrice;
+    private BigDecimal totalPrice;
+    @ApiModelProperty("数据唯一ID")
+    private String id;
 }

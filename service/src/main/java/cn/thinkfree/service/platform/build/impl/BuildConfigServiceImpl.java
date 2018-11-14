@@ -203,6 +203,12 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         if(StringUtils.isBlank(optionUserName)){
             throw new RuntimeException("操作人名称不能为空");
         }
+        BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
+        relExample.createCriteria().andCompanyIdEqualTo(companyId).andBuildSchemeNoEqualTo(schemeNo).andDelStateEqualTo(2);
+        List<BuildSchemeCompanyRel> rels = companyRelMapper.selectByExample(relExample);
+        if(!rels.isEmpty()){
+            throw new RuntimeException("该方案已存在,不可添加");
+        }
         BuildSchemeCompanyRel companyRel = new BuildSchemeCompanyRel();
         companyRel.setBuildSchemeNo(schemeNo);
         companyRel.setCompanyId(companyId);
@@ -210,6 +216,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         companyRel.setOptionUserName(optionUserName);
         companyRel.setCreateTime(new Date());
         companyRel.setIsEable(2);
+        companyRel.setDelState(2);
         companyRelMapper.insertSelective(companyRel);
     }
 
@@ -232,20 +239,52 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
-    public List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo) {
+    public void companyDelScheme(String companyId, String optionUserId, String optionUserName, String schemeNo) {
         if(StringUtils.isBlank(companyId)){
-            throw new RuntimeException("companyId不能为空");
+            throw new RuntimeException("公司ID不能为空");
         }
-        if(StringUtils.isBlank(cityStation)){
-            throw new RuntimeException("cityStation不能为空");
+        if(StringUtils.isBlank(optionUserId)){
+            throw new RuntimeException("操作人ID不能为空");
         }
-        if(StringUtils.isBlank(storeNo)){
-            throw new RuntimeException("storeNo不能为空");
+        if(StringUtils.isBlank(optionUserName)){
+            throw new RuntimeException("操作人名称不能为空");
         }
+        if(StringUtils.isBlank(schemeNo)){
+            throw new RuntimeException("方案编号不能为空");
+        }
+        BuildSchemeCompanyRelExample companyRelExample = new BuildSchemeCompanyRelExample();
+        companyRelExample.createCriteria().andCompanyIdEqualTo(companyId).andBuildSchemeNoEqualTo(schemeNo);
+        List<BuildSchemeCompanyRel> companyRels = companyRelMapper.selectByExample(companyRelExample);
+        if(companyRels.isEmpty()) {
+            throw new RuntimeException("没有查询到该关联关系");
+        }
+        for(BuildSchemeCompanyRel companyRel : companyRels){
+            if(companyRel.getIsEable() == 1){
+                throw new RuntimeException("该方案正在启用中，不可删除");
+            }
+        }
+        BuildSchemeCompanyRel schemeCompanyRel = new BuildSchemeCompanyRel();
+        schemeCompanyRel.setDelState(1);
+        companyRelMapper.updateByExampleSelective(schemeCompanyRel,companyRelExample);
+    }
+
+    @Override
+    public List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo) {
+//        if(StringUtils.isBlank(companyId)){
+//            throw new RuntimeException("companyId不能为空");
+//        }
+//        if(StringUtils.isBlank(cityStation)){
+//            throw new RuntimeException("cityStation不能为空");
+//        }
+//        if(StringUtils.isBlank(storeNo)){
+//            throw new RuntimeException("storeNo不能为空");
+//        }
         BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
         BuildSchemeConfigExample.Criteria criteria = configExample.createCriteria();
-        criteria.andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo).andDelStateEqualTo(2).andIsEnableEqualTo(1);
-        if(StringUtils.isBlank(searchKey)){
+        criteria
+//                .andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo)
+                .andDelStateEqualTo(2).andIsEnableEqualTo(1);
+        if(StringUtils.isNotBlank(searchKey)){
             criteria.andSchemeNameLike("%" + searchKey + "%");
             criteria.andSchemeNoLike("%" + searchKey + "%");
         }

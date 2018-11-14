@@ -11,7 +11,9 @@ import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.neworder.ReviewDetailsService;
 import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -20,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * PC项目相关
@@ -65,6 +64,10 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     ProjectQuotationRoomsHardDecorationMapper hardDecorationMapper;
     @Autowired
     ProjectQuotationRoomsSoftDecorationMapper softDecorationMapper;
+    @Autowired
+    ProjectQuotationCheckMapper checkMapper;
+    @Autowired
+    ReviewDetailsService reviewDetailsService;
 
 
     /**
@@ -194,19 +197,6 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     }
 
     /**
-     * PC获取项目详情接口--支付信息
-     *
-     * @param projectNo
-     * @return
-     */
-    @Override
-    public MyRespBundle<PaymentVo> getPcProjectPayment(String projectNo) {
-        //组合支付信息
-        PaymentVo paymentVo;
-        return null;
-    }
-
-    /**
      * PC获取项目详情接口--评价管理
      *
      * @param projectNo
@@ -281,7 +271,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 String constructString = JSONObject.toJSONString(constructList);
                 List<ProjectQuotationRoomsConstruct> projectQuotationRoomsSoftConstructs = JSONObject.parseArray(constructString, ProjectQuotationRoomsConstruct.class);
                 for (ProjectQuotationRoomsConstruct construct : projectQuotationRoomsSoftConstructs) {
+                    construct.setId(UUID.randomUUID().toString().replaceAll("-",""));
                     construct.setRoomType(projectQuotationRooms.getRoomType());
+                    construct.setRoomName(projectQuotationRooms.getRoomName());
                     construct.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     construct.setProjectNo(projectNo);
                     int constructResult = roomsConstructMapper.insertSelective(construct);
@@ -296,7 +288,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 String hardDecorationString = JSONObject.toJSONString(hardDecorationMaterials);
                 List<ProjectQuotationRoomsHardDecoration> projectQuotationRoomsHardConstructs = JSONObject.parseArray(hardDecorationString, ProjectQuotationRoomsHardDecoration.class);
                 for (ProjectQuotationRoomsHardDecoration hardDecoration : projectQuotationRoomsHardConstructs) {
+                    hardDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
                     hardDecoration.setRoomType(projectQuotationRooms.getRoomType());
+                    hardDecoration.setRoomName(projectQuotationRooms.getRoomName());
                     hardDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     hardDecoration.setProjectNo(projectNo);
                     int hardResult = hardDecorationMapper.insertSelective(hardDecoration);
@@ -311,7 +305,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 String softDecorationString = JSONObject.toJSONString(softDecorationMaterials);
                 List<ProjectQuotationRoomsSoftDecoration> projectQuotationRoomsSoftDecorations = JSONObject.parseArray(softDecorationString, ProjectQuotationRoomsSoftDecoration.class);
                 for (ProjectQuotationRoomsSoftDecoration softDecoration : projectQuotationRoomsSoftDecorations) {
+                    softDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
                     softDecoration.setRoomType(projectQuotationRooms.getRoomType());
+                    softDecoration.setRoomName(projectQuotationRooms.getRoomName());
                     softDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     softDecoration.setProjectNo(projectNo);
                     int softResult = softDecorationMapper.insertSelective(softDecoration);
@@ -323,4 +319,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         return RespData.success();
     }
+
+
+
 }
