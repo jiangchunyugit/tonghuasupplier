@@ -348,6 +348,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
 		List<String> relationMap = new ArrayList<>();
+//		relationMap.add("10000000");
+//		companyListSEO.setRelationMap(relationMap);
 
 		//todo 获取分站id？？？？星级
 		if(userVO != null){

@@ -20,7 +20,7 @@ public class CompanyListVo extends CompanyInfo {
      * 省
      */
     @ApiModelProperty(value = "省")
-    private Short siteProvinceCode;
+    private String siteProvinceCode;
     /**
      * 省
      */
@@ -30,7 +30,7 @@ public class CompanyListVo extends CompanyInfo {
      * 市
      */
     @ApiModelProperty(value = "市")
-    private Short siteCityCode;
+    private String siteCityCode;
     /**
      * 市
      */
@@ -40,7 +40,7 @@ public class CompanyListVo extends CompanyInfo {
      * 站点
      */
     @ApiModelProperty(value = "站点")
-    private Short siteCode;
+    private String siteCode;
     /**
      * 站点
      */
@@ -100,11 +100,11 @@ public class CompanyListVo extends CompanyInfo {
         this.comapnyNature = comapnyNature;
     }
 
-    public Short getSiteProvinceCode() {
+    public String getSiteProvinceCode() {
         return siteProvinceCode;
     }
 
-    public void setSiteProvinceCode(Short siteProvinceCode) {
+    public void setSiteProvinceCode(String siteProvinceCode) {
         this.siteProvinceCode = siteProvinceCode;
     }
 
@@ -116,11 +116,11 @@ public class CompanyListVo extends CompanyInfo {
         this.siteProvinceName = siteProvinceName;
     }
 
-    public Short getSiteCityCode() {
+    public String getSiteCityCode() {
         return siteCityCode;
     }
 
-    public void setSiteCityCode(Short siteCityCode) {
+    public void setSiteCityCode(String siteCityCode) {
         this.siteCityCode = siteCityCode;
     }
 
@@ -132,11 +132,11 @@ public class CompanyListVo extends CompanyInfo {
         this.siteCityName = siteCityName;
     }
 
-    public Short getSiteCode() {
+    public String getSiteCode() {
         return siteCode;
     }
 
-    public void setSiteCode(Short siteCode) {
+    public void setSiteCode(String siteCode) {
         this.siteCode = siteCode;
     }
 
