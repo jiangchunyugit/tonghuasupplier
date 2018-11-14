@@ -31,7 +31,7 @@
         SELECT
         pcb.*,pbc.company_name
         FROM
-        pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_comp_id = pbc.id
+        pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_company_code = pbc.branch_company_code
         <where>
           pcb.is_del = 2
           <if test="branchCompanyCode != null and branchCompanyCode != ''">
@@ -58,7 +58,7 @@
         C.city_name
         FROM
         pc_city_branch pcb
-        LEFT JOIN pc_branch_company pbc ON pbc.ID = pcb.branch_comp_id
+        LEFT JOIN pc_branch_company pbc ON pbc.branch_company_code = pcb.branch_company_code
         LEFT JOIN city C ON C.city_code = pcb.city_code
         WHERE
         pcb.ID =#{id,jdbcType=INTEGER}
