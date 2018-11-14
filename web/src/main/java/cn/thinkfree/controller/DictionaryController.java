@@ -332,4 +332,16 @@ public class DictionaryController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,status);
     }
 
+    /**
+     * 查询埃森哲用户
+     * @param condition
+     * @return
+     */
+    @ApiOperation(value = "查询埃森哲数据",notes = "查询埃森哲数据")
+    @MyRespBody
+    @GetMapping("/third/people")
+    public MyRespBundle<List<HrPeopleEntity>> peopleEntity(@ApiParam("用户名") String condition){
+        List<HrPeopleEntity> list = dictionaryService.findThirdPeople(condition);
+        return sendJsonData(ResultMessage.SUCCESS,list);
+    }
 }

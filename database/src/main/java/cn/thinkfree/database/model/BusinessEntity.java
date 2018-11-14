@@ -135,7 +135,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="站点id")
+    @ApiModelProperty(value="作废")
     private Integer cityBranchEbsid;
 
     /**
@@ -183,7 +183,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompEbsid选择分公司id")
+    @ApiModelProperty(value="作废")
     private Integer branchCompEbsid;
 
     /**
@@ -207,7 +207,8 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="cityBranchId城市分站id")
+    @ApiModelProperty(value="城市分站id")
+    @NotNull(message = "城市分站id不可为空",groups = {Severitys.Update.class,Severitys.Insert.class})
     private Integer cityBranchId;
 
     /**
@@ -219,7 +220,8 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="branchCompId分公司id")
+    @ApiModelProperty(value="分公司id")
+    @NotNull(message = "分公司id不可为空",groups = {Severitys.Update.class,Severitys.Insert.class})
     private Integer branchCompId;
 
     /**

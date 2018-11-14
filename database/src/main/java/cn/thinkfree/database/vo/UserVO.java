@@ -53,10 +53,7 @@ public class UserVO extends SecurityUser {
      * 企业账号
      */
     private CompanyUser companyUser;
-    /**
-     * 是否根公司
-     */
-    private Boolean isRoot = Boolean.FALSE;
+
 
     /**
      * 用户类型
@@ -67,16 +64,10 @@ public class UserVO extends SecurityUser {
         this.type = type;
     }
 
-    public Boolean isRoot() {
-        return isRoot;
-    }
 
-    public void setIsRoot(Boolean root) {
-        isRoot = root;
-    }
 
     public List<String> getRelationMap() {
-        return isRoot ? relationMap : Lists.newArrayList(getCompanyID());
+        return  type.equals(UserRegisterType.Platform) ? relationMap : Lists.newArrayList(getCompanyID());
     }
 
     public void setRelationMap(List<String> relationMap) {
@@ -164,8 +155,18 @@ public class UserVO extends SecurityUser {
     }
 
     public String getCompanyID(){
-        // TODO 分站信息待定
-        return companyInfo.getCompanyId();
+        if(UserRegisterType.Enterprise.equals(type)){
+            return companyInfo.getCompanyId();
+        }else if (UserRegisterType.Platform.equals(type)){
+            if(cityBranch != null){
+                return cityBranch.getId().toString();
+            }else if(branchCompany != null ){
+                return branchCompany.getId().toString();
+            }else {
+                return companyInfo.getCompanyId();
+            }
+        }
+        return "";
     }
 
     @Override

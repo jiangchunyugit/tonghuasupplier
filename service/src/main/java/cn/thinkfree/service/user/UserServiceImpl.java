@@ -18,6 +18,8 @@ import cn.thinkfree.service.user.strategy.StrategyFactory;
 import cn.thinkfree.service.utils.ThreadLocalHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -57,6 +60,12 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
 
     @Autowired
     CompanyUserMapper companyUserMapper;
+
+    @Autowired
+    RedisTemplate  redisTemplate;
+
+    @Value("${custom.userService.useCache}")
+    Boolean useCache;
 
 
     /**
@@ -105,6 +114,11 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     @Override
     public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
 
+        Optional<SecurityUser> userVO = getUserVOFromCache(phone);
+        if(userVO.isPresent()){
+            return userVO.get();
+        }
+
         printDebugMes("用户登录:{}",phone);
         UserRegisterExample userRegisterExample = new UserRegisterExample();
         userRegisterExample.createCriteria().andPhoneEqualTo(phone)
@@ -128,6 +142,18 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         return userDetails;
     }
 
+    /**
+     * 取缓存用户
+     * @param phone
+     * @return
+     */
+    private Optional<SecurityUser> getUserVOFromCache(String phone) {
+        if(useCache){
+            UserVO userVO = (UserVO) redisTemplate.opsForValue().get(phone);
+            return Optional.ofNullable(userVO);
+        }
+        return Optional.ofNullable(null);
+    }
 
 
     @Override

@@ -21,9 +21,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经营主体
+ */
 @RestController
 @RequestMapping(value = "/businessEntity")
-@Api(value = "前端使用---经营主体数据---蒋春雨经营主体",description = "前端使用---经营主体数据---蒋春雨经营主体")
+@Api(value = "前端使用---经营主体数据---蒋春雨",description = "前端使用---经营主体数据---蒋春雨")
 public class BusinessEntityController extends AbsBaseController{
 
     @Autowired
@@ -35,9 +40,9 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/saveBusinessEntity")
     @MyRespBody
     @ApiOperation(value="经营主体数据：创建主体")
-    public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntity businessEntity){
-        BeanValidator.validate(businessEntity, Severitys.Insert.class);
-        int line = businessEntityService.addBusinessEntity(businessEntity);
+    public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntityVO businessEntityVO){
+        BeanValidator.validate(businessEntityVO, Severitys.Insert.class);
+        int line = businessEntityService.addBusinessEntity(businessEntityVO);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
         }
@@ -50,9 +55,9 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/updateBusinessEntity")
     @MyRespBody
     @ApiOperation(value="经营主体数据：编辑主体")
-    public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntity businessEntity){
-        BeanValidator.validate(businessEntity, Severitys.Update.class);
-        int line = businessEntityService.updateBusinessEntity(businessEntity);
+    public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntityVO businessEntityVO){
+        BeanValidator.validate(businessEntityVO, Severitys.Update.class);
+        int line = businessEntityService.updateBusinessEntity(businessEntityVO);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
         }
@@ -105,10 +110,10 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：删除")
     public MyRespBundle<String> businessEntityDelete(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BusinessEntity businessEntity = new BusinessEntity();
-        businessEntity.setId(id);
-        businessEntity.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
-        int line = businessEntityService.updateBusinessEntity(businessEntity);
+        BusinessEntityVO businessEntityVO = new BusinessEntityVO();
+        businessEntityVO.setId(id);
+        businessEntityVO.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
+        int line = businessEntityService.updateBusinessEntity(businessEntityVO);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
@@ -123,7 +128,7 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：启用")
     public MyRespBundle<String> businessEntityEnable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BusinessEntity businessEntity = new BusinessEntity();
+        BusinessEntityVO businessEntity = new BusinessEntityVO();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
         int line = businessEntityService.updateBusinessEntity(businessEntity);
@@ -141,7 +146,7 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：禁用")
     public MyRespBundle<String> businessEntityDisable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BusinessEntity businessEntity = new BusinessEntity();
+        BusinessEntityVO businessEntity = new BusinessEntityVO();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Disable.shortVal());
         int line = businessEntityService.updateBusinessEntity(businessEntity);

@@ -8,6 +8,7 @@ import cn.thinkfree.database.mapper.CityBranchMapper;
 import cn.thinkfree.database.mapper.StoreInfoMapper;
 import cn.thinkfree.database.model.BusinessEntity;
 import cn.thinkfree.database.model.BusinessEntityExample;
+import cn.thinkfree.database.model.StoreInfo;
 import cn.thinkfree.database.model.StoreInfoExample;
 import cn.thinkfree.database.vo.BusinessEntitySEO;
 import cn.thinkfree.database.vo.BusinessEntityVO;
@@ -34,15 +35,43 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     StoreInfoMapper storeInfoMapper;
 
     @Override
-    public int addBusinessEntity(BusinessEntity businessEntity) {
+    public int addBusinessEntity(BusinessEntityVO businessEntityVO) {
+        BusinessEntity businessEntity = new BusinessEntity();
+        SpringBeanUtil.copy(businessEntityVO,businessEntity);
         businessEntity.setCreateTime(new Date());
         businessEntity.setIsDel(OneTrue.YesOrNo.NO.shortVal());
         businessEntity.setIsEnable(UserEnabled.Enabled_false.shortVal());
-        return businessEntityMapper.insertSelective(businessEntity);
+
+        int result = businessEntityMapper.insertSelective(businessEntity);
+        if (businessEntityVO.getStoreInfoList().size()>0) {
+
+            businessEntityVO.getStoreInfoList().forEach(e->{
+                e.setCityBranchId(businessEntity.getCityBranchId());
+                e.setBranchCompanyId(businessEntity.getBranchCompId());
+                e.setBusinessEntityId(businessEntity.getId());
+                storeInfoMapper.insertSelective(e);
+            });
+        }
+        return result;
     }
 
     @Override
-    public int updateBusinessEntity(BusinessEntity businessEntity) {
+    public int updateBusinessEntity(BusinessEntityVO businessEntityVO) {
+
+        StoreInfoExample storeInfoExample= new StoreInfoExample();
+        storeInfoExample.createCriteria().andBusinessEntityIdEqualTo(businessEntityVO.getId());
+        storeInfoMapper.deleteByExample(storeInfoExample);
+        BusinessEntity businessEntity = new BusinessEntity();
+        SpringBeanUtil.copy(businessEntityVO,businessEntity);
+        if (businessEntityVO.getStoreInfoList().size()>0) {
+
+            businessEntityVO.getStoreInfoList().forEach(e->{
+                e.setCityBranchId(businessEntity.getCityBranchId());
+                e.setBranchCompanyId(businessEntity.getBranchCompId());
+                e.setBusinessEntityId(businessEntity.getId());
+                storeInfoMapper.insertSelective(e);
+            });
+        }
         return businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
     }
 
@@ -50,20 +79,23 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     public BusinessEntityVO businessEntityDetails(Integer id) {
 
         // 经营主体信息
-        BusinessEntity businessEntity = new BusinessEntity();
-        businessEntity = businessEntityMapper.selectByPrimaryKey(id);
+        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
+        businessEntityExample.createCriteria().andIdEqualTo(id);
+        List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntityExample);
 
-        // todo  店面信息(接入店面信息接口)(自建店面表取店面主体)
         StoreInfoExample storeInfoExample = new StoreInfoExample();
         StoreInfoExample.Criteria criteria = storeInfoExample.createCriteria();
         criteria.andBusinessEntityIdEqualTo(id);
-        List<String> storeList = storeInfoMapper.selectByExample(storeInfoExample).stream().map(e->e.getStoreNm()).collect(Collectors.toList());
+        List<StoreInfo> storeList = storeInfoMapper.selectByExample(storeInfoExample);
 
         // businessEntityVO
         BusinessEntityVO businessEntityVO = new BusinessEntityVO();
-        businessEntityVO.setStoreNm(storeList);
-        SpringBeanUtil.copy(businessEntity,businessEntityVO);
 
+        if (businessEntityVOS.size()>0) {
+
+            businessEntityVO = businessEntityVOS.get(0);
+            businessEntityVO.setStoreInfoList(storeList);
+        }
         return businessEntityVO;
     }
 

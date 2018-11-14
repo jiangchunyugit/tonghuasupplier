@@ -6,7 +6,7 @@
     <classPathEntry
             location="src/main/resources/edb-jdbc16.jar"/>
     <context id="context1">
-        <!--<plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>-->
+        <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
         <!--<plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">-->
             <!--<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>-->
             <!--<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>-->
@@ -97,6 +97,8 @@
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
         <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
         <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
+        <table tableName="hr_people_entity" domainObjectName="HrPeopleEntity"/>
+
         <!-- 权限相关 E-->
         <!--<table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo"/>-->
         <!--<table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo"/>-->

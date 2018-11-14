@@ -58,6 +58,9 @@ public class CloudServiceImpl implements CloudService {
     @Value("${custom.cloud.syncOrderUrl}")
     String syncOrderUrl;
 
+    @Value("${custom.cloud.sendCreateAccountNotice}")
+    String sendCreateAccountNotice;
+
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
 
@@ -361,6 +364,30 @@ public class CloudServiceImpl implements CloudService {
             //todo jiangchunyu  更换路径
 //            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
         }catch (Exception e){
+            e.printStackTrace();
+            return buildFailResult();
+        }
+        return result;
+    }
+
+    /**
+     * 发送账号创建短信
+     *
+     * @param phone
+     * @param para
+     * @return
+     */
+    @Override
+    public RemoteResult<String> sendCreateAccountNotice(String phone, String para) {
+        MultiValueMap<String, Object> param = initParam();
+        param.add("telephone", phone);
+        param.add("code", para);
+        param.add("status","succeed");
+
+        RemoteResult<String> result = null;
+        try {
+            result = invokeRemoteMethod(sendCreateAccountNotice, param);
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }

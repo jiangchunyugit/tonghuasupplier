@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 分公司（省分站）
+ */
 @RestController
 @RequestMapping(value = "/branchCompany")
 @Api(value = "前端使用---分公司站点---蒋春雨",description = "前端使用---分公司站点---蒋春雨")
@@ -87,10 +92,10 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/branchCompanyById", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="分公司站点：编辑回写")
-    public MyRespBundle<BranchCompanyVO> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
+    public MyRespBundle<BranchCompany> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
-        BranchCompanyVO branchCompanyVO = branchCompanyService.branchCompanyById(id);
-        return sendJsonData(ResultMessage.SUCCESS, branchCompanyVO);
+        BranchCompany branchCompany = branchCompanyService.branchCompanyById(id);
+        return sendJsonData(ResultMessage.SUCCESS, branchCompany);
     }
 
     /**

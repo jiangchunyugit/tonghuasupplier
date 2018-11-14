@@ -19,6 +19,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 城市分站
+ */
 @Service
 public class CityBranchServiceImpl implements CityBranchService {
 
@@ -37,11 +42,9 @@ public class CityBranchServiceImpl implements CityBranchService {
     @Autowired
     CityMapper cityMapper;
     @Override
-    public int addCityBranch(CityBranchVO cityBranchVO) {
+    public int addCityBranch(CityBranch cityBranch) {
 
         // 城市分站保存
-        CityBranch cityBranch = new CityBranch();
-        SpringBeanUtil.copy(cityBranchVO,cityBranch);
         cityBranch.setCreateTime(new Date());
         cityBranch.setIsDel(OneTrue.YesOrNo.NO.shortVal());
         cityBranch.setIsEnable(UserEnabled.Enabled_false.shortVal());
@@ -52,36 +55,35 @@ public class CityBranchServiceImpl implements CityBranchService {
         if (branchCompany != null) {
             cityBranch.setProvinceCode(branchCompany.getProvinceCode());
         }
-        // todo 通过埃森哲城市分站获取城市code冗余
         int result = cityBranchMapper.insertSelective(cityBranch);
 
-        // 回刷经营主体,保存店面信息
-        BusinessEntity businessEntity = new BusinessEntity();
-        businessEntity.setBranchCompId(cityBranch.getBranchCompId());
-        businessEntity.setCityBranchId(cityBranch.getId());
-        cityBranchVO.getStoreInfoVOList().forEach(e->{
-            businessEntity.setId(e.getBusinessEntityId());
-            businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
-            e.setCityBranchId(cityBranch.getId());
-            StoreInfo storeInfo = new StoreInfo();
-            SpringBeanUtil.copy(e,storeInfo);
-            storeInfoMapper.insertSelective(storeInfo);
-        });
+//        // 回刷经营主体,保存店面信息
+//        BusinessEntity businessEntity = new BusinessEntity();
+//        businessEntity.setBranchCompId(cityBranch.getBranchCompId());
+//        businessEntity.setCityBranchId(cityBranch.getId());
+//        cityBranchVO.getStoreInfoVOList().forEach(e->{
+//            businessEntity.setId(e.getBusinessEntityId());
+//            businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
+//            e.setCityBranchId(cityBranch.getId());
+//            StoreInfo storeInfo = new StoreInfo();
+//            SpringBeanUtil.copy(e,storeInfo);
+//            storeInfoMapper.insertSelective(storeInfo);
+//        });
         return result;
     }
 
     @Override
-    public int updateCityBranch(CityBranchVO cityBranchVO) {
+    public int updateCityBranch(CityBranch cityBranch) {
         // 城市分站更新
-        CityBranch cityBranch = new CityBranch();
-        SpringBeanUtil.copy(cityBranchVO,cityBranch);
+//        CityBranch cityBranch = new CityBranch();
+//        SpringBeanUtil.copy(cityBranchVO,cityBranch);
 
         int result = cityBranchMapper.updateByPrimaryKeySelective(cityBranch);
-        cityBranchVO.getStoreInfoVOList().forEach(e->{
-
-            e.setCityBranchId(cityBranch.getId());
-            storeInfoMapper.updateByPrimaryKeySelective(e);
-        });
+//        cityBranchVO.getStoreInfoVOList().forEach(e->{
+//
+//            e.setCityBranchId(cityBranch.getId());
+//            storeInfoMapper.updateByPrimaryKeySelective(e);
+//        });
         return result;
     }
 
@@ -178,7 +180,8 @@ public class CityBranchServiceImpl implements CityBranchService {
     public List<CityBranch> cityBranchlistByCompany(Integer id) {
 
         CityBranchExample cityBranchExample = new CityBranchExample();
-        cityBranchExample.createCriteria().andBranchCompIdEqualTo(id);
+        cityBranchExample.createCriteria().andBranchCompIdEqualTo(id)
+        .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
 
         return cityBranchMapper.selectByExample(cityBranchExample);
     }

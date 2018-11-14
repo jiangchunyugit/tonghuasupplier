@@ -22,7 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 城市分站（市分站）
+ */
 @RestController
 @RequestMapping(value = "/cityBranch")
 @Api(value = "前端使用---城市分站---蒋春雨",description = "前端使用---城市分站---蒋春雨")
@@ -37,9 +41,9 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/saveCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：创建分站")
-    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息")  CityBranchVO cityBranchVO){
-        BeanValidator.validate(cityBranchVO, Severitys.Insert.class);
-        int line = cityBranchService.addCityBranch(cityBranchVO);
+    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息")  CityBranch cityBranch){
+        BeanValidator.validate(cityBranch, Severitys.Insert.class);
+        int line = cityBranchService.addCityBranch(cityBranch);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
         }
@@ -52,9 +56,9 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/updateCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：编辑分站")
-    public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息") CityBranchVO cityBranchVO){
-        BeanValidator.validate(cityBranchVO, Severitys.Update.class);
-        int line = cityBranchService.updateCityBranch(cityBranchVO);
+    public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息") CityBranch cityBranch){
+        BeanValidator.validate(cityBranch, Severitys.Update.class);
+        int line = cityBranchService.updateCityBranch(cityBranch);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, line);
         }
