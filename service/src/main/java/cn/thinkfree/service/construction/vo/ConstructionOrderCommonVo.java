@@ -14,7 +14,7 @@ import java.util.List;
 public class ConstructionOrderCommonVo {
 
     @ApiModelProperty("总页数")
-    private Integer countPageNum;
+    private long countPageNum;
 
     @ApiModelProperty("订单列表")
     private List<ConstructionOrderListVo> orderList;

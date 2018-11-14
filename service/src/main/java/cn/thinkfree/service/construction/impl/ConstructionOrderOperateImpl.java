@@ -39,7 +39,7 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
     public MyRespBundle<ConstructionOrderCommonVo> getOrderList(int pageNum, int pageSize, String cityName) {
         PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName);
         ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
-        constructionOrderCommonVo.setCountPageNum(pageInfo.getSize());
+        constructionOrderCommonVo.setCountPageNum(pageInfo.getTotal());
         constructionOrderCommonVo.setOrderList(pageInfo.getList());
         return RespData.success(constructionOrderCommonVo);
     }

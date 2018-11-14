@@ -147,4 +147,14 @@ public interface BuildConfigService {
      * @param pageIndex
      */
     PageVo<List<CompanySchemeVo>> queryByCompanyId(String companyId, int pageSize, int pageIndex);
+
+    /**
+     * 装饰公司删除施工方案
+     *
+     * @param companyId      公司ID
+     * @param optionUserId   操作人ID
+     * @param optionUserName 操作人名称
+     * @param schemeNo       方案编号
+     */
+    void companyDelScheme(String companyId, String optionUserId, String optionUserName, String schemeNo);
 }

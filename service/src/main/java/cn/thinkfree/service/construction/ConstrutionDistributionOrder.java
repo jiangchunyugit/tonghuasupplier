@@ -3,6 +3,8 @@ package cn.thinkfree.service.construction;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
 
+import java.util.List;
+
 public interface ConstrutionDistributionOrder {
 
 
@@ -11,7 +13,7 @@ public interface ConstrutionDistributionOrder {
      * @param companyName
      * @return
      */
-    MyRespBundle<DistributionOrderCityVo> getCityList(String companyName);
+    MyRespBundle<List<DistributionOrderCityVo>> getCityList(String companyName);
 
 
     /**

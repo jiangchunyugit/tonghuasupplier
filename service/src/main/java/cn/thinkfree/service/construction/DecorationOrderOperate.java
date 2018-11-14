@@ -18,5 +18,5 @@ public interface DecorationOrderOperate {
      * @param pageSize
      * @return
      */
-    MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(int pageNum, int pageSize);
+    MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(String companyNo,int pageNum, int pageSize);
 }

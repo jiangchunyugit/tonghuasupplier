@@ -77,14 +77,6 @@ public interface NewPcProjectService {
     MyRespBundle<SettlementVo> getPcProjectSettlement(String projectNo);
 
     /**
-     * PC获取项目详情接口--支付信息
-     *
-     * @param projectNo
-     * @return
-     */
-    MyRespBundle<PaymentVo> getPcProjectPayment(String projectNo);
-
-    /**
      * PC获取项目详情接口--评价管理
      *
      * @param projectNo
@@ -99,4 +91,13 @@ public interface NewPcProjectService {
      * @return
      */
     MyRespBundle<InvoiceVo> getPcProjectInvoice(String projectNo);
+
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    MyRespBundle getShangHaiPriceDetail(String designId,String projectNo);
+
+
 }

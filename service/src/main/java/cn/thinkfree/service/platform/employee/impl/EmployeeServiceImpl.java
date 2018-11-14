@@ -472,6 +472,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public List<EmployeeMsg> queryDesignerByCompanyId(String companyId, String roleCode) {
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode).andAuthStateEqualTo(2).andEmployeeStateEqualTo(2);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        return employeeMsgs;
+    }
+
+    @Override
     public PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司ID不能为空");

@@ -19,7 +19,7 @@ public class ProjectQuotation extends BaseModel {
      *
      * @mbg.generated
      */
-    private Long id;
+    private String id;
 
     /**
      * Database Column Remarks:
@@ -304,7 +304,7 @@ public class ProjectQuotation extends BaseModel {
      *
      * @mbg.generated
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
@@ -316,8 +316,8 @@ public class ProjectQuotation extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setId(Long id) {
-        this.id = id;
+    public void setId(String id) {
+        this.id = id == null ? null : id.trim();
     }
 
     /**
