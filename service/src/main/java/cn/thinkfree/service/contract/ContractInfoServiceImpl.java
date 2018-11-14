@@ -17,6 +17,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -128,6 +129,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
     @Autowired
     EventService eventService;
+
+	@Autowired
+	NewSchedulingService newSchedulingService;
 
 	@Value( "${custom.cloud.fileUpload}" )
 	private String fileUploadUrl;
@@ -403,7 +407,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				example1.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber )
 				.andCostTypeEqualTo( childList.get( i ).getCostType() );
 				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample( example1 );
-				root.put( childList.get( i ).getCostType(), childListr );
+				root.put("code"+ childList.get( i ).getCostType(), childListr );
 			}
 		}
 		/* 判断公司类型 */
@@ -667,6 +671,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		/* 公司详情 */
 		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo( companyId );
 
+		/* 合同信息 */
+		ContractVo vo = new ContractVo();
+		vo.setContractNumber( contractNumber );
+		ContractVo	newVo = contractInfoMapper.selectContractBycontractNumber( vo );
+		reMap.put("ContractVo",newVo == null ? "" : newVo );
+
 		/* 合同详情 */
 		ContractTermsExample exp = new ContractTermsExample();
 		/* 判断公司类型 */
@@ -721,6 +731,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setContractType("2");
 		/* record.setConractUrlPdf(url); */
 		orderContractMapper.insertSelective( record );
+		newSchedulingService.createScheduling(orderNumber);
 		return(contractNumber);
 	}
 
