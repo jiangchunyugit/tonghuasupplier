@@ -16,6 +16,8 @@ import cn.thinkfree.database.vo.account.ChangeMeVO;
 import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.user.strategy.StrategyFactory;
 import cn.thinkfree.service.utils.ThreadLocalHolder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,7 +64,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     CompanyUserMapper companyUserMapper;
 
     @Autowired
-    RedisTemplate  redisTemplate;
+    RedisTemplate<String,UserVO>  redisTemplate;
 
     @Value("${custom.userService.useCache}")
     Boolean useCache;
@@ -149,7 +151,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
      */
     private Optional<SecurityUser> getUserVOFromCache(String phone) {
         if(useCache){
-            UserVO userVO = (UserVO) redisTemplate.opsForValue().get(phone);
+            UserVO userVO =  redisTemplate.opsForValue().get(phone);
             return Optional.ofNullable(userVO);
         }
         return Optional.ofNullable(null);

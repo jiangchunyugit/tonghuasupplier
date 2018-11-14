@@ -7,6 +7,7 @@ import cn.thinkfree.core.event.model.UserLoginAfter;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.utils.JwtUtils;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,7 @@ public class SecuritySuccessAuthHandler
     JwtUtils jwtUtils;
 
     @Autowired
-    RedisTemplate redisTemplate;
+    RedisTemplate<String,Object> redisTemplate;
 
     @Value("${custom.userService.useCache}")
     Boolean useCache;
@@ -65,7 +66,6 @@ public class SecuritySuccessAuthHandler
         MyEventBus.getInstance().publicEvent(
                 new UserLoginAfter(user.getUsername(),user.getPhone(),SecurityRequestUtil.getRequestIp(request)));
         cacheUserVO(user);
-//        sendAjaxResult(request,response);
         Map<String, Object> result = new HashMap<String, Object>();
         Map<String,Object> userModel = new HashMap<>();
         userModel.put("username",user.getUsername());
@@ -77,9 +77,6 @@ public class SecuritySuccessAuthHandler
         result.put("token","Bearer "+token);
 
         sendAjaxResult(request,response,result);
-//        saveMessage(request, result);
-//        request.getRequestDispatcher("/index").forward(request, response);
-
     }
 
     /**
@@ -88,7 +85,7 @@ public class SecuritySuccessAuthHandler
      */
     private void cacheUserVO(SecurityUser user) {
         if(useCache){
-            redisTemplate.opsForValue().set(user.getPhone(),user,12, TimeUnit.HOURS);
+            redisTemplate.opsForValue().set(user.getPhone(),user,12,TimeUnit.HOURS);
         }
     }
 
