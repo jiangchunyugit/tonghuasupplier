@@ -91,12 +91,5 @@ public class PcProjectController {
         return newProjectService.getPcProjectInvoice(projectNo);
     }
 
-    @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
-    @ApiOperation("获取上海报价信息")
-    public MyRespBundle getShangHaiPriceDetail(
-            @RequestParam(name = "designId") @ApiParam(name = "designId", value = "案例id fc80f1ef-4937-41a4-9443-7ebf95500143",required = true) String designId,
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
-        return newProjectService.getShangHaiPriceDetail(designId,projectNo);
-    }
 
 }

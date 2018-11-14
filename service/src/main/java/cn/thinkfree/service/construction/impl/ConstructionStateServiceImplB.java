@@ -101,7 +101,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
                 break;
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (stage.equals(stageCode)) {
+        if (stageCode.equals(stage)) {
             if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
                 return RespData.success();
             }

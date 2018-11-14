@@ -77,4 +77,10 @@ public interface AfInstanceService {
      */
     Map<String, Integer> getProjectCheckResult(List<String> projectNos);
 
+    /**
+     * 获取项目审批列表（PDF地址）
+     * @param projectNo
+     * @return
+     */
+    List<String> projectApprovalList(String projectNo);
 }

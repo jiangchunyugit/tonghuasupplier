@@ -5,13 +5,13 @@ import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.exception.CommonException;
 import cn.thinkfree.core.utils.JSONUtil;
+import cn.thinkfree.core.utils.ThreadManager;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.config.HttpLinks;
-import cn.thinkfree.service.config.PdfConfig;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
@@ -65,6 +65,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfSubRoleService subRoleService;
     @Autowired
     private NewOrderService orderService;
+    @Autowired
+    private AfInstancePdfUrlService instancePdfUrlService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -528,7 +530,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 //            sendChangeMoney(instance.getProjectNo(), instance.getData(), instance.getRemark());
         }
 
-        createPdf(instance.getProjectNo(), instance.getConfigNo(), instance.getScheduleSort());
+        createPdf(instance);
     }
 
     private void sendChangeMoney(String projectNo, String data, String remark) {
@@ -541,8 +543,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         AfUtils.sendChangeMoney(httpLinks.getCreateFee(), orderNo, money, "+" + remark);
     }
 
-    private void createPdf(String projectNo, String configNo, Integer scheduleSort) {
-//        AfUtils.createPdf()
+    private void createPdf(AfInstance instance) {
+        try {
+            ThreadManager.getThreadPollProxy().execute(()-> {
+                instancePdfUrlService.create(instance);
+            });
+        } catch (Exception e) {
+            LOGGER.error("审批记录导出为PDF出错");
+        }
     }
 
     /**
@@ -1042,5 +1050,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         }
         return checkResult;
+    }
+
+    @Override
+    public List<String> projectApprovalList(String projectNo) {
+        List<String> pdfUrls = new ArrayList<>();
+        List<AfInstancePdfUrl> instancePdfUrls= instancePdfUrlService.findByProjectNo(projectNo);
+        if (instancePdfUrls != null) {
+            for (AfInstancePdfUrl instancePdfUrl : instancePdfUrls) {
+                pdfUrls.add(instancePdfUrl.getPdfUrl());
+            }
+        }
+        return pdfUrls;
     }
 }

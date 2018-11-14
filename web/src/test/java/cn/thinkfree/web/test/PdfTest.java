@@ -60,6 +60,8 @@ public class PdfTest {
         exportPdfVO.setApprovalUsers(userVOs);
 
 
-        AfUtils.createPdf(pdfConfig, exportPdfVO, "{}");
+        String exportFileName = AfUtils.createPdf(pdfConfig, exportPdfVO, "{}");
+        String pdfUrl = AfUtils.uploadFile(pdfConfig.getExportDir(), exportFileName, pdfConfig.getFileUploadUrl());
+        System.out.println(pdfUrl);
     }
 }

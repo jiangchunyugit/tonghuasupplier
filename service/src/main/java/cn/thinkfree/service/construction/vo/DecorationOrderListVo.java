@@ -51,4 +51,7 @@ public class DecorationOrderListVo {
     @ApiModelProperty("管家11")
     private String housekeeper;
 
+    @ApiModelProperty("项目编号12")
+    private String orderNo;
+
 }
