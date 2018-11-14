@@ -69,7 +69,10 @@ public class DesignerMsgVo {
         return sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(Integer sex) {
+        if(sex == null){
+            sex = -1;
+        }
         this.sex = sex;
     }
 
@@ -149,7 +152,10 @@ public class DesignerMsgVo {
         return authState;
     }
 
-    public void setAuthState(int authState) {
+    public void setAuthState(Integer authState) {
+        if(authState == null){
+            authState = -1;
+        }
         this.authState = authState;
     }
 

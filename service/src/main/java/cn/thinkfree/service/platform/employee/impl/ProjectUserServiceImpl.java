@@ -27,23 +27,38 @@ public class ProjectUserServiceImpl implements ProjectUserService {
 
     @Override
     public List<String> queryUserId(String projectNo, RoleFunctionEnum functionEnum) {
+        List<OrderUser> orderUsers = queryOrderUser(projectNo, functionEnum);
+        return ReflectUtils.getList(orderUsers, "userId");
+    }
+
+    @Override
+    public List<OrderUser> queryOrderUser(String projectNo, RoleFunctionEnum functionEnum) {
         List<String> roleCodes = functionService.queryRoleCodes(functionEnum);
-        if(roleCodes.isEmpty()){
+        if (roleCodes.isEmpty()) {
             return new ArrayList<>();
         }
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andProjectNoEqualTo(projectNo).andRoleCodeIn(roleCodes);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
-        return ReflectUtils.getList(orderUsers,"userId");
+        return orderUsers;
     }
 
     @Override
     public String queryUserIdOne(String projectNo, RoleFunctionEnum functionEnum) {
-        List<String> strings = queryUserId(projectNo,functionEnum);
-        if(strings.isEmpty()){
+        List<String> strings = queryUserId(projectNo, functionEnum);
+        if (strings.isEmpty()) {
             return null;
         }
         return strings.get(0);
+    }
+
+    @Override
+    public OrderUser queryOrderUserOne(String projectNo, RoleFunctionEnum functionEnum) {
+        List<OrderUser> orderUsers = queryOrderUser(projectNo,functionEnum);
+        if (orderUsers.isEmpty()) {
+            return null;
+        }
+        return orderUsers.get(0);
     }
 
     @Override
@@ -64,7 +79,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andOrderNoEqualTo(orderNo).andProjectNoEqualTo(projectNo).andUserIdEqualTo(userId).andRoleCodeEqualTo(roleCode);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
-        if(orderUsers.isEmpty()){
+        if (orderUsers.isEmpty()) {
             throw new RuntimeException("关联关系不存在");
         }
         orderUserMapper.deleteByExample(userExample);

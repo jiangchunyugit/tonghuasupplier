@@ -474,9 +474,54 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public List<EmployeeMsg> queryDesignerByCompanyId(String companyId, String roleCode) {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode).andAuthStateEqualTo(2).andEmployeeStateEqualTo(2);
+        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode).andAuthStateEqualTo(2).andEmployeeStateEqualTo(1);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         return employeeMsgs;
+    }
+
+    @Override
+    public PageVo<List<EmployeeMsgVo>> queryStaffByDesignCompanyId(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
+        if (StringUtils.isBlank(roleCode)) {
+            throw new RuntimeException("角色编码不能为空");
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        criteria.andCompanyIdEqualTo(companyId);
+        if (StringUtils.isNotBlank(searchKey)) {
+            msgExample.or().andUserIdLike("%" + searchKey + "%");
+            msgExample.or().andRealNameLike("%" + searchKey + "%");
+            msgExample.or().andCertificateLike("%" + searchKey + "%");
+        }
+        long total = employeeMsgMapper.countByExample(msgExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
+        if (msgs.isEmpty()) {
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> userIds = ReflectUtils.getList(msgs, "userId");
+        List<RoleVo> roleVos = queryRoles(null,-1,10000,1).getData();
+        Map<String, String> roleMap = ReflectUtils.listToMap(roleVos, "roleCode", "roleName");
+        Map<String, UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
+        List<BasicsData> cardTypes = basicsService.cardTypes();
+        List<BasicsData> countryCodes = basicsService.countryType();
+        Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
+        Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
+        List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        for (EmployeeMsg employeeMsg : msgs) {
+            UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
+            String roleName = roleMap.get(employeeMsg.getRoleCode());
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            employeeMsgVos.add(msgVo);
+        }
+        PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(employeeMsgVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
     }
 
     @Override
@@ -558,6 +603,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         msgVo.setCertificatePhotoUrl3(employeeMsg.getCertificatePhotoUrl3());
         msgVo.setCertificateType(employeeMsg.getCertificateType() + "");
         msgVo.setCountryCode(employeeMsg.getCountryCode());
+        msgVo.setSex(employeeMsg.getSex() + "");
+        msgVo.setEmail(employeeMsg.getEmail());
+        msgVo.setWorkTime(employeeMsg.getWorkingTime() + "");
+        msgVo.setAddress(employeeMsg.getProvince() + "," + employeeMsg.getCity());
         if(cardType != null){
             msgVo.setCertificateTypeName(cardType.getBasicsName());
         }

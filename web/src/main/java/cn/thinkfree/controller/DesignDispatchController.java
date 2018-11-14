@@ -46,6 +46,7 @@ public class DesignDispatchController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "orderList", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<DesignerOrderVo>>> queryDesignerOrder(
+            @ApiParam(name = "queryStage", required = false, value = "查询的数据阶段，具体字段待定，非必填，设计合同列表(DOCL)") @RequestParam(name = "queryStage", required = false) String queryStage,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userMsg", required = false, value = "业主姓名或电话") @RequestParam(name = "userMsg", required = false) String userMsg,
@@ -64,7 +65,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
-            PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+            PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
@@ -94,27 +95,6 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             designDispatchService.designerOrderExcel(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @ApiOperation("设计合同管理---->王玲组")
-    @MyRespBody
-    @RequestMapping(value = "designOrderContract", method = {RequestMethod.POST, RequestMethod.GET})
-    public void designOrderContract(
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
-            @ApiParam(name = "contractNo", required = false, value = "合同编号") @RequestParam(name = "contractNo", required = false) String contractNo,
-            @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo,
-            @ApiParam(name = "source", required = false, value = "订单来源") @RequestParam(name = "source", required = false) String source,
-            @ApiParam(name = "ownerMsg", required = false, value = "业主信息") @RequestParam(name = "ownerMsg", required = false) String ownerMsg,
-            @ApiParam(name = "signTimeStart", required = false, value = "签约时间开始") @RequestParam(name = "signTimeStart", required = false) String signTimeStart,
-            @ApiParam(name = "signTimeEnd", required = false, value = "签约时间结束") @RequestParam(name = "signTimeEnd", required = false) String signTimeEnd,
-            @ApiParam(name = "province", required = false, value = "所在省份") @RequestParam(name = "province", required = false) String province,
-            @ApiParam(name = "city", required = false, value = "所在市") @RequestParam(name = "city", required = false) String city,
-            @ApiParam(name = "contractState", required = false, value = "合同状态，1生效，2未生效") @RequestParam(name = "contractState", required = false, defaultValue = "-1") int contractState){
-        try {
-            designDispatchService.designOrderContract(companyId, contractNo, designOrderNo, source, ownerMsg, signTimeStart, signTimeEnd, province, city, contractState);
         } catch (Exception e) {
             e.printStackTrace();
         }

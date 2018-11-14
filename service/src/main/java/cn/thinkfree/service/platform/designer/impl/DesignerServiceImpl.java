@@ -177,30 +177,34 @@ public class DesignerServiceImpl implements DesignerService {
             throw new RuntimeException("无效的设计是ID");
         }
         DesignerMsg designerMsg = designerMsgs.get(0);
-        EmployeeMsg employeeMsg = queryEmployeeMsgByUserId(userId);
         UserMsgVo userMsgVo = userCenterService.queryUser(userId);
         DesignerMsgVo designerMsgVo = new DesignerMsgVo();
         designerMsgVo.setRealName(userMsgVo.getRealName());
-        designerMsgVo.setSex(employeeMsg.getSex());
-        designerMsgVo.setBirthday(DateUtils.dateToStr(employeeMsg.getBindDate()));
         designerMsgVo.setUserName(userMsgVo.getUserName());
         designerMsgVo.setPhone(userMsgVo.getUserPhone());
-        designerMsgVo.setEmail(employeeMsg.getEmail());
-        designerMsgVo.setCertificate(employeeMsg.getCertificate());
-        designerMsgVo.setCertificateUrl1(employeeMsg.getCertificatePhotoUrl1());
-        designerMsgVo.setCertificateUrl2(employeeMsg.getCertificatePhotoUrl2());
-        designerMsgVo.setCertificateUrl3(employeeMsg.getCertificatePhotoUrl3());
-        designerMsgVo.setAuthState(employeeMsg.getAuthState());
         designerMsgVo.setSource(designerMsg.getSource());
-        designerMsgVo.setRegisterTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
+        EmployeeMsg employeeMsg = queryEmployeeMsgByUserId(userId);
+        if(employeeMsg != null){
+            designerMsgVo.setSex(employeeMsg.getSex());
+            designerMsgVo.setBirthday(DateUtils.dateToStr(employeeMsg.getBindDate()));
+            designerMsgVo.setEmail(employeeMsg.getEmail());
+            designerMsgVo.setCertificate(employeeMsg.getCertificate());
+            designerMsgVo.setCertificateUrl1(employeeMsg.getCertificatePhotoUrl1());
+            designerMsgVo.setCertificateUrl2(employeeMsg.getCertificatePhotoUrl2());
+            designerMsgVo.setCertificateUrl3(employeeMsg.getCertificatePhotoUrl3());
+            designerMsgVo.setAuthState(employeeMsg.getAuthState());
+            designerMsgVo.setRegisterTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
+        }
         String designTag = "云设计家设计师";
-        if (designerMsg.getTag() != 1) {
+        if (designerMsg.getTag() == null || designerMsg.getTag() != 1) {
             designTag = "待定";
         }
         designerMsgVo.setDesignTag(designTag);
-        designerMsgVo.setLevel(designerMsg.getLevel().intValue());
+        if(designerMsg.getLevel() != null){
+            designerMsgVo.setLevel(designerMsg.getLevel().intValue());
+        }
         String identity = "社会化设计师";
-        if (designerMsg.getIdentity() != 1) {
+        if (designerMsg.getIdentity() == null || designerMsg.getIdentity() != 1) {
             identity = "待定";
         }
         designerMsgVo.setIdentity(identity);

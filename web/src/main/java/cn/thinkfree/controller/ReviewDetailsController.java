@@ -151,8 +151,17 @@ public class ReviewDetailsController extends AbsBaseController {
     @RequestMapping(value = "addCheckDetail",method = {RequestMethod.GET,RequestMethod.POST})
     @ApiOperation("提交精准报价审核信息")
     public MyRespBundle<String> addCheckDetail(
-            @ApiParam(value = "报价审核实体", name = "checkVo") ProjectQuotationCheckVo checkVo){
-        return reviewDetailsService.addCheckDetail(checkVo);
+            @RequestParam(name = "projectNo") @ApiParam(value = "提交精准报价", name = "projectNo") String projectNo){
+        return reviewDetailsService.addCheckDetail(projectNo);
+    }
+
+    @RequestMapping(value = "reviewOffer",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation("审核精准报价")
+    public MyRespBundle<String> reviewOffer(
+            @RequestParam(name = "projectNo") @ApiParam(value = "提交精准报价", name = "projectNo") String projectNo,
+            @RequestParam(name = "result", defaultValue = "-1") @ApiParam(value = "审核结果(1,通过 2,不通过)", name = "result") int result,
+            @RequestParam(name = "refuseReason") @ApiParam(value = "不通过原因", name = "refuseReason") String refuseReason){
+        return reviewDetailsService.reviewOffer(projectNo, result, refuseReason);
     }
 
 }

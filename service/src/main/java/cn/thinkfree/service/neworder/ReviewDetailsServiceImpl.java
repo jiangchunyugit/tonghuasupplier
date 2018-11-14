@@ -448,18 +448,48 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
 
     /**
      * 提交精准报价审核信息
-     * @param checkVo
+     * @param projectNo
      * @return
      */
     @Override
-    public MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo) {
-        ProjectQuotationCheck check = BaseToVoUtils.getVo(checkVo, ProjectQuotationCheck.class);
+    public MyRespBundle<String> addCheckDetail(String projectNo) {
+        ProjectQuotationCheck check = new ProjectQuotationCheck();
+        check.setSubmitTime(new Date());
+        check.setProjectNo(projectNo);
         check.setSubmitTime(new Date());
         check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         int i = checkMapper.insertSelective(check);
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("插入失败");
         }
+        return RespData.success();
+    }
+
+    @Override
+    public MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason) {
+        //审核结果(1,通过 2,不通过)
+        if(result != 1 && result != 2){
+            return RespData.error("无效的审核状态");
+        }
+        if(result == 2 && StringUtils.isBlank(refuseReason)){
+            return RespData.error("必须填写不通过原因");
+        }
+        ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        checkExample.createCriteria().andProjectNoEqualTo(projectNo).andCheckStatusEqualTo(1);
+        List<ProjectQuotationCheck> checks = checkMapper.selectByExample(checkExample);
+        if(checks.isEmpty()){
+            return RespData.error("没有查询到提交审核记录");
+        }
+        ProjectQuotationCheck check = checks.get(0);
+        check.setResult(result);
+        //(1,审核中 2,审核失败 3,审核通过)
+        if(result == 1){
+            check.setCheckStatus(3);
+        }else{
+            check.setCheckStatus(2);
+        }
+        check.setRefuseReason(refuseReason);
+        checkMapper.updateByPrimaryKeySelective(check);
         return RespData.success();
     }
 }

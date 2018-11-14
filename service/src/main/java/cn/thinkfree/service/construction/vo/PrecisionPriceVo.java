@@ -24,7 +24,7 @@ public class PrecisionPriceVo {
     private String projectNo;
 
     @ApiModelProperty("申请时间")
-    private Date appointmentTime;
+    private long appointmentTime;
 
     @ApiModelProperty("项目地址")
     private String addressDetail;
@@ -40,4 +40,7 @@ public class PrecisionPriceVo {
 
     @ApiModelProperty("订单状态(审核状态)")
     private String orderStage;
+
+    @ApiModelProperty("报价审核状态(1,审核中 2,审核失败 3,审核通过)")
+    private int offerCheck;
 }
