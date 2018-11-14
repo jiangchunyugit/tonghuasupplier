@@ -19,9 +19,6 @@ public class AuditInfoVO extends PcAuditInfo {
     }
 
     public void setCompanyAuditName(String companyAuditName) {
-        if(getCompanyAuditType() != null){
-            companyAuditName = CompanyAuditStatus.getDesc(Integer.parseInt(getCompanyAuditType()));
-        }
         this.companyAuditName = companyAuditName;
     }
 

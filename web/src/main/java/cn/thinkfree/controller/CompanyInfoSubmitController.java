@@ -3,10 +3,12 @@ package cn.thinkfree.controller;
 
 import java.util.Map;
 
+import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
 
+import cn.thinkfree.service.constants.CompanyConstants;
 import com.github.pagehelper.PageInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -221,8 +223,10 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/companyDetails")
     @MyRespBody
     public MyRespBundle<CompanyDetailsVO> companyDetails(@ApiParam("合同编号")@RequestParam(required = false) String contractNumber,
-    		@ApiParam("公司编号")@RequestParam String companyId, String auditType){
-        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId, auditType);
+    		@ApiParam("公司编号")@RequestParam String companyId,
+            @ApiParam("审核类型0入驻 1合同 2变更 3续签4结算比例 5结算规则")@RequestParam String auditType,
+            @ApiParam("除入驻外需要传申请时间")@RequestParam(required = false) String applyDate){
+        CompanyDetailsVO jbj =  companySubmitService.companyDetails(contractNumber, companyId, auditType, applyDate);
         return sendJsonData(ResultMessage.SUCCESS,jbj);
     }
 

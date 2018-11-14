@@ -101,12 +101,12 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
                 break;
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (stage == stageCode) {
+        if (stage.equals(stageCode)) {
             if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
                 return RespData.success();
             }
         }
-        return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
+        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
     }
 
     /**

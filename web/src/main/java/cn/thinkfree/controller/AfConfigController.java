@@ -10,9 +10,8 @@ import cn.thinkfree.service.approvalflow.AfConfigService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 /**
  * 审批流配置控制层
@@ -27,7 +26,7 @@ import javax.annotation.Resource;
 public class AfConfigController extends AbsBaseController {
 
 
-    @Resource
+    @Autowired
     private AfConfigService configService;
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)

@@ -64,6 +64,9 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     SystemRoleMapper systemRoleMapper;
 
     @Autowired
+    HrPeopleEntityMapper hrPeopleEntityMapper;
+
+    @Autowired
     EventService eventService;
 
     @Override
@@ -288,7 +291,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         List<SystemRole> roles = accountVO.getRoles();
         saveUserRole(userCode,roles);
 
-        AccountCreate accountCreate = new AccountCreate(userCode,account.getPhone(),password,userInfo.getName());
+        AccountCreate accountCreate = new AccountCreate(userCode,userInfo.getPhone(),password,userInfo.getName(),true);
         eventService.publish(accountCreate);
         return accountVO;
     }
@@ -318,8 +321,18 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             accountVO.setCityBranch(cityBranch);
         }
 
-        // TODO 补充第三方数据
+
         ThirdAccountVO thirdAccountVO = new ThirdAccountVO();
+        if(StringUtils.isNotBlank(pcUserInfo.getThirdId())){
+            HrPeopleEntity hrPeopleEntity = hrPeopleEntityMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getThirdId()));
+            thirdAccountVO.setAccount(hrPeopleEntity.getId().toString());
+            thirdAccountVO.setDept(hrPeopleEntity.getOrganizationText());
+            thirdAccountVO.setEmail(hrPeopleEntity.getPeopleEmail());
+            thirdAccountVO.setGroup(hrPeopleEntity.getPeopleGroup());
+            thirdAccountVO.setName(hrPeopleEntity.getPeopleName());
+            thirdAccountVO.setPhone(hrPeopleEntity.getPeopleTelephone());
+            thirdAccountVO.setWorkNumber(hrPeopleEntity.getPeopleNumber());
+        }
         accountVO.setThirdAccount(thirdAccountVO);
 
         List<SystemRole> roles = systemRoleMapper.selectSystemRoleVOForGrant(id,convertScope(pcUserInfo));
@@ -609,18 +622,6 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     }
 
 
-    public short getLevel(Short level){
-        if(UserLevel.Creator.shortVal() == level){
-            return UserLevel.Company_Admin.shortVal();
-        }else if(UserLevel.Company_Admin.shortVal() == level){
-            return UserLevel.Company_Province.shortVal();
-        }else if (UserLevel.Company_Province.shortVal() == level){
-            return UserLevel.Company_City.shortVal();
-        }else if(UserLevel.Company_City.shortVal() == level){
-            return UserLevel.Company_Area.shortVal();
-        }else{
-            return UserLevel.Company_City_Master.shortVal();
-        }
-    }
+
 
 }

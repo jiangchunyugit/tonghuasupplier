@@ -8,6 +8,7 @@ import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ConstrutionDistributionOrderImpl {
+public class ConstrutionDistributionOrderImpl implements ConstrutionDistributionOrder {
 
     @Autowired
     ConstructionStateServiceB constructionStateServiceB;
@@ -30,10 +31,11 @@ public class ConstrutionDistributionOrderImpl {
     ConstructionOrderMapper constructionOrderMapper;
 
     /**
-     *  施工派单-公司列表接口（含搜索公司）
+     *  施工派单-公司/城市列表接口（含搜索公司）
      * @param companyName
      * @return
      */
+    @Override
     public MyRespBundle<DistributionOrderCityVo> getCityList(String companyName) {
         DistributionOrderCityVo DistributionOrderCityVo = new DistributionOrderCityVo();
         CompanyInfoExample example = new CompanyInfoExample();
@@ -56,10 +58,11 @@ public class ConstrutionDistributionOrderImpl {
     }
 
     /**
-     *  施工派单-公司列表接口（含搜索公司）
+     *  施工派单- 确认派单
      * @param companyId
      * @return
      */
+    @Override
     public MyRespBundle<String> DistributionCompany(String orderNo,String companyId) {
 
         if (StringUtils.isBlank(orderNo)) {
@@ -77,7 +80,7 @@ public class ConstrutionDistributionOrderImpl {
 
         // 改变订单状态
         MyRespBundle<String> r = constructionStateServiceB.operateDispatchToConstruction(orderNo);
-        if (ResultMessage.SUCCESS.code != r.getCode()){
+        if (ResultMessage.SUCCESS.code.equals(r.getCode())){
             return RespData.error(ResultMessage.ERROR.code, r.getMessage());
         }
 

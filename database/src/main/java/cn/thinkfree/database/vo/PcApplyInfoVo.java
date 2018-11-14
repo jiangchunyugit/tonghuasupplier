@@ -25,6 +25,17 @@ public class PcApplyInfoVo extends PcApplyInfo {
     @ApiModelProperty(value = "地区名称")
     private String areaName;
 
+    @ApiModelProperty(value = "合同编码")
+    private String contractNumber;
+
+    public String getContractNumber() {
+        return contractNumber;
+    }
+
+    public void setContractNumber(String contractNumber) {
+        this.contractNumber = contractNumber;
+    }
+
     public String getRoleName() {
         return roleName;
     }

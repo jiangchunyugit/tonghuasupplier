@@ -6,6 +6,7 @@ import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
+import org.apache.catalina.User;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -92,7 +93,7 @@ public interface CompanySubmitService {
      * @param companyId
      * @return
      */
-    CompanyDetailsVO companyDetails(String contractNumber,String companyId, String auditType);
+    CompanyDetailsVO companyDetails(String contractNumber,String companyId, String auditType ,String applyDate);
 
     /**
      * 签约完成
@@ -114,4 +115,5 @@ public interface CompanySubmitService {
      * @return
      */
     AuditInfoVO findTempAuditStatus(String companyId);
+
 }

@@ -27,6 +27,7 @@
     <result column="is_need_check" jdbcType="INTEGER" property="isNeedCheck" />
     <result column="is_adopt" jdbcType="INTEGER" property="isAdopt" />
     <result column="version" jdbcType="INTEGER" property="version" />
+    <result column="scheme_no" jdbcType="VARCHAR" property="schemeNo" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -101,7 +102,7 @@
     -->
     id, company_id, project_no, big_sort, big_name, rename_big, plan_start_time, plan_end_time, 
     actual_start_time, actual_end_time, status, create_time, is_matching, is_completed, 
-    is_add, is_change, remark, submit_num, is_need_check, is_adopt, version
+    is_add, is_change, remark, submit_num, is_need_check, is_adopt, version, scheme_no
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.ProjectBigSchedulingDetailsExample" resultMap="BaseResultMap">
     <!--
@@ -160,16 +161,16 @@
       actual_end_time, status, create_time, 
       is_matching, is_completed, is_add, 
       is_change, remark, submit_num, 
-      is_need_check, is_adopt, version
-      )
+      is_need_check, is_adopt, version, 
+      scheme_no)
     values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
       #{bigSort,jdbcType=INTEGER}, #{bigName,jdbcType=VARCHAR}, #{renameBig,jdbcType=VARCHAR}, 
       #{planStartTime,jdbcType=TIMESTAMP}, #{planEndTime,jdbcType=TIMESTAMP}, #{actualStartTime,jdbcType=TIMESTAMP}, 
       #{actualEndTime,jdbcType=TIMESTAMP}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
       #{isMatching,jdbcType=INTEGER}, #{isCompleted,jdbcType=INTEGER}, #{isAdd,jdbcType=INTEGER}, 
       #{isChange,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, #{submitNum,jdbcType=INTEGER}, 
-      #{isNeedCheck,jdbcType=INTEGER}, #{isAdopt,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}
-      )
+      #{isNeedCheck,jdbcType=INTEGER}, #{isAdopt,jdbcType=INTEGER}, #{version,jdbcType=INTEGER}, 
+      #{schemeNo,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ProjectBigSchedulingDetails">
     <!--
@@ -241,6 +242,9 @@
       <if test="version != null">
         version,
       </if>
+      <if test="schemeNo != null">
+        scheme_no,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -305,6 +309,9 @@
       </if>
       <if test="version != null">
         #{version,jdbcType=INTEGER},
+      </if>
+      <if test="schemeNo != null">
+        #{schemeNo,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -388,6 +395,9 @@
       <if test="record.version != null">
         version = #{record.version,jdbcType=INTEGER},
       </if>
+      <if test="record.schemeNo != null">
+        scheme_no = #{record.schemeNo,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -419,7 +429,8 @@
       submit_num = #{record.submitNum,jdbcType=INTEGER},
       is_need_check = #{record.isNeedCheck,jdbcType=INTEGER},
       is_adopt = #{record.isAdopt,jdbcType=INTEGER},
-      version = #{record.version,jdbcType=INTEGER}
+      version = #{record.version,jdbcType=INTEGER},
+      scheme_no = #{record.schemeNo,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -491,6 +502,9 @@
       <if test="version != null">
         version = #{version,jdbcType=INTEGER},
       </if>
+      <if test="schemeNo != null">
+        scheme_no = #{schemeNo,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -519,7 +533,8 @@
       submit_num = #{submitNum,jdbcType=INTEGER},
       is_need_check = #{isNeedCheck,jdbcType=INTEGER},
       is_adopt = #{isAdopt,jdbcType=INTEGER},
-      version = #{version,jdbcType=INTEGER}
+      version = #{version,jdbcType=INTEGER},
+      scheme_no = #{schemeNo,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 

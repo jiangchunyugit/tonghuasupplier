@@ -238,11 +238,12 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 				//添加审核记录表
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 				String auditPersion = userVO == null ? "" : userVO.getUsername();
+				String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 				String companyId = userVO==null?"":userVO.getCompanyID();
 				String ratioNumber = String.valueOf(ratioNumbers.get(i));
 				PcAuditInfo record = new PcAuditInfo("4", "2",
 						auditPersion, auditStatus, new Date(),
-						companyId, auditCase, String.valueOf(ratioNumbers.get(i)));
+						companyId, auditCase, String.valueOf(ratioNumbers.get(i)), new Date(), auditAccount);
 				//插入审核记录
 				pcAuditInfoMapper.insertSelective(record);
 				//修改状态

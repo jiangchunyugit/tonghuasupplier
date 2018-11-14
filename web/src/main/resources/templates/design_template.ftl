@@ -87,7 +87,10 @@
         甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。
     </section>
     <section class='indent'>
-        甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自<p class="placeholderT">${c03?datetime('yyyy')}</p>年<p class="placeholderT">${c03?datetime('MM')}</p>月<p class="placeholderT">${c03?datetime('dd')}</p>日至<p class="placeholderT">${c04?datetime('yyyy')}</p>年 <p class="placeholderT">${c04?datetime('MM')}</p>月<p class="placeholderT">${c04?datetime('dd')}</p>日。乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
+        甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自
+        <p class="placeholderT">${startTime?string('yyyy')}</p>年<p class="placeholderT">${startTime?string('MM')}</p>月<p class="placeholderT">${startTime?string('dd')}</p>日
+            至<p class="placeholderT">${endTime?string('yyyy')}</p>年 <p class="placeholderT">${endTime?string('MM')}</p>月<p class="placeholderT">${endTime?string('dd')}</p>日。
+            乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
     </section>
     <section class='indent'>
         乙方指定返设计款、产品服务费、施工管理费等其他相关款项的账户信息为：
@@ -166,9 +169,9 @@
     <section class='indent'>
         1. 甲方在对应《设计合同》收到客户支付相应设计费后分三次与乙方结算设计费款项，分别为：
         <ul class="list">
-            <li>客户确认3D方案后，平台与乙方结算设计费总额的50%；</li>
-            <li>客户确认施工图纸、预算清单后，平台与乙方结算设计费总额的30%</li>
-            <li>客户确认施工完毕后，平台与乙方结算设计费总额的20%。</li>
+             <#list code04 as c>
+               <li>${c.costName}  ${c.costValue}%；</li>
+             </#list>
         </ul>
     </section>
     <section class='indent'>
@@ -177,8 +180,11 @@
     <section class='indent'>
         3. 甲方向乙方支付客户采购产品实交款总额<p class="placeholderT">10%</p>的产品服务费，甲方分两次与乙方结算产品服务费款项。
         <ul class="list">
-            <li>甲方在客户与商家签订正式订单并全额付款后向乙方支付产品实交款总额3%的首款。</li>
-            <li>甲方在商家为客户配送产品完成且客户确认验收后向乙方支付产品实交款总额7%的尾款。</li>
+            <ul class="list">
+             <#list code02 as c>
+                 <li>${c.costName}  ${c.costValue}%；</li>
+             </#list>
+            </ul>
         </ul>
     </section>
     <section class='indent'>
@@ -188,11 +194,12 @@
         4.1在客户《施工合同》首期款付款到账后的次月内向乙方支付施工合同折税后的合同额的<p class="placeholderT">${c12}%</p>
     </section>
     <section class='indent'>
-        5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">2%</p>作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：
+        5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">${c12}</p>
+        作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：
         <ul class="list">
-            <li>客户评分总分达到5分，则甲方向乙方支付全额 2%的施工管理费尾款；</li>
-            <li>客户评分总分达到4分，则甲方向乙方返还全额 1%的施工管理费尾款；</li>
-            <li>客户评分总分未达4分，甲方不向乙方支付该项目的施工管理费尾款。</li>
+             <#list code03 as c>
+                 <li>${c.costName}  ${c.costValue}%；</li>
+             </#list>
         </ul>
     </section>
     <section class='indent'>
@@ -225,7 +232,8 @@
         3. 对本协议的所有修正、更改或补充均应以书面形式作为本协议的附件或补充协议。本协议的附件及补充协议作为本协议不可分割的一部分，与本协议具有同等法律效力。
     </section>
     <section class='indent'>
-        4. 本协议一式三份，甲方两份，乙方一份。本协议生效日期 <p class="placeholderT"></p>年<p class="placeholderT"></p>月<p class="placeholderT"></p>日。
+        4. 本协议一式三份，甲方两份，乙方一份。本协议生效日期 <p class="placeholderT">${signedTime?string('yyyy')}</p>年<p class="placeholderT">${signedTime?string('MM')}</p>月
+        <p class="placeholderT">${signedTime?string('dd')}</p>日。
     </section>
     <div>
         <span>甲方（盖章）/法人代表签字：</span>

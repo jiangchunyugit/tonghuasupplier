@@ -93,13 +93,14 @@
                         <!--<groupId>org.mybatis.generator</groupId>-->
                         <!--<artifactId>mybatis-generator-core</artifactId>-->
                         <!--<version>${mybatis.generator.version}</version>-->
-                    <!--</dependency>                    &lt;!&ndash;<dependency>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<groupId>cn.thinkfree</groupId>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<artifactId>database</artifactId>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<version>1.0-SNAPSHOT</version>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<scope>system</scope>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<systemPath>D:/0.1/designer_service/database/target/database-1.0-SNAPSHOT.jar</systemPath>&ndash;&gt;-->
-                    <!--&lt;!&ndash;</dependency>&ndash;&gt;-->
+                    <!--</dependency>-->
+                    <!--<dependency>-->
+                        <!--<groupId>cn.thinkfree</groupId>-->
+                        <!--<artifactId>database</artifactId>-->
+                        <!--<version>1.0-SNAPSHOT</version>-->
+                        <!--<scope>system</scope>-->
+                        <!--<systemPath>G:/thinkFreeWsp/designer_service/database/target/database-1.0-SNAPSHOT.jar</systemPath>-->
+                    <!--</dependency>-->
                 <!--</dependencies>-->
             <!--</plugin>-->
         <!--</plugins>-->

@@ -3,6 +3,8 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
@@ -10,6 +12,11 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.construction.OrderListCommonService;
+import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
+import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
+import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
@@ -19,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -49,12 +55,16 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
-    @Resource
+    @Autowired
     private HttpLinks httpLinks;
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
     @Autowired
     private  OrderContractMapper orderContractMapper;
+    @Autowired
+    private FundsOrderMapper fundsOrderMapper;
+    @Autowired
+    private OrderListCommonService orderListCommonService;
 
     @Override
     public List<OrderUser> findByProjectNo(String projectNo) {
@@ -526,7 +536,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
     /**
      * @Author jiang
-     * @Description 合同列表
+     * @Description 设计合同列表
      * @Date
      * @Param
      * @return
@@ -534,24 +544,47 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
         List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
-        for (DesignContractVO vo :voList){
-            //业主
-            ProjectExample projectExample = new ProjectExample();
-            projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
-            List<Project> projects = projectMapper.selectByExample(projectExample);
-/*            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
-            //业主
-            vo.setOwnerName(customerInfo.getUsername());
-            //手机号码
-            vo.setOwnerPhone(customerInfo.getPhone());*/
-            if(vo.getAuditType() != null){
-                if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
-                    vo.setContractStatus(1);//生效
-                }else {
-                    vo.setContractStatus(0);//不生效
+        //装业主模糊的list
+        List<DesignContractVO> newList = new ArrayList();
+        if(voList.size()>0){
+            for (DesignContractVO vo :voList){
+                //业主
+                ProjectExample projectExample = new ProjectExample();
+                projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+                List<Project> projects = projectMapper.selectByExample(projectExample);
+                if(projects.size()>0){
+                    for(Project pr:projects){
+                        //遍历查询业主
+                        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), pr.getOwnerId(), Role.CC.id);
+                        //业主
+                        vo.setOwnerName(customerInfo.getUsername());
+                        //手机号码
+                        vo.setOwnerPhone(customerInfo.getPhone());
+                    }
+                }
+                if(vo.getAuditType() != null){
+                    if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
+                        vo.setContractStatus(1);//生效
+                    }else {
+                        vo.setContractStatus(0);//不生效
 
+                    }
                 }
             }
+        }
+        //模糊业主
+        if(designContractVO.getOwnerName() != null){
+            for(int i=0;i<voList.size();i++ ){
+                if(voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())){
+                    newList.add(voList.get(i));
+                }
+            }
+            PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
+            pageVo.setPageSize(pageSize);
+            pageVo.setTotal(designerOrderMapper.selectContractCount(designContractVO));
+            pageVo.setPageIndex(pageNum);
+            pageVo.setData(newList);
+            return pageVo;
         }
         PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
         pageVo.setPageSize(pageSize);
@@ -575,24 +608,46 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Override
     public PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int pageNum, int pageSize) {
         List<ConstructionContractVO> voList = constructionOrderMapper.selectConstructionContractByPage( constructionContractVO,  pageNum,  pageSize);
-        for (ConstructionContractVO vo :voList){
-            //业主
-            ProjectExample projectExample = new ProjectExample();
-            projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
-            List<Project> projects = projectMapper.selectByExample(projectExample);
-/*            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
-            //业主
-            vo.setOwnerName(customerInfo.getUsername());
-            //手机号码
-            vo.setOwnerPhone(customerInfo.getPhone());*/
-            if(vo.getAuditType() != null){
-                if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
-                    vo.setContractStatus(1);//生效
-                }else {
-                    vo.setContractStatus(0);//不生效
+        List<ConstructionContractVO> newList = new ArrayList();
+        if(voList.size()>0){
+           for (ConstructionContractVO vo :voList){
+               //业主
+               ProjectExample projectExample = new ProjectExample();
+               projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+               List<Project> projects = projectMapper.selectByExample(projectExample);
+               if(projects.size()>0){
+                   for(Project pr:projects){
+                       AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), pr.getOwnerId(), Role.CC.id);
+                       //业主
+                       vo.setOwnerName(customerInfo.getUsername());
+                       //手机号码
+                       vo.setOwnerPhone(customerInfo.getPhone());
+                   }
+               }
+               if(vo.getAuditType() != null){
+                   if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
+                       vo.setContractStatus(1);//生效
+                   }else {
+                       vo.setContractStatus(0);//不生效
+
+                   }
+               }
+           }
+       }
+        //模糊业主
+        if(constructionContractVO.getOwnerName() != null){
+            for(int i=0;i<voList.size();i++ ){
+                if(voList.get(i).getOwnerName().contains(constructionContractVO.getOwnerName())){
+                    newList.add(voList.get(i));
 
                 }
             }
+            PageVo<List<ConstructionContractVO>> pageVo = new PageVo<>();
+            pageVo.setPageSize(pageSize);
+            pageVo.setTotal(constructionOrderMapper.selectconstructionContractVOCount(constructionContractVO));
+            pageVo.setPageIndex(pageNum);
+            pageVo.setData(newList);
+            return pageVo;
         }
         PageVo<List<ConstructionContractVO>> pageVo = new PageVo<>();
         pageVo.setPageSize(pageSize);
@@ -600,6 +655,153 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         pageVo.setPageIndex(pageNum);
         pageVo.setData(voList);
         return pageVo;
+    }
+
+    /**
+     * @Author jiang
+     * @Description 工地详情信息
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo) {
+        SiteDetailsVo siteDetailsVo = new SiteDetailsVo();
+        ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
+        projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
+        if(projectSchedulings.size() == 1){
+            ProjectScheduling projectScheduling = projectSchedulings.get(0);
+            //项目编号
+            siteDetailsVo.setProjectNo(projectNo);
+            //开工时间
+            siteDetailsVo.setStartDates(projectScheduling.getStartTime());
+            //竣工时间
+            siteDetailsVo.setCompletionDays(projectScheduling.getEndTime());
+            //工期
+            Long day=(projectScheduling.getEndTime().getTime()-projectScheduling.getStartTime().getTime())/(24*60*60*1000);
+            siteDetailsVo.setDuration(day.intValue());
+            //施工进度
+            siteDetailsVo.setConstructionSchedule(projectScheduling.getRate().intValue());
+            //延期天数
+            siteDetailsVo.setDeferredDays(projectScheduling.getDelay());
+        }
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        designerOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.size()==1){
+            DesignerOrder designerOrder = designerOrders.get(0);
+            //订单编号
+            siteDetailsVo.setOrderNo(designerOrder.getOrderNo());
+            //订单类型
+            siteDetailsVo.setOrderType(designerOrder.getStyleType());
+        }
+
+
+        //业主
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(siteDetailsVo.getProjectNo());
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+       AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+        //业主
+        siteDetailsVo.setOwner(customerInfo.getUsername());
+        //手机号码
+        siteDetailsVo.setPhone(customerInfo.getPhone());
+        //项目地址
+        siteDetailsVo.setProjectAddress(projects.get(0).getAddressDetail());
+
+        //合同
+        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        if(constructionOrders.size()==1){
+            ConstructionOrder constructionOrder = constructionOrders.get(0);
+            //合同款
+            siteDetailsVo.setContractFunds(constructionOrder.getMoney());
+        }
+        FundsOrderExample example = new FundsOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
+        if(list.size() ==1){
+            FundsOrder fundsOrder = list.get(0);
+            //已付款
+            siteDetailsVo.setPaid(fundsOrder.getPaidAmount());
+            //待付款
+            siteDetailsVo.setPendingPayment(fundsOrder.getActualAmount());
+        }
+
+        //EmployeeInfoVO employeeInfoVO = new EmployeeInfoVO();
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        List<EmployeeInfoVO> lists = new ArrayList<>();
+        orderUsers.forEach((user) ->
+                {
+                    EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+                    employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
+                    List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+                    employeeMsgs.forEach(employeeMsg -> {
+                        String roleCode = employeeMsg.getRoleCode();
+                        if (roleCode != null) {
+                            if ("CP".equals(roleCode)) {
+                                //项目经理
+                                siteDetailsVo.setProjectManager(employeeMsg.getRealName());
+                            } else if ("CM".equals(roleCode)) {
+                                //工长
+                                siteDetailsVo.setForeman(employeeMsg.getRealName());
+                            } else if ("CS".equals(roleCode)) {
+                                //管家
+                                siteDetailsVo.setHousekeeper(employeeMsg.getRealName());
+                            }else if ("CD".equals(roleCode)) {
+                                //设计师
+                                siteDetailsVo.setDesignerName(employeeMsg.getRealName());
+                            }
+                        }
+                    });
+                }
+
+        );
+
+
+        return RespData.success(siteDetailsVo);
+    }
+    /**
+     * @Author jiang
+     * @Description 工地管理列表
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public MyRespBundle<ConstructionOrderCommonVo> getConstructionSiteList(int pageNum, int pageSize, String cityName) {
+        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName);
+        ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
+        constructionOrderCommonVo.setCountPageNum(pageInfo.getSize());
+        constructionOrderCommonVo.setOrderList(pageInfo.getList());
+        return RespData.success(constructionOrderCommonVo);
+    }
+    /**
+     * @Author jiang
+     * @Description 施工阶段数量
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public MyRespBundle<ConstructionStageNunVO> getScheduleNum() {
+        /* 统计状态个数 */
+        int waitExamine = 0, waitSign = 0, waitPay = 0;
+        //待开工
+        int waitStart = 1;
+        //施工中
+        int underConstruction = 2;
+        //已完工
+        int completed = 3;
+        ConstructionStageNunVO constructionStageNunVO = new ConstructionStageNunVO();
+        constructionStageNunVO.setWaitStart(waitStart);
+        constructionStageNunVO.setUnderConstruction(underConstruction);
+        constructionStageNunVO.setCompleted(completed);
+        return RespData.success(constructionStageNunVO);
     }
 
 

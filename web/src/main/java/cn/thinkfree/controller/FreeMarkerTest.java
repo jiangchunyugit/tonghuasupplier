@@ -44,10 +44,8 @@ public class FreeMarkerTest {
 //	        template.process(root, out);//将模板写到文件中
 //	        out.flush();
 //	    } catch (IOException e) {
-//	        // TODO Auto-generated catch block
 //	        e.printStackTrace();
 //	    } catch (TemplateException e) {
-//	        // TODO Auto-generated catch block
 //	        e.printStackTrace();
 //	    }
 //	}

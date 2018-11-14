@@ -254,10 +254,11 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
             String auditPersion = userVO == null ? "" : userVO.getUsername();
             String companyId = userVO==null?"":userVO.getCompanyID();
+            String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
             String ruleNumber = String.valueOf(ruleNumbers.get(i));
             PcAuditInfo record = new PcAuditInfo("4", "2",
                     auditPersion, auditStatus, new Date(),
-                    companyId, auditCase, String.valueOf(ruleNumbers.get(i)));
+                    companyId, auditCase, String.valueOf(ruleNumbers.get(i)), new Date(), auditAccount);
             //插入审核记录
             pcAuditInfoMapper.insertSelective(record);
             //修改状态

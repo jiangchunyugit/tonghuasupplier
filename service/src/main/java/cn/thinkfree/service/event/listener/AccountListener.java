@@ -43,9 +43,14 @@ public class AccountListener extends AbsLogPrinter {
         para.put("userName",accountCreate.getUserName());
         para.put("pwd",accountCreate.getPassword());
         para.put("http", UserLoginUrl);
-        cloudService.sendEmail(accountCreate.getEmail(),
-                SysConstants.EmailTemplate.join.code,
-                new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
+        if(accountCreate.isPhone()){
+            cloudService.sendCreateAccountNotice(accountCreate.getEmail()
+                    ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
+        }else{
+            cloudService.sendEmail(accountCreate.getEmail(),
+                    SysConstants.EmailTemplate.join.code,
+                    new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
+        }
 
     }
 

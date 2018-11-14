@@ -6,7 +6,7 @@
     <classPathEntry
             location="src/main/resources/edb-jdbc16.jar"/>
     <context id="context1">
-        <!--<plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>-->
+        <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
         <!--<plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">-->
             <!--<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>-->
             <!--<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>-->
@@ -43,12 +43,13 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <javaClientGenerator
-                targetPackage="cn.thinkfree.database.mapper"
-                targetProject="src/main/java/"
-                type="XMLMAPPER">
-            <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>        <!-- 表-->
+        <!--<javaClientGenerator-->
+                <!--targetPackage="cn.thinkfree.database.mapper"-->
+                <!--targetProject="src/main/java/"-->
+                <!--type="XMLMAPPER">-->
+            <!--<property name="enableSubPackages" value="false"/>-->
+        <!--</javaClientGenerator>        -->
+        <!-- 表-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
@@ -84,7 +85,7 @@
         <!--<table tableName="pc_contract_info" domainObjectName="PcContractInfo"/>-->
         <!-- 权限相关 S-->
         <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
-        <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
+        <table tableName="pc_index_menu" domainObjectName="Menu"/>
         <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
         <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
@@ -97,6 +98,8 @@
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
         <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
         <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
+        <!--<table tableName="hr_people_entity" domainObjectName="HrPeopleEntity"/>-->
+
         <!-- 权限相关 E-->
         <!--<table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo"/>-->
         <!--<table tableName="pc_settlement_ratio_info" domainObjectName="SettlementRatioInfo"/>-->
@@ -116,12 +119,16 @@
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->
         <!--<table tableName="order_user" domainObjectName="OrderUser"/>-->
         <!--<table tableName="project_data" domainObjectName="ProjectData"/>-->
-        <!--<table tableName="project_quotation_log" domainObjectName="ProjectQuotationLog"/>-->
         <!--<table tableName="project_stage_log" domainObjectName="ProjectStageLog"/>-->
         <!--<table tableName="project_scheduling" domainObjectName="ProjectScheduling"/>-->
         <!--<table tableName="design_grade" domainObjectName="DesignGrade"/>-->
         <!--<table tableName="design_label" domainObjectName="DesignLabel"/>-->
         <!--<table tableName="growth_value_integral" domainObjectName="GrowthValueIntegral"/>-->
+        <!--<table tableName="project_quotation" domainObjectName="ProjectQuotation"/>-->
+        <!--<table tableName="project_quotation_rooms" domainObjectName="ProjectQuotationRooms"/>-->
+        <!--<table tableName="project_quotation_rooms_construct" domainObjectName="ProjectQuotationRoomsConstruct"/>-->
+        <!--<table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardConstruct"/>-->
+        <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftConstruct"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->

@@ -21,7 +21,7 @@ public class OrderNoUtils {
      * @return
      */
     public static String getNo(String prefix) {
-        return UserNoUtils.getUserNo("DO") + UserNoUtils.getRandomString(5).toUpperCase();
+        return UserNoUtils.getUserNo(prefix) + UserNoUtils.getRandomString(5).toUpperCase();
     }
 
     /**
