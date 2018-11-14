@@ -13,6 +13,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -128,12 +129,9 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("装饰平台接口（施工派单-确认派单）---->迎喜专用")
     @MyRespBody
     @RequestMapping(value = "appointWorker", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> appointWorker(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
-                                              @RequestParam @ApiParam(value = "项目编号",required = true) String projdectNo,
-                                              @RequestParam @ApiParam(value = "员工编号",required = true) String workerNo,
-                                              @RequestParam @ApiParam(value = "角色名称",required = true) String roleName){
+    public MyRespBundle<String> appointWorker(@RequestBody@ApiParam(value = "员工信息",required = true) List<Map<String,String>> workerInfo){
 
-        return decorationDistributionOrder.appointWorker(orderNo,projdectNo,workerNo,roleName);
+        return decorationDistributionOrder.appointWorker(workerInfo);
     }
 
     @ApiOperation("装饰平台接口（获取施工订单列表）---->迎喜专用")

@@ -219,7 +219,7 @@ public class OrderListCommonService {
      */
     public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo,int pageNum, int pageSize) {
         if (StringUtils.isBlank(companyNo)){
-            RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+            RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
         PageHelper.startPage(pageNum, pageSize);
@@ -231,6 +231,9 @@ public class OrderListCommonService {
         example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        if(list.size() <= 0){
+            RespData.error(ResultMessage.ERROR.code, "订单编号不符");
+        }
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
 
         pageInfo2.setList(list);
@@ -340,7 +343,7 @@ public class OrderListCommonService {
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
         pageInfo.setPageNum(p.getPages());
-    //    pageInfo.setTotal(pageInfo2.getList().size());
+        pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 
@@ -376,6 +379,8 @@ public class OrderListCommonService {
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<DecorationOrderListVo> listVo = new ArrayList<>();
+
+        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -446,6 +451,8 @@ public class OrderListCommonService {
 
             // 项目编号
             decorationOrderListVo.setProjectNo(constructionOrder.getProjectNo());
+            // 订单编号
+            decorationOrderListVo.setOrderNo(constructionOrder.getOrderNo());
             // 订单状态
             if (!StringUtils.isBlank(orderStage)){
                 if (!orderStage.equals(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2))){
@@ -483,9 +490,8 @@ public class OrderListCommonService {
         }
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
-        pageInfo.setTotal(p.getPages());
         pageInfo.setPageNum(p.getPages());
-   //     pageInfo.setTotal(pageInfo2.getList().size());
+        pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 
