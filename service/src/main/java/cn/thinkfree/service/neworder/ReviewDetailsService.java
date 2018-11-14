@@ -1,6 +1,7 @@
 package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
@@ -90,4 +91,18 @@ public interface ReviewDetailsService {
      * @return
      */
     MyRespBundle<String> delBasisConstruction(String id);
+
+    /**
+     * 获取精准报价审核信息
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<ProjectQuotationCheckVo> getCheckDetail(String projectNo);
+
+    /**
+     * 提交精准报价审核信息
+     * @param checkVo
+     * @return
+     */
+    MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo);
 }
