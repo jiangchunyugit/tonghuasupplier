@@ -67,6 +67,14 @@ public class ConstructionOrderController extends AbsBaseController {
         return constructionOrderOperate.getOrderNum();
     }
 
+    @ApiOperation("运营平台接口（获取施工订单统计/城市(项目派单)）---->孙宇专用")
+    @MyRespBody
+    @RequestMapping(value = "getComDistributionOrderNum", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<ConstructionOrderDistributionNumVo> getComDistributionOrderNum(){
+
+        return construtionDistributionOrder.getComDistributionOrderNum();
+    }
+
     @ApiOperation("运营平台接口（施工派单-公司列表接口-含搜索公司）---->孙宇专用")
     @MyRespBody
     @RequestMapping(value = "getCityList", method = {RequestMethod.POST, RequestMethod.GET})
