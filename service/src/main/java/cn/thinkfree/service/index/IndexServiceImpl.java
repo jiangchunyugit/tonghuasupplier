@@ -1,9 +1,11 @@
 package cn.thinkfree.service.index;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.DateUtils;
 import cn.thinkfree.database.constants.IndexChartUnit;
 import cn.thinkfree.database.constants.MenuType;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.mapper.MenuMapper;
 import cn.thinkfree.database.model.Menu;
 import cn.thinkfree.database.model.MenuExample;
@@ -62,10 +64,18 @@ public class IndexServiceImpl implements IndexService  {
         if(resourceCode.isEmpty()){
             return Collections.EMPTY_LIST;
         }
+
+        Integer platform = 0;
+        if(UserRegisterType.Platform.shortVal().equals(userVO.getType())){
+            platform = SysConstants.PlatformType.Platform.code;
+        }else if(UserRegisterType.Enterprise.shortVal().equals(userVO.getType())){
+            platform = SysConstants.PlatformType.Enterprise.code;
+        }
+
         MenuExample menuExample = new MenuExample();
         menuExample.setOrderByClause(" sort_num ");
-        menuExample.createCriteria().
-                andResourceCodeIn(resourceCode);
+        menuExample.createCriteria().andPlatformEqualTo(platform)
+                                    .andResourceCodeIn(resourceCode);
 
         List<Menu> menus = menuMapper.selectByExample(menuExample);
         return convertMenus(menus);

@@ -1,9 +1,15 @@
 package cn.thinkfree.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.constants.JobState;
+import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.vo.SelectItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -344,4 +350,14 @@ public class DictionaryController extends AbsBaseController {
         List<HrPeopleEntity> list = dictionaryService.findThirdPeople(condition);
         return sendJsonData(ResultMessage.SUCCESS,list);
     }
+
+    @ApiOperation(value = "在职状态",notes = "在职状态")
+    @GetMapping("/jobState")
+    @MyRespBody
+    public MyRespBundle<List<SelectItem>> jobState(){
+        List<SelectItem> result = Arrays.stream(JobState.values()).map(e -> new SelectItem(e.mes, e.code.toString())).collect(Collectors.toList());
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+
 }
