@@ -66,11 +66,11 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 quotationVo.setFurnitureSumPrice(room.getHardMaterialPrice());
                 quotationVo.setMaterialSumPrice(room.getSoftMaterialPrice());
                 //给基础施工项赋值
-                quotationVo.setBasicsTableData(getBasisConstruction(projectNo, room.getRoomType()));
+                quotationVo.setBasicsTableData(getBasisConstruction(projectNo, room.getRoomType(),room.getRoomName()));
                 //给软装赋值
-                quotationVo.setMaterialTableData(getSoftQuote(projectNo, room.getRoomType()));
+                quotationVo.setMaterialTableData(getSoftQuote(projectNo, room.getRoomType(),room.getRoomName()));
                 //给硬装赋值
-                quotationVo.setFurnitureTableData(getHardQuote(projectNo, room.getRoomType()));
+                quotationVo.setFurnitureTableData(getHardQuote(projectNo, room.getRoomType(),room.getRoomName()));
                 quotationVoList.add(quotationVo);
             }
         }
@@ -90,6 +90,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         ProjectQuotationRoomsSoftDecoration decoration = new ProjectQuotationRoomsSoftDecoration();
         decoration.setProjectNo(softQuoteVO.getProjectNo());
         decoration.setRoomType(softQuoteVO.getRoomType());
+        decoration.setRoomName(softQuoteVO.getRoomName());
         decoration.setBrand(softQuoteVO.getBrand());
         decoration.setMaterialName(softQuoteVO.getMaterialName());
         decoration.setModel(softQuoteVO.getModel());
@@ -132,6 +133,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         ProjectQuotationRoomsHardDecoration decoration = new ProjectQuotationRoomsHardDecoration();
         decoration.setProjectNo(hardQuoteVO.getProjectNo());
         decoration.setRoomType(hardQuoteVO.getRoomType());
+        decoration.setRoomName(hardQuoteVO.getRoomName());
         decoration.setBrand(hardQuoteVO.getBrand());
         decoration.setMaterialName(hardQuoteVO.getMaterialName());
         decoration.setModel(hardQuoteVO.getModel());
@@ -173,6 +175,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         ProjectQuotationRoomsConstruct construct = new ProjectQuotationRoomsConstruct();
         construct.setProjectNo(basisConstructionVO.getProjectNo());
         construct.setRoomType(basisConstructionVO.getRoomType());
+        construct.setRoomName(basisConstructionVO.getRoomName());
         construct.setConstructCode(basisConstructionVO.getConstructCode());
         construct.setConstructName(basisConstructionVO.getConstructName());
         construct.setCustomerPrice(basisConstructionVO.getUnitPrice());
@@ -249,13 +252,13 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Date
      * @Param
      **/
-    @Override
-    public List<HardQuoteVO> getHardQuote(String projectNo, String roomType) {
+    public List<HardQuoteVO> getHardQuote(String projectNo, String roomType,String roomName) {
         ProjectQuotationRoomsHardDecorationExample hardDecorationExample = new ProjectQuotationRoomsHardDecorationExample();
         ProjectQuotationRoomsHardDecorationExample.Criteria hardCriteria = hardDecorationExample.createCriteria();
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         hardCriteria.andProjectNoEqualTo(projectNo);
         hardCriteria.andRoomTypeEqualTo(roomType);
+        hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsHardDecoration> decorations = projectQuotationRoomsHardConstructMapper.selectByExample(hardDecorationExample);
         List<HardQuoteVO> listVo = new ArrayList<>();
         for(ProjectQuotationRoomsHardDecoration decoration : decorations){
@@ -287,13 +290,13 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Date
      * @Param
      **/
-    @Override
-    public List<SoftQuoteVO> getSoftQuote(String projectNo, String roomType) {
+    public List<SoftQuoteVO> getSoftQuote(String projectNo, String roomType,String roomName) {
         ProjectQuotationRoomsSoftDecorationExample softDecorationExample = new ProjectQuotationRoomsSoftDecorationExample();
         ProjectQuotationRoomsSoftDecorationExample.Criteria hardCriteria = softDecorationExample.createCriteria();
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         hardCriteria.andProjectNoEqualTo(projectNo);
         hardCriteria.andRoomTypeEqualTo(roomType);
+        hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsSoftDecoration> decorations = projectQuotationRoomsSoftConstructMapper.selectByExample(softDecorationExample);
         List<SoftQuoteVO> listVo = new ArrayList<>();
         for(ProjectQuotationRoomsSoftDecoration decoration : decorations){
@@ -324,13 +327,13 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Date
      * @Param
      **/
-    @Override
-    public List<BasisConstructionVO> getBasisConstruction(String projectNo, String roomType) {
+    public List<BasisConstructionVO> getBasisConstruction(String projectNo, String roomType,String roomName) {
         ProjectQuotationRoomsConstructExample constructExample = new ProjectQuotationRoomsConstructExample();
         ProjectQuotationRoomsConstructExample.Criteria hardCriteria = constructExample.createCriteria();
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         hardCriteria.andProjectNoEqualTo(projectNo);
         hardCriteria.andRoomTypeEqualTo(roomType);
+        hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsConstruct> constructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
         List<BasisConstructionVO> listVo = new ArrayList<>();
         for(ProjectQuotationRoomsConstruct construct : constructs){

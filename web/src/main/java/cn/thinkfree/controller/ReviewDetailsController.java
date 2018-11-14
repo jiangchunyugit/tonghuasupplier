@@ -45,6 +45,7 @@ public class ReviewDetailsController extends AbsBaseController {
     public MyRespBundle<String> saveSoftQuote(
             @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
             @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+            @RequestParam(name = "roomName") @ApiParam(value = "房间名称", name = "roomName") String roomName,
             @RequestParam(name = "materialName") @ApiParam(value = "产品名称", name = "materialName") String materialName,
             @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
             @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
@@ -56,6 +57,7 @@ public class ReviewDetailsController extends AbsBaseController {
         SoftQuoteVO softQuoteVO = new SoftQuoteVO();
         softQuoteVO.setProjectNo(projectNo);
         softQuoteVO.setRoomType(roomType);
+        softQuoteVO.setRoomName(roomName);
         softQuoteVO.setBrand(brand);
         softQuoteVO.setModel(model);
         softQuoteVO.setMaterialName(materialName);
@@ -73,6 +75,7 @@ public class ReviewDetailsController extends AbsBaseController {
             @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
             @RequestParam(name = "materialName") @ApiParam(value = "产品名称", name = "materialName") String materialName,
             @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+            @RequestParam(name = "roomName") @ApiParam(value = "房间名称", name = "roomName") String roomName,
             @RequestParam(name = "brand") @ApiParam(value = "品牌", name = "brand") String brand,
             @RequestParam(name = "model") @ApiParam(value = "型号", name = "model") String model,
             @RequestParam(name = "spec") @ApiParam(value = "规格", name = "spec") String spec,
@@ -83,6 +86,7 @@ public class ReviewDetailsController extends AbsBaseController {
         HardQuoteVO hardQuoteVO = new HardQuoteVO();
         hardQuoteVO.setProjectNo(projectNo);
         hardQuoteVO.setRoomType(roomType);
+        hardQuoteVO.setRoomName(roomName);
         hardQuoteVO.setBrand(brand);
         hardQuoteVO.setMaterialName(materialName);
         hardQuoteVO.setModel(model);
@@ -99,6 +103,7 @@ public class ReviewDetailsController extends AbsBaseController {
     public MyRespBundle<String> saveBasisConstruction(
             @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo") String projectNo,
             @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType") String roomType,
+            @RequestParam(name = "roomName") @ApiParam(value = "房间名称", name = "roomName") String roomName,
             @RequestParam(name = "constructCode") @ApiParam(value = "项目名称", name = "constructCode") String constructCode,
             @RequestParam(name = "constructName") @ApiParam(value = "项目说明", name = "constructName") String constructName,
             @RequestParam(name = "unitPrice") @ApiParam(value = "单价", name = "unitPrice") BigDecimal unitPrice,
@@ -108,6 +113,7 @@ public class ReviewDetailsController extends AbsBaseController {
         BasisConstructionVO basisConstructionVO = new BasisConstructionVO();
         basisConstructionVO.setProjectNo(projectNo);
         basisConstructionVO.setRoomType(roomType);
+        basisConstructionVO.setRoomName(roomName);
         basisConstructionVO.setUnitPrice(unitPrice);
         basisConstructionVO.setUsedQuantity(usedQuantity);
         basisConstructionVO.setTotalPrice(totalPrice);

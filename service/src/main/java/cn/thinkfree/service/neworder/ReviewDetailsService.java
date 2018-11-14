@@ -15,30 +15,7 @@ import java.util.List;
  * @Description:
  */
 public interface ReviewDetailsService {
-    /**
-     * @Author jiang
-     * @Description 硬装保价详情
-     * @Date
-     * @Param
-     * @return
-     **/
-    List<HardQuoteVO> getHardQuote(String projectNo, String roomType);
-    /**
-     * @Author jiang
-     * @Description 软装保价详情
-     * @Date
-     * @Param
-     * @return
-     **/
-    List<SoftQuoteVO> getSoftQuote(String projectNo, String roomType);
-    /**
-     * @Author jiang
-     * @Description 基础保价详情
-     * @Date
-     * @Param
-     * @return
-     **/
-    List<BasisConstructionVO> getBasisConstruction(String projectNo, String roomType);
+
     /**
      * @Author jiang
      * @Description 新增软保价
