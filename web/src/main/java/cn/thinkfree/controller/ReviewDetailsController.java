@@ -3,6 +3,7 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
@@ -34,17 +35,11 @@ public class ReviewDetailsController extends AbsBaseController {
 
     @RequestMapping(value = "getPriceDetail", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation("获取精准报价")
-    public MyRespBundle<List<QuotationVo>> getPriceDetail(@RequestParam(name = "projectNo") @ApiParam(value = "项目编号  1223098338391", name = "projectNo") String projectNo) {
+    public MyRespBundle<List<QuotationVo>> getPriceDetail(
+            @RequestParam(name = "projectNo") @ApiParam(value = "项目编号  1223098338391", name = "projectNo") String projectNo) {
         return reviewDetailsService.getPriceDetail(projectNo);
     }
 
-    /**
-     * @return
-     * @Author jiang
-     * @Description 新增软装保价
-     * @Date
-     * @Param
-     **/
     @RequestMapping(value = "saveSoftQuote", method = RequestMethod.POST)
     @ApiOperation(value = "新增软装保价", notes = "")
     public MyRespBundle<String> saveSoftQuote(
@@ -72,13 +67,6 @@ public class ReviewDetailsController extends AbsBaseController {
         return reviewDetailsService.saveSoftQuote(softQuoteVO);
     }
 
-    /**
-     * @return
-     * @Author jiang
-     * @Description 新增硬装保价
-     * @Date
-     * @Param
-     **/
     @RequestMapping(value = "saveHardQuote", method = RequestMethod.POST)
     @ApiOperation(value = "新增硬装保价", notes = "")
     public MyRespBundle<String> saveHardQuote(
@@ -106,14 +94,6 @@ public class ReviewDetailsController extends AbsBaseController {
         return reviewDetailsService.saveHardQuote(hardQuoteVO);
     }
 
-
-    /**
-     * @return
-     * @Author jiang
-     * @Description 新增基础施工保价
-     * @Date
-     * @Param
-     **/
     @RequestMapping(value = "saveBasisConstruction", method = RequestMethod.POST)
     @ApiOperation(value = "新增施工保价")
     public MyRespBundle<String> saveBasisConstruction(
@@ -137,44 +117,36 @@ public class ReviewDetailsController extends AbsBaseController {
         return reviewDetailsService.saveBasisConstructionVO(basisConstructionVO);
     }
 
-    /**
-     * @return
-     * @Author jiang
-     * @Description 新增软装保价
-     * @Date
-     * @Param
-     **/
     @RequestMapping(value = "delSoftQuote", method = RequestMethod.POST)
     @ApiOperation(value = "删除软装保价", notes = "")
     public MyRespBundle<String> delSoftQuote(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
         return reviewDetailsService.delSoftQuote(id);
     }
 
-    /**
-     * @return
-     * @Author jiang
-     * @Description 新增硬装保价
-     * @Date
-     * @Param
-     **/
     @RequestMapping(value = "delHardQuote", method = RequestMethod.POST)
     @ApiOperation(value = "删除硬装保价", notes = "")
     public MyRespBundle<String> delHardQuote(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
         return reviewDetailsService.delHardQuote(id);
     }
 
-
-    /**
-     * @return
-     * @Author jiang
-     * @Description 新增基础施工保价
-     * @Date
-     * @Param
-     **/
     @RequestMapping(value = "delBasisConstruction", method = RequestMethod.POST)
     @ApiOperation(value = "删除施工保价")
     public MyRespBundle<String> delBasisConstruction(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id") String id) {
         return reviewDetailsService.delBasisConstruction(id);
+    }
+
+    @RequestMapping(value = "getCheckDetail",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation("获取精准报价审核信息")
+    public MyRespBundle<ProjectQuotationCheckVo> getCheckDetail(
+            @RequestParam(name = "projectNo") @ApiParam(value = "项目编号  1223098338391", name = "projectNo") String projectNo){
+        return reviewDetailsService.getCheckDetail(projectNo);
+    }
+
+    @RequestMapping(value = "addCheckDetail",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation("提交精准报价审核信息")
+    public MyRespBundle<String> addCheckDetail(
+            @ApiParam(value = "报价审核实体", name = "checkVo") ProjectQuotationCheckVo checkVo){
+        return reviewDetailsService.addCheckDetail(checkVo);
     }
 
 }

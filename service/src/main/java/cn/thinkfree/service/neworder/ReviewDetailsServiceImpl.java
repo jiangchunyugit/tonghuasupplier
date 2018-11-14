@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -239,27 +240,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         return RespData.success();
     }
 
-    /**
-     * 获取精准报价审核结果
-     *
-     * @param projectNo
-     * @return
-     */
-    public ProjectQuotationCheckVo getQuotationCheck(String projectNo) {
-        ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
-        checkExample.setOrderByClause("submit_time desc");
-        ProjectQuotationCheckExample.Criteria checkCriteria = checkExample.createCriteria();
-        checkCriteria.andProjectNoEqualTo(projectNo);
-        checkCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<ProjectQuotationCheck> projectQuotationChecks = checkMapper.selectByExample(checkExample);
-        if (projectQuotationChecks.size() > 0) {
-            ProjectQuotationCheck projectQuotationCheck = projectQuotationChecks.get(0);
-            ProjectQuotationCheckVo vo = BaseToVoUtils.getVo(projectQuotationCheck, ProjectQuotationCheckVo.class);
-            vo.setCheckNum(projectQuotationChecks.size());
-            return vo;
-        }
-        return null;
-    }
+
 
     /**
      * @return
@@ -438,5 +419,44 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
         }
         return sumCons;
+    }
+
+    /**
+     * 获取精准报价审核信息
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<ProjectQuotationCheckVo> getCheckDetail(String projectNo) {
+        ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        checkExample.setOrderByClause("submit_time desc");
+        ProjectQuotationCheckExample.Criteria checkCriteria = checkExample.createCriteria();
+        checkCriteria.andProjectNoEqualTo(projectNo);
+        checkCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<ProjectQuotationCheck> projectQuotationChecks = checkMapper.selectByExample(checkExample);
+        if (projectQuotationChecks.size() > 0) {
+            ProjectQuotationCheck projectQuotationCheck = projectQuotationChecks.get(0);
+            ProjectQuotationCheckVo vo = BaseToVoUtils.getVo(projectQuotationCheck, ProjectQuotationCheckVo.class);
+            vo.setCheckNum(projectQuotationChecks.size());
+            return RespData.success(vo);
+        }
+        return RespData.error("暂无审核信息");
+    }
+
+    /**
+     * 提交精准报价审核信息
+     * @param checkVo
+     * @return
+     */
+    @Override
+    public MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo) {
+        ProjectQuotationCheck check = BaseToVoUtils.getVo(checkVo, ProjectQuotationCheck.class);
+        check.setSubmitTime(new Date());
+        check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+        int i = checkMapper.insertSelective(check);
+        if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+            return RespData.error("插入失败");
+        }
+        return RespData.success();
     }
 }
