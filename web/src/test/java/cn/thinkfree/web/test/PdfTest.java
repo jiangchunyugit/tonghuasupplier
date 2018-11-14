@@ -5,12 +5,12 @@ import cn.thinkfree.service.config.PdfConfig;
 import cn.thinkfree.service.utils.AfUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +27,7 @@ import java.util.Map;
 @WebAppConfiguration
 public class PdfTest {
 
-    @Resource
+    @Autowired
     private PdfConfig pdfConfig;
 
     @Test

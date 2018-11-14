@@ -6,10 +6,10 @@ import cn.thinkfree.database.model.AfSubRole;
 import cn.thinkfree.database.model.AfSubRoleExample;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.approvalflow.AfSubRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class AfSubRoleServiceImpl implements AfSubRoleService {
     private static final MyLogger LOGGER = new MyLogger(AfSubRoleServiceImpl.class);
 
 
-    @Resource
+    @Autowired
     private AfSubRoleMapper subRoleMapper;
 
     @Override
