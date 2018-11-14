@@ -92,40 +92,42 @@
 </section>
 <h4>第一条 设计项目概括</h4>
 <div class="content">
-    <ul>
-        <li><h4 class="inline-block">甲方姓名：</h4>
-            <p class="placeholderT">${c03}</p>
-        </li>
-        <li>
-            <h4 class="inline-block">甲方电话：</h4>
-            <p class="placeholderT">${c04}</p>
-        </li>
-    </ul>
-    <ul>
-        <li style="margin-right: 18%;"><h4 class="inline-block">设计师姓名：</h4>
-            <p class="placeholderT">${c05}</p>
-        </li>
-        <li>
-            <h4 class="inline-block">设计师电话：</h4>
-            <p class="placeholderT">${c06}</p>
-        </li>
-    </ul>
-    <ul>
-        <li><h4 class="inline-block">项目名称：</h4>
-            <p class="placeholderT">${c07}</p>
-        </li>
-    </ul>
-    <ul>
-        <li> <h4 class="inline-block">项目地址：</h4>
-            <p class="placeholderT">${c08}</p>省<p class="placeholderT">${c09}</p>市<p class="placeholderT">${c10}</p>区/县<p class="placeholderT">${c11}</p>
-        </li>
-    </ul>
-    <ul>
-        <li> <h4 class="inline-block">项目套内建筑面积：</h4>
-            <p class="placeholder">${c12}</p>
-            <span>m²</span>
-        </li>
-    </ul>
+    <table>
+        <tr>
+            <td><h4 class="inline-block">甲方姓名：</h4>
+                <span class="placeholdanerT">${c03}</sp>
+            </td>
+            <td>
+                <h4 class="inline-block">甲方电话：</h4>
+                <span class="placeholdanerT">${c04}</sp>
+            </td>
+        </tr>
+        <tr>
+            <td style="margin-right: 18%;"><h4 class="inline-block">设计师姓名：</h4>
+                <span class="placeholdanerT">${c05}</sp>
+            </td>
+            <td>
+                <h4 class="inline-block">设计师电话：</h4>
+                <span class="placeholdanerT">${c06}</sp>
+            </td>
+        </tr>
+        <tr>
+            <td><h4 class="inline-block">项目名称：</h4>
+                <span class="placeholdanerT">${c07}</sp>
+            </td>
+        </tr>
+        <tr>
+            <td> <h4 class="inline-block">项目地址：</h4>
+                <span class="placeholderT">${c08}</sp>省<span canlass="placeholderT">${c09}</sp>市<span class="placeholderT">${c10}</sp>区/县<span class="placeholderT">${c11}</ansp>
+            </td>
+        </tr>
+        <tr>
+            <td> <h4 class="inline-block">项目套内建筑面积：</h4>
+                <span class="placeholderT">${c12}</span>
+                <span>m²</span>
+            </td>
+        </tr>
+    </table>
 </div>
 <h4>第二条 设计工作内容</h4>
 <section class='indent'>
@@ -142,27 +144,31 @@
     4. 陈设设计：平面规划方案确定后，乙方为甲方项目确定陈设设计的基本概念和总体方向，效果方案确定后，乙方为甲方出具色彩搭配、家具配置、窗帘布艺、陈设品配置方案以及详细的产品采购推荐清单（所涉价格均为当期市场参考价格，以实际成交价为准）。
 </section>
 <h4>第三条 设计费款项支付方式</h4>
-<ul>
-    <li>
-        <h4 class="inline-block">本项目设计费总额：<span class="placeholderk">${c16}</span>
-            元</h4>
-    </li>
-</ul>
-<ul>
-    <li>
-        <h4 class="inline-block">人民币大写：</h4>
-        <p class="placeholderK"></p>
-        <span>佰</span>
-        <span>拾</span>
-        <span>万</span>
-        <span>仟</span>
-        <span>佰</span>
-        <span>拾</span>
-        <span>圆</span>
-        <span>角</span>
-        <span>分。</span>
-    </li>
-</ul>
+<table>
+
+    <tr>
+        <td>
+            <h4 class="inline-block">本项目设计费总额：<span class="placeholderk">${c16}</span>
+                元</h4>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <h4 class="inline-block">人民币大写：</h4>
+            <span class="placeholderK"></span>
+            <span>佰</span>
+            <span>拾</span>
+            <span>万</span>
+            <span>仟</span>
+            <span>佰</span>
+            <span>拾</span>
+            <span>圆</span>
+            <span>角</span>
+            <span>分。</span>
+        </td>
+    </tr>
+</table>
+
 <section class='indent'>
     预计设计周期为：<p class="placeholderT">${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）
 </section>
@@ -245,7 +251,7 @@
             <td style="padding-right: 20%">
                 <h4 class="inline-block">甲方（委托方）</h4>
             </td>
-            <td style="padding-left: 10%">
+            <td style="padding-left: 15%">
                 <h4 class="inline-block">乙方（设计方）</h4>
             </td>
         </tr>
@@ -255,7 +261,7 @@
             <td style="padding-right: 20%">
                 <h4 class="inline-block">签字/盖章</h4>
             </td>
-            <td style="padding-left: 10%">
+            <td style="padding-left: 15%">
                 <h4 class="inline-block">签字/盖章</h4>
             </td>
         </tr>
@@ -265,7 +271,7 @@
             <td style="padding-right: 20%">
                 <span>日期：<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日</span>
             </td>
-            <td style="padding-left: 10%">
+            <td style="padding-left: 15%">
                 <span>日期：<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日</span>
             </td>
         </tr>

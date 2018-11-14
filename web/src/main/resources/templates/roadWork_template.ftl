@@ -331,11 +331,12 @@
         4.返款比例
     </section>
     <table>
-        <#list 03 as c>
+
+        <#list code03 as c>
 
             <tr>
                 <td>
-                    <span>第 <p class="placeholderK">${c?if_exists+1} </p>次按照工程合同额的<p class="placeholderK">${c.costValue})</p>% 返款。(${c.costName})</span>
+                    <span>第 <p class="placeholderK"> ${c_index+1}</p>次按照工程合同额的<p class="placeholderK">${c.costValue}</p>% 返款。(${c.costName})</span>
                 </td>
             </tr>
 
@@ -376,8 +377,8 @@
         2.本合同生效期间，乙方不得与其他平台公司合作。
     </section>
     <section class='indent'>
-        3.本合同有效期为<p class="placeholderK">${(startTime?string("yyyy")!}</p>年<p class="placeholderK">${(startTime?string("MM"))!}</p>月<p class="placeholderK">${(startTime?string("dd"))!}</p>日
-        至<p class="placeholderK">${(endTime?string("yyyy")!}</p>年<p class="placeholderK">${(endTime?string("MM")!}</p>月<p class="placeholderK">${(endTime?string("dd")!}</p>日。本合同到期后，若甲乙双方未续签协议，乙方应对已施工未完工工程继续履行施工责任，对已完工工程履行保修责任。
+        3.本合同有效期为<p class="placeholderK">${startTime?string('yyyy')}</p>年<p class="placeholderK">${startTime?string("MM")}</p>月<p class="placeholderK">${startTime?string("dd")}</p>日
+        至<p class="placeholderK">${endTime?string("yyyy")}</p>年<p class="placeholderK">${endTime?string("MM")}</p>月<p class="placeholderK">${endTime?string("dd")}</p>日。本合同到期后，若甲乙双方未续签协议，乙方应对已施工未完工工程继续履行施工责任，对已完工工程履行保修责任。
     </section>
     <section class='indent'>
         4.本合同一式四份，甲两份，乙方两份，自双方签字盖章之日生效。
