@@ -654,6 +654,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		/* 公司详情 */
 		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo( companyId );
 
+		/* 合同信息 */
+		ContractVo vo = new ContractVo();
+		vo.setContractNumber( contractNumber );
+		ContractVo	newVo = contractInfoMapper.selectContractBycontractNumber( vo );
+		reMap.put("ContractVo",newVo == null ? "" : newVo );
+
 		/* 合同详情 */
 		ContractTermsExample exp = new ContractTermsExample();
 		/* 判断公司类型 */
