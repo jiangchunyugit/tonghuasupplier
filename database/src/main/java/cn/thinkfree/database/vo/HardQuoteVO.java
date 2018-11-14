@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 public class HardQuoteVO {
     @ApiModelProperty("项目编号")
     private String projectNo;
+    @ApiModelProperty("房屋名称")
+    private String roomName;
     @ApiModelProperty("房间类型")
     private String roomType;
     @ApiModelProperty("产品名称")

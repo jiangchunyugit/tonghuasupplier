@@ -155,10 +155,10 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation("装饰平台接口（精准报价列表）---->松辉专用")
     @MyRespBody
     @RequestMapping(value = "getPrecisionPriceList", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<PageInfo<PrecisionPriceVo>> getPrecisionPriceList(@RequestParam @ApiParam(value = "公司编号",required = true) String companyNo,
-                                                                          @RequestParam @ApiParam(value = "页码",required = true) int pageNum,
-                                                                          @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
-
+    public MyRespBundle<PageInfo<PrecisionPriceVo>> getPrecisionPriceList(
+            @RequestParam @ApiParam(value = "公司编号",required = true) String companyNo,
+            @RequestParam(defaultValue = "10") @ApiParam(value = "页码",required = true) int pageNum,
+            @RequestParam(defaultValue = "1") @ApiParam(value = "每页条数",required = true) int pageSize){
         return otherService.getPrecisionPriceList(companyNo,pageNum,pageSize);
     }
 

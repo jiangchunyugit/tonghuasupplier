@@ -1,6 +1,7 @@
 package cn.thinkfree.service.neworder;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
@@ -14,30 +15,7 @@ import java.util.List;
  * @Description:
  */
 public interface ReviewDetailsService {
-    /**
-     * @Author jiang
-     * @Description 硬装保价详情
-     * @Date
-     * @Param
-     * @return
-     **/
-    List<HardQuoteVO> getHardQuote(String projectNo, String roomType);
-    /**
-     * @Author jiang
-     * @Description 软装保价详情
-     * @Date
-     * @Param
-     * @return
-     **/
-    List<SoftQuoteVO> getSoftQuote(String projectNo, String roomType);
-    /**
-     * @Author jiang
-     * @Description 基础保价详情
-     * @Date
-     * @Param
-     * @return
-     **/
-    List<BasisConstructionVO> getBasisConstruction(String projectNo, String roomType);
+
     /**
      * @Author jiang
      * @Description 新增软保价
@@ -90,4 +68,27 @@ public interface ReviewDetailsService {
      * @return
      */
     MyRespBundle<String> delBasisConstruction(String id);
+
+    /**
+     * 获取精准报价审核信息
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<ProjectQuotationCheckVo> getCheckDetail(String projectNo);
+
+    /**
+     * 提交精准报价审核信息
+     * @param checkVo
+     * @return
+     */
+    MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo);
+
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    MyRespBundle getShangHaiPriceDetail(String designId,String projectNo);
+
+
 }
