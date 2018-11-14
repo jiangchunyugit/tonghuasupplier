@@ -123,14 +123,16 @@
         <!--<table tableName="growth_value_integral" domainObjectName="GrowthValueIntegral"/>-->
         <!--<table tableName="project_quotation" domainObjectName="ProjectQuotation"/>-->
         <!--<table tableName="project_quotation_rooms" domainObjectName="ProjectQuotationRooms"/>-->
-        <!--<table tableName="project_quotation_rooms_construct" domainObjectName="ProjectQuotationRoomsConstruct"/>-->
-        <!--<table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardDecoration"/>-->
-        <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftDecoration"/>-->
+        <table tableName="project_quotation_rooms_construct" domainObjectName="ProjectQuotationRoomsConstruct"/>
+        <table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardDecoration"/>
+        <table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftDecoration"/>
+        <!--<table tableName="project_quotation_check" domainObjectName="ProjectQuotationCheck"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
         <!--<table tableName="a_f_config_scheme" domainObjectName="AfConfigScheme"/>-->
         <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
+        <!--<table tableName="a_f_instance_pdf_url" domainObjectName="AfInstancePdfUrl"/>-->
         <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
         <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
         <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->

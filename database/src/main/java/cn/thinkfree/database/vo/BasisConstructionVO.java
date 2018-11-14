@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 /**
  * @Auther: jiang
  * @Date: 2018/11/13 10:37
@@ -18,14 +20,16 @@ public class BasisConstructionVO {
     private String projectNo;
     @ApiModelProperty("项目名称")
     private String constructCode;
-    @ApiModelProperty("项目名称")
+    @ApiModelProperty("房屋类型")
     private String roomType;
     @ApiModelProperty("项目说明")
     private String constructName;
     @ApiModelProperty("单价")
-    private Integer unitPrice;
+    private BigDecimal unitPrice;
     @ApiModelProperty("数量")
     private Integer usedQuantity;
     @ApiModelProperty("总价")
-    private Integer totalPrice;
+    private BigDecimal totalPrice;
+    @ApiModelProperty("数据唯一ID")
+    private String id;
 }

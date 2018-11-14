@@ -1,5 +1,6 @@
 package cn.thinkfree.database.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -204,52 +205,62 @@ public class ProjectQuotationRoomsConstructExample {
             return (Criteria) this;
         }
 
-        public Criteria andIdEqualTo(Long value) {
+        public Criteria andIdEqualTo(String value) {
             addCriterion("id =", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotEqualTo(Long value) {
+        public Criteria andIdNotEqualTo(String value) {
             addCriterion("id <>", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThan(Long value) {
+        public Criteria andIdGreaterThan(String value) {
             addCriterion("id >", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdGreaterThanOrEqualTo(Long value) {
+        public Criteria andIdGreaterThanOrEqualTo(String value) {
             addCriterion("id >=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThan(Long value) {
+        public Criteria andIdLessThan(String value) {
             addCriterion("id <", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdLessThanOrEqualTo(Long value) {
+        public Criteria andIdLessThanOrEqualTo(String value) {
             addCriterion("id <=", value, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdIn(List<Long> values) {
+        public Criteria andIdLike(String value) {
+            addCriterion("id like", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdNotLike(String value) {
+            addCriterion("id not like", value, "id");
+            return (Criteria) this;
+        }
+
+        public Criteria andIdIn(List<String> values) {
             addCriterion("id in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotIn(List<Long> values) {
+        public Criteria andIdNotIn(List<String> values) {
             addCriterion("id not in", values, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdBetween(Long value1, Long value2) {
+        public Criteria andIdBetween(String value1, String value2) {
             addCriterion("id between", value1, value2, "id");
             return (Criteria) this;
         }
 
-        public Criteria andIdNotBetween(Long value1, Long value2) {
+        public Criteria andIdNotBetween(String value1, String value2) {
             addCriterion("id not between", value1, value2, "id");
             return (Criteria) this;
         }
@@ -264,52 +275,52 @@ public class ProjectQuotationRoomsConstructExample {
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceEqualTo(Integer value) {
+        public Criteria andCustomerPriceEqualTo(BigDecimal value) {
             addCriterion("customer_price =", value, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceNotEqualTo(Integer value) {
+        public Criteria andCustomerPriceNotEqualTo(BigDecimal value) {
             addCriterion("customer_price <>", value, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceGreaterThan(Integer value) {
+        public Criteria andCustomerPriceGreaterThan(BigDecimal value) {
             addCriterion("customer_price >", value, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andCustomerPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("customer_price >=", value, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceLessThan(Integer value) {
+        public Criteria andCustomerPriceLessThan(BigDecimal value) {
             addCriterion("customer_price <", value, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andCustomerPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("customer_price <=", value, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceIn(List<Integer> values) {
+        public Criteria andCustomerPriceIn(List<BigDecimal> values) {
             addCriterion("customer_price in", values, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceNotIn(List<Integer> values) {
+        public Criteria andCustomerPriceNotIn(List<BigDecimal> values) {
             addCriterion("customer_price not in", values, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceBetween(Integer value1, Integer value2) {
+        public Criteria andCustomerPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("customer_price between", value1, value2, "customerPrice");
             return (Criteria) this;
         }
 
-        public Criteria andCustomerPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andCustomerPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("customer_price not between", value1, value2, "customerPrice");
             return (Criteria) this;
         }
@@ -324,52 +335,52 @@ public class ProjectQuotationRoomsConstructExample {
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceEqualTo(Integer value) {
+        public Criteria andForemanPriceEqualTo(BigDecimal value) {
             addCriterion("foreman_price =", value, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceNotEqualTo(Integer value) {
+        public Criteria andForemanPriceNotEqualTo(BigDecimal value) {
             addCriterion("foreman_price <>", value, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceGreaterThan(Integer value) {
+        public Criteria andForemanPriceGreaterThan(BigDecimal value) {
             addCriterion("foreman_price >", value, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andForemanPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("foreman_price >=", value, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceLessThan(Integer value) {
+        public Criteria andForemanPriceLessThan(BigDecimal value) {
             addCriterion("foreman_price <", value, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andForemanPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("foreman_price <=", value, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceIn(List<Integer> values) {
+        public Criteria andForemanPriceIn(List<BigDecimal> values) {
             addCriterion("foreman_price in", values, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceNotIn(List<Integer> values) {
+        public Criteria andForemanPriceNotIn(List<BigDecimal> values) {
             addCriterion("foreman_price not in", values, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceBetween(Integer value1, Integer value2) {
+        public Criteria andForemanPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("foreman_price between", value1, value2, "foremanPrice");
             return (Criteria) this;
         }
 
-        public Criteria andForemanPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andForemanPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("foreman_price not between", value1, value2, "foremanPrice");
             return (Criteria) this;
         }
@@ -384,52 +395,52 @@ public class ProjectQuotationRoomsConstructExample {
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceEqualTo(Integer value) {
+        public Criteria andUnitPriceEqualTo(BigDecimal value) {
             addCriterion("unit_price =", value, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceNotEqualTo(Integer value) {
+        public Criteria andUnitPriceNotEqualTo(BigDecimal value) {
             addCriterion("unit_price <>", value, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceGreaterThan(Integer value) {
+        public Criteria andUnitPriceGreaterThan(BigDecimal value) {
             addCriterion("unit_price >", value, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andUnitPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("unit_price >=", value, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceLessThan(Integer value) {
+        public Criteria andUnitPriceLessThan(BigDecimal value) {
             addCriterion("unit_price <", value, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andUnitPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("unit_price <=", value, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceIn(List<Integer> values) {
+        public Criteria andUnitPriceIn(List<BigDecimal> values) {
             addCriterion("unit_price in", values, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceNotIn(List<Integer> values) {
+        public Criteria andUnitPriceNotIn(List<BigDecimal> values) {
             addCriterion("unit_price not in", values, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceBetween(Integer value1, Integer value2) {
+        public Criteria andUnitPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("unit_price between", value1, value2, "unitPrice");
             return (Criteria) this;
         }
 
-        public Criteria andUnitPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andUnitPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("unit_price not between", value1, value2, "unitPrice");
             return (Criteria) this;
         }
@@ -704,63 +715,63 @@ public class ProjectQuotationRoomsConstructExample {
             return (Criteria) this;
         }
 
-        public Criteria andLimitIsNull() {
-            addCriterion("limit is null");
+        public Criteria andLimitsIsNull() {
+            addCriterion("limits is null");
             return (Criteria) this;
         }
 
-        public Criteria andLimitIsNotNull() {
-            addCriterion("limit is not null");
+        public Criteria andLimitsIsNotNull() {
+            addCriterion("limits is not null");
             return (Criteria) this;
         }
 
-        public Criteria andLimitEqualTo(Integer value) {
-            addCriterion("limit =", value, "limit");
+        public Criteria andLimitsEqualTo(Integer value) {
+            addCriterion("limits =", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitNotEqualTo(Integer value) {
-            addCriterion("limit <>", value, "limit");
+        public Criteria andLimitsNotEqualTo(Integer value) {
+            addCriterion("limits <>", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitGreaterThan(Integer value) {
-            addCriterion("limit >", value, "limit");
+        public Criteria andLimitsGreaterThan(Integer value) {
+            addCriterion("limits >", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitGreaterThanOrEqualTo(Integer value) {
-            addCriterion("limit >=", value, "limit");
+        public Criteria andLimitsGreaterThanOrEqualTo(Integer value) {
+            addCriterion("limits >=", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitLessThan(Integer value) {
-            addCriterion("limit <", value, "limit");
+        public Criteria andLimitsLessThan(Integer value) {
+            addCriterion("limits <", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitLessThanOrEqualTo(Integer value) {
-            addCriterion("limit <=", value, "limit");
+        public Criteria andLimitsLessThanOrEqualTo(Integer value) {
+            addCriterion("limits <=", value, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitIn(List<Integer> values) {
-            addCriterion("limit in", values, "limit");
+        public Criteria andLimitsIn(List<Integer> values) {
+            addCriterion("limits in", values, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitNotIn(List<Integer> values) {
-            addCriterion("limit not in", values, "limit");
+        public Criteria andLimitsNotIn(List<Integer> values) {
+            addCriterion("limits not in", values, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitBetween(Integer value1, Integer value2) {
-            addCriterion("limit between", value1, value2, "limit");
+        public Criteria andLimitsBetween(Integer value1, Integer value2) {
+            addCriterion("limits between", value1, value2, "limits");
             return (Criteria) this;
         }
 
-        public Criteria andLimitNotBetween(Integer value1, Integer value2) {
-            addCriterion("limit not between", value1, value2, "limit");
+        public Criteria andLimitsNotBetween(Integer value1, Integer value2) {
+            addCriterion("limits not between", value1, value2, "limits");
             return (Criteria) this;
         }
 

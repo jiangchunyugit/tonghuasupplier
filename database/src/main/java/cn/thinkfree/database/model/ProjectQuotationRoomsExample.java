@@ -1,5 +1,6 @@
 package cn.thinkfree.database.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -324,52 +325,52 @@ public class ProjectQuotationRoomsExample {
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceEqualTo(Integer value) {
+        public Criteria andConstructsPriceEqualTo(BigDecimal value) {
             addCriterion("constructs_price =", value, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceNotEqualTo(Integer value) {
+        public Criteria andConstructsPriceNotEqualTo(BigDecimal value) {
             addCriterion("constructs_price <>", value, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceGreaterThan(Integer value) {
+        public Criteria andConstructsPriceGreaterThan(BigDecimal value) {
             addCriterion("constructs_price >", value, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andConstructsPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("constructs_price >=", value, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceLessThan(Integer value) {
+        public Criteria andConstructsPriceLessThan(BigDecimal value) {
             addCriterion("constructs_price <", value, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andConstructsPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("constructs_price <=", value, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceIn(List<Integer> values) {
+        public Criteria andConstructsPriceIn(List<BigDecimal> values) {
             addCriterion("constructs_price in", values, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceNotIn(List<Integer> values) {
+        public Criteria andConstructsPriceNotIn(List<BigDecimal> values) {
             addCriterion("constructs_price not in", values, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceBetween(Integer value1, Integer value2) {
+        public Criteria andConstructsPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("constructs_price between", value1, value2, "constructsPrice");
             return (Criteria) this;
         }
 
-        public Criteria andConstructsPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andConstructsPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("constructs_price not between", value1, value2, "constructsPrice");
             return (Criteria) this;
         }
@@ -384,52 +385,52 @@ public class ProjectQuotationRoomsExample {
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceEqualTo(Integer value) {
+        public Criteria andHardMaterialPriceEqualTo(BigDecimal value) {
             addCriterion("hard_material_price =", value, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceNotEqualTo(Integer value) {
+        public Criteria andHardMaterialPriceNotEqualTo(BigDecimal value) {
             addCriterion("hard_material_price <>", value, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceGreaterThan(Integer value) {
+        public Criteria andHardMaterialPriceGreaterThan(BigDecimal value) {
             addCriterion("hard_material_price >", value, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andHardMaterialPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("hard_material_price >=", value, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceLessThan(Integer value) {
+        public Criteria andHardMaterialPriceLessThan(BigDecimal value) {
             addCriterion("hard_material_price <", value, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andHardMaterialPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("hard_material_price <=", value, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceIn(List<Integer> values) {
+        public Criteria andHardMaterialPriceIn(List<BigDecimal> values) {
             addCriterion("hard_material_price in", values, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceNotIn(List<Integer> values) {
+        public Criteria andHardMaterialPriceNotIn(List<BigDecimal> values) {
             addCriterion("hard_material_price not in", values, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceBetween(Integer value1, Integer value2) {
+        public Criteria andHardMaterialPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("hard_material_price between", value1, value2, "hardMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andHardMaterialPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andHardMaterialPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("hard_material_price not between", value1, value2, "hardMaterialPrice");
             return (Criteria) this;
         }
@@ -774,52 +775,52 @@ public class ProjectQuotationRoomsExample {
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceEqualTo(Integer value) {
+        public Criteria andSoftMaterialPriceEqualTo(BigDecimal value) {
             addCriterion("soft_material_price =", value, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceNotEqualTo(Integer value) {
+        public Criteria andSoftMaterialPriceNotEqualTo(BigDecimal value) {
             addCriterion("soft_material_price <>", value, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceGreaterThan(Integer value) {
+        public Criteria andSoftMaterialPriceGreaterThan(BigDecimal value) {
             addCriterion("soft_material_price >", value, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andSoftMaterialPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("soft_material_price >=", value, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceLessThan(Integer value) {
+        public Criteria andSoftMaterialPriceLessThan(BigDecimal value) {
             addCriterion("soft_material_price <", value, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andSoftMaterialPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("soft_material_price <=", value, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceIn(List<Integer> values) {
+        public Criteria andSoftMaterialPriceIn(List<BigDecimal> values) {
             addCriterion("soft_material_price in", values, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceNotIn(List<Integer> values) {
+        public Criteria andSoftMaterialPriceNotIn(List<BigDecimal> values) {
             addCriterion("soft_material_price not in", values, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceBetween(Integer value1, Integer value2) {
+        public Criteria andSoftMaterialPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("soft_material_price between", value1, value2, "softMaterialPrice");
             return (Criteria) this;
         }
 
-        public Criteria andSoftMaterialPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andSoftMaterialPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("soft_material_price not between", value1, value2, "softMaterialPrice");
             return (Criteria) this;
         }
@@ -834,52 +835,52 @@ public class ProjectQuotationRoomsExample {
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceEqualTo(Integer value) {
+        public Criteria andTotalPriceEqualTo(BigDecimal value) {
             addCriterion("total_price =", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceNotEqualTo(Integer value) {
+        public Criteria andTotalPriceNotEqualTo(BigDecimal value) {
             addCriterion("total_price <>", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceGreaterThan(Integer value) {
+        public Criteria andTotalPriceGreaterThan(BigDecimal value) {
             addCriterion("total_price >", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceGreaterThanOrEqualTo(Integer value) {
+        public Criteria andTotalPriceGreaterThanOrEqualTo(BigDecimal value) {
             addCriterion("total_price >=", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceLessThan(Integer value) {
+        public Criteria andTotalPriceLessThan(BigDecimal value) {
             addCriterion("total_price <", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceLessThanOrEqualTo(Integer value) {
+        public Criteria andTotalPriceLessThanOrEqualTo(BigDecimal value) {
             addCriterion("total_price <=", value, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceIn(List<Integer> values) {
+        public Criteria andTotalPriceIn(List<BigDecimal> values) {
             addCriterion("total_price in", values, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceNotIn(List<Integer> values) {
+        public Criteria andTotalPriceNotIn(List<BigDecimal> values) {
             addCriterion("total_price not in", values, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceBetween(Integer value1, Integer value2) {
+        public Criteria andTotalPriceBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("total_price between", value1, value2, "totalPrice");
             return (Criteria) this;
         }
 
-        public Criteria andTotalPriceNotBetween(Integer value1, Integer value2) {
+        public Criteria andTotalPriceNotBetween(BigDecimal value1, BigDecimal value2) {
             addCriterion("total_price not between", value1, value2, "totalPrice");
             return (Criteria) this;
         }
@@ -1011,6 +1012,76 @@ public class ProjectQuotationRoomsExample {
 
         public Criteria andProjectNoNotBetween(String value1, String value2) {
             addCriterion("project_no not between", value1, value2, "projectNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdIsNull() {
+            addCriterion("quote_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdIsNotNull() {
+            addCriterion("quote_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdEqualTo(String value) {
+            addCriterion("quote_id =", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdNotEqualTo(String value) {
+            addCriterion("quote_id <>", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdGreaterThan(String value) {
+            addCriterion("quote_id >", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdGreaterThanOrEqualTo(String value) {
+            addCriterion("quote_id >=", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdLessThan(String value) {
+            addCriterion("quote_id <", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdLessThanOrEqualTo(String value) {
+            addCriterion("quote_id <=", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdLike(String value) {
+            addCriterion("quote_id like", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdNotLike(String value) {
+            addCriterion("quote_id not like", value, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdIn(List<String> values) {
+            addCriterion("quote_id in", values, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdNotIn(List<String> values) {
+            addCriterion("quote_id not in", values, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdBetween(String value1, String value2) {
+            addCriterion("quote_id between", value1, value2, "quoteId");
+            return (Criteria) this;
+        }
+
+        public Criteria andQuoteIdNotBetween(String value1, String value2) {
+            addCriterion("quote_id not between", value1, value2, "quoteId");
             return (Criteria) this;
         }
     }
