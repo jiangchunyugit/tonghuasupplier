@@ -410,6 +410,17 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		if ( companyInfo.getCompanyInfo().getRoleId().equals( "BD" ) ) /* 装修公司 */
 
 		{
+			if(!StringUtils.isEmpty(newVo.getSignedTime())) {
+				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));//合同生效时间
+			}else{
+				root.put("signedTime","");
+			}
+			if(root.get("c08") != null && !String.valueOf(root.get("c08")).equals("")){//合同开始时间
+				root.put("startTime",DateUtil.formateToDate(String.valueOf(root.get("c08")), "yyyy-MM-dd")) ;//合同开始时间
+			}
+			if(root.get("c09") != null && !String.valueOf(root.get("c09")).equals("")){
+				root.put("endTime",DateUtil.formateToDate(String.valueOf(root.get("c09")), "yyyy-MM-dd")) ;//合同结束时间
+			}
 			//特殊处理
 			try {
 				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
@@ -592,18 +603,20 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		{
 			Iterator < Entry < String, List < ContractTermsChild >>> childentries = contractClausevo.getChildparamMap()
 												.entrySet().iterator();
+			ContractTermsChildExample	exp	= new ContractTermsChildExample();
+			exp.createCriteria().andCompanyIdEqualTo( companyId )
+					.andContractNumberEqualTo( contractNumber );
+			contractTermsChildMapper.deleteByExample( exp );        /* 删除重复数据 */
 			while ( childentries.hasNext() )
 			{
 				Entry<String, List<ContractTermsChild> >	entry	= childentries.next();
 				String						key	= entry.getKey();
 				List<ContractTermsChild>			list	= entry.getValue();
+
+
 				for ( int i = 0; i < list.size(); i++ )
 				{
 					ContractTermsChild		child	= list.get( i );
-					ContractTermsChildExample	exp	= new ContractTermsChildExample();
-					exp.createCriteria().andCompanyIdEqualTo( companyId ).andCostTypeEqualTo( key )
-					.andContractNumberEqualTo( contractNumber );
-					contractTermsChildMapper.deleteByExample( exp );        /* 删除重复数据 */
 					contractTermsChildMapper.insertSelective( child );      /* 新增合同规则 */
 				}
 			}

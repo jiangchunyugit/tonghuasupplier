@@ -8,11 +8,10 @@ import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.approvalflow.AfApprovalRoleService;
 import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
 import cn.thinkfree.service.approvalflow.RoleService;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +28,11 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
 
     private static final MyLogger LOGGER = new MyLogger(AfApprovalRoleServiceImpl.class);
 
-    @Resource
+    @Autowired
     private AfApprovalRoleMapper approvalRoleMapper;
-    @Resource
+    @Autowired
     private RoleService roleService;
-    @Resource
+    @Autowired
     private AfConfigSchemeService configSchemeService;
 
     @Override

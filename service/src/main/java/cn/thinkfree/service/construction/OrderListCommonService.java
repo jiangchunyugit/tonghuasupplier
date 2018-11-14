@@ -9,6 +9,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
+import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
@@ -18,7 +19,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,13 +63,20 @@ public class OrderListCommonService {
     @Autowired
     DesignerOrderMapper designerOrderMapper;
 
-    @Resource
+    @Autowired
     private HttpLinks httpLinks;
 
     public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 
 
-
+    /**
+     * 施工订单
+     *
+     * @param pageNum
+     * @param pageSize
+     * @param cityName
+     * @return
+     */
     public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
 
         PageHelper.startPage(pageNum, pageSize);
@@ -147,7 +154,7 @@ public class OrderListCommonService {
             // 设计师
             for (Map<String, String> OrderUser : list3) {
                 if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
-                    constructionOrderListVo.setProjectManager(OrderUser.get("name"));
+                    constructionOrderListVo.setDesignerName(OrderUser.get("name"));
                 }
             }
             // 公司名称
@@ -192,16 +199,265 @@ public class OrderListCommonService {
         return pageInfo;
     }
 
+
     /**
-     *  查询订单个数
+     * 施工订单 (装饰公司)
+     *
+     * @param pageNum
+     * @param pageSize
      * @return
      */
-    public int getOrderNum() {
+    public PageInfo<ConstructionOrderListVo> getDecorateOrderList(int pageNum, int pageSize) {
+
+        PageHelper.startPage(pageNum, pageSize);
+        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
         ConstructionOrderExample example = new ConstructionOrderExample();
+        example.setOrderByClause("create_time DESC");
+        example.createCriteria().andStatusEqualTo(1);
+
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
-        return list.size();
+        List<ConstructionOrderListVo> listVo = new ArrayList<>();
+
+        /* 项目编号List */
+        List<String> listProjectNo = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : list) {
+            listProjectNo.add(constructionOrder.getProjectNo());
+        }
+
+        /* 订单编号List */
+        List<String> listOrdertNo = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : list) {
+            listOrdertNo.add(constructionOrder.getOrderNo());
+        }
+
+        /* 公司编号List */
+        List<String> listCompanyNo = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : list) {
+            listCompanyNo.add(constructionOrder.getCompanyId());
+        }
+
+        // 所属地区 & 项目地址 & 预约日期
+        List<Project> list1 = getProjectInfo(listProjectNo);
+        // 项目经理
+        List<Map<String, String>> list2 = getEmployeeInfo(listProjectNo, "CP");
+        // 设计师
+        List<Map<String, String>> list3 = getEmployeeInfo(listProjectNo, "CD");
+        // 延期天数
+        List<ProjectScheduling> list4 = getdelayDay(listProjectNo);
+        // 确认验收
+        Map<String, Integer> Map5 = getApprove(listProjectNo);
+        // 合同金额/时间
+        List<FundsOrder> list6 = getFundsOrder(listProjectNo);
+
+        continueOut:
+        for (ConstructionOrder constructionOrder : list) {
+            ConstructionOrderListVo constructionOrderListVo = new ConstructionOrderListVo();
+
+            // 所属地区 & 项目地址 & 预约日期
+            for (Project project : list1) {
+                if (constructionOrder.getProjectNo().equals(project.getProjectNo())) {
+                    constructionOrderListVo.setAddress(project.getCity());
+                    constructionOrderListVo.setAddressDetail(project.getAddressDetail());
+                    constructionOrderListVo.setAppointmentTime(project.getCreateTime());
+                }
+                // 业主 & 手机号  TODO 没做批量查询
+//                PersionVo owner = getOwnerId(project.getOwnerId());
+//                constructionOrderListVo.setOwner(owner.getName());
+//                constructionOrderListVo.setPhone(owner.getPhone());
+            }
+
+            // 订单编号 & 项目编号
+            constructionOrderListVo.setOrderNo(constructionOrder.getOrderNo());
+            constructionOrderListVo.setProjectNo(constructionOrder.getProjectNo());
+            // 项目经理
+            for (Map<String, String> OrderUser : list2) {
+                if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
+                    constructionOrderListVo.setProjectManager(OrderUser.get("name"));
+                }
+            }
+            // 设计师
+            for (Map<String, String> OrderUser : list3) {
+                if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
+                    constructionOrderListVo.setDesignerName(OrderUser.get("name"));
+                }
+            }
+            // 公司名称
+            constructionOrderListVo.setCompanyName(getCompanyInfo(constructionOrder.getCompanyId()));
+            // 施工阶段
+            constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
+            // 订单状态
+            constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
+            //延期天数 开工时间 竣工时间
+            for (ProjectScheduling projectScheduling : list4) {
+                if (constructionOrder.getProjectNo().equals(projectScheduling.getProjectNo())) {
+                    constructionOrderListVo.setDelayDays(projectScheduling.getDelay());
+                    constructionOrderListVo.setStartDates(projectScheduling.getStartTime());
+                    constructionOrderListVo.setCompletionDays(projectScheduling.getEndTime());
+                }
+            }
+            // 最近验收情况14
+            for (Map.Entry<String, Integer> map : Map5.entrySet()) {
+                if (constructionOrder.getProjectNo().equals(map.getKey())) {
+                    switch (map.getKey()) {
+                        case "1":
+                            constructionOrderListVo.setCheckCondition("通过");
+                        case "2":
+                            constructionOrderListVo.setCheckCondition("未通过");
+                        default:
+                            constructionOrderListVo.setCheckCondition("--");
+                    }
+                }
+            }
+            // 签约日期 已支付 应支付金额
+            for (FundsOrder fundsOrder : list6) {
+                if (constructionOrder.getProjectNo().equals(fundsOrder.getProjectNo())) {
+                    constructionOrderListVo.setSignedTime(DateUtil.formateToDate(fundsOrder.getSignedTime(), FORMAT));
+                    constructionOrderListVo.setReducedContractAmount(fundsOrder.getActualAmount());
+                    constructionOrderListVo.setHavePaid(fundsOrder.getPaidAmount());
+                }
+            }
+
+            listVo.add(constructionOrderListVo);
+        }
+        pageInfo.setList(listVo);
+        return pageInfo;
     }
 
+    /**
+     *  项目派单 给员工
+     * @param pageNum
+     * @param pageSize
+     * @param projectNo
+     * @param appointmentTime
+     * @param addressDetail
+     * @param owner
+     * @param phone
+     * @param orderStage
+     * @return
+     */
+    public PageInfo<DecorationOrderListVo> getDecorationOrderList(int pageNum, int pageSize, String projectNo, String appointmentTime,
+                                                                  String addressDetail, String owner, String phone, String orderStage) {
+
+        PageHelper.startPage(pageNum, pageSize);
+        PageInfo<DecorationOrderListVo> pageInfo = new PageInfo<>();
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.setOrderByClause("create_time DESC");
+        example.createCriteria().andStatusEqualTo(1);
+
+        if (!StringUtils.isBlank(projectNo)){
+            example.createCriteria().andProjectNoEqualTo(projectNo);
+        }
+
+        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        List<DecorationOrderListVo> listVo = new ArrayList<>();
+
+        /* 项目编号List */
+        List<String> listProjectNo = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : list) {
+            listProjectNo.add(constructionOrder.getProjectNo());
+        }
+
+        /* 订单编号List */
+        List<String> listOrdertNo = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : list) {
+            listOrdertNo.add(constructionOrder.getOrderNo());
+        }
+
+        /* 公司编号List */
+        List<String> listCompanyNo = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : list) {
+            listCompanyNo.add(constructionOrder.getCompanyId());
+        }
+
+        // 所属地区 & 项目地址 & 预约日期
+        List<Project> list1 = getProjectInfo(listProjectNo);
+        // 项目经理
+        List<Map<String, String>> list2 = getEmployeeInfo(listProjectNo, "CP");
+        // 设计师
+        List<Map<String, String>> list3 = getEmployeeInfo(listProjectNo, "CD");
+        // 工长
+        List<Map<String, String>> list4 = getEmployeeInfo(listProjectNo, "CM");
+        // 管家
+        List<Map<String, String>> list5 = getEmployeeInfo(listProjectNo, "CS");
+
+        conOut:
+        for (ConstructionOrder constructionOrder : list) {
+            DecorationOrderListVo decorationOrderListVo = new DecorationOrderListVo();
+
+            // 项目地址 & 预约日期
+            for (Project project : list1) {
+                if (constructionOrder.getProjectNo().equals(project.getProjectNo())) {
+                    decorationOrderListVo.setAddressDetail(project.getAddressDetail());
+                    if (!StringUtils.isBlank(addressDetail)){
+                        if (!addressDetail.equals(project.getAddressDetail())){
+                            continue conOut;
+                        }
+                    }
+                    decorationOrderListVo.setAppointmentTime(project.getCreateTime());
+                }
+                // 业主 & 手机号  TODO 没做批量查询
+//                PersionVo ownerP = getOwnerId(project.getOwnerId());
+//                if (!StringUtils.isBlank(owner)){
+//                    if (!owner.equals(ownerP.getName())){
+//                        continue conOut;
+//                    }
+//                }
+//                if (!StringUtils.isBlank(phone)){
+//                    if (!phone.equals(ownerP.getPhone())){
+//                        continue conOut;
+//                    }
+//                }
+//                decorationOrderListVo.setOwner(ownerP.getName());
+//                decorationOrderListVo.setPhone(ownerP.getPhone());
+            }
+
+            // 预算报价 TODO 新建表
+            decorationOrderListVo.setAppointmentPrice("");
+            if (!StringUtils.isBlank(appointmentTime)){
+
+            }
+
+
+            // 项目编号
+            decorationOrderListVo.setProjectNo(constructionOrder.getProjectNo());
+            // 订单状态
+            if (!StringUtils.isBlank(orderStage)){
+                if (!orderStage.equals(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2))){
+                    continue conOut;
+                }
+            }
+            decorationOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
+
+            // 项目经理
+            for (Map<String, String> OrderUser : list2) {
+                if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
+                    decorationOrderListVo.setProjectManager(OrderUser.get("name"));
+                }
+            }
+            // 设计师
+            for (Map<String, String> OrderUser : list3) {
+                if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
+                    decorationOrderListVo.setDesignerName(OrderUser.get("name"));
+                }
+            }
+            // 工长
+            for (Map<String, String> OrderUser : list4) {
+                if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
+                    decorationOrderListVo.setHeadWork(OrderUser.get("name"));
+                }
+            }
+            // 管家
+            for (Map<String, String> OrderUser : list5) {
+                if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
+                    decorationOrderListVo.setHousekeeper(OrderUser.get("name"));
+                }
+            }
+
+            listVo.add(decorationOrderListVo);
+        }
+        pageInfo.setList(listVo);
+        return pageInfo;
+    }
 
 
     /**
