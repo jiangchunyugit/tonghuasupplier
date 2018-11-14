@@ -12,10 +12,10 @@ import cn.thinkfree.database.vo.AfConfigVO;
 import cn.thinkfree.service.approvalflow.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +37,15 @@ public class AfConfigServiceImpl implements AfConfigService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AfConfigServiceImpl.class);
 
 
-    @Resource
+    @Autowired
     private AfConfigMapper configMapper;
-    @Resource
+    @Autowired
     private AfSubRoleService subRoleService;
-    @Resource
+    @Autowired
     private RoleService roleService;
-    @Resource
+    @Autowired
     private AfApprovalRoleService approvalRoleService;
-    @Resource
+    @Autowired
     private AfConfigSchemeService configSchemeService;
 
     @Override

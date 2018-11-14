@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.*;
 
 /**
@@ -38,27 +37,27 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AfInstanceServiceImpl.class);
 
-    @Resource
+    @Autowired
     private AfInstanceMapper instanceMapper;
-    @Resource
+    @Autowired
     private AfApprovalLogService approvalLogService;
-    @Resource
+    @Autowired
     private NewOrderUserService orderUserService;
-    @Resource
+    @Autowired
     private ProjectService projectService;
-    @Resource
+    @Autowired
     private AfApprovalRoleService approvalRoleService;
-    @Resource
+    @Autowired
     private RoleService roleService;
-    @Resource
+    @Autowired
     private AfConfigService configService;
     @Autowired
     private NewSchedulingService schedulingService;
-    @Resource
+    @Autowired
     private HttpLinks httpLinks;
-    @Resource
+    @Autowired
     private AfConfigSchemeService configSchemeService;
-    @Resource
+    @Autowired
     private AfSubRoleService subRoleService;
 
     @Override
