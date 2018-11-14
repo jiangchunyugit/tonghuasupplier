@@ -30,7 +30,8 @@ public class CompanyCityRelationStrategy implements RelationStrategy {
      */
     @Override
     public List<String> build(UserVO userVO) {
-        return storeInfoService.storeInfoListByCityId(Integer.valueOf(userVO.getPcUserInfo().getCityBranchCompanyId()))
+        // todo jangchunyu
+        return storeInfoService.storeInfoListByCityId(userVO.getPcUserInfo().getCityBranchCompanyId())
                 .stream()
                 .map(StoreInfo::getStoreId)
                 .collect(Collectors.toList());

@@ -15,18 +15,18 @@ public interface StoreInfoService {
     StoreInfo storeInfoById (String id);
 
     /**
-     * 通过城市id查询门店
-     * @param id
+     * 通过城市编码查询门店
+     * @param cityBranchCode
      * @return
      */
-    List<StoreInfo> storeInfoListByCityId (Integer id);
+    List<StoreInfo> storeInfoListByCityId (String cityBranchCode);
 
     /**
      * 通过分公司查询门店
-     * @param id
+     * @param branchCompanyCode
      * @return
      */
-    List<StoreInfo> storeInfoListByCompanyId(Integer id);
+    List<StoreInfo> storeInfoListByCompanyId(String branchCompanyCode);
 
     /**
      * 查询全部门店信息

@@ -8,6 +8,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.CityBranchSEO;
 import cn.thinkfree.database.vo.CityBranchVO;
 import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
+import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -48,10 +49,17 @@ public class CityBranchServiceImpl implements CityBranchService {
         cityBranch.setCreateTime(new Date());
         cityBranch.setIsDel(OneTrue.YesOrNo.NO.shortVal());
         cityBranch.setIsEnable(UserEnabled.Enabled_false.shortVal());
+        cityBranch.setCityBranchCode(AccountHelper.createUserNo("c"));
 
         // 通过分公司获取省份code
         BranchCompany branchCompany = new BranchCompany();
-        branchCompany = branchCompanyMapper.selectByPrimaryKey(cityBranch.getBranchCompId());
+        BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
+        branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(cityBranch.getBranchCompanyCode());
+//        branchCompany = branchCompanyMapper.selectByPrimaryKey(cityBranch.getBranchCompId());
+        List<BranchCompany> branchCompanys = branchCompanyMapper.selectByExample(branchCompanyExample);
+        if (branchCompanys.size()>0) {
+            branchCompany = branchCompanys.get(0);
+        }
         if (branchCompany != null) {
             cityBranch.setProvinceCode(branchCompany.getProvinceCode());
         }
@@ -118,7 +126,7 @@ public class CityBranchServiceImpl implements CityBranchService {
     public PageInfo<CityBranchWtihProCitVO> cityBranchWithProList(CityBranchSEO cityBranchSEO) {
 
         PageHelper.startPage(cityBranchSEO.getPage(),cityBranchSEO.getRows());
-        List<CityBranchWtihProCitVO> cityBranchWtihProCitVOList = cityBranchMapper.selectCityBranchWithProCit(cityBranchSEO.getBranchCompanyId());
+        List<CityBranchWtihProCitVO> cityBranchWtihProCitVOList = cityBranchMapper.selectCityBranchWithProCit(cityBranchSEO.getBranchCompanyCode());
         return new PageInfo<>(cityBranchWtihProCitVOList);
     }
 
@@ -162,6 +170,9 @@ public class CityBranchServiceImpl implements CityBranchService {
 
             List<String> cityCodes = cityBranchList.stream().filter(e->e.getCityCode() != null).map(e->e.getCityCode().toString()).collect(Collectors.toList());
 
+            if (cityCodes.size() == 0) {
+                return new ArrayList();
+            }
             CityExample cityExample = new CityExample();
             cityExample.createCriteria().andCityCodeIn(cityCodes);
             List<City> cityList = cityMapper.selectByExample(cityExample);
@@ -179,10 +190,16 @@ public class CityBranchServiceImpl implements CityBranchService {
     @Override
     public List<CityBranch> cityBranchlistByCompany(Integer id) {
 
-        CityBranchExample cityBranchExample = new CityBranchExample();
-        cityBranchExample.createCriteria().andBranchCompIdEqualTo(id)
-        .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
+        BranchCompanyExample branchCompanyExample= new BranchCompanyExample();
+        branchCompanyExample.createCriteria().andIdEqualTo(id);
+        BranchCompany branchCompany = branchCompanyMapper.selectByPrimaryKey(id);
+        if (branchCompany != null) {
 
-        return cityBranchMapper.selectByExample(cityBranchExample);
+            CityBranchExample cityBranchExample = new CityBranchExample();
+            cityBranchExample.createCriteria().andBranchCompanyCodeEqualTo(branchCompany.getBranchCompanyCode())
+            .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
+            return cityBranchMapper.selectByExample(cityBranchExample);
+        }
+        return null;
     }
 }

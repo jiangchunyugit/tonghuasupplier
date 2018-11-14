@@ -9,11 +9,15 @@ import cn.thinkfree.database.model.*;
 import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 public class UserVO extends SecurityUser {
+
+    private static Long serialVersionUID = 1L;
+
 
 
     /**
@@ -198,7 +202,7 @@ public class UserVO extends SecurityUser {
 
     @Override
     public Short getType() {
-        return UserRegisterType.Platform.shortVal();
+        return type.shortVal();
     }
 
 

@@ -33,7 +33,7 @@ public class CompanyUserController extends AbsBaseController{
     /**
      * 查询入驻公司员工
      * @author lqd
-     * @param ContractSEO
+     * @param companyUser
      * @return pageList
      */
     @ApiOperation(value = "入驻公司员工列表", notes = "根据一定条件获取分页入驻公司员工")
@@ -50,24 +50,21 @@ public class CompanyUserController extends AbsBaseController{
     /**
      * 新增入驻公司员工
      * @author lqd
-     * @param ContractSEO
-     * @return pageList
+     * @param companyUser
      */
     @ApiOperation(value = "新增或者添加公司信息", notes = "新增入驻公司员工")
     @PostMapping("/insertInfo")
     @MyRespBody
     public MyRespBundle<String> insertInfo(@ApiParam("添加/修改用户信息")CompanyUserVo companyUser){
 
-        boolean  falg = companyInfoService.insertOrUpdateCompanyUser(companyUser);
+        boolean  flag = companyInfoService.insertOrUpdateCompanyUser(companyUser);
 
-        return sendJsonData(ResultMessage.SUCCESS,falg);
+        return sendJsonData(ResultMessage.SUCCESS,flag?"操作成功":"操作失败");
     }
 
     /**
      * 停用/启用
      * @author lqd
-     * @param ContractSEO
-     * @return pageList
      */
     @ApiOperation(value = "停用/启用公司员工", notes = "1 代表启用  0代表停用")
     @PostMapping("/updateUserStatus")
@@ -82,7 +79,7 @@ public class CompanyUserController extends AbsBaseController{
     /**
      * 根据用户编号查询
      * @author lqd
-     * @param ContractSEO
+     * @param empNumber
      * @return pageList
      */
     @ApiOperation(value = "新增或者添加公司信息", notes = "根据一定条件获取分页入驻公司员工（通过id是否有值来区分）")
@@ -99,7 +96,6 @@ public class CompanyUserController extends AbsBaseController{
     /**
      * 查询公司角色列表
      * @author lqd
-     * @param ContractSEO
      * @return pageList
      */
     @ApiOperation(value = "入驻公角色列表", notes = "入驻公角色列表")
@@ -116,7 +112,7 @@ public class CompanyUserController extends AbsBaseController{
     /**
      *新增公司角色列表
      * @author lqd
-     * @param ContractSEO
+     * @param user
      * @return pageList
      */
     @ApiOperation(value = "新增角色列表", notes = "新增公角色列表")

@@ -43,12 +43,13 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <javaClientGenerator
-                targetPackage="cn.thinkfree.database.mapper"
-                targetProject="src/main/java/"
-                type="XMLMAPPER">
-            <property name="enableSubPackages" value="false"/>
-        </javaClientGenerator>        <!-- 表-->
+        <!--<javaClientGenerator-->
+                <!--targetPackage="cn.thinkfree.database.mapper"-->
+                <!--targetProject="src/main/java/"-->
+                <!--type="XMLMAPPER">-->
+            <!--<property name="enableSubPackages" value="false"/>-->
+        <!--</javaClientGenerator>        -->
+        <!-- 表-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
@@ -84,7 +85,7 @@
         <!--<table tableName="pc_contract_info" domainObjectName="PcContractInfo"/>-->
         <!-- 权限相关 S-->
         <!--<table tableName="pc_system_log" domainObjectName="LogInfo"/>-->
-        <!--<table tableName="pc_index_menu" domainObjectName="Menu"/>-->
+        <table tableName="pc_index_menu" domainObjectName="Menu"/>
         <!--<table tableName="pc_system_resource" domainObjectName="SystemResource"/>-->
         <!--<table tableName="pc_user_info" domainObjectName="PcUserInfo"/>-->
         <!--<table tableName="pc_user_resource" domainObjectName="PcUserResource"/>-->
@@ -97,7 +98,7 @@
         <!--<table tableName="pc_system_user_role" domainObjectName="SystemUserRole"/>-->
         <!--<table tableName="pc_system_permission_resource" domainObjectName="SystemPermissionResource" />-->
         <!--<table tableName="user_role_set" domainObjectName="UserRoleSet"/>-->
-        <table tableName="hr_people_entity" domainObjectName="HrPeopleEntity"/>
+        <!--<table tableName="hr_people_entity" domainObjectName="HrPeopleEntity"/>-->
 
         <!-- 权限相关 E-->
         <!--<table tableName="pc_settlement_method_info" domainObjectName="SettlementMethodInfo"/>-->

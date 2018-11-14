@@ -31,11 +31,11 @@
         SELECT
         pcb.*,pbc.company_name
         FROM
-        pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_comp_id = pbc.id
+        pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_company_code = pbc.branch_company_code
         <where>
           pcb.is_del = 2
-          <if test="branchCompanyId != null and branchCompanyId != ''">
-            and pcb.branch_comp_id = #{branchCompanyId}
+          <if test="branchCompanyCode != null and branchCompanyCode != ''">
+            and pcb.branch_company_code = #{branchCompanyCode}
           </if>
           <if test="cityCode != null and cityCode != ''">
             and pcb.city_code = #{cityCode}
@@ -43,7 +43,7 @@
           <if test="legalName != null and legalName != ''">
             and (pcb.legal_name like #{legalName} OR pcb.legal_phone = #{legalName})
           </if>
-          <if test="isEnable != null and isEnable != ''">
+          <if test="isEnable != null ">
             and pcb.is_enable = #{isEnable}
           </if>
           order by to_char(pcb.create_time, 'YYYY/MM/DD')
@@ -58,7 +58,7 @@
         C.city_name
         FROM
         pc_city_branch pcb
-        LEFT JOIN pc_branch_company pbc ON pbc.ID = pcb.branch_comp_id
+        LEFT JOIN pc_branch_company pbc ON pbc.branch_company_code = pcb.branch_company_code
         LEFT JOIN city C ON C.city_code = pcb.city_code
         WHERE
         pcb.ID =#{id,jdbcType=INTEGER}
@@ -82,7 +82,7 @@
     </select>
 
     <!--查看城市分站详细信息带有省份城市名称-->
-    <select id="selectCityBranchWithProCit" parameterType="java.lang.Integer" resultMap="CityBranchWithProCitResultMap">
+    <select id="selectCityBranchWithProCit" parameterType="java.lang.String" resultMap="CityBranchWithProCitResultMap">
         SELECT
             pcb.*,
             p.province_name,
@@ -93,7 +93,7 @@
             LEFT JOIN city c ON pcb.city_code = c.city_code
         WHERE
             pcb.is_del = 2 AND
-            pcb.branch_comp_id = #{id,jdbcType=INTEGER}
+            pcb.branch_company_code = #{branchCompanyCode,jdbcType=VARCHAR}
     </select>
 
 </mapper>

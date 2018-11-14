@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.HrPeopleEntity;
 import cn.thinkfree.database.model.HrPeopleEntityExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.account.ThirdAccountVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface HrPeopleEntityMapper {
@@ -93,4 +95,5 @@ public interface HrPeopleEntityMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(HrPeopleEntity record);
+
 }
