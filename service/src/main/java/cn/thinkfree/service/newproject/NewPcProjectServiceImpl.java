@@ -30,7 +30,6 @@ import java.util.*;
  * @author gejiaming
  */
 @Service
-@Slf4j
 public class NewPcProjectServiceImpl implements NewPcProjectService {
     @Autowired
     OrderUserMapper orderUserMapper;

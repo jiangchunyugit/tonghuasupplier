@@ -135,4 +135,12 @@ public interface EmployeeService {
      * @param remark
      */
     void editRole(String roleCode, String roleName, String remark);
+
+    /**
+     * 查询设计师列表
+     * @param companyId
+     * @param roleCode
+     * @return
+     */
+    List<EmployeeMsg> queryDesignerByCompanyId(String companyId, String roleCode);
 }

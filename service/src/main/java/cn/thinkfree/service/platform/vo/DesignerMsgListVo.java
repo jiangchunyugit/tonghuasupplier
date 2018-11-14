@@ -33,6 +33,8 @@ public class DesignerMsgListVo {
     private String levelName;
     @ApiModelProperty("用户ID")
     private String userId;
+    @ApiModelProperty("设计师绑定公司状态  1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
+    private String bindCompanyState;
 
     public String getUserName() {
         return userName;
@@ -136,5 +138,13 @@ public class DesignerMsgListVo {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public void setBindCompanyState(String bindCompanyState) {
+        this.bindCompanyState = bindCompanyState;
+    }
+
+    public String getBindCompanyState() {
+        return bindCompanyState;
     }
 }

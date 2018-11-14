@@ -47,6 +47,7 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "area", required = false, value = "所在区") @RequestParam(name = "area", required = false) String area,
             @ApiParam(name = "level", required = false, value = "设计师等级") @RequestParam(name = "level", required = false) String level,
             @ApiParam(name = "identity", required = false, value = "设计师身份") @RequestParam(name = "identity", required = false) String identity,
+            @ApiParam(name = "cardNo", required = false, value = "身份证号") @RequestParam(name = "cardNo", required = false) String cardNo,
             @ApiParam(name = "source", required = false, value = "设计师来源") @RequestParam(name = "source", required = false) String source,
             @ApiParam(name = "tag", required = false, value = "设计师标签") @RequestParam(name = "tag", required = false) String tag,
             @ApiParam(name = "registrationTimeStart", required = false, value = "注册时间") @RequestParam(name = "registrationTimeStart", required = false) String registrationTimeStart,
@@ -55,7 +56,7 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "pageSize", required = false, value = "每页条数") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         PageVo<List<DesignerMsgListVo>> pageVo = designerService.queryDesigners(designerName, designerRealName, phone, authState, province, city, area, level,
-                identity, source, tag, registrationTimeStart, registrationTimeEnd, sort, pageSize, pageIndex);
+                identity, cardNo, source, tag, registrationTimeStart, registrationTimeEnd, sort, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, pageVo);
     }
 

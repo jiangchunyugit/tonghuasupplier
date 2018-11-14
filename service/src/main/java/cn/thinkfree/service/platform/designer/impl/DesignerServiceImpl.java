@@ -63,6 +63,7 @@ public class DesignerServiceImpl implements DesignerService {
      * @param area                  所在区域
      * @param level                 设计师等级
      * @param identity              设计师身份
+     * @param cardNo                身份证号
      * @param source                来源
      * @param tag                   标签
      * @param registrationTimeStart 注册时间
@@ -75,7 +76,7 @@ public class DesignerServiceImpl implements DesignerService {
     @Override
     public PageVo<List<DesignerMsgListVo>> queryDesigners(
             String designerName, String designerRealName, String phone, String authState,
-            String province, String city, String area, String level, String identity, String source,
+            String province, String city, String area, String level, String identity, String cardNo, String source,
             String tag, String registrationTimeStart, String registrationTimeEnd, String sort, int pageSize, int pageIndex) {
         //调用用户中心，模糊查询用户名信息
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
@@ -102,6 +103,9 @@ public class DesignerServiceImpl implements DesignerService {
         }
         if (!StringUtils.isEmpty(registrationTimeEnd)) {
             msgExampleCriteria.andBindDateLessThanOrEqualTo(DateUtils.strToDate(registrationTimeEnd));
+        }
+        if (!StringUtils.isEmpty(cardNo)) {
+            msgExampleCriteria.andCertificateLike("%" + cardNo + "%");
         }
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
         List<String> userIds = ReflectUtils.getList(employeeMsgs, "userId");
@@ -143,6 +147,7 @@ public class DesignerServiceImpl implements DesignerService {
                 msgVo.setRegistrationTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
                 msgVo.setSex(employeeMsg.getSex() + "");
                 msgVo.setRealName(employeeMsg.getRealName());
+                msgVo.setBindCompanyState(employeeMsg.getEmployeeApplyState() + "");
             }
             msgVos.add(msgVo);
         }
@@ -162,7 +167,7 @@ public class DesignerServiceImpl implements DesignerService {
      */
     @Override
     public DesignerMsgVo queryDesignerByUserId(String userId) {
-        if(StringUtils.isEmpty(userId)){
+        if (StringUtils.isEmpty(userId)) {
             throw new RuntimeException("设计师ID不能为空");
         }
         DesignerMsgExample msgExample = new DesignerMsgExample();
@@ -189,13 +194,13 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsgVo.setSource(designerMsg.getSource());
         designerMsgVo.setRegisterTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
         String designTag = "云设计家设计师";
-        if(designerMsg.getTag() != 1){
+        if (designerMsg.getTag() != 1) {
             designTag = "待定";
         }
         designerMsgVo.setDesignTag(designTag);
         designerMsgVo.setLevel(designerMsg.getLevel().intValue());
         String identity = "社会化设计师";
-        if(designerMsg.getIdentity() != 1){
+        if (designerMsg.getIdentity() != 1) {
             identity = "待定";
         }
         designerMsgVo.setIdentity(identity);
@@ -205,7 +210,7 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsgVo.setDesignerMoneyLow(designerMsg.getDesignerMoneyLow().toString());
         designerMsgVo.setDesignerMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
         List<DesignerStyleConfigVo> styleConfigs = queryDesignerStyleByUserId(userId);
-        List<String> styles = ReflectUtils.getList(styleConfigs,"styleName");
+        List<String> styles = ReflectUtils.getList(styleConfigs, "styleName");
         designerMsgVo.setDesignerStyles(styles);
         return designerMsgVo;
     }
@@ -229,6 +234,7 @@ public class DesignerServiceImpl implements DesignerService {
 
     /**
      * 根据公司ID查询设计师信息
+     *
      * @param companyId 公司ID
      * @return
      */
@@ -253,9 +259,9 @@ public class DesignerServiceImpl implements DesignerService {
         List<DesignerStyleRelation> designerStyleRelations = relationMapper.selectByExample(relationExample);
         if (!designerStyleRelations.isEmpty()) {
             List<String> styleCodes = ReflectUtils.getList(designerStyleRelations, "styleCode");
-            List<BasicsData> basicsDatas = basicsService.queryData(BasicsDataParentEnum.DESIGN_STYLE.getCode(),styleCodes);
+            List<BasicsData> basicsDatas = basicsService.queryData(BasicsDataParentEnum.DESIGN_STYLE.getCode(), styleCodes);
             List<DesignerStyleConfigVo> styleConfigs = new ArrayList<>();
-            for (BasicsData basicsData : basicsDatas){
+            for (BasicsData basicsData : basicsDatas) {
                 DesignerStyleConfigVo styleConfigVo = new DesignerStyleConfigVo();
                 styleConfigVo.setDelState(basicsData.getDelState());
                 styleConfigVo.setRemark(basicsData.getRemark());
@@ -292,7 +298,7 @@ public class DesignerServiceImpl implements DesignerService {
     public List<DesignerStyleConfigVo> queryDesignerStyle() {
         List<BasicsData> basicsDatas = basicsService.queryData(BasicsDataParentEnum.DESIGN_STYLE.getCode());
         List<DesignerStyleConfigVo> styleConfigs = new ArrayList<>();
-        for (BasicsData basicsData : basicsDatas){
+        for (BasicsData basicsData : basicsDatas) {
             DesignerStyleConfigVo styleConfigVo = new DesignerStyleConfigVo();
             styleConfigVo.setDelState(basicsData.getDelState());
             styleConfigVo.setRemark(basicsData.getRemark());
@@ -389,27 +395,28 @@ public class DesignerServiceImpl implements DesignerService {
 
     /**
      * 导入设计师excel
+     *
      * @param designerFile excel文件
      * @param optionId     操作人ID
      * @param companyId    操作人所属公司
      */
     @Override
     public void importDesign(MultipartFile designerFile, String optionId, String companyId) {
-        try{
+        try {
             InputStream inputStream1 = designerFile.getInputStream();
             List<ExcelToListMap.TableTitle> tableTitles = new ArrayList<>();
-            tableTitles.add(new ExcelToListMap.TableTitle("用户名","userName"));
-            tableTitles.add(new ExcelToListMap.TableTitle("手机号","userPhone"));
-            tableTitles.add(new ExcelToListMap.TableTitle("性别","sex",new String[]{"男:1","女:2"}));
-            tableTitles.add(new ExcelToListMap.TableTitle("省","provide",provinces()));
-            tableTitles.add(new ExcelToListMap.TableTitle("市","city", cites()));
-            tableTitles.add(new ExcelToListMap.TableTitle("县/地区","area",areas()));
-            tableTitles.add(new ExcelToListMap.TableTitle("量房费","money"));
-            tableTitles.add(new ExcelToListMap.TableTitle("设计费","designMoney"));
-            List<Map<String,String>> listMap = ExcelToListMap.analysis(inputStream1,tableTitles);
+            tableTitles.add(new ExcelToListMap.TableTitle("用户名", "userName"));
+            tableTitles.add(new ExcelToListMap.TableTitle("手机号", "userPhone"));
+            tableTitles.add(new ExcelToListMap.TableTitle("性别", "sex", new String[]{"男:1", "女:2"}));
+            tableTitles.add(new ExcelToListMap.TableTitle("省", "provide", provinces()));
+            tableTitles.add(new ExcelToListMap.TableTitle("市", "city", cites()));
+            tableTitles.add(new ExcelToListMap.TableTitle("县/地区", "area", areas()));
+            tableTitles.add(new ExcelToListMap.TableTitle("量房费", "money"));
+            tableTitles.add(new ExcelToListMap.TableTitle("设计费", "designMoney"));
+            List<Map<String, String>> listMap = ExcelToListMap.analysis(inputStream1, tableTitles);
             //TODO 批量注册接口
             System.out.println(JSONObject.toJSONString(listMap));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("excel解析失败:" + e.getMessage());
         }
@@ -417,34 +424,37 @@ public class DesignerServiceImpl implements DesignerService {
 
     /**
      * 获取省份
+     *
      * @return
      */
-    private Map<String,String> provinces(){
+    private Map<String, String> provinces() {
         ProvinceExample provinceExample = new ProvinceExample();
         provinceExample.createCriteria();
         List<Province> provinces = provinceMapper.selectByExample(provinceExample);
-        return ReflectUtils.listToMap(provinces,"provinceName","provinceCode");
+        return ReflectUtils.listToMap(provinces, "provinceName", "provinceCode");
     }
 
     /**
      * 获取城市
+     *
      * @return
      */
-    private Map<String,String> cites(){
+    private Map<String, String> cites() {
         CityExample cityExample = new CityExample();
         cityExample.createCriteria();
         List<City> cities = cityMapper.selectByExample(cityExample);
-        return ReflectUtils.listToMap(cities,"cityName","cityCode");
+        return ReflectUtils.listToMap(cities, "cityName", "cityCode");
     }
 
     /**
      * 获取地区
+     *
      * @return
      */
-    private Map<String,String> areas(){
+    private Map<String, String> areas() {
         AreaExample areaExample = new AreaExample();
         areaExample.createCriteria();
         List<Area> areas = areaMapper.selectByExample(areaExample);
-        return ReflectUtils.listToMap(areas,"areaName","areaCode");
+        return ReflectUtils.listToMap(areas, "areaName", "areaCode");
     }
 }

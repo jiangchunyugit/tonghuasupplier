@@ -4,6 +4,9 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.database.model.EmployeeMsg;
+import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
@@ -11,6 +14,7 @@ import cn.thinkfree.service.platform.vo.RoleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,6 +219,46 @@ public class EmployeeController extends AbsBaseController {
         }
     }
 
+    @Autowired
+    private RoleFunctionService roleFunctionService;
+
+    @ApiOperation("根据角色和公司ID查询员工信息--->设计公司设计师列表用")
+    @MyRespBody
+    @RequestMapping(value = "queryStaff/designCompanyId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<EmployeeMsgVo>>> queryStaffByDesignCompanyId(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            String roleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
+            if(StringUtils.isBlank(roleCode)){
+                throw new RuntimeException("没有查询到设计师编码");
+            }
+            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryEmployee(companyId, roleCode, searchKey, pageSize, pageIndex);
+            return sendJsonData(ResultMessage.SUCCESS, pageVo);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("根据角色和公司ID查询设计师列表--->指派设计师，获取设计师列表===》王玲")
+    @MyRespBody
+    @RequestMapping(value = "designer/companyId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<EmployeeMsg>> queryDesignerByCompanyId(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
+        try {
+            String roleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
+            if(StringUtils.isBlank(roleCode)){
+                throw new RuntimeException("没有查询到设计师编码");
+            }
+            List<EmployeeMsg> msgVos = employeeService.queryDesignerByCompanyId(companyId, roleCode);
+            return sendJsonData(ResultMessage.SUCCESS, msgVos);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
     @ApiOperation("根据角色查询员工信息--->运营后台用")
     @MyRespBody
     @RequestMapping(value = "queryStaffByPlatform", method = {RequestMethod.POST, RequestMethod.GET})
@@ -228,7 +272,7 @@ public class EmployeeController extends AbsBaseController {
             PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryStaffByPlatform(roleCode, searchKey, city, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
-            logger.error("e:",e);
+            logger.error("e:", e);
             return sendFailMessage(e.getMessage());
         }
     }
