@@ -12,6 +12,7 @@ import cn.thinkfree.database.model.StoreInfo;
 import cn.thinkfree.database.model.StoreInfoExample;
 import cn.thinkfree.database.vo.BusinessEntitySEO;
 import cn.thinkfree.database.vo.BusinessEntityVO;
+import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -41,14 +42,15 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         businessEntity.setCreateTime(new Date());
         businessEntity.setIsDel(OneTrue.YesOrNo.NO.shortVal());
         businessEntity.setIsEnable(UserEnabled.Enabled_false.shortVal());
+        businessEntity.setBusinessEntityCode(AccountHelper.createUserNo("e"));
 
         int result = businessEntityMapper.insertSelective(businessEntity);
         if (businessEntityVO.getStoreInfoList().size()>0) {
 
             businessEntityVO.getStoreInfoList().forEach(e->{
-                e.setCityBranchId(businessEntity.getCityBranchId());
-                e.setBranchCompanyId(businessEntity.getBranchCompId());
-                e.setBusinessEntityId(businessEntity.getId());
+                e.setCityBranchCode(businessEntity.getCityBranchCode());
+                e.setBranchCompanyCode(businessEntity.getBranchCompanyCode());
+                e.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
                 storeInfoMapper.insertSelective(e);
             });
         }
@@ -59,16 +61,16 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     public int updateBusinessEntity(BusinessEntityVO businessEntityVO) {
 
         StoreInfoExample storeInfoExample= new StoreInfoExample();
-        storeInfoExample.createCriteria().andBusinessEntityIdEqualTo(businessEntityVO.getId());
+        storeInfoExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityVO.getBusinessEntityCode());
         storeInfoMapper.deleteByExample(storeInfoExample);
         BusinessEntity businessEntity = new BusinessEntity();
         SpringBeanUtil.copy(businessEntityVO,businessEntity);
         if (businessEntityVO.getStoreInfoList().size()>0) {
 
             businessEntityVO.getStoreInfoList().forEach(e->{
-                e.setCityBranchId(businessEntity.getCityBranchId());
-                e.setBranchCompanyId(businessEntity.getBranchCompId());
-                e.setBusinessEntityId(businessEntity.getId());
+                e.setCityBranchCode(businessEntity.getCityBranchCode());
+                e.setBranchCompanyCode(businessEntity.getBranchCompanyCode());
+                e.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
                 storeInfoMapper.insertSelective(e);
             });
         }
@@ -83,17 +85,16 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         businessEntityExample.createCriteria().andIdEqualTo(id);
         List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntityExample);
 
-        StoreInfoExample storeInfoExample = new StoreInfoExample();
-        StoreInfoExample.Criteria criteria = storeInfoExample.createCriteria();
-        criteria.andBusinessEntityIdEqualTo(id);
-        List<StoreInfo> storeList = storeInfoMapper.selectByExample(storeInfoExample);
-
         // businessEntityVO
         BusinessEntityVO businessEntityVO = new BusinessEntityVO();
 
         if (businessEntityVOS.size()>0) {
 
             businessEntityVO = businessEntityVOS.get(0);
+            StoreInfoExample storeInfoExample = new StoreInfoExample();
+            StoreInfoExample.Criteria criteria = storeInfoExample.createCriteria();
+            criteria.andBusinessEntityCodeEqualTo(businessEntityVO.getBusinessEntityCode());
+            List<StoreInfo> storeList = storeInfoMapper.selectByExample(storeInfoExample);
             businessEntityVO.setStoreInfoList(storeList);
         }
         return businessEntityVO;

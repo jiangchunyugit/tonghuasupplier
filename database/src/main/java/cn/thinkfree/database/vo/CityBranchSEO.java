@@ -19,8 +19,8 @@ public class CityBranchSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("法人电话号码")
     private String legalPhone;
 
-    @ApiModelProperty("分公司id")
-    private Integer branchCompanyId;
+    @ApiModelProperty("分公司code")
+    private String branchCompanyCode;
 
     @ApiModelProperty("城市code")
     private Integer cityCode;
@@ -49,12 +49,12 @@ public class CityBranchSEO extends AbsPageSearchCriteria  {
         this.legalPhone = legalPhone;
     }
 
-    public Integer getBranchCompanyId() {
-        return branchCompanyId;
+    public String getBranchCompanyCode() {
+        return branchCompanyCode;
     }
 
-    public void setBranchCompanyId(Integer branchCompanyId) {
-        this.branchCompanyId = branchCompanyId;
+    public void setBranchCompanyCode(String branchCompanyCode) {
+        this.branchCompanyCode = branchCompanyCode;
     }
 
     public Integer getCityCode() {

@@ -39,10 +39,10 @@ public class CompanyProvinceRelationStrategy implements RelationStrategy {
         userVO.setBranchCompany(branchCompany);
 
         CityBranchExample condition = new CityBranchExample();
-        condition.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal())
-                .andBranchCompIdEqualTo(Integer.valueOf(userVO.getPcUserInfo().getBranchCompanyId()));
-        List<CityBranch> cityBranches = cityBranchMapper.selectByExample(condition);
-        return cityBranches.stream().map(c->String.valueOf(c.getId()) ).collect(toList());
-
+//        condition.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal())
+//                .andBranchCompIdEqualTo(Integer.valueOf(userVO.getPcUserInfo().getBranchCompanyId()));
+//        List<CityBranch> cityBranches = cityBranchMapper.selectByExample(condition);
+//        return cityBranches.stream().map(c->String.valueOf(c.getId()) ).collect(toList());
+return null;
     }
 }

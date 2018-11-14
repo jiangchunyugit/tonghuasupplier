@@ -51,7 +51,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/updateBranchCompany", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="分公司站点：编辑分站")
+    @ApiOperation(value="分公司站点：编辑分站(id不可为空)")
     public MyRespBundle<String> updateBranchCompany(@ApiParam("分公司信息")BranchCompany branchCompany){
         BeanValidator.validate(branchCompany, Severitys.Update.class);
         int line = branchCompanyService.updateBranchCompany(branchCompany);
@@ -184,6 +184,15 @@ public class BranchCompanyController extends AbsBaseController{
     public MyRespBundle<SiteInfo> siteInfo() {
 
         return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getSiteInfo());
+    }
+
+    @GetMapping(value = "/branchCompanyByIdList")
+    @MyRespBody
+    @ApiOperation(value = "(权限)运营平台---站点信息")
+    public MyRespBundle<List<BranchCompany>> branchCompanyByIdList(@ApiParam("省code")@RequestParam String provinceCode,
+                                                                   @ApiParam("市code")@RequestParam String cityCode) {
+
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList(provinceCode,cityCode));
     }
 }
 
