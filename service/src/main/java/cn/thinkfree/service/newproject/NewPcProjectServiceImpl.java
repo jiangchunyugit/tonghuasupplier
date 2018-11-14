@@ -272,6 +272,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 for (ProjectQuotationRoomsConstruct construct : projectQuotationRoomsSoftConstructs) {
                     construct.setId(UUID.randomUUID().toString().replaceAll("-",""));
                     construct.setRoomType(projectQuotationRooms.getRoomType());
+                    construct.setRoomName(projectQuotationRooms.getRoomName());
                     construct.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     construct.setProjectNo(projectNo);
                     int constructResult = roomsConstructMapper.insertSelective(construct);
@@ -288,6 +289,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 for (ProjectQuotationRoomsHardDecoration hardDecoration : projectQuotationRoomsHardConstructs) {
                     hardDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
                     hardDecoration.setRoomType(projectQuotationRooms.getRoomType());
+                    hardDecoration.setRoomName(projectQuotationRooms.getRoomName());
                     hardDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     hardDecoration.setProjectNo(projectNo);
                     int hardResult = hardDecorationMapper.insertSelective(hardDecoration);
@@ -304,6 +306,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 for (ProjectQuotationRoomsSoftDecoration softDecoration : projectQuotationRoomsSoftDecorations) {
                     softDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
                     softDecoration.setRoomType(projectQuotationRooms.getRoomType());
+                    softDecoration.setRoomName(projectQuotationRooms.getRoomName());
                     softDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     softDecoration.setProjectNo(projectNo);
                     int softResult = softDecorationMapper.insertSelective(softDecoration);

@@ -974,6 +974,76 @@ public class ProjectQuotationRoomsConstructExample {
             addCriterion("project_no not between", value1, value2, "projectNo");
             return (Criteria) this;
         }
+
+        public Criteria andRoomNameIsNull() {
+            addCriterion("room_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameIsNotNull() {
+            addCriterion("room_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameEqualTo(String value) {
+            addCriterion("room_name =", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameNotEqualTo(String value) {
+            addCriterion("room_name <>", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameGreaterThan(String value) {
+            addCriterion("room_name >", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameGreaterThanOrEqualTo(String value) {
+            addCriterion("room_name >=", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameLessThan(String value) {
+            addCriterion("room_name <", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameLessThanOrEqualTo(String value) {
+            addCriterion("room_name <=", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameLike(String value) {
+            addCriterion("room_name like", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameNotLike(String value) {
+            addCriterion("room_name not like", value, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameIn(List<String> values) {
+            addCriterion("room_name in", values, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameNotIn(List<String> values) {
+            addCriterion("room_name not in", values, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameBetween(String value1, String value2) {
+            addCriterion("room_name between", value1, value2, "roomName");
+            return (Criteria) this;
+        }
+
+        public Criteria andRoomNameNotBetween(String value1, String value2) {
+            addCriterion("room_name not between", value1, value2, "roomName");
+            return (Criteria) this;
+        }
     }
 
     /**

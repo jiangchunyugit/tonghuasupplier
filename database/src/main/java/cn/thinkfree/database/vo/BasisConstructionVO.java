@@ -22,6 +22,8 @@ public class BasisConstructionVO {
     private String constructCode;
     @ApiModelProperty("房屋类型")
     private String roomType;
+    @ApiModelProperty("房屋名称")
+    private String roomName;
     @ApiModelProperty("项目说明")
     private String constructName;
     @ApiModelProperty("单价")
