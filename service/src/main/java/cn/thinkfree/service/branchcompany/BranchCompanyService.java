@@ -66,4 +66,11 @@ public interface BranchCompanyService {
      * @return
      */
     SiteInfo getSiteInfo();
+
+    /**
+     * 通过id范围查询分公司信息
+     * @param provinceCode
+     * @return
+     */
+    List<BranchCompany> getBranchCompanyByIdList(String provinceCode,String cityCode);
 }

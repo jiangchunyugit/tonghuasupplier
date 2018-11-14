@@ -91,6 +91,6 @@ public interface CityBranchMapper {
 
     List<CityBranchVO> selectBranchCompanyByParam(CityBranchSEO cityBranchSEO);
 
-    List<CityBranchWtihProCitVO> selectCityBranchWithProCit(Integer id);
+    List<CityBranchWtihProCitVO> selectCityBranchWithProCit(String branchCompanyCode);
 
 }

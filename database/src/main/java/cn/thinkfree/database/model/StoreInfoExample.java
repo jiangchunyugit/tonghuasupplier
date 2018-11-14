@@ -254,63 +254,73 @@ public class StoreInfoExample extends cn.thinkfree.core.model.AbstractDataAuth {
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdIsNull() {
-            addCriterion("city_branch_id is null");
+        public Criteria andCityBranchCodeIsNull() {
+            addCriterion("city_branch_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdIsNotNull() {
-            addCriterion("city_branch_id is not null");
+        public Criteria andCityBranchCodeIsNotNull() {
+            addCriterion("city_branch_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdEqualTo(Integer value) {
-            addCriterion("city_branch_id =", value, "cityBranchId");
+        public Criteria andCityBranchCodeEqualTo(String value) {
+            addCriterion("city_branch_code =", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdNotEqualTo(Integer value) {
-            addCriterion("city_branch_id <>", value, "cityBranchId");
+        public Criteria andCityBranchCodeNotEqualTo(String value) {
+            addCriterion("city_branch_code <>", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdGreaterThan(Integer value) {
-            addCriterion("city_branch_id >", value, "cityBranchId");
+        public Criteria andCityBranchCodeGreaterThan(String value) {
+            addCriterion("city_branch_code >", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("city_branch_id >=", value, "cityBranchId");
+        public Criteria andCityBranchCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("city_branch_code >=", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdLessThan(Integer value) {
-            addCriterion("city_branch_id <", value, "cityBranchId");
+        public Criteria andCityBranchCodeLessThan(String value) {
+            addCriterion("city_branch_code <", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdLessThanOrEqualTo(Integer value) {
-            addCriterion("city_branch_id <=", value, "cityBranchId");
+        public Criteria andCityBranchCodeLessThanOrEqualTo(String value) {
+            addCriterion("city_branch_code <=", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdIn(List<Integer> values) {
-            addCriterion("city_branch_id in", values, "cityBranchId");
+        public Criteria andCityBranchCodeLike(String value) {
+            addCriterion("city_branch_code like", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdNotIn(List<Integer> values) {
-            addCriterion("city_branch_id not in", values, "cityBranchId");
+        public Criteria andCityBranchCodeNotLike(String value) {
+            addCriterion("city_branch_code not like", value, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdBetween(Integer value1, Integer value2) {
-            addCriterion("city_branch_id between", value1, value2, "cityBranchId");
+        public Criteria andCityBranchCodeIn(List<String> values) {
+            addCriterion("city_branch_code in", values, "cityBranchCode");
             return (Criteria) this;
         }
 
-        public Criteria andCityBranchIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("city_branch_id not between", value1, value2, "cityBranchId");
+        public Criteria andCityBranchCodeNotIn(List<String> values) {
+            addCriterion("city_branch_code not in", values, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeBetween(String value1, String value2) {
+            addCriterion("city_branch_code between", value1, value2, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeNotBetween(String value1, String value2) {
+            addCriterion("city_branch_code not between", value1, value2, "cityBranchCode");
             return (Criteria) this;
         }
 
@@ -384,63 +394,73 @@ public class StoreInfoExample extends cn.thinkfree.core.model.AbstractDataAuth {
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdIsNull() {
-            addCriterion("business_entity_id is null");
+        public Criteria andBusinessEntityCodeIsNull() {
+            addCriterion("business_entity_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdIsNotNull() {
-            addCriterion("business_entity_id is not null");
+        public Criteria andBusinessEntityCodeIsNotNull() {
+            addCriterion("business_entity_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdEqualTo(Integer value) {
-            addCriterion("business_entity_id =", value, "businessEntityId");
+        public Criteria andBusinessEntityCodeEqualTo(String value) {
+            addCriterion("business_entity_code =", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdNotEqualTo(Integer value) {
-            addCriterion("business_entity_id <>", value, "businessEntityId");
+        public Criteria andBusinessEntityCodeNotEqualTo(String value) {
+            addCriterion("business_entity_code <>", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdGreaterThan(Integer value) {
-            addCriterion("business_entity_id >", value, "businessEntityId");
+        public Criteria andBusinessEntityCodeGreaterThan(String value) {
+            addCriterion("business_entity_code >", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("business_entity_id >=", value, "businessEntityId");
+        public Criteria andBusinessEntityCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("business_entity_code >=", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdLessThan(Integer value) {
-            addCriterion("business_entity_id <", value, "businessEntityId");
+        public Criteria andBusinessEntityCodeLessThan(String value) {
+            addCriterion("business_entity_code <", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdLessThanOrEqualTo(Integer value) {
-            addCriterion("business_entity_id <=", value, "businessEntityId");
+        public Criteria andBusinessEntityCodeLessThanOrEqualTo(String value) {
+            addCriterion("business_entity_code <=", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdIn(List<Integer> values) {
-            addCriterion("business_entity_id in", values, "businessEntityId");
+        public Criteria andBusinessEntityCodeLike(String value) {
+            addCriterion("business_entity_code like", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdNotIn(List<Integer> values) {
-            addCriterion("business_entity_id not in", values, "businessEntityId");
+        public Criteria andBusinessEntityCodeNotLike(String value) {
+            addCriterion("business_entity_code not like", value, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdBetween(Integer value1, Integer value2) {
-            addCriterion("business_entity_id between", value1, value2, "businessEntityId");
+        public Criteria andBusinessEntityCodeIn(List<String> values) {
+            addCriterion("business_entity_code in", values, "businessEntityCode");
             return (Criteria) this;
         }
 
-        public Criteria andBusinessEntityIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("business_entity_id not between", value1, value2, "businessEntityId");
+        public Criteria andBusinessEntityCodeNotIn(List<String> values) {
+            addCriterion("business_entity_code not in", values, "businessEntityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessEntityCodeBetween(String value1, String value2) {
+            addCriterion("business_entity_code between", value1, value2, "businessEntityCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessEntityCodeNotBetween(String value1, String value2) {
+            addCriterion("business_entity_code not between", value1, value2, "businessEntityCode");
             return (Criteria) this;
         }
 
@@ -514,63 +534,73 @@ public class StoreInfoExample extends cn.thinkfree.core.model.AbstractDataAuth {
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdIsNull() {
-            addCriterion("branch_company_id is null");
+        public Criteria andBranchCompanyCodeIsNull() {
+            addCriterion("branch_company_code is null");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdIsNotNull() {
-            addCriterion("branch_company_id is not null");
+        public Criteria andBranchCompanyCodeIsNotNull() {
+            addCriterion("branch_company_code is not null");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdEqualTo(Integer value) {
-            addCriterion("branch_company_id =", value, "branchCompanyId");
+        public Criteria andBranchCompanyCodeEqualTo(String value) {
+            addCriterion("branch_company_code =", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdNotEqualTo(Integer value) {
-            addCriterion("branch_company_id <>", value, "branchCompanyId");
+        public Criteria andBranchCompanyCodeNotEqualTo(String value) {
+            addCriterion("branch_company_code <>", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdGreaterThan(Integer value) {
-            addCriterion("branch_company_id >", value, "branchCompanyId");
+        public Criteria andBranchCompanyCodeGreaterThan(String value) {
+            addCriterion("branch_company_code >", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdGreaterThanOrEqualTo(Integer value) {
-            addCriterion("branch_company_id >=", value, "branchCompanyId");
+        public Criteria andBranchCompanyCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("branch_company_code >=", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdLessThan(Integer value) {
-            addCriterion("branch_company_id <", value, "branchCompanyId");
+        public Criteria andBranchCompanyCodeLessThan(String value) {
+            addCriterion("branch_company_code <", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdLessThanOrEqualTo(Integer value) {
-            addCriterion("branch_company_id <=", value, "branchCompanyId");
+        public Criteria andBranchCompanyCodeLessThanOrEqualTo(String value) {
+            addCriterion("branch_company_code <=", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdIn(List<Integer> values) {
-            addCriterion("branch_company_id in", values, "branchCompanyId");
+        public Criteria andBranchCompanyCodeLike(String value) {
+            addCriterion("branch_company_code like", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdNotIn(List<Integer> values) {
-            addCriterion("branch_company_id not in", values, "branchCompanyId");
+        public Criteria andBranchCompanyCodeNotLike(String value) {
+            addCriterion("branch_company_code not like", value, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdBetween(Integer value1, Integer value2) {
-            addCriterion("branch_company_id between", value1, value2, "branchCompanyId");
+        public Criteria andBranchCompanyCodeIn(List<String> values) {
+            addCriterion("branch_company_code in", values, "branchCompanyCode");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompanyIdNotBetween(Integer value1, Integer value2) {
-            addCriterion("branch_company_id not between", value1, value2, "branchCompanyId");
+        public Criteria andBranchCompanyCodeNotIn(List<String> values) {
+            addCriterion("branch_company_code not in", values, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeBetween(String value1, String value2) {
+            addCriterion("branch_company_code between", value1, value2, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeNotBetween(String value1, String value2) {
+            addCriterion("branch_company_code not between", value1, value2, "branchCompanyCode");
             return (Criteria) this;
         }
     }

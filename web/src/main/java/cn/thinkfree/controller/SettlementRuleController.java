@@ -14,9 +14,7 @@ import cn.thinkfree.database.vo.settle.SettlementRuleSEO;
 import cn.thinkfree.database.vo.settle.SettlementRuleVO;
 import cn.thinkfree.service.settle.rule.SettlementRuleService;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -139,6 +137,10 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "拷贝结算规则", notes = "拷贝结算规则")
     @PostMapping("/copyRule")
     @MyRespBody
+//    @ApiImplicitParams(
+//            @ApiImplicitParam(name = "",type = "query",required = true),
+//            @ApiImplicitParam(name = "",type = "return",);
+//    )
     // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
     public MyRespBundle<String> copyRule(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 

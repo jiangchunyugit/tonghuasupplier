@@ -71,7 +71,7 @@ public class CityBranchController extends AbsBaseController{
     @GetMapping(value = "/cityBranchlistByCompanyId")
     @MyRespBody
     @ApiOperation(value="城市分站：分站详情（根据分公司id进行分站联动查询）")
-    public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyId(@ApiParam("分公司id")Integer id){
+    public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyId(@ApiParam("分公司编号")Integer id){
 
         List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompany(id);
 

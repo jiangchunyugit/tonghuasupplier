@@ -7,6 +7,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MarginContractVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,9 @@ public class ThirdPartDateServiceImpl implements ThirdPartDateService {
     @Autowired
     PcAuditInfoMapper pcAuditInfoMapper;
 
+    @Value("${optionType}")
+    private String type;
+
     @Override
     public MarginContractVO getMarginContract(String contractNumber) {
 
@@ -41,7 +45,7 @@ public class ThirdPartDateServiceImpl implements ThirdPartDateService {
 
             // 合同信息
             ContractInfo contractInfo = contractInfos.get(0);
-            marginContractVO.setOptionType("${optionType}");
+            marginContractVO.setOptionType(type);
             marginContractVO.setContractNumber(contractInfo.getContractNumber());
             marginContractVO.setTransactionDate(contractInfo.getSignedTime().toString());
             marginContractVO.setVendorId(contractInfo.getCompanyId());

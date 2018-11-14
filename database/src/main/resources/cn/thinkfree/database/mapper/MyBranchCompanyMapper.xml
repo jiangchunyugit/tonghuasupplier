@@ -9,7 +9,7 @@
 
   <resultMap id="companyRelationResultMap" type="cn.thinkfree.database.vo.CompanyRelationVO" extends="BaseResultMap">
     <collection property="cityBranchList" ofType="cn.thinkfree.database.model.CityBranch" javaType="java.util.ArrayList" select="getCityBranchs"
-                column="id">
+                column="branch_company_code">
     </collection>
   </resultMap>
 
@@ -37,13 +37,13 @@
 	pc_branch_company
   </select>
 
-  <select id="getCityBranchs" resultMap="cityBranchResultMap" parameterType="java.lang.Integer">
+  <select id="getCityBranchs" resultMap="cityBranchResultMap" parameterType="java.lang.String">
     SELECT
 	*
     FROM
 	pc_city_branch
     WHERE
-	branch_comp_id = #{id,jdbcType=INTEGER}
+	branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
   </select>
   <!--分页查询-->
   <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.BranchCompanySEO" resultMap="branchCompanyPageResultMap">
@@ -61,7 +61,7 @@
       <if test="legalName != null and legalName != ''">
         and (legal_name like #{legalName} OR legal_phone = #{legalName})
       </if>
-      <if test="isEnable != null and isEnable != ''">
+      <if test="isEnable != null ">
         and is_enable = #{isEnable}
       </if>
       order by to_char(create_time, 'YYYY/MM/DD')
