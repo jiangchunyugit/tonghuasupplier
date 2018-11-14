@@ -20,16 +20,25 @@ import com.itextpdf.styledxmlparser.node.IElementNode;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateExceptionHandler;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -246,5 +255,54 @@ public class AfUtils {
         LOGGER.info("获取用户信息， httpRespMsg：{}", JSONUtil.bean2JsonStr(httpRespMsg));
         Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
         LOGGER.info("获取用户信息， responseMap：{}", JSONUtil.bean2JsonStr(responseMap));
+    }
+
+    public static String uploadFile(String fileDir, String fileName, String uploadUrl) {
+        String url = "";
+
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            HttpPost httppost = new HttpPost(uploadUrl);
+
+            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(200000).setSocketTimeout(200000).build();
+            httppost.setConfig(requestConfig);
+
+            FileBody bin = new FileBody(new File(fileDir, fileName));
+            StringBody comment = new StringBody("This is comment", ContentType.TEXT_PLAIN);
+
+            HttpEntity reqEntity = MultipartEntityBuilder.create().addPart("files", bin).addPart("comment", comment).build();
+
+            httppost.setEntity(reqEntity);
+
+            CloseableHttpResponse response = httpclient.execute(httppost);
+
+            try {
+                HttpEntity resEntity = response.getEntity();
+                if (resEntity != null) {
+                    String responseEntityStr = EntityUtils.toString(resEntity);
+                    LOGGER.info("upload file response:{}", responseEntityStr);
+
+                    Map responseEntityMap = JSONUtil.json2Bean(responseEntityStr, Map.class);
+                    url = ((List<String>) ((Map) responseEntityMap.get("data")).get("file")).get(0);
+                    LOGGER.info("Response url: " + url);
+                }
+                EntityUtils.consume(resEntity);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            } finally {
+                response.close();
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                httpclient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                LOGGER.error(e.getMessage());
+            }
+        }
+        return url;
     }
 }
