@@ -267,25 +267,27 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsHardDecoration> decorations = projectQuotationRoomsHardConstructMapper.selectByExample(hardDecorationExample);
         List<HardQuoteVO> listVo = new ArrayList<>();
-        for(ProjectQuotationRoomsHardDecoration decoration : decorations){
-            HardQuoteVO quoteVO = new HardQuoteVO();
-            quoteVO.setUnitPrice(decoration.getUnitPrice());
-            quoteVO.setUsedQuantity(decoration.getUsedQuantity());
-            quoteVO.setBrand(decoration.getBrand());
-            quoteVO.setModel(decoration.getModel());
-            quoteVO.setProjectNo(decoration.getProjectNo());
-            quoteVO.setRoomType(decoration.getRoomType());
-            quoteVO.setSpec(decoration.getSpec());
-            quoteVO.setMaterialName(decoration.getMaterialName());
-            quoteVO.setId(decoration.getId());
-            if(quoteVO.getUnitPrice() == null){
-                quoteVO.setUnitPrice(BigDecimal.ZERO);
+        if(decorations.size() > 0){
+            for(ProjectQuotationRoomsHardDecoration decoration : decorations){
+                HardQuoteVO quoteVO = new HardQuoteVO();
+                quoteVO.setUnitPrice(decoration.getUnitPrice());
+                quoteVO.setUsedQuantity(decoration.getUsedQuantity());
+                quoteVO.setBrand(decoration.getBrand());
+                quoteVO.setModel(decoration.getModel());
+                quoteVO.setProjectNo(decoration.getProjectNo());
+                quoteVO.setRoomType(decoration.getRoomType());
+                quoteVO.setSpec(decoration.getSpec());
+                quoteVO.setMaterialName(decoration.getMaterialName());
+                quoteVO.setId(decoration.getId());
+                if(quoteVO.getUnitPrice() == null){
+                    quoteVO.setUnitPrice(BigDecimal.ZERO);
+                }
+                if(quoteVO.getUsedQuantity() == null){
+                    quoteVO.setUsedQuantity(0);
+                }
+                quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
+                listVo.add(quoteVO);
             }
-            if(quoteVO.getUsedQuantity() == null){
-                quoteVO.setUsedQuantity(0);
-            }
-            quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
-            listVo.add(quoteVO);
         }
         return listVo;
     }
@@ -305,25 +307,27 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsSoftDecoration> decorations = projectQuotationRoomsSoftConstructMapper.selectByExample(softDecorationExample);
         List<SoftQuoteVO> listVo = new ArrayList<>();
-        for(ProjectQuotationRoomsSoftDecoration decoration : decorations){
-            SoftQuoteVO quoteVO = new SoftQuoteVO();
-            quoteVO.setUnitPrice(decoration.getUnitPrice());
-            quoteVO.setUsedQuantity(decoration.getUsedQuantity());
-            quoteVO.setBrand(decoration.getBrand());
-            quoteVO.setModel(decoration.getModel());
-            quoteVO.setProjectNo(decoration.getProjectNo());
-            quoteVO.setRoomType(decoration.getRoomType());
-            quoteVO.setSpec(decoration.getSpec());
-            quoteVO.setMaterialName(decoration.getMaterialName());
-            quoteVO.setId(decoration.getId());
-            if(quoteVO.getUnitPrice() == null){
-                quoteVO.setUnitPrice(BigDecimal.ZERO);
+        if(decorations.size() > 0){
+            for(ProjectQuotationRoomsSoftDecoration decoration : decorations){
+                SoftQuoteVO quoteVO = new SoftQuoteVO();
+                quoteVO.setUnitPrice(decoration.getUnitPrice());
+                quoteVO.setUsedQuantity(decoration.getUsedQuantity());
+                quoteVO.setBrand(decoration.getBrand());
+                quoteVO.setModel(decoration.getModel());
+                quoteVO.setProjectNo(decoration.getProjectNo());
+                quoteVO.setRoomType(decoration.getRoomType());
+                quoteVO.setSpec(decoration.getSpec());
+                quoteVO.setMaterialName(decoration.getMaterialName());
+                quoteVO.setId(decoration.getId());
+                if(quoteVO.getUnitPrice() == null){
+                    quoteVO.setUnitPrice(BigDecimal.ZERO);
+                }
+                if(quoteVO.getUsedQuantity() == null){
+                    quoteVO.setUsedQuantity(0);
+                }
+                quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
+                listVo.add(quoteVO);
             }
-            if(quoteVO.getUsedQuantity() == null){
-                quoteVO.setUsedQuantity(0);
-            }
-            quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
-            listVo.add(quoteVO);
         }
         return listVo;
     }
@@ -342,23 +346,25 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsConstruct> constructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
         List<BasisConstructionVO> listVo = new ArrayList<>();
-        for(ProjectQuotationRoomsConstruct construct : constructs){
-            BasisConstructionVO constructionVO = new BasisConstructionVO();
-            constructionVO.setProjectNo(construct.getProjectNo());
-            constructionVO.setRoomType(construct.getRoomType());
-            constructionVO.setUnitPrice(construct.getUnitPrice());
-            constructionVO.setUsedQuantity(construct.getUsedQuantity());
-            constructionVO.setConstructCode(construct.getConstructCode());
-            constructionVO.setConstructName(construct.getConstructName());
-            constructionVO.setId(construct.getId());
-            if(constructionVO.getUnitPrice() == null){
-                constructionVO.setUnitPrice(BigDecimal.ZERO);
+        if(constructs.size() > 0){
+            for(ProjectQuotationRoomsConstruct construct : constructs){
+                BasisConstructionVO constructionVO = new BasisConstructionVO();
+                constructionVO.setProjectNo(construct.getProjectNo());
+                constructionVO.setRoomType(construct.getRoomType());
+                constructionVO.setUnitPrice(construct.getUnitPrice());
+                constructionVO.setUsedQuantity(construct.getUsedQuantity());
+                constructionVO.setConstructCode(construct.getConstructCode());
+                constructionVO.setConstructName(construct.getConstructName());
+                constructionVO.setId(construct.getId());
+                if(constructionVO.getUnitPrice() == null){
+                    constructionVO.setUnitPrice(BigDecimal.ZERO);
+                }
+                if(constructionVO.getUsedQuantity() == null){
+                    constructionVO.setUsedQuantity(0);
+                }
+                constructionVO.setTotalPrice(constructionVO.getUnitPrice().multiply(new BigDecimal(constructionVO.getUsedQuantity())));
+                listVo.add(constructionVO);
             }
-            if(constructionVO.getUsedQuantity() == null){
-                constructionVO.setUsedQuantity(0);
-            }
-            constructionVO.setTotalPrice(constructionVO.getUnitPrice().multiply(new BigDecimal(constructionVO.getUsedQuantity())));
-            listVo.add(constructionVO);
         }
         return listVo;
     }
