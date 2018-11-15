@@ -12,6 +12,7 @@ import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.constants.UserStatus;
+import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -62,6 +63,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     DesignDispatchService designDispatchService;
     @Autowired
     CloudService cloudService;
+    @Autowired
+    ConstructionStateServiceB constructionStateServiceB;
 
 
     /**
@@ -79,6 +82,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         PageInfo<ProjectVo> pageInfo = new PageInfo<>();
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
+        if (orderUsers.size()==0){
+            return RespData.error("此项目下尚未分配人员");
+        }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
         for (OrderUser orderUser : orderUsers) {
@@ -89,6 +95,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoIn(list);
         List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size()==0){
+            return RespData.error("暂无此项目");
+        }
         List<ProjectVo> projectVoList = new ArrayList<>();
         for (Project project : projects) {
             ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
@@ -187,6 +196,18 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProgressIsShow(false);
         }
         //TODO 添加项目四个按钮状态 正式时修改,询问赋值规则和数据来源
+        String projectMessageStatus = cloudService.getProjectMessageStatus(projectNo, project.getOwnerId());
+        if (projectMessageStatus.trim().isEmpty()){
+            return RespData.error("获取徐洋消息信息失败!");
+        }
+        JSONObject messageJson = JSONObject.parseObject(projectMessageStatus);
+        JSONObject data = messageJson.getJSONObject("data");
+        if(!messageJson.getInteger("code").equals(ErrorCode.OK.getCode())){
+            return RespData.error("获取徐洋消息信息失败!");
+        }
+        String dataString = JSONObject.toJSONString(data);
+        OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
+        //TODO 等徐洋添加状态后根据状态判断然后赋值
         projectVo.setProjectDynamic(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
         projectVo.setProjectOrder(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
         projectVo.setProjectData(ProjectDataStatus.BUTTON_YES_NOTHING.getValue());
@@ -480,18 +501,6 @@ public class NewProjectServiceImpl implements NewProjectService {
     }
 
     /**
-     * 根据项目编号批量获取人员信息
-     *
-     * @param projectNo
-     * @return
-     */
-    @Override
-    public MyRespBundle<List<UserVo>> getProjectUsers(String projectNo) {
-        List<UserVo> userVoList = orderUserMapper.getProjectUsers(projectNo, UserStatus.NO_TRANSFER.getValue(), UserStatus.ON_JOB.getValue());
-        return RespData.success(userVoList);
-    }
-
-    /**
      * 获取项目阶段
      *
      * @param projectNo
@@ -499,31 +508,15 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<Integer> getProjectStatus(String projectNo) {
-        List<OrderDetailsVO> orderDetailsVO = projectMapper.selectOrderDetails(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
-        return RespData.success(orderDetailsVO.get(0).getStage());
-    }
-
-    /**
-     * 批量获取员工的信息
-     *
-     * @param userIds
-     * @return
-     */
-    @Override
-    public MyRespBundle<Map<String, UserVo>> getListUserByUserIds(List<String> userIds) {
-        Map<String, UserVo> map = new HashMap<>();
-        EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andUserIdIn(userIds);
-        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
-        for (EmployeeMsg employeeMsg : employeeMsgs) {
-            UserVo vo = new UserVo();
-            vo.setRealName(employeeMsg.getRealName());
-            vo.setRoleCode(employeeMsg.getRoleCode());
-            vo.setUserId(employeeMsg.getUserId());
-            vo.setRoleName(UserJobs.findByCodeStr(vo.getRoleCode()).mes);
-            map.put(employeeMsg.getUserId(), vo);
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size()==0){
+            return RespData.error("此项目不存在");
         }
-        return RespData.success(map);
+        return RespData.success(projects.get(0).getStage());
     }
 
     /**
@@ -576,37 +569,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
         if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState())) {
             //如果设计订单完成,则请求施工订单更改状态
-            ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
-            ConstructionOrderExample.Criteria constructionCriteria = constructionOrderExample.createCriteria();
-            constructionCriteria.andOrderNoEqualTo(orderNo);
-            constructionCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-            List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+            //TODO 东旭提完代码后放开
+            constructionStateServiceB.customerCancelOrder(userId,orderNo,cancelReason);
         } else {
             designDispatchService.endOrder(projectNo, userId, cancelReason);
-        }
-
-
-        //TODO 取消订单找另外另个人要接口
-
-        return null;
-    }
-
-    /**
-     * 提醒支付量房费
-     *
-     * @param projectNo
-     * @param ownerId
-     * @param userId
-     * @return
-     */
-    @Override
-    public MyRespBundle<String> remindPay(String projectNo, String ownerId, String userId) {
-        String[] args = {ownerId};
-        String result = cloudService.remindConsumer(args, projectNo, "请支付量房费用", userId, 0, 2);
-        JSONObject jsonObject = JSON.parseObject(result);
-        Integer code = jsonObject.getInteger("code");
-        if (!code.equals(ErrorCode.OK.getCode())) {
-            return RespData.error("通知失败!");
         }
         return RespData.success();
     }

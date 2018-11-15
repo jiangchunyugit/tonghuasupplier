@@ -28,7 +28,8 @@ public class SchedulingController extends AbsBaseController {
 
     @ApiOperation(value = "APP/PC-获取排期信息")
     @RequestMapping(value = "getScheduling", method = RequestMethod.POST)
-    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 使用 1223098338391") String projectNo) {
+    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getScheduling(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 使用 1223098338391", required = true) String projectNo) {
         return schedulingService.getScheduling(projectNo);
     }
 
@@ -54,14 +55,14 @@ public class SchedulingController extends AbsBaseController {
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ApiOperation("APP-获取验收阶段")
-    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 111") String projectNo) {
+    public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 111", required = true) String projectNo) {
         return schedulingService.getCheckStage(projectNo);
     }
 
     @RequestMapping(value = "createScheduling", method = RequestMethod.POST)
     @ApiOperation("生成排期")
     public MyRespBundle createScheduling(
-            @RequestParam(name = "orderNo") @ApiParam(name = "orderNo", value = "订单编号 使用 1223081") String orderNo) {
+            @RequestParam(name = "orderNo") @ApiParam(name = "orderNo", value = "订单编号 使用 1223081", required = true) String orderNo) {
         return schedulingService.createScheduling(orderNo);
     }
 

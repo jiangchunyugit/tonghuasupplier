@@ -634,6 +634,136 @@ public class ProjectQuotationCheckExample {
             addCriterion("project_no not between", value1, value2, "projectNo");
             return (Criteria) this;
         }
+
+        public Criteria andApprovalIdIsNull() {
+            addCriterion("approval_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdIsNotNull() {
+            addCriterion("approval_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdEqualTo(String value) {
+            addCriterion("approval_id =", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdNotEqualTo(String value) {
+            addCriterion("approval_id <>", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdGreaterThan(String value) {
+            addCriterion("approval_id >", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdGreaterThanOrEqualTo(String value) {
+            addCriterion("approval_id >=", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdLessThan(String value) {
+            addCriterion("approval_id <", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdLessThanOrEqualTo(String value) {
+            addCriterion("approval_id <=", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdLike(String value) {
+            addCriterion("approval_id like", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdNotLike(String value) {
+            addCriterion("approval_id not like", value, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdIn(List<String> values) {
+            addCriterion("approval_id in", values, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdNotIn(List<String> values) {
+            addCriterion("approval_id not in", values, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdBetween(String value1, String value2) {
+            addCriterion("approval_id between", value1, value2, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalIdNotBetween(String value1, String value2) {
+            addCriterion("approval_id not between", value1, value2, "approvalId");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeIsNull() {
+            addCriterion("approval_time is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeIsNotNull() {
+            addCriterion("approval_time is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeEqualTo(Date value) {
+            addCriterion("approval_time =", value, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeNotEqualTo(Date value) {
+            addCriterion("approval_time <>", value, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeGreaterThan(Date value) {
+            addCriterion("approval_time >", value, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeGreaterThanOrEqualTo(Date value) {
+            addCriterion("approval_time >=", value, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeLessThan(Date value) {
+            addCriterion("approval_time <", value, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeLessThanOrEqualTo(Date value) {
+            addCriterion("approval_time <=", value, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeIn(List<Date> values) {
+            addCriterion("approval_time in", values, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeNotIn(List<Date> values) {
+            addCriterion("approval_time not in", values, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeBetween(Date value1, Date value2) {
+            addCriterion("approval_time between", value1, value2, "approvalTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andApprovalTimeNotBetween(Date value1, Date value2) {
+            addCriterion("approval_time not between", value1, value2, "approvalTime");
+            return (Criteria) this;
+        }
     }
 
     /**
