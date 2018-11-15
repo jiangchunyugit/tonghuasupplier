@@ -1,13 +1,11 @@
 package cn.thinkfree.service.construction.impl;
 
 
-import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.model.ConstructionOrderExample;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import org.apache.commons.lang3.StringUtils;
@@ -32,16 +30,16 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     /**
      * 查询当前状态
      *
-     * @param type  ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
+     * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
      * @return
      */
     @Override
-    public MyRespBundle<String> getStateInfo(String orderNo,int type) {
+    public MyRespBundle<String> getStateInfo(String orderNo, int type) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode,type);
+        String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
         return RespData.success(stateInfo);
     }
 
@@ -55,8 +53,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_510.getNextStates();
-        if (ConstructionStateEnumB.STATE_510.getState() == stageCode) {
+        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_500.getNextStates();
+        if (stageCode.equals(ConstructionStateEnumB.STATE_500.getState())) {
             if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
                 return RespData.success();
             }
@@ -67,7 +65,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
     /**
      * 装饰公司
-     * 1派单给服务人员 2施工报价完成 3审核完成 4合同录入 5确认线下签约完成（自动创建工地项目）
+     * 1派单给服务人员 2施工报价完成  4合同录入 5确认线下签约完成（自动创建工地项目）
      */
     @Override
     public MyRespBundle<String> constructionState(String orderNo, int type) {
@@ -78,36 +76,68 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         List<ConstructionStateEnumB> nextStateCode = new ArrayList<>();
         switch (type) {
             case 1:
+                stage = ConstructionStateEnumB.STATE_510.getState();
+                nextStateCode = ConstructionStateEnumB.STATE_510.getNextStates();
+                break;
+            case 2:
                 stage = ConstructionStateEnumB.STATE_520.getState();
                 nextStateCode = ConstructionStateEnumB.STATE_520.getNextStates();
                 break;
-            case 2:
-                stage = ConstructionStateEnumB.STATE_530.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_530.getNextStates();
-                break;
-            case 3:
+
+            case 4:
                 stage = ConstructionStateEnumB.STATE_540.getState();
                 nextStateCode = ConstructionStateEnumB.STATE_540.getNextStates();
                 break;
-            case 4:
+            case 5:
                 stage = ConstructionStateEnumB.STATE_550.getState();
                 nextStateCode = ConstructionStateEnumB.STATE_550.getNextStates();
-                break;
-            case 5:
-                stage = ConstructionStateEnumB.STATE_560.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_560.getNextStates();
                 break;
             default:
                 break;
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (stage.equals(stageCode)) {
+        if (stageCode.equals(stage)) {
             if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
                 return RespData.success();
             }
         }
         return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
     }
+
+    /**
+     * 装饰公司
+     * 3审核完成 （审核是否通过）
+     */
+    @Override
+    public MyRespBundle<String> constructionStateOfExamine(String orderNo, int type, int isPass) {
+
+        if (StringUtils.isBlank(String.valueOf(isPass))) {
+            return RespData.error(ResultMessage.ERROR.code, "审核是否通过状态未知");
+        }
+
+
+        Integer stage = ConstructionStateEnumB.STATE_530.getState();
+        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
+
+        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_530.getNextStates();
+
+        if (stageCode.equals(stage)) {
+            if (isPass == 1) {   //下一步
+                if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
+                    return RespData.success();
+                }
+            } else {  //上一步
+                if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(1).getState())) {
+                    return RespData.success();
+                }
+            }
+        } else {
+            return RespData.error(ResultMessage.ERROR.code, "该订单不符合审核状态");
+        }
+
+        return RespData.error(ResultMessage.ERROR.code, "状态更新失败状态-请稍后重试");
+    }
+
 
     /**
      * 支付
@@ -182,11 +212,13 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
-
-        if (commonService.updateStateCodeByOrderNo(orderNo,  ConstructionStateEnumB.STATE_888.getState())) {
+        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
+        if (ConstructionStateEnumB.STATE_600.getState() >= stageCode) {
+            return RespData.error(ResultMessage.ERROR.code, "当前状态不能取消订单");
+        }
+        if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_888.getState())) {
             return RespData.success();
         }
-
         return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
     }
 
@@ -201,7 +233,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
-        if (commonService.updateStateCodeByOrderNo(orderNo,  ConstructionStateEnumB.STATE_888.getState())) {
+        if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_888.getState())) {
             return RespData.success();
         }
 

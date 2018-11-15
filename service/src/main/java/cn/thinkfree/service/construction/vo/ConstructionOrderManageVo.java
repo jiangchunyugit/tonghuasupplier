@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@ApiModel(value = "施工订单管理列表-反参实体（运营后台）--孙宇专用")
+@ApiModel(value = "施工订单管理列表-数据统计-反参实体（运营后台）--孙宇专用")
 public class ConstructionOrderManageVo {
 
     @ApiModelProperty("待审核")

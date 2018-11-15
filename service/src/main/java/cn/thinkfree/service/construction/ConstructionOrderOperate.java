@@ -24,10 +24,4 @@ public interface ConstructionOrderOperate {
      */
     MyRespBundle<ConstructionOrderCommonVo> getOrderList(int pageNum, int pageSize, String cityName);
 
-    /**
-     * 施工工地管理-列表
-     * 运营后台
-     * @return
-     */
-    MyRespBundle<ConstructionOrderManageVo> getConstructionSiteList(int pageNum, int pageSize, String cityName);
 }
