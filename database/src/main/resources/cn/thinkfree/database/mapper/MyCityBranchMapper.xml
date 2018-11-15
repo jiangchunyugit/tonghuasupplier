@@ -41,7 +41,7 @@
             and pcb.city_code = #{cityCode}
           </if>
           <if test="legalName != null and legalName != ''">
-            and (pcb.legal_name like #{legalName} OR pcb.legal_phone = #{legalName})
+            and (pcb.legal_name like #{legalName} OR pcb.legal_phone like #{legalName})
           </if>
           <if test="isEnable != null ">
             and pcb.is_enable = #{isEnable}

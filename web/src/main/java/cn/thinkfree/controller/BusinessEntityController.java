@@ -131,7 +131,7 @@ public class BusinessEntityController extends AbsBaseController{
         BusinessEntityVO businessEntity = new BusinessEntityVO();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
-        int line = businessEntityService.updateBusinessEntity(businessEntity);
+        int line = businessEntityService.enableBusinessEntity(businessEntity);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
@@ -149,7 +149,7 @@ public class BusinessEntityController extends AbsBaseController{
         BusinessEntityVO businessEntity = new BusinessEntityVO();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Disable.shortVal());
-        int line = businessEntityService.updateBusinessEntity(businessEntity);
+        int line = businessEntityService.enableBusinessEntity(businessEntity);
         if(line > 0){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
