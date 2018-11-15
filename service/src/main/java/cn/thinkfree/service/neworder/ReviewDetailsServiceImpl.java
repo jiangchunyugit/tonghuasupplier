@@ -10,6 +10,7 @@ import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
@@ -48,6 +49,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ProjectQuotationCheckMapper checkMapper;
     @Autowired
     CloudService cloudService;
+    @Autowired
+    ConstructionStateServiceB constructionStateServiceB;
+    @Autowired
+    ConstructionOrderMapper constructionOrderMapper;
 
     /**
      * 获取精准报价
@@ -593,6 +598,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             }
         }
         //TODO 调取东旭接口,修改订单状态  为 "报价完成"
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        if (constructionOrders.size()==0){
+            return RespData.error("查无此施工订单");
+        }
+        constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
         return RespData.success();
     }
 
