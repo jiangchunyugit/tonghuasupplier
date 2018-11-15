@@ -167,7 +167,7 @@ public class CityBranchServiceImpl implements CityBranchService {
     public List<City> selectCity() {
 
         CityBranchExample cityBranchExample = new CityBranchExample();
-
+        cityBranchExample.createCriteria().andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
         List<CityBranch> cityBranchList = cityBranchMapper.selectByExample(cityBranchExample);
         if (cityBranchList.size() >0 ) {
 

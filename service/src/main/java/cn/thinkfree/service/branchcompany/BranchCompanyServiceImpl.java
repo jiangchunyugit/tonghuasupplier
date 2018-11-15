@@ -47,6 +47,12 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     @Autowired
     StoreInfoMapper storeInfoMapper;
 
+    @Autowired
+    HrOrganizationEntityMapper hrOrganizationEntityMapper;
+
+    @Autowired
+    PcUserInfoMapper pcUserInfoMapper;
+
     @Override
     public int addBranchCompany(BranchCompany branchCompany) {
 
@@ -144,23 +150,22 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                     cityBranchExample.createCriteria().andCityBranchCodeEqualTo(userVO.getCityBranch().getCityBranchCode());
                     List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
 
-                    if (cityBranches.size() >0) {
-                        CityBranch cityBranch = cityBranches.get(0);
-                        siteInfo.setEbsCityBranch(cityBranch.getCityBranchName());
-                        // 市账号
-                        if (UserLevel.Company_City.code == level) {
-                            siteInfo.setLegalName(cityBranch.getLegalName());
-                            siteInfo.setLegalPhone(cityBranch.getLegalPhone());
-                            siteInfo.setMail(cityBranch.getMail());
-                            siteInfo.setMark(cityBranch.getMark());
-                        }
-                    }
                     // 省账号
                     if (UserLevel.Company_Province.code == level) {
                         siteInfo.setLegalName(branchCompany.getLegalName());
                         siteInfo.setLegalPhone(branchCompany.getLegalPhone());
                         siteInfo.setMail(branchCompany.getMail());
                         siteInfo.setMark(branchCompany.getMark());
+                    }else if (UserLevel.Company_City.code == level) {
+                        // 市账号
+                        if (cityBranches.size() >0) {
+                            CityBranch cityBranch = cityBranches.get(0);
+                            siteInfo.setEbsCityBranch(cityBranch.getCityBranchName());
+                            siteInfo.setLegalName(cityBranch.getLegalName());
+                            siteInfo.setLegalPhone(cityBranch.getLegalPhone());
+                            siteInfo.setMail(cityBranch.getMail());
+                            siteInfo.setMark(cityBranch.getMark());
+                        }
                     }
                 }
             }
@@ -187,37 +192,37 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     }
 
     @Override
-    public CompanyOrganizationVO getCompanyOrganizationByUser() {
+    public List<CompanyInfo> getCompanyOrganizationByUser(String userId) {
 
-        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        CompanyOrganizationVO companyOrganizationVO = new CompanyOrganizationVO();
-        if (null != userVO && userVO.getBranchCompany() != null) {
+        // 入驻公司表条件
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        CompanyInfoExample.Criteria criteria = companyInfoExample.createCriteria();
 
-            // 分公司信息获取
-            if (StringUtils.isNotBlank(userVO.getBranchCompany().getBranchCompanyCode())) {
-                BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
-                branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(userVO.getBranchCompany().getBranchCompanyCode());
-                List<BranchCompany> branchCompanys= branchCompanyMapper.selectByExample(branchCompanyExample);
-                if (branchCompanys.size() > 0) {
-                    companyOrganizationVO.setBranchCompany(branchCompanys.get(0));
-                    // 城市分站信息获取
-                    if (userVO.getCityBranch() !=null && StringUtils.isNotBlank(userVO.getCityBranch().getCityBranchCode())) {
+        PcUserInfoExample userInfoExample = new PcUserInfoExample();
+        userInfoExample.createCriteria().andIdEqualTo(userId);
+        PcUserInfo pcUserInfo = pcUserInfoMapper.findByUserId(userId);
 
-                        CityBranchExample cityBranchExample = new CityBranchExample();
-                        cityBranchExample.createCriteria().andCityBranchCodeEqualTo(userVO.getCityBranch().getCityBranchCode());
-                        List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
-                        if (cityBranches.size() >0 ) {
-                            companyOrganizationVO.setCityBranch(cityBranches.get(0));
-
-                            // 获取经营主体信息
-                            companyOrganizationVO.setBusinessEntityVOList(businessEntityMapper.selectWithCityBranchCode(userVO.getCityBranch().getCityBranchCode()));
-                        }
-                    }
-
+        if (pcUserInfo != null) {
+            StoreInfoExample storeInfoExample = new StoreInfoExample();
+            StoreInfoExample.Criteria storeCriteria = storeInfoExample.createCriteria();
+            // 市条件
+            if (StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())) {
+                storeCriteria.andCityBranchCodeEqualTo(pcUserInfo.getCityBranchCompanyId());
+            }
+            // 省条件
+            else if (StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())) {
+                storeCriteria.andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId());
+            }
+            List<StoreInfo> storeInfos = storeInfoMapper.selectByExample(storeInfoExample);
+            if (storeInfos.size() >0 ) {
+                List<String> storeIds = storeInfos.stream().filter(e->StringUtils.isNotBlank(e.getStoreId())).map(e->e.getStoreId()).collect(Collectors.toList());
+                if (storeIds.size() >0 ) {
+                    criteria.andSiteCompanyIdIn(storeIds);
                 }
             }
         }
-        return companyOrganizationVO;
+
+        return companyInfoMapper.selectByExample(companyInfoExample);
     }
 
     @Override
@@ -244,22 +249,48 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                     enterCompanyOrganizationVO.setStoreId(companyInfo.getSiteCompanyId());
                     // 分公司
                     if (StringUtils.isNotBlank(storeInfo.getBranchCompanyCode())) {
-
+                        BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
+                        branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(storeInfo.getBranchCompanyCode());
+                        List<BranchCompany> branchCompanys = branchCompanyMapper.selectByExample(branchCompanyExample);
+                        if (branchCompanys.size()>0) {
+                            BranchCompany branchCompany = branchCompanys.get(0);
+                            enterCompanyOrganizationVO.setBranchCompanyCode(branchCompany.getCompanyName());
+                            enterCompanyOrganizationVO.setBranchCompanyNm(branchCompany.getBranchCompanyCode());
+                        }
                     }
                     // 城市分站
                     if (StringUtils.isNotBlank(storeInfo.getCityBranchCode())) {
-
+                        CityBranchExample cityBranchExample = new CityBranchExample();
+                        cityBranchExample.createCriteria().andCityBranchCodeEqualTo(storeInfo.getCityBranchCode());
+                        List<CityBranch> cityBranchs = cityBranchMapper.selectByExample(cityBranchExample);
+                        if (cityBranchs.size()>0) {
+                            CityBranch cityBranch = cityBranchs.get(0);
+                            enterCompanyOrganizationVO.setCityBranchCode(cityBranch.getCityBranchName());
+                            enterCompanyOrganizationVO.setCityBranchNm(cityBranch.getCityBranchCode());
+                        }
                     }
                     // 经营主体
                     if (StringUtils.isNotBlank(storeInfo.getBusinessEntityCode())) {
-
+                        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
+                        businessEntityExample.createCriteria().andBusinessEntityCodeEqualTo(storeInfo.getBusinessEntityCode());
+                        List<BusinessEntity> businessEntitys = businessEntityMapper.selectByExample(businessEntityExample);
+                        if (businessEntitys.size()>0) {
+                            BusinessEntity businessEntity = businessEntitys.get(0);
+                            enterCompanyOrganizationVO.setBusinessEntityCode(businessEntity.getEntityName());
+                            enterCompanyOrganizationVO.setBusinessEntityNm(businessEntity.getBusinessEntityCode());
+                        }
                     }
                     // 门店名称
                     HrOrganizationEntityExample hrOrganizationEntityExample = new HrOrganizationEntityExample();
-//                    hrOrganizationEntityExample.createCriteria()
+                    hrOrganizationEntityExample.createCriteria().andOrganizationIdEqualTo(companyInfo.getSiteCompanyId());
+                    List<HrOrganizationEntity> hrOrganizationEntities = hrOrganizationEntityMapper.selectByExample(hrOrganizationEntityExample);
+                    if (hrOrganizationEntities.size() > 0) {
+                        HrOrganizationEntity hrOrganizationEntity = hrOrganizationEntities.get(0);
+                        enterCompanyOrganizationVO.setStoreNm(hrOrganizationEntity.getOrganizationText());
+                    }
                 }
             }
         }
-        return null;
+        return enterCompanyOrganizationVO;
     }
 }

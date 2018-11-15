@@ -1,6 +1,7 @@
 package cn.thinkfree.service.branchcompany;
 
 import cn.thinkfree.database.model.BranchCompany;
+import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 
@@ -75,7 +76,7 @@ public interface BranchCompanyService {
      * 根据用户查询用户组织架构
      * @return
      */
-    CompanyOrganizationVO getCompanyOrganizationByUser();
+    List<CompanyInfo> getCompanyOrganizationByUser(String userId);
 
     /**
      * 根据入驻公司名称获取组织架构
