@@ -3,6 +3,7 @@ package cn.thinkfree.service.event.listener;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.event.account.AccountCreate;
+import cn.thinkfree.database.event.account.ForgetPwd;
 import cn.thinkfree.database.event.account.ResetPassWord;
 import cn.thinkfree.database.model.UserLoginLog;
 import cn.thinkfree.database.model.UserRegister;
@@ -72,4 +73,14 @@ public class AccountListener extends AbsLogPrinter {
         return;
     }
 
+    /**
+     * 忘记密码重置之后
+     * @param forgetPwd
+     */
+    @EventListener
+    public void resetPwdInForgetPassWordAfter(ForgetPwd forgetPwd){
+        // TODO 发送通知 记录日志
+        System.out.println("我需要发送通知");
+        System.out.println("我还得记录日志");
+    }
 }
