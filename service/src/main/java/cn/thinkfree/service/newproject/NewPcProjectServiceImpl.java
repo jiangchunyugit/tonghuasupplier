@@ -75,7 +75,8 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     ReviewDetailsService reviewDetailsService;
     @Autowired
     ProjectQuotationCheckMapper projectQuotationCheckMapper;
-
+    @Autowired
+    FundsOrderFeeMapper fundsOrderFeeMapper;
     /**
      * PC获取项目详情接口--项目阶段
      *
@@ -207,7 +208,15 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
             //硬装保价
             offerVo.setOtherFee(projectQuotation.getHardDecorationPrice().toString());
             //变更保价  TODO 刘博接口
-            //offerVo.setChangeFee(null);
+            FundsOrderFeeExample fundsOrderFeeExample = new FundsOrderFeeExample();
+            FundsOrderFeeExample.Criteria criteria3 = fundsOrderFeeExample.createCriteria();
+            criteria3.andProjectNoEqualTo(projectNo);
+            List<FundsOrderFee> fundsOrderFees = fundsOrderFeeMapper.selectByExample(fundsOrderFeeExample);
+            if(fundsOrderFees.size() > 0){
+                FundsOrderFee fundsOrderFee = fundsOrderFees.get(0);
+                offerVo.setChangeFee(fundsOrderFee.getFeeAmount());
+            }
+            //
             ProjectQuotationCheckExample projectQuotationCheckExample = new ProjectQuotationCheckExample();
             ProjectQuotationCheckExample.Criteria criteria1 = projectQuotationCheckExample.createCriteria();
             criteria1.andProjectNoEqualTo(projectNo);

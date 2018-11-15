@@ -127,6 +127,7 @@
         <!--<table tableName="project_quotation_rooms_hard_decoration" domainObjectName="ProjectQuotationRoomsHardDecoration"/>-->
         <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftDecoration"/>-->
         <table tableName="project_quotation_check" domainObjectName="ProjectQuotationCheck"/>
+        <table tableName="funds_order_fee" domainObjectName="FundsOrderFee"/>
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
