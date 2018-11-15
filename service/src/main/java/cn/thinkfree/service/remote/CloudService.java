@@ -110,4 +110,12 @@ public interface CloudService {
      * @return
      */
     String getShangHaiPriceDetail(String designId);
+
+    /**
+     * 获取徐洋按钮红点信息
+     * @param projectNo
+     * @param userNo
+     * @return
+     */
+    String getProjectMessageStatus(String projectNo,String userNo);
 }

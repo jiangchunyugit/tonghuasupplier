@@ -63,6 +63,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         roomsCriteria.andProjectNoEqualTo(projectNo);
         roomsCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectQuotationRooms> projectQuotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
+        if (projectQuotationRooms.size()==0){
+            return RespData.error("查无此房屋报价信息");
+        }
         if (projectQuotationRooms.size() > 0) {
             for (ProjectQuotationRooms room : projectQuotationRooms) {
                 QuotationVo quotationVo = new QuotationVo();
@@ -466,6 +469,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Override
     public MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo) {
         ProjectQuotationCheck check = BaseToVoUtils.getVo(checkVo, ProjectQuotationCheck.class);
+        if (check.getProjectNo()==null||check.getResult()==null){
+            return RespData.error("请检查上传参数:ProjectNo="+checkVo.getProjectNo()+";Result="+checkVo.getResult());
+        }
         check.setSubmitTime(new Date());
         check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         int i = checkMapper.insertSelective(check);
@@ -491,6 +497,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle getShangHaiPriceDetail(String designId, String projectNo) {
         String result = cloudService.getShangHaiPriceDetail(designId);
+        if (result.trim().isEmpty()){
+            return RespData.error("获取上海报价信息失败!");
+        }
         JSONObject jsonObject = JSON.parseObject(result);
         JSONObject data = jsonObject.getJSONObject("data");
         JSONObject quoteResult = data.getJSONObject("quoteResult");
