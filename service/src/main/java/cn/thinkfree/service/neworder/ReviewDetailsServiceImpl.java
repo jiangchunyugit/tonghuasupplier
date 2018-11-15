@@ -10,6 +10,7 @@ import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
@@ -48,6 +49,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ProjectQuotationCheckMapper checkMapper;
     @Autowired
     CloudService cloudService;
+    @Autowired
+    ConstructionStateServiceB constructionStateServiceB;
+    @Autowired
+    ConstructionOrderMapper constructionOrderMapper;
 
     /**
      * 获取精准报价
@@ -63,6 +68,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         roomsCriteria.andProjectNoEqualTo(projectNo);
         roomsCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectQuotationRooms> projectQuotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
+        if (projectQuotationRooms.size() == 0) {
+            return RespData.error("查无此房屋报价信息");
+        }
         if (projectQuotationRooms.size() > 0) {
             for (ProjectQuotationRooms room : projectQuotationRooms) {
                 QuotationVo quotationVo = new QuotationVo();
@@ -72,11 +80,11 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 quotationVo.setFurnitureSumPrice(room.getHardMaterialPrice());
                 quotationVo.setMaterialSumPrice(room.getSoftMaterialPrice());
                 //给基础施工项赋值
-                quotationVo.setBasicsTableData(getBasisConstruction(projectNo, room.getRoomType(),room.getRoomName()));
+                quotationVo.setBasicsTableData(getBasisConstruction(projectNo, room.getRoomType(), room.getRoomName()));
                 //给软装赋值
-                quotationVo.setMaterialTableData(getSoftQuote(projectNo, room.getRoomType(),room.getRoomName()));
+                quotationVo.setMaterialTableData(getSoftQuote(projectNo, room.getRoomType(), room.getRoomName()));
                 //给硬装赋值
-                quotationVo.setFurnitureTableData(getHardQuote(projectNo, room.getRoomType(),room.getRoomName()));
+                quotationVo.setFurnitureTableData(getHardQuote(projectNo, room.getRoomType(), room.getRoomName()));
                 quotationVoList.add(quotationVo);
             }
         }
@@ -106,12 +114,12 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         //硬件保价
         if (StringUtils.isBlank(softQuoteVO.getId())) {
             decoration.setStatus(1);
-            decoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            decoration.setId(UUID.randomUUID().toString().replaceAll("-", ""));
             int i = projectQuotationRoomsSoftConstructMapper.insertSelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败");
             }
-        }else if (StringUtils.isNotBlank(softQuoteVO.getId())) {
+        } else if (StringUtils.isNotBlank(softQuoteVO.getId())) {
             decoration.setId(softQuoteVO.getId());
             int i = projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
@@ -119,7 +127,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             }
         }
         Boolean result = updateRoom(decoration.getProjectNo());
-        if(!result){
+        if (!result) {
             return RespData.error("修改房间总表总价失败");
         }
         return RespData.success();
@@ -149,12 +157,12 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         //硬件保价
         if (StringUtils.isBlank(hardQuoteVO.getId())) {
             decoration.setStatus(1);
-            decoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            decoration.setId(UUID.randomUUID().toString().replaceAll("-", ""));
             int i = projectQuotationRoomsHardConstructMapper.insertSelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败");
             }
-        }else if (StringUtils.isNotBlank(hardQuoteVO.getId())) {
+        } else if (StringUtils.isNotBlank(hardQuoteVO.getId())) {
             decoration.setId(hardQuoteVO.getId());
             int i = projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(decoration);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
@@ -162,7 +170,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             }
         }
         Boolean result = updateRoom(decoration.getProjectNo());
-        if(!result){
+        if (!result) {
             return RespData.error("修改房间总表总价失败");
         }
         return RespData.success();
@@ -190,7 +198,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         //基础保价
         if (StringUtils.isBlank(basisConstructionVO.getId())) {
             construct.setStatus(1);
-            construct.setId(UUID.randomUUID().toString().replaceAll("-",""));
+            construct.setId(UUID.randomUUID().toString().replaceAll("-", ""));
             int i = projectQuotationRoomsConstructMapper.insertSelective(construct);
             if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败");
@@ -204,7 +212,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             }
         }
         Boolean result = updateRoom(basisConstructionVO.getProjectNo());
-        if(!result){
+        if (!result) {
             return RespData.error("修改房间总表总价失败");
         }
         return RespData.success();
@@ -214,7 +222,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> delBasisConstruction(String id) {
         ProjectQuotationRoomsConstruct construct = projectQuotationRoomsConstructMapper.selectByPrimaryKey(id);
-        if(construct == null){
+        if (construct == null) {
             return RespData.error("无效的数据");
         }
         construct.setStatus(2);
@@ -227,7 +235,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> delHardQuote(String id) {
         ProjectQuotationRoomsHardDecoration hardDecoration = projectQuotationRoomsHardConstructMapper.selectByPrimaryKey(id);
-        if(hardDecoration == null){
+        if (hardDecoration == null) {
             return RespData.error("无效的数据");
         }
         hardDecoration.setStatus(2);
@@ -240,7 +248,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> delSoftQuote(String id) {
         ProjectQuotationRoomsSoftDecoration softDecoration = projectQuotationRoomsSoftConstructMapper.selectByPrimaryKey(id);
-        if(softDecoration == null){
+        if (softDecoration == null) {
             return RespData.error("无效的数据");
         }
         softDecoration.setStatus(2);
@@ -250,7 +258,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     }
 
 
-
     /**
      * @return
      * @Author jiang
@@ -258,7 +265,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Date
      * @Param
      **/
-    public List<HardQuoteVO> getHardQuote(String projectNo, String roomType,String roomName) {
+    public List<HardQuoteVO> getHardQuote(String projectNo, String roomType, String roomName) {
         ProjectQuotationRoomsHardDecorationExample hardDecorationExample = new ProjectQuotationRoomsHardDecorationExample();
         ProjectQuotationRoomsHardDecorationExample.Criteria hardCriteria = hardDecorationExample.createCriteria();
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
@@ -267,8 +274,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsHardDecoration> decorations = projectQuotationRoomsHardConstructMapper.selectByExample(hardDecorationExample);
         List<HardQuoteVO> listVo = new ArrayList<>();
-        if(decorations.size() > 0){
-            for(ProjectQuotationRoomsHardDecoration decoration : decorations){
+        if (decorations.size() > 0) {
+            for (ProjectQuotationRoomsHardDecoration decoration : decorations) {
                 HardQuoteVO quoteVO = new HardQuoteVO();
                 quoteVO.setUnitPrice(decoration.getUnitPrice());
                 quoteVO.setUsedQuantity(decoration.getUsedQuantity());
@@ -279,10 +286,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 quoteVO.setSpec(decoration.getSpec());
                 quoteVO.setMaterialName(decoration.getMaterialName());
                 quoteVO.setId(decoration.getId());
-                if(quoteVO.getUnitPrice() == null){
+                if (quoteVO.getUnitPrice() == null) {
                     quoteVO.setUnitPrice(BigDecimal.ZERO);
                 }
-                if(quoteVO.getUsedQuantity() == null){
+                if (quoteVO.getUsedQuantity() == null) {
                     quoteVO.setUsedQuantity(0);
                 }
                 quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
@@ -291,6 +298,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         return listVo;
     }
+
     /**
      * @return
      * @Author jiang
@@ -298,7 +306,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @Date
      * @Param
      **/
-    public List<SoftQuoteVO> getSoftQuote(String projectNo, String roomType,String roomName) {
+    public List<SoftQuoteVO> getSoftQuote(String projectNo, String roomType, String roomName) {
         ProjectQuotationRoomsSoftDecorationExample softDecorationExample = new ProjectQuotationRoomsSoftDecorationExample();
         ProjectQuotationRoomsSoftDecorationExample.Criteria hardCriteria = softDecorationExample.createCriteria();
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
@@ -307,8 +315,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsSoftDecoration> decorations = projectQuotationRoomsSoftConstructMapper.selectByExample(softDecorationExample);
         List<SoftQuoteVO> listVo = new ArrayList<>();
-        if(decorations.size() > 0){
-            for(ProjectQuotationRoomsSoftDecoration decoration : decorations){
+        if (decorations.size() > 0) {
+            for (ProjectQuotationRoomsSoftDecoration decoration : decorations) {
                 SoftQuoteVO quoteVO = new SoftQuoteVO();
                 quoteVO.setUnitPrice(decoration.getUnitPrice());
                 quoteVO.setUsedQuantity(decoration.getUsedQuantity());
@@ -319,10 +327,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 quoteVO.setSpec(decoration.getSpec());
                 quoteVO.setMaterialName(decoration.getMaterialName());
                 quoteVO.setId(decoration.getId());
-                if(quoteVO.getUnitPrice() == null){
+                if (quoteVO.getUnitPrice() == null) {
                     quoteVO.setUnitPrice(BigDecimal.ZERO);
                 }
-                if(quoteVO.getUsedQuantity() == null){
+                if (quoteVO.getUsedQuantity() == null) {
                     quoteVO.setUsedQuantity(0);
                 }
                 quoteVO.setTotalPrice(quoteVO.getUnitPrice().multiply(new BigDecimal(quoteVO.getUsedQuantity())));
@@ -331,13 +339,14 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         return listVo;
     }
+
     /**
      * @return
      * @Description 基础施工项详情
      * @Date
      * @Param
      **/
-    public List<BasisConstructionVO> getBasisConstruction(String projectNo, String roomType,String roomName) {
+    public List<BasisConstructionVO> getBasisConstruction(String projectNo, String roomType, String roomName) {
         ProjectQuotationRoomsConstructExample constructExample = new ProjectQuotationRoomsConstructExample();
         ProjectQuotationRoomsConstructExample.Criteria hardCriteria = constructExample.createCriteria();
         hardCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
@@ -346,8 +355,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         hardCriteria.andRoomNameEqualTo(roomName);
         List<ProjectQuotationRoomsConstruct> constructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
         List<BasisConstructionVO> listVo = new ArrayList<>();
-        if(constructs.size() > 0){
-            for(ProjectQuotationRoomsConstruct construct : constructs){
+        if (constructs.size() > 0) {
+            for (ProjectQuotationRoomsConstruct construct : constructs) {
                 BasisConstructionVO constructionVO = new BasisConstructionVO();
                 constructionVO.setProjectNo(construct.getProjectNo());
                 constructionVO.setRoomType(construct.getRoomType());
@@ -356,10 +365,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 constructionVO.setConstructCode(construct.getConstructCode());
                 constructionVO.setConstructName(construct.getConstructName());
                 constructionVO.setId(construct.getId());
-                if(constructionVO.getUnitPrice() == null){
+                if (constructionVO.getUnitPrice() == null) {
                     constructionVO.setUnitPrice(BigDecimal.ZERO);
                 }
-                if(constructionVO.getUsedQuantity() == null){
+                if (constructionVO.getUsedQuantity() == null) {
                     constructionVO.setUsedQuantity(0);
                 }
                 constructionVO.setTotalPrice(constructionVO.getUnitPrice().multiply(new BigDecimal(constructionVO.getUsedQuantity())));
@@ -368,8 +377,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         return listVo;
     }
-
-
 
 
     /**
@@ -381,7 +388,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         ProjectQuotationRoomsExample roomsExample = new ProjectQuotationRoomsExample();
         roomsExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ProjectQuotationRooms> quotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
-        if(quotationRooms.isEmpty()){
+        if (quotationRooms.isEmpty()) {
             return false;
         }
         ProjectQuotationRooms rooms = quotationRooms.get(0);
@@ -401,34 +408,36 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         constructExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
         List<ProjectQuotationRoomsConstruct> roomsConstructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
         BigDecimal sumCons = BigDecimal.ZERO;
-        for(ProjectQuotationRoomsConstruct roomsConstruct : roomsConstructs){
-            if(roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null){
+        for (ProjectQuotationRoomsConstruct roomsConstruct : roomsConstructs) {
+            if (roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null) {
                 continue;
             }
             sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
         }
         return sumCons;
     }
+
     private BigDecimal getSumSoft(String projectNo) {
         ProjectQuotationRoomsSoftDecorationExample decorationExample = new ProjectQuotationRoomsSoftDecorationExample();
         decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
         List<ProjectQuotationRoomsSoftDecoration> roomsConstructs = projectQuotationRoomsSoftConstructMapper.selectByExample(decorationExample);
         BigDecimal sumCons = BigDecimal.ZERO;
-        for(ProjectQuotationRoomsSoftDecoration roomsConstruct : roomsConstructs){
-            if(roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null){
+        for (ProjectQuotationRoomsSoftDecoration roomsConstruct : roomsConstructs) {
+            if (roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null) {
                 continue;
             }
             sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
         }
         return sumCons;
     }
+
     private BigDecimal getSumHard(String projectNo) {
         ProjectQuotationRoomsHardDecorationExample decorationExample = new ProjectQuotationRoomsHardDecorationExample();
         decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
         List<ProjectQuotationRoomsHardDecoration> roomsConstructs = projectQuotationRoomsHardConstructMapper.selectByExample(decorationExample);
         BigDecimal sumCons = BigDecimal.ZERO;
-        for(ProjectQuotationRoomsHardDecoration roomsConstruct : roomsConstructs){
-            if(roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null){
+        for (ProjectQuotationRoomsHardDecoration roomsConstruct : roomsConstructs) {
+            if (roomsConstruct.getUnitPrice() == null || roomsConstruct.getUsedQuantity() == null) {
                 continue;
             }
             sumCons = sumCons.add(roomsConstruct.getUnitPrice().multiply(new BigDecimal(roomsConstruct.getUsedQuantity())));
@@ -438,6 +447,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
 
     /**
      * 获取精准报价审核信息
+     *
      * @param projectNo
      * @return
      */
@@ -460,12 +470,16 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
 
     /**
      * 提交精准报价审核信息
+     *
      * @param checkVo
      * @return
      */
     @Override
     public MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo) {
         ProjectQuotationCheck check = BaseToVoUtils.getVo(checkVo, ProjectQuotationCheck.class);
+        if (check.getProjectNo() == null || check.getResult() == null) {
+            return RespData.error("请检查上传参数:ProjectNo=" + checkVo.getProjectNo() + ";Result=" + checkVo.getResult());
+        }
         check.setSubmitTime(new Date());
         check.setApprovalTime(new Date());
         check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
@@ -473,10 +487,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("插入失败");
         }
-        if(checkVo.getResult().equals(ProjectDataStatus.INSERT_SUCCESS.getValue())){
+        if (checkVo.getResult().equals(ProjectDataStatus.INSERT_SUCCESS.getValue())) {
             //TODO 审核通过 调取东旭接口,修改订单状态
         }
-        if(checkVo.getResult().equals(ProjectDataStatus.BUTTON_NO.getValue())){
+        if (checkVo.getResult().equals(ProjectDataStatus.BUTTON_NO.getValue())) {
             //TODO 审核失败 调取东旭接口,修改订单状态
         }
         return RespData.success();
@@ -492,8 +506,14 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle getShangHaiPriceDetail(String designId, String projectNo) {
         String result = cloudService.getShangHaiPriceDetail(designId);
+        if (result.trim().isEmpty()) {
+            return RespData.error("获取上海报价信息失败!");
+        }
         JSONObject jsonObject = JSON.parseObject(result);
         JSONObject data = jsonObject.getJSONObject("data");
+        if (data == null) {
+            return RespData.error(jsonObject.getJSONObject("status").getString("message"));
+        }
         JSONObject quoteResult = data.getJSONObject("quoteResult");
         String dataString = JSONObject.toJSONString(data);
         String quoteResultString = JSONObject.toJSONString(quoteResult);
@@ -531,7 +551,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 String constructString = JSONObject.toJSONString(constructList);
                 List<ProjectQuotationRoomsConstruct> projectQuotationRoomsSoftConstructs = JSONObject.parseArray(constructString, ProjectQuotationRoomsConstruct.class);
                 for (ProjectQuotationRoomsConstruct construct : projectQuotationRoomsSoftConstructs) {
-                    construct.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    construct.setId(UUID.randomUUID().toString().replaceAll("-", ""));
                     construct.setRoomType(projectQuotationRooms.getRoomType());
                     construct.setRoomName(projectQuotationRooms.getRoomName());
                     construct.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
@@ -548,7 +568,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 String hardDecorationString = JSONObject.toJSONString(hardDecorationMaterials);
                 List<ProjectQuotationRoomsHardDecoration> projectQuotationRoomsHardConstructs = JSONObject.parseArray(hardDecorationString, ProjectQuotationRoomsHardDecoration.class);
                 for (ProjectQuotationRoomsHardDecoration hardDecoration : projectQuotationRoomsHardConstructs) {
-                    hardDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    hardDecoration.setId(UUID.randomUUID().toString().replaceAll("-", ""));
                     hardDecoration.setRoomType(projectQuotationRooms.getRoomType());
                     hardDecoration.setRoomName(projectQuotationRooms.getRoomName());
                     hardDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
@@ -565,7 +585,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 String softDecorationString = JSONObject.toJSONString(softDecorationMaterials);
                 List<ProjectQuotationRoomsSoftDecoration> projectQuotationRoomsSoftDecorations = JSONObject.parseArray(softDecorationString, ProjectQuotationRoomsSoftDecoration.class);
                 for (ProjectQuotationRoomsSoftDecoration softDecoration : projectQuotationRoomsSoftDecorations) {
-                    softDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    softDecoration.setId(UUID.randomUUID().toString().replaceAll("-", ""));
                     softDecoration.setRoomType(projectQuotationRooms.getRoomType());
                     softDecoration.setRoomName(projectQuotationRooms.getRoomName());
                     softDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
@@ -578,6 +598,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             }
         }
         //TODO 调取东旭接口,修改订单状态  为 "报价完成"
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        if (constructionOrders.size()==0){
+            return RespData.error("查无此施工订单");
+        }
+        constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
         return RespData.success();
     }
 
