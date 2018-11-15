@@ -6,11 +6,9 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
+import cn.thinkfree.database.mapper.ConstructionOrderPayMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
-import cn.thinkfree.database.model.ConstructionOrder;
-import cn.thinkfree.database.model.ConstructionOrderExample;
-import cn.thinkfree.database.model.Project;
-import cn.thinkfree.database.model.ProjectExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +31,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     CommonService commonService;
     @Autowired
     ProjectMapper projectMapper;
+    @Autowired
+    ConstructionOrderPayMapper constructionOrderPayMapper;
 
     /**
      * 查询当前状态
@@ -148,45 +148,31 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
     /**
      * 支付
-     * 1.首期款支付 2.开工报告 3.阶段验收通过 4.支付阶段款 5.等待尾款支付（验收通过）
      */
     @Override
-    public MyRespBundle<String> customerPay(String orderNo, int type) {
+    public MyRespBundle<String> customerPay(String orderNo,String feeName,String sort,int isEnd) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
-        Integer stage = null;
-        List<ConstructionStateEnumB> nextStateCode = new ArrayList<>();
-        switch (type) {
-            case 1:
-                stage = ConstructionStateEnumB.STATE_600.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_600.getNextStates();
-                break;
-            case 2:
-                stage = ConstructionStateEnumB.STATE_605.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_605.getNextStates();
-                break;
-            case 3:
-                stage = ConstructionStateEnumB.STATE_610.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_610.getNextStates();
-                break;
-            case 4:
-                stage = ConstructionStateEnumB.STATE_615.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_615.getNextStates();
-                break;
-            case 5:
-                stage = ConstructionStateEnumB.STATE_690.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_690.getNextStates();
-                break;
-            default:
-                break;
+
+        ConstructionOrderPayExample example = new ConstructionOrderPayExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(example);
+        if (list.size() > 0){
+            ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
+            constructionOrderPay.setFeeName(feeName);
+            constructionOrderPay.setSort(sort);
+            constructionOrderPay.setIsEnd((short) isEnd);
+            constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay,example);
+        }else {
+            ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
+            constructionOrderPay.setOrderNo(orderNo);
+            constructionOrderPay.setFeeName(feeName);
+            constructionOrderPay.setSort(sort);
+            constructionOrderPay.setIsEnd((short) isEnd);
+            constructionOrderPayMapper.insertSelective(constructionOrderPay);
         }
-        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (stage == stageCode) {
-            if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
-                return RespData.success();
-            }
-        }
+
         return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
     }
 

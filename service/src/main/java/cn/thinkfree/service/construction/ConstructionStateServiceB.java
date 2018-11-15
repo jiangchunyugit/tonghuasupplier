@@ -36,9 +36,8 @@ public interface ConstructionStateServiceB {
 
     /**
      * 支付
-     * 1.首期款支付 2.开工报告 3.阶段验收通过 4.支付阶段款 5.等待尾款支付（验收通过）
      */
-     MyRespBundle<String> customerPay(String orderNo, int type);
+     MyRespBundle<String> customerPay(String orderNo,String feeName,String sort,int isEnd);
 
     /**
      * 订单完成
