@@ -1,6 +1,7 @@
 package cn.thinkfree.service.utils;
 
 import cn.thinkfree.core.utils.JSONUtil;
+import cn.thinkfree.database.vo.AfExportPdfVO;
 import cn.thinkfree.database.vo.AfUserDTO;
 import cn.thinkfree.service.config.PdfConfig;
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -26,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.StringWriter;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -70,18 +72,27 @@ public class AfUtils {
         return userDTO;
     }
 
-    public static String createPdf(PdfConfig pdfConfig, String configNo, String configName, String data) {
+    public static String createPdf(PdfConfig pdfConfig, AfExportPdfVO exportPdfVO, String data) {
         Map<String, Object> dataMap = JSONUtil.json2Bean(data, Map.class);
-        dataMap.put("configName", configName);
-        String html = getContent(pdfConfig.getTemplateDir(), configNo + ".ftl", dataMap);
+        Field[] fields = exportPdfVO.getClass().getDeclaredFields();
+        try {
+            for (Field field : fields) {
+                field.setAccessible(true);
+                dataMap.put(field.getName(), field.get(exportPdfVO));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        String exportFileName = createExportFileName(configNo);
+        String html = getContent(pdfConfig.getTemplateDir(), exportPdfVO.getConfigNo() + ".ftl", dataMap);
+
+        String exportFileName = createExportFileName(exportPdfVO.getConfigNo());
         createPdf(html, pdfConfig.getExportDir(), exportFileName, pdfConfig.getFontDir(), "");
         return exportFileName;
     }
 
     private static String createExportFileName(String configNo) {
-        return Thread.currentThread().getName() + configNo + System.currentTimeMillis() + ".pdf";
+        return configNo + "-" + Thread.currentThread().getName() + System.currentTimeMillis() + ".pdf";
     }
 
     public static String getContent(String templateDir, String templateFileName, Object data){
@@ -222,5 +233,18 @@ public class AfUtils {
 //            cell.setRole(PdfName.TH);
             return super.getElementResult();
         }
+    }
+
+    public static void sendChangeMoney(String url, String orderNo, String money, String remark) {
+        Map<String, String> requestMap = new HashMap<>(2);
+        requestMap.put("contractId", orderNo);
+        requestMap.put("feeAmount", money);
+        requestMap.put("feeName", "变更单");
+        requestMap.put("remark", remark);
+        LOGGER.info("获取用户信息，requestMap：{}", JSONUtil.bean2JsonStr(requestMap));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(url, requestMap);
+        LOGGER.info("获取用户信息， httpRespMsg：{}", JSONUtil.bean2JsonStr(httpRespMsg));
+        Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
+        LOGGER.info("获取用户信息， responseMap：{}", JSONUtil.bean2JsonStr(responseMap));
     }
 }

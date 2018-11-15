@@ -1,6 +1,7 @@
 package cn.thinkfree.service.platform.employee;
 
 import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.database.model.OrderUser;
 
 import java.util.List;
 
@@ -25,7 +26,24 @@ public interface ProjectUserService {
      * @param functionEnum 权限枚举
      * @return
      */
+    List<OrderUser> queryOrderUser(String projectNo, RoleFunctionEnum functionEnum);
+
+    /**
+     * 根据项目编号和权限查询该项目对应权限的人的ID
+     *
+     * @param projectNo    项目编号
+     * @param functionEnum 权限枚举
+     * @return
+     */
     String queryUserIdOne(String projectNo, RoleFunctionEnum functionEnum);
+    /**
+     * 根据项目编号和权限查询该项目对应权限的人的ID
+     *
+     * @param projectNo    项目编号
+     * @param functionEnum 权限枚举
+     * @return
+     */
+    OrderUser queryOrderUserOne(String projectNo, RoleFunctionEnum functionEnum);
 
     /**
      * 添加项目人员

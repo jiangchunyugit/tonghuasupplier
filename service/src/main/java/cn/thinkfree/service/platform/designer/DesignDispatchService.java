@@ -18,6 +18,7 @@ public interface DesignDispatchService {
     /**
      * 查询设计订单
      *
+     * @param queryStage         具体查询的列表数据编码
      * @param companyId          公司ID
      * @param projectNo          订单编号
      * @param userMsg            业主姓名或电话
@@ -38,7 +39,7 @@ public interface DesignDispatchService {
      * @return
      */
     PageVo<List<DesignerOrderVo>> queryDesignerOrder(
-            String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
@@ -265,24 +266,8 @@ public interface DesignDispatchService {
     void createConstructionOrder(String projectNo);
 
     /**
-     * 设计合同管理列表
-     *
-     * @param companyId     公司ID
-     * @param contractNo    合同编号
-     * @param designOrderNo 设计订单
-     * @param source        来源
-     * @param ownerMsg      业主信息
-     * @param signTimeStart 签约时间开始
-     * @param signTimeEnd   签约时间结束
-     * @param province      省
-     * @param city          市
-     * @param contractState 合同状态，1生效，2未生效
-     */
-    void designOrderContract(String companyId, String contractNo, String designOrderNo, String source, String ownerMsg,
-                             String signTimeStart, String signTimeEnd, String province, String city, int contractState);
-
-    /**
      * 根据设计订单编号查询展示的按钮
+     *
      * @param designOrderNo 设计订单编号
      * @return ["LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)","SJZL(提交设计资料)","CKHT(查看合同)"]
      */

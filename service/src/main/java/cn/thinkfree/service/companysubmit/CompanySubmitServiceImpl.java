@@ -5,7 +5,9 @@ import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.core.event.BaseEvent;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.event.sync.CompanyJoin;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -15,6 +17,7 @@ import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.*;
 import org.apache.commons.lang3.StringUtils;
 import org.checkerframework.checker.units.qual.A;
@@ -79,6 +82,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Autowired
 	CompanyInfoExpandMapper companyInfoExpandMapper;
+
+	@Autowired
+	EventService eventService;
 
 
 	final static String TARGET = "static/";
@@ -347,12 +353,13 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	public PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO) {
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
-		List<String> relationMap = new ArrayList<>();
+		List<String> relationMap = null;
 //		relationMap.add("10000000");
 //		companyListSEO.setRelationMap(relationMap);
 
 		//todo 获取分站id？？？？星级
 		if(userVO != null){
+			relationMap = new ArrayList<>();
 			relationMap = userVO.getRelationMap();
 			if(relationMap != null && relationMap.size() > 0){
 				companyListSEO.setRelationMap(relationMap);
@@ -532,6 +539,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		    
 			if(flag > 0 && applyFlag &&  flagon  > 0 ){
 				//todo 调取事件同步埃森哲
+				eventService.publish(new CompanyJoin(companyId));
 				map.put("code", true);
 				map.put("msg", "审核成功");
 				return map;

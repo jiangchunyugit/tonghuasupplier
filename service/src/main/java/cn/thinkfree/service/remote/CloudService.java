@@ -103,12 +103,16 @@ public interface CloudService {
      * @return
      */
     RemoteResult<String> marginContractTransaction(MarginContractVO marginContractVO);
-
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    String getShangHaiPriceDetail(String designId);
     /**
      * 发送账号创建短信
      * @param phone
      * @param para
      * @return
      */
-    RemoteResult<String> sendCreateAccountNotice(String phone, String para);
-}
+    RemoteResult<String> sendCreateAccountNotice(String phone, String para);}

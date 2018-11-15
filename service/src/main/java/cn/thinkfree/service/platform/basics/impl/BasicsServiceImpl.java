@@ -104,7 +104,7 @@ public class BasicsServiceImpl implements BasicsService {
             BasicsData basicsData = new BasicsData();
             basicsData.setDelState(2);
             basicsData.setRemark(remark);
-            int res = basicsDataMapper.updateByExample(basicsData,dataExample);
+            int res = basicsDataMapper.updateByExampleSelective(basicsData,dataExample);
             //更新已删除的状态
             logger.info("更新已删除的基础数据为未删除：params={},res={}", JSONObject.toJSONString(HttpUtils.getHttpParams()),res);
         }else{

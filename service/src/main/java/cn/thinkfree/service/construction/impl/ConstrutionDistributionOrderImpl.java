@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,25 +37,27 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
      * @return
      */
     @Override
-    public MyRespBundle<DistributionOrderCityVo> getCityList(String companyName) {
-        DistributionOrderCityVo DistributionOrderCityVo = new DistributionOrderCityVo();
+    public MyRespBundle<List<DistributionOrderCityVo>> getCityList(String companyName) {
+
         CompanyInfoExample example = new CompanyInfoExample();
         if (!StringUtils.isBlank(companyName)){
-            example.createCriteria().andCompanyNameLike(companyName);
+            example.createCriteria().andCompanyNameLike("%"+companyName+"%");
         }
+        List<DistributionOrderCityVo> listData = new ArrayList<>();
         List<CompanyInfo> list = companyInfoMapper.selectByExample(example);
         for (CompanyInfo companyInfo : list){
             CityExample cityExample = new CityExample();
             cityExample.createCriteria().andCityCodeEqualTo(String.valueOf(companyInfo.getCityCode()));
             List<City> listCity = cityMapper.selectByExample(cityExample);
             for (City city1 :listCity){
+                DistributionOrderCityVo DistributionOrderCityVo = new DistributionOrderCityVo();
                 DistributionOrderCityVo.setCity(city1.getCityName());
                 DistributionOrderCityVo.setCompanyName(companyInfo.getCompanyName());
                 DistributionOrderCityVo.setCompanyId(companyInfo.getCompanyId());
-
+                listData.add(DistributionOrderCityVo);
             }
         }
-        return RespData.success(DistributionOrderCityVo);
+        return RespData.success(listData);
     }
 
     /**
@@ -80,7 +83,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
 
         // 改变订单状态
         MyRespBundle<String> r = constructionStateServiceB.operateDispatchToConstruction(orderNo);
-        if (ResultMessage.SUCCESS.code.equals(r.getCode())){
+        if (!ResultMessage.SUCCESS.code.equals(r.getCode())){
             return RespData.error(ResultMessage.ERROR.code, r.getMessage());
         }
 
