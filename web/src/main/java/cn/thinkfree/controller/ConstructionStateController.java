@@ -67,12 +67,13 @@ public class ConstructionStateController extends AbsBaseController {
         return constructionStateServiceB.constructionState(orderNo,2);
     }
 
-    @ApiOperation("装饰公司-审核完成")
+    @ApiOperation("装饰公司-审核完成(是否通过)")
     @MyRespBody
     @RequestMapping(value = "constructionExamineComplete", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> constructionExamineComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
+    public MyRespBundle<String> constructionExamineComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
+                                                            @RequestParam @ApiParam(value = "审核是否通过",required = true) Integer isPass) {
 
-        return constructionStateServiceB.constructionState(orderNo,3);
+        return constructionStateServiceB.constructionStateOfExamine(orderNo,3,isPass);
     }
 
     @ApiOperation("装饰公司-合同录入")
@@ -156,7 +157,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "customerCancelOrderForPay", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> customerCancelOrderForPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.customerCancelOrder(orderNo);
+        return constructionStateServiceB.customerCancelOrderForPay(orderNo);
     }
 
 

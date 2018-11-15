@@ -3,6 +3,7 @@ package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.PersionVo;
@@ -169,6 +170,13 @@ public class OrderListCommonService {
             constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
             // 订单状态
             constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 1));
+            // 是否可以派单 （运营平台指派装饰公司）
+            if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_500.getState())){
+                constructionOrderListVo.setIsDistribution(1);
+            }else {
+                constructionOrderListVo.setIsDistribution(0);
+            }
+
             //延期天数 开工时间 竣工时间
             for (ProjectScheduling projectScheduling : list4) {
                 if (constructionOrder.getProjectNo().equals(projectScheduling.getProjectNo())) {
@@ -203,7 +211,8 @@ public class OrderListCommonService {
         }
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
-        pageInfo.setTotal(p.getPages());
+        pageInfo.setPageNum(p.getPages());
+    //    pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 
@@ -218,7 +227,7 @@ public class OrderListCommonService {
      */
     public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo,int pageNum, int pageSize) {
         if (StringUtils.isBlank(companyNo)){
-            RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+            RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
         PageHelper.startPage(pageNum, pageSize);
@@ -230,6 +239,9 @@ public class OrderListCommonService {
         example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        if(list.size() <= 0){
+            RespData.error(ResultMessage.ERROR.code, "订单编号不符");
+        }
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
 
         pageInfo2.setList(list);
@@ -338,7 +350,8 @@ public class OrderListCommonService {
 
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
-        pageInfo.setTotal(p.getPages());
+        pageInfo.setPageNum(p.getPages());
+        pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 
@@ -374,6 +387,8 @@ public class OrderListCommonService {
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<DecorationOrderListVo> listVo = new ArrayList<>();
+
+        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -441,9 +456,17 @@ public class OrderListCommonService {
 
             }
 
-
             // 项目编号
             decorationOrderListVo.setProjectNo(constructionOrder.getProjectNo());
+            // 订单编号
+            decorationOrderListVo.setOrderNo(constructionOrder.getOrderNo());
+            // 派单给员工-是否可以
+            if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_510.getState())){
+                decorationOrderListVo.setIsCheck(1);
+            }else {
+                decorationOrderListVo.setIsCheck(0);
+            }
+
             // 订单状态
             if (!StringUtils.isBlank(orderStage)){
                 if (!orderStage.equals(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2))){
@@ -481,7 +504,8 @@ public class OrderListCommonService {
         }
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
-        pageInfo.setTotal(p.getPages());
+        pageInfo.setPageNum(p.getPages());
+        pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 

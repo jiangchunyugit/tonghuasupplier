@@ -10,7 +10,11 @@ import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +46,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ProjectQuotationRoomsMapper projectQuotationRoomsMapper;
     @Autowired
     ProjectQuotationCheckMapper checkMapper;
+    @Autowired
+    CloudService cloudService;
 
     /**
      * 获取精准报价
@@ -466,6 +472,112 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("插入失败");
         }
+        if(checkVo.getResult().equals(ProjectDataStatus.INSERT_SUCCESS.getValue())){
+            //TODO 审核通过 调取东旭接口,修改订单状态
+        }
+        if(checkVo.getResult().equals(ProjectDataStatus.BUTTON_NO.getValue())){
+            //TODO 审核失败 调取东旭接口,修改订单状态
+        }
         return RespData.success();
     }
+
+    /**
+     * 获取上海报价信息
+     *
+     * @param designId
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle getShangHaiPriceDetail(String designId, String projectNo) {
+        String result = cloudService.getShangHaiPriceDetail(designId);
+        JSONObject jsonObject = JSON.parseObject(result);
+        JSONObject data = jsonObject.getJSONObject("data");
+        JSONObject quoteResult = data.getJSONObject("quoteResult");
+        String dataString = JSONObject.toJSONString(data);
+        String quoteResultString = JSONObject.toJSONString(quoteResult);
+        //添加报价总表信息
+        ProjectQuotation projectQuotation = JSONObject.parseObject(dataString, ProjectQuotation.class);
+        ProjectQuotation projectQuotation1 = JSONObject.parseObject(quoteResultString, ProjectQuotation.class);
+        projectQuotation.setConstructionTotalPrice(projectQuotation1.getConstructionTotalPrice());
+        projectQuotation.setExtraPrice(projectQuotation1.getExtraPrice());
+        projectQuotation.setHardDecorationPrice(projectQuotation1.getHardDecorationPrice());
+        projectQuotation.setMaterialTotalPrice(projectQuotation1.getMaterialTotalPrice());
+        projectQuotation.setSoftDecorationPrice(projectQuotation1.getSoftDecorationPrice());
+        projectQuotation.setTotalPrice(projectQuotation1.getTotalPrice());
+        projectQuotation.setUnitPrice(projectQuotation1.getUnitPrice());
+        projectQuotation.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+        projectQuotation.setProjectNo(projectNo);
+        int projectQuotationResult = projectQuotationMapper.insertSelective(projectQuotation);
+        if (projectQuotationResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+            return RespData.error("插入报价总表信息失败!");
+        }
+        JSONArray rooms = data.getJSONArray("rooms");
+        for (int i = 0; i < rooms.size(); i++) {
+            JSONObject room = rooms.getJSONObject(i);
+            //添加报价房屋信息表
+            String roomString = JSONObject.toJSONString(room);
+            ProjectQuotationRooms projectQuotationRooms = JSONObject.parseObject(roomString, ProjectQuotationRooms.class);
+            projectQuotationRooms.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+            projectQuotationRooms.setProjectNo(projectNo);
+            int roomsResult = projectQuotationRoomsMapper.insertSelective(projectQuotationRooms);
+            if (roomsResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+                return RespData.error("插入报价房屋信息表失败!");
+            }
+            //房屋基础施工信息
+            JSONArray constructList = room.getJSONArray("constructList");
+            if (constructList.size() > 0) {
+                String constructString = JSONObject.toJSONString(constructList);
+                List<ProjectQuotationRoomsConstruct> projectQuotationRoomsSoftConstructs = JSONObject.parseArray(constructString, ProjectQuotationRoomsConstruct.class);
+                for (ProjectQuotationRoomsConstruct construct : projectQuotationRoomsSoftConstructs) {
+                    construct.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    construct.setRoomType(projectQuotationRooms.getRoomType());
+                    construct.setRoomName(projectQuotationRooms.getRoomName());
+                    construct.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+                    construct.setProjectNo(projectNo);
+                    int constructResult = projectQuotationRoomsConstructMapper.insertSelective(construct);
+                    if (constructResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+                        return RespData.error("插入房屋基础施工信息表失败!");
+                    }
+                }
+            }
+            //添加硬装报价信息
+            JSONArray hardDecorationMaterials = room.getJSONArray("hardDecorationMaterials");
+            if (hardDecorationMaterials.size() > 0) {
+                String hardDecorationString = JSONObject.toJSONString(hardDecorationMaterials);
+                List<ProjectQuotationRoomsHardDecoration> projectQuotationRoomsHardConstructs = JSONObject.parseArray(hardDecorationString, ProjectQuotationRoomsHardDecoration.class);
+                for (ProjectQuotationRoomsHardDecoration hardDecoration : projectQuotationRoomsHardConstructs) {
+                    hardDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    hardDecoration.setRoomType(projectQuotationRooms.getRoomType());
+                    hardDecoration.setRoomName(projectQuotationRooms.getRoomName());
+                    hardDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+                    hardDecoration.setProjectNo(projectNo);
+                    int hardResult = projectQuotationRoomsHardConstructMapper.insertSelective(hardDecoration);
+                    if (hardResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+                        return RespData.error("插入硬装报价信息表失败!");
+                    }
+                }
+            }
+            //插入软装报价信息
+            JSONArray softDecorationMaterials = room.getJSONArray("softDecorationMaterials");
+            if (softDecorationMaterials.size() > 0) {
+                String softDecorationString = JSONObject.toJSONString(softDecorationMaterials);
+                List<ProjectQuotationRoomsSoftDecoration> projectQuotationRoomsSoftDecorations = JSONObject.parseArray(softDecorationString, ProjectQuotationRoomsSoftDecoration.class);
+                for (ProjectQuotationRoomsSoftDecoration softDecoration : projectQuotationRoomsSoftDecorations) {
+                    softDecoration.setId(UUID.randomUUID().toString().replaceAll("-",""));
+                    softDecoration.setRoomType(projectQuotationRooms.getRoomType());
+                    softDecoration.setRoomName(projectQuotationRooms.getRoomName());
+                    softDecoration.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+                    softDecoration.setProjectNo(projectNo);
+                    int softResult = projectQuotationRoomsSoftConstructMapper.insertSelective(softDecoration);
+                    if (softResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
+                        return RespData.error("插入软装报价信息表失败!");
+                    }
+                }
+            }
+        }
+        //TODO 调取东旭接口,修改订单状态  为 "报价完成"
+        return RespData.success();
+    }
+
 }
