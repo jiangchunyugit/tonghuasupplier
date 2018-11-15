@@ -22,6 +22,17 @@ public class CityBranchVO extends CityBranch {
     @ApiModelProperty("城市名称")
     private String cityNm;
 
+    @ApiModelProperty("经营主体：门店")
+    private List<BusinessEntityVO> businessEntityVOS;
+
+    public List<BusinessEntityVO> getBusinessEntityVOS() {
+        return businessEntityVOS;
+    }
+
+    public void setBusinessEntityVOS(List<BusinessEntityVO> businessEntityVOS) {
+        this.businessEntityVOS = businessEntityVOS;
+    }
+
     public String getCityNm() {
         return cityNm;
     }

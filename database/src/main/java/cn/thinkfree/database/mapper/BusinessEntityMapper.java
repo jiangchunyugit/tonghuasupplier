@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.BusinessEntity;
 import cn.thinkfree.database.model.BusinessEntityExample;
 import java.util.List;
 
+import cn.thinkfree.database.vo.BusinessEntitySEO;
 import cn.thinkfree.database.vo.BusinessEntityVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -85,5 +86,9 @@ public interface BusinessEntityMapper {
      */
     int updateByPrimaryKey(BusinessEntity record);
 
-    List<BusinessEntityVO> selectWithCompany(BusinessEntityExample example);
+    List<BusinessEntityVO> selectWithCompany(BusinessEntitySEO businessEntitySEO);
+
+    List<BusinessEntityVO> selectWithId(Integer id);
+
+    List<BusinessEntityVO> selectWithCityBranchCode(String cityBranchCode);
 }

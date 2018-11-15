@@ -87,4 +87,11 @@ public interface CityBranchService {
      * @return
      */
     List<CityBranch> cityBranchlistByCompany (Integer id);
+
+    /**
+     * 通过分公司id查询全部城市分站信息
+     * @param cityCode
+     * @return
+     */
+    List<CityBranch> cityBranchlistByCompanyCode (String cityCode);
 }

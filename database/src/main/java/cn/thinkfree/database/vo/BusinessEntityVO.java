@@ -19,6 +19,9 @@ public class BusinessEntityVO extends BusinessEntity {
     @ApiModelProperty("站点")
     private String cityBranchNm;
 
+    @ApiModelProperty("店面名称")
+    private List<StoreInfo> storeInfoList;
+
     public String getBranchCompanyNm() {
         return branchCompanyNm;
     }
@@ -34,9 +37,6 @@ public class BusinessEntityVO extends BusinessEntity {
     public void setCityBranchNm(String cityBranchNm) {
         this.cityBranchNm = cityBranchNm;
     }
-
-    @ApiModelProperty("店面名称")
-    private List<StoreInfo> storeInfoList;
 
     public List<StoreInfo> getStoreInfoList() {
         return storeInfoList;

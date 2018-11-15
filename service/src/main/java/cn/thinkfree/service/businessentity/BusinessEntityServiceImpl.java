@@ -5,11 +5,9 @@ import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.mapper.BusinessEntityMapper;
 import cn.thinkfree.database.mapper.CityBranchMapper;
+import cn.thinkfree.database.mapper.HrOrganizationEntityMapper;
 import cn.thinkfree.database.mapper.StoreInfoMapper;
-import cn.thinkfree.database.model.BusinessEntity;
-import cn.thinkfree.database.model.BusinessEntityExample;
-import cn.thinkfree.database.model.StoreInfo;
-import cn.thinkfree.database.model.StoreInfoExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.BusinessEntitySEO;
 import cn.thinkfree.database.vo.BusinessEntityVO;
 import cn.thinkfree.service.utils.AccountHelper;
@@ -21,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class BusinessEntityServiceImpl implements BusinessEntityService {
@@ -45,57 +42,60 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         businessEntity.setBusinessEntityCode(AccountHelper.createUserNo("e"));
 
         int result = businessEntityMapper.insertSelective(businessEntity);
-        if (businessEntityVO.getStoreInfoList().size()>0) {
-
-            businessEntityVO.getStoreInfoList().forEach(e->{
-                e.setCityBranchCode(businessEntity.getCityBranchCode());
-                e.setBranchCompanyCode(businessEntity.getBranchCompanyCode());
-                e.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
-                storeInfoMapper.insertSelective(e);
-            });
+        if (businessEntityVO.getStoreInfoList()!= null && businessEntityVO.getStoreInfoList().size()>0) {
+            this.insertStoreInfo(businessEntityVO.getStoreInfoList(),businessEntity);
         }
         return result;
+    }
+
+    private void insertStoreInfo(List<StoreInfo> storeInfos,BusinessEntity businessEntity) {
+
+        storeInfos.forEach(e->{
+            e.setCityBranchCode(businessEntity.getCityBranchCode());
+            e.setBranchCompanyCode(businessEntity.getBranchCompanyCode());
+            e.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
+            storeInfoMapper.insertSelective(e);
+        });
     }
 
     @Override
     public int updateBusinessEntity(BusinessEntityVO businessEntityVO) {
 
         StoreInfoExample storeInfoExample= new StoreInfoExample();
-        storeInfoExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityVO.getBusinessEntityCode());
-        storeInfoMapper.deleteByExample(storeInfoExample);
+        if (StringUtils.isNotBlank(businessEntityVO.getBusinessEntityCode())) {
+
+            storeInfoExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityVO.getBusinessEntityCode());
+            storeInfoMapper.deleteByExample(storeInfoExample);
+        }
         BusinessEntity businessEntity = new BusinessEntity();
         SpringBeanUtil.copy(businessEntityVO,businessEntity);
-        if (businessEntityVO.getStoreInfoList().size()>0) {
-
-            businessEntityVO.getStoreInfoList().forEach(e->{
-                e.setCityBranchCode(businessEntity.getCityBranchCode());
-                e.setBranchCompanyCode(businessEntity.getBranchCompanyCode());
-                e.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
-                storeInfoMapper.insertSelective(e);
-            });
+        if (businessEntityVO.getStoreInfoList() != null) {
+            this.insertStoreInfo(businessEntityVO.getStoreInfoList(),businessEntity);
         }
         return businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
     }
 
     @Override
+    public int enableBusinessEntity(BusinessEntityVO businessEntityVO) {
+
+        BusinessEntity businessEntity = new BusinessEntity();
+        SpringBeanUtil.copy(businessEntityVO,businessEntity);
+        return businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
+    }
+
+    @Autowired
+    HrOrganizationEntityMapper hrOrganizationEntityMapper;
+
+    @Override
     public BusinessEntityVO businessEntityDetails(Integer id) {
 
         // 经营主体信息
-        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
-        businessEntityExample.createCriteria().andIdEqualTo(id);
-        List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntityExample);
+        List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithId(id);
 
         // businessEntityVO
         BusinessEntityVO businessEntityVO = new BusinessEntityVO();
-
         if (businessEntityVOS.size()>0) {
-
             businessEntityVO = businessEntityVOS.get(0);
-            StoreInfoExample storeInfoExample = new StoreInfoExample();
-            StoreInfoExample.Criteria criteria = storeInfoExample.createCriteria();
-            criteria.andBusinessEntityCodeEqualTo(businessEntityVO.getBusinessEntityCode());
-            List<StoreInfo> storeList = storeInfoMapper.selectByExample(storeInfoExample);
-            businessEntityVO.setStoreInfoList(storeList);
         }
         return businessEntityVO;
     }
@@ -103,30 +103,8 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     @Override
     public PageInfo<BusinessEntityVO> businessEntityList(BusinessEntitySEO businessEntitySEO) {
 
-        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
-        BusinessEntityExample.Criteria criteria = businessEntityExample.createCriteria();
-        criteria.andIsDelNotEqualTo(OneTrue.YesOrNo.YES.shortVal());
-
-        // 经营主体名称查询条件（模糊查询）
-        if(StringUtils.isNotBlank(businessEntitySEO.getBusinessEntityNm())) {
-            criteria.andEntityNameLike(businessEntitySEO.getBusinessEntityNm());
-        }
-
-        // 分公司，城市分站，查询条件
-        if(businessEntitySEO.getBranchCompanyEbsId() != null) {
-            criteria.andBranchCompEbsidEqualTo(businessEntitySEO.getBranchCompanyEbsId());
-        }
-        if(businessEntitySEO.getCityBranchid() != null){
-            criteria.andCityBranchEbsidEqualTo(businessEntitySEO.getCityBranchid());
-        }
-
-        // 启动状态
-        if(businessEntitySEO.getIsEnable() != null) {
-            criteria.andIsEnableEqualTo(businessEntitySEO.getIsEnable().shortValue());
-        }
-
         PageHelper.startPage(businessEntitySEO.getPage(),businessEntitySEO.getRows());
-        List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntityExample);
+        List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntitySEO);
         return new PageInfo<>(businessEntityVOS);
     }
 
