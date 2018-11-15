@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.model.ProjectExample;
 import java.util.List;
 
+import cn.thinkfree.database.pcvo.SchedulingVo;
 import cn.thinkfree.database.vo.ConstructionSiteVO;
 import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.database.vo.SiteDetailsVO;
@@ -138,4 +139,12 @@ public interface ProjectMapper {
      * @return
      **/
     Integer selectSiteCount(@Param("siteDetailsVO") SiteDetailsVO siteDetailsVO);
+
+    /**
+     * 获取施工信息
+     * @param projectNo
+     * @param status
+     * @return
+     */
+    SchedulingVo selectContractByProjectNo(@Param("projectNo") String projectNo, @Param("status") Integer status);
 }

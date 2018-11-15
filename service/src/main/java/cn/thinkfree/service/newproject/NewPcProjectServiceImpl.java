@@ -5,10 +5,15 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.OrderTaskSortVo;
+import cn.thinkfree.database.appvo.PersionVo;
+import cn.thinkfree.database.appvo.UserVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.Scheduling;
+import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.neworder.ReviewDetailsService;
@@ -126,8 +131,28 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
      */
     @Override
     public MyRespBundle<DesignerOrderVo> getPcProjectDesigner(String projectNo) {
-        //假信息
-        DesignerOrderVo designerOrderVo = new DesignerOrderVo(true, "刘强东", "审核中", new Date(), "方案1", "https://www.baidu.com/", "方案2", "https://www.baidu.com/", "方案3", "https://www.baidu.com/");
+        DesignerOrderVo designerOrderVo = new DesignerOrderVo();
+        //组合设计信息
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(projectNo);
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
+        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState())){
+            designerOrderVo.setComplete(true);
+        }else {
+            designerOrderVo.setComplete(false);
+        }
+        if (persionVo!=null){
+            designerOrderVo.setDesigner(persionVo.getName());
+        }
+        designerOrderVo.setProgrammeOneName("美丽家园");
+        designerOrderVo.setProgrammeOneUrl("https://rs.homestyler.com/floorplan/render/images/2018-6-27/f5f15d55-f431-4e2b-9cef-1280e7e89d62/7ecbaa27_0545_4b66_8142_62a5454ecf54.jpg");
         return RespData.success(designerOrderVo);
     }
 
@@ -178,8 +203,28 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
      */
     @Override
     public MyRespBundle<SchedulingVo> getPcProjectScheduling(String projectNo) {
-        //组合施工信息
-        SchedulingVo schedulingVo = new SchedulingVo("个性化", new Date(), new Date(), "水电工程", "隐蔽验收完成", "20000.0", "刘欢", "张富贵", "刘勋", "张恒");
+        SchedulingVo schedulingVo = projectMapper.selectContractByProjectNo(projectNo,ProjectDataStatus.BASE_STATUS.getValue());
+        if (schedulingVo == null){
+            return RespData.error("查无此施工信息!");
+        }
+        List<UserVo> userVoList = orderUserMapper.getProjectUsers(projectNo, UserStatus.NO_TRANSFER.getValue(), UserStatus.ON_JOB.getValue());
+        if (userVoList.size()==0){
+            return RespData.error("此项目尚无分配施工人员");
+        }
+        for (UserVo userVo : userVoList){
+            if (userVo.getRoleCode().equals(UserJobs.ProjectManager.roleCode)){
+                schedulingVo.setProjectManager(userVo.getRealName());
+            }
+            if (userVo.getRoleCode().equals(UserJobs.Foreman.roleCode)){
+                schedulingVo.setForeman(userVo.getRealName());
+            }
+            if (userVo.getRoleCode().equals(UserJobs.Steward.roleCode)){
+                schedulingVo.setHousekeeper(userVo.getRealName());
+            }
+            if (userVo.getRoleCode().equals(UserJobs.QualityInspector.roleCode)){
+                schedulingVo.setQualityInspector(userVo.getRealName());
+            }
+        }
         return RespData.success(schedulingVo);
     }
 
@@ -221,6 +266,8 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         InvoiceVo invoiceVo = new InvoiceVo("电子普通发票", "装修服务", "个人", "02956156154", true);
         return RespData.success(invoiceVo);
     }
+
+
 
 
 

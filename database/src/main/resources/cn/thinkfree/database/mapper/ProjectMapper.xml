@@ -633,6 +633,22 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
 
+  <select id="selectContractByProjectNo" resultType="cn.thinkfree.database.pcvo.SchedulingVo">
+      SELECT
+          P ."style" style,
+          P .plan_start_time startTime,
+          P .plan_end_time endTime,
+          pb."name" stage,
+          co.money contractMoney
+      FROM
+          project P
+      LEFT JOIN project_scheduling ps ON P .project_no = ps.project_no
+      LEFT JOIN project_base_big_scheduling pb ON pb.sort = ps.rate
+      LEFT JOIN construction_order co ON co.project_no = P .project_no
+      WHERE
+          P .project_no = #{projectNo}
+          AND P .status =#{status}
+  </select>
 
 
 </mapper>
