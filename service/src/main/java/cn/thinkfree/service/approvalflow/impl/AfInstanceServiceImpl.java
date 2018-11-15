@@ -503,6 +503,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private void sendMessage(String projectNo, String sendUserId, List<String> subUserIds, String content) {
         Map<String, String> requestMsg = new HashMap<>();
         requestMsg.put("projectNo", projectNo);
+        // TODO 测试用
 //        requestMsg.put("userNo", JSONUtil.bean2JsonStr(subUserIds));
 //        requestMsg.put("senderId", sendUserId);
         requestMsg.put("userNo", "[123567]");
@@ -511,9 +512,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         requestMsg.put("dynamicId", "0");
         requestMsg.put("type", "3");
         LOGGER.info("发送审批消息：requestMsg：{}", requestMsg);
-        HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
-        LOGGER.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
-        // TODO 错误判断
+        try {
+            ThreadManager.getThreadPollProxy().execute(()->{
+                HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
+                LOGGER.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
+            });
+        } catch (Exception e) {
+            LOGGER.error("发送审批消息出错", e);
+        }
     }
 
     /**
@@ -549,7 +555,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instancePdfUrlService.create(instance);
             });
         } catch (Exception e) {
-            LOGGER.error("审批记录导出为PDF出错");
+            LOGGER.error("审批记录导出为PDF出错， instance:{}", instance.getInstanceNo());
         }
     }
 
