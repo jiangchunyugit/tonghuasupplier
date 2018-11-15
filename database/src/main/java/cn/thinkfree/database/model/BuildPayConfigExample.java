@@ -1,5 +1,6 @@
 package cn.thinkfree.database.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -722,6 +723,66 @@ public class BuildPayConfigExample {
 
         public Criteria andDeleteStateNotBetween(Integer value1, Integer value2) {
             addCriterion("delete_state not between", value1, value2, "deleteState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumIsNull() {
+            addCriterion("pay_percentum is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumIsNotNull() {
+            addCriterion("pay_percentum is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumEqualTo(BigDecimal value) {
+            addCriterion("pay_percentum =", value, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumNotEqualTo(BigDecimal value) {
+            addCriterion("pay_percentum <>", value, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumGreaterThan(BigDecimal value) {
+            addCriterion("pay_percentum >", value, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("pay_percentum >=", value, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumLessThan(BigDecimal value) {
+            addCriterion("pay_percentum <", value, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("pay_percentum <=", value, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumIn(List<BigDecimal> values) {
+            addCriterion("pay_percentum in", values, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumNotIn(List<BigDecimal> values) {
+            addCriterion("pay_percentum not in", values, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("pay_percentum between", value1, value2, "payPercentum");
+            return (Criteria) this;
+        }
+
+        public Criteria andPayPercentumNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("pay_percentum not between", value1, value2, "payPercentum");
             return (Criteria) this;
         }
     }

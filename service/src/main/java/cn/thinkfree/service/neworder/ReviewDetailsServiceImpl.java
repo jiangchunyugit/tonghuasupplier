@@ -468,12 +468,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("插入失败");
         }
-        if(checkVo.getResult().equals(ProjectDataStatus.INSERT_SUCCESS.getValue())){
-            //TODO 审核通过 调取东旭接口,修改订单状态
-        }
-        if(checkVo.getResult().equals(ProjectDataStatus.BUTTON_NO.getValue())){
-            //TODO 审核失败 调取东旭接口,修改订单状态
-        }
         return RespData.success();
     }
 
@@ -502,6 +496,11 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         check.setRefuseReason(refuseReason);
         checkMapper.updateByPrimaryKeySelective(check);
+        if(result == 1){
+            //TODO 审核通过 调取东旭接口,修改订单状态
+        }else if(result == 2){
+            //TODO 审核失败 调取东旭接口,修改订单状态
+        }
         return RespData.success();
     }	/**
      * 获取上海报价信息

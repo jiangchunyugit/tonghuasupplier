@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -146,7 +147,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
-    public void savePayConfig(String schemeNo, String progressName, String stageNo, int time, String remark) {
+    public void savePayConfig(String paySchemeNo, String schemeNo, String progressName, String stageNo, BigDecimal payPercentum, int time, String remark) {
         checkScheme(schemeNo);
         if(StringUtils.isBlank(progressName)){
             throw new RuntimeException("请输入工程进度名");
@@ -160,16 +161,25 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         if(StringUtils.isBlank(remark)){
             throw new RuntimeException("请输入备注");
         }
+        if(payPercentum == null || payPercentum.doubleValue() <= 0){
+            throw new RuntimeException("支付百分比不能小于0");
+        }
         BuildPayConfig payConfig = new BuildPayConfig();
         payConfig.setSchemeNo(schemeNo);
-        payConfig.setCreateTime(new Date());
         payConfig.setProgressName(progressName);
         payConfig.setPayTimeOut(time);
         payConfig.setStageCode(stageNo);
         payConfig.setRemark(remark);
-        payConfig.setPaySchemeNo(OrderNoUtils.getNo("BUC"));
-        payConfig.setDeleteState(2);
-        payConfigMapper.insertSelective(payConfig);
+        payConfig.setPayPercentum(payPercentum);
+        if(StringUtils.isNotBlank(paySchemeNo)){
+            payConfig.setPaySchemeNo(paySchemeNo);
+            payConfigMapper.updateByPrimaryKeySelective(payConfig);
+        }else{
+            payConfig.setCreateTime(new Date());
+            payConfig.setPaySchemeNo(OrderNoUtils.getNo("BUC"));
+            payConfig.setDeleteState(2);
+            payConfigMapper.insertSelective(payConfig);
+        }
     }
 
     @Override
