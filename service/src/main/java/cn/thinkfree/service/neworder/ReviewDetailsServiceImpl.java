@@ -473,6 +473,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             return RespData.error("请检查上传参数:ProjectNo="+checkVo.getProjectNo()+";Result="+checkVo.getResult());
         }
         check.setSubmitTime(new Date());
+        check.setApprovalTime(new Date());
         check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         int i = checkMapper.insertSelective(check);
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {

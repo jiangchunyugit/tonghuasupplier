@@ -70,11 +70,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
-        // TODO 测试用
-//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-//            LOGGER.error("无法发起审批");
-//            throw new CommonException(500, "无法发起审批");
-//        }
+        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+            LOGGER.error("无法发起审批");
+            throw new RuntimeException();
+        }
         AfInstanceDetailVO instanceDetailVO = new AfInstanceDetailVO();
         Project project = projectService.findByProjectNo(projectNo);
         if (project == null) {
@@ -132,11 +131,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark) {
-        // TODO 测试用
-//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-//            LOGGER.error("无法发起审批");
-//            throw new CommonException(500, "无法发起审批");
-//        }
+        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+            LOGGER.error("无法发起审批");
+            throw new RuntimeException();
+        }
         List<UserRoleSet> allRoles = roleService.findAll();
         String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
         if (configSchemeNo == null) {
@@ -503,17 +501,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private void sendMessage(String projectNo, String sendUserId, List<String> subUserIds, String content) {
         Map<String, String> requestMsg = new HashMap<>();
         requestMsg.put("projectNo", projectNo);
-//        requestMsg.put("userNo", JSONUtil.bean2JsonStr(subUserIds));
-//        requestMsg.put("senderId", sendUserId);
-        requestMsg.put("userNo", "[123567]");
-        requestMsg.put("senderId", "123456");
+        requestMsg.put("userNo", JSONUtil.bean2JsonStr(subUserIds));
+        requestMsg.put("senderId", sendUserId);
         requestMsg.put("content", content);
         requestMsg.put("dynamicId", "0");
         requestMsg.put("type", "3");
         LOGGER.info("发送审批消息：requestMsg：{}", requestMsg);
-        HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
-        LOGGER.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
-        // TODO 错误判断
+        try {
+            ThreadManager.getThreadPollProxy().execute(()->{
+                HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
+                LOGGER.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
+            });
+        } catch (Exception e) {
+            LOGGER.error("发送审批消息出错", e);
+        }
     }
 
     /**
@@ -549,7 +550,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instancePdfUrlService.create(instance);
             });
         } catch (Exception e) {
-            LOGGER.error("审批记录导出为PDF出错");
+            LOGGER.error("审批记录导出为PDF出错， instance:{}", instance.getInstanceNo());
         }
     }
 
@@ -580,10 +581,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfStartMenuVO> startMenus = new ArrayList<>();
 
         List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
-        // TODO
-//        if (schedulingDetailsVOs != null && schedulingDetailsVOs.size() > 0) {
-//            int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
-//            if (projectCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && projectCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
+        if (schedulingDetailsVOs != null && schedulingDetailsVOs.size() > 0) {
+            int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
+            if (projectCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && projectCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
                 if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
                     // 进度验收
                     if (scheduleSort == null) {
@@ -600,16 +600,16 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                         getInstances(instanceVOs, AfConfigs.CHECK_REPORT.configNo, userId, projectNo, scheduleSort);
                         // 完工审批
                         getInstances(instanceVOs, AfConfigs.COMPLETE_APPLICATION.configNo, userId, projectNo, scheduleSort);
-//                        int preScheduleSortCompleteStatus = getPreScheduleSortCompleteStatus(projectNo, schedulingDetailsVOs, scheduleSort);
-//                        if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
-//                            int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
-//                            if (scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
-//                                if (isNeedCheck(schedulingDetailsVOs, scheduleSort)) {
+                        int preScheduleSortCompleteStatus = getPreScheduleSortCompleteStatus(projectNo, schedulingDetailsVOs, scheduleSort);
+                        if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+                            int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
+                            if (scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
+                                if (isNeedCheck(schedulingDetailsVOs, scheduleSort)) {
                                     // 获取验收、完工申请发起菜单
                                     getCheckAndCompleteStartMenus(startMenus, userId, projectNo, schedulingDetailsVOs, scheduleSort);
-//                                }
-//                            }
-//                        }
+                                }
+                            }
+                        }
                     }
 
                 } else if (AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION.equals(approvalType)) {
@@ -630,8 +630,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     // 延期确认
                     getInstances(instanceVOs, AfConfigs.DELAY_ORDER.configNo, userId, projectNo);
                     getDelayStartMenus(startMenus, AfConfigs.DELAY_ORDER.configNo, userId, projectNo);
-//                }
-//            }
+                }
+            }
         }
         instanceVOs.sort(Comparator.comparing(AfInstanceVO::getCreateTime).reversed());
         instanceListVO.setInstances(instanceVOs);
@@ -759,8 +759,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         int checkApplicationCount = getSuccessCount(checkApplicationInstances);
         int checkReportCount = getStartAndSuccessCount(checkReportInstances);
-        // TODO 测试用
-//        if (isNeedCheck(schedulingDetailsVOs, scheduleSort)) {
+        if (isNeedCheck(schedulingDetailsVOs, scheduleSort)) {
             // 发起验收申请菜单
             addStartMenu(startMenus, projectNo, AfConfigs.CHECK_APPLICATION.configNo, userId);
 
@@ -769,7 +768,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 addStartMenu(startMenus, projectNo, AfConfigs.START_APPLICATION.configNo, userId);
 
             }
-//        }
+        }
         if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
             if (checkApplicationCount == checkReportCount) {
                 if (schedulingDetailsVOs.get(schedulingDetailsVOs.size() - 1).getBigSort().equals(scheduleSort)) {
@@ -851,16 +850,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo 项目编号
      */
     private void getStartStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo) {
-//        int startApplicationStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
-//        if (startApplicationStatus == 0 || startApplicationStatus == AfConstants.APPROVAL_STATUS_FAIL) {
+        int startApplicationStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
+        if (startApplicationStatus == 0 || startApplicationStatus == AfConstants.APPROVAL_STATUS_FAIL) {
             addStartMenu(startMenus, projectNo, AfConfigs.START_APPLICATION.configNo, userId);
-//        } else if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS ) {
-//            int startReportStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
-//            if (startReportStatus == 0 || startReportStatus == AfConstants.APPROVAL_STATUS_FAIL ) {
+        } else if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS ) {
+            int startReportStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+            if (startReportStatus == 0 || startReportStatus == AfConstants.APPROVAL_STATUS_FAIL ) {
                 addStartMenu(startMenus, projectNo, AfConfigs.START_REPORT.configNo, userId);
-//            }
-//        }
-        // TODO 测试用
+            }
+        }
     }
 
     /**
