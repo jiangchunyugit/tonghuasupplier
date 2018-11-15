@@ -22,6 +22,7 @@ import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,7 +61,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
     @Autowired
-    private  OrderContractMapper orderContractMapper;
+    private OrderContractMapper orderContractMapper;
     @Autowired
     private FundsOrderMapper fundsOrderMapper;
     @Autowired
@@ -114,7 +115,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                     EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
                     employeeMsgExample.createCriteria().andUserIdEqualTo(user.getUserId());
                     List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
-                    if(employeeMsgs != null){
+                    if (employeeMsgs != null) {
                         employeeMsgs.forEach(employeeMsg -> {
                             if (employeeMsg.getRoleCode().equals("CP")) {
                                 employeeInfoVO.setProjectManager(employeeMsg.getRealName());
@@ -128,8 +129,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                                 employeeInfoVO.setDesigner(employeeMsg.getRealName());
                             }
                         });
-                    }else {
-                        throw  new RuntimeException();
+                    } else {
+                        throw new RuntimeException();
                     }
 
                 }
@@ -499,17 +500,17 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     /**
+     * @return
      * @Author jiang
      * @Description 设计合同列表
      * @Date
      * @Param
-     * @return
      **/
 
     @Override
     public PageVo<List<DesignContractVO>> getDesignContractListss(Integer pageNum, Integer pageSize, String companyId) {
         List<DesignContractVO> designContractVOs = new ArrayList<>();
-        for(int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10; i++) {
             DesignContractVO vo = new DesignContractVO();
             vo.setContractStatus(1);
             vo.setContractAmount(11);
@@ -535,25 +536,25 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     /**
+     * @return
      * @Author jiang
      * @Description 设计合同列表
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
-        List<DesignContractVO> voList = designerOrderMapper.selectContractByPage( designContractVO,  pageNum,  pageSize);
+        List<DesignContractVO> voList = designerOrderMapper.selectContractByPage(designContractVO, pageNum, pageSize);
         //装业主模糊的list
         List<DesignContractVO> newList = new ArrayList();
-        if(voList.size()>0){
-            for (DesignContractVO vo :voList){
+        if (voList.size() > 0) {
+            for (DesignContractVO vo : voList) {
                 //业主
                 ProjectExample projectExample = new ProjectExample();
                 projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
                 List<Project> projects = projectMapper.selectByExample(projectExample);
-                if(projects.size()>0){
-                    for(Project pr:projects){
+                if (projects.size() > 0) {
+                    for (Project pr : projects) {
                         //遍历查询业主
                         AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), pr.getOwnerId(), Role.CC.id);
                         //业主
@@ -562,10 +563,10 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                         vo.setOwnerPhone(customerInfo.getPhone());
                     }
                 }
-                if(vo.getAuditType() != null){
-                    if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
+                if (vo.getAuditType() != null) {
+                    if (vo.getAuditType() == 1 && vo.getSigningTime().after(new Date())) {
                         vo.setContractStatus(1);//生效
-                    }else {
+                    } else {
                         vo.setContractStatus(0);//不生效
 
                     }
@@ -573,9 +574,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             }
         }
         //模糊业主
-        if(designContractVO.getOwnerName() != null){
-            for(int i=0;i<voList.size();i++ ){
-                if(voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())){
+        if (designContractVO.getOwnerName() != null) {
+            for (int i = 0; i < voList.size(); i++) {
+                if (voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())) {
                     newList.add(voList.get(i));
                 }
             }
@@ -598,48 +599,48 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     public Integer queryContractCount(DesignContractVO designContractVO) {
         return designerOrderMapper.selectContractCount(designContractVO);
     }
+
     /**
+     * @return
      * @Author jiang
      * @Description 施工合同列表
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int pageNum, int pageSize) {
-        List<ConstructionContractVO> voList = constructionOrderMapper.selectConstructionContractByPage( constructionContractVO,  pageNum,  pageSize);
+        List<ConstructionContractVO> voList = constructionOrderMapper.selectConstructionContractByPage(constructionContractVO, pageNum, pageSize);
         List<ConstructionContractVO> newList = new ArrayList();
-        if(voList.size()>0){
-           for (ConstructionContractVO vo :voList){
-               //业主
-               ProjectExample projectExample = new ProjectExample();
-               projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
-               List<Project> projects = projectMapper.selectByExample(projectExample);
-               if(projects.size()>0){
-                   for(Project pr:projects){
-                       AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), pr.getOwnerId(), Role.CC.id);
-                       //业主
-                       vo.setOwnerName(customerInfo.getUsername());
-                       //手机号码
-                       vo.setOwnerPhone(customerInfo.getPhone());
-                   }
-               }
-               if(vo.getAuditType() != null){
-                   if(vo.getAuditType() ==1 && vo.getSigningTime().after(new Date())){
-                       vo.setContractStatus(1);//生效
-                   }else {
-                       vo.setContractStatus(0);//不生效
-
-                   }
-               }
-           }
-       }
+        if (voList.size() > 0) {
+            for (ConstructionContractVO vo : voList) {
+                //业主
+                ProjectExample projectExample = new ProjectExample();
+                projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+                List<Project> projects = projectMapper.selectByExample(projectExample);
+                if (projects.size() > 0) {
+                    for (Project pr : projects) {
+                        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), pr.getOwnerId(), Role.CC.id);
+                        //业主
+                        vo.setOwnerName(customerInfo.getUsername());
+                        //手机号码
+                        vo.setOwnerPhone(customerInfo.getPhone());
+                    }
+                }
+                if (vo.getAuditType() != null) {
+                    //当前时间在签约时之内且审批状态为通过
+                    if (vo.getAuditType() == 1 && vo.getSigningTime().after(new Date())) {
+                        vo.setContractStatus(1);//生效
+                    } else {
+                        vo.setContractStatus(0);//不生效
+                    }
+                }
+            }
+        }
         //模糊业主
-        if(constructionContractVO.getOwnerName() != null){
-            for(int i=0;i<voList.size();i++ ){
-                if(voList.get(i).getOwnerName().contains(constructionContractVO.getOwnerName())){
+        if (constructionContractVO.getOwnerName() != null) {
+            for (int i = 0; i < voList.size(); i++) {
+                if (voList.get(i).getOwnerName().contains(constructionContractVO.getOwnerName())) {
                     newList.add(voList.get(i));
-
                 }
             }
             PageVo<List<ConstructionContractVO>> pageVo = new PageVo<>();
@@ -658,11 +659,11 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     }
 
     /**
+     * @return
      * @Author jiang
      * @Description 工地详情信息
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo) {
@@ -670,7 +671,10 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
         projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
-        if(projectSchedulings.size() == 1){
+        if(projectSchedulings.size() == 0){
+            return RespData.error("未查询到此项目信息");
+        }
+        if (projectSchedulings.size() == 1) {
             ProjectScheduling projectScheduling = projectSchedulings.get(0);
             //项目编号
             siteDetailsVo.setProjectNo(projectNo);
@@ -679,7 +683,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             //竣工时间
             siteDetailsVo.setCompletionDays(projectScheduling.getEndTime());
             //工期
-            Long day=(projectScheduling.getEndTime().getTime()-projectScheduling.getStartTime().getTime())/(24*60*60*1000);
+            Long day = (projectScheduling.getEndTime().getTime() - projectScheduling.getStartTime().getTime()) / (24 * 60 * 60 * 1000);
             siteDetailsVo.setDuration(day.intValue());
             //施工进度
             siteDetailsVo.setConstructionSchedule(projectScheduling.getRate().intValue());
@@ -689,32 +693,35 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         designerOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.size()==1){
+        if(designerOrders.size() != 1){
+            return RespData.error("查询到结果不止一个");
+        }
+        if (designerOrders.size() == 1) {
             DesignerOrder designerOrder = designerOrders.get(0);
             //订单编号
             siteDetailsVo.setOrderNo(designerOrder.getOrderNo());
             //订单类型
             siteDetailsVo.setOrderType(designerOrder.getStyleType());
         }
-
-
         //业主
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(siteDetailsVo.getProjectNo());
         List<Project> projects = projectMapper.selectByExample(projectExample);
-       AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+        if(projects.size() > 0){
+            return RespData.error("未查询到此项目信息");
+        }
+        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
         //业主
         siteDetailsVo.setOwner(customerInfo.getUsername());
         //手机号码
         siteDetailsVo.setPhone(customerInfo.getPhone());
         //项目地址
         siteDetailsVo.setProjectAddress(projects.get(0).getAddressDetail());
-
         //合同
         ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
         constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
-        if(constructionOrders.size()==1){
+        if (constructionOrders.size() == 1) {
             ConstructionOrder constructionOrder = constructionOrders.get(0);
             //合同款
             siteDetailsVo.setContractFunds(constructionOrder.getMoney());
@@ -722,14 +729,13 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         FundsOrderExample example = new FundsOrderExample();
         example.createCriteria().andProjectNoEqualTo(projectNo);
         List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
-        if(list.size() ==1){
+        if (list.size() == 1) {
             FundsOrder fundsOrder = list.get(0);
             //已付款
             siteDetailsVo.setPaid(fundsOrder.getPaidAmount());
             //待付款
             siteDetailsVo.setPendingPayment(fundsOrder.getActualAmount());
         }
-
         //EmployeeInfoVO employeeInfoVO = new EmployeeInfoVO();
         OrderUserExample orderUserExample = new OrderUserExample();
         orderUserExample.createCriteria().andProjectNoEqualTo(projectNo);
@@ -752,25 +758,25 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                             } else if ("CS".equals(roleCode)) {
                                 //管家
                                 siteDetailsVo.setHousekeeper(employeeMsg.getRealName());
-                            }else if ("CD".equals(roleCode)) {
+                            } else if ("CD".equals(roleCode)) {
                                 //设计师
                                 siteDetailsVo.setDesignerName(employeeMsg.getRealName());
                             }
                         }
                     });
                 }
-
         );
 
 
         return RespData.success(siteDetailsVo);
     }
+
     /**
+     * @return
      * @Author jiang
      * @Description 工地管理列表
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public MyRespBundle<ConstructionOrderCommonVo> getConstructionSiteList(int pageNum, int pageSize, String cityName) {
@@ -780,12 +786,13 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         constructionOrderCommonVo.setOrderList(pageInfo.getList());
         return RespData.success(constructionOrderCommonVo);
     }
+
     /**
+     * @return
      * @Author jiang
      * @Description 施工阶段数量
      * @Date
      * @Param
-     * @return
      **/
     @Override
     public MyRespBundle<ConstructionStageNunVO> getScheduleNum() {
@@ -813,8 +820,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         List<DesignContractVO> voList = new ArrayList<>();
         designerOrderExample.createCriteria().andCompanyIdEqualTo(companyId).andStatusEqualTo(1);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.size()>0){
-            for (DesignerOrder or:designerOrders){
+        if (designerOrders.size() > 0) {
+            for (DesignerOrder or : designerOrders) {
                 DesignContractVO designContractVO = new DesignContractVO();
                 //订单编号
                 designContractVO.setOrderNo(or.getOrderNo());
@@ -823,23 +830,23 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                 ProjectExample projectExample = new ProjectExample();
                 projectExample.createCriteria().andProjectNoEqualTo(or.getProjectNo());
                 List<Project> projects = projectMapper.selectByExample(projectExample);
-               if(projects.size()>0){
-                   for (Project pr:projects){
+                if (projects.size() > 0) {
+                    for (Project pr : projects) {
 
-                       designContractVO.setOrderAddress(pr.getProvince());
-                       designContractVO.setOrderSource(pr.getOrderSource());
-                       AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
-                       //业主
-                       designContractVO.setOwnerName(customerInfo.getUsername());
-                       //手机号码
-                       designContractVO.setOwnerPhone(customerInfo.getPhone());
-                   }
-               }
+                        designContractVO.setOrderAddress(pr.getProvince());
+                        designContractVO.setOrderSource(pr.getOrderSource());
+                        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+                        //业主
+                        designContractVO.setOwnerName(customerInfo.getUsername());
+                        //手机号码
+                        designContractVO.setOwnerPhone(customerInfo.getPhone());
+                    }
+                }
                 OrderContractExample orderContractExample = new OrderContractExample();
                 orderContractExample.createCriteria().andOrderNumberEqualTo(designContractVO.getOrderNo());
                 List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-                if(orderContracts.size()>0){
-                    for(OrderContract ord:orderContracts){
+                if (orderContracts.size() > 0) {
+                    for (OrderContract ord : orderContracts) {
                         designContractVO.setContractNo(ord.getContractNumber());
                         designContractVO.setSigningTime(ord.getSignTime());
                        /* if(ord.getSignTime().after(new Date())&&ord.getAuditType()){
