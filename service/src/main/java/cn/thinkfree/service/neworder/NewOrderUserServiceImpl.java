@@ -789,14 +789,26 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public MyRespBundle<ConstructionStageNunVO> getScheduleNum() {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         /* 统计状态个数 */
-        int waitExamine = 0, waitSign = 0, waitPay = 0;
-        //待开工
-        int waitStart = 1;
-        //施工中
-        int underConstruction = 2;
-        //已完工
-        int completed = 3;
+        int waitStart = 0;//待开工
+        int underConstruction = 0;//施工中
+        int completed = 0;//已完工
+        // 订单状态 统计
+        for (ConstructionOrder constructionOrder : list) {
+            int stage = constructionOrder.getOrderStage();
+            if (stage == ConstructionStateEnum.STATE_600.getState()) {
+                waitStart++;
+            }
+            if (stage > ConstructionStateEnum.STATE_600.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+                underConstruction++;
+            }
+            if (stage == ConstructionStateEnum.STATE_700.getState()) {
+                completed++;
+            }
+        }
+
         ConstructionStageNunVO constructionStageNunVO = new ConstructionStageNunVO();
         constructionStageNunVO.setWaitStart(waitStart);
         constructionStageNunVO.setUnderConstruction(underConstruction);
