@@ -41,7 +41,7 @@ BranchCompany extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="companyName省分站名称")
+    @ApiModelProperty(value="分公司名称")
     @NotBlank(message = "分公司名称不能为空",groups = {Severitys.Insert.class})
     private String companyName;
 
@@ -156,7 +156,7 @@ BranchCompany extends BaseModel {
     private Short isEnable;
 
 
-    @ApiModelProperty(value="companyCode分公司编码")
+    @ApiModelProperty(value="分公司编码")
     private String branchCompanyCode;
 
     /**

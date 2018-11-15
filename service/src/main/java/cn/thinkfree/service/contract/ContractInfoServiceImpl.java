@@ -411,7 +411,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 		}
 		/* 判断公司类型 */
-		if ( companyInfo.getCompanyInfo().getRoleId().equals( "BD" ) ) /* 装修公司 */
+		if ( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.BD.stringVal() ) ) /* 装修公司 */
 
 		{
 			if(!StringUtils.isEmpty(newVo.getSignedTime())) {
@@ -435,7 +435,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				printErrorMes("生成pdf合同发生错误", e.getMessage());
 			}
 
-		} else if ( companyInfo.getCompanyInfo().getRoleId().equals( "SJ" ) )/* 设计公司 */
+		} else if ( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.SJ.stringVal()) )/* 设计公司 */
 
 		{
 			if(!StringUtils.isEmpty(newVo.getSignedTime())) {
@@ -488,7 +488,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		{
 			dbmap.put( list.get( i ).getContractDictCode(), list.get( i ).getContractValue() );
 		}
-		if ( roleType.equals( "SJ" ) ) /* 设计公司 */
+		if ( roleType.equals( CompanyType.SJ.stringVal()) ) /* 设计公司 */
 
 		{
 			if ( list != null & list.size() > 0 )
@@ -523,7 +523,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			rmap.put( "designCastList", ma.get( "01" ) );   /* 设计费结算比例 */
 			rmap.put( "productCastLis", ma.get( "02" ) );   /* 产品费结算比例 */
 			rmap.put( "roadWorkCastLis", ma.get( "03" ) );  /* 施工费结算比例 */
-		} else if ( roleType.equals( "BD" ) ) /* 装饰公司 */
+		} else if ( roleType.equals(CompanyType.BD.stringVal() ) ) /* 装饰公司 */
 
 		{
 			if ( list != null & list.size() > 0 )
@@ -559,7 +559,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 			rmap.put( "designCastList", ma.get( "04" ) ); /* 返款规则 */
 		}
-		return(rmap);
+		return rmap;
 	}
 
 
