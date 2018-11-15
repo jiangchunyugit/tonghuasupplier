@@ -73,7 +73,8 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     ProjectQuotationCheckMapper checkMapper;
     @Autowired
     ReviewDetailsService reviewDetailsService;
-
+    @Autowired
+    ProjectQuotationCheckMapper projectQuotationCheckMapper;
 
     /**
      * PC获取项目详情接口--项目阶段
@@ -138,17 +139,17 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         designCriteria.andProjectNoEqualTo(projectNo);
         designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("查无此设计订单");
         }
         DesignerOrder designerOrder = designerOrders.get(0);
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
-        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState())){
+        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState())) {
             designerOrderVo.setComplete(true);
-        }else {
+        } else {
             designerOrderVo.setComplete(false);
         }
-        if (persionVo!=null){
+        if (persionVo != null) {
             designerOrderVo.setDesigner(persionVo.getName());
         }
         designerOrderVo.setProgrammeOneName("美丽家园");
@@ -178,7 +179,60 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     @Override
     public MyRespBundle<OfferVo> getPcProjectOffer(String projectNo) {
         //组合报价信息
-        OfferVo offerVo = new OfferVo("86", "1099", "20000", "1200", "2700", "2700", "2700", "通过", "刘万东", new Date());
+        // OfferVo offerVo = new OfferVo("86", "1099", "20000", "1200", "2700", "2700", "2700", "通过", "刘万东", new Date());
+        if (null == projectNo || "".equals(projectNo)) {
+            return RespData.error("项目编号为空");
+        }
+        OfferVo offerVo = new OfferVo();
+        ProjectQuotationExample projectQuotationExample = new ProjectQuotationExample();
+        ProjectQuotationExample.Criteria criteria = projectQuotationExample.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<ProjectQuotation> projectQuotations = projectQuotationMapper.selectByExample(projectQuotationExample);
+        if(projectQuotations.size() == 0){
+            return RespData.error("无此项目信息");
+        }
+        if (projectQuotations.size() == 1) {
+            ProjectQuotation projectQuotation = projectQuotations.get(0);
+            //面积
+            offerVo.setArea(projectQuotation.getInnerArea().toString());
+            //平米单价
+            offerVo.setUnitPrice(projectQuotation.getUnitPrice().toString());
+            //总价
+            offerVo.setTotalPrice(projectQuotation.getTotalPrice().toString());
+            //基础施工保价
+            offerVo.setBasePrice(projectQuotation.getConstructionTotalPrice().toString());
+            //软装保价
+            offerVo.setMainMaterialFee(projectQuotation.getSoftDecorationPrice().toString());
+            //硬装保价
+            offerVo.setOtherFee(projectQuotation.getHardDecorationPrice().toString());
+            //变更保价  TODO 刘博接口
+            //offerVo.setChangeFee(null);
+            ProjectQuotationCheckExample projectQuotationCheckExample = new ProjectQuotationCheckExample();
+            ProjectQuotationCheckExample.Criteria criteria1 = projectQuotationCheckExample.createCriteria();
+            criteria1.andProjectNoEqualTo(projectNo);
+            criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            List<ProjectQuotationCheck> projectQuotationChecks = projectQuotationCheckMapper.selectByExample(projectQuotationCheckExample);
+            if (projectQuotationChecks.size() == 1) {
+                ProjectQuotationCheck projectQuotationCheck = projectQuotationChecks.get(0);
+                //审核状态
+                offerVo.setAuditStatus(projectQuotationCheck.getCheckStatus().toString());
+                //审核时间
+                offerVo.setAuditTime(projectQuotationCheck.getApprovalTime());
+                //审核人
+                if (projectQuotationCheck.getApprovalId() != null) {
+                    EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+                    EmployeeMsgExample.Criteria criteria2 = employeeMsgExample.createCriteria();
+                    criteria2.andUserIdEqualTo(projectQuotationCheck.getApprovalId());
+                    List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+                    if (employeeMsgs.size() == 1) {
+                        EmployeeMsg employeeMsg = employeeMsgs.get(0);
+                        offerVo.setPriceAuditor(employeeMsg.getRealName());
+                    }
+                }
+            }
+
+        }
         return RespData.success(offerVo);
     }
 
@@ -203,25 +257,25 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
      */
     @Override
     public MyRespBundle<SchedulingVo> getPcProjectScheduling(String projectNo) {
-        SchedulingVo schedulingVo = projectMapper.selectContractByProjectNo(projectNo,ProjectDataStatus.BASE_STATUS.getValue());
-        if (schedulingVo == null){
+        SchedulingVo schedulingVo = projectMapper.selectContractByProjectNo(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        if (schedulingVo == null) {
             return RespData.error("查无此施工信息!");
         }
         List<UserVo> userVoList = orderUserMapper.getProjectUsers(projectNo, UserStatus.NO_TRANSFER.getValue(), UserStatus.ON_JOB.getValue());
-        if (userVoList.size()==0){
+        if (userVoList.size() == 0) {
             return RespData.error("此项目尚无分配施工人员");
         }
-        for (UserVo userVo : userVoList){
-            if (userVo.getRoleCode().equals(UserJobs.ProjectManager.roleCode)){
+        for (UserVo userVo : userVoList) {
+            if (userVo.getRoleCode().equals(UserJobs.ProjectManager.roleCode)) {
                 schedulingVo.setProjectManager(userVo.getRealName());
             }
-            if (userVo.getRoleCode().equals(UserJobs.Foreman.roleCode)){
+            if (userVo.getRoleCode().equals(UserJobs.Foreman.roleCode)) {
                 schedulingVo.setForeman(userVo.getRealName());
             }
-            if (userVo.getRoleCode().equals(UserJobs.Steward.roleCode)){
+            if (userVo.getRoleCode().equals(UserJobs.Steward.roleCode)) {
                 schedulingVo.setHousekeeper(userVo.getRealName());
             }
-            if (userVo.getRoleCode().equals(UserJobs.QualityInspector.roleCode)){
+            if (userVo.getRoleCode().equals(UserJobs.QualityInspector.roleCode)) {
                 schedulingVo.setQualityInspector(userVo.getRealName());
             }
         }
@@ -266,10 +320,6 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         InvoiceVo invoiceVo = new InvoiceVo("电子普通发票", "装修服务", "个人", "02956156154", true);
         return RespData.success(invoiceVo);
     }
-
-
-
-
 
 
 }

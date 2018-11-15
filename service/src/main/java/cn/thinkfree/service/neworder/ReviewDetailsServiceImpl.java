@@ -467,6 +467,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     public MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo) {
         ProjectQuotationCheck check = BaseToVoUtils.getVo(checkVo, ProjectQuotationCheck.class);
         check.setSubmitTime(new Date());
+        check.setApprovalTime(new Date());
         check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         int i = checkMapper.insertSelective(check);
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
