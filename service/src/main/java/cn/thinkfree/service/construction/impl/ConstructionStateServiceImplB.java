@@ -6,6 +6,11 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
+import cn.thinkfree.database.mapper.ProjectMapper;
+import cn.thinkfree.database.model.ConstructionOrder;
+import cn.thinkfree.database.model.ConstructionOrderExample;
+import cn.thinkfree.database.model.Project;
+import cn.thinkfree.database.model.ProjectExample;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +31,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     CommonService commonService;
+    @Autowired
+    ProjectMapper projectMapper;
 
     /**
      * 查询当前状态
@@ -192,6 +199,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
+
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_700.getNextStates();
         if (ConstructionStateEnumB.STATE_700.getState() == stageCode) {
@@ -208,18 +216,38 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 签约阶段逆向
      */
     @Override
-    public MyRespBundle<String> customerCancelOrder(String orderNo) {
+    public MyRespBundle<String> customerCancelOrder(String userId, String orderNo, String cancelReason) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
+
+        if (StringUtils.isBlank(userId)) {
+            return RespData.error(ResultMessage.ERROR.code, "用户ID不能为空");
+        }
+
+        ProjectExample example = new ProjectExample();
+        example.createCriteria().andOwnerIdEqualTo(userId).andStatusEqualTo(1);
+        List<Project> list = projectMapper.selectByExample(example);
+        if (list.size() <= 0) {
+            return RespData.error(ResultMessage.ERROR.code, "用户不存在");
+        }
+
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (ConstructionStateEnumB.STATE_600.getState() >= stageCode) {
+        if (ConstructionStateEnumB.STATE_600.getState() <= stageCode) {
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能取消订单");
         }
-        if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_888.getState())) {
+
+        ConstructionOrderExample example2 = new ConstructionOrderExample();
+        example2.createCriteria().andOrderNoEqualTo(orderNo);
+        ConstructionOrder constructionOrder = new ConstructionOrder();
+        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_888.getState());
+        constructionOrder.setRemark(cancelReason);
+        int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
+        if (isUpdate == 1) {
             return RespData.success();
+        } else {
+            return RespData.error(ResultMessage.ERROR.code, "取消订单失败-请稍后重试");
         }
-        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
     }
 
     /**

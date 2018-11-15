@@ -51,7 +51,7 @@ public interface ConstructionStateServiceB {
      * 取消订单
      * 签约阶段逆向
      */
-     MyRespBundle<String> customerCancelOrder(String orderNo);
+     MyRespBundle<String> customerCancelOrder(String userId, String orderNo, String cancelReason);
 
     /**
      * 消费者

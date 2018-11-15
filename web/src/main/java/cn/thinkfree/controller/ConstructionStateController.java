@@ -147,9 +147,11 @@ public class ConstructionStateController extends AbsBaseController {
     @ApiOperation("消费者-取消订单(签约阶段逆向)")
     @MyRespBody
     @RequestMapping(value = "customerCancelOrder", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> customerCancelOrder(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
+    public MyRespBundle<String> customerCancelOrder(@RequestParam @ApiParam(value = "用户编号",required = true) String userId,
+                                                    @RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
+                                                    @RequestParam(required = false) @ApiParam(value = "理由")  String cancelReason) {
 
-        return constructionStateServiceB.customerCancelOrder(orderNo);
+        return constructionStateServiceB.customerCancelOrder(userId, orderNo,cancelReason);
     }
 
     @ApiOperation("消费者-取消订单(支付未开工逆向)")
