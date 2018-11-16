@@ -1,15 +1,8 @@
 package cn.thinkfree.service.user.strategy.relation;
 
-import cn.thinkfree.core.exception.ForbiddenException;
-import cn.thinkfree.database.constants.UserEnabled;
-import cn.thinkfree.database.mapper.BranchCompanyMapper;
-import cn.thinkfree.database.mapper.CityBranchMapper;
-import cn.thinkfree.database.model.BranchCompany;
-import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.model.StoreInfo;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.storeinfo.StoreInfoService;
-import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +23,6 @@ public class CompanyCityRelationStrategy implements RelationStrategy {
      */
     @Override
     public List<String> build(UserVO userVO) {
-        // todo jangchunyu
         return storeInfoService.storeInfoListByCityId(userVO.getPcUserInfo().getCityBranchCompanyId())
                 .stream()
                 .map(StoreInfo::getStoreId)

@@ -89,7 +89,7 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
         }
         SystemResourceExample systemResourceExample = new SystemResourceExample();
         systemResourceExample.createCriteria().andPlatformEqualTo(SysConstants.PlatformType.Enterprise.code)
-                .andIdIn(companyRoleResources.stream().map(CompanyRoleResource::getId).collect(toList()));
+                .andIdIn(companyRoleResources.stream().map(CompanyRoleResource::getResourceId).collect(toList()));
         List<SystemResource> systemResources = systemResourceMapper.selectByExample(systemResourceExample);
         userVO.setResources(systemResources);
 

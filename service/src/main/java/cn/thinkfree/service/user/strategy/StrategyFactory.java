@@ -2,11 +2,8 @@ package cn.thinkfree.service.user.strategy;
 
 import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.constants.UserRegisterType;
-import cn.thinkfree.service.user.strategy.build.PlatformUserBuildStrategy;
+import cn.thinkfree.service.user.strategy.build.*;
 import cn.thinkfree.service.user.strategy.relation.*;
-import cn.thinkfree.service.user.strategy.build.EnterpriseUserBuildStrategy;
-import cn.thinkfree.service.user.strategy.build.UserBuildStrategy;
-import cn.thinkfree.service.user.strategy.build.SmartUserBuildStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +26,9 @@ public class StrategyFactory {
 
     @Autowired
     PlatformUserBuildStrategy platformUserBuildStrategy;
+
+    @Autowired
+    StaffBuildStrategy staffBuildStrategy;
 
     @Autowired
     SmartUserBuildStrategy smartLoginStrategy;
@@ -55,7 +55,7 @@ public class StrategyFactory {
             case Personal:return smartLoginStrategy;
             case Enterprise: return enterpriseLoginStrategy;
             case Customer: return smartLoginStrategy;
-            case Staff: return platformUserBuildStrategy;
+            case Staff: return staffBuildStrategy;
             case Platform:return platformUserBuildStrategy;
             default:return smartLoginStrategy;
         }
