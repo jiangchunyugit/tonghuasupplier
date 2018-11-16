@@ -4,6 +4,7 @@ import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
@@ -194,12 +195,12 @@ public class NewProjectServiceImpl implements NewProjectService {
         Project project = projects.get(0);
         ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
         //添加进度展示
-        if (project.getStage() > ConstructionStateEnum.STATE_500.getState()) {
+        if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-            projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
-            projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
+            projectVo.setStageDesignName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(3));
+            projectVo.setStageConsumerName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(4));
         } else {
             projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
             projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -284,7 +285,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //组合施工订单
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
-        List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+        List<Map<String, Object>> maps1 = ConstructionStateEnumB.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
         for (Map<String, Object> map : maps1) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort((Integer) map.get("key"));
