@@ -2,13 +2,17 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
+import cn.thinkfree.service.construction.vo.ConstructionOrderDistributionNumVo;
+import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +26,50 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
 
     @Autowired
     ConstructionStateServiceB constructionStateServiceB;
-
-
     @Autowired
     CompanyInfoMapper companyInfoMapper;
     @Autowired
     CityMapper cityMapper;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
+    @Autowired
+    CommonService commonService;
+
+
+    /**
+     * 施工订单(项目派单)列表统计
+     * @return
+     */
+    @Override
+    public MyRespBundle<ConstructionOrderDistributionNumVo> getComDistributionOrderNum() {
+
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+
+        /* 统计状态个数 待派单/待接单/已接单*/
+        int waitDistributionOrder = 0, waitReceipt = 0, alreadyReceipt= 0;
+        for (ConstructionOrder constructionOrder : list) {
+            // 订单状态 统计
+            int stage = constructionOrder.getOrderStage();
+            if (stage == ConstructionStateEnum.STATE_500.getState() || stage == ConstructionStateEnum.STATE_510.getState()) {
+                waitDistributionOrder++;//待派单
+            }
+            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+                waitReceipt++;//待接单
+            }
+            if (stage > ConstructionStateEnum.STATE_520.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+                alreadyReceipt++;//已接单
+            }
+        }
+
+        ConstructionOrderDistributionNumVo constructionOrderDistributionNumVo = new ConstructionOrderDistributionNumVo();
+        constructionOrderDistributionNumVo.setCityList(commonService.getCityList());
+        constructionOrderDistributionNumVo.setOrderNum(list.size());
+        constructionOrderDistributionNumVo.setWaitDistributionOrder(waitDistributionOrder);
+        constructionOrderDistributionNumVo.setWaitReceipt(waitReceipt);
+        constructionOrderDistributionNumVo.setAlreadyReceipt(alreadyReceipt);
+        return RespData.success(constructionOrderDistributionNumVo);
+    }
 
     /**
      *  施工派单-公司/城市列表接口（含搜索公司）

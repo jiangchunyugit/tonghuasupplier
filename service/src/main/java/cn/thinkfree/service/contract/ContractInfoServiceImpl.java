@@ -238,6 +238,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
             String pdfUrl = this.createContractDoc( contractNumber );
             vo.setContractUrl( pdfUrl );
             vo.setSignedTime(DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
+            eventService.publish(new MarginContractEvent(contractNumber));
         } else {                                                        /* 财务审核不通过 */
             companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
         }

@@ -100,7 +100,7 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 		//添加角色（删除当前用户得角色 重写插入）
 		List<String> list = companyUser.getRoleList();//角色列表
 		if(!list.isEmpty()){
-			int userId = companyUser.getCompanyUser().getId();
+			String userId = companyUser.getCompanyUser().getEmpNumber();
 			CompanyUserRoleExample examp = new CompanyUserRoleExample();
 			examp.createCriteria().andUserIdEqualTo(userId);
 			companyUserRoleMapper.deleteByExample(examp);

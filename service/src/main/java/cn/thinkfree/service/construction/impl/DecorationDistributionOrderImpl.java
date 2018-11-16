@@ -43,16 +43,16 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
     OrderUserMapper orderUserMapper;
 
 
-
     /**
      * 订单列表(带有员工)
+     *
      * @return
      */
     @Override
-    public MyRespBundle<DecorationOrderCommonVo> getOrderList(String companyNo,int pageNum, int pageSize, String projectNo, String appointmentTime,
+    public MyRespBundle<DecorationOrderCommonVo> getOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                               String addressDetail, String owner, String phone, String orderStage) {
-        PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(companyNo,pageNum,pageSize,projectNo,appointmentTime,
-                 addressDetail, owner,phone,orderStage);
+        PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(companyNo, pageNum, pageSize, projectNo, appointmentTime,
+                addressDetail, owner, phone, orderStage);
         DecorationOrderCommonVo decorationOrderCommonVo = new DecorationOrderCommonVo();
         decorationOrderCommonVo.setCountPageNum(pageInfo.getSize());
         decorationOrderCommonVo.setOrderList(pageInfo.getList());
@@ -62,6 +62,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
 
     /**
      * 订单列表统计
+     *
      * @return
      */
 
@@ -93,10 +94,11 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
 
     /**
      * 指派施工人员列表
+     *
      * @return
      */
     @Override
-    public MyRespBundle<Map<String,List<appointWorkerListVo>>> appointWorkerList(String companyId) {
+    public MyRespBundle<Map<String, List<appointWorkerListVo>>> appointWorkerList(String companyId) {
 
         if (StringUtils.isBlank(companyId)) {
             return RespData.error(ResultMessage.ERROR.code, "公司ID不能为空");
@@ -111,9 +113,9 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
         List<appointWorkerListVo> list3 = new ArrayList<>();
         List<appointWorkerListVo> list4 = new ArrayList<>();
 
-        for (EmployeeMsg employeeMsg : list){
+        for (EmployeeMsg employeeMsg : list) {
 
-            if (employeeMsg.getRoleCode().equals("CM")){ //CM  工长
+            if (employeeMsg.getRoleCode().equals("CM")) { //CM  工长
                 appointWorkerListVo appointWorkerListVo = new appointWorkerListVo();
                 appointWorkerListVo.setWorkerId(employeeMsg.getUserId());
                 appointWorkerListVo.setName(employeeMsg.getRealName());
@@ -122,41 +124,41 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
                 appointWorkerListVo.setProjectNum("5");
                 list1.add(appointWorkerListVo);
             }
-            if (employeeMsg.getRoleCode().equals("CS")){ //CS  管家
+            if (employeeMsg.getRoleCode().equals("CS")) { //CS  管家
                 appointWorkerListVo appointWorkerListVo = new appointWorkerListVo();
                 appointWorkerListVo.setWorkerId(employeeMsg.getUserId());
                 appointWorkerListVo.setName(employeeMsg.getRealName());
-                appointWorkerListVo.setRoleName("工长");
+                appointWorkerListVo.setRoleName("管家");
                 appointWorkerListVo.setRoleType("业务人员");
                 appointWorkerListVo.setProjectNum("5");
                 list2.add(appointWorkerListVo);
 
             }
-            if (employeeMsg.getRoleCode().equals("CP")){ //CP  项目经理
+            if (employeeMsg.getRoleCode().equals("CP")) { //CP  项目经理
                 appointWorkerListVo appointWorkerListVo = new appointWorkerListVo();
                 appointWorkerListVo.setWorkerId(employeeMsg.getUserId());
                 appointWorkerListVo.setName(employeeMsg.getRealName());
-                appointWorkerListVo.setRoleName("工长");
+                appointWorkerListVo.setRoleName("项目经理");
                 appointWorkerListVo.setRoleType("业务人员");
                 appointWorkerListVo.setProjectNum("5");
                 list3.add(appointWorkerListVo);
             }
-            if (employeeMsg.getRoleCode().equals("CQ")){ //CQ  质检员
+            if (employeeMsg.getRoleCode().equals("CQ")) { //CQ  质检员
                 appointWorkerListVo appointWorkerListVo = new appointWorkerListVo();
                 appointWorkerListVo.setWorkerId(employeeMsg.getUserId());
                 appointWorkerListVo.setName(employeeMsg.getRealName());
-                appointWorkerListVo.setRoleName("工长");
+                appointWorkerListVo.setRoleName("质检员");
                 appointWorkerListVo.setRoleType("业务人员");
                 appointWorkerListVo.setProjectNum("5");
                 list4.add(appointWorkerListVo);
             }
         }
 
-        Map<String,List<appointWorkerListVo>> map = new HashMap<>();
-        map.put("CM",list1);
-        map.put("CS",list2);
-        map.put("CP",list3);
-        map.put("CQ",list4);
+        Map<String, List<appointWorkerListVo>> map = new HashMap<>();
+        map.put("CM", list1);
+        map.put("CS", list2);
+        map.put("CP", list3);
+        map.put("CQ", list4);
 
         return RespData.success(map);
     }
@@ -164,47 +166,63 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
 
     /**
      * 项目分配施工人员 （单选）
+     *
      * @return
      */
     @Override
-    public MyRespBundle<String> appointWorker(String orderNo,String projdectNo,String workerNo,String roleName) {
+    public MyRespBundle<String> appointWorker(List<Map<String,String>> workerInfo) {
 
-        if (StringUtils.isBlank(orderNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+        Set<String> setOrderNo = new LinkedHashSet<>();
+        Set<String> setProjectNO = new LinkedHashSet<>();
+
+        for (Map<String,String> map1 : workerInfo) {
+            if (StringUtils.isBlank(map1.get("orderNo"))) {
+                return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+            }
+            if (StringUtils.isBlank(map1.get("projectNo"))) {
+                return RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+            }
+            if (StringUtils.isBlank(map1.get("workerNo"))) {
+                return RespData.error(ResultMessage.ERROR.code, "员工编号不能为空");
+            }
+            if (StringUtils.isBlank(map1.get("roleName"))) {
+                return RespData.error(ResultMessage.ERROR.code, "角色名称不能为空");
+            }
+            setOrderNo.add(map1.get("orderNo"));
+            setProjectNO.add(map1.get("projectNo"));
         }
-        if (StringUtils.isBlank(projdectNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
-        }
-        if (StringUtils.isBlank(workerNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "员工编号不能为空");
-        }
-        if (StringUtils.isBlank(roleName)) {
-            return RespData.error(ResultMessage.ERROR.code, "角色名称不能为空");
+
+        if (setOrderNo.size() != 1 && setProjectNO.size() != 1){
+            return RespData.error(ResultMessage.ERROR.code, "出现不同订单编号或项目编号");
         }
 
         // 改变订单状态
-        MyRespBundle<String> r = constructionStateServiceB.constructionState(orderNo,1);
-        if (!ResultMessage.SUCCESS.code.equals(r.getCode())){
+        MyRespBundle<String> r = constructionStateServiceB.constructionState(workerInfo.get(0).get("orderNo"), 1);
+        if (!ResultMessage.SUCCESS.code.equals(r.getCode())) {
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能分配施工人员");
         }
 
-        OrderUserExample example = new OrderUserExample();
-        example.createCriteria().andProjectNoEqualTo(projdectNo).andOrderNoEqualTo(orderNo);
-        List<OrderUser> list = orderUserMapper.selectByExample(example);
-        OrderUser orderUser = new OrderUser();
-        if (list.size() <= 0){
-            orderUser.setOrderNo(orderNo);
-            orderUser.setUserId(workerNo);
-            orderUser.setProjectNo(projdectNo);
-            orderUser.setRoleCode(roleName);
-            orderUser.setCreateTime(new Date());
-            orderUser.setIsTransfer((short) 0);
-            orderUserMapper.insertSelective(orderUser);
-        }else {
-            orderUser.setUserId(workerNo);
-            orderUser.setRoleCode(roleName);
-            orderUser.setUpdateTime(new Date());
-            orderUserMapper.updateByExampleSelective(orderUser,example);
+        for (Map<String,String> map : workerInfo) {
+
+            OrderUserExample example = new OrderUserExample();
+            example.createCriteria().andUserIdEqualTo(map.get("workerNo")).andOrderNoEqualTo(map.get("orderNo"));
+            List<OrderUser> list = orderUserMapper.selectByExample(example);
+            OrderUser orderUser = new OrderUser();
+            if (list.size() <= 0) {
+                orderUser.setOrderNo(map.get("orderNo"));
+                orderUser.setUserId(map.get("workerNo"));
+                orderUser.setProjectNo(map.get("projectNo"));
+                orderUser.setRoleCode(map.get("roleName"));
+                orderUser.setCreateTime(new Date());
+                orderUser.setIsTransfer((short) 0);
+                orderUserMapper.insertSelective(orderUser);
+            } else {
+                orderUser.setUserId(map.get("workerNo"));
+                orderUser.setRoleCode(map.get("roleName"));
+                orderUser.setUpdateTime(new Date());
+                orderUserMapper.updateByExampleSelective(orderUser, example);
+            }
+
         }
 
         return RespData.success();

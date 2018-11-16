@@ -71,7 +71,7 @@ public class DecorationOrderOperateImpl implements DecorationOrderOperate {
 
         ConstructionOrderManageVo constructionOrderManageVo = new ConstructionOrderManageVo();
         constructionOrderManageVo.setCityList(commonService.getCityList());
-        constructionOrderManageVo.setOrderNum(list.size());
+    //    constructionOrderManageVo.setOrderNum(list.size());
         constructionOrderManageVo.setWaitExamine(waitExamine);
         constructionOrderManageVo.setWaitSign(waitSign);
         return RespData.success(constructionOrderManageVo);

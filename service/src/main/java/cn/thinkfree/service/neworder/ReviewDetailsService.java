@@ -91,4 +91,13 @@ public interface ReviewDetailsService {
      * @return
      */
     MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason);
+
+    /**
+     * 获取上海报价信息
+     * @param designId
+     * @return
+     */
+    MyRespBundle getShangHaiPriceDetail(String designId,String projectNo);
+
+
 }

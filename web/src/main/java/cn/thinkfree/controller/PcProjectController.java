@@ -27,49 +27,57 @@ public class PcProjectController {
 
     @RequestMapping(value = "getPcProjectTask", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--项目阶段")
-    public MyRespBundle<List<OrderTaskSortVo>> getPcProjectTask(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<List<OrderTaskSortVo>> getPcProjectTask(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectTask(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectConstructionOrder", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--施工订单")
-    public MyRespBundle<ConstructionOrderVO> getPcProjectConstructionOrder(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<ConstructionOrderVO> getPcProjectConstructionOrder(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectConstructionOrder(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectDesigner", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--设计信息")
-    public MyRespBundle<DesignerOrderVo> getPcProjectDesigner(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<DesignerOrderVo> getPcProjectDesigner(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectDesigner(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectPreview", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--预交底信息")
-    public MyRespBundle<PreviewVo> getPcProjectPreview(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<PreviewVo> getPcProjectPreview(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectPreview(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectOffer", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--报价信息")
-    public MyRespBundle<OfferVo> getPcProjectOffer(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<OfferVo> getPcProjectOffer(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectOffer(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectContract", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--合同信息")
-    public MyRespBundle<ContractVo> getPcProjectContract(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<ContractVo> getPcProjectContract(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectContract(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectScheduling", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--施工信息")
-    public MyRespBundle<SchedulingVo> getPcProjectScheduling(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<SchedulingVo> getPcProjectScheduling(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectScheduling(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectSettlement", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--结算管理")
-    public MyRespBundle<SettlementVo> getPcProjectSettlement(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<SettlementVo> getPcProjectSettlement(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectSettlement(projectNo);
     }
 
@@ -81,22 +89,17 @@ public class PcProjectController {
 
     @RequestMapping(value = "getPcProjectEvaluate", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--评价管理")
-    public MyRespBundle<EvaluateVo> getPcProjectEvaluate(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<EvaluateVo> getPcProjectEvaluate(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectEvaluate(projectNo);
     }
 
     @RequestMapping(value = "getPcProjectInvoice", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--发票管理")
-    public MyRespBundle<InvoiceVo> getPcProjectInvoice(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391") String projectNo) {
+    public MyRespBundle<InvoiceVo> getPcProjectInvoice(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
         return newProjectService.getPcProjectInvoice(projectNo);
     }
 
-    @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
-    @ApiOperation("获取上海报价信息")
-    public MyRespBundle getShangHaiPriceDetail(
-            @RequestParam(name = "designId") @ApiParam(name = "designId", value = "案例id fc80f1ef-4937-41a4-9443-7ebf95500143",required = true) String designId,
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
-        return newProjectService.getShangHaiPriceDetail(designId,projectNo);
-    }
 
 }
