@@ -29,9 +29,6 @@ import java.util.Map;
 public class ConstructionOrderController extends AbsBaseController {
 
     @Autowired
-    ConstructionStateService constructionStateService;
-
-    @Autowired
     ConstructionOrderOperate constructionOrderOperate;
 
     @Autowired

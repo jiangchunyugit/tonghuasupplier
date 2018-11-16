@@ -2,7 +2,7 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.OrderTaskSortVo;
 import cn.thinkfree.database.appvo.PersionVo;
@@ -11,21 +11,14 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
-import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.neworder.ReviewDetailsService;
 import cn.thinkfree.service.remote.CloudService;
-import cn.thinkfree.service.utils.BaseToVoUtils;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -87,7 +80,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         //获取项目阶段信息,所有的阶段时间都以开始时间展示为主,展示所有的PC项目阶段
         List<OrderTaskSortVo> allOrderTask = new ArrayList<>();
         List<Map<String, Object>> designMaps = DesignStateEnum.allStates(ProjectDataStatus.PLAY_PLATFORM.getValue());
-        List<Map<String, Object>> constructioMaps = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_PLATFORM.getValue());
+        List<Map<String, Object>> constructioMaps = ConstructionStateEnumB.allStates(ProjectDataStatus.PLAY_PLATFORM.getValue());
         for (Map<String, Object> map : constructioMaps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort((Integer) map.get("key"));
