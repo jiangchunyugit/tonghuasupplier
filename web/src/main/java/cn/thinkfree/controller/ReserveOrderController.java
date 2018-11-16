@@ -101,7 +101,9 @@ public class ReserveOrderController extends AbsBaseController {
      * @param roomNum          房屋个数
      * @param officeNum        客厅个数
      * @param toiletNum        卫生间个数
-     * @param address          装修地址
+     * @param province         省份编码
+     * @param city             城市编码
+     * @param region           区编码
      * @param addressDetail    装修详细地址
      * @param style            装修风格
      * @param area             建筑面积
@@ -111,7 +113,8 @@ public class ReserveOrderController extends AbsBaseController {
      * @param planEndTime      计划装修结束时间
      * @param decorationBudget 装修预算
      * @param balconyNum       阳台个数
-     * @param ownerId          业主ID
+     * @param ownerName        业主姓名
+     * @param ownerPhone       业主手机号
      * @param designerId       设计师ID
      */
     @ApiOperation("创建订单")
@@ -125,9 +128,11 @@ public class ReserveOrderController extends AbsBaseController {
             @ApiParam(name = "roomNum", required = false, value = "房屋个数") @RequestParam(name = "roomNum", required = false) int roomNum,
             @ApiParam(name = "officeNum", required = false, value = "客厅个数") @RequestParam(name = "officeNum", required = false) int officeNum,
             @ApiParam(name = "toiletNum", required = false, value = "卫生间个数") @RequestParam(name = "toiletNum", required = false) int toiletNum,
-            @ApiParam(name = "address", required = false, value = "装修地址") @RequestParam(name = "address", required = false) String address,
+            @ApiParam(name = "province", required = false, value = "省份编码") @RequestParam(name = "province", required = false) String province,
+            @ApiParam(name = "city", required = false, value = "城市编码") @RequestParam(name = "city", required = false) String city,
+            @ApiParam(name = "region", required = false, value = "县编码") @RequestParam(name = "region", required = false) String region,
             @ApiParam(name = "addressDetail", required = false, value = "装修详细地址") @RequestParam(name = "addressDetail", required = false) String addressDetail,
-            @ApiParam(name = "style", required = false, value = "装修风格") @RequestParam(name = "style", required = false) int style,
+            @ApiParam(name = "style", required = false, value = "装修风格") @RequestParam(name = "style", required = false) String style,
             @ApiParam(name = "area", required = false, value = "建筑面积") @RequestParam(name = "area", required = false) int area,
             @ApiParam(name = "houseType", required = false, value = "房屋类型") @RequestParam(name = "houseType", required = false) int houseType,
             @ApiParam(name = "peopleNum", required = false, value = "常住人口") @RequestParam(name = "peopleNum", required = false) int peopleNum,
@@ -135,11 +140,12 @@ public class ReserveOrderController extends AbsBaseController {
             @ApiParam(name = "planEndTime", required = false, value = "计划装修结束时间") @RequestParam(name = "planEndTime", required = false) String planEndTime,
             @ApiParam(name = "decorationBudget", required = false, value = "装修预算") @RequestParam(name = "decorationBudget", required = false) int decorationBudget,
             @ApiParam(name = "balconyNum", required = false, value = "阳台个数") @RequestParam(name = "balconyNum", required = false) int balconyNum,
-            @ApiParam(name = "ownerId", required = false, value = "业主ID") @RequestParam(name = "ownerId", required = false) String ownerId,
+            @ApiParam(name = "ownerName", required = false, value = "业主姓名") @RequestParam(name = "ownerName", required = false) String ownerName,
+            @ApiParam(name = "ownerPhone", required = false, value = "业主手机号") @RequestParam(name = "ownerPhone", required = false) String ownerPhone,
             @ApiParam(name = "designerId", required = false, value = "设计师ID") @RequestParam(name = "designerId", required = false) String designerId){
         try{
-            reserveOrderService.createProject(reserveNo,companyId,source,huxing,roomNum,officeNum,toiletNum,address,addressDetail,style,area,
-                    houseType,peopleNum,planStartTime,planEndTime,decorationBudget,balconyNum,ownerId,designerId);
+            reserveOrderService.createProject(reserveNo,companyId,source,huxing,roomNum,officeNum,toiletNum,province,city,region,addressDetail,style,area,
+                    houseType,peopleNum,planStartTime,planEndTime,decorationBudget,balconyNum,ownerName,ownerPhone,designerId);
             return sendSuccessMessage(null);
         }catch (Exception e){
             return sendFailMessage(e.getMessage());

@@ -8,7 +8,7 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="role_id" jdbcType="VARCHAR" property="roleId" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -136,7 +136,7 @@
     -->
     insert into pc_company_user_role (id, role_id, user_id
       )
-    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}
+    values (#{id,jdbcType=INTEGER}, #{roleId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CompanyUserRole">
@@ -164,7 +164,7 @@
         #{roleId,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
-        #{userId,jdbcType=INTEGER},
+        #{userId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -192,7 +192,7 @@
         role_id = #{record.roleId,jdbcType=VARCHAR},
       </if>
       <if test="record.userId != null">
-        user_id = #{record.userId,jdbcType=INTEGER},
+        user_id = #{record.userId,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -207,7 +207,7 @@
     update pc_company_user_role
     set id = #{record.id,jdbcType=INTEGER},
       role_id = #{record.roleId,jdbcType=VARCHAR},
-      user_id = #{record.userId,jdbcType=INTEGER}
+      user_id = #{record.userId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -223,7 +223,7 @@
         role_id = #{roleId,jdbcType=VARCHAR},
       </if>
       <if test="userId != null">
-        user_id = #{userId,jdbcType=INTEGER},
+        user_id = #{userId,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -235,7 +235,7 @@
     -->
     update pc_company_user_role
     set role_id = #{roleId,jdbcType=VARCHAR},
-      user_id = #{userId,jdbcType=INTEGER}
+      user_id = #{userId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

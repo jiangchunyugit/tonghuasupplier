@@ -5,6 +5,7 @@ import cn.thinkfree.database.model.BuildSchemeConfig;
 import cn.thinkfree.service.platform.vo.CompanySchemeVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -75,14 +76,15 @@ public interface BuildConfigService {
 
     /**
      * 保存支付方案
-     *
+     *@param paySchemeNo   支付方案编号
      * @param schemeNo     方案编号
      * @param progressName 进度名称
      * @param stageNo      阶段编号
+     * @param payPercentum 支付方案百分比
      * @param time         未支付超时时间
      * @param remark       备注
      */
-    void savePayConfig(String schemeNo, String progressName, String stageNo, int time, String remark);
+    void savePayConfig(String paySchemeNo, String schemeNo, String progressName, String stageNo, BigDecimal payPercentum, int time, String remark);
 
     /**
      * 删除支付方案

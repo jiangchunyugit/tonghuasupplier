@@ -1,6 +1,7 @@
 package cn.thinkfree.service.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -28,5 +29,8 @@ public class PdfConfig {
      * 字体文件夹
      */
     private String fontDir;
+
+    @Value("${custom.cloud.fileUpload}")
+    private String fileUploadUrl;
 
 }

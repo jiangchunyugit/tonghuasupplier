@@ -21,9 +21,9 @@ public class OfferVo {
     private String totalPrice;
     @ApiModelProperty(value = "基础施工费用/元")
     private String basePrice;
-    @ApiModelProperty(value = "主材费用/元")
+    @ApiModelProperty(value = "软装保价/元")
     private String mainMaterialFee;
-    @ApiModelProperty(value = "其他费用/元")
+    @ApiModelProperty(value = "硬装保价/元")
     private String otherFee;
     @ApiModelProperty(value = "变更报价/元")
     private String changeFee;
