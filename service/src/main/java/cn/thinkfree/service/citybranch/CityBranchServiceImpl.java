@@ -152,6 +152,7 @@ public class CityBranchServiceImpl implements CityBranchService {
 
         CityBranchExample cityBranchExample = new CityBranchExample();
         CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
+        criteria.andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
         if (province != null) {
 
             criteria.andProvinceCodeEqualTo(province.shortValue());
