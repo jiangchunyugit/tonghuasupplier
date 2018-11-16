@@ -95,10 +95,13 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     }
 
     @Override
-    public List<BranchCompany> branchCompanys() {
+    public List<BranchCompany> branchCompanys(Integer flag) {
 
         BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
         BranchCompanyExample.Criteria criteria = branchCompanyExample.createCriteria();
+        if (flag==1) {
+            criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
+        }
         criteria.andIsDelNotEqualTo(OneTrue.YesOrNo.YES.shortVal());
         return branchCompanyMapper.selectByExample(branchCompanyExample);
     }

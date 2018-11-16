@@ -35,6 +35,7 @@
 	*
     FROM
 	pc_branch_company
+	WHERE pc_branch_company.is_enable = 1
   </select>
 
   <select id="getCityBranchs" resultMap="cityBranchResultMap" parameterType="java.lang.String">
@@ -43,7 +44,7 @@
     FROM
 	pc_city_branch
     WHERE
-	branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
+	pc_city_branch.is_enable = 1 AND branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
   </select>
   <!--分页查询-->
   <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.BranchCompanySEO" resultMap="branchCompanyPageResultMap">

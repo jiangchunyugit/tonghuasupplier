@@ -28,8 +28,8 @@ public class StoreInfoController extends AbsBaseController {
      */
     @GetMapping(value = "/storeInfoListByCityId")
     @MyRespBody
-    @ApiOperation(value="门店：门店信息（通过城市分站id查询门店信息）")
-    public MyRespBundle<List<StoreInfo>> storeInfoListByCityId(@ApiParam("城市分站id")String cityBranchCode){
+    @ApiOperation(value="门店：门店信息（通过城市分站编号查询门店信息）")
+    public MyRespBundle<List<StoreInfo>> storeInfoListByCityId(@ApiParam("城市分站编号")String cityBranchCode){
 
         return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByCityId(cityBranchCode));
     }

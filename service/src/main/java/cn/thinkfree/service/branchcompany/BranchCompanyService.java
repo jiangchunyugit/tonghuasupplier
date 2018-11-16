@@ -1,6 +1,7 @@
 package cn.thinkfree.service.branchcompany;
 
 import cn.thinkfree.database.model.BranchCompany;
+import cn.thinkfree.database.model.BranchCompanyExample;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
@@ -44,7 +45,7 @@ public interface BranchCompanyService {
      * 分公司list（不带城市分站）
      * @return
      */
-    List<BranchCompany> branchCompanys();
+    List<BranchCompany> branchCompanys(Integer flag);
 
     /**
      * 分公司信息（不带城市分站）
