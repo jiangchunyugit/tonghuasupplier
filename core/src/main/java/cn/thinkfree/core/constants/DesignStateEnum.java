@@ -378,6 +378,21 @@ public enum DesignStateEnum {
         throw new RuntimeException("无效的状态值");
     }
 
+    /**
+     * 获取所有可取消的设计订单状态值
+     * @return
+     */
+    public static List<DesignStateEnum> getAllCancelState(){
+        DesignStateEnum[] stateEnums = DesignStateEnum.values();
+        List<DesignStateEnum> stateEnums1 = new ArrayList<>();
+        for (DesignStateEnum designStateEnum : stateEnums) {
+            if (designStateEnum.getNextStates().contains(DesignStateEnum.STATE_330)) {
+                stateEnums1.add(designStateEnum);
+            }
+        }
+        return stateEnums1;
+    }
+
     public int getState() {
         return state;
     }
