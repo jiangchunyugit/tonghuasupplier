@@ -111,6 +111,7 @@
         <!--<table tableName="designer_order" domainObjectName="DesignerOrder"/>-->
         <!--<table tableName="order_apply_refund" domainObjectName="OrderApplyRefund"/>-->
         <!--<table tableName="construction_order" domainObjectName="ConstructionOrder"/>-->
+        <!--<table tableName="construction_order_pay" domainObjectName="ConstructionOrderPay"/>-->
         <!--<table tableName="project_base_small_scheduling" domainObjectName="ProjectSmallScheduling"/>-->
         <!--<table tableName="project_base_big_scheduling" domainObjectName="ProjectBigScheduling"/>-->
         <!--<table tableName="project_big_scheduling_details" domainObjectName="ProjectBigSchedulingDetails"/>-->

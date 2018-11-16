@@ -95,15 +95,18 @@ public class ConstructionStateController extends AbsBaseController {
     /**
      *  订单支付
      */
-    @ApiOperation("消费者-首期款支付")
+    @ApiOperation("消费者-订单支付===刘博")
     @MyRespBody
-    @RequestMapping(value = "constructionFirstPay", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> constructionFirstPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
+    @RequestMapping(value = "constructionOrderPay", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<String> constructionOrderPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
+                                                     @RequestParam @ApiParam(value = "支付阶段名称",required = true) String feeName,
+                                                     @RequestParam @ApiParam(value = "阶段排序",required = true) String sort,
+                                                     @RequestParam @ApiParam(value = "首尾阶段",required = true) int isEnd) {
 
-        return constructionStateServiceB.customerPay(orderNo,1);
+        return constructionStateServiceB.customerPay(orderNo,feeName,sort,isEnd);
     }
 
-    @ApiOperation("施工人员-开工报告")
+/*    @ApiOperation("施工人员-开工报告")
     @MyRespBody
     @RequestMapping(value = "commencementReport", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> commencementReport(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
@@ -117,32 +120,7 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> constructionStageCheck(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
         return constructionStateServiceB.customerPay(orderNo,3);
-    }
-
-    @ApiOperation("消费者-支付阶段款")
-    @MyRespBody
-    @RequestMapping(value = "constructionPayStage", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> constructionPayStage(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateServiceB.customerPay(orderNo,4);
-    }
-
-
-    @ApiOperation("施工人员-等待尾款支付（验收通过）")
-    @MyRespBody
-    @RequestMapping(value = "waitForTheTail", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> waitForTheTail(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateServiceB.customerPay(orderNo,5);
-    }
-
-    @ApiOperation("订单完成-支付尾款后")
-    @MyRespBody
-    @RequestMapping(value = "orderComplete", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> orderComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateServiceB.orderComplete(orderNo);
-    }
+    }*/
 
     @ApiOperation("消费者-取消订单(签约阶段逆向)")
     @MyRespBody
