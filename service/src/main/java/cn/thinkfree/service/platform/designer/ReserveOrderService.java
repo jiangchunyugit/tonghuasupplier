@@ -63,7 +63,9 @@ public interface ReserveOrderService {
      * @param roomNum          房屋个数
      * @param officeNum        客厅个数
      * @param toiletNum        卫生间个数
-     * @param address          装修地址
+     * @param province         省份编码
+     * @param city             城市编码
+     * @param region           区编码
      * @param addressDetail    装修详细地址
      * @param style            装修风格
      * @param area             建筑面积
@@ -73,10 +75,11 @@ public interface ReserveOrderService {
      * @param planEndTime      计划装修结束时间
      * @param decorationBudget 装修预算
      * @param balconyNum       阳台个数
-     * @param ownerId          业主ID
+     * @param ownerName        业主姓名
+     * @param ownerPhone       业主手机号
      * @param designerId       设计师ID
      */
     void createProject(String reserveNo, String companyId, int source, int huxing, int roomNum, int officeNum, int toiletNum,
-                       String address, String addressDetail, int style, int area, int houseType, int peopleNum,
-                       String planStartTime, String planEndTime, int decorationBudget, int balconyNum, String ownerId, String designerId);
+                       String province, String city, String region, String addressDetail, String style, int area, int houseType, int peopleNum,
+                       String planStartTime, String planEndTime, int decorationBudget, int balconyNum, String ownerName, String ownerPhone, String designerId);
 }

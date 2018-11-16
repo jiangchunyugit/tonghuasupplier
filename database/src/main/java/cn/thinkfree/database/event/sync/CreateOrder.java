@@ -6,7 +6,7 @@ import cn.thinkfree.database.vo.remote.SyncOrderVO;
 /**
  * 创建订单
  */
-public class CreateOrder extends AbsBaseEvent {
+    public class CreateOrder extends AbsBaseEvent {
 
     private String source;
 
@@ -14,6 +14,9 @@ public class CreateOrder extends AbsBaseEvent {
 
     public CreateOrder(String source) {
         this.source = source;
+    }
+
+    public CreateOrder() {
     }
 
     /**

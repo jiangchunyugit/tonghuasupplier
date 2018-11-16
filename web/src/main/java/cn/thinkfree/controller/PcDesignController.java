@@ -29,7 +29,8 @@ public class PcDesignController {
 
     @RequestMapping(value = "getDesignGrade",method = RequestMethod.POST)
     @ApiOperation("获取设计师等级列表")
-    public MyRespBundle<List<DesignGradeVo>> getDesignGrade(@RequestParam(name = "userId")@ApiParam(name = "userId",value = "用户id")String userId){
+    public MyRespBundle<List<DesignGradeVo>> getDesignGrade(
+            @RequestParam(name = "userId")@ApiParam(name = "userId",value = "用户id",required = true)String userId){
         return baseDesignService.getDesignGrade(userId);
     }
 
@@ -41,7 +42,8 @@ public class PcDesignController {
 
     @RequestMapping(value = "getDesignLabel",method = RequestMethod.POST)
     @ApiOperation("获取设计师标签列表")
-    public MyRespBundle<List<DesignLabelVo>> getDesignLabel(@RequestParam(name = "userId")@ApiParam(name = "userId",value = "用户id")String userId){
+    public MyRespBundle<List<DesignLabelVo>> getDesignLabel(
+            @RequestParam(name = "userId")@ApiParam(name = "userId",value = "用户id",required = true)String userId){
         return baseDesignService.getDesignLabel(userId);
     }
 
@@ -59,7 +61,8 @@ public class PcDesignController {
 
     @RequestMapping(value = "getDesignIntegral",method = RequestMethod.POST)
     @ApiOperation("获取成长值与积分列表")
-    public MyRespBundle<List<GrowthValueIntegralVo>> getDesignIntegral(@RequestParam(name = "userId")@ApiParam(name = "userId",value = "用户id")String userId){
+    public MyRespBundle<List<GrowthValueIntegralVo>> getDesignIntegral(
+            @RequestParam(name = "userId")@ApiParam(name = "userId",value = "用户id",required = true)String userId){
         return baseDesignService.getDesignIntegral(userId);
     }
 

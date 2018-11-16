@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -132,14 +133,16 @@ public class BuildConfigController extends AbsBaseController {
     @ResponseBody
     @RequestMapping(value = "savePayConfig", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle savePayConfig(
+            @ApiParam(name = "paySchemeNo", required = false, value = "支付方案编号，编辑的时候使用") @RequestParam(name = "paySchemeNo", required = false) String paySchemeNo,
             @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
             @ApiParam(name = "progressName", required = false, value = "进度名称") @RequestParam(name = "progressName", required = false) String progressName,
-            @ApiParam(name = "stageNo", required = false, value = "阶段编号") @RequestParam(name = "stageNo", required = false) String stageNo,
-            @ApiParam(name = "time", required = false, value = "未支付超时时间") @RequestParam(name = "time", required = false, defaultValue = "-1") int time,
+            @ApiParam(name = "stageCode", required = false, value = "阶段编号") @RequestParam(name = "stageCode", required = false) String stageCode,
+            @ApiParam(name = "payPercentum", required = false, value = "支付百分比") @RequestParam(name = "payPercentum", required = false) BigDecimal payPercentum,
+            @ApiParam(name = "payTimeOut", required = false, value = "未支付超时时间") @RequestParam(name = "payTimeOut", required = false, defaultValue = "-1") int payTimeOut,
             @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
             logger.info("保存支付方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
-            buildConfigService.savePayConfig(schemeNo, progressName, stageNo, time, remark);
+            buildConfigService.savePayConfig(paySchemeNo, schemeNo, progressName, stageCode, payPercentum, payTimeOut, remark);
             return sendSuccessMessage(null);
         } catch (Exception e) {
             return sendSuccessMessage(e.getMessage());

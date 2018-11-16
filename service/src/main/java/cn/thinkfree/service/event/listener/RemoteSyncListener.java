@@ -80,11 +80,15 @@ public class RemoteSyncListener extends AbsLogPrinter {
      */
     @EventListener
     public void CreateOrderAfter(CreateOrder createOrder){
+       if(createOrder.getData() != null){
+           cloudService.syncOrder(createOrder.getData());
+       }else{
+           Optional<SyncOrderVO> syncOrderVO = contractService.selectSyncDateByOrder(createOrder.getSource());
+           if(syncOrderVO.isPresent()){
+               cloudService.syncOrder(syncOrderVO.get());
+           }
+       }
 
-        Optional<SyncOrderVO> syncOrderVO = contractService.selectSyncDateByOrder(createOrder.getSource());
-        if(syncOrderVO.isPresent()){
-            cloudService.syncOrder(syncOrderVO.get());
-        }
 
 
     }

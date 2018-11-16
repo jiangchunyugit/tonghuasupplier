@@ -7,15 +7,14 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.vo.AfInstanceDetailVO;
 import cn.thinkfree.database.vo.AfInstanceListVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 审批流实例控制层
@@ -113,5 +112,13 @@ public class AfInstanceController extends AbsBaseController {
                                                @RequestParam(name = "approvalType") String approvalType,
                                                @RequestParam(name = "scheduleSort", required = false) Integer scheduleSort){
         return sendJsonData(ResultMessage.SUCCESS, instanceService.list(userId, projectNo, approvalType, scheduleSort));
+    }
+
+    @RequestMapping(value = "/projectApprovalList", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="前端-审批实例列表-宋传让")
+    @ApiParam(name = "projectNo", value = "项目编号", required = true)
+    public MyRespBundle<List<String>> projectApprovalList(@RequestParam(name = "projectNo") String projectNo){
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.projectApprovalList(projectNo));
     }
 }

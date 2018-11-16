@@ -57,7 +57,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "money", required = false, value = "装修预算") @RequestParam(name = "money", required = false) String money,
             @ApiParam(name = "acreage", required = false, value = "建筑面积") @RequestParam(name = "acreage", required = false) String acreage,
             @ApiParam(name = "designerOrderState", required = false, value = "订单状态") @RequestParam(name = "designerOrderState", required = false, defaultValue = "-1") int designerOrderState,
-            @ApiParam(name = "companyState", required = false, value = "公司状态") @RequestParam(name = "companyState", required = false) String companyState,
+            @ApiParam(name = "companyState", required = false, value = "公司入驻状态 0入驻中 1资质待审核 2资质审核通过 3资质审核不通过4财务审核中5财务审核成功6财务审核失败7待交保证金8入驻成功") @RequestParam(name = "companyState", required = false, defaultValue = "-1") int companyState,
             @ApiParam(name = "optionUserName", required = false, value = "操作人姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName,
             @ApiParam(name = "optionTimeStart", required = false, value = "操作时间开始") @RequestParam(name = "optionTimeStart", required = false) String optionTimeStart,
             @ApiParam(name = "optionTimeEnd", required = false, value = "操作时间结束") @RequestParam(name = "optionTimeEnd", required = false) String optionTimeEnd,
@@ -76,6 +76,7 @@ public class DesignDispatchController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "designOrderExcel", method = {RequestMethod.POST, RequestMethod.GET})
     public void designOrderExcel(
+            @ApiParam(name = "queryStage", required = false, value = "查询的数据阶段，具体字段待定，非必填，设计合同列表(DOCL)") @RequestParam(name = "queryStage", required = false) String queryStage,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userMsg", required = false, value = "业主姓名或电话") @RequestParam(name = "userMsg", required = false) String userMsg,
@@ -86,11 +87,13 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "money", required = false, value = "装修预算") @RequestParam(name = "money", required = false) String money,
             @ApiParam(name = "acreage", required = false, value = "建筑面积") @RequestParam(name = "acreage", required = false) String acreage,
             @ApiParam(name = "designerOrderState", required = false, value = "订单状态") @RequestParam(name = "designerOrderState", required = false, defaultValue = "-1") int designerOrderState,
-            @ApiParam(name = "companyState", required = false, value = "公司状态") @RequestParam(name = "companyState", required = false) String companyState,
+            @ApiParam(name = "companyState", required = false, value = "公司入驻状态 0入驻中 1资质待审核 2资质审核通过 3资质审核不通过4财务审核中5财务审核成功6财务审核失败7待交保证金8入驻成功") @RequestParam(name = "companyState", required = false, defaultValue = "-1") int companyState,
             @ApiParam(name = "optionUserName", required = false, value = "操作人姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName,
             @ApiParam(name = "optionTimeStart", required = false, value = "操作时间开始") @RequestParam(name = "optionTimeStart", required = false) String optionTimeStart,
             @ApiParam(name = "optionTimeEnd", required = false, value = "操作时间结束") @RequestParam(name = "optionTimeEnd", required = false) String optionTimeEnd,
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
             @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response) {
         try {
             designDispatchService.designerOrderExcel(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,

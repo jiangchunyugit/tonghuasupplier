@@ -3,7 +3,7 @@ package cn.thinkfree.database.vo;
 import lombok.Data;
 
 /**
- * TODO
+ * 用户角色信息
  *
  * @author song
  * @version 1.0
