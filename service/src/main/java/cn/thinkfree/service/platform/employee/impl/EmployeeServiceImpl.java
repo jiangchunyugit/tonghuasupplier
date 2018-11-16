@@ -8,10 +8,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
-import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
-import cn.thinkfree.service.platform.vo.PageVo;
-import cn.thinkfree.service.platform.vo.RoleVo;
-import cn.thinkfree.service.platform.vo.UserMsgVo;
+import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
@@ -496,7 +493,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             msgExample.or().andCertificateLike("%" + searchKey + "%");
         }
         long total = employeeMsgMapper.countByExample(msgExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
         if (msgs.isEmpty()) {
             return PageVo.def(new ArrayList<>());
@@ -522,6 +519,51 @@ public class EmployeeServiceImpl implements EmployeeService {
         pageVo.setData(employeeMsgVos);
         pageVo.setPageIndex(pageIndex);
         return pageVo;
+    }
+
+    @Override
+    public PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex) {
+        EmployeeApplyLogExample applyLogExample = new EmployeeApplyLogExample();
+        applyLogExample.createCriteria().andCompanyIdEqualTo(companyId);
+        long total = applyLogMapper.countByExample(applyLogExample);
+        PageHelper.startPage(pageIndex, pageSize);
+        List<EmployeeApplyLog> employeeApplyLogs = applyLogMapper.selectByExample(applyLogExample);
+        if(employeeApplyLogs.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> userIds = ReflectUtils.getList(employeeApplyLogs,"userId");
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdIn(userIds);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        Map<String,EmployeeMsg> employeeMsgMap = ReflectUtils.listToMap(employeeMsgs,"userId");
+        List<EmployeeApplyVo> applyVos = new ArrayList<>();
+        for(EmployeeApplyLog applyLog : employeeApplyLogs){
+            EmployeeApplyVo applyVo = new EmployeeApplyVo();
+            EmployeeMsg employeeMsg = employeeMsgMap.get(applyLog.getUserId());
+            if(employeeMsg != null){
+                applyVo.setRealName(employeeMsg.getRealName());
+                applyVo.setCardNo(employeeMsg.getCertificate());
+            }
+            applyVo.setApplyTime(getTime(applyLog.getApplyTime()));
+            applyVo.setDealTime(getTime(applyLog.getApplyTime()));
+            applyVo.setDealState(applyVo.getDealState());
+            applyVo.setDealUserName(applyLog.getDealUserId());
+            applyVo.setUserId(applyLog.getUserId());
+            applyVos.add(applyVo);
+        }
+        PageVo<List<EmployeeApplyVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(applyVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
+    }
+
+    private long getTime(Date date){
+        if(date == null){
+            return -1;
+        }
+        return date.getTime();
     }
 
     @Override
