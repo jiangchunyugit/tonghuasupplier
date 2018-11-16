@@ -2,20 +2,18 @@ package cn.thinkfree.service.construction;
 
 
 import cn.thinkfree.core.base.RespData;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
-import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -68,7 +66,12 @@ public class OrderListCommonService {
     DesignerOrderMapper designerOrderMapper;
 
     @Autowired
-    private HttpLinks httpLinks;
+    ProjectQuotationMapper projectQuotationMapper;
+
+    /**
+     * 用户中心地址接口
+     */
+    private static String userCenterUrl = "http://10.240.10.169:5000/userapi/other/api/user/getListUserByUserIds";
 
     public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 
@@ -112,6 +115,8 @@ public class OrderListCommonService {
         for (ConstructionOrder constructionOrder : list) {
             listCompanyNo.add(constructionOrder.getCompanyId());
         }
+        /* 用户编号List */
+        List<Map<String, String>> listUserNo = new ArrayList<>();
 
         // 所属地区 & 项目地址 & 预约日期
         List<Project> list1 = getProjectInfo(listProjectNo);
@@ -142,11 +147,20 @@ public class OrderListCommonService {
                     constructionOrderListVo.setAddress(project.getCity());
                     constructionOrderListVo.setAddressDetail(project.getAddressDetail());
                     constructionOrderListVo.setAppointmentTime(project.getCreateTime());
+                    // 业主 & 手机号
+                    Map<String, String> map = new HashMap<>();
+                    map.put("userId", project.getOwnerId());
+                    map.put("roleId", "CC");
+                    listUserNo.add(map);
+                    List<PersionVo>  owner = getOwnerId(listUserNo);
+                    for (PersionVo persionVo : owner){
+                        if (project.getOwnerId().equals(persionVo.getUserId())){
+                            constructionOrderListVo.setOwner(persionVo.getName());
+                            constructionOrderListVo.setPhone(persionVo.getPhone());
+                        }
+                    }
                 }
-                // 业主 & 手机号  TODO 没做批量查询
-//                PersionVo owner = getOwnerId(project.getOwnerId());
-//                constructionOrderListVo.setOwner(owner.getName());
-//                constructionOrderListVo.setPhone(owner.getPhone());
+
             }
 
             // 订单编号 & 项目编号
@@ -169,11 +183,11 @@ public class OrderListCommonService {
             // 施工阶段
             constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
             // 订单状态
-            constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 1));
+            constructionOrderListVo.setOrderStage(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 1));
             // 是否可以派单 （运营平台指派装饰公司）
-            if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_500.getState())){
+            if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_500.getState())) {
                 constructionOrderListVo.setIsDistribution(1);
-            }else {
+            } else {
                 constructionOrderListVo.setIsDistribution(0);
             }
 
@@ -212,7 +226,7 @@ public class OrderListCommonService {
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
         pageInfo.setPageNum(p.getPages());
-    //    pageInfo.setTotal(pageInfo2.getList().size());
+        //    pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 
@@ -225,8 +239,8 @@ public class OrderListCommonService {
      * @param pageSize
      * @return
      */
-    public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo,int pageNum, int pageSize) {
-        if (StringUtils.isBlank(companyNo)){
+    public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo, int pageNum, int pageSize) {
+        if (StringUtils.isBlank(companyNo)) {
             RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
@@ -239,7 +253,7 @@ public class OrderListCommonService {
         example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
-        if(list.size() <= 0){
+        if (list.size() <= 0) {
             RespData.error(ResultMessage.ERROR.code, "订单编号不符");
         }
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
@@ -263,6 +277,8 @@ public class OrderListCommonService {
         for (ConstructionOrder constructionOrder : list) {
             listCompanyNo.add(constructionOrder.getCompanyId());
         }
+        /* 用户编号List */
+        List<Map<String, String>> listUserNo = new ArrayList<>();
 
         // 所属地区 & 项目地址 & 预约日期
         List<Project> list1 = getProjectInfo(listProjectNo);
@@ -287,11 +303,19 @@ public class OrderListCommonService {
                     constructionOrderListVo.setAddress(project.getCity());
                     constructionOrderListVo.setAddressDetail(project.getAddressDetail());
                     constructionOrderListVo.setAppointmentTime(project.getCreateTime());
+                    // 业主 & 手机号
+                    Map<String, String> map = new HashMap<>();
+                    map.put("userId", project.getOwnerId());
+                    map.put("roleId", "CC");
+                    listUserNo.add(map);
+                    List<PersionVo>  owner = getOwnerId(listUserNo);
+                    for (PersionVo persionVo : owner){
+                        if (project.getOwnerId().equals(persionVo.getUserId())){
+                            constructionOrderListVo.setOwner(persionVo.getName());
+                            constructionOrderListVo.setPhone(persionVo.getPhone());
+                        }
+                    }
                 }
-                // 业主 & 手机号  TODO 没做批量查询
-//                PersionVo owner = getOwnerId(project.getOwnerId());
-//                constructionOrderListVo.setOwner(owner.getName());
-//                constructionOrderListVo.setPhone(owner.getPhone());
             }
 
             // 订单编号 & 项目编号
@@ -314,7 +338,7 @@ public class OrderListCommonService {
             // 施工阶段
             constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
             // 订单状态
-            constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
+            constructionOrderListVo.setOrderStage(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 2));
             //延期天数 开工时间 竣工时间
             for (ProjectScheduling projectScheduling : list4) {
                 if (constructionOrder.getProjectNo().equals(projectScheduling.getProjectNo())) {
@@ -356,7 +380,8 @@ public class OrderListCommonService {
     }
 
     /**
-     *  项目派单 给员工
+     * 项目派单 给员工
+     *
      * @param pageNum
      * @param pageSize
      * @param projectNo
@@ -367,10 +392,10 @@ public class OrderListCommonService {
      * @param orderStage
      * @return
      */
-    public PageInfo<DecorationOrderListVo> getDecorationOrderList(String companyNo,int pageNum, int pageSize, String projectNo, String appointmentTime,
+    public PageInfo<DecorationOrderListVo> getDecorationOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                                   String addressDetail, String owner, String phone, String orderStage) {
 
-        if (StringUtils.isBlank(companyNo)){
+        if (StringUtils.isBlank(companyNo)) {
             RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
         }
         PageHelper.startPage(pageNum, pageSize);
@@ -381,7 +406,7 @@ public class OrderListCommonService {
         example.setOrderByClause("create_time DESC");
         example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
 
-        if (!StringUtils.isBlank(projectNo)){
+        if (!StringUtils.isBlank(projectNo)) {
             example.createCriteria().andProjectNoEqualTo(projectNo);
         }
 
@@ -407,6 +432,8 @@ public class OrderListCommonService {
         for (ConstructionOrder constructionOrder : list) {
             listCompanyNo.add(constructionOrder.getCompanyId());
         }
+        /* 用户编号List */
+        List<Map<String, String>> listUserNo = new ArrayList<>();
 
         // 所属地区 & 项目地址 & 预约日期
         List<Project> list1 = getProjectInfo(listProjectNo);
@@ -418,63 +445,54 @@ public class OrderListCommonService {
         List<Map<String, String>> list4 = getEmployeeInfo(listProjectNo, "CM");
         // 管家
         List<Map<String, String>> list5 = getEmployeeInfo(listProjectNo, "CS");
+        //预算报价
+        List<ProjectQuotation> list6 = getPrice(listProjectNo);
 
         conOut:
         for (ConstructionOrder constructionOrder : list) {
             DecorationOrderListVo decorationOrderListVo = new DecorationOrderListVo();
-
             // 项目地址 & 预约日期
             for (Project project : list1) {
                 if (constructionOrder.getProjectNo().equals(project.getProjectNo())) {
                     decorationOrderListVo.setAddressDetail(project.getAddressDetail());
-                    if (!StringUtils.isBlank(addressDetail)){
-                        if (!addressDetail.equals(project.getAddressDetail())){
-                            continue conOut;
+                    decorationOrderListVo.setAppointmentTime(project.getCreateTime());
+                    // 业主 & 手机号
+                    Map<String, String> map = new HashMap<>();
+                    map.put("userId", project.getOwnerId());
+                    map.put("roleId", "CC");
+                    listUserNo.add(map);
+                    List<PersionVo>  owne = getOwnerId(listUserNo);
+                    for (PersionVo persionVo : owne){
+                        if (project.getOwnerId().equals(persionVo.getUserId())){
+                            decorationOrderListVo.setOwner(persionVo.getName());
+                            decorationOrderListVo.setPhone(persionVo.getPhone());
                         }
                     }
-                    decorationOrderListVo.setAppointmentTime(project.getCreateTime());
                 }
-                // 业主 & 手机号  TODO 没做批量查询
-//                PersionVo ownerP = getOwnerId(project.getOwnerId());
-//                if (!StringUtils.isBlank(owner)){
-//                    if (!owner.equals(ownerP.getName())){
-//                        continue conOut;
-//                    }
-//                }
-//                if (!StringUtils.isBlank(phone)){
-//                    if (!phone.equals(ownerP.getPhone())){
-//                        continue conOut;
-//                    }
-//                }
-//                decorationOrderListVo.setOwner(ownerP.getName());
-//                decorationOrderListVo.setPhone(ownerP.getPhone());
             }
-
-            // 预算报价 TODO 新建表
-            decorationOrderListVo.setAppointmentPrice("");
-            if (!StringUtils.isBlank(appointmentTime)){
-
+            // 预算报价
+            for (ProjectQuotation projectQuotation : list6){
+                if (constructionOrder.getProjectNo().equals(projectQuotation.getProjectNo())) {
+                    decorationOrderListVo.setAppointmentPrice(projectQuotation.getTotalPrice());
+                }
             }
-
             // 项目编号
             decorationOrderListVo.setProjectNo(constructionOrder.getProjectNo());
             // 订单编号
             decorationOrderListVo.setOrderNo(constructionOrder.getOrderNo());
             // 派单给员工-是否可以
-            if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_510.getState())){
+            if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_510.getState())) {
                 decorationOrderListVo.setIsCheck(1);
-            }else {
+            } else {
                 decorationOrderListVo.setIsCheck(0);
             }
-
             // 订单状态
-            if (!StringUtils.isBlank(orderStage)){
-                if (!orderStage.equals(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2))){
+            if (!StringUtils.isBlank(orderStage)) {
+                if (!orderStage.equals(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 2))) {
                     continue conOut;
                 }
             }
-            decorationOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
-
+            decorationOrderListVo.setOrderStage(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 2));
             // 项目经理
             for (Map<String, String> OrderUser : list2) {
                 if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
@@ -525,19 +543,35 @@ public class OrderListCommonService {
     /**
      * 查询用户信息 -用户中心接口
      *
-     * @param userId
+     * @param listUserNo
      * @return
      */
-    public PersionVo getOwnerId(String userId) {
-        PersionVo owner = new PersionVo();
-        Map<String, String> requestMap = new HashMap<>();
-        requestMap.put("userId", userId);
-        requestMap.put("roleId", "CC");
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(httpLinks.getUserCenterGetUserMsg(), requestMap);
-        Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
-        owner.setName(responseMap.get("nickName").toString());
-        owner.setPhone(responseMap.get("phone").toString());
-        return owner;
+    public List<PersionVo> getOwnerId (List<Map<String, String>> listUserNo) {
+
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterUrl, JSONObject.toJSONString(listUserNo));
+        if (httpRespMsg.getResponseCode() != 200) {
+            //用户中心服务异常
+            throw new RuntimeException("用户中心异常");
+        }
+        JSONObject jsonObject = JSONObject.parseObject(httpRespMsg.getContent());
+        if (!"1000".equals(jsonObject.getString("code"))) {
+            throw new RuntimeException("无效的用户ID");
+        }
+        JSONObject dataObj = jsonObject.getJSONObject("data");
+        List<PersionVo>  list = new ArrayList<>();
+        for (Map<String, String> map: listUserNo){
+
+            if (!dataObj.containsKey(map.get("userId"))) {
+                continue;
+            }
+            JSONObject userMsg = dataObj.getJSONObject(map.get("userId"));
+            PersionVo persionVo = new PersionVo();
+            persionVo.setUserId(userMsg.getString("consumerId"));
+            persionVo.setName(userMsg.getString("nickName"));
+            persionVo.setPhone(userMsg.getString("phone"));
+            list.add(persionVo);
+        }
+        return list;
     }
 
     /**
@@ -622,6 +656,19 @@ public class OrderListCommonService {
         FundsOrderExample example = new FundsOrderExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
+        return list;
+    }
+
+    /**
+     * 报价
+     *
+     * @param listProjectNo
+     * @return
+     */
+    public List<ProjectQuotation> getPrice(List<String> listProjectNo) {
+        ProjectQuotationExample example = new ProjectQuotationExample();
+        example.createCriteria().andProjectNoIn(listProjectNo);
+        List<ProjectQuotation> list = projectQuotationMapper.selectByExample(example);
         return list;
     }
 

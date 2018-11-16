@@ -2,12 +2,11 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
 import cn.thinkfree.service.construction.CommonService;
-import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.DecorationOrderOperate;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
@@ -61,10 +60,10 @@ public class DecorationOrderOperateImpl implements DecorationOrderOperate {
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_530.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_520.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnum.STATE_550.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_540.getState()) {
                 waitSign++;
             }
         }

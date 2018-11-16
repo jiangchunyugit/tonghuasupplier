@@ -2,7 +2,7 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
@@ -12,7 +12,6 @@ import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
 import cn.thinkfree.service.construction.vo.ConstructionOrderDistributionNumVo;
-import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,13 +50,13 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_500.getState() || stage == ConstructionStateEnum.STATE_510.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_500.getState() || stage == ConstructionStateEnumB.STATE_510.getState()) {
                 waitDistributionOrder++;//待派单
             }
-            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_520.getState()) {
                 waitReceipt++;//待接单
             }
-            if (stage > ConstructionStateEnum.STATE_520.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+            if (stage > ConstructionStateEnumB.STATE_520.getState() && stage < ConstructionStateEnumB.STATE_700.getState()) {
                 alreadyReceipt++;//已接单
             }
         }

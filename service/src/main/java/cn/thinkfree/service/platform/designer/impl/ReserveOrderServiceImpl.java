@@ -174,29 +174,33 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         project.setAddressDetail(addressDetail);
         project.setStyle(style);
         project.setArea(area);
-        project.setProjectNo(peopleNum + "");
-        project.setPlanStartTime(DateUtils.strToDate(planStartTime));
-        project.setPlanEndTime(DateUtils.strToDate(planEndTime));
+        project.setPeopleNo(peopleNum);
+        project.setPlanStartTime(DateUtils.strToDate(planStartTime, "yyyy-MM-dd"));
+        project.setPlanEndTime(DateUtils.strToDate(planEndTime,"yyyy-MM-dd"));
         project.setDecorationBudget(decorationBudget);
         project.setOwnerId(ownerId);
         project.setBalcony(balconyNum);
         project.setHouseType(houseType);
         projectMapper.insertSelective(project);
-		DesignerOrder DesignerOrder = new DesignerOrder();
-        DesignerOrder.setId(UUID.randomUUID().toString().replaceAll("-",""));
-        DesignerOrder.setProjectNo(project.getProjectNo());
-        DesignerOrder.setCreateTime(new Date());
-        DesignerOrder.setOrderNo(OrderNoUtils.getNo("DO"));
-        DesignerOrder.setOrderStage(DesignStateEnum.STATE_1.getState());
-        DesignerOrder.setAppointmentTime(new Date());
-        DesignerOrder.setStatus(1);
-        DesignerOrder.setStyleType(style + "");
-        DesignerOrderMapper.insertSelective(DesignerOrder);
+		DesignerOrder designerOrder = new DesignerOrder();
+        designerOrder.setId(UUID.randomUUID().toString().replaceAll("-",""));
+        designerOrder.setProjectNo(project.getProjectNo());
+        designerOrder.setCreateTime(new Date());
+        designerOrder.setOrderNo(OrderNoUtils.getNo("DO"));
+        designerOrder.setOrderStage(DesignStateEnum.STATE_1.getState());
+        designerOrder.setAppointmentTime(new Date());
+        designerOrder.setStatus(1);
+        designerOrder.setStyleType(style + "");
+        if(companyId != null){
+            designerOrder.setCompanyId(companyId);
+            designerOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
+        }
+        DesignerOrderMapper.insertSelective(designerOrder);
         if(StringUtils.isNotBlank(designerId)){
-            userService.addUserId(DesignerOrder.getOrderNo(),project.getProjectNo(),designerId, RoleFunctionEnum.DESIGN_POWER);
+            userService.addUserId(designerOrder.getOrderNo(),project.getProjectNo(),designerId, RoleFunctionEnum.DESIGN_POWER);
         }
         if(StringUtils.isNotBlank(ownerId)){
-            userService.addUserId(DesignerOrder.getOrderNo(),project.getProjectNo(),ownerId, RoleFunctionEnum.OWNER_POWER);
+            userService.addUserId(designerOrder.getOrderNo(),project.getProjectNo(),ownerId, RoleFunctionEnum.OWNER_POWER);
         }
         //TODO 待创建施工订单
         if (StringUtils.isBlank(reserveNo)) {
@@ -206,7 +210,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
         ReserveProject reserveProject = new ReserveProject();
         reserveProject.setProjectNo(project.getProjectNo());
-        reserveProject.setDesignerOrderNo(DesignerOrder.getOrderNo());
+        reserveProject.setDesignerOrderNo(designerOrder.getOrderNo());
         reserveProject.setChangeTime(new Date());
         reserveProject.setState(2);
         reserveProjectMapper.updateByExample(reserveProject, reserveProjectExample);

@@ -6,18 +6,19 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
+import cn.thinkfree.database.mapper.ConstructionOrderPayMapper;
+import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
-import cn.thinkfree.database.model.ConstructionOrder;
-import cn.thinkfree.database.model.ConstructionOrderExample;
-import cn.thinkfree.database.model.Project;
-import cn.thinkfree.database.model.ProjectExample;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Max;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,6 +34,10 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     CommonService commonService;
     @Autowired
     ProjectMapper projectMapper;
+    @Autowired
+    ConstructionOrderPayMapper constructionOrderPayMapper;
+    @Autowired
+    ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
     /**
      * 查询当前状态
@@ -148,67 +153,134 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
     /**
      * 支付
-     * 1.首期款支付 2.开工报告 3.阶段验收通过 4.支付阶段款 5.等待尾款支付（验收通过）
      */
     @Override
-    public MyRespBundle<String> customerPay(String orderNo, int type) {
+    public MyRespBundle<String> customerPay(String orderNo, String feeName, String sort, String isEnd) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
-        Integer stage = null;
-        List<ConstructionStateEnumB> nextStateCode = new ArrayList<>();
-        switch (type) {
-            case 1:
-                stage = ConstructionStateEnumB.STATE_600.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_600.getNextStates();
+        if (StringUtils.isBlank(isEnd)) {
+            return RespData.error(ResultMessage.ERROR.code, "支付首尾款");
+        }
+
+        ConstructionOrderPayExample example = new ConstructionOrderPayExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(example);
+        if (list.size() > 0) {
+            ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
+            constructionOrderPay.setFeeName(feeName);
+            constructionOrderPay.setSort(sort);
+            constructionOrderPay.setIsEnd(isEnd);
+            constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, example);
+        } else {
+            ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
+            constructionOrderPay.setOrderNo(orderNo);
+            constructionOrderPay.setFeeName(feeName);
+            constructionOrderPay.setSort(sort);
+            constructionOrderPay.setIsEnd(isEnd);
+            constructionOrderPayMapper.insertSelective(constructionOrderPay);
+        }
+
+        switch (isEnd) {
+            case "0":
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
                 break;
-            case 2:
-                stage = ConstructionStateEnumB.STATE_605.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_605.getNextStates();
+            case "1":
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState());
                 break;
-            case 3:
-                stage = ConstructionStateEnumB.STATE_610.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_610.getNextStates();
-                break;
-            case 4:
-                stage = ConstructionStateEnumB.STATE_615.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_615.getNextStates();
-                break;
-            case 5:
-                stage = ConstructionStateEnumB.STATE_690.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_690.getNextStates();
+            case "2":
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
                 break;
             default:
                 break;
         }
-        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (stage == stageCode) {
-            if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
-                return RespData.success();
-            }
-        }
-        return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
+
+        return RespData.success();
     }
 
     /**
-     * 订单完成
-     * 支付尾款后
+     * 施工阶段方案
      */
     @Override
-    public MyRespBundle<String> orderComplete(String orderNo) {
-        if (StringUtils.isBlank(orderNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+    public MyRespBundle<String> constructionPlan(String projectNo, String sort, String isEnd) {
+
+        if (StringUtils.isBlank(projectNo)) {
+            return RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
         }
 
-        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_700.getNextStates();
-        if (ConstructionStateEnumB.STATE_700.getState() == stageCode) {
-            if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
-                return RespData.success();
+        ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
+
+        //通过projectNo查询orderNo
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
+        for (ConstructionOrder constructionOrder : constructionOrderList) {
+
+            constructionOrderPay.setOrderNo(constructionOrder.getOrderNo());
+
+            //通过sort 查找feeName
+            List<Integer> listNum = new ArrayList<>();
+            ProjectBigSchedulingExample example1 = new ProjectBigSchedulingExample();
+            example1.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo());
+            //查询施工阶段 排序
+            List<ProjectBigScheduling> schedulingList1 = projectBigSchedulingMapper.selectByExample(example1);
+            for (ProjectBigScheduling projectBigScheduling : schedulingList1) {
+                //查询是否竣工
+                listNum.add(projectBigScheduling.getSort());
+                Collections.sort(listNum);
+            }
+
+            //查询当前施工阶段
+            ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
+            example2.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo()).andSortEqualTo(Integer.parseInt(sort));
+            List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
+            for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
+
+                constructionOrderPay.setFeeName(projectBigScheduling.getName());
+                // A开工报告 B阶段验收 C竣工验收
+                if (isEnd.equals("B")) {
+                    if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())) {
+                        constructionOrderPay.setIsEnd("C");
+                    } else {
+                        constructionOrderPay.setIsEnd("B");
+                    }
+                } else {
+                    constructionOrderPay.setIsEnd("A");
+                }
+
+            }
+
+            // 入库
+            ConstructionOrderPayExample exampleC = new ConstructionOrderPayExample();
+            exampleC.createCriteria().andOrderNoEqualTo(constructionOrder.getOrderNo());
+            List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(exampleC);
+            if (list.size() > 0) {
+                constructionOrderPay.setSort(sort);
+                constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, exampleC);
+            } else {
+                constructionOrderPay.setSort(sort);
+                constructionOrderPayMapper.insertSelective(constructionOrderPay);
+            }
+            // 更改状态
+            switch (constructionOrderPay.getIsEnd()) {
+                case "A":
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnumB.STATE_610.getState());
+                    break;
+                case "B":
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnumB.STATE_620.getState());
+                    break;
+                case "C":
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnumB.STATE_690.getState());
+                    break;
+                default:
+                    break;
             }
         }
-        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
+
+        return RespData.success();
     }
+
+
 
     /**
      * 消费者
@@ -240,7 +312,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         ConstructionOrderExample example2 = new ConstructionOrderExample();
         example2.createCriteria().andOrderNoEqualTo(orderNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
-        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_888.getState());
+        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_710.getState());
         constructionOrder.setRemark(cancelReason);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
         if (isUpdate == 1) {
@@ -253,19 +325,52 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     /**
      * 消费者
      * 取消订单
-     * 支付未开工逆向
+     * 签约阶段逆向
+     * 查看状态
      */
     @Override
-    public MyRespBundle<String> customerCancelOrderForPay(String orderNo) {
+    public Boolean customerCancelOrderState(String userId, String orderNo) {
+        if (StringUtils.isBlank(orderNo)) {
+            return false;
+        }
+
+        if (StringUtils.isBlank(userId)) {
+            return false;
+        }
+
+        ProjectExample example = new ProjectExample();
+        example.createCriteria().andOwnerIdEqualTo(userId).andStatusEqualTo(1);
+        List<Project> list = projectMapper.selectByExample(example);
+        if (list.size() <= 0) {
+            return false;
+        }
+
+        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
+        if (ConstructionStateEnumB.STATE_600.getState() <= stageCode) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 消费者
+     * 取消订单
+     * 支付未开工逆向
+     * &审核通过
+     */
+    @Override
+    public MyRespBundle<String> customerCancelOrderForPay(String orderNo,int type) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
-        if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_888.getState())) {
-            return RespData.success();
+        if (type == 1){
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_720.getState());
+        }else {
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_730.getState());
         }
 
-        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
+        return RespData.success();
     }
 
 }

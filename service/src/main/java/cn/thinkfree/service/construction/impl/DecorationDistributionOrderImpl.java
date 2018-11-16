@@ -2,18 +2,16 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
-import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
 import cn.thinkfree.service.construction.DecorationDistributionOrder;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.*;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,10 +75,10 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_530.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_530.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnum.STATE_550.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_550.getState()) {
                 waitSign++;
             }
         }
