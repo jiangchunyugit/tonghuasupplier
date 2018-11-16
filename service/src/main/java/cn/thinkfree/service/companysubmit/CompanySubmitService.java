@@ -116,4 +116,13 @@ public interface CompanySubmitService {
      */
     AuditInfoVO findTempAuditStatus(String companyId);
 
+    /**
+     * 下架，冻结，删除
+     * @param companyId
+     * @param platformType
+     * @param isDelete
+     * @return
+     */
+    Integer updateByParam(String companyId,String platformType,String isDelete);
+
 }

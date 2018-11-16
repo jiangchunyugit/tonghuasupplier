@@ -40,6 +40,9 @@
         <if test="applyThingType != null and applyThingType != ''">
             and info.apply_thing_type = #{applyThingType}
         </if>
+        <if test="applyType != null and applyType != ''">
+            and info.apply_type = #{applyType}
+        </if>
         <if test="companyRole != null and companyRole != ''">
             and info.company_role = #{companyRole}
         </if>
@@ -56,6 +59,9 @@
         </if>
         <if test="provinceCode != null and provinceCode != ''">
             and info.province_code = #{provinceCode}
+        </if>
+        <if test="transactType != null and transactType != ''">
+            and info.transact_type = #{transactType}
         </if>
         order by info.transact_type asc, info.apply_date desc
     </select>

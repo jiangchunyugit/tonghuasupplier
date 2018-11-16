@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public interface CompanyInfoMapper {
@@ -130,5 +131,12 @@ public interface CompanyInfoMapper {
      * @return
      */
     List<CompanyListVo> downLoad(CompanyListSEO companyListSEO);
+
+    /**
+     * 下架，冻结，删除
+     * @param map
+     * @return
+     */
+    int updateByParam(Map<String, Object> map);
 
 }

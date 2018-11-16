@@ -379,7 +379,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		ExcelData data = new ExcelData();
 		data.setName("用户信息数据");
 		//添加表头
-		String[] titleArrays = {"公司编号","公司类型","公司性质","所属站点","公司名称",
+		String[] titleArrays = {"公司编号","公司类型","所属站点","公司名称",
 				"入驻日期","截至时间","签约时间","法人","联系人","联系电话","保证金","状态"};
 		List<String> titles = new ArrayList<>();
 		for(String title: titleArrays){
@@ -395,7 +395,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			row=new ArrayList<>();
 			row.add(vo.getCompanyId());
 			row.add(vo.getRoleName());
-			row.add(vo.getComapnyNature());
+//			row.add(vo.getComapnyNature());
 			row.add(vo.getSiteProvinceName()+vo.getSiteCityName()+vo.getSiteName());
 			row.add(vo.getCompanyName());
 			row.add(vo.getStartTime());
@@ -635,4 +635,21 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		}
 		return auditInfoVO;
 	}
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer updateByParam(String companyId, String platformType, String isDelete) {
+        Date date = new Date();
+        Map<String, Object> map = new HashMap<>();
+        map.put("updateTime", date);
+        map.put("companyId", companyId);
+        if(StringUtils.isNotBlank(platformType)){
+            map.put("platformType", Short.valueOf(platformType));
+        }
+        if(StringUtils.isNotBlank(isDelete)){
+            map.put("isDelete", Short.valueOf(isDelete));
+        }
+        int line = companyInfoMapper.updateByParam(map);
+        return line;
+    }
 }

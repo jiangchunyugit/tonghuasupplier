@@ -25,6 +25,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
  * @author ying007
@@ -157,12 +159,12 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     /**
      * 导出
      */
-//    @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
-//    @ExceptionHandler(value=Exception.class)
-//    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--导出excel--李阳")
-//    public void downLoad(HttpServletResponse response, @ApiParam("条件查询参数")CompanyListSEO companyListSEO){
-//        companySubmitService.downLoad(response, companyListSEO);
-//    }
+    @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
+    @ExceptionHandler(value=Exception.class)
+    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--导出excel--李阳")
+    public void downLoad(HttpServletResponse response, @ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+        companySubmitService.downLoad(response, companyListSEO);
+    }
 
     /**
      * 查看合同
@@ -290,5 +292,25 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         AuditInfoVO auditInfoVO = companySubmitService.findTempAuditStatus(companyId);
         return sendJsonData(success, "操作成功", auditInfoVO);
     }
+
+    /**
+     * 下架，冻结，删除
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/updateByParam", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="前端--运营后台--下架，冻结，删除--李阳")
+    public MyRespBundle<String> updateByParam(
+            @ApiParam("公司id")@RequestParam(value = "companyId") String companyId,
+            @ApiParam("0正常，1冻结，2下架（冻结高于下架）")@RequestParam(required = false) String platformType,
+            @ApiParam("是否删除 1是 2否")@RequestParam(required = false) String isDelete){
+        Integer msg = companySubmitService.updateByParam(companyId,platformType,isDelete);
+        if(msg > 0){
+            return sendJsonData(success, "操作成功", msg);
+        }
+        return sendJsonData(fail, "操作失败", msg);
+    }
+
 
 }

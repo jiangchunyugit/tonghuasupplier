@@ -245,12 +245,12 @@
     <if test="siteCode != null and siteCode != ''">
         AND info.site_company_id = #{siteCode}
     </if>
-    <if test="provinceCode != null and provinceCode != ''">
-        AND branch.province_code = #{provinceCode}
-    </if>
-    <if test="cityCode != null and cityCode != ''">
-        AND branch.city_code = #{cityCode}
-    </if>
+    <!--<if test="provinceCode != null and provinceCode != ''">-->
+        <!--AND branch.province_code = #{provinceCode}-->
+    <!--</if>-->
+    <!--<if test="cityCode != null and cityCode != ''">-->
+        <!--AND branch.city_code = #{cityCode}-->
+    <!--</if>-->
     <if test="companyId != null and companyId != ''">
         AND info.company_id = #{companyId}
     </if>
@@ -274,6 +274,9 @@
         order by <foreach collection="orderList" index="key" item="value" separator="," >
         ${key} ${value}
     </foreach>
+    </if>
+    <if test="orderList == null">
+        order by info.update_time desc
     </if>
     </select>
 
@@ -355,6 +358,24 @@
             ${key} ${value}
         </foreach>
         </if>
-
+        <if test="orderList == null">
+            order by info.update_time desc
+        </if>
     </select>
+
+    <update id="updateByParam" parameterType="java.util.Map">
+        update company_info
+        <set>
+            <if test="isDelete != null">
+                is_delete = #{isDelete,jdbcType=SMALLINT},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="platformType != null">
+                platform_type = #{platformType,jdbcType=SMALLINT}
+            </if>
+        </set>
+        where company_id = #{companyId}
+    </update>
 </mapper>

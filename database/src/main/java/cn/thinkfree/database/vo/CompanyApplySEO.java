@@ -25,19 +25,41 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
     private String endDate;
 
     @ApiModelProperty(value = "申请事项")
-    private Short applyThingType;
+    private String applyThingType;
 
     @ApiModelProperty(value = "公司类型")
     private String companyRole;
 
     @ApiModelProperty(value = "市")
-    private Short cityCode;
+    private String cityCode;
 
     @ApiModelProperty(value = "区")
     private Integer areaCode;
 
     @ApiModelProperty(value = "省")
-    private Short provinceCode;
+    private String provinceCode;
+
+    @ApiModelProperty(value = "申请来源")
+    private String applyType;
+
+    @ApiModelProperty(value = "办理状态")
+    private String transactType;
+
+    public String getTransactType() {
+        return transactType;
+    }
+
+    public void setTransactType(String transactType) {
+        this.transactType = transactType;
+    }
+
+    public String getParam() {
+        return param;
+    }
+
+    public void setParam(String param) {
+        this.param = param;
+    }
 
     public String getStartDate() {
         return startDate;
@@ -55,19 +77,11 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
         this.endDate = endDate;
     }
 
-    public String getParam() {
-        return param;
-    }
-
-    public void setParam(String param) {
-        this.param = param;
-    }
-
-    public Short getApplyThingType() {
+    public String getApplyThingType() {
         return applyThingType;
     }
 
-    public void setApplyThingType(Short applyThingType) {
+    public void setApplyThingType(String applyThingType) {
         this.applyThingType = applyThingType;
     }
 
@@ -79,11 +93,11 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
         this.companyRole = companyRole;
     }
 
-    public Short getCityCode() {
+    public String getCityCode() {
         return cityCode;
     }
 
-    public void setCityCode(Short cityCode) {
+    public void setCityCode(String cityCode) {
         this.cityCode = cityCode;
     }
 
@@ -95,12 +109,20 @@ public class CompanyApplySEO extends AbsPageSearchCriteria {
         this.areaCode = areaCode;
     }
 
-    public Short getProvinceCode() {
+    public String getProvinceCode() {
         return provinceCode;
     }
 
-    public void setProvinceCode(Short provinceCode) {
+    public void setProvinceCode(String provinceCode) {
         this.provinceCode = provinceCode;
+    }
+
+    public String getApplyType() {
+        return applyType;
+    }
+
+    public void setApplyType(String applyType) {
+        this.applyType = applyType;
     }
 
     @Override
