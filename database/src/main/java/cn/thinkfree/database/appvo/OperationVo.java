@@ -21,4 +21,10 @@ public class OperationVo {
     private String planScheduling;
     @ApiModelProperty(value = ";项目资料")
     private String projectData;
+    @ApiModelProperty(value = "项目动态")
+    private String projectDynamic;
+    @ApiModelProperty(value = "项目订单")
+    private String projectOrder;
+    @ApiModelProperty(value = "开具发票")
+    private String invoice;
 }

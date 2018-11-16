@@ -474,52 +474,62 @@ public class ConstructionOrderPayExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsEndEqualTo(Short value) {
+        public Criteria andIsEndEqualTo(String value) {
             addCriterion("is_end =", value, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndNotEqualTo(Short value) {
+        public Criteria andIsEndNotEqualTo(String value) {
             addCriterion("is_end <>", value, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndGreaterThan(Short value) {
+        public Criteria andIsEndGreaterThan(String value) {
             addCriterion("is_end >", value, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndGreaterThanOrEqualTo(Short value) {
+        public Criteria andIsEndGreaterThanOrEqualTo(String value) {
             addCriterion("is_end >=", value, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndLessThan(Short value) {
+        public Criteria andIsEndLessThan(String value) {
             addCriterion("is_end <", value, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndLessThanOrEqualTo(Short value) {
+        public Criteria andIsEndLessThanOrEqualTo(String value) {
             addCriterion("is_end <=", value, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndIn(List<Short> values) {
+        public Criteria andIsEndLike(String value) {
+            addCriterion("is_end like", value, "isEnd");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEndNotLike(String value) {
+            addCriterion("is_end not like", value, "isEnd");
+            return (Criteria) this;
+        }
+
+        public Criteria andIsEndIn(List<String> values) {
             addCriterion("is_end in", values, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndNotIn(List<Short> values) {
+        public Criteria andIsEndNotIn(List<String> values) {
             addCriterion("is_end not in", values, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndBetween(Short value1, Short value2) {
+        public Criteria andIsEndBetween(String value1, String value2) {
             addCriterion("is_end between", value1, value2, "isEnd");
             return (Criteria) this;
         }
 
-        public Criteria andIsEndNotBetween(Short value1, Short value2) {
+        public Criteria andIsEndNotBetween(String value1, String value2) {
             addCriterion("is_end not between", value1, value2, "isEnd");
             return (Criteria) this;
         }
