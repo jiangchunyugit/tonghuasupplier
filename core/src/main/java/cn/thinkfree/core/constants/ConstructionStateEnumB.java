@@ -58,34 +58,35 @@ public enum ConstructionStateEnumB {
      */
     STATE_550(550, "确认线下签约完成(自动创建工地项目)", "待支付", "等待首付款支付", "等待首付款支付", "等待首付款支付", new Integer[]{600}),
 
+
+    /************************** *********************** * ***********************/
+
     /**
      * 消费者- 首期款支付
      */
-    STATE_600(600, "支付首期款", "待开工", "等待开工", "等待开工", "等待开工", new Integer[]{605}),
+    STATE_600(600, "支付首期款", "待开工", "等待开工", "等待开工", "等待开工"),
 
     /**
-     * 施工人员- 施工中
+     * 施工人员- 开工报告
      */
-    STATE_605(605, "开工报告", "施工中", "施工中", "施工中", "施工中", new Integer[]{610}),
+    STATE_610(610, "开工报告", "施工中", "施工中", "施工中", "施工中"),
 
     /* 阶段款支付 - 施工人员 验收 */
-    STATE_610(610, "阶段验收通过", "待支付", "等待阶段款支付", "等待阶段款支付", "等待阶段款支付", new Integer[]{615}),
+    STATE_620(620, "阶段验收通过", "待支付", "等待阶段款支付", "等待阶段款支付", "等待阶段款支付"),
 
     /* 施工中 - 消费者 支付  */
-    STATE_615(615, "支付阶段款", "施工中", "施工中", "施工中", "施工中", new Integer[]{690}),
+    STATE_615(630, "支付阶段款", "施工中", "施工中", "施工中", "施工中"),
 
     /**
      * 施工人员- 尾款支付
      */
-    STATE_690(690, "竣工验收通过", "待支付", "等待尾款支付", "等待尾款支付", "等待尾款支付",  new Integer[]{700}),
+    STATE_690(690, "竣工验收通过", "待支付", "等待尾款支付", "等待尾款支付", "等待尾款支付"),
 
-    //TODO
     /**
      * 消费者- 订单完成
      */
-    STATE_700(700, "支付尾款", "已完成", "已完成", "已完成", "已完成", new Integer[]{}),
+    STATE_700(700, "支付尾款", "已完成", "已完成", "已完成", "已完成"),
 
-    //TODO
     /**
      *  消费者 签约阶段逆向
      */
@@ -127,6 +128,16 @@ public enum ConstructionStateEnumB {
     private Integer[] nextStates = new Integer[]{};
 
     ConstructionStateEnumB(int state, String operateInfo, String stateConsumer, String statePlatform, String stateConstructionCompany, String stateConstructor,Integer[] nextStates) {
+        this.state = state;
+        this.operateInfo = operateInfo;
+        this.stateConsumer = stateConsumer;
+        this.statePlatform = statePlatform;
+        this.stateConstructionCompany = stateConstructionCompany;
+        this.stateConstructor = stateConstructor;
+        this.nextStates = nextStates;
+    }
+
+    ConstructionStateEnumB(int state, String operateInfo, String stateConsumer, String statePlatform, String stateConstructionCompany, String stateConstructor) {
         this.state = state;
         this.operateInfo = operateInfo;
         this.stateConsumer = stateConsumer;

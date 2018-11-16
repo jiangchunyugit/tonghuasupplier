@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderPayMapper;
+import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
@@ -15,7 +16,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.Max;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -33,6 +36,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     ProjectMapper projectMapper;
     @Autowired
     ConstructionOrderPayMapper constructionOrderPayMapper;
+    @Autowired
+    ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
     /**
      * 查询当前状态
@@ -150,7 +155,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 支付
      */
     @Override
-    public MyRespBundle<String> customerPay(String orderNo,String feeName,String sort,int isEnd) {
+    public MyRespBundle<String> customerPay(String orderNo, String feeName, String sort, String isEnd) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
@@ -158,19 +163,87 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         ConstructionOrderPayExample example = new ConstructionOrderPayExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
         List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(example);
-        if (list.size() > 0){
+        if (list.size() > 0) {
             ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
             constructionOrderPay.setFeeName(feeName);
             constructionOrderPay.setSort(sort);
-            constructionOrderPay.setIsEnd((short) isEnd);
-            constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay,example);
-        }else {
+            constructionOrderPay.setIsEnd(isEnd);
+            constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, example);
+        } else {
             ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
             constructionOrderPay.setOrderNo(orderNo);
             constructionOrderPay.setFeeName(feeName);
             constructionOrderPay.setSort(sort);
-            constructionOrderPay.setIsEnd((short) isEnd);
+            constructionOrderPay.setIsEnd(isEnd);
             constructionOrderPayMapper.insertSelective(constructionOrderPay);
+        }
+
+        return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
+    }
+
+    /**
+     * 施工阶段方案
+     */
+    @Override
+    public MyRespBundle<String> constructionPlan(String projectNo, String sort, String isEnd) {
+
+        if (StringUtils.isBlank(projectNo)) {
+            return RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+        }
+
+        ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
+
+        //通过projectNo查询orderNo
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
+        for (ConstructionOrder constructionOrder : constructionOrderList) {
+
+            constructionOrderPay.setOrderNo(constructionOrder.getOrderNo());
+
+            //通过sort 查找feeName
+            List<Integer> listNum = new ArrayList<>();
+            ProjectBigSchedulingExample example1 = new ProjectBigSchedulingExample();
+            example1.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo());
+            //查询施工阶段 排序
+            List<ProjectBigScheduling> schedulingList1 = projectBigSchedulingMapper.selectByExample(example1);
+            for (ProjectBigScheduling projectBigScheduling : schedulingList1) {
+                //查询是否竣工
+                listNum.add(projectBigScheduling.getSort());
+                Collections.sort(listNum);
+
+            }
+
+            //查询当前施工阶段
+            example1.createCriteria().andSortEqualTo(Integer.parseInt(sort));
+            List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example1);
+            for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
+
+                constructionOrderPay.setFeeName(projectBigScheduling.getName());
+
+                if (isEnd.equals("B")){
+                    if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())){
+                        constructionOrderPay.setIsEnd("C");
+                    }else {
+                        constructionOrderPay.setIsEnd("B");
+                    }
+                }else {
+                    constructionOrderPay.setIsEnd("A");
+                }
+
+            }
+
+            // 入库
+            ConstructionOrderPayExample exampleC = new ConstructionOrderPayExample();
+            exampleC.createCriteria().andOrderNoEqualTo(constructionOrder.getOrderNo());
+            List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(exampleC);
+            if (list.size() > 0) {
+                constructionOrderPay.setSort(sort);
+                constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, exampleC);
+            } else {
+                constructionOrderPay.setSort(sort);
+                constructionOrderPayMapper.insertSelective(constructionOrderPay);
+            }
         }
 
         return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
@@ -240,7 +313,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 消费者
      * 取消订单
      * 签约阶段逆向
-     *  查看状态
+     * 查看状态
      */
     @Override
     public Boolean customerCancelOrderState(String userId, String orderNo) {

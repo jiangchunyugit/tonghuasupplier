@@ -101,19 +101,21 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> constructionOrderPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                      @RequestParam @ApiParam(value = "支付阶段名称",required = true) String feeName,
                                                      @RequestParam @ApiParam(value = "阶段排序",required = true) String sort,
-                                                     @RequestParam @ApiParam(value = "首尾阶段",required = true) int isEnd) {
+                                                     @RequestParam @ApiParam(value = "首尾阶段",required = true) String isEnd) {
 
         return constructionStateServiceB.customerPay(orderNo,feeName,sort,isEnd);
     }
 
-/*    @ApiOperation("施工人员-开工报告")
+    @ApiOperation("施工人员-开工报告")
     @MyRespBody
-    @RequestMapping(value = "commencementReport", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<String> commencementReport(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
+    @RequestMapping(value = "constructionPlan", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<String> constructionPlan(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
+                                                 @RequestParam @ApiParam(value = "序号",required = true) String sort,
+                                                 @RequestParam @ApiParam(value = "订单方案",required = true) String isEnd) {
 
-        return constructionStateServiceB.customerPay(orderNo,2);
+        return constructionStateServiceB.constructionPlan(projectNo,sort,isEnd);
     }
-
+/*
     @ApiOperation("施工人员-阶段验收通过")
     @MyRespBody
     @RequestMapping(value = "constructionStageCheck", method = {RequestMethod.POST, RequestMethod.GET})

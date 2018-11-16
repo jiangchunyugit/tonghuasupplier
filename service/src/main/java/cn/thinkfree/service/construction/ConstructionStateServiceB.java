@@ -37,7 +37,12 @@ public interface ConstructionStateServiceB {
     /**
      * 支付
      */
-    MyRespBundle<String> customerPay(String orderNo, String feeName, String sort, int isEnd);
+    MyRespBundle<String> customerPay(String orderNo, String feeName, String sort, String isEnd);
+
+    /**
+     * 施工阶段方案
+     */
+    MyRespBundle<String> constructionPlan(String projectNo, String sort, String isEnd);
 
     /**
      * 订单完成
