@@ -222,12 +222,12 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  //是否全额支付
 	            				  if(i == 0){
 	            				  vo.setIsEnd("1");
-	            				  }else{
-	            					  if(i == jsonArray.size()-1 ){
-	            						  vo.setIsEnd("2");
-	            					  }else{
-	            						  vo.setIsEnd("0");
-	            					  }
+									  }else{
+										  if(i == jsonArray.size()-1 ){
+											  vo.setIsEnd("2");
+										  }else{
+											  vo.setIsEnd("0");
+										  }
 	            				  }
 	            				  //合同类型 订单类型：设计1、施工2、合同3
 	            				  vo.setType("1");
@@ -238,7 +238,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  //签约时间
 	            				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 	            				  //是否个性化
-	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getType());
+	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getStyleType());
 	            				  
 	            				  vo.setSort(""+(i+1));
 
