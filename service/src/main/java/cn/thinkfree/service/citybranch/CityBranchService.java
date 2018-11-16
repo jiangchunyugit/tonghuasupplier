@@ -93,5 +93,5 @@ public interface CityBranchService {
      * @param cityCode
      * @return
      */
-    List<CityBranch> cityBranchlistByCompanyCode (String cityCode);
+    List<CityBranch> cityBranchlistByCompanyCode (Integer flag,String cityCode);
 }

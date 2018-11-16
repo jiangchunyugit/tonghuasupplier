@@ -86,7 +86,22 @@ public class CityBranchController extends AbsBaseController{
     @ApiOperation(value="城市分站：分站详情（根据分公司编号进行分站联动查询）")
     public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyCode(@ApiParam("分公司编号")@RequestParam String branchCompanyCode){
 
-        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompanyCode(branchCompanyCode);
+        int flag = 1;
+        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompanyCode(flag,branchCompanyCode);
+
+        return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
+    }
+
+    /**
+     * 查询城市分站信息
+     */
+    @GetMapping(value = "/cityBranchlistByCompanyCodeSearch")
+    @MyRespBody
+    @ApiOperation(value="城市分站：分站详情（根据分公司编号进行分站联动查询）")
+    public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyCodeSearch(@ApiParam("分公司编号")@RequestParam String branchCompanyCode){
+
+        int flag = 0;
+        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompanyCode(flag,branchCompanyCode);
 
         return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
     }

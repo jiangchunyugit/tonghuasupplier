@@ -106,7 +106,22 @@ public class BranchCompanyController extends AbsBaseController{
     @ApiOperation(value="分公司站点：分站名称||选择省分站名称")
     public MyRespBundle<List<BranchCompany>> branchCompanys(){
 
-        List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys();
+        int flag = 1;
+        List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys(flag);
+
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanys);
+    }
+
+    /**
+     * 分公司
+     */
+    @RequestMapping(value = "/branchCompanySearch", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="分公司站点：查询条件")
+    public MyRespBundle<List<BranchCompany>> branchCompanySearch(){
+
+        int flag = 0;
+        List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys(flag);
 
         return sendJsonData(ResultMessage.SUCCESS, branchCompanys);
     }

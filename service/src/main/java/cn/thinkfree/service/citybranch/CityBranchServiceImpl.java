@@ -208,10 +208,14 @@ public class CityBranchServiceImpl implements CityBranchService {
     }
 
     @Override
-    public List<CityBranch> cityBranchlistByCompanyCode(String cityCode) {
+    public List<CityBranch> cityBranchlistByCompanyCode(Integer flag,String cityCode) {
         CityBranchExample cityBranchExample = new CityBranchExample();
-        cityBranchExample.createCriteria().andBranchCompanyCodeEqualTo(cityCode)
+        CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
+        criteria.andBranchCompanyCodeEqualTo(cityCode)
                 .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
+        if (flag==1) {
+            criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
+        }
         return cityBranchMapper.selectByExample(cityBranchExample);
     }
 }
