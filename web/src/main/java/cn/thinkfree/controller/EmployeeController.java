@@ -8,6 +8,7 @@ import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeApplyVo;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
@@ -270,6 +271,23 @@ public class EmployeeController extends AbsBaseController {
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryStaffByPlatform(roleCode, searchKey, city, pageSize, pageIndex);
+            return sendJsonData(ResultMessage.SUCCESS, pageVo);
+        } catch (Exception e) {
+            logger.error("e:", e);
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("根据角色查询员工信息--->运营后台用")
+    @MyRespBody
+    @RequestMapping(value = "waitDealList", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<EmployeeApplyVo>>> waitDealList(
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "companyType", required = false, value = "公司类型，1装饰，2设计") @RequestParam(name = "companyType", required = false) int companyType,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            PageVo<List<EmployeeApplyVo>> pageVo = employeeService.waitDealList(companyId, companyType, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             logger.error("e:", e);

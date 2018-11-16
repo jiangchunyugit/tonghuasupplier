@@ -57,4 +57,9 @@ public class DataDetailVo {
      */
     @ApiModelProperty(value = "项目编号")
     private String projectNo;
+    /**
+     * 点击图片更多H5地址
+     */
+    @ApiModelProperty(value = "点击图片更多H5地址")
+    private String moreUrl;
 }
