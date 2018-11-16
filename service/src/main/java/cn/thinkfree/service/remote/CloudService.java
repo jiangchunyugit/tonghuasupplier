@@ -40,7 +40,7 @@ public interface CloudService {
     /**
      * 合同上传
      *
-     * @param filepath
+     * @param fileName
      */
     public String uploadFile(String fileName);
 
@@ -110,9 +110,17 @@ public interface CloudService {
      */
     String getShangHaiPriceDetail(String designId);
     /**
+     * 获取徐洋按钮红点信息
+     * @param projectNo
+     * @param userNo
+     * @return
+     */
+    String getProjectMessageStatus(String projectNo,String userNo);
+    /**
      * 发送账号创建短信
      * @param phone
      * @param para
      * @return
      */
-    RemoteResult<String> sendCreateAccountNotice(String phone, String para);}
+    RemoteResult<String> sendCreateAccountNotice(String phone, String para);
+}

@@ -47,7 +47,7 @@ public class SyncOrderVO extends BaseModel {
      */
     private String fromOrderid;
     /**
-     * 是否是合同尾款:是1,否2
+     * 是否是合同尾款:是1,否2 
      */
     private String isEnd;
     /**
@@ -82,6 +82,10 @@ public class SyncOrderVO extends BaseModel {
      * 业主id
      */
     private String userId;
+    /**
+     * 排序
+     */
+    private  String sort;
 
     public SyncOrderVO() {
         this.actualAmount = "";
@@ -103,9 +107,13 @@ public class SyncOrderVO extends BaseModel {
         this.type = "";
         this.typeSub = "";
         this.userId = "";
+        this.sort = "";
     }
 
-    public SyncOrderVO(String actualAmount, String companyId, String companyName, String constructionStage, String consumerName, String contractType, String designId, String designUserId, String endTime, String fromOrderid, String isEnd, String projectAddr, String projectNo, String signedTime, String startTime, String styleType, String type, String typeSub, String userId) {
+    public SyncOrderVO(String actualAmount, String companyId, String companyName, String constructionStage, String consumerName, 
+    		String contractType, String designId, String designUserId, String endTime, String fromOrderid, String isEnd, 
+    		String projectAddr, String projectNo, String signedTime, String startTime, String styleType, 
+    		String type, String typeSub, String userId,String sort) {
         this.actualAmount = actualAmount;
         this.companyId = companyId;
         this.companyName = companyName;
@@ -125,6 +133,7 @@ public class SyncOrderVO extends BaseModel {
         this.type = type;
         this.typeSub = typeSub;
         this.userId = userId;
+        this.sort = sort;
     }
 
     public String getActualAmount() {
@@ -278,4 +287,12 @@ public class SyncOrderVO extends BaseModel {
     public void setUserId(String userId) {
         this.userId = userId;
     }
+
+	public String getSort() {
+		return sort;
+	}
+
+	public void setSort(String sort) {
+		this.sort = sort;
+	}
 }

@@ -19,6 +19,14 @@ public interface UserCenterService {
     List<UserMsgVo> queryUsers(List<String> userIds);
 
     /**
+     * 模糊查询业主信息
+     *
+     * @param userMsg
+     * @return
+     */
+    List<UserMsgVo> queryUserMsg(String userMsg);
+
+    /**
      * 根据用户id查询用户信息
      *
      * @param userIds
@@ -33,4 +41,14 @@ public interface UserCenterService {
      * @return
      */
     UserMsgVo queryUser(String userId);
+
+    /**
+     * 调用用户注册接口
+     *
+     * @param userName  姓名
+     * @param userPhone 手机号
+     * @param isOwner   是否是业主
+     * @return
+     */
+    UserMsgVo registerUser(String userName, String userPhone, boolean isOwner);
 }

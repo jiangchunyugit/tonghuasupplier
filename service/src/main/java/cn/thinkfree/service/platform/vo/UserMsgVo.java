@@ -18,6 +18,10 @@ public class UserMsgVo {
 
     private String userIcon;
 
+    private String staffId;
+
+    private String consumerId;
+
     public UserMsgVo() {
     }
 
@@ -84,5 +88,21 @@ public class UserMsgVo {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public void setConsumerId(String consumerId) {
+        this.consumerId = consumerId;
+    }
+
+    public String getConsumerId() {
+        return consumerId;
+    }
+
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
+    }
+
+    public String getStaffId() {
+        return staffId;
     }
 }

@@ -117,8 +117,7 @@ public class OtherServiceImpl implements OtherService {
             listVo.add(precisionPriceVo);
         }
         pageInfo.setList(listVo);
-        Page p = (Page) pageInfo2.getList();
-        pageInfo.setTotal(p.getPages());
+        pageInfo.setTotal(pageInfo2.getList().size());
         return RespData.success(pageInfo);
     }
 
