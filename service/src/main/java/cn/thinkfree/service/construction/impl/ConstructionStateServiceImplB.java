@@ -239,6 +239,36 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     /**
      * 消费者
      * 取消订单
+     * 签约阶段逆向
+     *  查看状态
+     */
+    @Override
+    public Boolean customerCancelOrderState(String userId, String orderNo) {
+        if (StringUtils.isBlank(orderNo)) {
+            return false;
+        }
+
+        if (StringUtils.isBlank(userId)) {
+            return false;
+        }
+
+        ProjectExample example = new ProjectExample();
+        example.createCriteria().andOwnerIdEqualTo(userId).andStatusEqualTo(1);
+        List<Project> list = projectMapper.selectByExample(example);
+        if (list.size() <= 0) {
+            return false;
+        }
+
+        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
+        if (ConstructionStateEnumB.STATE_600.getState() <= stageCode) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 消费者
+     * 取消订单
      * 支付未开工逆向
      */
     @Override
