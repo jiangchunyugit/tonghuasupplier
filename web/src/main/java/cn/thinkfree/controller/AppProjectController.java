@@ -26,16 +26,19 @@ public class AppProjectController {
     @Autowired
     private NewProjectService newProjectService;
 
-    @RequestMapping(value = "getAllProject", method = RequestMethod.POST)
+    @RequestMapping(value = "getAllProject/{userId}", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目列表")
-    public MyRespBundle<PageInfo<ProjectVo>> getAllProject(@ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
+    public MyRespBundle<PageInfo<ProjectVo>> getAllProject(
+            @PathVariable("userId") String userId,
+            @ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
         MyRespBundle<PageInfo<ProjectVo>> page = newProjectService.getAllProject(appProjectSEO);
         return page;
     }
 
     @RequestMapping(value = "getProjectNum", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目个数")
-    public MyRespBundle<Integer> getAllProject(@RequestParam("userId") @ApiParam(name = "userId", value = "用户编号,默认先写123456",required = true) String userId) {
+    public MyRespBundle<Integer> getAllProject(
+            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号,默认先写123456",required = true) String userId) {
         return newProjectService.getProjectNum(userId);
     }
 
