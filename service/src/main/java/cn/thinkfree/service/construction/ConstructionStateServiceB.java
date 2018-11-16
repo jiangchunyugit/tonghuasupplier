@@ -24,9 +24,15 @@ public interface ConstructionStateServiceB {
 
     /**
      * 装饰公司
-     * 1派单给服务人员 2施工报价完成 3审核完成 4合同录入 5确认线下签约完成（自动创建工地项目）
+     * 1派单给服务人员 2施工报价完成 4合同录入 5确认线下签约完成（自动创建工地项目）
      */
      MyRespBundle<String> constructionState(String orderNo, int type);
+
+    /**
+     * 装饰公司
+     *  3审核完成 (审核是否通过)
+     */
+    MyRespBundle<String> constructionStateOfExamine(String orderNo, int type,int isPass);
 
     /**
      * 支付
@@ -45,7 +51,7 @@ public interface ConstructionStateServiceB {
      * 取消订单
      * 签约阶段逆向
      */
-     MyRespBundle<String> customerCancelOrder(String orderNo);
+     MyRespBundle<String> customerCancelOrder(String userId, String orderNo, String cancelReason);
 
     /**
      * 消费者

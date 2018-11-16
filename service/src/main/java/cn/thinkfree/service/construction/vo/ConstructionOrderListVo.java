@@ -78,5 +78,8 @@ public class ConstructionOrderListVo {
     @ApiModelProperty("开工日期20")
     private Date StartDates;
 
+    @ApiModelProperty("0查看1指派")
+    private Integer isDistribution;
+
 
 }

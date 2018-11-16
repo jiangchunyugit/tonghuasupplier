@@ -54,4 +54,7 @@ public class DecorationOrderListVo {
     @ApiModelProperty("项目编号12")
     private String orderNo;
 
+    @ApiModelProperty("是否可以修改")
+    private Integer isCheck;
+
 }

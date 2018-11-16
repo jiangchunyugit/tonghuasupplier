@@ -22,4 +22,6 @@ public class ProjectQuotationCheckVo {
     private Integer checkNum;
     @ApiModelProperty(value = "项目编号")
     private String projectNo;
+    @ApiModelProperty(value = "保价员id")
+    private String approvalId;
 }
