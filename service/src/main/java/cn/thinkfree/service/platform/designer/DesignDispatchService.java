@@ -40,7 +40,7 @@ public interface DesignDispatchService {
      */
     PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
+            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
     /**
@@ -246,7 +246,7 @@ public interface DesignDispatchService {
      * @param response           返回数据对象
      */
     void designerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-                            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, String companyState,
+                            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
                             String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 
     /**

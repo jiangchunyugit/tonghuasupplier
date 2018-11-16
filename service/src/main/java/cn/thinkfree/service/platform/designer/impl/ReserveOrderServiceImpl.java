@@ -1,6 +1,7 @@
 package cn.thinkfree.service.platform.designer.impl;
 
 import cn.thinkfree.core.constants.DesignStateEnum;
+import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.mapper.DesignerOrderMapper;
 import cn.thinkfree.database.mapper.ProjectMapper;
 import cn.thinkfree.database.mapper.ReserveProjectMapper;
@@ -9,7 +10,10 @@ import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.model.ReserveProject;
 import cn.thinkfree.database.model.ReserveProjectExample;
 import cn.thinkfree.service.platform.designer.ReserveOrderService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
+import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import com.github.pagehelper.PageHelper;
@@ -20,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author xusonghui
@@ -33,6 +38,8 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     private ProjectMapper projectMapper;
     @Autowired
     private DesignerOrderMapper DesignerOrderMapper;
+    @Autowired
+    private ProjectUserService userService;
 
     /**
      * 创建设计订单
@@ -113,6 +120,8 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         }
         return reserveProjects.get(0);
     }
+    @Autowired
+    private UserCenterService userCenterService;
 
     /**
      * @param reserveNo        待转换订单编号
@@ -122,7 +131,9 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
      * @param roomNum          房屋个数
      * @param officeNum        客厅个数
      * @param toiletNum        卫生间个数
-     * @param address          装修地址
+     * @param province         省份编码
+     * @param city             城市编码
+     * @param region           区编码
      * @param addressDetail    装修详细地址
      * @param style            装修风格
      * @param area             建筑面积
@@ -132,14 +143,20 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
      * @param planEndTime      计划装修结束时间
      * @param decorationBudget 装修预算
      * @param balconyNum       阳台个数
-     * @param ownerId          业主ID
+     * @param ownerName        业主姓名
+     * @param ownerPhone       业主手机号
      * @param designerId       设计师ID
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void createProject(String reserveNo, String companyId, int source, int huxing, int roomNum, int officeNum, int toiletNum,
-                              String address, String addressDetail, int style, int area, int houseType, int peopleNum, String planStartTime,
-                              String planEndTime, int decorationBudget, int balconyNum, String ownerId, String designerId) {
+                              String province, String city, String region, String addressDetail, String style, int area, int houseType, int peopleNum, String planStartTime,
+                              String planEndTime, int decorationBudget, int balconyNum, String ownerName, String ownerPhone, String designerId) {
+        UserMsgVo msgVo = userCenterService.registerUser(ownerName, ownerPhone, true);
+        if(msgVo == null){
+            throw new RuntimeException("业主注册失败");
+        }
+        String ownerId = msgVo.getConsumerId();
         Project project = new Project();
         project.setProjectNo(OrderNoUtils.getNo("PN"));
         project.setStatus(1);
@@ -151,9 +168,11 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         project.setHouseRoom(roomNum);
         project.setHouseOffice(officeNum);
         project.setHouseToilet(toiletNum);
-        project.setAddressDetail(address);
+        project.setProvince(province);
+        project.setCity(city);
+        project.setRegion(region);
         project.setAddressDetail(addressDetail);
-        project.setStatus(style);
+        project.setStyle(style);
         project.setArea(area);
         project.setProjectNo(peopleNum + "");
         project.setPlanStartTime(DateUtils.strToDate(planStartTime));
@@ -161,8 +180,10 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         project.setDecorationBudget(decorationBudget);
         project.setOwnerId(ownerId);
         project.setBalcony(balconyNum);
+        project.setHouseType(houseType);
         projectMapper.insertSelective(project);
 		DesignerOrder DesignerOrder = new DesignerOrder();
+        DesignerOrder.setId(UUID.randomUUID().toString().replaceAll("-",""));
         DesignerOrder.setProjectNo(project.getProjectNo());
         DesignerOrder.setCreateTime(new Date());
         DesignerOrder.setOrderNo(OrderNoUtils.getNo("DO"));
@@ -171,6 +192,12 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         DesignerOrder.setStatus(1);
         DesignerOrder.setStyleType(style + "");
         DesignerOrderMapper.insertSelective(DesignerOrder);
+        if(StringUtils.isNotBlank(designerId)){
+            userService.addUserId(DesignerOrder.getOrderNo(),project.getProjectNo(),designerId, RoleFunctionEnum.DESIGN_POWER);
+        }
+        if(StringUtils.isNotBlank(ownerId)){
+            userService.addUserId(DesignerOrder.getOrderNo(),project.getProjectNo(),ownerId, RoleFunctionEnum.OWNER_POWER);
+        }
         //TODO 待创建施工订单
         if (StringUtils.isBlank(reserveNo)) {
             return;

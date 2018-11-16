@@ -1,8 +1,6 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -23,7 +21,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("支付方案编号")
     private String paySchemeNo;
 
     /**
@@ -35,7 +32,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("关联方案编号")
     private String schemeNo;
 
     /**
@@ -47,7 +43,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("工程进度名称")
     private String progressName;
 
     /**
@@ -59,7 +54,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("阶段编码")
     private String stageCode;
 
     /**
@@ -71,7 +65,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("支付超时提醒（小时）")
     private Integer payTimeOut;
 
     /**
@@ -83,7 +76,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("备注")
     private String remark;
 
     /**
@@ -95,7 +87,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("创建时间")
     private Date createTime;
 
     /**
@@ -107,7 +98,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("是否删除，1已删除，2未删除")
     private Integer deleteState;
 
     /**
@@ -119,7 +109,6 @@ public class BuildPayConfig extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty("支付百分比")
     private BigDecimal payPercentum;
 
     /**
