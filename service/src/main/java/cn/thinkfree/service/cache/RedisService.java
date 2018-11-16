@@ -9,6 +9,11 @@ public interface RedisService {
      */
     String validate(String key, String val);
 
+    /**
+     * 发送验证码
+     * @param key
+     * @return
+     */
     String saveVerificationCode(String key);
 
 

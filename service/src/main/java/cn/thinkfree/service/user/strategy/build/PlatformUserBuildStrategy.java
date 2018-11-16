@@ -9,13 +9,11 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.user.strategy.StrategyFactory;
 import cn.thinkfree.service.utils.ThreadLocalHolder;
-import net.bytebuddy.asm.Advice;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.security.Permission;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,6 +41,10 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
     SystemPermissionResourceMapper systemPermissionResourceMapper;
     @Autowired
     SystemRoleMapper systemRoleMapper;
+    @Autowired
+    BranchCompanyMapper branchCompanyMapper;
+    @Autowired
+    CityBranchMapper cityBranchMapper;
 
 
     /**
@@ -78,7 +80,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
      * @param userID
      */
     private void completionThirdUserInfo(UserVO userVO, String userID) {
-
+        //TODO 处理埃森哲数据
     }
 
     /**
@@ -134,7 +136,6 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         }
         PcUserInfo pcUserInfo = users.get(0);
         userVO.setPcUserInfo(pcUserInfo);
-
         userVO.setRelationMap(strategyFactory.getStrategy(userVO.getPcUserInfo().getLevel()).build(userVO));
 
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
@@ -145,6 +146,22 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         }
         CompanyInfo companyInfo = companyInfos.get(0);
         userVO.setCompanyInfo(companyInfo);
+
+        if(StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())){
+            BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
+            branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId())
+                                                    .andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal());
+            List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
+            userVO.setBranchCompany(branchCompanies.size() == 1 ? branchCompanies.get(0) : null);
+        }
+        if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
+            CityBranchExample cityBranchExample = new CityBranchExample();
+            cityBranchExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getCityBranchCompanyId())
+                    .andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal());
+            List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
+            userVO.setCityBranch(cityBranches.size() == 1 ? cityBranches.get(0) : null);
+        }
+
 
     }
 }

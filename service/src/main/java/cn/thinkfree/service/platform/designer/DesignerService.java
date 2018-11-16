@@ -26,6 +26,7 @@ public interface DesignerService {
      * @param area                  所在区域
      * @param level                 设计师等级
      * @param identity              设计师身份
+     * @param cardNo                身份证号
      * @param source                来源
      * @param tag                   标签
      * @param registrationTimeStart 注册时间
@@ -37,7 +38,7 @@ public interface DesignerService {
      */
     PageVo<List<DesignerMsgListVo>> queryDesigners(
             String designerName, String designerRealName, String phone, String authState,
-            String province, String city, String area, String level, String identity, String source,
+            String province, String city, String area, String level, String identity, String cardNo, String source,
             String tag, String registrationTimeStart, String registrationTimeEnd, String sort, int pageSize, int pageIndex);
 
     /**

@@ -106,7 +106,7 @@
       and pc_system_role_permission.role_id = #{id}
 
   </select>
-  <select id="selectEffectivePermission"     resultMap="BaseResultMap">
+  <select id="selectEffectivePermission"  parameterType="java.util.List"   resultMap="BaseResultMap">
     select
     <include refid="MyColumnList">
       <property name="alias" value="pc_system_permission"/>
@@ -115,7 +115,10 @@
     pc_system_permission pc_system_permission
     join pc_system_role_permission pc_system_role_permission
     on pc_system_permission.id= pc_system_role_permission.permission_id
-    WHERE pc_system_role_permission.role_id = #{roleID}
+    WHERE pc_system_role_permission.role_id in
+      <foreach collection="list" open="(" close=")" separator="," item="item">
+        #{item}
+      </foreach>
     and pc_system_permission.is_del=0
     and pc_system_permission.is_enable = 1
 

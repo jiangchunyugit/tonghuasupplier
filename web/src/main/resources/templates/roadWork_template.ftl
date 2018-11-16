@@ -71,7 +71,7 @@
     </div>
     <div>
         <h4 class="inline-block">乙方：</h4>
-        <p class="placeholder">${c02}<</p>
+        <p class="placeholder">${c02}</p>
         <span>(以下简称乙方)</span>
     </div>
     <section class='indent'>
@@ -140,7 +140,7 @@
         </tr>
     </table>
     <section class='indent'>
-        合作期限自<p class="placeholderK">${c08}</p><p class="placeholderK"></p>至<p class="placeholderK">${c09}</p>。乙方在经营过程中，乙方应本着诚信原则为甲方客户提供服务。
+        合作期限自<p class="placeholderK">${startTime?string('yyyy年MM月dd')}</p>至<p class="placeholderK">${endTime?string('yyyy年MM月dd')}</p>。乙方在经营过程中，乙方应本着诚信原则为甲方客户提供服务。
     </section>
     <section class='indent'>
         乙方指定返施工款等其他相关款项的账户信息为：
@@ -179,7 +179,7 @@
         4. 甲方为平台的客户提供含“先行赔付”在内的居然之家所有服务承诺。
     </section>
     <section class='indent'>
-        5. 甲方收取乙方与甲方客户签订的《家庭居室装饰装修施工合同》总额的<p class="placeholderK">${c16}</p>
+        5. 甲方收取乙方与甲方客户签订的《家庭居室装饰装修施工合同》总额的<p class="placeholderK">${c16}%</p>
         作为平台服务管理费。
     </section>
     <section class='indent'>
@@ -301,7 +301,7 @@
         </tr>
         <tr>
             <td>
-                <span>（2）承接施工平台合同每个合同再扣除合同额的5%，</span>
+                <span>（2）承接施工平台合同每个合同再扣除合同额的<p class="placeholderK">${c19}</p>%</span>
             </td>
         </tr>
     </table>
@@ -325,30 +325,27 @@
         2.施工款分三次返款，费用使用约定账户网银返还乙方公司，第一次在工地开工之后返款；第二次在中期验收合格后返款；第三次在客户竣工验收合格（施工完工，主材全部安装完毕）并结算尾款（施工和主材款）后返款。
     </section>
     <section class='indent'>
-        3.每月22日-25日支付一次施工款，按自然月开工、中期验收和竣工结算的客户，次月返款。
+        3.${c22}支付一次施工款，按自然月开工、中期验收和竣工结算的客户，次月返款。
     </section>
     <section class='indent'>
         4.返款比例
     </section>
     <table>
-        <tr>
-            <td>
-                <span>第一次按照工程合同额的<p class="placeholderK"></p>% 返款。</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span>第二次按照工程合同额的<p class="placeholderK"></p>% 返款。</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span>第三次按照工程合同额的<p class="placeholderK"></p>% 返款。</span>
-            </td>
-        </tr>
+
+        <#list code03 as c>
+
+            <tr>
+                <td>
+                    <span>第 <p class="placeholderK"> ${c_index+1}</p>次按照工程合同额的<p class="placeholderK">${c.costValue}</p>% 返款。(${c.costName})</span>
+                </td>
+            </tr>
+
+        </#list>
+
+
     </table>
     <section class='indent'>
-        5.乙方工程消费辅料占比不低于合同额的 %.消费辅料占比每少一个百分点甲方收取乙方直接费1个点。
+        5.乙方工程消费辅料占比不低于合同额的 <p class="placeholderK">${c21}</p>%.消费辅料占比每少一个百分点甲方收取乙方直接费1个点。
     </section>
     <section class='indent'>
         6.客户不认可的工程增减项费用，甲方不与乙方进行返款。
@@ -380,7 +377,8 @@
         2.本合同生效期间，乙方不得与其他平台公司合作。
     </section>
     <section class='indent'>
-        3.本合同有效期为<p class="placeholderK">${(c08?string("yyyy-MM-dd"))!}</p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日至<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日。本合同到期后，若甲乙双方未续签协议，乙方应对已施工未完工工程继续履行施工责任，对已完工工程履行保修责任。
+        3.本合同有效期为<p class="placeholderK">${startTime?string('yyyy')}</p>年<p class="placeholderK">${startTime?string("MM")}</p>月<p class="placeholderK">${startTime?string("dd")}</p>日
+        至<p class="placeholderK">${endTime?string("yyyy")}</p>年<p class="placeholderK">${endTime?string("MM")}</p>月<p class="placeholderK">${endTime?string("dd")}</p>日。本合同到期后，若甲乙双方未续签协议，乙方应对已施工未完工工程继续履行施工责任，对已完工工程履行保修责任。
     </section>
     <section class='indent'>
         4.本合同一式四份，甲两份，乙方两份，自双方签字盖章之日生效。

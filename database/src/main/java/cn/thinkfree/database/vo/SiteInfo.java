@@ -9,7 +9,7 @@ public class SiteInfo {
     @ApiModelProperty("分站名称")
     private String siteNm;
 
-    @ApiModelProperty("所属分公司")
+    @ApiModelProperty("作废")
     private String ebsBranchCompany;
 
     @ApiModelProperty("站点")

@@ -16,7 +16,7 @@ public class EmployeeMsgVo {
     private String roleName;
     @ApiModelProperty("用户所属角色编码")
     private String roleCode;
-    @ApiModelProperty("绑定公司状态，1未绑定，2已绑定，3实名认证审核中，4审核不通过")
+    @ApiModelProperty("员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
     private int bindCompanyState;
     @ApiModelProperty("实名认证状态，1未认证，2已认证，3实名认证审核中，4审核不通过")
     private int authState;
@@ -42,6 +42,50 @@ public class EmployeeMsgVo {
     private String countryCode;
     @ApiModelProperty("国家类型名称")
     private String countryCodeName;
+    @ApiModelProperty("性别，1男，2女")
+    private String sex;
+    @ApiModelProperty("邮箱地址")
+    private String email;
+    @ApiModelProperty("所在地")
+    private String address;
+    @ApiModelProperty("工作年限")
+    private String workTime;
+
+    public void setAuthState(int authState) {
+        this.authState = authState;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getWorkTime() {
+        return workTime;
+    }
+
+    public void setWorkTime(String workTime) {
+        this.workTime = workTime;
+    }
 
     public void setUserId(String userId) {
         this.userId = userId;
