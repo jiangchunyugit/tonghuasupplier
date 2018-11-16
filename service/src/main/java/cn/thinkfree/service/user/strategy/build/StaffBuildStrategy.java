@@ -66,7 +66,7 @@ public class StaffBuildStrategy implements UserBuildStrategy {
      */
     private void completionUserRole(UserVO userVO ) {
         CompanyUserRoleExample companyUserRoleExample = new CompanyUserRoleExample();
-        companyUserRoleExample.createCriteria().andUserIdEqualTo(userVO.getCompanyUser().getId());
+        companyUserRoleExample.createCriteria().andUserIdEqualTo(userVO.getCompanyUser().getEmpNumber());
         List<CompanyUserRole> companyUserRoles = companyUserRoleMapper.selectByExample(companyUserRoleExample);
 
         if(companyUserRoles.isEmpty() ){

@@ -238,7 +238,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  //签约时间
 	            				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 	            				  //是否个性化
-	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getType());
+//	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getType());
 	            				  
 	            				  vo.setSort(""+(i+1));
 

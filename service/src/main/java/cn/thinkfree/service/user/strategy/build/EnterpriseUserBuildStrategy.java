@@ -72,8 +72,7 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
      */
     private void completionUserRole(UserVO userVO ,String userID) {
         CompanyUserRoleExample companyUserRoleExample = new CompanyUserRoleExample();
-        // TODO 重新生成
-//        companyUserRoleExample.createCriteria().andUserIdEqualTo(userID);
+        companyUserRoleExample.createCriteria().andUserIdEqualTo(userID);
         List<CompanyUserRole> companyUserRoles = companyUserRoleMapper.selectByExample(companyUserRoleExample);
 
         if(companyUserRoles.isEmpty() ){
