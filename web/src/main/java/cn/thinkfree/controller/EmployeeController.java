@@ -92,7 +92,7 @@ public class EmployeeController extends AbsBaseController {
     @RequestMapping(value = "dealApply", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle dealApply(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
+            @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
             @ApiParam(name = "dealExplain", required = false, value = "处理结果") @RequestParam(name = "dealExplain", required = false) String dealExplain,
             @ApiParam(name = "dealUserId", required = false, value = "处理人ID") @RequestParam(name = "dealUserId", required = false) String dealUserId,
             @ApiParam(name = "roleCode", required = false, value = "该员工所属角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
@@ -235,7 +235,7 @@ public class EmployeeController extends AbsBaseController {
             if(StringUtils.isBlank(roleCode)){
                 throw new RuntimeException("没有查询到设计师编码");
             }
-            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryEmployee(companyId, roleCode, searchKey, pageSize, pageIndex);
+            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryStaffByDesignCompanyId(companyId, roleCode, searchKey, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());

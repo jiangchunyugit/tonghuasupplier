@@ -2,6 +2,7 @@ package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.vo.PrecisionPriceVo;
+import cn.thinkfree.service.construction.vo.OfferProjectVo;
 import com.github.pagehelper.PageInfo;
 
 public interface OtherService {
@@ -13,5 +14,12 @@ public interface OtherService {
      * @param pageSize
      * @return
      */
-    MyRespBundle<PageInfo<PrecisionPriceVo>> getPrecisionPriceList(String companyNo, int pageNum, int pageSize);
+    MyRespBundle<PageInfo<PrecisionPriceVo>> getOfferList(String companyNo, int pageNum, int pageSize);
+
+    /**
+     * 项目编号
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<OfferProjectVo> getProject(String projectNo);
 }

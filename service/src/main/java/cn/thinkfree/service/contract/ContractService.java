@@ -183,7 +183,7 @@ public interface ContractService {
        * @author lvqidong
        */
 
-      List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber);
+      List<ContractCostVo> queryListContractCostVoBycontractNumber(String contractNumber, String roleId);
 
 
     /**

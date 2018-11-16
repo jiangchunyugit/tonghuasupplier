@@ -251,15 +251,15 @@
         FROM
             pc_user_info pc_user_info
         JOIN pc_ebs_user pc_ebs_user on pc_user_info.third_id = pc_ebs_user."id"
-        LEFT JOIN pc_branch_company pc_branch_company on pc_branch_company."id" = pc_user_info.branch_company_id
-        LEFT JOIN pc_city_branch pc_city_branch on pc_city_branch."id" = pc_user_info.city_branch_company_id
+        LEFT JOIN pc_branch_company pc_branch_company on pc_branch_company."branch_company_code" = pc_user_info.branch_company_id
+        LEFT JOIN pc_city_branch pc_city_branch on pc_city_branch."city_branch_code" = pc_user_info.city_branch_company_id
         WHERE pc_user_info.is_delete = 0
 
         <if test="branchCompany != null and '' neq branchCompany ">
-            and pc_branch_company.id = #{branchCompany}
+            and pc_branch_company.branch_company_code = #{branchCompany}
         </if>
         <if test="cityBranch != null and '' neq cityBranch">
-            and pc_city_branch.id = #{cityBranch}
+            and pc_city_branch.city_branch_code = #{cityBranch}
         </if>
         <if test="dept != null and '' neq dept">
             and pc_branch_company.id = #{dept}

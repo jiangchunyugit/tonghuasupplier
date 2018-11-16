@@ -6,15 +6,19 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.EnterCompanyOrganizationVO;
 import cn.thinkfree.database.vo.ProjectQuotationVO;
 import cn.thinkfree.database.vo.SelectItem;
+import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.company.CompanyInfoService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import com.github.pagehelper.PageInfo;
+import com.sun.tools.javac.comp.Enter;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +41,8 @@ public class OpenApiController extends AbsBaseController {
     @Autowired
     CompanyInfoService companyInfoService;
 
+    @Autowired
+    BranchCompanyService branchCompanyService;
 
     @ApiOperation(value = "APP模糊查询公司列表",notes = "默认30条数据")
     @PostMapping("/companyInfo")
@@ -69,6 +75,32 @@ public class OpenApiController extends AbsBaseController {
             return sendJsonData(ResultMessage.FAIL, "失败");
         }
         return sendJsonData(ResultMessage.SUCCESS, sysMsg);
+    }
+
+    /**
+     * 通过公司编号获取运营平台组织架构
+     * @param companyId
+     * @return
+     */
+    @GetMapping("/getCompanyOrganizationByCompanyId")
+    @ApiOperation(value = "for徐洋---通过公司编号获取运营平台组织架构---蒋春雨",notes = "通过公司编号获取运营平台组织架构")
+    @MyRespBody
+    public MyRespBundle<EnterCompanyOrganizationVO> getCompanyOrganizationByCompanyId(@ApiParam("入驻公司id")@RequestParam String companyId){
+        EnterCompanyOrganizationVO enterCompanyOrganizationVO = branchCompanyService.getCompanyOrganizationByCompanyId(companyId);
+        return sendJsonData(ResultMessage.SUCCESS,enterCompanyOrganizationVO);
+    }
+
+    /**
+     * 通过用户id获取运营平台组织架构
+     * @param userId
+     * @return
+     */
+    @GetMapping("/getCompanyInfoByUserId")
+    @ApiOperation(value = "for徐洋---通过用户id获取运营平台组织架构---蒋春雨",notes = "通过用户id获取运营平台组织架构")
+    @MyRespBody
+    public MyRespBundle<List<CompanyInfo>> getCompanyInfoByUserId(@ApiParam("userId")@RequestParam String userId){
+        List<CompanyInfo> companyInfos = branchCompanyService.getCompanyOrganizationByUser(userId);
+        return sendJsonData(ResultMessage.SUCCESS,companyInfos);
     }
 
 }

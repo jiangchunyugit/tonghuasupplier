@@ -10,22 +10,30 @@ import com.github.pagehelper.PageInfo;
 import java.util.List;
 
 /**
- * @author jiangchunyu 城市分站service接口
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 城市分站 接口
  */
 public interface CityBranchService {
 
     /**
      * 添加城市分站
+     * @param cityBranch
+     * @return
      */
-    int addCityBranch(CityBranchVO cityBranchVO);
+    int addCityBranch(CityBranch cityBranch);
 
     /**
      * 修改城市分站信息
+     * @param cityBranch
+     * @return
      */
-    int updateCityBranch(CityBranchVO cityBranchVO);
+    int updateCityBranch(CityBranch cityBranch);
 
     /**
      * 查询城市分站信息
+     * @param cityBranchSEO
+     * @return
      */
     PageInfo<CityBranchVO> cityBranchList(CityBranchSEO cityBranchSEO);
 
@@ -36,6 +44,8 @@ public interface CityBranchService {
 
     /**
      * 根据城市分站id查询详情(带有店面信息)
+     * @param id
+     * @return
      */
     CityBranchVO cityBranchDetails(Integer id);
 
@@ -47,6 +57,8 @@ public interface CityBranchService {
 
     /**
      * 更新城市分站状态（启动，禁用，删除）
+     * @return
+     * @param cityBranch
      * @return
      */
     int updateCityBranchStatus(CityBranch cityBranch);
@@ -75,4 +87,11 @@ public interface CityBranchService {
      * @return
      */
     List<CityBranch> cityBranchlistByCompany (Integer id);
+
+    /**
+     * 通过分公司id查询全部城市分站信息
+     * @param cityCode
+     * @return
+     */
+    List<CityBranch> cityBranchlistByCompanyCode (String cityCode);
 }

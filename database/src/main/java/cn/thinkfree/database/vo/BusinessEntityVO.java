@@ -1,6 +1,7 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.BusinessEntity;
+import cn.thinkfree.database.model.StoreInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -18,6 +19,9 @@ public class BusinessEntityVO extends BusinessEntity {
     @ApiModelProperty("站点")
     private String cityBranchNm;
 
+    @ApiModelProperty("店面名称")
+    private List<StoreInfo> storeInfoList;
+
     public String getBranchCompanyNm() {
         return branchCompanyNm;
     }
@@ -34,14 +38,11 @@ public class BusinessEntityVO extends BusinessEntity {
         this.cityBranchNm = cityBranchNm;
     }
 
-    @ApiModelProperty("店面名称")
-    private List<String> StoreNm;
-
-    public List<String> getStoreNm() {
-        return StoreNm;
+    public List<StoreInfo> getStoreInfoList() {
+        return storeInfoList;
     }
 
-    public void setStoreNm(List<String> storeNm) {
-        StoreNm = storeNm;
+    public void setStoreInfoList(List<StoreInfo> storeInfoList) {
+        this.storeInfoList = storeInfoList;
     }
 }

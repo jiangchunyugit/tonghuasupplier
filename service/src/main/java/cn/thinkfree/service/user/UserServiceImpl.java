@@ -8,23 +8,30 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.token.MyCustomUserDetailToken;
 import cn.thinkfree.core.security.utils.MultipleMd5;
+import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.database.event.account.ForgetPwd;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.IndexUserReportVO;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.account.ChangeMeVO;
-import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.service.cache.RedisService;
+import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.user.strategy.StrategyFactory;
 import cn.thinkfree.service.utils.ThreadLocalHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -58,6 +65,16 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
     @Autowired
     CompanyUserMapper companyUserMapper;
 
+    @Autowired
+    RedisTemplate<String,UserVO>  redisTemplate;
+    @Autowired
+    RedisService redisService;
+    @Autowired
+    EventService eventService;
+
+    @Value("${custom.userService.useCache}")
+    Boolean useCache;
+
 
     /**
      * 汇总
@@ -89,7 +106,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         UserLoginLogExample loginLogExample = new UserLoginLogExample();
         loginLogExample.createCriteria().andUserIdEqualTo(userID);
         List<UserLoginLog> logs = userLoginLogMapper.selectByExample(loginLogExample);
-        return logs.isEmpty() ? "Y":"N";
+        return logs.size() == 1 ? "Y":"N";
     }
 
 
@@ -104,6 +121,11 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
      */
     @Override
     public UserDetails loadUserByUsername(String phone) throws UsernameNotFoundException {
+
+        Optional<SecurityUser> userVO = getUserVOFromCache(phone);
+        if(userVO.isPresent()){
+            return userVO.get();
+        }
 
         printDebugMes("用户登录:{}",phone);
         UserRegisterExample userRegisterExample = new UserRegisterExample();
@@ -128,6 +150,18 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         return userDetails;
     }
 
+    /**
+     * 取缓存用户
+     * @param phone
+     * @return
+     */
+    private Optional<SecurityUser> getUserVOFromCache(String phone) {
+        if(useCache){
+            UserVO userVO =  redisTemplate.opsForValue().get(phone);
+            return Optional.ofNullable(userVO);
+        }
+        return Optional.ofNullable(null);
+    }
 
 
     @Override
@@ -188,5 +222,67 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
             companyUserMapper.updateByExampleSelective(update,condition);
         }
         return "操作成功!";
+    }
+
+    /**
+     * 检查用户是否存在
+     *
+     * @param email
+     * @return
+     */
+    @Override
+    public Boolean  checkUserExist(String email) {
+
+        UserRegisterExample condition = new UserRegisterExample();
+        condition.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal())
+                .andPhoneEqualTo(email);
+
+        long countUser = userRegisterMapper.countByExample(condition);
+        return countUser == 1;
+    }
+
+    /**
+     * 忘记密码
+     *
+     * @param email
+     * @return
+     */
+    @Override
+    public String forgetPwd(String email) {
+        printWarnMes("忘记密码:{}",email);
+        if(checkUserExist(email)){
+            redisService.saveVerificationCode(email);
+            return "激活码已发送至邮箱";
+        }else{
+            return "用户不存在!";
+        }
+    }
+
+    /**
+     * 忘记密码 -- 重置密码
+     *
+     * @param email
+     * @param pwd
+     * @param code
+     * @return
+     */
+    @Transactional
+    @Override
+    public String updatePassWordOnForget(String email, String pwd, String code) {
+        if("验证成功!".equals(redisService.validate(email,code))){
+            UserRegisterExample condition = new UserRegisterExample();
+            condition.createCriteria().andPhoneEqualTo(email).andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal());
+            List<UserRegister> accounts = userRegisterMapper.selectByExample(condition);
+            if(accounts.size() == 1){
+                UserRegister account = accounts.get(0);
+                account.setPassword(new MultipleMd5().encode(pwd));
+                account.setUpdateTime(new Date());
+                userRegisterMapper.updateByPrimaryKey(account);
+                eventService.publish(new ForgetPwd(email));
+            }
+        }else{
+            return "验证码不正确";
+        }
+        return "操作成功";
     }
 }

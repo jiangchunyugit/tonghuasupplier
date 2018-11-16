@@ -205,32 +205,16 @@
     contract.signed_time,
     contract.contract_number,
     info.legal_name,
-    branch.province_name as site_province_name,
-    branch.province_code as site_province_code,
-    branch.city_branch_name as site_name,
-    branch.id as site_code,
-    branch.city_name as site_city_name,
-    branch.city_code as site_city_code,
+    branch.organization_id as site_code,
+    branch.organization_text as site_city_name,
     expand.contact_name,
     expand.contact_phone,
     info.deposit_money,
     info.audit_status
     FROM
     company_info info
-    LEFT JOIN (
-    SELECT
-    cityBranch.id,
-    cityBranch.city_branch_name,
-    cityBranch.province_code,
-    province.province_name,
-    cityBranch.city_code,
-    city.city_name
-    FROM
-    pc_city_branch cityBranch
-    LEFT JOIN province province ON province.province_code = cityBranch.province_code
-    LEFT JOIN city city ON city.city_code = cityBranch.city_code
-
-    ) branch ON info.site_company_id = branch.id
+    LEFT JOIN hr_organization_entity branch
+    ON info.site_company_id = branch.organization_id
     LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
     LEFT JOIN user_role_set role ON info.role_id = role.role_code
     left JOIN (
@@ -304,32 +288,19 @@
         contract.signed_time,
         contract.contract_number,
         info.legal_name,
-        branch.province_name as siteProvinceName,
-        branch.city_branch_name site_name,
-        branch.city_name as siteCityName,
+        branch.organization_id as site_code,
+        branch.organization_text as site_city_name,
         expand.contact_name,
         expand.contact_phone,
         info.deposit_money,
         info.audit_status
         FROM
         company_info info
-        LEFT JOIN (
-        SELECT
-        cityBranch.id,
-        cityBranch.city_branch_name,
-        cityBranch.province_code,
-        province.province_name,
-        cityBranch.city_code,
-        city.city_name
-        FROM
-        pc_city_branch cityBranch
-        LEFT JOIN province province ON province.province_code = cityBranch.province_code
-        LEFT JOIN city city ON city.city_code = cityBranch.city_code
-
-        ) branch ON info.site_company_id = branch.id
+        LEFT JOIN hr_organization_entity branch
+        ON info.site_company_id = branch.organization_id
         LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
         LEFT JOIN user_role_set role ON info.role_id = role.role_code
-        inner JOIN (
+        left JOIN (
         SELECT
         id,
         contract_number,
@@ -340,7 +311,8 @@
         create_time,
         company_id,
         contract_url,
-        contract_remark
+        contract_remark,
+        role_id
         FROM
         pc_contract_info
         WHERE
