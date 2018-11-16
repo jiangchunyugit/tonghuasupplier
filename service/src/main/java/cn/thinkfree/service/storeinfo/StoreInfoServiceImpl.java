@@ -29,7 +29,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
         StoreInfoExample storeInfoExample = new StoreInfoExample();
         if (StringUtils.isNotBlank(cityCode)) {
             storeInfoExample.createCriteria().andCityBranchCodeEqualTo(cityCode);
-            return storeInfoMapper.selectByExample(storeInfoExample);
+            return storeInfoMapper.selectByCityBranchCode(storeInfoExample);
         }
         return new ArrayList<>();
     }

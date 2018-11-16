@@ -82,4 +82,6 @@ public interface StoreInfoMapper {
 
      */
     int updateByPrimaryKey(StoreInfo record);
+
+    List<StoreInfo> selectByCityBranchCode(StoreInfoExample example);
 }
