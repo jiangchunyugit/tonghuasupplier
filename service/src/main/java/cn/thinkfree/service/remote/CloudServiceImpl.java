@@ -59,6 +59,8 @@ public class CloudServiceImpl implements CloudService {
     String syncContractUrl;
     @Value("${custom.cloud.syncOrderUrl}")
     String syncOrderUrl;
+    @Value("${message.messageStatusUrl}")
+    String messageStatusUrl;
 
     Integer SuccessCode = 1000;
     Integer ProjectUpFailCode = 2005;
@@ -312,11 +314,11 @@ public class CloudServiceImpl implements CloudService {
         headers.setContentType(type);
         String body = new GsonBuilder().serializeNulls().create().toJson(syncContractVO);
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
-        RemoteResult<String > result = null;
+        RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethodForJson(syncContractUrl,requestEntity);
+            result = invokeRemoteMethodForJson(syncContractUrl, requestEntity);
 //            result = invokeRemoteMethod(syncMerchantUrl,param);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -333,7 +335,7 @@ public class CloudServiceImpl implements CloudService {
         MultiValueMap<String, Object> param = initParam();
         Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
 
-        param.setAll(gson.fromJson(gson.toJson(syncOrderVO),Map.class));
+        param.setAll(gson.fromJson(gson.toJson(syncOrderVO), Map.class));
 
         RemoteResult<String> result = null;
         try {
@@ -345,8 +347,9 @@ public class CloudServiceImpl implements CloudService {
         return result;
 
     }
+
     private RemoteResult<String> invokeRemoteMethodForJson(String url, HttpEntity<String> param) {
-        String result  = restTemplate.postForObject(url, param, String.class);
+        String result = restTemplate.postForObject(url, param, String.class);
         RemoteResult remoteResult = new RemoteResult();
         System.out.println(result);
         // TODO 确认是否完成
@@ -363,11 +366,11 @@ public class CloudServiceImpl implements CloudService {
         String body = new Gson().toJson(marginContractVO);
         System.out.println(body);
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
-        RemoteResult<String > result = null;
+        RemoteResult<String> result = null;
         try {
             //todo jiangchunyu  更换路径
 //            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
@@ -376,6 +379,7 @@ public class CloudServiceImpl implements CloudService {
 
     /**
      * 获取上海报价信息
+     *
      * @param designId
      * @return
      */
@@ -383,7 +387,29 @@ public class CloudServiceImpl implements CloudService {
     public String getShangHaiPriceDetail(String designId) {
         String result = null;
         try {
-            result = invokeRemoteShangHaiPriceMethod(priceUrl+designId);
+            result = invokeRemoteShangHaiPriceMethod(priceUrl + designId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+        return result;
+    }
+
+    /**
+     * 获取徐洋按钮红点信息
+     *
+     * @param projectNo
+     * @param userNo
+     * @return
+     */
+    @Override
+    public String getProjectMessageStatus(String projectNo, String userNo) {
+        String result = null;
+        MultiValueMap<String, Object> param = initParam();
+        param.add("userNo", userNo);
+        param.add("projectNo", projectNo);
+        try {
+            result = invokeRemoteMessageMethod(messageStatusUrl, param);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
