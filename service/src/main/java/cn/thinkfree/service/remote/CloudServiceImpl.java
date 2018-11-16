@@ -12,6 +12,8 @@ import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
+
+import com.alibaba.fastjson.JSONObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -26,10 +28,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.model.SystemMessage;
 
 @Service
-public class CloudServiceImpl implements CloudService {
+public class CloudServiceImpl extends AbsLogPrinter implements CloudService {
 
     @Autowired
     RestTemplate restTemplate;
@@ -337,7 +340,7 @@ public class CloudServiceImpl implements CloudService {
         Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
 
         param.setAll(gson.fromJson(gson.toJson(syncOrderVO),Map.class));
-
+        System.out.println(JSONObject.toJSON(param));
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(syncOrderUrl, param);
