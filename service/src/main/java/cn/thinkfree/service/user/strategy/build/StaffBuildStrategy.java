@@ -2,7 +2,6 @@ package cn.thinkfree.service.user.strategy.build;
 
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.SysConstants;
-import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.UserRegisterType;
@@ -10,11 +9,8 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.EnterPriseUserVO;
 import cn.thinkfree.database.vo.UserVO;
-import cn.thinkfree.service.company.CompanyInfoService;
-import cn.thinkfree.service.companyuser.CompanyUserService;
 import cn.thinkfree.service.utils.ThreadLocalHolder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +20,12 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 /**
- * 入驻平台
- *
+ * 企业员工登录
  */
 @Component
-public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
+public class StaffBuildStrategy implements UserBuildStrategy {
 
-
-    MyLogger logger = LogUtil.getLogger(EnterpriseUserBuildStrategy.class);
+    MyLogger logger = LogUtil.getLogger(StaffBuildStrategy.class);
 
 
     @Autowired
@@ -55,12 +49,12 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
     @Override
     public SecurityUser build(String userID) {
         UserVO userVO = new EnterPriseUserVO();
-        userVO.setType(UserRegisterType.Enterprise);
+        userVO.setType(UserRegisterType.Staff);
         UserRegister userRegister = (UserRegister) ThreadLocalHolder.get();
         userVO.setUserRegister(userRegister);
         completionDetailInfo(userVO,userID);
 
-        completionUserRole(userVO,userID);
+        completionUserRole(userVO);
 
         ThreadLocalHolder.clear();
         return userVO;
@@ -70,10 +64,9 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
      * 补充用户权限
      * @param userVO
      */
-    private void completionUserRole(UserVO userVO ,String userID) {
+    private void completionUserRole(UserVO userVO ) {
         CompanyUserRoleExample companyUserRoleExample = new CompanyUserRoleExample();
-        // TODO 重新生成
-//        companyUserRoleExample.createCriteria().andUserIdEqualTo(userID);
+        companyUserRoleExample.createCriteria().andUserIdEqualTo(userVO.getCompanyUser().getId());
         List<CompanyUserRole> companyUserRoles = companyUserRoleMapper.selectByExample(companyUserRoleExample);
 
         if(companyUserRoles.isEmpty() ){
@@ -94,6 +87,7 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
         List<SystemResource> systemResources = systemResourceMapper.selectByExample(systemResourceExample);
         userVO.setResources(systemResources);
 
+
     }
 
     /**
@@ -102,9 +96,17 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
      * @param userID
      */
     private void completionDetailInfo(UserVO userVO, String userID) {
+        CompanyUserExample condition = new CompanyUserExample();
+        condition.createCriteria().andEmpNumberEqualTo(userID).andStatusEqualTo(SysConstants.YesOrNo.YES.shortVal().toString());
+        List<CompanyUser> users = companyUserMapper.selectByExample(condition);
+        if(users.isEmpty() || users.size() > 1){
+            throw  new UsernameNotFoundException("用户信息异常");
+        }
+        CompanyUser companyUser = users.get(0);
+        userVO.setCompanyUser(companyUser);
 
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdEqualTo(userID);
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyUser.getCompanyId());
         List<CompanyInfo> companyInfoList = companyInfoMapper.selectByExample(companyInfoExample);
         if(companyInfoList.isEmpty() || companyInfoList.size() > 1){
             throw  new UsernameNotFoundException("公司信息异常");
