@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
+import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
@@ -90,39 +91,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<String> queryProjectNo = queryProjectNos(userMsg);
         // 根据公司状态查询公司ID
         List<String> companyIds = queryCompanyIds(companyState);
-        ProjectExample projectExample = new ProjectExample();
-        ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
-        if (StringUtils.isBlank(companyId)) {
-            throw new RuntimeException("公司缺失");
-        }
-        if (StringUtils.isNotBlank(orderSource)) {
-            projectCriteria.andOrderSourceEqualTo(Integer.parseInt(orderSource));
-        }
-        if (StringUtils.isNotBlank(projectNo)) {
-            projectCriteria.andProjectNoLike(projectNo);
-        }
-        if (StringUtils.isNotBlank(money)) {
-            projectCriteria.andDecorationBudgetEqualTo(Integer.parseInt(money));
-        }
-        if (!queryProjectNo.isEmpty()) {
-            projectCriteria.andProjectNoIn(queryProjectNo);
-        }
-        List<Project> projects = projectMapper.selectByExample(projectExample);
-        Map<String, Project> projectMap = ReflectUtils.listToMap(projects, "projectNo");
-        List<String> projectNos = ReflectUtils.getList(projects, "projectNo");
-        OptionLogExample optionLogExample = new OptionLogExample();
-        OptionLogExample.Criteria logExampleCriteria = optionLogExample.createCriteria();
-        if (StringUtils.isNotBlank(optionUserName)) {
-            logExampleCriteria.andOptionUserNameLike(optionUserName);
-        }
-        if (StringUtils.isNotBlank(optionTimeStart)) {
-            logExampleCriteria.andOptionTimeGreaterThanOrEqualTo(DateUtils.strToDate(optionTimeStart));
-        }
-        if (StringUtils.isNotBlank(optionTimeEnd)) {
-            logExampleCriteria.andOptionTimeLessThanOrEqualTo(DateUtils.strToDate(optionTimeEnd));
-        }
-        List<OptionLog> optionLogs = optionLogMapper.selectByExample(optionLogExample);
-        List<String> orderNos = ReflectUtils.getList(optionLogs, "linkNo");
+        List<String> projectNos = getProjectNos(projectNo, orderSource, money, queryProjectNo);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
         if (StringUtils.isNotBlank(createTimeStart)) {
@@ -144,26 +113,26 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (!projectNos.isEmpty()) {
             orderExampleCriteria.andProjectNoIn(projectNos);
         }
-        if (!orderNos.isEmpty()) {
-            orderExampleCriteria.andOrderNoIn(orderNos);
-        }
         if (!companyIds.isEmpty()) {
             orderExampleCriteria.andCompanyIdIn(companyIds);
         }
         long total = DesignerOrderMapper.countByExample(orderExample);
         PageHelper.startPage(pageIndex - 1, pageSize);
-        List<DesignerOrder> DesignerOrders = DesignerOrderMapper.selectByExample(orderExample);
+        List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
         List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
+        projectNos.clear();
+        projectNos = ReflectUtils.getList(designerOrders,"projectNo");
         companyIds.clear();
-        companyIds = ReflectUtils.getList(DesignerOrders,"companyId");
+        companyIds = ReflectUtils.getList(designerOrders, "companyId");
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andProjectNoIn(projectNos);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
-        List<String> userIds = ReflectUtils.getList(orderUsers,"userId");
+        List<String> userIds = ReflectUtils.getList(orderUsers, "userId");
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(companyIds);
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
-        for (DesignerOrder designerOrder : DesignerOrders) {
+        Map<String, Project> projectMap = getProjectMap(projectNos);
+        for (DesignerOrder designerOrder : designerOrders) {
             CompanyInfo companyInfo = companyInfoMap.get(designerOrder.getCompanyId());
             Project project = projectMap.get(designerOrder.getProjectNo());
             DesignerOrderVo DesignerOrderVo = getDesignerOrderVo(companyInfo, stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
@@ -177,19 +146,123 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return pageVo;
     }
 
-    private List<String> queryProjectNos(String userMsg){
-        if(StringUtils.isBlank(userMsg)){
+    private Map<String,Project> getProjectMap(List<String> projectNos){
+        if(projectNos == null || projectNos.isEmpty()){
+            return new HashMap<>();
+        }
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoIn(projectNos);
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        return ReflectUtils.listToMap(projects,"projectNo");
+    }
+
+    @Override
+    public PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
+            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+            String styleCode, String money, String acreage, int designerOrderState, String optionUserName,
+            String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
+        if (StringUtils.isBlank(companyId)) {
+            throw new RuntimeException("公司缺失");
+        }
+        // 模糊查询用户信息
+        List<String> queryProjectNo = queryProjectNos(userMsg);
+        // 根据公司状态查询公司ID
+        List<String> projectNos = getProjectNos(projectNo, orderSource, money, queryProjectNo);
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
+        if (StringUtils.isNotBlank(createTimeStart)) {
+            orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
+        }
+        if (StringUtils.isNotBlank(createTimeEnd)) {
+            orderExampleCriteria.andCreateTimeLessThanOrEqualTo(DateUtils.strToDate(createTimeEnd));
+        }
+        if (StringUtils.isNotBlank(styleCode)) {
+            orderExampleCriteria.andStyleTypeEqualTo(styleCode);
+        }
+        if (designerOrderState > 0) {
+            orderExampleCriteria.andOrderStageIn(DesignStateEnum.queryStatesByState(designerOrderState, stateType));
+        }
+        if ("DOCL".equals(queryStage)) {
+            List<Integer> orderStates = Arrays.asList(DesignStateEnum.STATE_130.getState());
+            orderExampleCriteria.andOrderStageIn(orderStates);
+        }
+        if (!projectNos.isEmpty()) {
+            orderExampleCriteria.andProjectNoIn(projectNos);
+        }
+        orderExampleCriteria.andCompanyIdEqualTo(companyId);
+        long total = DesignerOrderMapper.countByExample(orderExample);
+        PageHelper.startPage(pageIndex - 1, pageSize);
+        List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
+        List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
+        Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
+        List<String> companyIds = new ArrayList<>();
+        companyIds.add(companyId);
+        companyIds = ReflectUtils.getList(designerOrders, "companyId");
+        projectNos.clear();
+        projectNos = ReflectUtils.getList(designerOrders,"projectNo");
+        OrderUserExample userExample = new OrderUserExample();
+        userExample.createCriteria().andProjectNoIn(projectNos);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        List<String> userIds = ReflectUtils.getList(orderUsers, "userId");
+        Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(companyIds);
+        Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
+        Map<String, Project> projectMap = getProjectMap(projectNos);
+        for (DesignerOrder designerOrder : designerOrders) {
+            CompanyInfo companyInfo = companyInfoMap.get(designerOrder.getCompanyId());
+            Project project = projectMap.get(designerOrder.getProjectNo());
+            DesignerOrderVo DesignerOrderVo = getDesignerOrderVo(companyInfo, stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
+            DesignerOrderVos.add(DesignerOrderVo);
+        }
+        PageVo<List<DesignerOrderVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(DesignerOrderVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
+    }
+
+    private List<String> getProjectNos(String projectNo, String orderSource, String money, List<String> queryProjectNo) {
+        ProjectExample projectExample = new ProjectExample();
+        ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
+        int conditionNum = 0;
+        if (StringUtils.isNotBlank(orderSource)) {
+            projectCriteria.andOrderSourceEqualTo(Integer.parseInt(orderSource));
+            conditionNum++;
+        }
+        if (StringUtils.isNotBlank(projectNo)) {
+            projectCriteria.andProjectNoLike(projectNo);
+            conditionNum++;
+        }
+        if (StringUtils.isNotBlank(money)) {
+            projectCriteria.andDecorationBudgetEqualTo(Integer.parseInt(money));
+            conditionNum++;
+        }
+        if (!queryProjectNo.isEmpty()) {
+            projectCriteria.andProjectNoIn(queryProjectNo);
+            conditionNum++;
+        }
+        if (conditionNum == 0) {
+            return new ArrayList<>();
+        }
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        Map<String, Project> projectMap = ReflectUtils.listToMap(projects, "projectNo");
+        List<String> projectNos = ReflectUtils.getList(projects, "projectNo");
+        return projectNos;
+    }
+
+    private List<String> queryProjectNos(String userMsg) {
+        if (StringUtils.isBlank(userMsg)) {
             return new ArrayList<>();
         }
         List<UserMsgVo> msgVos = userService.queryUserMsg(userMsg);
-        if(msgVos.isEmpty()){
+        if (msgVos.isEmpty()) {
             return new ArrayList<>();
         }
-        List<String> userIds = ReflectUtils.getList(msgVos,"userId");
+        List<String> userIds = ReflectUtils.getList(msgVos, "userId");
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andUserIdIn(userIds);
         List<OrderUser> userList = orderUserMapper.selectByExample(userExample);
-        return ReflectUtils.getList(userList,"projectNo");
+        return ReflectUtils.getList(userList, "projectNo");
     }
 
     /**
@@ -239,7 +312,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderVo DesignerOrderVo = new DesignerOrderVo();
         DesignerOrderVo.setProjectNo(project.getProjectNo());
         DesignerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
-        UserMsgVo ownerMsg = msgVoMap.get(project.getOwnerId());
+        String ownerId = projectUserService.queryUserIdOne(project.getProjectNo(),RoleFunctionEnum.OWNER_POWER);
+        UserMsgVo ownerMsg = msgVoMap.get(ownerId);
         if (ownerMsg != null) {
             DesignerOrderVo.setOwnerName(ownerMsg.getUserName());
             DesignerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
@@ -257,9 +331,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrderVo.setCompanyName(companyInfo.getCompanyName());
             DesignerOrderVo.setCompanyState(companyInfo.getAuditStatus());
         }
-        UserMsgVo designMsg = msgVoMap.get(project.getOwnerId());
-        if (designMsg != null) {
-            DesignerOrderVo.setDesignerName(designMsg.getRealName());
+        String designerId = projectUserService.queryUserIdOne(project.getProjectNo(),RoleFunctionEnum.DESIGN_POWER);
+        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
+        if (employeeMsg != null) {
+            DesignerOrderVo.setDesignerName(employeeMsg.getRealName());
         }
         DesignerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
         DesignerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
@@ -268,7 +343,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         logExample.createCriteria().andOptionTypeEqualTo("DO");
         logExample.setOrderByClause(" option_time desc limit 1");
         List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
-        if(!optionLogs.isEmpty()){
+        if (!optionLogs.isEmpty()) {
             OptionLog optionLog = optionLogs.get(0);
             DesignerOrderVo.setOptionUserName(optionLog.getOptionUserName());
             DesignerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
@@ -458,7 +533,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         userIds.add(designerOrder.getUserId());
         userIds.add(project.getOwnerId());
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
-        Map<String,CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
+        Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
         DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(designerOrderVo, 1, stateEnum.getStateName(stateType),
