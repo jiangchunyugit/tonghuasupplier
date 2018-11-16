@@ -319,7 +319,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
         DesignerOrderVo.setAddress(project.getAddressDetail());
-        DesignerOrderVo.setOrderSource(ProjectSource.queryByState(project.getOrderSource()).getSourceName());
+        try{
+            DesignerOrderVo.setOrderSource(ProjectSource.queryByState(project.getOrderSource()).getSourceName());
+        }catch (Exception e){
+            DesignerOrderVo.setOrderSource("未知");
+        }
         DesignerOrderVo.setCreateTime(DateUtils.dateToStr(project.getCreateTime()));
         DesignerStyleConfigVo designerStyleConfig = designerStyleConfigMap.get(DesignerOrder.getStyleType());
         if (designerStyleConfig != null) {
@@ -336,7 +340,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (employeeMsg != null) {
             DesignerOrderVo.setDesignerName(employeeMsg.getRealName());
         }
-        DesignerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
+        try{
+            DesignerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
+        }catch (Exception e){
+            DesignerOrderVo.setOrderStateName("未知");
+        }
         DesignerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
         DesignerOrderVo.setProjectMoney(project.getDecorationBudget() + "");
         OptionLogExample logExample = new OptionLogExample();
