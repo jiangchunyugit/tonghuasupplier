@@ -154,5 +154,27 @@ public class CompanyConstants{
         }
     }
 
+    /**
+     * 审核级别0初次审核1二级审核
+     */
+    public enum RoleType{
+        /**
+         * BD
+         */
+        BD("BD","角色：装饰"),
+        /**
+         * SJ
+         */
+        SJ("SJ","角色：设计");
+
+        public final String code;
+        public final String mes;
+
+        RoleType(String code ,String mes){
+            this.code = code;
+            this.mes = mes;
+        }
+    }
+
 }
 

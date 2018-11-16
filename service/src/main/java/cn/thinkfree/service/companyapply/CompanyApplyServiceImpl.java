@@ -15,6 +15,7 @@ import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
@@ -29,10 +30,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -80,6 +78,15 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Autowired
     PcAuditInfoMapper pcAuditInfoMapper;
+
+    @Autowired
+    CompanyUserRoleMapper companyUserRoleMapper;
+
+    @Autowired
+    UserRoleSetMapper userRoleSetMapper;
+
+    @Autowired
+    CompanyRoleMapper companyRoleMapper;
 
 
     /**
@@ -293,37 +300,44 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         userRegister.setUserId(companyId);
         registerLine = userRegisterMapper.insertSelective(userRegister);
 
+        String[] split = pcApplyInfoSEO.getCompanyRole().split(",");
+        List<Integer> num = new ArrayList<>();
+        for(String str: split){
+            //查询角色信息
+            UserRoleSetExample example = new UserRoleSetExample();
+            example.createCriteria().andRoleCodeEqualTo(str);
+            List<UserRoleSet> userRoleSet = userRoleSetMapper.selectByExample(example);
 
-        //TODO 插入pc_user_info？？？
-        CompanyUser companyUser = new CompanyUser();
-        companyUser.setEmpName(pcApplyInfoSEO.getContactName());
-        companyUser.setEmpNumber(pcApplyInfoSEO.getCompanyId());
-        companyUser.setIsJob(SysConstants.YesOrNo.YES.shortVal().toString());
-        companyUser.setMobile(pcApplyInfoSEO.getContactPhone());
-        companyUser.setEmail(pcApplyInfoSEO.getEmail());
-        companyUser.setCreateTime(date);
-        companyUser.setUpdateTime(date);
-        companyUser.setCompanyId(pcApplyInfoSEO.getCompanyId());
-        companyUser.setStatus(SysConstants.YesOrNo.YES.shortVal().toString());
-        int uLine = companyUserMapper.insertSelective(companyUser);
+            //插入角色表
+            CompanyRole companyRole = new CompanyRole();
+            companyRole.setCreateTime(date);
+            companyRole.setCompanyId(pcApplyInfoSEO.getCompanyRole());
+            companyRole.setRoleId(Integer.parseInt(userRoleSet.get(0).getId().toString()));
+            companyRole.setRoleName("公司角色");
+            companyRole.setRoleType(str);
+            int cLine = companyRoleMapper.insertSelective(companyRole);
+            if(cLine > 0){
+                num.add(1);
+            }
 
-        //插入pcUserINfo
-        PcUserInfo userInfo = new PcUserInfo();
-        userInfo.setId(pcApplyInfoSEO.getCompanyId());
-        userInfo.setName(pcApplyInfoSEO.getContactName());
-        userInfo.setPhone(pcApplyInfoSEO.getEmail());
-        userInfo.setCreator(SessionUserDetailsUtil.getLoginUserName());
-        userInfo.setEnabled(SysConstants.YesOrNo.YES.shortVal());
-        userInfo.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
-        userInfo.setCityBranchCompanyId(pcApplyInfoSEO.getCityBranchCompanyId());
-        userInfo.setBranchCompanyId(pcApplyInfoSEO.getBranchCompanyId());
-        userInfo.setRootCompanyId(pcApplyInfoSEO.getCompanyId());
-        userInfo.setProvince(pcApplyInfoSEO.getProvinceCode().toString());
-        userInfo.setCity(pcApplyInfoSEO.getCityCode().toString());
-        userInfo.setArea(pcApplyInfoSEO.getAreaCode().toString());
-        userInfo.setCreateTime(new Date());
-        userInfo.setEmail(pcApplyInfoSEO.getEmail());
-        int userLine = pcUserInfoMapper.insertSelective(userInfo);
+            //插入用户角色关联表
+            CompanyUserRole companyUserRole = new CompanyUserRole();
+            companyUserRole.setRoleId(companyRole.getId().toString());
+            companyUserRole.setUserId(companyId);
+            int uLine = companyUserRoleMapper.insertSelective(companyUserRole);
+            if(uLine > 0){
+                num.add(1);
+            }
+        }
+
+        CompanyUserRole companyUserRole = new CompanyUserRole();
+        if(CompanyConstants.RoleType.BD.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            companyUserRole.setRoleId(CompanyType.BD.toString());
+        }else if(CompanyConstants.RoleType.SJ.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            companyUserRole.setRoleId(CompanyType.SJ.toString());
+        }
+        companyUserRole.setUserId(companyId);
+        int uLine = companyUserRoleMapper.insertSelective(companyUserRole);
 
         //插入审批表
         String auditPersion = userVO ==null?"":userVO.getUsername();
@@ -333,7 +347,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         int line = pcAuditInfoMapper.insertSelective(record);
         //TODO：添加账号发送短信 and 发送邮件
 
-        if(line > 0 && infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0 && userLine > 0 && uLine > 0){
+        if(num.size() == split.length * 2 && line > 0 && infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0){
             map.put("code",true);
             map.put("msg","操作成功");
             return map;

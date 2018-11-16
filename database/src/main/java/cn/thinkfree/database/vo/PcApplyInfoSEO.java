@@ -26,10 +26,10 @@ public class PcApplyInfoSEO extends PcApplyInfo {
     @ApiModelProperty("站点公司id，门店id")
     private String siteCompanyId;
 
-    @ApiModelProperty(value = "分公司id")
+    @ApiModelProperty(value = "分公司编号")
     private String branchCompanyId;
 
-    @ApiModelProperty(value = "城市分站")
+    @ApiModelProperty(value = "城市分站编号")
     private String cityBranchCompanyId;
 
     public String getBranchCompanyId() {
