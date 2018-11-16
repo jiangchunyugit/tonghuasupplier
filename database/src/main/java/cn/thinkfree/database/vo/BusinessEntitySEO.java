@@ -9,11 +9,11 @@ import io.swagger.annotations.ApiModelProperty;
  */
 @ApiModel(description = "子公司管理条件")
 public class BusinessEntitySEO extends AbsPageSearchCriteria  {
-    @ApiModelProperty("埃森哲分公司id")
-    private Integer branchCompanyEbsId;
+    @ApiModelProperty("分公司编号")
+    private String branchCompanyCode;
 
-    @ApiModelProperty("埃森哲城市分站id")
-    private Integer cityBranchid;
+    @ApiModelProperty("城市分站编号")
+    private String cityBranchCode;
 
     @ApiModelProperty("启动状态")
     private Integer isEnable;
@@ -21,20 +21,20 @@ public class BusinessEntitySEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("经营主体名称")
     private String businessEntityNm;
 
-    public Integer getBranchCompanyEbsId() {
-        return branchCompanyEbsId;
+    public String getBranchCompanyCode() {
+        return branchCompanyCode;
     }
 
-    public void setBranchCompanyEbsId(Integer branchCompanyEbsId) {
-        this.branchCompanyEbsId = branchCompanyEbsId;
+    public void setBranchCompanyCode(String branchCompanyCode) {
+        this.branchCompanyCode = branchCompanyCode;
     }
 
-    public Integer getCityBranchid() {
-        return cityBranchid;
+    public String getCityBranchCode() {
+        return cityBranchCode;
     }
 
-    public void setCityBranchid(Integer cityBranchid) {
-        this.cityBranchid = cityBranchid;
+    public void setCityBranchCode(String cityBranchCode) {
+        this.cityBranchCode = cityBranchCode;
     }
 
     public Integer getIsEnable() {

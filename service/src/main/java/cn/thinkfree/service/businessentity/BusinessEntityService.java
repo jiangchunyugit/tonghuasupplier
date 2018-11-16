@@ -44,4 +44,6 @@ public interface BusinessEntityService {
      * @return
      */
     BusinessEntity businessEntityById(Integer id);
+
+    int enableBusinessEntity(BusinessEntityVO businessEntityVO);
 }

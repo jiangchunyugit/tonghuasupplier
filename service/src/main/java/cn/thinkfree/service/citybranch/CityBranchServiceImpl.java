@@ -99,6 +99,9 @@ public class CityBranchServiceImpl implements CityBranchService {
     public CityBranchVO cityBranchDetails(Integer id) {
         CityBranchVO cityBranchVO =  this.cityBranchById(id);
 
+        if (null != cityBranchVO && StringUtils.isNotBlank(cityBranchVO.getCityBranchCode())) {
+            cityBranchVO.setBusinessEntityVOS(businessEntityMapper.selectWithCityBranchCode(cityBranchVO.getCityBranchCode()));
+        }
 //        PcUserInfoExample pcUserInfoExample = new PcUserInfoExample();
 //        pcUserInfoExample.createCriteria().andCityBranchCompanyIdEqualTo(cityBranchVO.getId().toString());
 //        List<PcUserInfo> pcUserInfoList = pcUserInfoMapper.selectByExample(pcUserInfoExample);
@@ -164,7 +167,7 @@ public class CityBranchServiceImpl implements CityBranchService {
     public List<City> selectCity() {
 
         CityBranchExample cityBranchExample = new CityBranchExample();
-
+        cityBranchExample.createCriteria().andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
         List<CityBranch> cityBranchList = cityBranchMapper.selectByExample(cityBranchExample);
         if (cityBranchList.size() >0 ) {
 
@@ -201,5 +204,13 @@ public class CityBranchServiceImpl implements CityBranchService {
             return cityBranchMapper.selectByExample(cityBranchExample);
         }
         return null;
+    }
+
+    @Override
+    public List<CityBranch> cityBranchlistByCompanyCode(String cityCode) {
+        CityBranchExample cityBranchExample = new CityBranchExample();
+        cityBranchExample.createCriteria().andBranchCompanyCodeEqualTo(cityCode)
+                .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
+        return cityBranchMapper.selectByExample(cityBranchExample);
     }
 }
