@@ -12,6 +12,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
@@ -67,6 +68,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private NewOrderService orderService;
     @Autowired
     private AfInstancePdfUrlService instancePdfUrlService;
+    @Autowired
+    private ConstructionStateServiceB constructionStateServiceB;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -524,8 +527,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private void executeSuccessAction(AfInstance instance) {
         if (AfConfigs.START_REPORT.configNo.equals(instance.getConfigNo())) {
             schedulingService.projectStart(instance.getProjectNo(), instance.getScheduleSort());
+            constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "A");
         } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getProjectNo())) {
             schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
+            constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "B");
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
             // TODO 发送变更金额
 //            sendChangeMoney(instance.getProjectNo(), instance.getData(), instance.getRemark());
