@@ -159,6 +159,9 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
+        if (StringUtils.isBlank(isEnd)) {
+            return RespData.error(ResultMessage.ERROR.code, "支付首尾款");
+        }
 
         ConstructionOrderPayExample example = new ConstructionOrderPayExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
@@ -178,7 +181,21 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             constructionOrderPayMapper.insertSelective(constructionOrderPay);
         }
 
-        return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
+        switch (isEnd) {
+            case "0":
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
+                break;
+            case "1":
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState());
+                break;
+            case "2":
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
+                break;
+            default:
+                break;
+        }
+
+        return RespData.success();
     }
 
     /**
@@ -211,23 +228,23 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
                 //查询是否竣工
                 listNum.add(projectBigScheduling.getSort());
                 Collections.sort(listNum);
-
             }
 
             //查询当前施工阶段
-            example1.createCriteria().andSortEqualTo(Integer.parseInt(sort));
-            List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example1);
+            ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
+            example2.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo()).andSortEqualTo(Integer.parseInt(sort));
+            List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
             for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
 
                 constructionOrderPay.setFeeName(projectBigScheduling.getName());
-
-                if (isEnd.equals("B")){
-                    if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())){
+                // A开工报告 B阶段验收 C竣工验收
+                if (isEnd.equals("B")) {
+                    if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())) {
                         constructionOrderPay.setIsEnd("C");
-                    }else {
+                    } else {
                         constructionOrderPay.setIsEnd("B");
                     }
-                }else {
+                } else {
                     constructionOrderPay.setIsEnd("A");
                 }
 
@@ -244,30 +261,26 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
                 constructionOrderPay.setSort(sort);
                 constructionOrderPayMapper.insertSelective(constructionOrderPay);
             }
-        }
-
-        return RespData.error(ResultMessage.ERROR.code, "操作-请稍后重试");
-    }
-
-    /**
-     * 订单完成
-     * 支付尾款后
-     */
-    @Override
-    public MyRespBundle<String> orderComplete(String orderNo) {
-        if (StringUtils.isBlank(orderNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
-        }
-
-        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_700.getNextStates();
-        if (ConstructionStateEnumB.STATE_700.getState() == stageCode) {
-            if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
-                return RespData.success();
+            // 更改状态
+            switch (constructionOrderPay.getIsEnd()) {
+                case "A":
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnumB.STATE_610.getState());
+                    break;
+                case "B":
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnumB.STATE_620.getState());
+                    break;
+                case "C":
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnumB.STATE_690.getState());
+                    break;
+                default:
+                    break;
             }
         }
-        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
+
+        return RespData.success();
     }
+
+
 
     /**
      * 消费者
@@ -299,7 +312,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         ConstructionOrderExample example2 = new ConstructionOrderExample();
         example2.createCriteria().andOrderNoEqualTo(orderNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
-        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_888.getState());
+        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_710.getState());
         constructionOrder.setRemark(cancelReason);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
         if (isUpdate == 1) {
@@ -343,18 +356,21 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 消费者
      * 取消订单
      * 支付未开工逆向
+     * &审核通过
      */
     @Override
-    public MyRespBundle<String> customerCancelOrderForPay(String orderNo) {
+    public MyRespBundle<String> customerCancelOrderForPay(String orderNo,int type) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
-        if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_888.getState())) {
-            return RespData.success();
+        if (type == 1){
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_720.getState());
+        }else {
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_730.getState());
         }
 
-        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
+        return RespData.success();
     }
 
 }

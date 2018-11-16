@@ -45,12 +45,6 @@ public interface ConstructionStateServiceB {
     MyRespBundle<String> constructionPlan(String projectNo, String sort, String isEnd);
 
     /**
-     * 订单完成
-     * 支付尾款后
-     */
-    MyRespBundle<String> orderComplete(String orderNo);
-
-    /**
      * 消费者
      * 取消订单
      * 签约阶段逆向
@@ -71,5 +65,5 @@ public interface ConstructionStateServiceB {
      * 取消订单
      * 支付未开工逆向
      */
-    MyRespBundle<String> customerCancelOrderForPay(String orderNo);
+    MyRespBundle<String> customerCancelOrderForPay(String orderNo,int type);
 }
