@@ -176,5 +176,33 @@ public class CompanyConstants{
         }
     }
 
+    /**
+     * 公司分类：0：一级公司 1：二级公司（子公司，分站）2：三级公司（入驻公司）
+     */
+    public enum ClassClassify{
+        /**
+         * 一级公司
+         */
+        FIRESTCOMPANY(0,"一级公司"),
+        /**
+         * 三级公司（入驻公司）
+         */
+        JOINCOMPANY(2,"三级公司（入驻公司）"),
+        /**
+         * 二级公司（子公司，分站）
+         */
+        SECONDCOMPANY(1,"二级公司（子公司，分站）");
+
+        public final Integer code;
+        public final String mes;
+
+        ClassClassify(Integer code ,String mes){
+            this.code = code;
+            this.mes = mes;
+        }
+        public Short shortVal(){
+            return Short.valueOf(code.toString());
+        }
+    }
 }
 

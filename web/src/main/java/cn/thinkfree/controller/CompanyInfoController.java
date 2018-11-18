@@ -133,5 +133,21 @@ public class CompanyInfoController extends AbsBaseController{
 
         return sendJsonData(ResultMessage.SUCCESS, companyInfo);
     }
+
+    /**
+     * 公司详情
+     */
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType="query", name = "roleId", value = "公司类型id-设计：SJ-装饰-BD", required = true, dataType = "String"),
+    })
+    @RequestMapping(value = "/companyInfoByRole", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="根据公司类型查询公司列表")
+    public MyRespBundle<List<CompanyInfo>> companyInfoByRole(@RequestParam(value = "roleId") String roleId){
+
+        List<CompanyInfo> companyInfo = companyInfoService.companyInfoByRole(roleId);
+
+        return sendJsonData(ResultMessage.SUCCESS, companyInfo);
+    }
 }
 

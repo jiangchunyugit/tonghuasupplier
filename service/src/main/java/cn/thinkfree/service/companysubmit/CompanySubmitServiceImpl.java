@@ -366,7 +366,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 //		relationMap.add("10000000");
 //		companyListSEO.setRelationMap(relationMap);
 
-		//todo 获取分站id？？？？星级
 		if(userVO != null){
 			relationMap = new ArrayList<>();
 			relationMap = userVO.getRelationMap();

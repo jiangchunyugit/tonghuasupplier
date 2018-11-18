@@ -11,6 +11,7 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import cn.thinkfree.service.businessentity.BusinessEntityService;
 import cn.thinkfree.service.constants.CompanyConstants;
+import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -153,5 +154,16 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 //        sync.setCwgsdm();
 
         return Optional.ofNullable(sync);
+    }
+
+    @Override
+    public List<CompanyInfo> companyInfoByRole(String roleId) {
+        CompanyInfoExample example = new CompanyInfoExample();
+        example.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+                .andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
+                .andPlatformTypeEqualTo(CompanyConstants.PlatformType.NORMAL.shortVal())
+                .andRoleIdEqualTo(roleId).andCompanyClassifyEqualTo(CompanyConstants.ClassClassify.JOINCOMPANY.shortVal());
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(example);
+        return companyInfos;
     }
 }

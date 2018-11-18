@@ -52,4 +52,6 @@ public interface CompanyInfoService {
      * @return
      */
     Optional<SyncTransactionVO> selectSyncDateByCompanyID(String companyID);
+
+    List<CompanyInfo> companyInfoByRole(String roleId);
 }
