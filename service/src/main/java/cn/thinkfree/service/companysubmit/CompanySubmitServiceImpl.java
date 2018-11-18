@@ -160,25 +160,20 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			return auditInfoVO;
 		}
 
-		CompanyInfoExample example = new CompanyInfoExample();
-		example.createCriteria().andCompanyIdEqualTo(companyId);
-		List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(example);
 
-		if(companyInfos.size() > 0){
-			CompanyInfo companyInfo = companyInfos.get(0);
-			//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
-			if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(companyInfo.getAuditStatus())){
-				auditInfoVO.setCompanyAuditName("签约完成");
-			}else if(CompanyAuditStatus.FAILAUDIT.stringVal().equals(companyInfo.getAuditStatus())){
-				auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILAUDIT.mes);
+		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
+		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setCompanyAuditName("签约完成");
+		}else if(CompanyAuditStatus.FAILAUDIT.stringVal().equals(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILAUDIT.mes);
 
-			}else if(CompanyAuditStatus.FAILCHECK.stringVal().equals(companyInfo.getAuditStatus())){
-				auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILCHECK.mes);
+		}else if(CompanyAuditStatus.FAILCHECK.stringVal().equals(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILCHECK.mes);
 
-			}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(companyInfo.getAuditStatus())){
-				auditInfoVO.setCompanyAuditName("资质审核中");
-			}
+		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
+			auditInfoVO.setCompanyAuditName("资质审核中");
 		}
+
 
 		return auditInfoVO;
 	}
