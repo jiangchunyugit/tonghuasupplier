@@ -38,6 +38,7 @@ import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.CompanyPaymentMapper;
 import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
 import cn.thinkfree.database.mapper.ContractTermsChildMapper;
 import cn.thinkfree.database.mapper.ContractTermsMapper;
 import cn.thinkfree.database.mapper.MyContractInfoMapper;
@@ -50,6 +51,8 @@ import cn.thinkfree.database.model.CompanyInfoExample;
 import cn.thinkfree.database.model.CompanyPayment;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.ContractInfoExample;
+import cn.thinkfree.database.model.ContractTemplateDict;
+import cn.thinkfree.database.model.ContractTemplateDictExample;
 import cn.thinkfree.database.model.ContractTerms;
 import cn.thinkfree.database.model.ContractTermsChild;
 import cn.thinkfree.database.model.ContractTermsChildExample;
@@ -139,6 +142,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Value( "${custom.cloud.fileUpload.dir}" )
 	private String filePathDir;
 
+	@Autowired
+	ContractTemplateDictMapper contractTemplateDictMapper;
 
 
 
@@ -239,7 +244,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
             vo.setContractUrl( pdfUrl );
             vo.setSignedTime(DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
-            eventService.publish(new MarginContractEvent(contractNumber));
+            //eventService.publish(new MarginContractEvent(contractNumber));
         } else {                                                        /* 财务审核不通过 */
             companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
         }
@@ -277,10 +282,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		contractInfo.setContractStatus( "5" );
 		 cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
 		/* 修改公司表 */
-		CompanyInfo companyInfo = new CompanyInfo();
-		companyInfo.setCompanyId( companyId );
-		companyInfo.setAuditStatus(  CompanyAuditStatus.SUCCESSJOIN.stringVal()  ); /* 确认已交保证金 */
-		int flag = companyInfoMapper.updateauditStatus( companyInfo );
+		CompanyInfo record  = new CompanyInfo();
+		record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
+		record.setDepositMoney(0);//保证金设置为0
+		CompanyInfoExample companyInfo = new CompanyInfoExample();
+		companyInfo.createCriteria().andCompanyIdEqualTo( companyId ); /* 确认已交保证金 */
+
+		int flag = companyInfoMapper.updateByExampleSelective(record ,companyInfo );
 		if ( flag > 0 )
 		{
 			return true;
@@ -688,28 +696,41 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		if ( list.size() == 0 && companyInfo != null )
 		{
-			ContractTerms term_0 = new ContractTerms( "01", "居然设计家" );
-			list.add( term_0 );
+//			ContractTerms term_0 = new ContractTerms( "01", "居然设计家" );
+//			list.add( term_0 );
+			String type = companyInfo.getCompanyInfo().getRoleId().equals("SJ")?"0":"1";
+			ContractTemplateDictExample example = new ContractTemplateDictExample();
+			example.createCriteria().andTypeEqualTo(type);
+			List<ContractTemplateDict> list1 = contractTemplateDictMapper.selectByExample(example);
+			for (int i = 0; i < list1.size(); i++) {
+				ContractTerms ter = new ContractTerms();
+
+		        String str1 = list1.get(i).getCode().replace("c", "");
+				ter.setContractDictCode(str1);
+				list.add(ter);
+			}
+			
 		}
 		/* 查询结算规则 */
-		ContractTermsChildExample example = new ContractTermsChildExample();
-		example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-		List<ContractTermsChild>		childList	= contractTermsChildMapper.selectByExample( example );
-		Map<Long, List<ContractTermsChild> >	map2		= new LinkedHashMap<Long, List<ContractTermsChild> >();
-		CommonGroupUtils.listGroup2Map( childList, map2, ContractTermsChild.class, "cost_type" ); /* 根据类型分组 */
-		if ( childList != null )
-		{
-			Map<String, List<ContractTermsChild> > ma = new HashMap<>();
-			for ( int i = 0; i < childList.size(); i++ )
+			ContractTermsChildExample example = new ContractTermsChildExample();
+			example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
+			List<ContractTermsChild>		childList	= contractTermsChildMapper.selectByExample( example );
+			Map<Long, List<ContractTermsChild> >	map2		= new LinkedHashMap<Long, List<ContractTermsChild> >();
+			CommonGroupUtils.listGroup2Map( childList, map2, ContractTermsChild.class, "cost_type" ); /* 根据类型分组 */
+			if ( childList != null )
 			{
-				ContractTermsChildExample example1 = new ContractTermsChildExample();
-				example1.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber )
-				.andCostTypeEqualTo( childList.get( i ).getCostType() );
-				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample( example1 );
-				ma.put( childList.get( i ).getCostType(), childListr );
+				Map<String, List<ContractTermsChild> > ma = new HashMap<>();
+				for ( int i = 0; i < childList.size(); i++ )
+				{
+					ContractTermsChildExample example1 = new ContractTermsChildExample();
+					example1.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber )
+					.andCostTypeEqualTo( childList.get( i ).getCostType() );
+					List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample( example1 );
+					ma.put( childList.get( i ).getCostType(), childListr );
+				}
+				reMap.put( "ContractChild", ma );
 			}
-			reMap.put( "ContractChild", ma );
-		}
+		
 		/* 查询合同设置项目 */
 		reMap.put( "companyMap", companyInfo == null ? "" : companyInfo );
 		reMap.put( "ContractList", list );
