@@ -53,5 +53,10 @@ public interface CompanyInfoService {
      */
     Optional<SyncTransactionVO> selectSyncDateByCompanyID(String companyID);
 
+    /**
+     * 根据公司类型查询公司列表
+     * @param roleId
+     * @return
+     */
     List<CompanyInfo> companyInfoByRole(String roleId);
 }

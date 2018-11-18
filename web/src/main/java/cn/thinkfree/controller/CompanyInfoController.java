@@ -135,7 +135,7 @@ public class CompanyInfoController extends AbsBaseController{
     }
 
     /**
-     * 公司详情
+     * 根据公司类型查询公司列表
      */
     @ApiImplicitParams({
             @ApiImplicitParam(paramType="query", name = "roleId", value = "公司类型id-设计：SJ-装饰-BD", required = true, dataType = "String"),
