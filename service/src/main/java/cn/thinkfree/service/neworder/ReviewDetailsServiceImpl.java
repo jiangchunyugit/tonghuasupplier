@@ -471,27 +471,61 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     /**
      * 提交精准报价审核信息
      *
-     * @param checkVo
+     * @param projectNo
      * @return
      */
     @Override
-    public MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo) {
-        ProjectQuotationCheck check = BaseToVoUtils.getVo(checkVo, ProjectQuotationCheck.class);
-        if (check.getProjectNo() == null || check.getResult() == null) {
-            return RespData.error("请检查上传参数:ProjectNo=" + checkVo.getProjectNo() + ";Result=" + checkVo.getResult());
-        }
+    public MyRespBundle<String> addCheckDetail(String projectNo) {
+        ProjectQuotationCheck check = new ProjectQuotationCheck();
         check.setSubmitTime(new Date());
-        check.setApprovalTime(new Date());
+
+        check.setProjectNo(projectNo);
+        check.setSubmitTime(new Date());
         check.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         int i = checkMapper.insertSelective(check);
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("插入失败");
         }
-        if (checkVo.getResult().equals(ProjectDataStatus.INSERT_SUCCESS.getValue())) {
-            //TODO 审核通过 调取东旭接口,修改订单状态
+        return RespData.success();
+    }
+
+    @Override
+    public MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason) {
+        //审核结果(1,通过 2,不通过)
+        if (result != 1 && result != 2) {
+            return RespData.error("无效的审核状态");
         }
-        if (checkVo.getResult().equals(ProjectDataStatus.BUTTON_NO.getValue())) {
-            //TODO 审核失败 调取东旭接口,修改订单状态
+        if (result == 2 && StringUtils.isBlank(refuseReason)) {
+            return RespData.error("必须填写不通过原因");
+        }
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        if (constructionOrders.size() == 0) {
+            return RespData.error("暂无此施工订单");
+        }
+        ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        checkExample.createCriteria().andProjectNoEqualTo(projectNo).andCheckStatusEqualTo(1);
+        List<ProjectQuotationCheck> checks = checkMapper.selectByExample(checkExample);
+        if (checks.isEmpty()) {
+            return RespData.error("没有查询到提交审核记录");
+        }
+        ProjectQuotationCheck check = checks.get(0);
+        check.setResult(result);
+        //(1,审核中 2,审核失败 3,审核通过)
+        if (result == 1) {
+            check.setCheckStatus(3);
+        } else {
+            check.setCheckStatus(2);
+        }
+        check.setRefuseReason(refuseReason);
+        checkMapper.updateByPrimaryKeySelective(check);
+        if (result == 1) {
+            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+        } else if (result == 2) {
+            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
         }
         return RespData.success();
     }
@@ -597,17 +631,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 }
             }
         }
-        //TODO 调取东旭接口,修改订单状态  为 "报价完成"
         ConstructionOrderExample example = new ConstructionOrderExample();
         ConstructionOrderExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
-        if (constructionOrders.size()==0){
+        if (constructionOrders.size() == 0) {
             return RespData.error("查无此施工订单");
         }
         constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
         return RespData.success();
     }
-
 }

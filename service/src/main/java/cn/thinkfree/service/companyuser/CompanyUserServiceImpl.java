@@ -74,56 +74,44 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public boolean insertOrUpdateCompanyUser(CompanyUserVo companyUser) {
-		boolean flag = false;
-		if(companyUser == null || companyUser.getCompanyUser() == null){
-			return flag;
-		}
-		CompanyUser saveObj = companyUser.getCompanyUser();
-		try {
-			//处理头像
-			if( companyUser.getPhotoUrl() != null ){
-				saveObj.setPhotoUrl(WebFileUtil.fileCopy(TARGET, companyUser.getPhotoUrl()));
-			}
-			if(saveObj.getId() == null ){//判断主键值是否空
-					saveObj.setEmpNumber(AccountHelper.createUserNo(AccountHelper.UserType.PE.prefix));
-					saveObj.setCreateTime(new Date());
-					saveObj.setUpdateTime(new Date());
-					companyUserMapper.insertSelective(saveObj);
-					// 处理账号信息
-					UserRegister account = initAccount();
-					account.setHeadPortraits(saveObj.getPhotoUrl());
-					account.setPhone(saveObj.getEmail());
-					account.setUserId(saveObj.getEmpNumber());
-					String password = AccountHelper.createUserPassWord();
-					account.setPassword(new MultipleMd5().encode(password));
-					userRegisterMapper.insertSelective(account);
-					eventService.publish(new AccountCreate(account.getUserId(),account.getPhone(),password,saveObj.getEmpName()));
-			}else{
 
-				companyUser.getCompanyUser().setUpdateTime(new Date());
-				CompanyUserExample userem = new CompanyUserExample();
-				userem.createCriteria().andIdEqualTo(companyUser.getCompanyUser().getId());
-				companyUserMapper.updateByExampleSelective(companyUser.getCompanyUser(),userem);
-			}
-			//添加角色（删除当前用户得角色 重写插入）
-			List<String> list = companyUser.getRoleList();//角色列表
-			if(!list.isEmpty()){
-				int userId = companyUser.getCompanyUser().getId();
-				CompanyUserRoleExample examp = new CompanyUserRoleExample();
-				examp.createCriteria().andUserIdEqualTo(userId);
-				companyUserRoleMapper.deleteByExample(examp);
-				for (int i = 0; i < list.size(); i++) {
-					CompanyUserRole record = new CompanyUserRole();
-					record.setUserId(userId);
-					record.setRoleId(list.get(i));
-					companyUserRoleMapper.insertSelective(record);
-				}
-			}
-			flag = true;
-		} catch (Exception e) {
-			throw new RuntimeException("内部错误");
+		CompanyUser saveObj = companyUser.getCompanyUser();
+
+		if(saveObj.getId() == null ){//判断主键值是否空
+			saveObj.setEmpNumber(AccountHelper.createUserNo(AccountHelper.UserType.PE.prefix));
+			saveObj.setCreateTime(new Date());
+			saveObj.setUpdateTime(new Date());
+			companyUserMapper.insertSelective(saveObj);
+			// 处理账号信息
+			UserRegister account = initAccount();
+			account.setHeadPortraits(saveObj.getPhotoUrl());
+			account.setPhone(saveObj.getEmail());
+			account.setUserId(saveObj.getEmpNumber());
+			String password = AccountHelper.createUserPassWord();
+			account.setPassword(new MultipleMd5().encode(password));
+			userRegisterMapper.insertSelective(account);
+			eventService.publish(new AccountCreate(account.getUserId(),account.getPhone(),password,saveObj.getEmpName()));
+		}else{
+			companyUser.getCompanyUser().setUpdateTime(new Date());
+			CompanyUserExample userem = new CompanyUserExample();
+			userem.createCriteria().andIdEqualTo(companyUser.getCompanyUser().getId());
+			companyUserMapper.updateByExampleSelective(companyUser.getCompanyUser(),userem);
 		}
-		return flag;
+		//添加角色（删除当前用户得角色 重写插入）
+		List<String> list = companyUser.getRoleList();//角色列表
+		if(!list.isEmpty()){
+			int userId = companyUser.getCompanyUser().getId();
+			CompanyUserRoleExample examp = new CompanyUserRoleExample();
+			examp.createCriteria().andUserIdEqualTo(userId);
+			companyUserRoleMapper.deleteByExample(examp);
+			for (int i = 0; i < list.size(); i++) {
+				CompanyUserRole record = new CompanyUserRole();
+				record.setUserId(userId);
+				record.setRoleId(list.get(i));
+				companyUserRoleMapper.insertSelective(record);
+			}
+		}
+		return true;
 	}
 
 	private UserRegister initAccount() {

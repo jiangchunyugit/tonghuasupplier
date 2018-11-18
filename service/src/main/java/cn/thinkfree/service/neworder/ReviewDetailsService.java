@@ -78,10 +78,19 @@ public interface ReviewDetailsService {
 
     /**
      * 提交精准报价审核信息
-     * @param checkVo
+     * @param projectNo
      * @return
      */
-    MyRespBundle<String> addCheckDetail(ProjectQuotationCheckVo checkVo);
+    MyRespBundle<String> addCheckDetail(String projectNo);
+
+    /**
+     * 审核精准报价
+     * @param projectNo
+     * @param result
+     * @param refuseReason
+     * @return
+     */
+    MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason);
 
     /**
      * 获取上海报价信息

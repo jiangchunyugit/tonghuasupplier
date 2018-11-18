@@ -3,8 +3,7 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
@@ -15,14 +14,12 @@ import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
-import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -805,13 +802,13 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         // 订单状态 统计
         for (ConstructionOrder constructionOrder : list) {
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_600.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_600.getState()) {
                 waitStart++;
             }
-            if (stage > ConstructionStateEnum.STATE_600.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+            if (stage > ConstructionStateEnumB.STATE_600.getState() && stage < ConstructionStateEnumB.STATE_700.getState()) {
                 underConstruction++;
             }
-            if (stage == ConstructionStateEnum.STATE_700.getState()) {
+            if (stage == ConstructionStateEnumB.STATE_700.getState()) {
                 completed++;
             }
         }

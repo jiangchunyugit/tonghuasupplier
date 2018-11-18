@@ -3,10 +3,12 @@ package cn.thinkfree.controller;
 
 import java.util.Map;
 
+import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
 
+import cn.thinkfree.service.constants.CompanyConstants;
 import com.github.pagehelper.PageInfo;
 
 import org.springframework.beans.factory.annotation.Autowired;

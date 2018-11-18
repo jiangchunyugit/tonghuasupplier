@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 分公司（省分站）
+ */
 @RestController
 @RequestMapping(value = "/branchCompany")
 @Api(value = "前端使用---分公司站点---蒋春雨",description = "前端使用---分公司站点---蒋春雨")
@@ -46,7 +51,7 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/updateBranchCompany", method = RequestMethod.POST)
     @MyRespBody
-    @ApiOperation(value="分公司站点：编辑分站")
+    @ApiOperation(value="分公司站点：编辑分站(id不可为空)")
     public MyRespBundle<String> updateBranchCompany(@ApiParam("分公司信息")BranchCompany branchCompany){
         BeanValidator.validate(branchCompany, Severitys.Update.class);
         int line = branchCompanyService.updateBranchCompany(branchCompany);
@@ -87,10 +92,10 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/branchCompanyById", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="分公司站点：编辑回写")
-    public MyRespBundle<BranchCompanyVO> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
+    public MyRespBundle<BranchCompany> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
-        BranchCompanyVO branchCompanyVO = branchCompanyService.branchCompanyById(id);
-        return sendJsonData(ResultMessage.SUCCESS, branchCompanyVO);
+        BranchCompany branchCompany = branchCompanyService.branchCompanyById(id);
+        return sendJsonData(ResultMessage.SUCCESS, branchCompany);
     }
 
     /**
@@ -179,6 +184,15 @@ public class BranchCompanyController extends AbsBaseController{
     public MyRespBundle<SiteInfo> siteInfo() {
 
         return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getSiteInfo());
+    }
+
+    @GetMapping(value = "/branchCompanyByIdList")
+    @MyRespBody
+    @ApiOperation(value = "(权限)运营平台---站点信息")
+    public MyRespBundle<List<BranchCompany>> branchCompanyByIdList(@ApiParam("省code")@RequestParam String provinceCode,
+                                                                   @ApiParam("市code")@RequestParam String cityCode) {
+
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList(provinceCode,cityCode));
     }
 }
 

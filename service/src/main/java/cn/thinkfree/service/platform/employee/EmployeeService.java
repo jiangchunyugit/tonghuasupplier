@@ -1,6 +1,7 @@
 package cn.thinkfree.service.platform.employee;
 
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.platform.vo.EmployeeApplyVo;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.RoleVo;
@@ -130,9 +131,40 @@ public interface EmployeeService {
 
     /**
      * 编辑角色编码
+     *
      * @param roleCode
      * @param roleName
      * @param remark
      */
     void editRole(String roleCode, String roleName, String remark);
+
+    /**
+     * 查询设计师列表
+     *
+     * @param companyId
+     * @param roleCode
+     * @return
+     */
+    List<EmployeeMsg> queryDesignerByCompanyId(String companyId, String roleCode);
+
+    /**
+     * 查询设计师公司的员工
+     *
+     * @param companyId 公司ID
+     * @param roleCode  角色编码
+     * @param searchKey 搜索关键字
+     * @param pageSize  每页多少条
+     * @param pageIndex 第几页
+     * @return
+     */
+    PageVo<List<EmployeeMsgVo>> queryStaffByDesignCompanyId(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex);
+
+    /**
+     * 查询员工申请记录表
+     *
+     * @param companyId   公司ID
+     * @param companyType 公司类型，1装饰，2设计
+     * @return
+     */
+    PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex);
 }

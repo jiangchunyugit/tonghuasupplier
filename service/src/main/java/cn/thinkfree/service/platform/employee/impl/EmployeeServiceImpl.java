@@ -8,10 +8,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
-import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
-import cn.thinkfree.service.platform.vo.PageVo;
-import cn.thinkfree.service.platform.vo.RoleVo;
-import cn.thinkfree.service.platform.vo.UserMsgVo;
+import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
@@ -472,6 +469,104 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public List<EmployeeMsg> queryDesignerByCompanyId(String companyId, String roleCode) {
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode).andAuthStateEqualTo(2).andEmployeeStateEqualTo(1);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        return employeeMsgs;
+    }
+
+    @Override
+    public PageVo<List<EmployeeMsgVo>> queryStaffByDesignCompanyId(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
+        if (StringUtils.isBlank(roleCode)) {
+            throw new RuntimeException("角色编码不能为空");
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        criteria.andCompanyIdEqualTo(companyId);
+        if (StringUtils.isNotBlank(searchKey)) {
+            msgExample.or().andUserIdLike("%" + searchKey + "%");
+            msgExample.or().andRealNameLike("%" + searchKey + "%");
+            msgExample.or().andCertificateLike("%" + searchKey + "%");
+        }
+        long total = employeeMsgMapper.countByExample(msgExample);
+        PageHelper.startPage(pageIndex, pageSize);
+        List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
+        if (msgs.isEmpty()) {
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> userIds = ReflectUtils.getList(msgs, "userId");
+        List<RoleVo> roleVos = queryRoles(null,-1,10000,1).getData();
+        Map<String, String> roleMap = ReflectUtils.listToMap(roleVos, "roleCode", "roleName");
+        Map<String, UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
+        List<BasicsData> cardTypes = basicsService.cardTypes();
+        List<BasicsData> countryCodes = basicsService.countryType();
+        Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
+        Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
+        List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        for (EmployeeMsg employeeMsg : msgs) {
+            UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
+            String roleName = roleMap.get(employeeMsg.getRoleCode());
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            employeeMsgVos.add(msgVo);
+        }
+        PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(employeeMsgVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
+    }
+
+    @Override
+    public PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex) {
+        EmployeeApplyLogExample applyLogExample = new EmployeeApplyLogExample();
+        applyLogExample.createCriteria().andCompanyIdEqualTo(companyId);
+        long total = applyLogMapper.countByExample(applyLogExample);
+        PageHelper.startPage(pageIndex, pageSize);
+        List<EmployeeApplyLog> employeeApplyLogs = applyLogMapper.selectByExample(applyLogExample);
+        if(employeeApplyLogs.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> userIds = ReflectUtils.getList(employeeApplyLogs,"userId");
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdIn(userIds);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        Map<String,EmployeeMsg> employeeMsgMap = ReflectUtils.listToMap(employeeMsgs,"userId");
+        List<EmployeeApplyVo> applyVos = new ArrayList<>();
+        for(EmployeeApplyLog applyLog : employeeApplyLogs){
+            EmployeeApplyVo applyVo = new EmployeeApplyVo();
+            EmployeeMsg employeeMsg = employeeMsgMap.get(applyLog.getUserId());
+            if(employeeMsg != null){
+                applyVo.setRealName(employeeMsg.getRealName());
+                applyVo.setCardNo(employeeMsg.getCertificate());
+            }
+            applyVo.setApplyTime(getTime(applyLog.getApplyTime()));
+            applyVo.setDealTime(getTime(applyLog.getApplyTime()));
+            applyVo.setDealState(applyLog.getDealState());
+            applyVo.setDealUserName(applyLog.getDealUserId());
+            applyVo.setUserId(applyLog.getUserId());
+            applyVos.add(applyVo);
+        }
+        PageVo<List<EmployeeApplyVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(applyVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
+    }
+
+    private long getTime(Date date){
+        if(date == null){
+            return -1;
+        }
+        return date.getTime();
+    }
+
+    @Override
     public PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司ID不能为空");
@@ -550,6 +645,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         msgVo.setCertificatePhotoUrl3(employeeMsg.getCertificatePhotoUrl3());
         msgVo.setCertificateType(employeeMsg.getCertificateType() + "");
         msgVo.setCountryCode(employeeMsg.getCountryCode());
+        msgVo.setSex(employeeMsg.getSex() + "");
+        msgVo.setEmail(employeeMsg.getEmail());
+        msgVo.setWorkTime(employeeMsg.getWorkingTime() + "");
+        msgVo.setAddress(employeeMsg.getProvince() + "," + employeeMsg.getCity());
         if(cardType != null){
             msgVo.setCertificateTypeName(cardType.getBasicsName());
         }

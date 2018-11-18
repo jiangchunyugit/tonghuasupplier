@@ -1,5 +1,7 @@
 package cn.thinkfree.database.event;
 
+import cn.thinkfree.core.event.AbsBaseEvent;
+import cn.thinkfree.core.event.BaseEvent;
 import cn.thinkfree.core.model.AbsMyEvent;
 
 /**
@@ -7,7 +9,7 @@ import cn.thinkfree.core.model.AbsMyEvent;
  * @date 20181109
  * @Description 合同相关数据事件
  */
-public class MarginContractEvent extends AbsMyEvent {
+public class MarginContractEvent extends AbsBaseEvent {
 
     private String source;
     /**

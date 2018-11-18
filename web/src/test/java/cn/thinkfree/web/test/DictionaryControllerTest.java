@@ -82,4 +82,17 @@ public class DictionaryControllerTest extends AbsControllerTest {
         Assert.assertNotNull(rsb.getData());
     }
 
+    @Test
+    public void thirdPeople() throws Exception {
+        String rs = mvc.perform(get("/dictionary/third/people").param("condition","测试").with(user(userVO)))
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+
+        Type type = new TypeToken<MyRespBundle<List<HrPeopleEntity>>>() {}.getType();
+        MyRespBundle<HrPeopleEntity> rsb = gson.fromJson(rs, type);
+        Assert.assertNotNull(rsb.getData());
+
+    }
 }

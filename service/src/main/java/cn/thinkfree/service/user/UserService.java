@@ -37,4 +37,27 @@ public interface UserService {
      * @return
      */
     String updateUserInfo(ChangeMeVO changeMeVO);
+
+    /**
+     * 检查用户是否存在
+     * @param email
+     * @return
+     */
+    Boolean checkUserExist(String email);
+
+    /**
+     * 忘记密码
+     * @param email
+     * @return
+     */
+    String forgetPwd(String email);
+
+    /**
+     * 忘记密码 -- 重置密码
+     * @param email
+     * @param pwd
+     * @param code
+     * @return
+     */
+    String updatePassWordOnForget(String email, String pwd, String code);
 }

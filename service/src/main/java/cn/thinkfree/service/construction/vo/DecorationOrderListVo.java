@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -34,7 +35,7 @@ public class DecorationOrderListVo {
     private String phone;
 
     @ApiModelProperty("预约报价6")
-    private String appointmentPrice;
+    private BigDecimal appointmentPrice;
 
     @ApiModelProperty("订单状态7")
     private String orderStage;

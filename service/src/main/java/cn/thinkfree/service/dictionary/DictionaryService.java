@@ -76,4 +76,10 @@ public interface DictionaryService {
      */
     List<CompanyInfo> findCompanyByCode(Integer provinceCode, Integer cityCode);
 
+    /**
+     * 根据条件查询埃森哲数据
+     * @param condition
+     * @return
+     */
+    List<HrPeopleEntity> findThirdPeople(String condition);
 }

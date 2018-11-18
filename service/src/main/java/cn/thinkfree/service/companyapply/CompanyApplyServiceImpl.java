@@ -12,6 +12,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.cache.RedisService;
+import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.event.EventService;
@@ -428,6 +429,18 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         }
         PageHelper.startPage(companyApplySEO.getPage(), companyApplySEO.getRows());
         List<PcApplyInfoVo> pcUserInfoVos = pcApplyInfoMapper.findByParam(companyApplySEO);
+        //如果是资质变更，查询公司id，和合同编号
+        CompanyListSEO companyListSEO = new CompanyListSEO();
+        //解决方式不好吧！！！
+        for(PcApplyInfoVo pc: pcUserInfoVos){
+            if(!CompanyApply.applyThinkType.APPLYJOIN.code.toString().equals(pc.getApplyThingType())){
+                companyListSEO.setCompanyId(pc.getCompanyId());
+                List<CompanyListVo> companyListVoList = companyInfoMapper.list(companyListSEO);
+                if(companyListVoList.size() > 0){
+                    pc.setContractNumber(companyListVoList.get(0).getContractNumber());
+                }
+            }
+        }
         PageInfo<PcApplyInfoVo> pageInfo = new PageInfo<>(pcUserInfoVos);
         return pageInfo;
     }

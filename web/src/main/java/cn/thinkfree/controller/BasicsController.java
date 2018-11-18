@@ -3,6 +3,7 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BasicsData;
 import cn.thinkfree.service.platform.basics.BasicsService;
@@ -129,5 +130,11 @@ public class BasicsController extends AbsBaseController {
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
+    }
+    @ApiOperation("查询所有订单来源")
+    @MyRespBody
+    @RequestMapping(value = "projectSource", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<Map<String,Object>>> projectSource(){
+        return sendJsonData(ResultMessage.SUCCESS,ProjectSource.queryAllState());
     }
 }

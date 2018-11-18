@@ -1,6 +1,8 @@
 package cn.thinkfree.database.model;
 
 import cn.thinkfree.core.model.BaseModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
@@ -20,6 +22,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("员工ID")
     private String userId;
 
     /**
@@ -53,6 +56,7 @@ public class EmployeeMsg extends BaseModel {
      *
      * @mbg.generated
      */
+    @ApiModelProperty("真实姓名")
     private String realName;
 
     /**
