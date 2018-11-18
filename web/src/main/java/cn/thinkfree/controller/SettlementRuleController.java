@@ -174,13 +174,28 @@ public class SettlementRuleController extends AbsBaseController {
      * 获取费用名称
      * @return
      */
-    @ApiOperation(value = "费用名称Map", notes = "费用名称Map （key字符串 value字符串）")
+    @ApiOperation(value = "代收款费用名称Map", notes = "费用名称Map （key字符串 value字符串）")
     @GetMapping("/getCostNames")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
     public MyRespBundle<Map<String,String>> getCostNames(){
 
         Map<String, String>  result= settlementRuleService.getCostNames();
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 获取费用名称
+     * @return
+     */
+    @ApiOperation(value = "平台费用名称Map", notes = "费用名称Map （key字符串 value字符串）")
+    @GetMapping("/getPlateformCostNames")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
+    public MyRespBundle<Map<String,String>> getPlateformCostNames(){
+
+        Map<String, String>  result= settlementRuleService.getPlateFormNames();
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
