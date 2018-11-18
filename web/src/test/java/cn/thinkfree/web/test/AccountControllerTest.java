@@ -368,7 +368,7 @@ public class AccountControllerTest extends AbsControllerTest {
 
         String rs = mvc.perform(get("/account/info")
                 .with(user(userVO))
-                .param("name","临时")
+//                .param("name","临时")
         )
                 .andExpect(status().isOk())
                 .andDo(print())         //打印出请求和相应的内容

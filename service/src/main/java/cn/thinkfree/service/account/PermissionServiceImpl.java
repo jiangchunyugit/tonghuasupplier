@@ -72,6 +72,7 @@ public class PermissionServiceImpl extends AbsLogPrinter implements PermissionSe
         }
 
         PageHelper.startPage(permissionSEO.getPage(),permissionSEO.getRows());
+        systemPermissionExample.setOrderByClause( " pc_system_permission.create_time desc");
         List<SystemPermission> page = systemPermissionMapper.selectPermissionVO(systemPermissionExample);
         return new PageInfo<>(page);
     }

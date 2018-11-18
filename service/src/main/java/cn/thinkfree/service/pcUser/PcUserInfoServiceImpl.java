@@ -562,12 +562,12 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         // 处理用户级别
         if(accountVO.getBranchCompany() != null  && accountVO.getCityBranch() != null){
             userInfo.setLevel(UserLevel.Company_City.shortVal());
-            userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getId().toString());
-            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getId().toString());
+            userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getCityBranchCode());
+            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getBranchCompanyCode());
             userInfo.setProvince(accountVO.getCityBranch().getProvinceCode().toString());
             userInfo.setCity(accountVO.getCityBranch().getCityCode().toString());
         }else if(accountVO.getBranchCompany() != null &&  accountVO.getCityBranch() == null){
-            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getId().toString());
+            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getBranchCompanyCode());
             userInfo.setProvince(accountVO.getBranchCompany().getProvinceCode().toString());
             userInfo.setLevel(UserLevel.Company_Province.shortVal());
             userInfo.setCityBranchCompanyId(null);

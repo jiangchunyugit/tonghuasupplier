@@ -275,6 +275,8 @@
         <if test="state != null and '' neq state">
             and pc_user_info.enabled = #{state}
         </if>
+
+        order by pc_user_info.create_time desc
     </select>
     <!-- 查询账号详情  -->
     <select id="selectAccountVOByID">

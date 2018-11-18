@@ -75,6 +75,7 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
         }
 
         PageHelper.startPage(systemRoleSEO.getPage(),systemRoleSEO.getRows());
+        systemRoleExample.setOrderByClause(" pc_system_role.create_time desc");
         List<SystemRole> page = systemRoleMapper.selectSystemRoleVOByExample(systemRoleExample);
         return new PageInfo<>(page);
     }

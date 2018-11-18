@@ -418,7 +418,7 @@ public class AccountController extends AbsBaseController {
     @PostMapping("/info/{id}")
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "修改账号信息")
-    public MyRespBundle<String> editInfo(@PathVariable String id, AccountVO accountVO){
+    public MyRespBundle<String> editInfo(@PathVariable String id,@RequestBody AccountVO accountVO){
         String mes = pcUserInfoService.updateAccountVO(id,accountVO);
         return sendSuccessMessage(mes);
     }
