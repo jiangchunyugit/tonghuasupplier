@@ -190,7 +190,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		//查询companyInfoExpand表：
 		CompanyInfoExpandVO companyInfoExpandVO = companyInfoExpandMapper.findCompanyExpand(companyId);
 
-		if(companyInfoExpandVO != null && StringUtils.isNotBlank(companyInfoExpandVO.getCompanyType().toString())) {
+		if(companyInfoExpandVO != null &&  companyInfoExpandVO.getCompanyType()!= null) {
 			companySubmitVo.setCompanyTypeName(CompanyConstants.CompanySharesType.getDesc(companyInfoExpandVO.getCompanyType().intValue()));
 		}
 		companySubmitVo.setCompanyInfoExpand(companyInfoExpandVO);

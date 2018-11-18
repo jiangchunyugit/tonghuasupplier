@@ -64,6 +64,7 @@ public class UserRoleSetServiceImpl extends AbsLogPrinter implements UserRoleSet
         PageHelper.startPage(userRoleSetSEO.getPage(),userRoleSetSEO.getRows());
         UserRoleSetExample userRoleSetExample = new UserRoleSetExample();
         userRoleSetExample.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal().intValue());
+        userRoleSetExample.setOrderByClause(" create_time desc");
         List<UserRoleSet> list = userRoleSetMapper.selectByExample(userRoleSetExample);
         return new PageInfo<>(list);
     }
