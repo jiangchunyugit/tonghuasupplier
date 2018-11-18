@@ -144,7 +144,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         if(rule != null){
 
-            Map<String, String> paream = getCostNames();
+            Map<String, String> paream = convertNames();
             //翻译
             if (StringUtils.isNotBlank(rule.getFeeName())) {
                 rule.setFeeName(paream.get(rule.getFeeName()));
@@ -185,8 +185,43 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         Map<String, String> map = new HashMap<>();
         map.put("1", "设计费");
         map.put("2", "施工费");
-        map.put("3", "物业费");
-        map.put("4", "平台费");
+        return map;
+    }
+
+    private Map<String, String> convertNames () {
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "设计费");
+        map.put("2", "施工费");
+        map.put("3", "施工平台管理服务费");
+        map.put("4", "设计平台管理服务费");
+        map.put("5", "产品服务费");
+        map.put("6", "租金");
+        map.put("7", "物业费");
+        map.put("8", "其他收费");
+        map.put("9", "材料推荐服务费");
+        map.put("10", "施工服务费");
+        map.put("11", "先行赔付款");
+        map.put("12", "客户赔偿款");
+        map.put("13", "合同保证金");
+        map.put("14", "入驻费");
+        return map;
+    }
+
+    @Override
+    public Map<String, String> getPlateFormNames () {
+        Map<String, String> map = new HashMap<>();
+        map.put("3", "施工平台管理服务费");
+        map.put("4", "设计平台管理服务费");
+        map.put("5", "产品服务费");
+        map.put("6", "租金");
+        map.put("7", "物业费");
+        map.put("8", "其他收费");
+        map.put("9", "材料推荐服务费");
+        map.put("10", "施工服务费");
+        map.put("11", "先行赔付款");
+        map.put("12", "客户赔偿款");
+        map.put("13", "合同保证金");
+        map.put("14", "入驻费");
         return map;
     }
 
