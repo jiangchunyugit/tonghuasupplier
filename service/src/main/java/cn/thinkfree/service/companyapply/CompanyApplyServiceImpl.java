@@ -25,6 +25,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.catalina.manager.util.SessionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,10 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Autowired
     CompanyRoleMapper companyRoleMapper;
+
+    @Value("${depositMoney:-500000}")
+    private String depositMoney;
+
 
 
     /**
@@ -243,6 +248,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCreateTime(date);
         companyInfo.setUpdateTime(date);
+        companyInfo.setDepositMoney(Integer.parseInt(depositMoney));
         companyInfo.setCompanyId(companyId);
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
