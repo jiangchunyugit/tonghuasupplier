@@ -317,7 +317,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             //插入角色表
             CompanyRole companyRole = new CompanyRole();
             companyRole.setCreateTime(date);
-            companyRole.setCompanyId(pcApplyInfoSEO.getCompanyRole());
+            companyRole.setCompanyId(pcApplyInfoSEO.getCompanyId());
             companyRole.setRoleId(Integer.parseInt(userRoleSet.get(0).getId().toString()));
             companyRole.setRoleName("公司角色");
             companyRole.setRoleType(str);
@@ -335,15 +335,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
                 num.add(1);
             }
         }
-
-        CompanyUserRole companyUserRole = new CompanyUserRole();
-        if(CompanyConstants.RoleType.BD.code.equals(pcApplyInfoSEO.getCompanyRole())){
-            companyUserRole.setRoleId(CompanyType.BD.toString());
-        }else if(CompanyConstants.RoleType.SJ.code.equals(pcApplyInfoSEO.getCompanyRole())){
-            companyUserRole.setRoleId(CompanyType.SJ.toString());
-        }
-        companyUserRole.setUserId(companyId);
-        int uLine = companyUserRoleMapper.insertSelective(companyUserRole);
 
         //插入审批表
         String auditPersion = userVO ==null?"":userVO.getUsername();
