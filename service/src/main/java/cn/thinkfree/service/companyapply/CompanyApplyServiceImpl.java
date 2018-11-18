@@ -25,6 +25,7 @@ import com.github.pagehelper.PageInfo;
 import org.apache.catalina.manager.util.SessionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -87,6 +88,10 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Autowired
     CompanyRoleMapper companyRoleMapper;
+
+    @Value("${depositMoney:-500000}")
+    private String depositMoney;
+
 
 
     /**
@@ -243,6 +248,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCreateTime(date);
         companyInfo.setUpdateTime(date);
+        companyInfo.setDepositMoney(Integer.parseInt(depositMoney));
         companyInfo.setCompanyId(companyId);
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
@@ -311,7 +317,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             //插入角色表
             CompanyRole companyRole = new CompanyRole();
             companyRole.setCreateTime(date);
-            companyRole.setCompanyId(pcApplyInfoSEO.getCompanyRole());
+            companyRole.setCompanyId(pcApplyInfoSEO.getCompanyId());
             companyRole.setRoleId(Integer.parseInt(userRoleSet.get(0).getId().toString()));
             companyRole.setRoleName("公司角色");
             companyRole.setRoleType(str);
@@ -329,15 +335,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
                 num.add(1);
             }
         }
-
-        CompanyUserRole companyUserRole = new CompanyUserRole();
-        if(CompanyConstants.RoleType.BD.code.equals(pcApplyInfoSEO.getCompanyRole())){
-            companyUserRole.setRoleId(CompanyType.BD.toString());
-        }else if(CompanyConstants.RoleType.SJ.code.equals(pcApplyInfoSEO.getCompanyRole())){
-            companyUserRole.setRoleId(CompanyType.SJ.toString());
-        }
-        companyUserRole.setUserId(companyId);
-        int uLine = companyUserRoleMapper.insertSelective(companyUserRole);
 
         //插入审批表
         String auditPersion = userVO ==null?"":userVO.getUsername();
