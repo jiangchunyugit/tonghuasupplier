@@ -92,7 +92,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
             ContractInfo contractInfo = contractInfos.get(0);
             marginContractVO.setOptionType(type);
             marginContractVO.setContractNumber(contractInfo.getContractNumber());
-            marginContractVO.setTransactionDate(contractInfo.getSignedTime().toString());
+            marginContractVO.setTransactionDate(String.valueOf(contractInfo.getSignedTime()));
             marginContractVO.setVendorId(contractInfo.getCompanyId());
 
             // 公司信息
