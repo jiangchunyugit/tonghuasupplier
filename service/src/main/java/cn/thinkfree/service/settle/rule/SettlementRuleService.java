@@ -70,6 +70,8 @@ public interface SettlementRuleService {
      */
     Map<String,String> getCostNames();
 
+    Map<String,String> getPlateFormNames();
+
     /**
      * 导出数据 （根据数据导出）
      * @return null
