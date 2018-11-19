@@ -2,7 +2,7 @@ package cn.thinkfree.service.construction;
 
 
 import cn.thinkfree.core.base.AbsBaseController;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.City;
@@ -71,23 +71,6 @@ public class CommonService extends AbsBaseController {
         constructionOrder.setOrderStage(stateCode);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
         if (isUpdate == 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 查询操作角色 是否有变更状态的权限
-     */
-    public boolean queryIsState(String projectNo, String role) {
-        ConstructionOrderExample example = new ConstructionOrderExample();
-        example.createCriteria().andProjectNoEqualTo(projectNo);
-        List<ConstructionOrder> constructionOrderList = constructionOrderMapper.selectByExample(example);
-        if (constructionOrderList.isEmpty()) {
-            return false;
-        }
-        if (ConstructionStateEnum.queryIsState(role)) {
             return true;
         } else {
             return false;

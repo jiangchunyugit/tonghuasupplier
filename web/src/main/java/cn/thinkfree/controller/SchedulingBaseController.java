@@ -40,8 +40,6 @@ public class SchedulingBaseController extends AbsBaseController {
     @RequestMapping(value = "listShangHai", method = RequestMethod.POST)
     @ApiOperation(value = "基础施工项同步(同步)-同步上海基础小排期")
     public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listShangHai( @ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo) {
-//        PageInfo<ProjectSmallSchedulingVO> pageInfo = schedulingBaseService.listShangHai(schedulingSeo);
-//        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
         String result = schedulingBaseService.listShangHai(schedulingSeo);
         return sendSuccessMessage(result);
     }

@@ -211,8 +211,12 @@ public class DesignerMsgVo {
         return workingTime;
     }
 
-    public void setWorkingTime(int workingTime) {
-        this.workingTime = workingTime;
+    public void setWorkingTime(Integer workingTime) {
+        if(workingTime == null){
+            this.workingTime = -1;
+        }else{
+            this.workingTime = workingTime;
+        }
     }
 
     public String getVolumeRoomMoney() {

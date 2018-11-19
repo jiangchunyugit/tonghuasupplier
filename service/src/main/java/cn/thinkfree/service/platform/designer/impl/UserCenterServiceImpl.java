@@ -103,7 +103,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         Map<String,String> params = new HashMap<>();
         params.put("userName",userName);
         params.put("userPhone",userPhone);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(registerC, HttpUtils.mapToParams(params));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(registerC, HttpUtils.mapToParams(params));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -170,7 +170,7 @@ public class UserCenterServiceImpl implements UserCenterService {
             throw new RuntimeException(jsonObject.getString("msg"));
         }
         JSONArray jsonArray = jsonObject.getJSONArray("data");
-        if(jsonArray.size() < 0){
+        if(jsonArray.size() < 1){
             return null;
         }
         JSONObject msgObj = jsonArray.getJSONObject(0);

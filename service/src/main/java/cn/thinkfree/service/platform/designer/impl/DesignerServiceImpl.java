@@ -170,21 +170,14 @@ public class DesignerServiceImpl implements DesignerService {
         if (StringUtils.isEmpty(userId)) {
             throw new RuntimeException("设计师ID不能为空");
         }
-        DesignerMsgExample msgExample = new DesignerMsgExample();
-        msgExample.createCriteria().andUserIdEqualTo(userId);
-        List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
-        if (designerMsgs.isEmpty()) {
-            throw new RuntimeException("无效的设计是ID");
-        }
-        DesignerMsg designerMsg = designerMsgs.get(0);
+        DesignerMsg designerMsg = getDesignerMsg(userId);
         UserMsgVo userMsgVo = userCenterService.queryUser(userId);
         DesignerMsgVo designerMsgVo = new DesignerMsgVo();
         designerMsgVo.setRealName(userMsgVo.getRealName());
         designerMsgVo.setUserName(userMsgVo.getUserName());
         designerMsgVo.setPhone(userMsgVo.getUserPhone());
-        designerMsgVo.setSource(designerMsg.getSource());
         EmployeeMsg employeeMsg = queryEmployeeMsgByUserId(userId);
-        if(employeeMsg != null){
+        if (employeeMsg != null) {
             designerMsgVo.setSex(employeeMsg.getSex());
             designerMsgVo.setBirthday(DateUtils.dateToStr(employeeMsg.getBindDate()));
             designerMsgVo.setEmail(employeeMsg.getEmail());
@@ -195,28 +188,41 @@ public class DesignerServiceImpl implements DesignerService {
             designerMsgVo.setAuthState(employeeMsg.getAuthState());
             designerMsgVo.setRegisterTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
         }
-        String designTag = "云设计家设计师";
-        if (designerMsg.getTag() == null || designerMsg.getTag() != 1) {
-            designTag = "待定";
+        if (designerMsg != null) {
+            designerMsgVo.setSource(designerMsg.getSource());
+            String designTag = "云设计家设计师";
+            if (designerMsg.getTag() == null || designerMsg.getTag() != 1) {
+                designTag = "待定";
+            }
+            designerMsgVo.setDesignTag(designTag);
+            if (designerMsg.getLevel() != null) {
+                designerMsgVo.setLevel(designerMsg.getLevel().intValue());
+            }
+            String identity = "社会化设计师";
+            if (designerMsg.getIdentity() == null || designerMsg.getIdentity() != 1) {
+                identity = "待定";
+            }
+            designerMsgVo.setVolumeRoomMoney(designerMsg.getVolumeRoomMoney().toString());
+            designerMsgVo.setDesignerMoneyLow(designerMsg.getDesignerMoneyLow().toString());
+            designerMsgVo.setDesignerMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
+            designerMsgVo.setIdentity(identity);
         }
-        designerMsgVo.setDesignTag(designTag);
-        if(designerMsg.getLevel() != null){
-            designerMsgVo.setLevel(designerMsg.getLevel().intValue());
-        }
-        String identity = "社会化设计师";
-        if (designerMsg.getIdentity() == null || designerMsg.getIdentity() != 1) {
-            identity = "待定";
-        }
-        designerMsgVo.setIdentity(identity);
         designerMsgVo.setCompanyName(employeeMsg.getCompanyId());
         designerMsgVo.setWorkingTime(employeeMsg.getWorkingTime());
-        designerMsgVo.setVolumeRoomMoney(designerMsg.getVolumeRoomMoney().toString());
-        designerMsgVo.setDesignerMoneyLow(designerMsg.getDesignerMoneyLow().toString());
-        designerMsgVo.setDesignerMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
         List<DesignerStyleConfigVo> styleConfigs = queryDesignerStyleByUserId(userId);
         List<String> styles = ReflectUtils.getList(styleConfigs, "styleName");
         designerMsgVo.setDesignerStyles(styles);
         return designerMsgVo;
+    }
+
+    private DesignerMsg getDesignerMsg(String userId) {
+        DesignerMsgExample msgExample = new DesignerMsgExample();
+        msgExample.createCriteria().andUserIdEqualTo(userId);
+        List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
+        if (designerMsgs.isEmpty()) {
+            return null;
+        }
+        return designerMsgs.get(0);
     }
 
     /**

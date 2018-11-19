@@ -3,15 +3,13 @@ package cn.thinkfree.service.newproject;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.OrderDetailsVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
-import cn.thinkfree.service.constants.UserStatus;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -20,8 +18,6 @@ import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
-import com.alibaba.druid.sql.visitor.functions.If;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -123,12 +119,12 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectVo.setOwner(owner);
             //添加进度展示
-            if (project.getStage() > ConstructionStateEnum.STATE_500.getState()) {
+            if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
                 projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-                projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
-                projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
+                projectVo.setStageConsumerName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(4));
+                projectVo.setStageDesignName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(3));
             } else {
                 projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
                 projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -194,12 +190,12 @@ public class NewProjectServiceImpl implements NewProjectService {
         Project project = projects.get(0);
         ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
         //添加进度展示
-        if (project.getStage() > ConstructionStateEnum.STATE_500.getState()) {
+        if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-            projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
-            projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
+            projectVo.setStageDesignName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(3));
+            projectVo.setStageConsumerName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(4));
         } else {
             projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
             projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -216,10 +212,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         String dataString = JSONObject.toJSONString(data);
         OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
-        projectVo.setProjectDynamic(Integer.getInteger(operationVo.getProjectDynamic()));
-        projectVo.setProjectOrder(Integer.getInteger(operationVo.getProjectOrder()));
-        projectVo.setProjectData(Integer.getInteger(operationVo.getProjectData()));
-        projectVo.setProjectInvoice(Integer.getInteger(operationVo.getInvoice()));
+        projectVo.setProjectDynamic(Integer.valueOf(operationVo.getProjectDynamic()));
+        projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()));
+        projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()));
+        projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()));
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
@@ -255,11 +251,16 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
-        //TODO 组合导航内容和颜色,正式时询问这些内容赋值规则
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtn(designerOrder.getOrderNo()));
 //        designerOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
-        //TODO 添加是否可以取消,正式时询问这些内容赋值规则
-        designerOrderDetailVo.setCancle(true);
+        List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
+        for (DesignStateEnum designStateEnum : allCancelState){
+            if (project.getStage().equals(designStateEnum.getState())){
+                designerOrderDetailVo.setCancle(true);
+            }else {
+                designerOrderDetailVo.setCancle(false);
+            }
+        }
         //存放订单类型
         designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
@@ -284,7 +285,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //组合施工订单
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
-        List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+        List<Map<String, Object>> maps1 = ConstructionStateEnumB.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
         for (Map<String, Object> map : maps1) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort((Integer) map.get("key"));

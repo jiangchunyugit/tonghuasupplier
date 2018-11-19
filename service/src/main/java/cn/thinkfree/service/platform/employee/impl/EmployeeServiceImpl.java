@@ -546,7 +546,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
             applyVo.setApplyTime(getTime(applyLog.getApplyTime()));
             applyVo.setDealTime(getTime(applyLog.getApplyTime()));
-            applyVo.setDealState(applyVo.getDealState());
+            applyVo.setDealState(applyLog.getDealState());
             applyVo.setDealUserName(applyLog.getDealUserId());
             applyVo.setUserId(applyLog.getUserId());
             applyVos.add(applyVo);

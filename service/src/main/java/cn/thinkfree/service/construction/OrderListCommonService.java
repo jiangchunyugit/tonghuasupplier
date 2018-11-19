@@ -2,19 +2,15 @@ package cn.thinkfree.service.construction;
 
 
 import cn.thinkfree.core.base.RespData;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
-import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
-import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.alibaba.fastjson.JSONObject;
@@ -187,7 +183,7 @@ public class OrderListCommonService {
             // 施工阶段
             constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
             // 订单状态
-            constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 1));
+            constructionOrderListVo.setOrderStage(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 1));
             // 是否可以派单 （运营平台指派装饰公司）
             if (constructionOrder.getOrderStage().equals(ConstructionStateEnumB.STATE_500.getState())) {
                 constructionOrderListVo.setIsDistribution(1);
@@ -342,7 +338,7 @@ public class OrderListCommonService {
             // 施工阶段
             constructionOrderListVo.setConstructionProgress(getContstructionStage(constructionOrder.getConstructionStage()));
             // 订单状态
-            constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
+            constructionOrderListVo.setOrderStage(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 2));
             //延期天数 开工时间 竣工时间
             for (ProjectScheduling projectScheduling : list4) {
                 if (constructionOrder.getProjectNo().equals(projectScheduling.getProjectNo())) {
@@ -492,11 +488,11 @@ public class OrderListCommonService {
             }
             // 订单状态
             if (!StringUtils.isBlank(orderStage)) {
-                if (!orderStage.equals(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2))) {
+                if (!orderStage.equals(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 2))) {
                     continue conOut;
                 }
             }
-            decorationOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
+            decorationOrderListVo.setOrderStage(ConstructionStateEnumB.getNowStateInfo(constructionOrder.getOrderStage(), 2));
             // 项目经理
             for (Map<String, String> OrderUser : list2) {
                 if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {
