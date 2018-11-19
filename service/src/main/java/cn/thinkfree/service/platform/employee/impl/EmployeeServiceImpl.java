@@ -390,7 +390,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeMsg.setAuthState(1);
             employeeMsg.setEmployeeApplyState(-1);
         }
-        UserMsgVo userMsgVo = userCenterService.queryUser(userId);
+        UserMsgVo userMsgVo = userCenterService.queryUserMsgOne("CM",userId);
         UserRoleSet userRoleSet = queryRoleSet(employeeMsg.getRoleCode());
         List<BasicsData> cardTypes = basicsService.cardTypes();
         List<BasicsData> countryCodes = basicsService.countryType();

@@ -59,9 +59,6 @@ public class UserCenterServiceImpl implements UserCenterService {
                 employeeMsgMap.put(userId, employeeMsg);
             }
         }
-//        for(String userId : userIds){
-//            userMsgVos.add(new UserMsgVo(userId, "测试", "13241229115", "CC", "测试", ""));
-//        }
         userMsgVos.addAll(queryUserMsg(employeeMsgMap));
         return userMsgVos;
     }
@@ -75,15 +72,15 @@ public class UserCenterServiceImpl implements UserCenterService {
         return userMsgVo;
     }
 
-    public static void main(String[] args) {
-        Map<String, EmployeeMsg> employeeMsgMap = new HashMap<>();
-        EmployeeMsg employeeMsg = new EmployeeMsg();
-        employeeMsg.setUserId("CC18103016014600009");
-        employeeMsg.setRoleCode("CC");
-        employeeMsgMap.put("CC18103016014600009", employeeMsg);
-        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
-        System.out.println(JSONObject.toJSONString(userMsgVos));
-    }
+//    public static void main(String[] args) {
+//        Map<String, EmployeeMsg> employeeMsgMap = new HashMap<>();
+//        EmployeeMsg employeeMsg = new EmployeeMsg();
+//        employeeMsg.setUserId("CC18103016014600009");
+//        employeeMsg.setRoleCode("CC");
+//        employeeMsgMap.put("CC18103016014600009", employeeMsg);
+//        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
+//        System.out.println(JSONObject.toJSONString(userMsgVos));
+//    }
 
     /**
      * 注册用户
@@ -183,7 +180,22 @@ public class UserCenterServiceImpl implements UserCenterService {
         return msgVo;
     }
 
-    private static List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
+    @Override
+    public UserMsgVo queryUserMsgOne(String roleCode,String userId) {
+        Map<String,EmployeeMsg> employeeMsgMap = new HashMap<>();
+        EmployeeMsg employeeMsg = new EmployeeMsg();
+        employeeMsg.setUserId(userId);
+        employeeMsg.setRoleCode(roleCode);
+        employeeMsgMap.put(userId,employeeMsg);
+        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
+        if(userMsgVos != null || !userMsgVos.isEmpty()){
+            return userMsgVos.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterUrl, getParams(employeeMsgMap));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
