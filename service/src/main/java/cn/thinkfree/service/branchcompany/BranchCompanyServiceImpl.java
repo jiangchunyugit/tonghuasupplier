@@ -182,6 +182,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
         // 分公司查询条件
         BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
         BranchCompanyExample.Criteria criteria = branchCompanyExample.createCriteria();
+        criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         if (userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null) {
             // 权限等级
