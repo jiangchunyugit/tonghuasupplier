@@ -21,6 +21,16 @@ public class EmployeeApplyVo {
     private String dealUserName;
     @ApiModelProperty("用户ID")
     private String userId;
+    @ApiModelProperty("实名认证状态，1未认证，2已认证，3实名认证审核中，4审核不通过")
+    private int authState;
+    @ApiModelProperty("员工手机号")
+    private String phone;
+    @ApiModelProperty("证件照1")
+    private String certificatePhotoUrl1;
+    @ApiModelProperty("证件照2")
+    private String certificatePhotoUrl2;
+    @ApiModelProperty("证件照3")
+    private String certificatePhotoUrl3;
 
     public void setUserId(String userId) {
         this.userId = userId;
@@ -76,5 +86,45 @@ public class EmployeeApplyVo {
 
     public void setDealUserName(String dealUserName) {
         this.dealUserName = dealUserName;
+    }
+
+    public void setAuthState(int authState) {
+        this.authState = authState;
+    }
+
+    public int getAuthState() {
+        return authState;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getCertificatePhotoUrl1() {
+        return certificatePhotoUrl1;
+    }
+
+    public void setCertificatePhotoUrl1(String certificatePhotoUrl1) {
+        this.certificatePhotoUrl1 = certificatePhotoUrl1;
+    }
+
+    public String getCertificatePhotoUrl2() {
+        return certificatePhotoUrl2;
+    }
+
+    public void setCertificatePhotoUrl2(String certificatePhotoUrl2) {
+        this.certificatePhotoUrl2 = certificatePhotoUrl2;
+    }
+
+    public String getCertificatePhotoUrl3() {
+        return certificatePhotoUrl3;
+    }
+
+    public void setCertificatePhotoUrl3(String certificatePhotoUrl3) {
+        this.certificatePhotoUrl3 = certificatePhotoUrl3;
     }
 }

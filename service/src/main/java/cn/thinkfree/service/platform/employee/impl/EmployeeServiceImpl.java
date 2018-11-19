@@ -536,13 +536,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         msgExample.createCriteria().andUserIdIn(userIds);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         Map<String,EmployeeMsg> employeeMsgMap = ReflectUtils.listToMap(employeeMsgs,"userId");
+        Map<String,UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
         List<EmployeeApplyVo> applyVos = new ArrayList<>();
         for(EmployeeApplyLog applyLog : employeeApplyLogs){
             EmployeeApplyVo applyVo = new EmployeeApplyVo();
             EmployeeMsg employeeMsg = employeeMsgMap.get(applyLog.getUserId());
+            UserMsgVo userMsgVo = userMsgVoMap.get(applyLog.getUserId());
             if(employeeMsg != null){
                 applyVo.setRealName(employeeMsg.getRealName());
                 applyVo.setCardNo(employeeMsg.getCertificate());
+                applyVo.setAuthState(employeeMsg.getAuthState());
+                applyVo.setCertificatePhotoUrl1(employeeMsg.getCertificatePhotoUrl1());
+                applyVo.setCertificatePhotoUrl2(employeeMsg.getCertificatePhotoUrl2());
+                applyVo.setCertificatePhotoUrl3(employeeMsg.getCertificatePhotoUrl3());
+            }
+            if(userMsgVo != null){
+                applyVo.setPhone(userMsgVo.getUserPhone());
             }
             applyVo.setApplyTime(getTime(applyLog.getApplyTime()));
             applyVo.setDealTime(getTime(applyLog.getApplyTime()));
