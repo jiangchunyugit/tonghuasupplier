@@ -156,7 +156,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         }
         if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
             CityBranchExample cityBranchExample = new CityBranchExample();
-            cityBranchExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getCityBranchCompanyId())
+            cityBranchExample.createCriteria().andCityBranchCodeEqualTo(pcUserInfo.getCityBranchCompanyId())
                     .andIsDelEqualTo(SysConstants.YesOrNoSp.NO.shortVal());
             List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
             userVO.setCityBranch(cityBranches.size() == 1 ? cityBranches.get(0) : null);
