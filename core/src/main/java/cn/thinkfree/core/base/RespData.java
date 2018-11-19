@@ -65,6 +65,21 @@ public class RespData {
     }
 
     /**
+     * 成功
+     *
+     * @param data
+     * @param <T>
+     * @return
+     */
+    public static <T> MyRespBundle<T> success(T data, String msg) {
+        MyRespBundle<T> myRespBundle = new MyRespBundle<>();
+        myRespBundle.setCode(ErrorCode.OK.getCode());
+        myRespBundle.setData(data);
+        myRespBundle.setMessage(msg);
+        return myRespBundle;
+    }
+
+    /**
      * 失败
      *
      * @param code
