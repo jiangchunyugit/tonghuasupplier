@@ -122,7 +122,7 @@ public class ReserveOrderController extends AbsBaseController {
     @RequestMapping(value = "createProject", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle createProject(
             @ApiParam(name = "reserveNo", required = false, value = "待订单编号") @RequestParam(name = "reserveNo", required = false) String reserveNo,
-            @ApiParam(name = "companyId", required = false, value = "所属公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "companyId", required = false, value = "设计公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "source", required = false, value = "订单来源") @RequestParam(name = "source", required = false) int source,
             @ApiParam(name = "huxing", required = false, value = "房屋户型") @RequestParam(name = "huxing", required = false) int huxing,
             @ApiParam(name = "roomNum", required = false, value = "房屋个数") @RequestParam(name = "roomNum", required = false) int roomNum,

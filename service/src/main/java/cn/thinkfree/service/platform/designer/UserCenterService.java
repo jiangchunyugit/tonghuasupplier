@@ -1,5 +1,6 @@
 package cn.thinkfree.service.platform.designer;
 
+import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 
 import java.util.List;
@@ -51,4 +52,19 @@ public interface UserCenterService {
      * @return
      */
     UserMsgVo registerUser(String userName, String userPhone, boolean isOwner);
+
+    /**
+     * 查询用户信息
+     * @param employeeMsgMap
+     * @return
+     */
+    List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap);
+
+    /**
+     *
+     * @param roleCode
+     * @param userId
+     * @return
+     */
+    UserMsgVo queryUserMsgOne(String roleCode,String userId);
 }

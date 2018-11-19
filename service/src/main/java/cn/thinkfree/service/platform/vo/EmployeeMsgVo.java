@@ -16,7 +16,7 @@ public class EmployeeMsgVo {
     private String roleName;
     @ApiModelProperty("用户所属角色编码")
     private String roleCode;
-    @ApiModelProperty("员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
+    @ApiModelProperty("员工申请状态，1未绑定，2已绑定，3审核中，4审核不通过")
     private int bindCompanyState;
     @ApiModelProperty("实名认证状态，1未认证，2已认证，3实名认证审核中，4审核不通过")
     private int authState;

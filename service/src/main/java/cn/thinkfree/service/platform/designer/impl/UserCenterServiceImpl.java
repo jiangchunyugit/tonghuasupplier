@@ -27,10 +27,6 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
     /**
-     * 用户中心地址接口
-     */
-    private static String userCenterUrl = "http://10.240.10.169:5000/userapi/other/api/user/getListUserByUserIds";
-    /**
      * 查询用户的用户中心地址
      */
     private static String queryUserUrl = "http://10.240.10.169:5000/userapi/other/getUserMsgByPhone";
@@ -46,6 +42,10 @@ public class UserCenterServiceImpl implements UserCenterService {
      * 根据手机号和姓名模糊查询用户信息
      */
     private static String queryUserByPhoneAndName = "http://10.240.10.169:5000/userapi/other/getUserMsgByPhoneAndName";
+    /**
+     * 根据用户ID查询用户信息
+     */
+    private static String getAllUserByIds = "http://10.240.10.169:5000/userapi/other/api/getListUserByUserIds";
 
     @Override
     public List<UserMsgVo> queryUsers(List<String> userIds) {
@@ -59,9 +59,6 @@ public class UserCenterServiceImpl implements UserCenterService {
                 employeeMsgMap.put(userId, employeeMsg);
             }
         }
-//        for(String userId : userIds){
-//            userMsgVos.add(new UserMsgVo(userId, "测试", "13241229115", "CC", "测试", ""));
-//        }
         userMsgVos.addAll(queryUserMsg(employeeMsgMap));
         return userMsgVos;
     }
@@ -75,15 +72,15 @@ public class UserCenterServiceImpl implements UserCenterService {
         return userMsgVo;
     }
 
-    public static void main(String[] args) {
-        Map<String, EmployeeMsg> employeeMsgMap = new HashMap<>();
-        EmployeeMsg employeeMsg = new EmployeeMsg();
-        employeeMsg.setUserId("CC18103016014600009");
-        employeeMsg.setRoleCode("CC");
-        employeeMsgMap.put("CC18103016014600009", employeeMsg);
-        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
-        System.out.println(JSONObject.toJSONString(userMsgVos));
-    }
+//    public static void main(String[] args) {
+//        Map<String, EmployeeMsg> employeeMsgMap = new HashMap<>();
+//        EmployeeMsg employeeMsg = new EmployeeMsg();
+//        employeeMsg.setUserId("CC18103016014600009");
+//        employeeMsg.setRoleCode("CC");
+//        employeeMsgMap.put("CC18103016014600009", employeeMsg);
+//        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
+//        System.out.println(JSONObject.toJSONString(userMsgVos));
+//    }
 
     /**
      * 注册用户
@@ -103,7 +100,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         Map<String,String> params = new HashMap<>();
         params.put("userName",userName);
         params.put("userPhone",userPhone);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(registerC, HttpUtils.mapToParams(params));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(registerC, HttpUtils.mapToParams(params));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -170,7 +167,7 @@ public class UserCenterServiceImpl implements UserCenterService {
             throw new RuntimeException(jsonObject.getString("msg"));
         }
         JSONArray jsonArray = jsonObject.getJSONArray("data");
-        if(jsonArray.size() < 0){
+        if(jsonArray.size() < 1){
             return null;
         }
         JSONObject msgObj = jsonArray.getJSONObject(0);
@@ -183,8 +180,23 @@ public class UserCenterServiceImpl implements UserCenterService {
         return msgVo;
     }
 
-    private static List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterUrl, getParams(employeeMsgMap));
+    @Override
+    public UserMsgVo queryUserMsgOne(String roleCode,String userId) {
+        Map<String,EmployeeMsg> employeeMsgMap = new HashMap<>();
+        EmployeeMsg employeeMsg = new EmployeeMsg();
+        employeeMsg.setUserId(userId);
+        employeeMsg.setRoleCode(roleCode);
+        employeeMsgMap.put(userId,employeeMsg);
+        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
+        if(userMsgVos != null || !userMsgVos.isEmpty()){
+            return userMsgVos.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getAllUserByIds, getParams(employeeMsgMap));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -255,18 +267,12 @@ public class UserCenterServiceImpl implements UserCenterService {
      * @return
      */
     private static String getParams(Map<String, EmployeeMsg> employeeMsgMap) {
-        List<Map<String, String>> list = new ArrayList<>();
+        List<String> userIds = new ArrayList<>();
         for (Map.Entry<String, EmployeeMsg> msgEntry : employeeMsgMap.entrySet()) {
             EmployeeMsg employeeMsg = msgEntry.getValue();
-            Map<String, String> params = new HashMap<>();
-            params.put("userId", employeeMsg.getUserId());
-            if(StringUtils.isBlank(employeeMsg.getRoleCode())){
-                employeeMsg.setRoleCode("CC");
-            }
-            params.put("roleId", employeeMsg.getRoleCode());
-            list.add(params);
+            userIds.add(employeeMsg.getUserId());
         }
-        return JSONObject.toJSONString(list);
+        return JSONObject.toJSONString(userIds);
     }
 
     /**

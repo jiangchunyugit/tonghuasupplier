@@ -18,6 +18,8 @@ import cn.thinkfree.database.event.sync.CompanyJoin;
 import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.service.event.EventService;
+import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
+
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -55,6 +57,7 @@ import cn.thinkfree.database.mapper.PreProjectGuideMapper;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.PreProjectGuide;
 import cn.thinkfree.database.vo.PcUserInfoVo;
+import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.user.UserService;
@@ -80,6 +83,10 @@ public class ExampleController extends AbsBaseController {
    CustomListenerServie customListenerServie;
 
 
+   
+   @Autowired
+   ThirdPartDateService thirdPartDateService;
+   
     @PostMapping("/file")
     @MyRespBody
     @MySysLog(desc = "",action = SysLogAction.LOGIN,module = SysLogModule.PC_USER)
@@ -218,9 +225,16 @@ public class ExampleController extends AbsBaseController {
     @GetMapping("/test")
     public void test(){
 
-//        eventService.publish(new CompanyJoin("BD2018080710405900001"));
-//        eventService.publish(new FinishContract("SJHT201811091623204760001"));
-        eventService.publish(new CreateOrder("SJHT201811091623204760001"));
+////        eventService.publish(new CompanyJoin("BD2018080710405900001"));
+////        eventService.publish(new FinishContract("SJHT201811091623204760001"));
+//        eventService.publish(new CreateOrder("SJHT201811091623204760001"));
+        
+        List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContract("sj111222221");
+        for (int i = 0; i < listvo.size(); i++) {
+        	  CreateOrder order = new CreateOrder();
+              order.setData(listvo.get(i));
+              eventService.publish(order);
+		}
 
     }
     @GetMapping("/send")

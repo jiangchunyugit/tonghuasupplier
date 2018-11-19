@@ -80,7 +80,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size()==0){
-            return RespData.error("此项目下尚未分配人员");
+            return RespData.success(pageInfo,"此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
@@ -212,10 +212,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         String dataString = JSONObject.toJSONString(data);
         OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
-        projectVo.setProjectDynamic(Integer.getInteger(operationVo.getProjectDynamic()));
-        projectVo.setProjectOrder(Integer.getInteger(operationVo.getProjectOrder()));
-        projectVo.setProjectData(Integer.getInteger(operationVo.getProjectData()));
-        projectVo.setProjectInvoice(Integer.getInteger(operationVo.getInvoice()));
+        projectVo.setProjectDynamic(Integer.valueOf(operationVo.getProjectDynamic()));
+        projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()));
+        projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()));
+        projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()));
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
@@ -251,11 +251,16 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
-        //TODO 组合导航内容和颜色,正式时询问这些内容赋值规则
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtn(designerOrder.getOrderNo()));
 //        designerOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
-        //TODO 添加是否可以取消,正式时询问这些内容赋值规则
-        designerOrderDetailVo.setCancle(true);
+        List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
+        for (DesignStateEnum designStateEnum : allCancelState){
+            if (project.getStage().equals(designStateEnum.getState())){
+                designerOrderDetailVo.setCancle(true);
+            }else {
+                designerOrderDetailVo.setCancle(false);
+            }
+        }
         //存放订单类型
         designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
