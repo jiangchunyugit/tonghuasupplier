@@ -78,7 +78,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
     
 
     @Override
-    public MarginContractVO getMarginContract(String contractNumber) {
+    public MarginContractVO getMarginContract(String contractNumber,String signedTime) {
 
 
         MarginContractVO marginContractVO = new MarginContractVO();

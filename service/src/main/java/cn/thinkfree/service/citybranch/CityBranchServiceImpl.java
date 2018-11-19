@@ -1,13 +1,16 @@
 package cn.thinkfree.service.citybranch;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.CityBranchSEO;
 import cn.thinkfree.database.vo.CityBranchVO;
 import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -148,19 +151,42 @@ public class CityBranchServiceImpl implements CityBranchService {
     }
 
     @Override
-    public List<CityBranch> selectByProCit(Integer province, Integer city) {
+    public List<CityBranch> selectByProCit(String branchCompanyCode, Integer cityCode) {
 
-        CityBranchExample cityBranchExample = new CityBranchExample();
+        // 分公司查询条件
+                CityBranchExample cityBranchExample = new CityBranchExample();
         CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
-        criteria.andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
-        if (province != null) {
+        criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        if (userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null) {
+            // 权限等级
+            short level = userVO.getPcUserInfo().getLevel();
 
-            criteria.andProvinceCodeEqualTo(province.shortValue());
+            // 省账号
+            if (UserLevel.Company_City.code == level && userVO.getCityBranch() != null
+                    && StringUtils.isNotBlank(userVO.getCityBranch().getCityBranchCode())) {
+                criteria.andBranchCompanyCodeEqualTo(userVO.getCityBranch().getCityBranchCode());
+            }
         }
-        if (city != null) {
 
-            criteria.andCityCodeEqualTo(city.shortValue());
+        // 市地区条件
+        if (null != cityCode) {
+            criteria.andProvinceCodeEqualTo(cityCode.shortValue());
         }
+
+        // 分公司编码
+        if (StringUtils.isNotBlank(branchCompanyCode)) {
+            criteria.andBranchCompanyCodeEqualTo(branchCompanyCode);
+        }
+//        criteria.andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
+//        if (province != null) {
+//
+//            criteria.andProvinceCodeEqualTo(province.shortValue());
+//        }
+//        if (city != null) {
+//
+//            criteria.andCityCodeEqualTo(city.shortValue());
+//        }
         return cityBranchMapper.selectByExample(cityBranchExample);
     }
 

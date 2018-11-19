@@ -270,6 +270,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @return
      */
     private List<String> queryCompanyIds(int companyState) {
+        if(companyState < 0){
+            return new ArrayList<>();
+        }
         CompanyInfoExample infoExample = new CompanyInfoExample();
         CompanyInfoExample.Criteria criteria = infoExample.createCriteria();
         if (companyState > 0) {

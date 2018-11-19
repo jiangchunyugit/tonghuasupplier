@@ -87,7 +87,7 @@ public class StoreInfoServiceImpl implements StoreInfoService {
 
         HrOrganizationEntityExample hrOrganizationEntityExample = new HrOrganizationEntityExample();
 
-        PageHelper.startPage(1,40);
+//        PageHelper.startPage(1,40);
         return hrOrganizationEntityMapper.selectByExample(hrOrganizationEntityExample);
     }
 }

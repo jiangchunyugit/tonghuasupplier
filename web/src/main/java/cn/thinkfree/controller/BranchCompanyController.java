@@ -12,6 +12,7 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -204,10 +205,9 @@ public class BranchCompanyController extends AbsBaseController{
     @GetMapping(value = "/branchCompanyByIdList")
     @MyRespBody
     @ApiOperation(value = "(权限)运营平台---站点信息")
-    public MyRespBundle<List<BranchCompany>> branchCompanyByIdList(@ApiParam("省code")@RequestParam String provinceCode,
-                                                                   @ApiParam("市code")@RequestParam String cityCode) {
+    public MyRespBundle<List<BranchCompany>> branchCompanyByIdList(@ApiParam("省code") Integer provinceCode) {
 
-        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList(provinceCode,cityCode));
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList(provinceCode));
     }
 }
 

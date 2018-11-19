@@ -73,9 +73,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 throw new RuntimeException("无效的操作");
             }
             employeeMsg.setCompanyId(companyId);
-            employeeMsg.setEmployeeState(employeeApplyState);
+            employeeMsg.setEmployeeApplyState(employeeApplyState);
             employeeMsg.setApplyTime(new Date());
-            int res = employeeMsgMapper.updateByPrimaryKey(employeeMsg);
+            int res = employeeMsgMapper.updateByPrimaryKeySelective(employeeMsg);
             logger.info("新增用户绑定记录：res={}", res);
             applyLog = new EmployeeApplyLog();
             applyLog.setApplyTime(new Date());
@@ -380,7 +380,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeMsgVo employeeMsgById(String userId) {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andUserIdEqualTo(userId).andEmployeeStateEqualTo(1);
+        msgExample.createCriteria().andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         EmployeeMsg employeeMsg;
         if (!employeeMsgs.isEmpty()) {
@@ -389,8 +389,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeMsg = new EmployeeMsg();
             employeeMsg.setAuthState(1);
             employeeMsg.setEmployeeApplyState(-1);
+            employeeMsg.setUserId(userId);
         }
-        UserMsgVo userMsgVo = userCenterService.queryUser(userId);
+        UserMsgVo userMsgVo = userCenterService.queryUserMsgOne("CM",userId);
         UserRoleSet userRoleSet = queryRoleSet(employeeMsg.getRoleCode());
         List<BasicsData> cardTypes = basicsService.cardTypes();
         List<BasicsData> countryCodes = basicsService.countryType();
@@ -536,13 +537,23 @@ public class EmployeeServiceImpl implements EmployeeService {
         msgExample.createCriteria().andUserIdIn(userIds);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         Map<String,EmployeeMsg> employeeMsgMap = ReflectUtils.listToMap(employeeMsgs,"userId");
+        Map<String,UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
         List<EmployeeApplyVo> applyVos = new ArrayList<>();
         for(EmployeeApplyLog applyLog : employeeApplyLogs){
             EmployeeApplyVo applyVo = new EmployeeApplyVo();
             EmployeeMsg employeeMsg = employeeMsgMap.get(applyLog.getUserId());
+            UserMsgVo userMsgVo = userMsgVoMap.get(applyLog.getUserId());
             if(employeeMsg != null){
                 applyVo.setRealName(employeeMsg.getRealName());
                 applyVo.setCardNo(employeeMsg.getCertificate());
+                applyVo.setAuthState(employeeMsg.getAuthState());
+                applyVo.setCertificatePhotoUrl1(employeeMsg.getCertificatePhotoUrl1());
+                applyVo.setCertificatePhotoUrl2(employeeMsg.getCertificatePhotoUrl2());
+                applyVo.setCertificatePhotoUrl3(employeeMsg.getCertificatePhotoUrl3());
+                applyVo.setEmployeeApplyState(employeeMsg.getEmployeeApplyState());
+            }
+            if(userMsgVo != null){
+                applyVo.setPhone(userMsgVo.getUserPhone());
             }
             applyVo.setApplyTime(getTime(applyLog.getApplyTime()));
             applyVo.setDealTime(getTime(applyLog.getApplyTime()));
@@ -632,7 +643,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             CompanyInfo companyInfo = checkCompanyExit(companyId);
             msgVo.setCompanyName(companyInfo.getCompanyName());
         }
-        //1未绑定，2已绑定，3实名认证审核中，4审核不通过
+        //1未绑定，2已绑定，3审核中，4审核不通过
         int bindCompanyState = 1;
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         bindCompanyState = getBindCompanyState(employeeMsg, bindCompanyState);
@@ -662,6 +673,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(employeeMsg.getEmployeeApplyState() == null){
             return bindCompanyState;
         }
+        //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         switch (employeeMsg.getEmployeeApplyState()) {
             case 1:
                 bindCompanyState = 3;
