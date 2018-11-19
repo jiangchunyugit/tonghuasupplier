@@ -109,9 +109,10 @@ public class CloudServiceImpl implements CloudService {
     public RemoteResult<String> sendSms(String phone, String activeCode) {
 
         MultiValueMap<String, Object> param = initParam();
-        param.add("phone", phone);
-        param.add("activationCode", activeCode);
-
+//        param.add("phone", phone);
+//        param.add("activationCode", activeCode);
+        param.add("telephone", phone);
+        param.add("code", activeCode);
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethod(sendSmsUrl, param);
@@ -218,7 +219,10 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> sendEmail(String email, String templateCode, String para) {
-        MultiValueMap param = initParam();
+        MultiValueMap<String, Object> param = initParam();
+        param.add("recipientAddress",email);
+        param.add("templateNo",templateCode);
+        param.add("tplContent",para);
 
         RemoteResult<String> result = null;
         try {
