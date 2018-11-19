@@ -69,6 +69,11 @@ public interface CityBranchService {
     List<CityBranch> selectByProCit(String branchCompanyCode, Integer cityCode);
 
     /**
+     * 根据省市查询城市分站
+     */
+    List<CityBranch> selectByProCitCode(Integer province,Integer city);
+
+    /**
      * 城市分站城市信息
      * @return
      */
