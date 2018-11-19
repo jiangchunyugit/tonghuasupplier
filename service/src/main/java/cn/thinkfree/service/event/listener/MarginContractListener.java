@@ -1,19 +1,14 @@
 package cn.thinkfree.service.event.listener;
 
-import cn.thinkfree.core.logger.AbsLogPrinter;
-import cn.thinkfree.database.event.MarginContractEvent;
-import cn.thinkfree.database.event.sync.CompanyJoin;
-import cn.thinkfree.database.vo.MarginContractVO;
-import cn.thinkfree.database.vo.remote.SyncTransactionVO;
-import cn.thinkfree.service.company.CompanyInfoService;
-import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
-import cn.thinkfree.service.remote.CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import cn.thinkfree.core.logger.AbsLogPrinter;
+import cn.thinkfree.database.event.MarginContractEvent;
+import cn.thinkfree.database.vo.MarginContractVO;
+import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
+import cn.thinkfree.service.remote.CloudService;
 
 /**
  * @author jiangchunyu(后台)
@@ -34,8 +29,8 @@ public class MarginContractListener extends AbsLogPrinter {
     @EventListener
     public void marginContract(MarginContractEvent marginContractEvent){
 
-        String contractID = marginContractEvent.getSource();
-        MarginContractVO flag = thirdPartDateService.getMarginContract(contractID);
+        String[] contractID = marginContractEvent.getSource().split("@");
+        MarginContractVO flag = thirdPartDateService.getMarginContract(contractID[0],contractID[1]);
         if(flag != null){
             cloudService.marginContractTransaction(flag);
         }
