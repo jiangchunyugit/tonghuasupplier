@@ -31,6 +31,16 @@ public class EmployeeApplyVo {
     private String certificatePhotoUrl2;
     @ApiModelProperty("证件照3")
     private String certificatePhotoUrl3;
+    @ApiModelProperty("员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
+    private Integer employeeApplyState;
+
+    public Integer getEmployeeApplyState() {
+        return employeeApplyState;
+    }
+
+    public void setEmployeeApplyState(Integer employeeApplyState) {
+        this.employeeApplyState = employeeApplyState;
+    }
 
     public void setUserId(String userId) {
         this.userId = userId;

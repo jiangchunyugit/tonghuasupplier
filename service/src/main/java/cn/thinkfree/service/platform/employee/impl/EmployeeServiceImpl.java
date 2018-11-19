@@ -549,6 +549,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 applyVo.setCertificatePhotoUrl1(employeeMsg.getCertificatePhotoUrl1());
                 applyVo.setCertificatePhotoUrl2(employeeMsg.getCertificatePhotoUrl2());
                 applyVo.setCertificatePhotoUrl3(employeeMsg.getCertificatePhotoUrl3());
+                applyVo.setEmployeeApplyState(employeeMsg.getEmployeeApplyState());
             }
             if(userMsgVo != null){
                 applyVo.setPhone(userMsgVo.getUserPhone());
