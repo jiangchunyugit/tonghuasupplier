@@ -150,14 +150,14 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         if(StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())){
             BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
             branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId())
-                                                    .andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal());
+                                                    .andIsDelEqualTo(SysConstants.YesOrNoSp.NO.shortVal());
             List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
             userVO.setBranchCompany(branchCompanies.size() == 1 ? branchCompanies.get(0) : null);
         }
         if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
             CityBranchExample cityBranchExample = new CityBranchExample();
             cityBranchExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getCityBranchCompanyId())
-                    .andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal());
+                    .andIsDelEqualTo(SysConstants.YesOrNoSp.NO.shortVal());
             List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
             userVO.setCityBranch(cityBranches.size() == 1 ? cityBranches.get(0) : null);
         }
