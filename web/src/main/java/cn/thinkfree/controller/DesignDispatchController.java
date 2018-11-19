@@ -69,6 +69,7 @@ public class DesignDispatchController extends AbsBaseController {
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
+            e.printStackTrace();
             return sendFailMessage(e.getMessage());
         }
     }

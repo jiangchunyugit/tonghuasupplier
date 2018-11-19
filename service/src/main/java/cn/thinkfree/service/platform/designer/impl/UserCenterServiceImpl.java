@@ -27,10 +27,6 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
     /**
-     * 用户中心地址接口
-     */
-    private static String userCenterUrl = "http://10.240.10.169:5000/userapi/other/api/user/getListUserByUserIds";
-    /**
      * 查询用户的用户中心地址
      */
     private static String queryUserUrl = "http://10.240.10.169:5000/userapi/other/getUserMsgByPhone";
@@ -46,6 +42,10 @@ public class UserCenterServiceImpl implements UserCenterService {
      * 根据手机号和姓名模糊查询用户信息
      */
     private static String queryUserByPhoneAndName = "http://10.240.10.169:5000/userapi/other/getUserMsgByPhoneAndName";
+    /**
+     * 根据用户ID查询用户信息
+     */
+    private static String getAllUserByIds = "http://10.240.10.169:5000/userapi/other/api/getListUserByUserIds";
 
     @Override
     public List<UserMsgVo> queryUsers(List<String> userIds) {
@@ -196,7 +196,7 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Override
     public List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterUrl, getParams(employeeMsgMap));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getAllUserByIds, getParams(employeeMsgMap));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -267,18 +267,12 @@ public class UserCenterServiceImpl implements UserCenterService {
      * @return
      */
     private static String getParams(Map<String, EmployeeMsg> employeeMsgMap) {
-        List<Map<String, String>> list = new ArrayList<>();
+        List<String> userIds = new ArrayList<>();
         for (Map.Entry<String, EmployeeMsg> msgEntry : employeeMsgMap.entrySet()) {
             EmployeeMsg employeeMsg = msgEntry.getValue();
-            Map<String, String> params = new HashMap<>();
-            params.put("userId", employeeMsg.getUserId());
-            if(StringUtils.isBlank(employeeMsg.getRoleCode())){
-                employeeMsg.setRoleCode("CC");
-            }
-            params.put("roleId", employeeMsg.getRoleCode());
-            list.add(params);
+            userIds.add(employeeMsg.getUserId());
         }
-        return JSONObject.toJSONString(list);
+        return JSONObject.toJSONString(userIds);
     }
 
     /**
