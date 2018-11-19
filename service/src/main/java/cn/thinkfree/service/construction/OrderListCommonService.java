@@ -535,6 +535,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<Project> getProjectInfo(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         ProjectExample example = new ProjectExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         return projectMapper.selectByExample(example);
