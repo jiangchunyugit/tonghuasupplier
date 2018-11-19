@@ -156,6 +156,7 @@ public class CityBranchServiceImpl implements CityBranchService {
         // 分公司查询条件
                 CityBranchExample cityBranchExample = new CityBranchExample();
         CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
+        criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         if (userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null) {
             // 权限等级
