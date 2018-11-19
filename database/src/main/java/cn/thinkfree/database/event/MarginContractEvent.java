@@ -26,4 +26,9 @@ public class MarginContractEvent extends AbsBaseEvent {
         this.source = projectNo;
     }
 
+	public MarginContractEvent(String contractNumber, String signedTime) {
+		// TODO Auto-generated constructor stub
+		this.source  = contractNumber+"@"+signedTime;
+	}
+
 }

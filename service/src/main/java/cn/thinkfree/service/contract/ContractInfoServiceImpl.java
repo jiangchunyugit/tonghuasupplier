@@ -1,8 +1,6 @@
 package cn.thinkfree.service.contract;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +15,6 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
-import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
-import cn.thinkfree.core.event.BaseEvent;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
@@ -79,6 +75,7 @@ import cn.thinkfree.service.constants.CompanyFinancialType;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.event.EventService;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.ExcelData;
@@ -242,9 +239,15 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
             /* 财务审核通过生成合同 */
             String pdfUrl = this.createContractDoc( contractNumber );
             vo.setContractUrl( pdfUrl );
-            vo.setSignedTime(DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss"));
+            String signedTime = DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss");
+            vo.setSignedTime(signedTime);
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
-            //eventService.publish(new MarginContractEvent(contractNumber));
+            try {
+            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
+			} catch (Exception e) {
+				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
+			}
+           
         } else {                                                        /* 财务审核不通过 */
             companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
         }
@@ -280,15 +283,39 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
 		ContractInfo contractInfo = new ContractInfo();
 		contractInfo.setContractStatus( "5" );
-		 cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
+		cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
+		 //查询当前合同保证金
+		ContractTermsExample	exp		= new ContractTermsExample();
+	    exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
+	    List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
+	    Map<String,String> resMap = new HashMap<>();
+	    if(list != null){
+		    for (int i = 0; i < list.size(); i++) {
+		    	resMap.put(list.get(i).getContractDictCode(), list.get(i).getContractValue());
+			}
+	    }
+	    //查询公司类型
+	    /* 公司详情 */
+		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo( companyId );
+		String deposistMoney = "";
+		//装修
+	    if( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.BD.stringVal() )){
+	    	if(resMap != null ){
+	    	  deposistMoney = String.valueOf(resMap.get("c17"));
+	    	}
+	    }else{
+	    	if(resMap != null){
+	    	  deposistMoney = String.valueOf(resMap.get("c15"));
+	    	}
+	    }
 		/* 修改公司表 */
 		CompanyInfo record  = new CompanyInfo();
 		record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
-		record.setDepositMoney(0);//保证金设置为0
-		CompanyInfoExample companyInfo = new CompanyInfoExample();
-		companyInfo.createCriteria().andCompanyIdEqualTo( companyId ); /* 确认已交保证金 */
+		record.setDepositMoney(Integer.valueOf(deposistMoney));
+		CompanyInfoExample companyInfoex = new CompanyInfoExample();
+		companyInfoex.createCriteria().andCompanyIdEqualTo( companyId ); /* 确认已交保证金 */
 
-		int flag = companyInfoMapper.updateByExampleSelective(record ,companyInfo );
+		int flag = companyInfoMapper.updateByExampleSelective(record ,companyInfoex );
 		if ( flag > 0 )
 		{
 			return true;
@@ -320,57 +347,60 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	private List<Map<String, Object> > getContractInfo( String contractNumber, ContractVo newVo,
-							    CompanySubmitVo companyInfo )
-	{
-		List<Map<String, Object> > resList = new ArrayList<>();
+//	private List<Map<String, Object> > getContractInfo( String contractNumber, ContractVo newVo,
+//							    CompanySubmitVo companyInfo )
+//	{
+//		List<Map<String, Object> > resList = new ArrayList<>();
+//
+//		String			ownerCompanyName	= "居然之家";                                               /* 甲方公司名称 */
+//		String			secondCompanyName	= companyInfo.getCompanyInfo().getCompanyName();        /* 乙方公司名称 */
+//		SimpleDateFormat	sdf			= new SimpleDateFormat( "yyyy-MM-dd" );
+//		DateFormat		format1			= new SimpleDateFormat( "yyyy-MM-dd" );
+//		String			formatstartYear[]	= null;
+//		String			formatendYear[]		= null;
+//		try {
+//			formatstartYear = sdf.format( format1.parse( newVo.getStartTime() ) ).split( "-" );
+//			formatendYear	= sdf.format( format1.parse( newVo.getEndTime() ) ).split( "-" );
+//		} catch ( ParseException e ) {
+//			e.printStackTrace();
+//		}
+//		String	startYear	= formatstartYear[0];                           /* 合同开始年 */
+//		String	startmonth	= formatstartYear[1];                           /* 合同开始年 */
+//		String	startsun	= formatstartYear[2];                           /* 合同开始年 */
+//		String	endYear		= formatendYear[0];                             /* 合同结束年 */
+//		String	endtmonth	= formatendYear[1];                             /* 合同结束月 */
+//		String	endsun		= formatendYear[2];                             /* 合同结束日 */
+//		/* 开户户名 */
+//		PcCompanyFinancial accountinfo = pcCompanyFinancialMapper
+//						 .findPcCompanyFinancialByCompanyId( newVo.getCompanyId() );
+//		String	cardName		= accountinfo.getCardName();            /* 开户行名称 */
+//		String	accounBranchName	= accountinfo.getAccountBranchName();   /* 开户银行名称 */
+//		String	accountNumber		= accountinfo.getAccountNumber() + "";  /* 银行卡卡号 */
+//
+//		Map<String, Object> rmap = balanceInfo( contractNumber, newVo.getCompanyId(),
+//							companyInfo.getCompanyInfo().getRoleId() );
+//
+//		Map<String, Object> rep = new HashMap<>();
+//		rep.put( "ownerCompanyName", ownerCompanyName );
+//		rep.put( "secondCompanyName", secondCompanyName );
+//		rep.put( "startYear", startYear );
+//		rep.put( "startmonth", startmonth );
+//		rep.put( "startsun", startsun );
+//		rep.put( "endYear", endYear );
+//		rep.put( "endtmonth", endtmonth );
+//		rep.put( "endsun", endsun );
+//		rep.put( "cardName", cardName );
+//		rep.put( "accounBranchName", accounBranchName );
+//		rep.put( "accountNumber", accountNumber );
+//
+//		resList.add( rmap ); /* 结算比例 */
+//
+//		return(resList);
+//	}
 
-		String			ownerCompanyName	= "居然之家";                                               /* 甲方公司名称 */
-		String			secondCompanyName	= companyInfo.getCompanyInfo().getCompanyName();        /* 乙方公司名称 */
-		SimpleDateFormat	sdf			= new SimpleDateFormat( "yyyy-MM-dd" );
-		DateFormat		format1			= new SimpleDateFormat( "yyyy-MM-dd" );
-		String			formatstartYear[]	= null;
-		String			formatendYear[]		= null;
-		try {
-			formatstartYear = sdf.format( format1.parse( newVo.getStartTime() ) ).split( "-" );
-			formatendYear	= sdf.format( format1.parse( newVo.getEndTime() ) ).split( "-" );
-		} catch ( ParseException e ) {
-			e.printStackTrace();
-		}
-		String	startYear	= formatstartYear[0];                           /* 合同开始年 */
-		String	startmonth	= formatstartYear[1];                           /* 合同开始年 */
-		String	startsun	= formatstartYear[2];                           /* 合同开始年 */
-		String	endYear		= formatendYear[0];                             /* 合同结束年 */
-		String	endtmonth	= formatendYear[1];                             /* 合同结束月 */
-		String	endsun		= formatendYear[2];                             /* 合同结束日 */
-		/* 开户户名 */
-		PcCompanyFinancial accountinfo = pcCompanyFinancialMapper
-						 .findPcCompanyFinancialByCompanyId( newVo.getCompanyId() );
-		String	cardName		= accountinfo.getCardName();            /* 开户行名称 */
-		String	accounBranchName	= accountinfo.getAccountBranchName();   /* 开户银行名称 */
-		String	accountNumber		= accountinfo.getAccountNumber() + "";  /* 银行卡卡号 */
-
-		Map<String, Object> rmap = balanceInfo( contractNumber, newVo.getCompanyId(),
-							companyInfo.getCompanyInfo().getRoleId() );
-
-		Map<String, Object> rep = new HashMap<>();
-		rep.put( "ownerCompanyName", ownerCompanyName );
-		rep.put( "secondCompanyName", secondCompanyName );
-		rep.put( "startYear", startYear );
-		rep.put( "startmonth", startmonth );
-		rep.put( "startsun", startsun );
-		rep.put( "endYear", endYear );
-		rep.put( "endtmonth", endtmonth );
-		rep.put( "endsun", endsun );
-		rep.put( "cardName", cardName );
-		rep.put( "accounBranchName", accounBranchName );
-		rep.put( "accountNumber", accountNumber );
-
-		resList.add( rmap ); /* 结算比例 */
-
-		return(resList);
-	}
-
+	
+	
+	
 
 	@Override
 	public String selectContractBycontractNumber( String contractNumber )
@@ -385,92 +415,91 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public String createContractDoc( String contractNumber)
 	{
-		String	url	= "";                                                                   /* 上传服务器返回地址 */
-		SimpleDateFormat sdf	= new SimpleDateFormat( "yyyy-MM-dd" );
-		Map<String, Object>	root = new HashMap<>();                                                      /* data数据 */
+		String url = ""; /* 上传服务器返回地址 */
+		Map<String, Object> root = new HashMap<>(); /* data数据 */
 
 		ContractVo vo = new ContractVo();
-		vo.setContractNumber( contractNumber );
-		ContractVo	newVo		= contractInfoMapper.selectContractBycontractNumber( vo );              /* 合同信息 */
-		CompanySubmitVo companyInfo	= companySubmitService.findCompanyInfo( (newVo.getCompanyId() ) );      /* 公司信息 */
+		vo.setContractNumber(contractNumber);
+		 /* 合同信息 */
+		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo);
+		/* 公司信息 */
+		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo((newVo.getCompanyId())); 
 		/* 合同详情 */
-		String			companyId	= newVo.getCompanyId();
-		ContractTermsExample	exp		= new ContractTermsExample();
-		exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-		List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
-		for ( int i = 0; i < list.size(); i++ )
-		{
-			root.put( list.get( i ).getContractDictCode(), list.get( i ).getContractValue() );
+		String companyId = newVo.getCompanyId();
+		ContractTermsExample exp = new ContractTermsExample();
+		exp.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+		List<ContractTerms> list = pcContractTermsMapper.selectByExample(exp);
+		for (int i = 0; i < list.size(); i++) {
+			root.put(list.get(i).getContractDictCode(), list.get(i).getContractValue());
 		}
 		/* 查询结算规则 */
 		ContractTermsChildExample example = new ContractTermsChildExample();
-		example.createCriteria().andCompanyIdEqualTo( (newVo.getCompanyId() ) ).andContractNumberEqualTo( contractNumber );
-		List<ContractTermsChild>		childList	= contractTermsChildMapper.selectByExample( example );
-		Map<Long, List<ContractTermsChild> >	map2		= new LinkedHashMap<Long, List<ContractTermsChild> >();
-		CommonGroupUtils.listGroup2Map( childList, map2, ContractTermsChild.class, "cost_type" ); /* 根据类型分组 */
-		if ( childList != null )
-		{
-			Map<String, List<ContractTermsChild> > ma = new HashMap<>();
-			for ( int i = 0; i < childList.size(); i++ )
-			{
+		example.createCriteria().andCompanyIdEqualTo((newVo.getCompanyId())).andContractNumberEqualTo(contractNumber);
+		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
+		Map<Long, List<ContractTermsChild>> map2 = new LinkedHashMap<Long, List<ContractTermsChild>>();
+		/* 根据类型分组 */
+		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type"); 
+		if (childList != null) {
+			for (int i = 0; i < childList.size(); i++) {
 				ContractTermsChildExample example1 = new ContractTermsChildExample();
-				example1.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber )
-				.andCostTypeEqualTo( childList.get( i ).getCostType() );
-				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample( example1 );
-				root.put("code"+ childList.get( i ).getCostType(), childListr );
+				example1.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
+						.andCostTypeEqualTo(childList.get(i).getCostType());
+				List<ContractTermsChild> childListr = contractTermsChildMapper.selectByExample(example1);
+				root.put("code" + childList.get(i).getCostType(), childListr);
 			}
 		}
 		/* 判断公司类型 */
-		if ( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.BD.stringVal() ) ) /* 装修公司 */
+		 /* 装修公司 */
+		if (companyInfo.getCompanyInfo().getRoleId().equals(CompanyType.BD.stringVal()))
 
 		{
-			if(!StringUtils.isEmpty(newVo.getSignedTime())) {
-				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));//合同生效时间
-			}else{
-				root.put("signedTime","");
+			if (!StringUtils.isEmpty(newVo.getSignedTime())) {
+				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));// 合同生效时间
+			} else {
+				root.put("signedTime", "");
 			}
-			if(root.get("c08") != null && !String.valueOf(root.get("c08")).equals("")){//合同开始时间
-				root.put("startTime",DateUtil.formateToDate(String.valueOf(root.get("c08")), "yyyy-MM-dd")) ;//合同开始时间
+			if (root.get("c08") != null && !String.valueOf(root.get("c08")).equals("")) {// 合同开始时间
+				root.put("startTime", DateUtil.formateToDate(String.valueOf(root.get("c08")), "yyyy-MM-dd"));// 合同开始时间
 			}
-			if(root.get("c09") != null && !String.valueOf(root.get("c09")).equals("")){
-				root.put("endTime",DateUtil.formateToDate(String.valueOf(root.get("c09")), "yyyy-MM-dd")) ;//合同结束时间
+			if (root.get("c09") != null && !String.valueOf(root.get("c09")).equals("")) {
+				root.put("endTime", DateUtil.formateToDate(String.valueOf(root.get("c09")), "yyyy-MM-dd"));// 合同结束时间
 			}
-			//特殊处理
+			// 特殊处理
 			try {
-				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "1", root );
+				String filePath = FreemarkerUtils.savePdf(filePathDir + contractNumber, "1", root);
 				/* 上传 */
-				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
+				url = PdfUplodUtils.upload(filePath, fileUploadUrl);
 			} catch (Exception e) {
 				e.printStackTrace();
 				printErrorMes("生成pdf合同发生错误", e.getMessage());
 			}
 
-		} else if ( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.SJ.stringVal()) )/* 设计公司 */
+		} else if (companyInfo.getCompanyInfo().getRoleId().equals(CompanyType.SJ.stringVal()))/* 设计公司 */
 
 		{
-			if(!StringUtils.isEmpty(newVo.getSignedTime())) {
-				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));//合同生效时间
-			}else{
-				root.put("signedTime","");
+			if (!StringUtils.isEmpty(newVo.getSignedTime())) {
+				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));// 合同生效时间
+			} else {
+				root.put("signedTime", "");
 			}
-			if(root.get("c03") != null && !String.valueOf(root.get("c03")).equals("")){//合同开始时间
-			 root.put("startTime",DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd")) ;//合同开始时间
+			if (root.get("c03") != null && !String.valueOf(root.get("c03")).equals("")) {// 合同开始时间
+				root.put("startTime", DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd"));// 合同开始时间
 			}
-			if(root.get("c04") != null && !String.valueOf(root.get("c04")).equals("")){
-				root.put("endTime",DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd")) ;//合同结束时间
+			if (root.get("c04") != null && !String.valueOf(root.get("c04")).equals("")) {
+				root.put("endTime", DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd"));// 合同结束时间
 			}
-			
+
 			try {
-				String filePath = FreemarkerUtils.savePdf(filePathDir+contractNumber, "0", root );
+				String filePath = FreemarkerUtils.savePdf(filePathDir + contractNumber, "0", root);
 				/* 上传 */
-				url = PdfUplodUtils.upload( filePath, fileUploadUrl );
+				url = PdfUplodUtils.upload(filePath, fileUploadUrl);
 			} catch (Exception e) {
 				e.printStackTrace();
 				printErrorMes("生成pdf合同发生错误", e.getMessage());
 			}
 		}
 
-		return  url;
+		return url;
 	}
 
 
@@ -578,100 +607,92 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	public boolean insertContractClause( String contractNumber, String companyId, ContractClauseVO contractClausevo )
 	{
 
-	try {
-
-
-		if ( contractClausevo.getParamMap() != null )
-		{
-			Iterator<Map.Entry<String, String> > entries = contractClausevo.getParamMap().entrySet().iterator();
-			while ( entries.hasNext() )
+	     try {
+			if ( contractClausevo.getParamMap() != null )
 			{
-				Map.Entry<String, String>	entry	= entries.next();
-				String				key	= entry.getKey();
-				if ( key.equals( "paymentNumber" ) ) /* 添加支付方案 */
+				Iterator<Map.Entry<String, String> > entries = contractClausevo.getParamMap().entrySet().iterator();
+				while ( entries.hasNext() )
 				{
-					CompanyPayment record = new CompanyPayment();
-					record.setCompanyCode( companyId );
-					record.setProgramCode( entry.getValue() );
-					companyPaymentMapper.insertSelective( record );
-					break;
-				}
-				String		value	= entry.getValue();
-				ContractTerms	terms	= new ContractTerms();
-				terms.setCompanyId( companyId );
-				terms.setContractNumber( contractNumber );
-				terms.setCreateTime( new Date() );
-				terms.setUpdateTime( new Date() );
-				terms.setContractDictCode( key );
-				terms.setContractValue( value );
-				/* list.add(terms); */
-				ContractTermsExample exp = new ContractTermsExample();
-				exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractDictCodeEqualTo( key )
-				.andContractNumberEqualTo( contractNumber );
-				pcContractTermsMapper.deleteByExample( exp );
-				pcContractTermsMapper.insertSelective( terms );
-			}
-		}
-		/* 设置结算规则 */
-		if ( contractClausevo.getChildparamMap() != null )
-		{
-			Iterator < Entry < String, List < ContractTermsChild >>> childentries = contractClausevo.getChildparamMap()
-												.entrySet().iterator();
-			ContractTermsChildExample	exp	= new ContractTermsChildExample();
-			exp.createCriteria().andCompanyIdEqualTo( companyId )
+					Map.Entry<String, String>	entry	= entries.next();
+					String				key	= entry.getKey();
+					if ( key.equals( "paymentNumber" ) ) /* 添加支付方案 */
+					{
+						CompanyPayment record = new CompanyPayment();
+						record.setCompanyCode( companyId );
+						record.setProgramCode( entry.getValue() );
+						companyPaymentMapper.insertSelective( record );
+						break;
+					}
+					String		value	= entry.getValue();
+					ContractTerms	terms	= new ContractTerms();
+					terms.setCompanyId( companyId );
+					terms.setContractNumber( contractNumber );
+					terms.setCreateTime( new Date() );
+					terms.setUpdateTime( new Date() );
+					terms.setContractDictCode( key );
+					terms.setContractValue( value );
+					/* list.add(terms); */
+					ContractTermsExample exp = new ContractTermsExample();
+					exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractDictCodeEqualTo( key )
 					.andContractNumberEqualTo( contractNumber );
-			contractTermsChildMapper.deleteByExample( exp );        /* 删除重复数据 */
-			while ( childentries.hasNext() )
-			{
-				Entry<String, List<ContractTermsChild> >	entry	= childentries.next();
-				String						key	= entry.getKey();
-				List<ContractTermsChild>			list	= entry.getValue();
-
-
-				for ( int i = 0; i < list.size(); i++ )
-				{
-					ContractTermsChild		child	= list.get( i );
-					contractTermsChildMapper.insertSelective( child );      /* 新增合同规则 */
+					pcContractTermsMapper.deleteByExample( exp );
+					pcContractTermsMapper.insertSelective( terms );
 				}
 			}
+			/* 设置结算规则 */
+			if ( contractClausevo.getChildparamMap() != null )
+			{
+				Iterator < Entry < String, List < ContractTermsChild >>> childentries = contractClausevo.getChildparamMap()
+													.entrySet().iterator();
+				ContractTermsChildExample	exp	= new ContractTermsChildExample();
+				exp.createCriteria().andCompanyIdEqualTo( companyId )
+						.andContractNumberEqualTo( contractNumber );
+		        /* 删除重复数据 */
+				contractTermsChildMapper.deleteByExample( exp );
+				while ( childentries.hasNext() )
+				{
+					Entry<String, List<ContractTermsChild> > entry	= childentries.next();
+					List<ContractTermsChild> list = entry.getValue();
+					for ( int i = 0; i < list.size(); i++ )
+					{
+						ContractTermsChild		child	= list.get( i );
+					    /* 新增合同规则 */
+						contractTermsChildMapper.insertSelective( child );
+					}
+				}
+			}
+
+			// 修改合同状态
+			ContractInfo record = new ContractInfo();
+			record.setContractStatus(ContractStatus.WaitAudit.shortVal());
+			record.setCompanyId(companyId);
+			if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))) {
+				Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
+				record.setStartTime(startTime);
+			} else {
+				return false;
+			}
+			if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))) {
+				Date endTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
+				record.setEndTime(endTime);
+			} else {
+				return false;
+			}
+			record.setContractNumber(contractNumber);
+			ContractInfoExample example = new ContractInfoExample();
+			example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+			cxcontractInfoMapper.updateByExampleSelective(record, example);
+			// 修改公司状态
+			companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal());
+		} catch (Exception e) {
+			printErrorMes("设置合同条款服务异常 {}" + e.getMessage());
+			return false;
 		}
-
-		//修改合同状态
-		ContractInfo record = new ContractInfo();
-		record.setContractStatus(ContractStatus.WaitAudit.shortVal());
-		record.setCompanyId(companyId);
-		if(StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))){
-		      Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
-		      record.setStartTime(startTime);
-		    }else{
-		      return false;
-		    }
-		    if(StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))){
-		      Date endTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
-		      record.setEndTime(endTime);
-		    }else{
-		      return false;
-		    }
-		record.setContractNumber(contractNumber);
-		ContractInfoExample example = new ContractInfoExample();
-		example.createCriteria().andCompanyIdEqualTo(companyId).
-		andContractNumberEqualTo(contractNumber);
-		cxcontractInfoMapper.updateByExampleSelective(record, example);
-		//修改公司状态
-		companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal());
-	} catch (Exception e) {
-		printErrorMes("设置合同条款服务异常 {}"+ e.getMessage());
-		return false;
-	}
-		return  true;
+		return true;
 	}
 
 
-	@Override
-	public Map<String, String> getContractBycontractNumber( String contractNumber )
-	{
-		return(null);
-	}
+	
 
 
 	@Override
@@ -696,8 +717,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		if ( list.size() == 0 && companyInfo != null )
 		{
-//			ContractTerms term_0 = new ContractTerms( "01", "居然设计家" );
-//			list.add( term_0 );
+         //ContractTerms term_0 = new ContractTerms( "01", "居然设计家" );
+          //list.add( term_0 );
 			String type = companyInfo.getCompanyInfo().getRoleId().equals("SJ")?"0":"1";
 			ContractTemplateDictExample example = new ContractTemplateDictExample();
 			example.createCriteria().andTypeEqualTo(type);
@@ -902,7 +923,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 			return true;
 		} catch ( Exception e ) {
-			
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -940,6 +961,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 			return(true);
 		} catch ( Exception e ) {
+			e.printStackTrace();
 			return(false);
 		}
 	}
@@ -983,7 +1005,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		example.createCriteria().andCompanyIdEqualTo((newVo.getCompanyId())).andContractNumberEqualTo(contractNumber);
 		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
 		Map<Long, List<ContractTermsChild>> map2 = new LinkedHashMap<Long, List<ContractTermsChild>>();
-		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type"); /* 根据类型分组 */
+		 /* 根据类型分组 */
+		CommonGroupUtils.listGroup2Map(childList, map2, ContractTermsChild.class, "cost_type");
 		if (childList != null) {
 			for (int i = 0; i < childList.size(); i++) {
 				ContractTermsChildExample example1 = new ContractTermsChildExample();
