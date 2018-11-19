@@ -125,7 +125,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
 
     /**
      * @param reserveNo        待转换订单编号
-     * @param companyId        所属公司ID
+     * @param companyId        设计公司ID
      * @param source           订单来源
      * @param huxing           房屋户型，1小区房，2别墅，3复式，4其他
      * @param roomNum          房屋个数

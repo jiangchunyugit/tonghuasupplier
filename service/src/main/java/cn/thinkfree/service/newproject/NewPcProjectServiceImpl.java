@@ -199,12 +199,12 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
             offerVo.setMainMaterialFee(projectQuotation.getSoftDecorationPrice().toString());
             //硬装保价
             offerVo.setOtherFee(projectQuotation.getHardDecorationPrice().toString());
-            //变更保价  TODO 刘博接口
+            //变更保价
             FundsOrderFeeExample fundsOrderFeeExample = new FundsOrderFeeExample();
             FundsOrderFeeExample.Criteria criteria3 = fundsOrderFeeExample.createCriteria();
             criteria3.andProjectNoEqualTo(projectNo);
             List<FundsOrderFee> fundsOrderFees = fundsOrderFeeMapper.selectByExample(fundsOrderFeeExample);
-            if(fundsOrderFees.size() > 0){
+            if(fundsOrderFees.size() == 1){
                 FundsOrderFee fundsOrderFee = fundsOrderFees.get(0);
                 offerVo.setChangeFee(fundsOrderFee.getFeeAmount());
             }
