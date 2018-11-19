@@ -125,4 +125,11 @@ public interface CompanySubmitService {
      */
     Integer updateByParam(String companyId,String platformType,String isDelete);
 
+    /**
+     * 运营平台资质变更
+     * @param companySubmitVo
+     * @return
+     */
+    Map<String, Object> updateCompanyInfo(CompanySubmitVo companySubmitVo);
+
 }

@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
+import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -14,6 +15,9 @@ import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
+import cn.thinkfree.service.platform.employee.ProjectUserService;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
@@ -22,6 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,6 +67,12 @@ public class NewProjectServiceImpl implements NewProjectService {
     CloudService cloudService;
     @Autowired
     ConstructionStateServiceB constructionStateServiceB;
+    @Autowired
+    ProjectUserService projectUserService;
+    @Autowired
+    UserCenterService userCenterService;
+    @Autowired
+    BasicsDataMapper basicsDataMapper;
 
 
     /**
@@ -80,7 +91,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size()==0){
-            return RespData.error("此项目下尚未分配人员");
+            return RespData.success(pageInfo,"此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
@@ -269,55 +280,67 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("设计订单的公司不存在!");
         }
         List<PersionVo> persionList = new ArrayList<>();
-        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
+        String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
+        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
         try {
-            Map userName = newOrderUserService.getUserName(designerOrder.getUserId(), persionVo.getRole());//正式时打开
-//        Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
-            persionVo.setPhone(userName.get("phone").toString());
+            UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
+            persionVo.setPhone(userMsgVo.getUserPhone());
         } catch (Exception e) {
             e.printStackTrace();
             log.info("调取人员信息失败!");
         }
+        persionVo.setRole(UserJobs.Designer.mes);
         persionList.add(persionVo);
         designOrderPlayVo.setPersionList(persionList);
         designerOrderDetailVo.setOrderPlayVo(designOrderPlayVo);
+        BasicsDataExample basicsDataExample = new BasicsDataExample();
+        BasicsDataExample.Criteria dataCriteria = basicsDataExample.createCriteria();
+        dataCriteria.andBasicsCodeEqualTo(designerOrderDetailVo.getStyleType());
+        List<BasicsData> basicsData = basicsDataMapper.selectByExample(basicsDataExample);
+        if (basicsData.size()==0){
+            designerOrderDetailVo.setStyleType("");
+        }else {
+            designerOrderDetailVo.setStyleType(basicsData.get(0).getBasicsName());
+        }
         projectOrderDetailVoList.add(designerOrderDetailVo);
         //组合施工订单
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
-        List<Map<String, Object>> maps1 = ConstructionStateEnumB.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
-        for (Map<String, Object> map : maps1) {
-            OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
-            orderTaskSortVo.setSort((Integer) map.get("key"));
-            orderTaskSortVo.setName(map.get("val").toString());
-            orderTaskSortVoList1.add(orderTaskSortVo);
-        }
-        constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
-        constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
-        constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
+        if(constructionOrderDetailVo!=null){
+            List<Map<String, Object>> maps1 = ConstructionStateEnumB.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+            for (Map<String, Object> map : maps1) {
+                OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
+                orderTaskSortVo.setSort((Integer) map.get("key"));
+                orderTaskSortVo.setName(map.get("val").toString());
+                orderTaskSortVoList1.add(orderTaskSortVo);
+            }
+            constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
+            constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
+            constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
 //        constructionOrderDetailVo.setPlayTask("提交设计资料");
 //        constructionOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
-        Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
-        constructionOrderDetailVo.setCancle(aBoolean);
-        //存放订单类型
-        constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
-        //存放展示信息
-        OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
-        constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
-        //存放人员信息
-        List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
-        for (PersionVo persionVo1 : constructionPersionList) {
-            try {
-                Map persionDetail = newOrderUserService.getUserName(persionVo1.getUserId(), persionVo1.getRole());
+            Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
+            constructionOrderDetailVo.setCancle(aBoolean);
+            //存放订单类型
+            constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
+            //存放展示信息
+            OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
+            //存放人员信息
+            List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
+            for (PersionVo persionVo1 : constructionPersionList) {
+                try {
+                    Map persionDetail = newOrderUserService.getUserName(persionVo1.getUserId(), persionVo1.getRole());
 //                Map persionDetail = newOrderUserService.getUserName("CC1810301612170000C", "CC");
-                persionVo1.setPhone(persionDetail.get("phone").toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.info("调取人员信息失败!");
+                    persionVo1.setPhone(persionDetail.get("phone").toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.info("调取人员信息失败!");
+                }
             }
+            constructionOrderPlayVo.setPersionList(constructionPersionList);
+            constructionOrderDetailVo.setOrderPlayVo(constructionOrderPlayVo);
         }
-        constructionOrderPlayVo.setPersionList(constructionPersionList);
-        constructionOrderDetailVo.setOrderPlayVo(constructionOrderPlayVo);
         projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);
@@ -345,11 +368,13 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectTitleVo.setAddress(project.getAddressDetail());
         projectTitleVo.setProjectNo(projectNo);
         OrderPlayVo orderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
-        projectTitleVo.setCost(orderPlayVo.getCost());
-        projectTitleVo.setDelay(orderPlayVo.getDelay());
-        projectTitleVo.setSchedule(orderPlayVo.getSchedule());
-        projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
-        projectTitleVo.setIsConfirm(orderPlayVo.getIsConfirm());
+        if (orderPlayVo != null){
+            projectTitleVo.setCost(orderPlayVo.getCost());
+            projectTitleVo.setDelay(orderPlayVo.getDelay());
+            projectTitleVo.setSchedule(orderPlayVo.getSchedule());
+            projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
+            projectTitleVo.setIsConfirm(orderPlayVo.getIsConfirm());
+        }
         //添加进度展示
         projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
         return RespData.success(projectTitleVo);

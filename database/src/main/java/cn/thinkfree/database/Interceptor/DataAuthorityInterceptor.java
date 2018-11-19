@@ -33,7 +33,7 @@ import cn.thinkfree.database.vo.UserVO;
         @Signature(type = StatementHandler.class, method = "prepare", args = { Connection.class,Integer.class })
 //        @Signature(method = "query", type = Executor.class, args = { MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class })
 })
-@Component
+//@Component
 public class DataAuthorityInterceptor implements Interceptor {
     /** 日志 */
     private static final Logger log = LoggerFactory.getLogger(DataAuthorityInterceptor.class);

@@ -21,6 +21,7 @@ import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.UserNoUtils;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.catalina.manager.util.SessionUtils;
@@ -343,14 +344,15 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
                 companyId, "", "", date, auditAccount);
         int line = pcAuditInfoMapper.insertSelective(record);
-        //TODO：添加账号发送短信 and 发送邮件
-        String sms = "登录账号：" + pcApplyInfoSEO.getEmail() +
-                "默认密码：123456";
-        RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), sms);
+
+        JSONObject object = new JSONObject();
+        object.put("登录账号", pcApplyInfoSEO.getEmail());
+        object.put("默认密码", "123456");
+        RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), object.toJSONString());
         if(!rs.isComplete())throw new RuntimeException("添加账号发送短信失败");
 
         //邮件
-        RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", sms);
+        RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", object.toJSONString());
 
         if(num.size() == split.length * 2 && line > 0 && infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0){
             map.put("code",true);
@@ -442,6 +444,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     public PageInfo<PcApplyInfoVo> findByParam(CompanyApplySEO companyApplySEO) {
+
+        //获取登陆人信息
+        UserVO userVO = (UserVO)SessionUserDetailsUtil.getUserDetails();
+//        userVO.getPcUserInfo().getLevel();
+
         String param = companyApplySEO.getParam();
         if(StringUtils.isNotBlank(param)){
             companyApplySEO.setParam("%" + param + "%");

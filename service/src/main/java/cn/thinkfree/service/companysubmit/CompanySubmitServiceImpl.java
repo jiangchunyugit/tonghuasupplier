@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.thinkfree.core.event.BaseEvent;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.event.sync.CompanyJoin;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -360,12 +361,15 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		List<String> relationMap = null;
 //		relationMap.add("10000000");
 //		companyListSEO.setRelationMap(relationMap);
-
-		if(userVO != null){
-			relationMap = new ArrayList<>();
-			relationMap = userVO.getRelationMap();
-			if(relationMap != null && relationMap.size() > 0){
-				companyListSEO.setRelationMap(relationMap);
+		if(userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null){
+			if(!UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
+				if(userVO != null){
+					relationMap = new ArrayList<>();
+					relationMap = userVO.getRelationMap();
+					if(relationMap != null && relationMap.size() > 0){
+						companyListSEO.setRelationMap(relationMap);
+					}
+				}
 			}
 		}
 
@@ -426,6 +430,9 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     @Transactional(rollbackFor = Exception.class)
     public boolean upCompanyInfo(CompanySubmitVo companySubmitVo) {
         Date date = new Date();
+		if(companySubmitVo == null){
+			return false;
+		}
 
         //1.更新表company_info
         int ci = updateCompanyInfo(companySubmitVo, date);
@@ -445,23 +452,31 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
     private int updateCompanyExpand(CompanySubmitVo companySubmitVo, Date date) {
 
         CompanyInfoExpand companyInfoExpand = companySubmitVo.getCompanyInfoExpand();
-        companyInfoExpand.setUpdateTime(date);
-
-        CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
-        companyInfoExpandExample.createCriteria()
-				.andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
-        return companyInfoExpandMapper.updateByExampleSelective(companyInfoExpand,companyInfoExpandExample);
+        if(companyInfoExpand != null){
+			companyInfoExpand.setUpdateTime(date);
+//			companyInfoExpand.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
+			CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
+			companyInfoExpandExample.createCriteria()
+					.andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
+			return companyInfoExpandMapper.updateByExampleSelective(companyInfoExpand,companyInfoExpandExample);
+		}else{
+        	return 1;
+		}
     }
 
     private int updateFinancial(CompanySubmitVo companySubmitVo, Date date) {
 
-        PcCompanyFinancial pcCompanyFinancial = new PcCompanyFinancial();
-		SpringBeanUtil.copy(companySubmitVo.getPcCompanyFinancial(),pcCompanyFinancial);
-        pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
-        pcCompanyFinancial.setUpdateTime(date);
-        PcCompanyFinancialExample example = new PcCompanyFinancialExample();
-        example.createCriteria().andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
-        return pcCompanyFinancialMapper.updateByExampleSelective(pcCompanyFinancial, example);
+        PcCompanyFinancial pcCompanyFinancial = companySubmitVo.getPcCompanyFinancial();
+		if(pcCompanyFinancial != null){
+//			pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
+			pcCompanyFinancial.setUpdateTime(date);
+			PcCompanyFinancialExample example = new PcCompanyFinancialExample();
+			example.createCriteria().andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
+			return pcCompanyFinancialMapper.updateByExampleSelective(pcCompanyFinancial, example);
+		}else{
+			return 1;
+		}
+
     }
 
     private int updateCompanyInfo(CompanySubmitVo companySubmitVo, Date date) {
@@ -655,4 +670,59 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
         int line = companyInfoMapper.updateByParam(map);
         return line;
     }
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Map<String, Object> updateCompanyInfo(CompanySubmitVo companySubmitVo){
+		Date date = new Date();
+		Map<String, Object> map = new HashMap<>();
+
+		String companyId = "";
+		if(companySubmitVo != null){
+			if(companySubmitVo.getCompanyInfoExpand() != null && StringUtils.isNotBlank(companySubmitVo.getCompanyInfoExpand().getEmail())){
+				map.put("msg", "公司邮箱不能修改！！！");
+				map.put("code", false);
+				return map;
+			}
+			//公司表
+			CompanyInfo companyInfo = companySubmitVo.getCompanyInfo();
+			if(companyInfo != null && StringUtils.isNotBlank(companyInfo.getCompanyId())){
+				companyId = companySubmitVo.getCompanyInfo().getCompanyId();
+				CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+				companyInfoExample.createCriteria()
+						.andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+						.andPlatformTypeEqualTo(CompanyConstants.PlatformType.NORMAL.shortVal())
+						.andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.stringVal())
+						.andCompanyIdEqualTo(companyId);
+				int cinfoLine = companyInfoMapper.updateByExampleSelective(companyInfo, companyInfoExample);
+				if(cinfoLine > 0){
+					//更新表company_info_expand
+					int exLine = updateCompanyExpand(companySubmitVo, date);
+					//更新表pc_company_financial
+					int fcLine = updateFinancial(companySubmitVo, date);
+
+					if(exLine > 0 && fcLine > 0){
+						map.put("msg", "资质变更操作成功！！！");
+						map.put("code", true);
+						return map;
+					}
+				}else{
+					map.put("msg", "资质变更操作失败！！！");
+					map.put("code", false);
+					return map;
+				}
+			}else{
+				map.put("msg", "公司编码不能为空！！！");
+				map.put("code", false);
+				return map;
+			}
+		}else{
+			map.put("msg", "公司编码不能为空！！！");
+			map.put("code", false);
+			return map;
+		}
+		map.put("msg", "资质变更操作失败！！！");
+		map.put("code", false);
+		return map;
+	}
 }

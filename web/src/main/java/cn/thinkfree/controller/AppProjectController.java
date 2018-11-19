@@ -26,10 +26,9 @@ public class AppProjectController {
     @Autowired
     private NewProjectService newProjectService;
 
-    @RequestMapping(value = "getAllProject/{userId}", method = RequestMethod.POST)
+    @RequestMapping(value = "getAllProject", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目列表")
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(
-            @PathVariable("userId") String userId,
             @ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
         MyRespBundle<PageInfo<ProjectVo>> page = newProjectService.getAllProject(appProjectSEO);
         return page;

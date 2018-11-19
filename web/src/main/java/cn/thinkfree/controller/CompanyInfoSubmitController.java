@@ -137,7 +137,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @RequestMapping(value = "/upCompanyInfo", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="前端--装饰/设计公司管理中心--完善公司资质--提交--李阳")
-    public MyRespBundle<String> upCompanyInfo(@ApiParam("公司资质信息")CompanySubmitVo companySubmitVo){
+    public MyRespBundle<String> upCompanyInfo(@ApiParam(value = "公司资质信息", required = true)CompanySubmitVo companySubmitVo){
         boolean flag = companySubmitService.upCompanyInfo(companySubmitVo);
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
@@ -312,5 +312,18 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         return sendJsonData(fail, "操作失败", msg);
     }
 
+    /**
+     * 运营平台资质变更
+     * @param companySubmitVo
+     * @return
+     */
+    @RequestMapping(value = "/updateCompanyInfo", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="前端--运营后台--公司资质变更(公司id必填项）--李阳")
+    public MyRespBundle<String> updateCompanyInfo(
+            @ApiParam("公司id")CompanySubmitVo companySubmitVo){
+        Map<String, Object> map= companySubmitService.updateCompanyInfo(companySubmitVo);
+        return sendJsonData(success, "操作成功", map);
+    }
 
 }
