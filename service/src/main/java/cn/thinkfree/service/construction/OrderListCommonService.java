@@ -144,7 +144,7 @@ public class OrderListCommonService {
                             continue continueOut;
                         }
                     }
-                    constructionOrderListVo.setAddress(project.getCity());
+                    constructionOrderListVo.setAddress(commonService.getCityNameByCode(project.getCity()));
                     constructionOrderListVo.setAddressDetail(project.getAddressDetail());
                     constructionOrderListVo.setAppointmentTime(project.getCreateTime());
                     // 业主 & 手机号
