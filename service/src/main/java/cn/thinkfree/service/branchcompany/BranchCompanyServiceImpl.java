@@ -223,7 +223,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
 
         PcUserInfoExample userInfoExample = new PcUserInfoExample();
         userInfoExample.createCriteria().andIdEqualTo(userId);
-        PcUserInfo pcUserInfo = pcUserInfoMapper.findByUserId(userId);
+        PcUserInfo pcUserInfo = pcUserInfoMapper.selectByPrimaryKey(userId);
 
         if (pcUserInfo != null) {
             StoreInfoExample storeInfoExample = new StoreInfoExample();
