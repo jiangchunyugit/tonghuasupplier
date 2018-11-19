@@ -177,20 +177,39 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     }
 
     @Override
-    public List<BranchCompany> getBranchCompanyByIdList(String provicecode ,String cityCode) {
+    public List<BranchCompany> getBranchCompanyByIdList(Integer provicecode) {
 
-        List<CityBranch> cityBranchList = cityBranchService.selectByProCit(provicecode!=null?Integer.valueOf(provicecode):null,cityCode!=null?Integer.valueOf(cityCode):null);
+        // 分公司查询条件
         BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
         BranchCompanyExample.Criteria criteria = branchCompanyExample.createCriteria();
-        if (StringUtils.isNotBlank(provicecode)) {
-            criteria.andProvinceCodeEqualTo(Integer.valueOf(provicecode).shortValue());
-        }
-        if (cityBranchList.size()>0) {
-            List<String> strings = cityBranchList.stream().map(e->e.getBranchCompanyCode()).collect(Collectors.toList());
-            if (strings.size()>0) {
-                criteria.andBranchCompanyCodeIn(strings);
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        if (userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null) {
+            // 权限等级
+            short level = userVO.getPcUserInfo().getLevel();
+
+            // 省账号
+            if (UserLevel.Company_Province.code == level && userVO.getBranchCompany() != null
+                    && StringUtils.isNotBlank(userVO.getBranchCompany().getBranchCompanyCode())) {
+                criteria.andBranchCompanyCodeEqualTo(userVO.getBranchCompany().getBranchCompanyCode());
             }
         }
+
+        // 省地区条件
+        if (null != provicecode) {
+            criteria.andProvinceCodeEqualTo(provicecode.shortValue());
+        }
+
+//        List<CityBranch> cityBranchList = cityBranchService.selectByProCit(provicecode!=null?Integer.valueOf(provicecode):null,cityCode!=null?Integer.valueOf(cityCode):null);
+//
+//        if (StringUtils.isNotBlank(provicecode)) {
+//            criteria.andProvinceCodeEqualTo(Integer.valueOf(provicecode).shortValue());
+//        }
+//        if (cityBranchList.size()>0) {
+//            List<String> strings = cityBranchList.stream().map(e->e.getBranchCompanyCode()).collect(Collectors.toList());
+//            if (strings.size()>0) {
+//                criteria.andBranchCompanyCodeIn(strings);
+//            }
+//        }
         return branchCompanyMapper.selectByExample(branchCompanyExample);
     }
 
