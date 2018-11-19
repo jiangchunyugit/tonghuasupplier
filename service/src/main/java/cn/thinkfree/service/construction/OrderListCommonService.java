@@ -97,7 +97,13 @@ public class OrderListCommonService {
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
         pageInfo2.setList(list);
-
+        if(list == null || list.isEmpty()){
+            pageInfo.setList(listVo);
+            Page p = (Page) pageInfo2.getList();
+            pageInfo.setPageNum(p.getPages());
+            //    pageInfo.setTotal(pageInfo2.getList().size());
+            return pageInfo;
+        }
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
         for (ConstructionOrder constructionOrder : list) {
@@ -584,6 +590,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         OrderUserExample example = new OrderUserExample();
         example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
         List<OrderUser> list = orderUserMapper.selectByExample(example);
@@ -634,6 +643,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<ProjectScheduling> getdelayDay(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         ProjectSchedulingExample example = new ProjectSchedulingExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         return projectSchedulingMapper.selectByExample(example);
