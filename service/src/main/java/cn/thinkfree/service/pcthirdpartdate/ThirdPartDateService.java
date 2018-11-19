@@ -12,7 +12,7 @@ import cn.thinkfree.database.vo.remote.SyncOrderVO;
  */
 public interface ThirdPartDateService {
 
-    MarginContractVO getMarginContract(String contractCode);
+    MarginContractVO getMarginContract(String contractCode,String signedTime);
     
     /**
      * 小C上传完后合同后 调用支付订单
