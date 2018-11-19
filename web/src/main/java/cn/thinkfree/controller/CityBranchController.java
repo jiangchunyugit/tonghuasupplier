@@ -213,9 +213,9 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/cityBranchRuZhu")
     @MyRespBody
     @ApiOperation(value="城市分站：城市分站")
-    public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份code")@RequestParam(value = "provinceCode") Integer provinceCode, @ApiParam("城市code")@RequestParam(value = "cityCode") Integer cityCode){
+    public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份编码")String branchCompanyCode, @ApiParam("城市code") Integer cityCode){
 
-        return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(provinceCode,cityCode));
+        return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(branchCompanyCode,cityCode));
     }
 
 

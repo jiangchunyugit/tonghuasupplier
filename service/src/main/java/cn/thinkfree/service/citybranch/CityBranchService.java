@@ -64,9 +64,9 @@ public interface CityBranchService {
     int updateCityBranchStatus(CityBranch cityBranch);
 
     /**
-     * 根据省市查询城市分站
+     * 根据城市查询城市分站（过滤入驻权限）
      */
-    List<CityBranch> selectByProCit(Integer province,Integer city);
+    List<CityBranch> selectByProCit(String branchCompanyCode, Integer cityCode);
 
     /**
      * 城市分站城市信息
