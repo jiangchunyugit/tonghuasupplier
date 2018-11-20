@@ -8,9 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
 
 /**
- * 计算规则 分页查询
- * @author jiangchunyu
- *
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 计算规则 继承分页
  */
 @ApiModel(description = "计算规则分页查询")
 public class SettlementRuleSEO extends AbsPageSearchCriteria  {

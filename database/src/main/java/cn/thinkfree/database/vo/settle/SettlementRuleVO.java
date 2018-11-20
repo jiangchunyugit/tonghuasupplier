@@ -9,7 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 /**
- * @author jiangchunyu 结算规则信息
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 结算规则信息
  */
 @ApiModel(description = "结算规则信息")
 public class SettlementRuleVO extends SettlementRuleInfo {

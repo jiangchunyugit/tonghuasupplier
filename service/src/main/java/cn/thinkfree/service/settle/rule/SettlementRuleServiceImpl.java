@@ -48,9 +48,12 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     @Override
     public PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO (SettlementRuleSEO rule) {
 
+        // 查询规则
         PageHelper.startPage(rule.getPage(), rule.getRows());
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
         example.setOrderByClause("id DESC");
+
+        // 拼接规则条件
         this.searchRef(example,rule);
         List<SettlementRuleInfo> list = settlementRuleInfoMapper.selectByExample(example);
         printInfoMes("查询 结算比例数量 {}", list.size());
@@ -58,7 +61,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     }
 
     @Override
-    public boolean insertOrupdateSettlementRule (SettlementRuleVO settlementRuleVO) {
+    public boolean insertOpiateSettlementRule(SettlementRuleVO settlementRuleVO) {
 
         int flag = 0;
         if (settlementRuleVO != null) {
@@ -69,26 +72,25 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                 settlementRuleVO.setUpdateTime(new Date());
                 settlementRuleVO.setCreateUser(auditPersion);
                 settlementRuleVO.setInvalidStatus(OneTrue.YesOrNo.NO.toString());
+
                 // 新增未待审核
                 // 当前时间大于结束时间作废
                 if (this.datecompare(settlementRuleVO.getEndTime())>0) {
-
                     settlementRuleVO.setStatus(SettlementStatus.AuditCAN.getCode());
                     // 作废标签
                     settlementRuleVO.setInvalidStatus(OneTrue.YesOrNo.YES.toString());
                 } else {
-
                     settlementRuleVO.setStatus(SettlementStatus.AuditWait.getCode());
                 }
                 settlementRuleVO.setRuleNumber(getRuleNumber());
                 flag = settlementRuleInfoMapper.insertSelective(settlementRuleVO);
                 settlementRuleVO.getSettlementMethodInfos().forEach(e -> {
-
                     e.setRuleCode(settlementRuleVO.getRuleNumber());
                     settlementMethodInfoMapper.insertSelective(e);
                 });
             }
 
+            // 判断返回值
             if (flag > 0) {
                 return true;
             }
@@ -99,6 +101,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     @Override
     public boolean copySettlementRule (String ruleNumber) {
 
+        // 复制规则
         if(!StringUtils.isEmpty(ruleNumber)){
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
             String auditPersion = userVO == null ? "" : userVO.getUsername();
@@ -112,19 +115,18 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             rule.setUpdateTime(new Date());
             rule.setCreateUser(auditPersion);
             rule.setInvalidStatus(OneTrue.YesOrNo.NO.toString());
-            int  falg = settlementRuleInfoMapper.insertSelective(rule);
+            int  flag = settlementRuleInfoMapper.insertSelective(rule);
 
             SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
             settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(ruleNumber);
             List<SettlementMethodInfo> settlementMethodInfos = settlementMethodInfoMapper.selectByExample(settlementMethodInfoExample);
-
             for (SettlementMethodInfo settlementMethodInfo : settlementMethodInfos) {
-
                 settlementMethodInfo.setId(null);
                 settlementMethodInfo.setRuleCode(rule.getRuleNumber());
                 settlementMethodInfoMapper.insertSelective(settlementMethodInfo);
             }
-            if(falg > 0 ){
+
+            if(flag > 0 ){
                 return true;
             }else{
                 return false;
@@ -143,7 +145,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         SettlementRuleInfo rule = (list!=null && list.size() > 0)?list.get(0):null;
 
         if(rule != null){
-
             Map<String, String> paream = convertNames();
             //翻译
             if (StringUtils.isNotBlank(rule.getFeeName())) {
@@ -165,7 +166,8 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     }
 
     @Override
-    public boolean cancellatSettlementRule (String ruleNumber) {
+    public boolean cancelledSettlementRule(String ruleNumber) {
+
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
         example.createCriteria().andRuleNumberEqualTo(ruleNumber);
         SettlementRuleInfo record = new SettlementRuleInfo();
@@ -182,13 +184,19 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Override
     public Map<String, String> getCostNames () {
+
         Map<String, String> map = new HashMap<>();
         map.put("01", "设计费");
         map.put("02", "施工费");
         return map;
     }
 
+    /**
+     * 费用名称转换
+     * @return
+     */
     private Map<String, String> convertNames () {
+
         Map<String, String> map = new HashMap<>();
         map.put("01", "设计费");
         map.put("02", "施工费");
@@ -209,6 +217,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Override
     public Map<String, String> getPlateFormNames () {
+
         Map<String, String> map = new HashMap<>();
         map.put("03", "施工平台管理服务费");
         map.put("04", "设计平台管理服务费");
@@ -227,6 +236,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Override
     public void exportList (SettlementRuleSEO rule, HttpServletResponse response) {
+
         ExcelData data = new ExcelData();
         String title = "合同信息数据";
         data.setName(title);
@@ -250,10 +260,10 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         PageHelper.startPage(rule.getPage(),rule.getRows());
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
 
+        // 拼接查询条件
         this.searchRef(example,rule);
         List<SettlementRuleInfo> list = settlementRuleInfoMapper.selectByExample(example);
         for(int i=0; i<list.size();i++){
-
             BillCycleResult billCycleResult = this.billCycleConvert(list.get(i));
             row=new ArrayList<>();
             row.add(i+1);
@@ -281,8 +291,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean batchcCheckSettlementRule(List<String> ruleNumbers,String auditStatus,String auditCase) {
-
+    public boolean batchCheckSettlementRule(List<String> ruleNumbers, String auditStatus, String auditCase) {
 
         for (int i = 0; i < ruleNumbers.size(); i++) {
             //添加审核记录表
@@ -338,6 +347,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             settlementRuleInfoMapper.updateByExampleSelective(recordT, example);
             return true;
         }
+
         return false;
     }
 
@@ -363,6 +373,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             record.setCreateTime(new Date());
             record.setUpdateTime(new Date());
             record.setCreateUser(auditPersion);
+
             // 新增未待审核
             record.setStatus(SettlementStatus.AuditWait.getCode());
             record.setRuleNumber(getRuleNumber());
@@ -374,6 +385,8 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                 e.setRuleCode(record.getRuleNumber());
                 settlementMethodInfoMapper.updateByExampleSelective(e,settlementMethodInfoExample);
             });
+
+            // 判断返回值
             if (flag > 0) {
                 return true;
             }
@@ -383,13 +396,14 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Override
     public boolean applicationInvalid(String ruleNumber) {
+
         SettlementRuleInfoExample example = new SettlementRuleInfoExample();
         example.createCriteria().andRuleNumberEqualTo(ruleNumber);
         SettlementRuleInfo record = new SettlementRuleInfo();
         //申请作废
         record.setStatus(SettlementStatus.CANDecline.getCode());
-        int  falg = 	settlementRuleInfoMapper.updateByExampleSelective(record, example);
-        if(falg >  0 ){
+        int flag = settlementRuleInfoMapper.updateByExampleSelective(record, example);
+        if(flag >  0 ){
             return true;
         }
         return false;
@@ -489,7 +503,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
     private BillCycleResult billCycleConvert(SettlementRuleInfo settlementRuleInfo) {
 
         BillCycleResult billCycleResult = new BillCycleResult();
-
         StringBuilder method = new StringBuilder();
         billCycleResult.setCheckTime(DateUtils.dateToDateTime(settlementRuleInfo.getCheckingTime()));
 
@@ -561,13 +574,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
          * 结算方案
          */
         private String settlementMethod;
-
-//        public BillCycleResult (String checkTime,String cycleTime ,String settlementMethod){
-//
-//            this.checkTime = checkTime;
-//            this.cycleTime = cycleTime;
-//            this.settlementMethod = settlementMethod;
-//        }
 
         public String getCheckTime() {
             return checkTime;
