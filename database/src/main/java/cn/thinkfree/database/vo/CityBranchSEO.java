@@ -5,7 +5,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @author jiangchunyu城市分站管理查询条件  继承分页
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 城市分站管理查询条件  继承分页
  */
 @ApiModel(description = "城市分站管理条件")
 public class CityBranchSEO extends AbsPageSearchCriteria  {

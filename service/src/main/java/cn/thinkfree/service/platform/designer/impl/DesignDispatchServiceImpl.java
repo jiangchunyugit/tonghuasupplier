@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -968,9 +969,23 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         msgExample.createCriteria().andUserIdEqualTo(designerUserId).andReviewStateEqualTo(2);
         List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
         if (designerMsgs.isEmpty()) {
-            throw new RuntimeException("没有查询到该设计师");
+            return createDesignerMsg(designerUserId);
         }
         return designerMsgs.get(0);
+    }
+
+    private DesignerMsg createDesignerMsg(String designerUserId){
+        DesignerMsg designerMsg = new DesignerMsg();
+        designerMsg.setUserId(designerUserId);
+        designerMsg.setVolumeRoomMoney(new BigDecimal(100));
+        designerMsg.setDesignerMoneyLow(new BigDecimal(100));
+        designerMsg.setDesignerMoneyHigh(new BigDecimal(100));
+        designerMsg.setIdentity(Long.parseLong("1"));
+        designerMsg.setTag(Long.parseLong("1"));
+        designerMsg.setReviewState(2);
+        designerMsg.setLevel(Long.parseLong("1"));
+        designerMsgMapper.insertSelective(designerMsg);
+        return designerMsg;
     }
 
     /**
@@ -1126,7 +1141,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     @Override
-    public void updateProjectState(String projectNo,int state){
+    public void updateProjectState(String projectNo, int state){
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(projectNo);
         Project project = new Project();

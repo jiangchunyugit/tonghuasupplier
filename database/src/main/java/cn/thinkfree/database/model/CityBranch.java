@@ -114,7 +114,6 @@ public class CityBranch extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="埃森哲数据作废")
-//    @NotNull(message = "埃森哲城市分站不可为空",groups = {Severitys.Insert.class})
     private Integer cityBranchEbsid;
 
     /**
