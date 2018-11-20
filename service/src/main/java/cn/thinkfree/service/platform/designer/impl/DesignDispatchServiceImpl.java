@@ -1091,7 +1091,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * @param designOrderNo 设计订单编号
-     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)","SJZL(提交设计资料)","CKHT(查看合同)"]
+     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)",
+     * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
      */
     @Override
     public List<String> showBtn(String designOrderNo) {
@@ -1130,15 +1131,21 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("CKHT");
                 break;
             case STATE_150:
-            case STATE_180:
             case STATE_230:
-            case STATE_250:
                 btns.add("SJZL");
+                btns.add("CKHT");
+                break;
+            case STATE_180:
+            case STATE_250:
+                btns.add("SGZL");
                 btns.add("CKHT");
                 break;
         }
         if(stateEnum != DesignStateEnum.STATE_270){
             return btns;
+        }
+        if(designerOrder.getPreviewState() == 2){
+            btns.add("YJD");
         }
         return btns;
     }
