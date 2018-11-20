@@ -477,7 +477,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         constructionOrder.setStatus(1);
         constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_500.getState());
         // 1小包，2大包
-        if (project.getContractType() == 2) {
+        if (project.getContractType() != null && project.getContractType() == 2) {
             DesignerOrder designerOrders = queryDesignerOrder(projectNo);
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
@@ -767,7 +767,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         remindOwnerLog.setRemindTime(new Date());
         remindOwnerLogMapper.insertSelective(remindOwnerLog);
     }
-
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateOrderState(String projectNo, int orderState, String optionId, String optionName) {
         //设计师接单
@@ -791,7 +791,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
         }
-        updateProjectState(projectNo,stateEnum.getState());
     }
 
     @Override
@@ -816,7 +815,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
         }
-        updateProjectState(projectNo,stateEnum.getState());
     }
 
     @Override
@@ -1138,6 +1136,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("SJZL");
                 btns.add("CKHT");
                 break;
+        }
+        if(stateEnum != DesignStateEnum.STATE_270){
+            return btns;
         }
         return btns;
     }
