@@ -144,7 +144,7 @@ public class OrderListCommonService {
                             continue continueOut;
                         }
                     }
-                    constructionOrderListVo.setAddress(project.getCity());
+                    constructionOrderListVo.setAddress(commonService.getCityNameByCode(project.getCity()));
                     constructionOrderListVo.setAddressDetail(project.getAddressDetail());
                     constructionOrderListVo.setAppointmentTime(project.getCreateTime());
                     // 业主 & 手机号
@@ -535,6 +535,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<Project> getProjectInfo(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         ProjectExample example = new ProjectExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         return projectMapper.selectByExample(example);
@@ -547,7 +550,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<PersionVo> getOwnerId (List<Map<String, String>> listUserNo) {
-
+        if(listUserNo == null || listUserNo.isEmpty()){
+            return new ArrayList<>();
+        }
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterUrl, JSONObject.toJSONString(listUserNo));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
@@ -581,6 +586,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         OrderUserExample example = new OrderUserExample();
         example.createCriteria().andProjectNoIn(listProjectNo).andRoleCodeEqualTo(role).andIsTransferEqualTo((short) 0);
         List<OrderUser> list = orderUserMapper.selectByExample(example);
@@ -621,6 +629,9 @@ public class OrderListCommonService {
         ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
         example.createCriteria().andSortEqualTo(stage);
         List<ProjectBigScheduling> list = projectBigSchedulingMapper.selectByExample(example);
+        if(list == null || list.isEmpty()){
+            return "";
+        }
         return list.get(0).getName();
     }
 
@@ -631,6 +642,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<ProjectScheduling> getdelayDay(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         ProjectSchedulingExample example = new ProjectSchedulingExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         return projectSchedulingMapper.selectByExample(example);
@@ -643,6 +657,9 @@ public class OrderListCommonService {
      * @return
      */
     public Map<String, Integer> getApprove(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new HashMap<>();
+        }
         return afInstanceService.getProjectCheckResult(listProjectNo);
     }
 
@@ -653,6 +670,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<FundsOrder> getFundsOrder(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         FundsOrderExample example = new FundsOrderExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         List<FundsOrder> list = fundsOrderMapper.selectByExample(example);
@@ -666,6 +686,9 @@ public class OrderListCommonService {
      * @return
      */
     public List<ProjectQuotation> getPrice(List<String> listProjectNo) {
+        if(listProjectNo == null || listProjectNo.isEmpty()){
+            return new ArrayList<>();
+        }
         ProjectQuotationExample example = new ProjectQuotationExample();
         example.createCriteria().andProjectNoIn(listProjectNo);
         List<ProjectQuotation> list = projectQuotationMapper.selectByExample(example);
