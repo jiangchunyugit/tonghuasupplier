@@ -1,7 +1,6 @@
 package cn.thinkfree.service.branchcompany;
 
 import cn.thinkfree.database.model.BranchCompany;
-import cn.thinkfree.database.model.BranchCompanyExample;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
@@ -31,21 +30,25 @@ public interface BranchCompanyService {
 
     /**
      * 查询分公司信息(分页)
+     * @param branchCompanySEO
+     * @return
      */
     PageInfo<BranchCompanyVO> branchCompanyList(BranchCompanySEO branchCompanySEO);
 
     /**
      * 根据分公司id查询公司详情(带城市分站)
-     * @param Id
+     * @param id
      * @return
      */
-    BranchCompanyVO branchCompanyDetails(Integer Id);
+    BranchCompanyVO branchCompanyDetails(Integer id);
 
     /**
      * 分公司list（不带城市分站）
      * @return
+     * @param flag
+     * @return
      */
-    List<BranchCompany> branchCompanys(Integer flag);
+    List<BranchCompany> branchCompanies(Integer flag);
 
     /**
      * 分公司信息（不带城市分站）
@@ -75,6 +78,8 @@ public interface BranchCompanyService {
 
     /**
      * 根据用户查询用户组织架构
+     * @return
+     * @param userId
      * @return
      */
     List<CompanyInfo> getCompanyOrganizationByUser(String userId);

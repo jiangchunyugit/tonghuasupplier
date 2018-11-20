@@ -87,9 +87,23 @@ public interface BranchCompanyMapper {
      */
     int updateByPrimaryKey(BranchCompany record);
 
+    /**
+     * 分公司信息关联省市
+     * @param id
+     * @return
+     */
     BranchCompanyVO selectBranchCompanyWithPro(Integer id);
 
+    /**
+     * 分公司信息分页查询
+     * @param branchCompanySEO
+     * @return
+     */
     List<BranchCompanyVO> selectBranchCompanyByParam(BranchCompanySEO branchCompanySEO);
 
+    /**
+     * 权限分公司关系图
+     * @return
+     */
     List<CompanyRelationVO> selectCompanyRelation();
 }

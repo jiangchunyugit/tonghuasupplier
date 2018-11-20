@@ -16,6 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 门店中间表
+ */
 @RestController
 @RequestMapping(value = "/storeInfo")
 @Api(value = "前端使用---门店---蒋春雨",description = "前端使用---门店---蒋春雨")
@@ -32,6 +37,17 @@ public class StoreInfoController extends AbsBaseController {
     public MyRespBundle<List<StoreInfo>> storeInfoListByCityId(@ApiParam("城市分站编号")String cityBranchCode){
 
         return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByCityId(cityBranchCode));
+    }
+
+    /**
+     * 查询城市分站信息
+     */
+    @GetMapping(value = "/storeInfoListByCompanyId")
+    @MyRespBody
+    @ApiOperation(value="门店：门店信息（通过分公司编号查询门店信息）")
+    public MyRespBundle<List<StoreInfo>> storeInfoListByCompanyId(@ApiParam("城市分站编号")String branchCompanyCode){
+
+        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByCompanyId(branchCompanyCode));
     }
 
     /**

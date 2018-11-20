@@ -19,70 +19,75 @@ public interface SettlementRuleService {
 
     /**
      * 根据条件分页查询 合同数据
-     * @return pageList
+     * @param settlementRuleSEO
+     * @return
      */
     PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO(SettlementRuleSEO settlementRuleSEO);
 
 
     /**
-     *
-     * 创建/修改 结算规则
-     * @return boolean
+     * 创建 结算规则
+     * @param settlementRuleVO
+     * @return
      */
-    boolean insertOrupdateSettlementRule(SettlementRuleVO settlementRuleVO);
-
+    boolean insertOpiateSettlementRule(SettlementRuleVO settlementRuleVO);
 
     /**
-     *
      * 拷贝结算规则
-     * @return boolean
+     * @param ruleNumber
+     * @return
      */
     boolean copySettlementRule(String ruleNumber);
 
-
-
     /**
-     *
      * 查看结算规则
-     * @return SettlementRuleInfo
+     * @param ruleNumber
+     * @return
      */
     SettlementRuleVO getSettlementRule(String ruleNumber);
 
-
     /**
-     *
      * 作废结算规则
-     * @return SettlementRuleInfo
+     * @param ruleNumber
+     * @return
      */
-    boolean cancellatSettlementRule(String ruleNumber);
+    boolean cancelledSettlementRule(String ruleNumber);
 
     /**
-     *
      * 申请作废结算规则
-     * @return SettlementRuleInfo
+     * @param ruleNumber
+     * @return
      */
     boolean applicationInvalid(String ruleNumber);
 
 
     /**
-     * 获取费用名称从埃森哲获取
+     * 获取费用名称  代收款费用名称
      * @return
      */
     Map<String,String> getCostNames();
 
+    /**
+     * 获取费用名称  平台费用名称
+     * @return
+     */
     Map<String,String> getPlateFormNames();
 
     /**
      * 导出数据 （根据数据导出）
-     * @return null
+     * @param settlementRuleSEO
+     * @param response
      */
     void exportList(SettlementRuleSEO settlementRuleSEO, HttpServletResponse response);
 
     /**
      * 批量审核
+     * @param ruleNumbers
+     * @param auditStatus
+     * @param auditCase
      * @return
      */
-    boolean  batchcCheckSettlementRule(List<String> ruleNumbers, String auditStatus, String auditCase);
+    boolean batchCheckSettlementRule(List<String> ruleNumbers, String auditStatus, String auditCase);
 
     /**
      * 合同获取规则
@@ -92,9 +97,9 @@ public interface SettlementRuleService {
     List<SettlementRuleContractVO> getSettlementRuleContract(SettlementRuleInfo settlementRuleInfo);
 
     /**
-     *
      * 编辑作废 结算规则
-     * @return boolean
+     * @param settlementRuleVO
+     * @return
      */
     boolean updateSettlementRule(SettlementRuleVO settlementRuleVO);
 }

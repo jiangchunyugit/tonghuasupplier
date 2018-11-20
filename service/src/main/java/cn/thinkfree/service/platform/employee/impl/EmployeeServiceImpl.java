@@ -182,16 +182,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employeeApplyState == 1 || employeeApplyState == 2 || employeeApplyState == 6) {
             employeeState = 2;
             employeeMsg.setCompanyId("");
+            employeeMsg.setRoleCode("");
         } else {
             employeeState = 1;
             employeeMsg.setCompanyId(companyId);
+            employeeMsg.setRoleCode(roleCode);
         }
         if (employeeApplyState == 3) {
             employeeMsg.setBindDate(new Date());
         }
         employeeMsg.setEmployeeState(employeeState);
         employeeMsg.setEmployeeApplyState(employeeApplyState);
-        employeeMsg.setRoleCode(roleCode);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, employeeMsgExample);
         logger.info("更新用户信息：res={}", res);
         EmployeeApplyLogExample employeeApplyLogExample = new EmployeeApplyLogExample();
