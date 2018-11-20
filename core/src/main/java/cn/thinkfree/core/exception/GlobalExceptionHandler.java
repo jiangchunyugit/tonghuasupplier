@@ -73,7 +73,14 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		return buildErrorInfo(HttpStatus.BAD_REQUEST, e, req);
 	}
 
-
+	@ExceptionHandler(value = MyException.class)
+	@ResponseBody
+	public MyRespBundle<String> exceptionHandler(HttpServletRequest req, HttpServletResponse response, MyException e) throws Exception {
+		responseHandler(response, HttpStatus.BAD_REQUEST);
+		printErrorMes(e.getMessage());
+		e.printStackTrace();
+		return buildErrorInfo(HttpStatus.BAD_REQUEST, e.getDesc(), req);
+	}
 
 
 	@ExceptionHandler(value = Exception.class)
@@ -84,6 +91,7 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		e.printStackTrace();
 		return buildErrorInfo(HttpStatus.INTERNAL_SERVER_ERROR, "内部服务异常", req);
     }
+
 
 	private void responseHandler(HttpServletResponse response, HttpStatus status){
 		if(response != null) response.setStatus(HttpStatus.OK.value());
