@@ -228,6 +228,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()));
         projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()));
         projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()));
+        projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
