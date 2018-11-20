@@ -119,9 +119,10 @@ public class CityBranchServiceImpl implements CityBranchService {
     public List<CityBranch> selectByProCit(String branchCompanyCode, Integer cityCode) {
 
         // 分公司查询条件
-                CityBranchExample cityBranchExample = new CityBranchExample();
+        CityBranchExample cityBranchExample = new CityBranchExample();
         CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
         criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
+        criteria.andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         if (userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null) {
             // 权限等级

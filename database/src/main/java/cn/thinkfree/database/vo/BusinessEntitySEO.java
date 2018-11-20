@@ -5,10 +5,13 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @author jiangchunyu 经营主体管理查询条件  继承分页
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经营主体管理查询条件  继承分页
  */
 @ApiModel(description = "子公司管理条件")
 public class BusinessEntitySEO extends AbsPageSearchCriteria  {
+
     @ApiModelProperty("分公司编号")
     private String branchCompanyCode;
 
