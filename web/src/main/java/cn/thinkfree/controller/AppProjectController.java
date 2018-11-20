@@ -106,7 +106,7 @@ public class AppProjectController {
     public MyRespBundle<String> applyRefund(
             @RequestParam("OrderNo") @ApiParam(name = "OrderNo", value = "订单号",required = true) String orderNo,
             @RequestParam("payOrderNo") @ApiParam(name = "payOrderNo", value = "支付订单号",required = true) String payOrderNo,
-            @RequestParam("otherReason") @ApiParam(name = "otherReason", value = "其他原因",required = true) String otherReason,
+            @RequestParam(value = "otherReason",required = false) @ApiParam(name = "otherReason", value = "其他原因",required = true) String otherReason,
             @RequestParam("money") @ApiParam(name = "money", value = "金额",required = true) Integer money,
             @RequestParam("moneyName") @ApiParam(name = "moneyName", value = "退款项目名",required = true) String moneyName,
             @RequestParam("userId") @ApiParam(name = "userId", value = "用户id",required = true) String userId,
