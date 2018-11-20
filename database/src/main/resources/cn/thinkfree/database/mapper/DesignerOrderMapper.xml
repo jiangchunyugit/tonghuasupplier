@@ -23,6 +23,7 @@
     <result column="design_id" jdbcType="VARCHAR" property="designId" />
     <result column="contract_type" jdbcType="INTEGER" property="contractType" />
     <result column="style_type" jdbcType="VARCHAR" property="styleType" />
+    <result column="preview_state" jdbcType="INTEGER" property="previewState" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -97,7 +98,7 @@
     -->
     id, company_id, project_no, create_time, appointment_time, order_no, order_stage, 
     volume_room_time, volume_room_money, user_id, remark, actual_pay_money, status, close_time, 
-    design_id, contract_type, style_type
+    design_id, contract_type, style_type, preview_state
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.DesignerOrderExample" resultMap="BaseResultMap">
     <!--
@@ -155,13 +156,15 @@
       order_stage, volume_room_time, volume_room_money, 
       user_id, remark, actual_pay_money, 
       status, close_time, design_id, 
-      contract_type, style_type)
+      contract_type, style_type, preview_state
+      )
     values (#{id,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{appointmentTime,jdbcType=TIMESTAMP}, #{orderNo,jdbcType=VARCHAR}, 
       #{orderStage,jdbcType=INTEGER}, #{volumeRoomTime,jdbcType=TIMESTAMP}, #{volumeRoomMoney,jdbcType=BIGINT}, 
       #{userId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{actualPayMoney,jdbcType=BIGINT}, 
       #{status,jdbcType=INTEGER}, #{closeTime,jdbcType=TIMESTAMP}, #{designId,jdbcType=VARCHAR}, 
-      #{contractType,jdbcType=INTEGER}, #{styleType,jdbcType=VARCHAR})
+      #{contractType,jdbcType=INTEGER}, #{styleType,jdbcType=VARCHAR}, #{previewState,jdbcType=INTEGER}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.DesignerOrder">
     <!--
@@ -221,6 +224,9 @@
       <if test="styleType != null">
         style_type,
       </if>
+      <if test="previewState != null">
+        preview_state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -273,6 +279,9 @@
       </if>
       <if test="styleType != null">
         #{styleType,jdbcType=VARCHAR},
+      </if>
+      <if test="previewState != null">
+        #{previewState,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -344,6 +353,9 @@
       <if test="record.styleType != null">
         style_type = #{record.styleType,jdbcType=VARCHAR},
       </if>
+      <if test="record.previewState != null">
+        preview_state = #{record.previewState,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -371,7 +383,8 @@
       close_time = #{record.closeTime,jdbcType=TIMESTAMP},
       design_id = #{record.designId,jdbcType=VARCHAR},
       contract_type = #{record.contractType,jdbcType=INTEGER},
-      style_type = #{record.styleType,jdbcType=VARCHAR}
+      style_type = #{record.styleType,jdbcType=VARCHAR},
+      preview_state = #{record.previewState,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -431,6 +444,9 @@
       <if test="styleType != null">
         style_type = #{styleType,jdbcType=VARCHAR},
       </if>
+      <if test="previewState != null">
+        preview_state = #{previewState,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -455,7 +471,8 @@
       close_time = #{closeTime,jdbcType=TIMESTAMP},
       design_id = #{designId,jdbcType=VARCHAR},
       contract_type = #{contractType,jdbcType=INTEGER},
-      style_type = #{styleType,jdbcType=VARCHAR}
+      style_type = #{styleType,jdbcType=VARCHAR},
+      preview_state = #{previewState,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

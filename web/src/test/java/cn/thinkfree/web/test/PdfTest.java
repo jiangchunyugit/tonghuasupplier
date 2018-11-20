@@ -60,7 +60,7 @@ public class PdfTest {
         exportPdfVO.setApprovalUsers(userVOs);
 
 
-        String exportFileName = AfUtils.createPdf(pdfConfig, exportPdfVO, "{}");
+        String exportFileName = AfUtils.createPdf(pdfConfig, exportPdfVO, "{url:[\"http://47.94.212.199:81/1541742836169.JPEG\",\"http://47.94.212.199:81/1541742836169.JPEG\",\"http://47.94.212.199:81/1541742836169.JPEG\"]}");
         String pdfUrl = AfUtils.uploadFile(pdfConfig.getExportDir(), exportFileName, pdfConfig.getFileUploadUrl());
         System.out.println(pdfUrl);
     }
