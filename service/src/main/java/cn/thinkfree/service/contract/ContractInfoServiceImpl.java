@@ -1,5 +1,6 @@
 package cn.thinkfree.service.contract;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -493,6 +494,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				String filePath = FreemarkerUtils.savePdf(filePathDir + contractNumber, "0", root);
 				/* 上传 */
 				url = PdfUplodUtils.upload(filePath, fileUploadUrl);
+
+				if(url!= null){//上传完删除文件
+					File bin = new File(filePath);
+					bin.delete();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 				printErrorMes("生成pdf合同发生错误", e.getMessage());

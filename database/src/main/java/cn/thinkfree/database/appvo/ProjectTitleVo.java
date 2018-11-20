@@ -37,6 +37,8 @@ public class ProjectTitleVo {
     private Date projectStartTime;
     @ApiModelProperty(value = "项目结束时间")
     private Date projectEndTime;
+    @ApiModelProperty(value = "甘特图url")
+    private String ganttChartUrl;
 
 
 }

@@ -91,6 +91,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size()==0){
+            pageInfo.setList(new ArrayList<>());
             return RespData.success(pageInfo,"此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
@@ -227,6 +228,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()));
         projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()));
         projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()));
+        projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
@@ -340,8 +342,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             constructionOrderPlayVo.setPersionList(constructionPersionList);
             constructionOrderDetailVo.setOrderPlayVo(constructionOrderPlayVo);
+            projectOrderDetailVoList.add(constructionOrderDetailVo);
         }
-        projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);
     }
@@ -377,6 +379,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         //添加进度展示
         projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+        projectTitleVo.setGanttChartUrl("https://www.baidu.com");
         return RespData.success(projectTitleVo);
     }
 
