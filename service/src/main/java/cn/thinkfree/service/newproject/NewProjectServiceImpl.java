@@ -110,7 +110,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<ProjectVo> projectVoList = new ArrayList<>();
         for (Project project : projects) {
             ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
-            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getStateName(4))) {
+            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
                 projectVo.setAgreeButto(true);
                 projectVo.setRefuseButton(true);
             } else {
