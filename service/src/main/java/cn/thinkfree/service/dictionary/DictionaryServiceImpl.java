@@ -2,9 +2,11 @@ package cn.thinkfree.service.dictionary;
 
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.constants.CompanyConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,7 +54,21 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public List<Province> findAllProvince() {
-        return provinceMapper.selectByExample(null);
+        //根据登录人获取
+        UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        if(userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY)){
+            return provinceMapper.selectByExample(null);
+        }else{
+            Short level =userVO.getPcUserInfo().getLevel();
+            if(level.equals(UserLevel.Company_Province.shortVal()) || level.equals(UserLevel.Company_City.shortVal())){
+                ProvinceExample example = new ProvinceExample();
+                example.createCriteria().andProvinceCodeEqualTo(userVO.getPcUserInfo().getProvince());
+                return provinceMapper.selectByExample(example);
+            }else{
+                return provinceMapper.selectByExample(null);
+            }
+        }
+
     }
 
     /**
@@ -63,9 +79,17 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public List<City> findCityByProvince(String province) {
-        CityExample cityExample = new CityExample();
-        cityExample.createCriteria().andProvinceCodeEqualTo(province);
-        return cityMapper.selectByExample(cityExample);
+        UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        if(userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY)) {
+            CityExample cityExample = new CityExample();
+            cityExample.createCriteria().andProvinceCodeEqualTo(province);
+            return cityMapper.selectByExample(cityExample);
+        }else{
+            CityExample cityExample = new CityExample();
+            cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
+            return cityMapper.selectByExample(cityExample);
+
+        }
     }
 
     /**

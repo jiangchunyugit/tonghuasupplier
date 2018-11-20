@@ -7,13 +7,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Configuration
@@ -23,6 +28,13 @@ public class SwaggerConfig {
 
     @Bean
     public Docket createRestApi() {
+
+        //添加head参数start
+        ParameterBuilder tokenPar = new ParameterBuilder();
+        List<Parameter> pars = new ArrayList<>();
+        tokenPar.name("Authorization").description("令牌").modelRef(new ModelRef("string")).parameterType("header").required(false).build();
+        pars.add(tokenPar.build());
+        //添加head参数end
         return new Docket(DocumentationType.SWAGGER_2)
 
                 .apiInfo(apiInfo())
@@ -31,7 +43,7 @@ public class SwaggerConfig {
 //                .apis(RequestHandlerSelectors.basePackage("cn.thinkfree.controller,cn.thinkfree.appController"))
                 .apis(SwaggerConfig.basePackage("cn.thinkfree.controller,cn.thinkfree.appcontroller"))
                 .paths(PathSelectors.any())
-                .build();
+                .build().globalOperationParameters(pars);
     }
 
 
