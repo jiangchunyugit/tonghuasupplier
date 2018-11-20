@@ -535,6 +535,11 @@ public class NewProjectServiceImpl implements NewProjectService {
                 return RespData.error("确认失败!");
             }
         }
+        try {
+            designDispatchService.updateOrderState(dataVo.getProjectNo(), DesignStateEnum.STATE_60.getState(), "system", "system");
+        } catch (Exception e) {
+            return RespData.error("此阶段无法提交资料信息!");
+        }
         return RespData.success();
     }
 

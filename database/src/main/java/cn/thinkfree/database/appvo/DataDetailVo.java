@@ -40,7 +40,7 @@ public class DataDetailVo {
     /**
      * 资料类别(客厅施工图,开工报告)
      */
-    @ApiModelProperty(value = "资料类别(客厅施工图,开工报告)")
+    @ApiModelProperty(value = "资料类别(1,效果图资料 2,施工图资料)")
     private Integer category;
     /**
      * 是否确认
