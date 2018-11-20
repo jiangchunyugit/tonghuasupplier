@@ -668,7 +668,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
         projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
-        if(projectSchedulings.size() == 0){
+        if(projectSchedulings == null || projectSchedulings.size() == 0){
             return RespData.error("未查询到此项目信息");
         }
         if (projectSchedulings.size() == 1) {
@@ -704,7 +704,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(siteDetailsVo.getProjectNo());
         List<Project> projects = projectMapper.selectByExample(projectExample);
-        if(projects.size() > 0){
+        if(projects == null || projects.size() == 0){
             return RespData.error("未查询到此项目信息");
         }
         AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
@@ -795,6 +795,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     public MyRespBundle<ConstructionStageNunVO> getScheduleNum() {
         ConstructionOrderExample example = new ConstructionOrderExample();
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        if(list == null || list.size() == 0){
+            return RespData.error("施工订单信息为空");
+        }
         /* 统计状态个数 */
         int waitStart = 0;//待开工
         int underConstruction = 0;//施工中
