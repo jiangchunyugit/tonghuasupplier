@@ -12,11 +12,9 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -108,9 +106,9 @@ public class BranchCompanyController extends AbsBaseController{
     public MyRespBundle<List<BranchCompany>> branchCompanys(){
 
         int flag = 1;
-        List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys(flag);
+        List<BranchCompany> branchCompanies = branchCompanyService.branchCompanies(flag);
 
-        return sendJsonData(ResultMessage.SUCCESS, branchCompanys);
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanies);
     }
 
     /**
@@ -122,9 +120,9 @@ public class BranchCompanyController extends AbsBaseController{
     public MyRespBundle<List<BranchCompany>> branchCompanySearch(){
 
         int flag = 0;
-        List<BranchCompany> branchCompanys = branchCompanyService.branchCompanys(flag);
+        List<BranchCompany> branchCompanies = branchCompanyService.branchCompanies(flag);
 
-        return sendJsonData(ResultMessage.SUCCESS, branchCompanys);
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanies);
     }
 
     /**
