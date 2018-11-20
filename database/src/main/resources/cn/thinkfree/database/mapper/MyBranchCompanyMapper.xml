@@ -30,6 +30,7 @@
     <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
   </resultMap>
 
+  <!--权限分公司关系图-->
   <select id="selectCompanyRelation" parameterType="java.lang.Integer" resultMap="companyRelationResultMap">
     SELECT
 	*
@@ -37,7 +38,6 @@
 	pc_branch_company
 	WHERE pc_branch_company.is_enable = 1
   </select>
-
   <select id="getCityBranchs" resultMap="cityBranchResultMap" parameterType="java.lang.String">
     SELECT
 	*
@@ -46,6 +46,7 @@
     WHERE
 	pc_city_branch.is_enable = 1 AND branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
   </select>
+
   <!--分页查询-->
   <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.BranchCompanySEO" resultMap="branchCompanyPageResultMap">
     SELECT
@@ -69,6 +70,7 @@
     </where>
   </select>
 
+  <!--分公司关联省市信息-->
   <select id="selectBranchCompanyWithPro" parameterType="java.lang.Integer" resultMap="branchCompanyPageResultMap">
     SELECT
     pbc.*,
