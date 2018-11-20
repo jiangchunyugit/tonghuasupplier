@@ -4,11 +4,10 @@ import cn.thinkfree.database.model.BranchCompany;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
-
 /**
- * 分公司信息
- * @author jiangchunyu
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 分公司信息
  */
 @ApiModel("分公司信息")
 public class BranchCompanyVO extends BranchCompany {
@@ -18,30 +17,6 @@ public class BranchCompanyVO extends BranchCompany {
      */
     @ApiModelProperty("省份名称")
     private String provinceNm;
-
-//    @ApiModelProperty("埃森哲分公司名称")
-//    private String ebsCompanyNm;
-//
-//    public String getEbsCompanyNm() {
-//        return ebsCompanyNm;
-//    }
-//
-//    public void setEbsCompanyNm(String ebsCompanyNm) {
-//        this.ebsCompanyNm = ebsCompanyNm;
-//    }
-    //    /**
-//     * 城市分站list
-//     */
-//    @ApiModelProperty("分公司城市分站")
-//    private List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS;
-
-//    public List<CityBranchWtihProCitVO> getCityBranchWtihProCitVOS() {
-//        return cityBranchWtihProCitVOS;
-//    }
-//
-//    public void setCityBranchWtihProCitVOS(List<CityBranchWtihProCitVO> cityBranchWtihProCitVOS) {
-//        this.cityBranchWtihProCitVOS = cityBranchWtihProCitVOS;
-//    }
 
     public String getProvinceNm() {
         return provinceNm;
