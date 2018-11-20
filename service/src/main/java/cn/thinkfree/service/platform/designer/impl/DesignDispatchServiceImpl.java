@@ -1137,6 +1137,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("CKHT");
                 break;
         }
+        if(stateEnum != DesignStateEnum.STATE_270){
+            return btns;
+        }
         return btns;
     }
 
