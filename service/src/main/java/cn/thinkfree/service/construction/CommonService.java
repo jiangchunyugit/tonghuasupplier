@@ -5,10 +5,8 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.model.City;
-import cn.thinkfree.database.model.CityExample;
-import cn.thinkfree.database.model.ConstructionOrder;
-import cn.thinkfree.database.model.ConstructionOrderExample;
+import cn.thinkfree.database.mapper.ProjectMapper;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.vo.ConstructionCityVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +21,9 @@ public class CommonService extends AbsBaseController {
 
     @Autowired
     CityMapper cityMapper;
+
+    @Autowired
+    ProjectMapper projectMapper;
 
     /**
      * 查询 当前状态值 By projectNo
@@ -59,6 +60,7 @@ public class CommonService extends AbsBaseController {
         } else {
             return false;
         }
+
     }
 
     /**
@@ -69,12 +71,26 @@ public class CommonService extends AbsBaseController {
         example.createCriteria().andOrderNoEqualTo(orderNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
         constructionOrder.setOrderStage(stateCode);
+
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
-        if (isUpdate == 1) {
+        //同步到project表中
+        int isUpdateProject = updateToProject(constructionOrder.getProjectNo(),stateCode);
+        if (isUpdate == 1 && isUpdateProject ==1) {
             return true;
         } else {
             return false;
         }
+    }
+
+    /**
+     *  更新状态值-同步到project表中
+     */
+    public int updateToProject(String projectNo,int stateCode){
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(projectNo);
+        Project project = new Project();
+        project.setStage(stateCode);
+        return  projectMapper.updateByExampleSelective(project,projectExample);
     }
 
     /**
