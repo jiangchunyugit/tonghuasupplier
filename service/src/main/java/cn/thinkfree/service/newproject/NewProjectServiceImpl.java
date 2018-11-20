@@ -91,6 +91,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size()==0){
+            pageInfo.setList(new ArrayList<>());
             return RespData.success(pageInfo,"此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
@@ -272,11 +273,6 @@ public class NewProjectServiceImpl implements NewProjectService {
                 designerOrderDetailVo.setCancle(false);
             }
         }
-        if (project.getStage().equals(DesignStateEnum.STATE_140.getState())||project.getStage().equals(DesignStateEnum.STATE_220.getState())){
-            designerOrderDetailVo.setIsSign(true);
-        }else {
-            designerOrderDetailVo.setIsSign(false);
-        }
         //存放订单类型
         designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
@@ -326,11 +322,6 @@ public class NewProjectServiceImpl implements NewProjectService {
 //        constructionOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
             Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
             constructionOrderDetailVo.setCancle(aBoolean);
-            if (project.getStage().equals(ConstructionStateEnumB.STATE_550.getState())){
-                constructionOrderDetailVo.setIsSign(true);
-            }else {
-                constructionOrderDetailVo.setIsSign(false);
-            }
             //存放订单类型
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
             //存放展示信息
@@ -350,8 +341,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             constructionOrderPlayVo.setPersionList(constructionPersionList);
             constructionOrderDetailVo.setOrderPlayVo(constructionOrderPlayVo);
+            projectOrderDetailVoList.add(constructionOrderDetailVo);
         }
-        projectOrderDetailVoList.add(constructionOrderDetailVo);
         projectVo.setProjectOrderDetailVoList(projectOrderDetailVoList);
         return RespData.success(projectVo);
     }
@@ -387,6 +378,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         //添加进度展示
         projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+        projectTitleVo.setGanttChartUrl("https://www.baidu.com");
         return RespData.success(projectTitleVo);
     }
 

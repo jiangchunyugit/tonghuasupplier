@@ -30,8 +30,6 @@ public class ProjectOrderDetailVo {
     private String styleType;
     @ApiModelProperty(name = "cancle",value = "能否取消")
     private Boolean cancle;
-    @ApiModelProperty(value = "是否展示签订合同")
-    private Boolean IsSign;
     @ApiModelProperty(name = "orderPlayVo",value = "展示信息")
     private OrderPlayVo orderPlayVo;
 //    private List<FlexibleOrderPlayVo> flexibleOrderPlayVos;
