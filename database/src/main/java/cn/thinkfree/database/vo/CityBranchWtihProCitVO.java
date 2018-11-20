@@ -5,20 +5,16 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * @author jiangchunyu 城市分站带有省份城市名称
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 城市分站带有省份城市名称
  */
 @ApiModel("城市分站带有省份城市名称信息")
 public class CityBranchWtihProCitVO extends CityBranch {
 
-    /**
-     * 省份名称
-     */
     @ApiModelProperty("省份名称")
     private String provinceNm;
 
-    /**
-     * 城市名称
-     */
     @ApiModelProperty("城市名称")
     private String cityNm;
 

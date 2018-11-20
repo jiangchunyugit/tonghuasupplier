@@ -1148,6 +1148,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         projectExample.createCriteria().andProjectNoEqualTo(projectNo);
         Project project = new Project();
         project.setStage(state);
-        projectMapper.updateByExample(project,projectExample);
+        projectMapper.updateByExampleSelective(project,projectExample);
     }
 }

@@ -56,17 +56,21 @@ public class DictionaryServiceImpl implements DictionaryService {
     public List<Province> findAllProvince() {
         //根据登录人获取
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        if(userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY)){
+        if(userVO != null){
+        if(userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY.shortVal())){
             return provinceMapper.selectByExample(null);
-        }else{
-            Short level =userVO.getPcUserInfo().getLevel();
-            if(level.equals(UserLevel.Company_Province.shortVal()) || level.equals(UserLevel.Company_City.shortVal())){
+        }else {
+            Short level = userVO.getPcUserInfo().getLevel();
+            if (level.equals(UserLevel.Company_Province.shortVal()) || level.equals(UserLevel.Company_City.shortVal())) {
                 ProvinceExample example = new ProvinceExample();
                 example.createCriteria().andProvinceCodeEqualTo(userVO.getPcUserInfo().getProvince());
                 return provinceMapper.selectByExample(example);
-            }else{
+            } else {
                 return provinceMapper.selectByExample(null);
             }
+        }
+        }else{
+            return provinceMapper.selectByExample(null);
         }
 
     }
@@ -80,15 +84,21 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public List<City> findCityByProvince(String province) {
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        if(userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY)) {
+        if(userVO != null) {
+            if (userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY.shortVal())) {
+                CityExample cityExample = new CityExample();
+                cityExample.createCriteria().andProvinceCodeEqualTo(province);
+                return cityMapper.selectByExample(cityExample);
+            } else {
+                CityExample cityExample = new CityExample();
+                cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
+                return cityMapper.selectByExample(cityExample);
+
+            }
+        }else{
             CityExample cityExample = new CityExample();
             cityExample.createCriteria().andProvinceCodeEqualTo(province);
             return cityMapper.selectByExample(cityExample);
-        }else{
-            CityExample cityExample = new CityExample();
-            cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
-            return cityMapper.selectByExample(cityExample);
-
         }
     }
 
