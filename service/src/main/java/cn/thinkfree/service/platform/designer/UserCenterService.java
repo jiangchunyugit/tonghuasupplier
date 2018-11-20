@@ -11,6 +11,8 @@ import java.util.Map;
  * 获取用户信息服务即可
  */
 public interface UserCenterService {
+    String getUrl(String suffix);
+
     /**
      * 根据用户ID查询用户信息
      *

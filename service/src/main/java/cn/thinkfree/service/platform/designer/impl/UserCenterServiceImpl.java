@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -26,26 +27,35 @@ public class UserCenterServiceImpl implements UserCenterService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
+    @Value("{user.center.ip}")
+    private String userCenterIp;
+    @Value("{user.center.port}")
+    private String userCenterPort;
     /**
      * 查询用户的用户中心地址
      */
-    private static String queryUserUrl = "http://10.240.10.169:5000/userapi/other/getUserMsgByPhone";
+    private String queryUserUrl = "/userapi/other/getUserMsgByPhone";
     /**
      * 业主注册
      */
-    private static String registerC = "http://10.240.10.169:5000/userapi/register/api/registerC";
+    private String registerC = "/userapi/register/api/registerC";
     /**
      * 员工注册
      */
-    private static String registerS = "http://10.240.10.169:5000/userapi/register/api/registerS";
+    private String registerS = "/userapi/register/api/registerS";
     /**
      * 根据手机号和姓名模糊查询用户信息
      */
-    private static String queryUserByPhoneAndName = "http://10.240.10.169:5000/userapi/other/getUserMsgByPhoneAndName";
+    private String queryUserByPhoneAndName = "/userapi/other/getUserMsgByPhoneAndName";
     /**
      * 根据用户ID查询用户信息
      */
-    private static String getAllUserByIds = "http://10.240.10.169:5000/userapi/other/api/getListUserByUserIds";
+    private String getAllUserByIds = "/userapi/other/api/getListUserByUserIds";
+
+    @Override
+    public String getUrl(String suffix){
+        return "http://" + userCenterIp + ":" + userCenterPort + suffix;
+    }
 
     @Override
     public List<UserMsgVo> queryUsers(List<String> userIds) {
@@ -72,23 +82,13 @@ public class UserCenterServiceImpl implements UserCenterService {
         return userMsgVo;
     }
 
-//    public static void main(String[] args) {
-//        Map<String, EmployeeMsg> employeeMsgMap = new HashMap<>();
-//        EmployeeMsg employeeMsg = new EmployeeMsg();
-//        employeeMsg.setUserId("CC18103016014600009");
-//        employeeMsg.setRoleCode("CC");
-//        employeeMsgMap.put("CC18103016014600009", employeeMsg);
-//        List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
-//        System.out.println(JSONObject.toJSONString(userMsgVos));
-//    }
-
     /**
      * 注册用户
      * @param userName
      * @param userPhone
      * @param isOwner
      */
-    private static UserMsgVo register(String userName, String userPhone, boolean isOwner){
+    private UserMsgVo register(String userName, String userPhone, boolean isOwner){
         if(isOwner){
             return registerC(userName,userPhone);
         }else{
@@ -96,11 +96,11 @@ public class UserCenterServiceImpl implements UserCenterService {
         }
     }
 
-    private static UserMsgVo registerC(String userName, String userPhone){
+    private UserMsgVo registerC(String userName, String userPhone){
         Map<String,String> params = new HashMap<>();
         params.put("userName",userName);
         params.put("userPhone",userPhone);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(registerC, HttpUtils.mapToParams(params));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(registerC), HttpUtils.mapToParams(params));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -122,13 +122,13 @@ public class UserCenterServiceImpl implements UserCenterService {
         return msgVo;
     }
 
-    private static UserMsgVo registerS(String userName, String userPhone){
+    private UserMsgVo registerS(String userName, String userPhone){
         Map<String,String> params = new HashMap<>();
         params.put("userName",userName);
         params.put("userPhone",userPhone);
         List<Map<String,String>> mapList = new ArrayList<>();
         mapList.add(params);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(registerS, JSONObject.toJSONString(mapList));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getUrl(registerS), JSONObject.toJSONString(mapList));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -154,10 +154,10 @@ public class UserCenterServiceImpl implements UserCenterService {
      * 根据手机号查询用户信息
      * @param userPhone
      */
-    private static UserMsgVo queryByPhone(String userPhone){
+    private UserMsgVo queryByPhone(String userPhone){
         Map<String,String> queryUserParams = new HashMap<>();
         queryUserParams.put("phone",userPhone);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(queryUserUrl, HttpUtils.mapToParams(queryUserParams));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserUrl), HttpUtils.mapToParams(queryUserParams));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -196,7 +196,7 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Override
     public List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getAllUserByIds, getParams(employeeMsgMap));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getUrl(getAllUserByIds), getParams(employeeMsgMap));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -235,7 +235,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         }else {
             queryUserParams.put("nickName",userMsg);
         }
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(queryUserByPhoneAndName, HttpUtils.mapToParams(queryUserParams));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserByPhoneAndName), HttpUtils.mapToParams(queryUserParams));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             return new ArrayList<>();
@@ -266,7 +266,7 @@ public class UserCenterServiceImpl implements UserCenterService {
      * @param employeeMsgMap
      * @return
      */
-    private static String getParams(Map<String, EmployeeMsg> employeeMsgMap) {
+    private String getParams(Map<String, EmployeeMsg> employeeMsgMap) {
         List<String> userIds = new ArrayList<>();
         for (Map.Entry<String, EmployeeMsg> msgEntry : employeeMsgMap.entrySet()) {
             EmployeeMsg employeeMsg = msgEntry.getValue();
