@@ -157,6 +157,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProjectOrder(Integer.getInteger(operationVo.getProjectOrder()));
             projectVo.setProjectData(Integer.getInteger(operationVo.getProjectData()));
             projectVo.setProjectInvoice(Integer.getInteger(operationVo.getInvoice()));
+            projectVo.setStageNameColor("#50ABD2");
             projectVoList.add(projectVo);
         }
         pageInfo.setList(projectVoList);
