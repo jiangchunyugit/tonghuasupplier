@@ -616,10 +616,9 @@ public class AccountController extends AbsBaseController {
         result.put("name",userVO.getName());
         result.put("first",userService.isFirstLogin());
         result.put("companyId", userVO.getCompanyID());
+        if(userVO.getCompanyInfo() != null){
+            result.put("auditStatus", userVO.getCompanyInfo().getAuditStatus());
+        }
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
-
-
-
-
 }
