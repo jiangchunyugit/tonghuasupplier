@@ -19,7 +19,11 @@
 		<property name="fileName" value="designer"/>
 		<property name="level" value="DEBUG"/>
 	</springProfile>
-
+	<springProfile name="uat">
+		<property name="dir" value="/home/designer/approot/logs"/>
+		<property name="fileName" value="designer"/>
+		<property name="level" value="DEBUG"/>
+	</springProfile>
 
 	<timestamp key="date" datePattern="yyyyMMdd" />
 	<!-- Output to Console -->
