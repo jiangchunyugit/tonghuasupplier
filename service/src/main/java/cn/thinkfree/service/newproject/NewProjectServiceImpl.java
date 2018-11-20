@@ -272,6 +272,11 @@ public class NewProjectServiceImpl implements NewProjectService {
                 designerOrderDetailVo.setCancle(false);
             }
         }
+        if (project.getStage().equals(DesignStateEnum.STATE_140.getState())||project.getStage().equals(DesignStateEnum.STATE_220.getState())){
+            designerOrderDetailVo.setIsSign(true);
+        }else {
+            designerOrderDetailVo.setIsSign(false);
+        }
         //存放订单类型
         designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
@@ -321,6 +326,11 @@ public class NewProjectServiceImpl implements NewProjectService {
 //        constructionOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
             Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
             constructionOrderDetailVo.setCancle(aBoolean);
+            if (project.getStage().equals(ConstructionStateEnumB.STATE_550.getState())){
+                constructionOrderDetailVo.setIsSign(true);
+            }else {
+                constructionOrderDetailVo.setIsSign(false);
+            }
             //存放订单类型
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
             //存放展示信息
