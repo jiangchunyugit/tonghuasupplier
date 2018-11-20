@@ -621,4 +621,27 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         return RespData.success();
     }
+
+    /**
+     * C端确认资料
+     * @param projectNo
+     * @param category
+     * @return
+     */
+    @Override
+    public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category) {
+        ProjectData projectData = new ProjectData();
+        projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
+        projectData.setConfirmTime(new Date());
+        ProjectDataExample example = new ProjectDataExample();
+        ProjectDataExample.Criteria criteria = example.createCriteria();
+        criteria.andCategoryEqualTo(category);
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        int i = projectDataMapper.updateByExampleSelective(projectData, example);
+        if(i==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("确认失败");
+        }
+        return RespData.success();
+    }
 }

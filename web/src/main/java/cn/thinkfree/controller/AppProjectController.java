@@ -94,6 +94,14 @@ public class AppProjectController {
         return newProjectService.confirmVolumeRoomData(dataVo);
     }
 
+    @RequestMapping(value = "confirmVolumeRoomDataUser", method = RequestMethod.POST)
+    @ApiOperation(value = "C端确认资料")
+    public MyRespBundle<String> confirmVolumeRoomDataUser(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ")String projectNo,
+            @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号,测试请用 ")Integer category) {
+        return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
+    }
+
     @RequestMapping(value = "getProjectStatus", method = RequestMethod.POST)
     @ApiOperation(value = "APP-获取项目阶段")
     public MyRespBundle<Integer> getProjectStatus(
