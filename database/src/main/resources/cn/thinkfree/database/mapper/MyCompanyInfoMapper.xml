@@ -23,6 +23,7 @@
         <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
         <result column="contract_number" jdbcType="VARCHAR" property="contractNumber" />
         <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+        <result column="role_id" jdbcType="VARCHAR" property="roleId" />
     </resultMap>
 
     <sql id="Base_Column_List_VO">
@@ -197,6 +198,7 @@
 <select id="list" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
     SELECT
     info.company_id,
+    info.role_id,
     role.role_name,
     expand.comapny_nature as comapny_nature,
     info.company_name,
@@ -283,6 +285,7 @@
     <select id="downLoad" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
         SELECT
         info.company_id,
+        info.roleId,
         role.role_name,
         expand.comapny_nature as comapny_nature,
         info.company_name,
