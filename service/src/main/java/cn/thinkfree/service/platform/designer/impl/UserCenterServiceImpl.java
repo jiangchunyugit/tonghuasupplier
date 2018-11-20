@@ -27,9 +27,9 @@ public class UserCenterServiceImpl implements UserCenterService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
-    @Value("{custom.service.ip}")
+    @Value("${custom.service.ip}")
     private String userCenterIp;
-    @Value("{custom.service.port}")
+    @Value("${custom.service.port}")
     private String userCenterPort;
     /**
      * 查询用户的用户中心地址
