@@ -3,7 +3,9 @@ package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
+import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,16 +16,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  *  施工状态相关接口
  */
-@Api(value = "施工订单状态接口API", tags = "施工订单状态接口API---->刘博/佳明/传让/../..")
+@Api(value = "施工订单状态接口API", tags = "施工订单状态接口API---->刘博/佳明/传让/江宁哥/../..")
 @Controller
 @RequestMapping("constructionState")
 public class ConstructionStateController extends AbsBaseController {
 
     @Autowired
     ConstructionStateServiceB constructionStateServiceB;
+
+    @ApiOperation("获取所有订单状态==江宁哥")
+    @MyRespBody
+    @RequestMapping(value = "getAllState", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<Map<String, Object>>> getAllState(@RequestParam @ApiParam(value = "1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态",required = true) int type) {
+        List<Map<String, Object>> list = ConstructionStateEnumB.allStates(type);
+        return  RespData.success(list,"操作成功!");
+    }
 
 
     @ApiOperation("查询当前状态")

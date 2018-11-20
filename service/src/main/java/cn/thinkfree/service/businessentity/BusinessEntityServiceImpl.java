@@ -20,6 +20,11 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经营主体
+ */
 @Service
 public class BusinessEntityServiceImpl implements BusinessEntityService {
 
@@ -32,8 +37,13 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     @Autowired
     StoreInfoMapper storeInfoMapper;
 
+    @Autowired
+    HrOrganizationEntityMapper hrOrganizationEntityMapper;
+
     @Override
     public int addBusinessEntity(BusinessEntityVO businessEntityVO) {
+
+        // 新增经营主体
         BusinessEntity businessEntity = new BusinessEntity();
         SpringBeanUtil.copy(businessEntityVO,businessEntity);
         businessEntity.setCreateTime(new Date());
@@ -43,11 +53,18 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
 
         int result = businessEntityMapper.insertSelective(businessEntity);
         if (businessEntityVO.getStoreInfoList()!= null && businessEntityVO.getStoreInfoList().size()>0) {
+
+            // 新增门店信息
             this.insertStoreInfo(businessEntityVO.getStoreInfoList(),businessEntity);
         }
         return result;
     }
 
+    /**
+     * 新增门店信息
+     * @param storeInfos
+     * @param businessEntity
+     */
     private void insertStoreInfo(List<StoreInfo> storeInfos,BusinessEntity businessEntity) {
 
         storeInfos.forEach(e->{
@@ -61,15 +78,19 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     @Override
     public int updateBusinessEntity(BusinessEntityVO businessEntityVO) {
 
+        // 更新门店信息
         StoreInfoExample storeInfoExample= new StoreInfoExample();
         if (StringUtils.isNotBlank(businessEntityVO.getBusinessEntityCode())) {
 
+            // 先删除当前经营主体所有门店
             storeInfoExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityVO.getBusinessEntityCode());
             storeInfoMapper.deleteByExample(storeInfoExample);
         }
         BusinessEntity businessEntity = new BusinessEntity();
         SpringBeanUtil.copy(businessEntityVO,businessEntity);
         if (businessEntityVO.getStoreInfoList() != null) {
+
+            // 增加门店信息
             this.insertStoreInfo(businessEntityVO.getStoreInfoList(),businessEntity);
         }
         return businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
@@ -82,9 +103,6 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         SpringBeanUtil.copy(businessEntityVO,businessEntity);
         return businessEntityMapper.updateByPrimaryKeySelective(businessEntity);
     }
-
-    @Autowired
-    HrOrganizationEntityMapper hrOrganizationEntityMapper;
 
     @Override
     public BusinessEntityVO businessEntityDetails(Integer id) {
@@ -109,7 +127,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     }
 
     @Override
-    public List<BusinessEntity> businessEntitys() {
+    public List<BusinessEntity> businessEntices() {
 
         BusinessEntityExample businessEntityExample = new BusinessEntityExample();
         BusinessEntityExample.Criteria criteria = businessEntityExample.createCriteria();

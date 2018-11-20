@@ -73,7 +73,7 @@ public class CityBranchController extends AbsBaseController{
     @ApiOperation(value="城市分站：分站详情（根据分公司id进行分站联动查询）")
     public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyId(@ApiParam("分公司编号")Integer id){
 
-        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompany(id);
+        List<CityBranch> cityBranchList = cityBranchService.cityBranchesByCompany(id);
 
         return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
     }
@@ -87,7 +87,7 @@ public class CityBranchController extends AbsBaseController{
     public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyCode(@ApiParam("分公司编号")@RequestParam String branchCompanyCode){
 
         int flag = 1;
-        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompanyCode(flag,branchCompanyCode);
+        List<CityBranch> cityBranchList = cityBranchService.cityBranchesByCompanyCode(flag,branchCompanyCode);
 
         return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
     }
@@ -101,7 +101,7 @@ public class CityBranchController extends AbsBaseController{
     public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyCodeSearch(@ApiParam("分公司编号")@RequestParam String branchCompanyCode){
 
         int flag = 0;
-        List<CityBranch> cityBranchList = cityBranchService.cityBranchlistByCompanyCode(flag,branchCompanyCode);
+        List<CityBranch> cityBranchList = cityBranchService.cityBranchesByCompanyCode(flag,branchCompanyCode);
 
         return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
     }
@@ -228,9 +228,6 @@ public class CityBranchController extends AbsBaseController{
 
         return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCitCode(provinceCode,cityCode));
     }
-
-
-
 
     /**
      * 城市分站

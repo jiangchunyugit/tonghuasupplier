@@ -86,9 +86,24 @@ public interface BusinessEntityMapper {
      */
     int updateByPrimaryKey(BusinessEntity record);
 
+    /**
+     * 经营主体分页查询
+     * @param businessEntitySEO
+     * @return
+     */
     List<BusinessEntityVO> selectWithCompany(BusinessEntitySEO businessEntitySEO);
 
+    /**
+     * 查看详情
+     * @param id
+     * @return
+     */
     List<BusinessEntityVO> selectWithId(Integer id);
 
+    /**
+     * 通过城市分站编号查询
+     * @param cityBranchCode
+     * @return
+     */
     List<BusinessEntityVO> selectWithCityBranchCode(String cityBranchCode);
 }
