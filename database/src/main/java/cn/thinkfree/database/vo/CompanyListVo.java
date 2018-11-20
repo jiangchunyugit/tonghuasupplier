@@ -84,6 +84,19 @@ public class CompanyListVo extends CompanyInfo {
     @ApiModelProperty(value = "公司类型")
     private String roleName;
 
+    @ApiModelProperty(value = "角色id")
+    private  String roleId;
+
+    @Override
+    public String getRoleId() {
+        return roleId;
+    }
+
+    @Override
+    public void setRoleId(String roleId) {
+        this.roleId = roleId;
+    }
+
     public String getRoleName() {
         return roleName;
     }

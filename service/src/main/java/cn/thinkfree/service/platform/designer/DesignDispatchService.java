@@ -279,4 +279,5 @@ public interface DesignDispatchService {
     List<String> showBtn(String designOrderNo);
 
 
+    void updateProjectState(String projectNo, int state);
 }
