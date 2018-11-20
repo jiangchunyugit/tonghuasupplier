@@ -12,7 +12,6 @@
 
     <collection property="storeInfoList" ofType="cn.thinkfree.database.model.StoreInfo" select="getStoreInfos"
                 javaType="java.util.ArrayList" column="business_entity_code">
-
     </collection>
   </resultMap>
 
@@ -25,6 +24,7 @@
     <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
   </resultMap>
 
+  <!--分页查询-->
   <select id="selectWithCompany" parameterType="cn.thinkfree.database.vo.BusinessEntitySEO" resultMap="businessEntityResultMap">
     SELECT
     pbe.*,
@@ -52,6 +52,7 @@
     order by to_char(pbe.create_time, 'YYYY/MM/DD')
   </select>
 
+  <!--查看详情-->
   <select id="selectWithId" parameterType="java.lang.Integer" resultMap="businessEntityWithStoreInfoResultMap">
     <!--
       WARNING - @mbg.generated
@@ -70,6 +71,7 @@
     </where>
   </select>
 
+  <!--城市分站查看详情，经营主体门店信息-->
   <select id="selectWithCityBranchCode" parameterType="java.lang.String" resultMap="businessEntityWithStoreInfoResultMap">
     <!--
       WARNING - @mbg.generated
@@ -87,7 +89,7 @@
       pbe.city_branch_code = #{cityBranchCode}
     </where>
   </select>
-
+  <!--联动SQL（查询门店信息）-->
   <select id="getStoreInfos" resultMap="storeInfoWithHrResultMap" parameterType="java.lang.String">
 
     SELECT

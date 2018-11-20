@@ -97,7 +97,7 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：经营主体信息")
     public MyRespBundle<List<BusinessEntity>> businessEntitys(){
 
-        List<BusinessEntity> businessEntitys = businessEntityService.businessEntitys();
+        List<BusinessEntity> businessEntitys = businessEntityService.businessEntices();
 
         return sendJsonData(ResultMessage.SUCCESS, businessEntitys);
     }

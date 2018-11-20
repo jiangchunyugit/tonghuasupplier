@@ -8,7 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 /**
- * @author jiangchunyu 经营主体信息
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经营主体信息
  */
 @ApiModel("经营主体信息")
 public class BusinessEntityVO extends BusinessEntity {
