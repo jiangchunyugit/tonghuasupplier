@@ -87,10 +87,25 @@ public interface CityBranchMapper {
      */
     int updateByPrimaryKey(CityBranch record);
 
+    /**
+     * 城市分站查看详情
+     * @param id
+     * @return
+     */
     CityBranchVO selectBranchDetails(Integer id);
 
+    /**
+     * 城市分站分页查询
+     * @param cityBranchSEO
+     * @return
+     */
     List<CityBranchVO> selectBranchCompanyByParam(CityBranchSEO cityBranchSEO);
 
+    /**
+     * 城市分站关联省份，城市
+     * @param branchCompanyCode
+     * @return
+     */
     List<CityBranchWtihProCitVO> selectCityBranchWithProCit(String branchCompanyCode);
 
 }
