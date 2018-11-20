@@ -5,6 +5,11 @@ import cn.thinkfree.database.model.StoreInfo;
 
 import java.util.List;
 
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 门店信息
+ */
 public interface StoreInfoService {
 
     /**

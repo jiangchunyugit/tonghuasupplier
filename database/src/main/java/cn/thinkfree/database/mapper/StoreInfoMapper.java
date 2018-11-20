@@ -83,5 +83,10 @@ public interface StoreInfoMapper {
      */
     int updateByPrimaryKey(StoreInfo record);
 
+    /**
+     * 通过城市编号查询
+     * @param example
+     * @return
+     */
     List<StoreInfo> selectByCityBranchCode(StoreInfoExample example);
 }
