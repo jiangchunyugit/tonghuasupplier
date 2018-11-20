@@ -39,6 +39,8 @@ public interface CityBranchService {
 
     /**
      * 分公司查看详细城市分站
+     * @param cityBranchSEO
+     * @return
      */
     PageInfo<CityBranchWtihProCitVO> cityBranchWithProList(CityBranchSEO cityBranchSEO);
 
@@ -50,12 +52,6 @@ public interface CityBranchService {
     CityBranchVO cityBranchDetails(Integer id);
 
     /**
-     * 城市分站list
-     * @return
-     */
-    List<CityBranch> cityBranchs();
-
-    /**
      * 更新城市分站状态（启动，禁用，删除）
      * @return
      * @param cityBranch
@@ -65,11 +61,17 @@ public interface CityBranchService {
 
     /**
      * 根据城市查询城市分站（过滤入驻权限）
+     * @param branchCompanyCode
+     * @param cityCode
+     * @return
      */
     List<CityBranch> selectByProCit(String branchCompanyCode, Integer cityCode);
 
     /**
      * 根据省市查询城市分站
+     * @param province
+     * @param city
+     * @return
      */
     List<CityBranch> selectByProCitCode(Integer province,Integer city);
 
@@ -91,12 +93,13 @@ public interface CityBranchService {
      * @param id
      * @return
      */
-    List<CityBranch> cityBranchlistByCompany (Integer id);
+    List<CityBranch> cityBranchesByCompany(Integer id);
 
     /**
-     * 通过分公司id查询全部城市分站信息
-     * @param cityCode
+     * 通过分公司编号查询全部城市分站信息
+     * @param flag
+     * @param branchCompanyCode
      * @return
      */
-    List<CityBranch> cityBranchlistByCompanyCode (Integer flag,String cityCode);
+    List<CityBranch> cityBranchesByCompanyCode (Integer flag,String branchCompanyCode);
 }
