@@ -171,7 +171,7 @@ public class CityBranchServiceImpl implements CityBranchService {
 
         // 市地区条件
         if (null != cityCode) {
-            criteria.andProvinceCodeEqualTo(cityCode.shortValue());
+            criteria.andCityCodeEqualTo(cityCode.shortValue());
         }
 
         // 分公司编码
@@ -187,6 +187,24 @@ public class CityBranchServiceImpl implements CityBranchService {
 //
 //            criteria.andCityCodeEqualTo(city.shortValue());
 //        }
+        return cityBranchMapper.selectByExample(cityBranchExample);
+    }
+
+    @Override
+    public List<CityBranch> selectByProCitCode(Integer province, Integer city) {
+
+        CityBranchExample cityBranchExample = new CityBranchExample();
+        CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
+        criteria.andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
+        criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
+        if (province != null) {
+
+            criteria.andProvinceCodeEqualTo(province.shortValue());
+        }
+        if (city != null) {
+
+            criteria.andCityCodeEqualTo(city.shortValue());
+        }
         return cityBranchMapper.selectByExample(cityBranchExample);
     }
 
