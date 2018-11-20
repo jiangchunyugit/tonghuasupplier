@@ -12,6 +12,7 @@ import cn.thinkfree.database.vo.SelectItem;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.company.CompanyInfoService;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import cn.thinkfree.service.user.UserService;
@@ -25,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 不需要token的部分
@@ -51,6 +53,9 @@ public class OpenApiController extends AbsBaseController {
 
     @Autowired
     BranchCompanyService branchCompanyService;
+
+    @Autowired
+    ContractService contractService;
 
     @ApiOperation(value = "APP模糊查询公司列表",notes = "默认30条数据")
     @PostMapping("/companyInfo")
@@ -143,4 +148,23 @@ public class OpenApiController extends AbsBaseController {
         List<CompanyInfo> companyInfos = branchCompanyService.getCompanyOrganizationByUser(userId);
         return sendJsonData(ResultMessage.SUCCESS,companyInfos);
     }
+
+
+
+    /**
+     * 设计合同录入
+     *
+     */
+
+    @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
+    @PostMapping("/insertDesignOrderContract/{orderNumber}/{companyId}")
+    @MyRespBody
+    public MyRespBundle<Map<String,Object> > insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
+                                                          @ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
+
+    	Map<String,Object>  map  = contractService.insertDesignOrderContract(orderNumber, paramMap);
+
+        return sendJsonData(ResultMessage.SUCCESS,map);
+    }
+
 }
