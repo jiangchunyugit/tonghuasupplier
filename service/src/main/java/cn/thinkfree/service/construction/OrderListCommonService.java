@@ -226,7 +226,7 @@ public class OrderListCommonService {
         pageInfo.setList(listVo);
         Page p = (Page) pageInfo2.getList();
         pageInfo.setPageNum(p.getPages());
-        //    pageInfo.setTotal(pageInfo2.getList().size());
+        pageInfo.setTotal(pageInfo2.getList().size());
         return pageInfo;
     }
 

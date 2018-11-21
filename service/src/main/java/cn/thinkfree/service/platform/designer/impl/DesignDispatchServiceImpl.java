@@ -4,10 +4,14 @@ import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.pcvo.ConstructionOrderVO;
+import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
+import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.platform.designer.CreatePayOrderService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
@@ -65,6 +69,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private OrderUserMapper orderUserMapper;
     @Autowired
     private CreatePayOrderService createPayOrderService;
+    @Autowired
+    private BuildConfigService buildConfigService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -126,7 +132,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
         projectNos.clear();
-        projectNos = ReflectUtils.getList(designerOrders,"projectNo");
+        projectNos = ReflectUtils.getList(designerOrders, "projectNo");
         companyIds.clear();
         companyIds = ReflectUtils.getList(designerOrders, "companyId");
         OrderUserExample userExample = new OrderUserExample();
@@ -150,14 +156,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return pageVo;
     }
 
-    private Map<String,Project> getProjectMap(List<String> projectNos){
-        if(projectNos == null || projectNos.isEmpty()){
+    private Map<String, Project> getProjectMap(List<String> projectNos) {
+        if (projectNos == null || projectNos.isEmpty()) {
             return new HashMap<>();
         }
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoIn(projectNos);
         List<Project> projects = projectMapper.selectByExample(projectExample);
-        return ReflectUtils.listToMap(projects,"projectNo");
+        return ReflectUtils.listToMap(projects, "projectNo");
     }
 
     @Override
@@ -203,7 +209,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         companyIds.add(companyId);
         companyIds = ReflectUtils.getList(designerOrders, "companyId");
         projectNos.clear();
-        projectNos = ReflectUtils.getList(designerOrders,"projectNo");
+        projectNos = ReflectUtils.getList(designerOrders, "projectNo");
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andProjectNoIn(projectNos);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
@@ -274,7 +280,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @return
      */
     private List<String> queryCompanyIds(int companyState) {
-        if(companyState < 0){
+        if (companyState < 0) {
             return new ArrayList<>();
         }
         CompanyInfoExample infoExample = new CompanyInfoExample();
@@ -319,16 +325,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderVo DesignerOrderVo = new DesignerOrderVo();
         DesignerOrderVo.setProjectNo(project.getProjectNo());
         DesignerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
-        String ownerId = projectUserService.queryUserIdOne(project.getProjectNo(),RoleFunctionEnum.OWNER_POWER);
+        String ownerId = projectUserService.queryUserIdOne(project.getProjectNo(), RoleFunctionEnum.OWNER_POWER);
         UserMsgVo ownerMsg = msgVoMap.get(ownerId);
         if (ownerMsg != null) {
             DesignerOrderVo.setOwnerName(ownerMsg.getUserName());
             DesignerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
         DesignerOrderVo.setAddress(project.getAddressDetail());
-        try{
+        try {
             DesignerOrderVo.setOrderSource(ProjectSource.queryByState(project.getOrderSource()).getSourceName());
-        }catch (Exception e){
+        } catch (Exception e) {
             DesignerOrderVo.setOrderSource("未知");
         }
         DesignerOrderVo.setCreateTime(DateUtils.dateToStr(project.getCreateTime()));
@@ -342,14 +348,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrderVo.setCompanyName(companyInfo.getCompanyName());
             DesignerOrderVo.setCompanyState(companyInfo.getAuditStatus());
         }
-        String designerId = projectUserService.queryUserIdOne(project.getProjectNo(),RoleFunctionEnum.DESIGN_POWER);
+        String designerId = projectUserService.queryUserIdOne(project.getProjectNo(), RoleFunctionEnum.DESIGN_POWER);
         EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
         if (employeeMsg != null) {
             DesignerOrderVo.setDesignerName(employeeMsg.getRealName());
         }
-        try{
+        try {
             DesignerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
-        }catch (Exception e){
+        } catch (Exception e) {
             DesignerOrderVo.setOrderStateName("未知");
         }
         DesignerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
@@ -416,14 +422,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     /**
      * 合同审核通过
      *
-     * @param projectNo    项目编号
+     * @param orderNo      设计订单编号
      * @param contractType 合同类型，1全款合同，2分期合同
-     * @param companyId    公司ID
-     * @param optionId     操作人ID
-     * @param optionName   操作人名称
      */
     @Override
-    public void reviewPass(String projectNo, int contractType, String companyId, String optionId, String optionName) {
+    public void reviewPass(String orderNo, int contractType) {
         if (contractType != 1 && contractType != 2) {
             throw new RuntimeException("必须声明合同类型");
         }
@@ -431,20 +434,20 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (contractType == 2) {
             stateEnum = DesignStateEnum.STATE_140;
         }
-        Project project = queryProjectByNo(projectNo);
-        DesignerOrder designerOrder = queryDesignerOrder(projectNo);
-        if (!designerOrder.getCompanyId().equals(companyId)) {
-            throw new RuntimeException("无权操作");
-        }
+        DesignerOrder designerOrder = queryDesignerOrderByOrderNo(orderNo);
+        Project project = queryProjectByNo(designerOrder.getProjectNo());
+//        if (!designerOrder.getCompanyId().equals(companyId)) {
+//            throw new RuntimeException("无权操作");
+//        }
         DesignerOrder updateOrder = new DesignerOrder();
         updateOrder.setId(designerOrder.getId());
         updateOrder.setContractType(contractType);
         updateOrder.setOrderStage(stateEnum.getState());
         DesignerOrderMapper.updateByPrimaryKeySelective(updateOrder);
         //记录操作日志
-        saveOptionLog(designerOrder.getOrderNo(), optionId, optionName, "合同审核通过");
+        saveOptionLog(designerOrder.getOrderNo(), "system", "system", "合同审核通过");
         saveLog(stateEnum.getState(), project);
-        updateProjectState(projectNo,stateEnum.getState());
+        updateProjectState(project.getProjectNo(), stateEnum.getState());
     }
 
     @Override
@@ -481,10 +484,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrder designerOrders = queryDesignerOrder(projectNo);
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
+            constructionOrder.setSchemeNo(buildConfigService.getSchemeNoByCompanyId(companyId));
             constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_520.getState());
         }
         constructionOrderMapper.insertSelective(constructionOrder);
-        updateProjectState(projectNo,constructionOrder.getOrderStage());
+        updateProjectState(projectNo, constructionOrder.getOrderStage());
     }
 
     /**
@@ -510,7 +514,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //记录操作日志
         saveOptionLog(designerOrders.getOrderNo(), optionUserId, optionUserName, reason);
         saveLog(DesignStateEnum.STATE_999.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_999.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_999.getState());
     }
 
     /**
@@ -540,7 +544,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "指派订单给公司【" + companyId + "】";
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_10.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_10.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_10.getState());
     }
 
     @Override
@@ -549,8 +553,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         Project project = queryProjectByNo(projectNo);
         List<String> userIds = new ArrayList<>();
-        userIds.add(projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER));
-        userIds.add(projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.DESIGN_POWER));
+        userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER));
+        userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER));
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
@@ -589,7 +593,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "公司编号为【" + companyId + "】的公司拒绝接单，拒绝原因：" + reason;
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_1.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_1.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_1.getState());
     }
 
     /**
@@ -623,7 +627,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "公司编号为【" + companyId + "】的公司指派设计师";
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_20.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_20.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_20.getState());
     }
 
     /**
@@ -660,7 +664,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "设计师【" + optionUserName + "】拒绝接单";
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_10.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_10.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_10.getState());
     }
 
     /**
@@ -695,7 +699,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "设计师【" + optionUserName + "】已接单";
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_30.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_30.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_30.getState());
     }
 
     /**
@@ -737,7 +741,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_40.getState(), project);
         createPayOrderService.createVolumeRoomPay(projectNo);
-        updateProjectState(projectNo,DesignStateEnum.STATE_40.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_40.getState());
     }
 
     @Override
@@ -767,6 +771,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         remindOwnerLog.setRemindTime(new Date());
         remindOwnerLogMapper.insertSelective(remindOwnerLog);
     }
+
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateOrderState(String projectNo, int orderState, String optionId, String optionName) {
@@ -790,6 +795,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
+        }else{
+            updateProjectState(projectNo,orderState);
         }
     }
 
@@ -814,6 +821,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
+        }else{
+            updateProjectState(projectNo,orderState);
         }
     }
 
@@ -835,7 +844,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = DesignStateEnum.STATE_70.getLogText();
         saveOptionLog(designerOrders.getOrderNo(), optionId, "业主", remark);
         saveLog(DesignStateEnum.STATE_70.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_70.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_70.getState());
     }
 
 
@@ -880,7 +889,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
             createConstructionOrder(project.getProjectNo());
         }
-        updateProjectState(project.getProjectNo(),stateEnum.getState());
+        updateProjectState(project.getProjectNo(), stateEnum.getState());
     }
 
 
@@ -938,7 +947,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = DesignStateEnum.STATE_330.getLogText();
         saveOptionLog(designerOrder.getOrderNo(), userId, "业主", remark);
         saveLog(DesignStateEnum.STATE_330.getState(), project);
-        updateProjectState(projectNo,DesignStateEnum.STATE_330.getState());
+        updateProjectState(projectNo, DesignStateEnum.STATE_330.getState());
     }
 
     /**
@@ -972,7 +981,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return designerMsgs.get(0);
     }
 
-    private DesignerMsg createDesignerMsg(String designerUserId){
+    private DesignerMsg createDesignerMsg(String designerUserId) {
         DesignerMsg designerMsg = new DesignerMsg();
         designerMsg.setUserId(designerUserId);
         designerMsg.setVolumeRoomMoney(new BigDecimal(100));
@@ -1091,7 +1100,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * @param designOrderNo 设计订单编号
-     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)",
+     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)",
      * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
      */
     @Override
@@ -1115,7 +1124,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("LFZL");
                 break;
             case STATE_130:
-                btns.add("HTQY");
                 btns.add("CKHT");
                 break;
             case STATE_140:
@@ -1141,21 +1149,52 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("CKHT");
                 break;
         }
-        if(stateEnum != DesignStateEnum.STATE_270){
+        if (stateEnum != DesignStateEnum.STATE_270) {
             return btns;
         }
-        if(designerOrder.getPreviewState() == 2){
+        if (designerOrder.getPreviewState() == 2) {
             btns.add("YJD");
         }
         return btns;
     }
 
     @Override
-    public void updateProjectState(String projectNo, int state){
+    public void updateProjectState(String projectNo, int state) {
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(projectNo);
         Project project = new Project();
         project.setStage(state);
-        projectMapper.updateByExampleSelective(project,projectExample);
+        projectMapper.updateByExampleSelective(project, projectExample);
+    }
+
+    @Override
+    public ContractMsgVo queryContractMsg(String projectNo) {
+        Project project = queryProjectByNo(projectNo);
+        CompanyInfoVo companyInfo = getCompanyMsg(projectNo);
+        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
+        UserMsgVo userMsgVo = userService.queryUser(ownerId);
+        ContractMsgVo contractMsgVo = new ContractMsgVo();
+        contractMsgVo.setOwnerAddress(project.getAddressDetail());
+        contractMsgVo.setOwnerCardNo(userMsgVo.getMemberEcode());
+        contractMsgVo.setOwnerEmaile("");
+        contractMsgVo.setOwnerName(userMsgVo.getUserName());
+        contractMsgVo.setOwnerPhone(userMsgVo.getUserPhone());
+        contractMsgVo.setCompanyName(companyInfo.getCompanyName());
+        contractMsgVo.setCompanyLegalPerson(companyInfo.getLegalName());
+        return contractMsgVo;
+    }
+
+    private CompanyInfoVo getCompanyMsg(String projectNo) {
+        CompanyInfoVo companyInfo;ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        String companyId = null;
+        if(!constructionOrders.isEmpty()){
+            companyId = constructionOrders.get(0).getCompanyId();
+        }else{
+            return null;
+        }
+        companyInfo = companyInfoMapper.selectByCompanyId(companyId);
+        return companyInfo;
     }
 }

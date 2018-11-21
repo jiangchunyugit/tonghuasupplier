@@ -14,10 +14,10 @@ public class UserNoUtils {
 	private static String ip = null;
 	private static AtomicLong number = new AtomicLong(0);
 	private static long recordIpTime = 0;
-	private static final String maxNumStr = "VVVVV";
-	private static final int maxLength = 5;
+	private static final String maxNumStr = "VVVV";
+	private static final int maxLength = 4;
 	private static final long maxNum = UnCompressNumber(maxNumStr);
-	private static final SimpleDateFormat formatter = new SimpleDateFormat("yyMMddHHmmss");
+	private static final SimpleDateFormat formatter = new SimpleDateFormat("yyMMdd");
 
 	/*public static void main(String[] args) {
 		System.out.println(getNonceStr());

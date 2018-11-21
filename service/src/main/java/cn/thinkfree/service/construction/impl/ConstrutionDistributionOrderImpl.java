@@ -13,6 +13,7 @@ import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
 import cn.thinkfree.service.construction.vo.ConstructionOrderDistributionNumVo;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
+import cn.thinkfree.service.platform.build.BuildConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,8 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     CommonService commonService;
+    @Autowired
+    BuildConfigService buildConfigService;
 
 
     /**
@@ -83,11 +86,18 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
             example.createCriteria().andCompanyNameLike("%"+companyName+"%");
         }
         List<DistributionOrderCityVo> listData = new ArrayList<>();
+        example.createCriteria().andRoleIdLike("%BD%");
         List<CompanyInfo> list = companyInfoMapper.selectByExample(example);
         for (CompanyInfo companyInfo : list){
             CityExample cityExample = new CityExample();
             cityExample.createCriteria().andCityCodeEqualTo(String.valueOf(companyInfo.getCityCode()));
             List<City> listCity = cityMapper.selectByExample(cityExample);
+
+            /* 判断该公司是否又施工方案 */
+            String schemeNo = buildConfigService.getSchemeNoByCompanyId(companyInfo.getCompanyId());
+            if (StringUtils.isBlank(schemeNo)){
+                continue;
+            }
             for (City city1 :listCity){
                 DistributionOrderCityVo DistributionOrderCityVo = new DistributionOrderCityVo();
                 DistributionOrderCityVo.setCity(city1.getCityName());
@@ -115,10 +125,17 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
             return RespData.error(ResultMessage.ERROR.code, "公司ID不能为空");
         }
 
+        /* 判断该公司是否又施工方案 */
+        String schemeNo = buildConfigService.getSchemeNoByCompanyId(companyId);
+        if (StringUtils.isBlank(schemeNo)){
+            return RespData.error(ResultMessage.ERROR.code, "该公司没有施工方案不能派单");
+        }
+
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
         constructionOrder.setCompanyId(companyId);
+        constructionOrder.setSchemeNo(schemeNo);
 
         // 改变订单状态
         MyRespBundle<String> r = constructionStateServiceB.operateDispatchToConstruction(orderNo);
@@ -133,6 +150,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         } else {
             return RespData.error(ResultMessage.ERROR.code, "派单失败,请稍后重试");
         }
+
     }
 
 }

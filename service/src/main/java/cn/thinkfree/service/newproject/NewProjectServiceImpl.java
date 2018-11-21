@@ -144,19 +144,19 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             String projectMessageStatus = cloudService.getProjectMessageStatus(project.getProjectNo(), project.getOwnerId());
             if (projectMessageStatus.trim().isEmpty()) {
-                return RespData.error("获取徐洋消息信息失败!");
+                return RespData.error("获取动态消息信息失败!");
             }
             JSONObject messageJson = JSONObject.parseObject(projectMessageStatus);
             JSONObject data = messageJson.getJSONObject("data");
             if (!messageJson.getInteger("code").equals(ErrorCode.OK.getCode())) {
-                return RespData.error("获取徐洋消息信息失败!");
+                return RespData.error("获取动态消息信息失败!");
             }
             String dataString = JSONObject.toJSONString(data);
             OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
-            projectVo.setProjectDynamic(Integer.getInteger(operationVo.getProjectDynamic()));
-            projectVo.setProjectOrder(Integer.getInteger(operationVo.getProjectOrder()));
-            projectVo.setProjectData(Integer.getInteger(operationVo.getProjectData()));
-            projectVo.setProjectInvoice(Integer.getInteger(operationVo.getInvoice()));
+            projectVo.setProjectDynamic(Integer.parseInt(operationVo.getProjectDynamic()) > 0 ? 1 : 0);
+            projectVo.setProjectOrder(Integer.parseInt(operationVo.getProjectOrder()) > 0 ? 1 : 0);
+            projectVo.setProjectData(Integer.parseInt(operationVo.getProjectData()) > 0 ? 1 : 0);
+            projectVo.setProjectInvoice(Integer.parseInt(operationVo.getInvoice()) > 0 ? 1 : 0);
             projectVo.setStageNameColor("#50ABD2");
             projectVoList.add(projectVo);
         }
@@ -216,19 +216,19 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         String projectMessageStatus = cloudService.getProjectMessageStatus(projectNo, project.getOwnerId());
         if (projectMessageStatus.trim().isEmpty()) {
-            return RespData.error("获取徐洋消息信息失败!");
+            return RespData.error("获取动态消息信息失败!");
         }
         JSONObject messageJson = JSONObject.parseObject(projectMessageStatus);
         JSONObject data = messageJson.getJSONObject("data");
         if (!messageJson.getInteger("code").equals(ErrorCode.OK.getCode())) {
-            return RespData.error("获取徐洋消息信息失败!");
+            return RespData.error("获取动态消息信息失败!");
         }
         String dataString = JSONObject.toJSONString(data);
         OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
-        projectVo.setProjectDynamic(Integer.valueOf(operationVo.getProjectDynamic()));
-        projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()));
-        projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()));
-        projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()));
+        projectVo.setProjectDynamic(Integer.valueOf(operationVo.getProjectDynamic()) > 0 ? 1 : 0);
+        projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()) > 0 ? 1 : 0);
+        projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()) > 0 ? 1 : 0);
+        projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()) > 0 ? 1 : 0);
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
@@ -328,7 +328,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
             //存放展示信息
             OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
-            if(constructionOrderPlayVo == null){
+            if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
             }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
@@ -453,22 +453,29 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<List<UrlDetailVo>> getConstructionData(String projectNo) {
+    public MyRespBundle<ConstructionDataVo> getConstructionData(String projectNo) {
+        ConstructionDataVo constructionDataVo = new ConstructionDataVo();
         List<UrlDetailVo> urlList = new ArrayList<>();
+        Integer confirm = 0;
         ProjectDataExample example = new ProjectDataExample();
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andTypeEqualTo(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
+        criteria.andTypeEqualTo(ProjectDataStatus.QUOTATION_STATUS.getValue());
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
         for (ProjectData projectData : projectDataList) {
+            if (projectData.getIsConfirm() != null){
+                confirm = projectData.getIsConfirm();
+            }
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
             urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
             urlList.add(urlDetailVo);
         }
-        return RespData.success(urlList);
+        constructionDataVo.setUrlList(urlList);
+        constructionDataVo.setConfirm(confirm);
+        return RespData.success(constructionDataVo);
     }
 
     /**
@@ -508,7 +515,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getUserId().isEmpty()) {
             return RespData.error("请给userid赋值");
         }
-        if (dataVo.getHsDesignId()==null||dataVo.getHsDesignId().trim().isEmpty()){
+        if (dataVo.getHsDesignId() == null || dataVo.getHsDesignId().trim().isEmpty()) {
             return RespData.error("hsDesignId 不可为空");
         }
         EmployeeMsgExample example = new EmployeeMsgExample();
@@ -532,13 +539,13 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setHsDesignid(dataVo.getHsDesignId());
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
-            if(dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())){
-                if(urlDetailVo.getPhoto360Url()==null||urlDetailVo.getPhoto360Url().trim().isEmpty()){
+            if (dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
+                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
                     return RespData.error("3D全景度为空");
                 }
                 projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
-            }else {
-                if(urlDetailVo.getImgUrl()==null||urlDetailVo.getImgUrl().trim().isEmpty()){
+            } else {
+                if (urlDetailVo.getImgUrl() == null || urlDetailVo.getImgUrl().trim().isEmpty()) {
                     return RespData.error("图片地址为空");
                 }
                 projectData.setUrl(urlDetailVo.getImgUrl());
@@ -552,10 +559,10 @@ public class NewProjectServiceImpl implements NewProjectService {
                 return RespData.error("确认失败!");
             }
         }
-        if(dataVo.getType().equals(ProjectDataStatus.VOLUME_DATA.getValue())){
+        if (dataVo.getType().equals(ProjectDataStatus.VOLUME_DATA.getValue())) {
             designDispatchService.updateOrderState(dataVo.getProjectNo(), DesignStateEnum.STATE_60.getState(), "system", "system");
         }
-        if(dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())){
+        if (dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_240;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(dataVo.getProjectNo()).getContractType() == 2) {
@@ -563,7 +570,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             designDispatchService.updateOrderState(dataVo.getProjectNo(), stateEnum.getState(), "system", "system");
         }
-        if(dataVo.getType().equals(ProjectDataStatus.CONSTRUCTION_DATA.getValue())){
+        if (dataVo.getType().equals(ProjectDataStatus.CONSTRUCTION_DATA.getValue())) {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(dataVo.getProjectNo()).getContractType() == 2) {
@@ -655,11 +662,13 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * C端确认资料
+     *
      * @param projectNo
      * @param category
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category) {
         ProjectData projectData = new ProjectData();
         projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
@@ -670,24 +679,24 @@ public class NewProjectServiceImpl implements NewProjectService {
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         int i = projectDataMapper.updateByExampleSelective(projectData, example);
-        if(i==ProjectDataStatus.INSERT_FAILD.getValue()){
+        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("确认失败");
         }
-        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
-        if(category == 1){
+        String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
+        if (category == 1) {
             designDispatchService.confirmedDeliveries(projectNo, ownerId);
-        }else if(category == 2){
+        } else if (category == 2) {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_170;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
-        }else if(category == 3){
+        } else if (category == 3) {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
-                stateEnum = DesignStateEnum.STATE_190;
+                stateEnum = DesignStateEnum.STATE_200;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         }
@@ -696,18 +705,20 @@ public class NewProjectServiceImpl implements NewProjectService {
 
     /**
      * 更具设计师ID获取设计信息
+     *
      * @param designerId
      * @return
      */
     @Override
     public MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId) {
-        if (designerId==null||designerId.trim().isEmpty()){
+        if (designerId == null || designerId.trim().isEmpty()) {
             return RespData.error("设计师Id不可为空");
         }
-        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId,ProjectDataStatus.BASE_STATUS.getValue());
-        for (DesignOrderVo designOrderVo:designOrderVos){
+        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue());
+        for (DesignOrderVo designOrderVo : designOrderVos) {
             designOrderVo.setProjectStage(DesignStateEnum.queryByState(designOrderVo.getStage()).getStateName(3));
         }
         return RespData.success(designOrderVos);
     }
+
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.ContractInfo;
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
@@ -130,7 +131,7 @@ public interface ContractService {
        * 财务审核通过 生成合同pdf
        *
        */
-      boolean createOrderContract(String orderNumber);
+      boolean createOrderContractpdf(String orderNumber);
 
       /**
        * 根据订单号获取
@@ -154,6 +155,8 @@ public interface ContractService {
        * @param  orderNumber 
        */
       Map<String,Object> insertDesignOrderContract(String orderNumber,Map<String,String> paramMap);
+      
+      
       
       /**
        * 新增施工合同
@@ -200,4 +203,18 @@ public interface ContractService {
      * @return
      */
     Optional<SyncOrderVO> selectSyncDateByOrder(String contractID);
+    
+    /**
+     * 审批合同
+     * @param orderNumber
+     * @return
+     */
+    boolean examineOrderContract(String orderNumber,String status,String cause);
+    
+    /**
+     * 查询订单合同不通的原因
+     * 根据订单编号
+     * 
+     */
+    List<PcAuditInfo> getAuditInfoList(String orderNumber);
 }
