@@ -792,7 +792,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setCteateTime( new Date() );
 		record.setUpdateTime( new Date() );
 		record.setOrderNumber( orderNumber );
-		record.setContractType("2");
+		record.setAuditType("2");
 		/* record.setConractUrlPdf(url); */
 		orderContractMapper.insertSelective( record );
 		newSchedulingService.createScheduling(orderNumber);
