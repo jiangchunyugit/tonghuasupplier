@@ -153,6 +153,14 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState());
     }
 
+    /**
+     * 装饰公司
+     * 5确认线下签约完成（自动创建工地项目）
+     */
+    @Override
+    public void contractCompleteState(String orderNo){
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_550.getState());
+    }
 
     /**
      * 支付
