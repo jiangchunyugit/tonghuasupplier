@@ -444,6 +444,7 @@ public class DesignDispatchController extends AbsBaseController {
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         } catch (Exception e) {
+            e.printStackTrace();
             return sendFailMessage(e.getMessage());
         }
         return sendSuccessMessage(null);

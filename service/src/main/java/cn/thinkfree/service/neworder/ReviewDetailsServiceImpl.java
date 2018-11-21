@@ -53,6 +53,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ConstructionStateServiceB constructionStateServiceB;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
+    @Autowired
+    ProjectDataMapper projectDataMapper;
+    @Autowired
+    DesignerOrderMapper designerOrderMapper;
 
     /**
      * 获取精准报价
@@ -533,12 +537,20 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     /**
      * 获取上海报价信息
      *
-     * @param designId
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle getShangHaiPriceDetail(String designId, String projectNo) {
+    public MyRespBundle getShangHaiPriceDetail(String projectNo) {
+        ProjectDataExample dataExample = new ProjectDataExample();
+        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+        dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        dataCriteria.andProjectNoEqualTo(projectNo);
+        List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
+        if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
+            return RespData.error("此项目尚未提交设计案例");
+        }
+        String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
         if (result.trim().isEmpty()) {
             return RespData.error("获取上海报价信息失败!");
@@ -639,7 +651,22 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (constructionOrders.size() == 0) {
             return RespData.error("查无此施工订单");
         }
-        constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+        try {
+            constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("修改项目状态失败!");
+        }
+        DesignerOrder designerOrder = new DesignerOrder();
+        designerOrder.setPreviewState(ProjectDataStatus.BASE_STATUS.getValue());
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
+        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        orderCritera.andProjectNoEqualTo(projectNo);
+        int i = designerOrderMapper.updateByExampleSelective(designerOrder, orderExample);
+        if (i == 0) {
+            return RespData.error("修改设计订单预交底状态失败!");
+        }
         return RespData.success();
     }
 }

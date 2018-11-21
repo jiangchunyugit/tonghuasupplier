@@ -35,7 +35,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
     /**
      * 创建支付订单url
      */
-    private static String createPayUrl = "http://10.240.10.169:5000/financialapi/funds/order";
+    private String createPayUrl = "/financialapi/funds/order";
     @Autowired
     private DesignDispatchService designDispatchService;
     @Autowired
@@ -158,7 +158,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
         params.put("userId", ownerMsg.getUserId());
         List<Map<String, String>> listParams = new ArrayList<>();
         listParams.add(params);
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(createPayUrl, JSONObject.toJSONString(listParams));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterService.getUrl(createPayUrl), JSONObject.toJSONString(listParams));
         logger.info(JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             throw new RuntimeException("创建订单服务异常");

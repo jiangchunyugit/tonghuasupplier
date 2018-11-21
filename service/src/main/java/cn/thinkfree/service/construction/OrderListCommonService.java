@@ -625,7 +625,10 @@ public class OrderListCommonService {
      * @param stage
      * @return
      */
-    public String getContstructionStage(int stage) {
+    public String getContstructionStage(Integer stage) {
+        if (null == stage){
+            return "";
+        }
         ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
         example.createCriteria().andSortEqualTo(stage);
         List<ProjectBigScheduling> list = projectBigSchedulingMapper.selectByExample(example);
