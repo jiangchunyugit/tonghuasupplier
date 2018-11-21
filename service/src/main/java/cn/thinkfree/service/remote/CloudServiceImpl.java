@@ -50,7 +50,7 @@ public class CloudServiceImpl implements CloudService {
     String smallSchedulingUrl;
     @Value("${shanghai.priceUrl}")
     String priceUrl;
-    @Value("${message.remindConsumerUrl}")
+    @Value("${shanghai.priceUrl}")
     String remindConsumerUrl;
 
     @Value("${custom.cloud.syncMerchantUrl}")
@@ -324,7 +324,6 @@ public class CloudServiceImpl implements CloudService {
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethodForJson(syncContractUrl, requestEntity);
-//            result = invokeRemoteMethod(syncMerchantUrl,param);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
@@ -356,11 +355,9 @@ public class CloudServiceImpl implements CloudService {
     }
 
     private RemoteResult<String> invokeRemoteMethodForJson(String url, HttpEntity<String> param) {
-        String result = restTemplate.postForObject(url, param, String.class);
-        RemoteResult remoteResult = new RemoteResult();
-        System.out.println(result);
-        // TODO 确认是否完成
-        return null;
+        RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
+        result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
+        return result;
     }
 
     @Override

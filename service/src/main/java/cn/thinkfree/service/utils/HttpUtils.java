@@ -190,7 +190,7 @@ public class HttpUtils {
      * @return
      */
     public static HttpRespMsg postJson(String requestUrl, String requestMsg) {
-        return send(requestUrl, METHOD_POST, CHARSET_UTF8, requestMsg,"application/json");
+        return send(requestUrl, METHOD_POST, CHARSET_UTF8, requestMsg,"application/json; charset=UTF-8");
     }
     /**
      * 发送请求

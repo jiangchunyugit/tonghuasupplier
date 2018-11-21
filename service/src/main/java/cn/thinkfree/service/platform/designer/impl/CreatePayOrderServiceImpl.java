@@ -19,7 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +35,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
     /**
      * 创建支付订单url
      */
-    private static String createPayUrl = "http://10.240.10.169:5000/financialapi/funds/order";
+    private String createPayUrl = "/financialapi/funds/order";
     @Autowired
     private DesignDispatchService designDispatchService;
     @Autowired
@@ -78,7 +80,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
         }
         checkMoney(designerMsgVo.getVolumeRoomMoney());
         CompanyInfo companyInfo = getDesignCompanyMsg(designerOrder.getCompanyId());
-        createPay(project,designerOrder,ownerMsg,designerMsg,designerMsgVo,companyInfo);
+        createPay(project, designerOrder, ownerMsg, designerMsg, designerMsgVo, companyInfo);
     }
 
     private void checkMoney(String money) {
@@ -110,7 +112,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
 
     private void createPay(Project project, DesignerOrder designerOrder, OrderUser ownerMsg, OrderUser designerMsg, DesignerMsgVo designerMsgVo, CompanyInfo companyInfo) {
         UserMsgVo ownerMsgVo = userCenterService.queryUser(ownerMsg.getUserId());
-        if(ownerMsgVo == null){
+        if (ownerMsgVo == null) {
             throw new RuntimeException("没有查询到业主信息");
         }
         Map<String, String> params = new HashMap<>();
@@ -120,81 +122,50 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
         params.put("companyId", companyInfo.getCompanyId());
         //公司名称
         params.put("companyName", companyInfo.getCompanyName());
+        //施工阶段(水电工程)
+        params.put("constructionStage", "");
         //业主姓名
         params.put("consumerName", ownerMsgVo.getUserName());
+        //合同类型：1全款，2分期
+        params.put("contractType", "");
+        //设计案例id
+        params.put("designId", "");
         //设计师id
         params.put("designUserId", designerMsg.getUserId());
+        //合同结束时间
+        params.put("endTime", "");
         //订单号：设计单号、施工单号、合同编号
         params.put("fromOrderid", designerOrder.getOrderNo());
+        //1首款,2尾款,0无
+        params.put("isEnd", "0");
         //项目地址
         params.put("projectAddr", project.getAddressDetail());
         //项目编号，是否订单号
         params.put("projectNo", project.getProjectNo());
+        //签约时间
+        params.put("signedTime", "");
+        //阶段排序号
+        params.put("sort", "");
+        //合同开始时间
+        params.put("startTime", "");
         //装修类型(个性化)
         params.put("styleType", project.getStyle());
         //订单类型：设计1、施工2、合同3
         params.put("type", "1");
         //费用类型：量房费
-        params.put("typeSub", "量房费");
+        params.put("typeSub", "1");
         //业主id
         params.put("userId", ownerMsg.getUserId());
-
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(createPayUrl,JSONObject.toJSONString(params));
+        List<Map<String, String>> listParams = new ArrayList<>();
+        listParams.add(params);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterService.getUrl(createPayUrl), JSONObject.toJSONString(listParams));
         logger.info(JSONObject.toJSONString(httpRespMsg));
-        if(httpRespMsg.getResponseCode() != 200){
+        if (httpRespMsg.getResponseCode() != 200) {
             throw new RuntimeException("创建订单服务异常");
         }
         JSONObject data = JSONObject.parseObject(httpRespMsg.getContent());
-        if(!"1000".equals(data.getInteger("code"))){
+        if (!"1000".equals(data.getInteger("code"))) {
             throw new RuntimeException(data.getString("msg"));
         }
     }
-
-
-
-
-
-
-
-//    Map<String, String> params = new HashMap<>();
-//    //实际支付费用：总费用扣除<积分优惠券抵扣>剩下的金额
-//        params.put("actualAmount", designerMsgVo.getVolumeRoomMoney());
-//    //公司id
-//        params.put("companyId", companyInfo.getCompanyId());
-//    //公司名称
-//        params.put("companyName", companyInfo.getCompanyName());
-//    //施工阶段(水电工程)
-//        params.put("constructionStage", "");
-//    //业主姓名
-//        params.put("consumerName", ownerMsgVo.getUserName());
-//    //合同类型：1全款，2分期
-//        params.put("contractType", "");
-//    //设计案例id
-//        params.put("designId", "");
-//    //设计师id
-//        params.put("designUserId", designerMsg.getUserId());
-//    //合同结束时间
-//        params.put("endTime", "");
-//    //订单号：设计单号、施工单号、合同编号
-//        params.put("fromOrderid", designerOrder.getOrderNo());
-//    //1首款,2尾款,0无
-//        params.put("isEnd", "0");
-//    //项目地址
-//        params.put("projectAddr", project.getAddressDetail());
-//    //项目编号，是否订单号
-//        params.put("projectNo", project.getProjectNo());
-//    //签约时间
-//        params.put("signedTime", "");
-//    //阶段排序号
-//        params.put("sort", "");
-//    //合同开始时间
-//        params.put("startTime", "");
-//    //装修类型(个性化)
-//        params.put("styleType", project.getStyle());
-//    //订单类型：设计1、施工2、合同3
-//        params.put("type", "1");
-//    //费用类型：量房费
-//        params.put("typeSub", "量房费");
-//    //业主id
-//        params.put("userId", ownerMsg.getUserId());
 }

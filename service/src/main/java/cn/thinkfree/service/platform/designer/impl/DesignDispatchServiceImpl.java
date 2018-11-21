@@ -477,7 +477,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         constructionOrder.setStatus(1);
         constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_500.getState());
         // 1小包，2大包
-        if (project.getContractType() == 2) {
+        if (project.getContractType() != null && project.getContractType() == 2) {
             DesignerOrder designerOrders = queryDesignerOrder(projectNo);
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
@@ -549,8 +549,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         Project project = queryProjectByNo(projectNo);
         List<String> userIds = new ArrayList<>();
-        userIds.add(designerOrder.getUserId());
-        userIds.add(project.getOwnerId());
+        userIds.add(projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER));
+        userIds.add(projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.DESIGN_POWER));
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
@@ -767,7 +767,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         remindOwnerLog.setRemindTime(new Date());
         remindOwnerLogMapper.insertSelective(remindOwnerLog);
     }
-
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void updateOrderState(String projectNo, int orderState, String optionId, String optionName) {
         //设计师接单
@@ -791,7 +791,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
         }
-        updateProjectState(projectNo,stateEnum.getState());
     }
 
     @Override
@@ -816,7 +815,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
         }
-        updateProjectState(projectNo,stateEnum.getState());
     }
 
     @Override
@@ -1093,7 +1091,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * @param designOrderNo 设计订单编号
-     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)","SJZL(提交设计资料)","CKHT(查看合同)"]
+     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)",
+     * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
      */
     @Override
     public List<String> showBtn(String designOrderNo) {
@@ -1132,12 +1131,21 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("CKHT");
                 break;
             case STATE_150:
-            case STATE_180:
             case STATE_230:
-            case STATE_250:
                 btns.add("SJZL");
                 btns.add("CKHT");
                 break;
+            case STATE_180:
+            case STATE_250:
+                btns.add("SGZL");
+                btns.add("CKHT");
+                break;
+        }
+        if(stateEnum != DesignStateEnum.STATE_270){
+            return btns;
+        }
+        if(designerOrder.getPreviewState() == 2){
+            btns.add("YJD");
         }
         return btns;
     }

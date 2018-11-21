@@ -7,6 +7,7 @@ import cn.thinkfree.core.resolver.MultiRequestBodyArgumentResolver;
 import cn.thinkfree.core.utils.LogUtil;
 import com.google.common.collect.Lists;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
@@ -29,6 +30,9 @@ import java.util.List;
 @Configuration
 public class SpringMvcConfig extends WebMvcConfigurationSupport {
 
+    @Value("${custom.config.openSwagger}")
+    Boolean  swaggerEnable;
+
     MyLogger logger = LogUtil.getLogger(SpringMvcConfig.class);
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -38,10 +42,13 @@ public class SpringMvcConfig extends WebMvcConfigurationSupport {
                 .addResourceLocations("classpath:/static/");
 //        registry.addResourceHandler("/static/**")
 //                .addResourceLocations("classpath:/webapp/**");
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        if(swaggerEnable){
+            registry.addResourceHandler("swagger-ui.html")
+                    .addResourceLocations("classpath:/META-INF/resources/");
+            registry.addResourceHandler("/webjars/**")
+                    .addResourceLocations("classpath:/META-INF/resources/webjars/");
+        }
+
         super.addResourceHandlers(registry);
     }
 

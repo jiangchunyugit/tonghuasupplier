@@ -50,9 +50,11 @@ public class JwtUtils {
      * @param userDetails 用户
      * @return 令牌
      */
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(SecurityUser userDetails) {
         Map<String, Object> claims = new HashMap<>(3);
         claims.put("sub", userDetails.getUsername());
+        claims.put("userName",userDetails.getName());
+        claims.put("userId",userDetails.getUserID());
 //        claims.put("pwd",userDetails.getPassword());
         claims.put("created", new Date());
         return generateToken(claims);
