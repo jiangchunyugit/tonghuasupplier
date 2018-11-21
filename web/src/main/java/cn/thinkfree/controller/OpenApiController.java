@@ -157,7 +157,7 @@ public class OpenApiController extends AbsBaseController {
      */
 
     @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
-    @PostMapping("/insertDesignOrderContract/{orderNumber}/{companyId}")
+    @PostMapping("/insertDesignOrderContract/{orderNumber}")
     @MyRespBody
     public MyRespBundle<Map<String,Object> > insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
                                                           @ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
