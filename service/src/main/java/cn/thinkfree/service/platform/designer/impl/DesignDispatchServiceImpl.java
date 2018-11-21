@@ -8,6 +8,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
+import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.platform.designer.CreatePayOrderService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
@@ -65,6 +66,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private OrderUserMapper orderUserMapper;
     @Autowired
     private CreatePayOrderService createPayOrderService;
+    @Autowired
+    private BuildConfigService buildConfigService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -461,7 +464,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setId(designerOrder.getId());
         DesignerOrderMapper.updateByPrimaryKeySelective(updateOrder);
     }
-
     /**
      * 创建施工订单
      *
@@ -481,6 +483,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrder designerOrders = queryDesignerOrder(projectNo);
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
+            constructionOrder.setSchemeNo(buildConfigService.getSchemeNoByCompanyId(companyId));
             constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_520.getState());
         }
         constructionOrderMapper.insertSelective(constructionOrder);
