@@ -197,13 +197,14 @@ public class OpenApiController extends AbsBaseController {
      */
 
     @ApiOperation(value = "B端--订单合同不通的原因--吕启栋", notes = "返回pdf",consumes = "application/json")
-    @PostMapping("/getDesignOrderContractNoPassCase/{orderNumber}")
+    @PostMapping("/getDesignOrderContractNoPassCase/pdfUrl")
     @MyRespBody
-    public MyRespBundle< List<PcAuditInfo> > getDesignOrderContractNoPassCase(@PathVariable("orderNumber") String orderNumber){
+    public MyRespBundle< List<PcAuditInfo> > getDesignOrderContractNoPassCase(@ApiParam("合同编号orderNumber")@RequestParam  String orderNumber){
 
     	 List<PcAuditInfo> list   = contractService.getAuditInfoList(orderNumber);
 
         return sendJsonData(ResultMessage.SUCCESS,list);
     }
+
 
 }
