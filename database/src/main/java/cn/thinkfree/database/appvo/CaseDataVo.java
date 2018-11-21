@@ -28,6 +28,8 @@ public class CaseDataVo {
     private String caseUploadTime;
     @ApiModelProperty(value = "案例ID")
     private String caseId;
+    @ApiModelProperty(value = "设计案例ID")
+    private String hsDesignId;
     @ApiModelProperty(value = "资料类型(量房资料 1 , 设计资料 2 ,施工资料 3) -- 上传时选择的")
     private Integer category;
     @ApiModelProperty(value = "资料类型(1,设计资料 2,施工资料) ")

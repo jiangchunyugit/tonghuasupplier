@@ -508,6 +508,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getUserId().isEmpty()) {
             return RespData.error("请给userid赋值");
         }
+        if (dataVo.getHsDesignId()==null||dataVo.getHsDesignId().trim().isEmpty()){
+            return RespData.error("hsDesignId 不可为空");
+        }
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(dataVo.getUserId());
@@ -526,6 +529,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setCategory(dataVo.getType());
             projectData.setProjectNo(dataVo.getProjectNo());
             projectData.setCaseId(dataVo.getCaseId());
+            projectData.setHsDesignid(dataVo.getHsDesignId());
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
             if(dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())){
@@ -669,6 +673,41 @@ public class NewProjectServiceImpl implements NewProjectService {
         if(i==ProjectDataStatus.INSERT_FAILD.getValue()){
             return RespData.error("确认失败");
         }
+        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
+        if(category == 1){
+            designDispatchService.confirmedDeliveries(projectNo, ownerId);
+        }else if(category == 2){
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_170;
+            }
+            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+        }else if(category == 3){
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_190;
+            }
+            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+        }
         return RespData.success();
+    }
+
+    /**
+     * 更具设计师ID获取设计信息
+     * @param designerId
+     * @return
+     */
+    @Override
+    public MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId) {
+        if (designerId==null||designerId.trim().isEmpty()){
+            return RespData.error("设计师Id不可为空");
+        }
+        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId,ProjectDataStatus.BASE_STATUS.getValue());
+        for (DesignOrderVo designOrderVo:designOrderVos){
+            designOrderVo.setProjectStage(DesignStateEnum.queryByState(designOrderVo.getStage()).getStateName(3));
+        }
+        return RespData.success(designOrderVos);
     }
 }

@@ -3,6 +3,7 @@ package cn.thinkfree.service.config;
 import cn.hutool.core.util.CharUtil;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.RequestHandler;
@@ -25,7 +26,8 @@ import java.util.Optional;
 @EnableSwagger2
 public class SwaggerConfig {
 
-
+    @Value("${custom.config.openSwagger}")
+    Boolean  swaggerEnable;
     @Bean
     public Docket createRestApi() {
 
@@ -36,7 +38,7 @@ public class SwaggerConfig {
         pars.add(tokenPar.build());
         //添加head参数end
         return new Docket(DocumentationType.SWAGGER_2)
-
+                .enable(swaggerEnable)
                 .apiInfo(apiInfo())
                 .select()
 //                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))

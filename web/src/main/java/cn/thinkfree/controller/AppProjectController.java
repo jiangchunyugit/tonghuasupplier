@@ -104,7 +104,12 @@ public class AppProjectController {
     public MyRespBundle<String> confirmVolumeRoomDataUser(
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ")String projectNo,
             @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号,测试请用 ")Integer category) {
-        return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
+        try{
+            return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+        }
     }
 
     @RequestMapping(value = "getProjectStatus", method = RequestMethod.POST)
@@ -126,5 +131,13 @@ public class AppProjectController {
             @RequestParam("cancelReason") @ApiParam(name = "cancelReason", value = "取消原因",required = true) String cancelReason) {
         return newProjectService.applyRefund(orderNo, payOrderNo, otherReason, money, moneyName, userId, cancelReason);
     }
+
+    @RequestMapping(value = "getDesignOrderData",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation("根据设计师ID获取设计信息")
+    public MyRespBundle<List<DesignOrderVo>> getDesignOrderData(
+            @RequestParam("designerId")@ApiParam(name = "designerId",value = "设计师ID")String designerId){
+        return newProjectService.getDesignOrderData(designerId);
+    }
+
 }
 

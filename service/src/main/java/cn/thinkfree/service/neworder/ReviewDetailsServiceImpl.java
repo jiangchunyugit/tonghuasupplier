@@ -547,10 +547,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         dataCriteria.andProjectNoEqualTo(projectNo);
         List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
-        if (projectDatas.size() == 0 || projectDatas.get(0).getCaseId() == null || projectDatas.get(0).getCaseId().trim().isEmpty()) {
+        if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
             return RespData.error("此项目尚未提交设计案例");
         }
-        String designId = projectDatas.get(0).getCaseId();
+        String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
         if (result.trim().isEmpty()) {
             return RespData.error("获取上海报价信息失败!");
