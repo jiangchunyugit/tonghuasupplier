@@ -675,4 +675,21 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         return RespData.success();
     }
+
+    /**
+     * 更具设计师ID获取设计信息
+     * @param designerId
+     * @return
+     */
+    @Override
+    public MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId) {
+        if (designerId==null||designerId.trim().isEmpty()){
+            return RespData.error("设计师Id不可为空");
+        }
+        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId,ProjectDataStatus.BASE_STATUS.getValue());
+        for (DesignOrderVo designOrderVo:designOrderVos){
+            designOrderVo.setProjectStage(DesignStateEnum.queryByState(designOrderVo.getStage()).getStateName(3));
+        }
+        return RespData.success(designOrderVos);
+    }
 }
