@@ -444,7 +444,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //记录操作日志
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", "合同审核通过");
         saveLog(stateEnum.getState(), project);
-        updateProjectState(projectNo, stateEnum.getState());
+        updateProjectState(project.getProjectNo(), stateEnum.getState());
     }
 
     @Override
