@@ -548,28 +548,24 @@ public class NewProjectServiceImpl implements NewProjectService {
                 return RespData.error("确认失败!");
             }
         }
-        try {
-            if(dataVo.getType().equals(ProjectDataStatus.VOLUME_DATA.getValue())){
-                designDispatchService.updateOrderState(dataVo.getProjectNo(), DesignStateEnum.STATE_60.getState(), "system", "system");
+        if(dataVo.getType().equals(ProjectDataStatus.VOLUME_DATA.getValue())){
+            designDispatchService.updateOrderState(dataVo.getProjectNo(), DesignStateEnum.STATE_60.getState(), "system", "system");
+        }
+        if(dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())){
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_240;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(dataVo.getProjectNo()).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_160;
             }
-            if(dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())){
-                DesignStateEnum stateEnum = DesignStateEnum.STATE_240;
-                //1全款合同，2分期合同
-                if (designDispatchService.queryDesignerOrder(dataVo.getProjectNo()).getContractType() == 2) {
-                    stateEnum = DesignStateEnum.STATE_160;
-                }
-                designDispatchService.updateOrderState(dataVo.getProjectNo(), stateEnum.getState(), "system", "system");
+            designDispatchService.updateOrderState(dataVo.getProjectNo(), stateEnum.getState(), "system", "system");
+        }
+        if(dataVo.getType().equals(ProjectDataStatus.CONSTRUCTION_DATA.getValue())){
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(dataVo.getProjectNo()).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_190;
             }
-            if(dataVo.getType().equals(ProjectDataStatus.CONSTRUCTION_DATA.getValue())){
-                DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
-                //1全款合同，2分期合同
-                if (designDispatchService.queryDesignerOrder(dataVo.getProjectNo()).getContractType() == 2) {
-                    stateEnum = DesignStateEnum.STATE_190;
-                }
-                designDispatchService.updateOrderState(dataVo.getProjectNo(), stateEnum.getState(), "system", "system");
-            }
-        } catch (Exception e) {
-            return RespData.error("此阶段无法提交资料信息!");
+            designDispatchService.updateOrderState(dataVo.getProjectNo(), stateEnum.getState(), "system", "system");
         }
         return RespData.success();
     }

@@ -91,7 +91,12 @@ public class AppProjectController {
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
     @ApiOperation(value = "APP-确认资料")
     public MyRespBundle<String> confirmVolumeRoomData( @RequestBody  @ApiParam(name = "dataVo", value = "确认资料 ") CaseDataVo dataVo) {
-        return newProjectService.confirmVolumeRoomData(dataVo);
+        try{
+            return newProjectService.confirmVolumeRoomData(dataVo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("此阶段无法提交资料信息!");
+        }
     }
 
     @RequestMapping(value = "confirmVolumeRoomDataUser", method = RequestMethod.POST)
