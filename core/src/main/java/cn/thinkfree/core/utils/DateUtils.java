@@ -96,6 +96,9 @@ public class DateUtils {
     public static String dateToDateTime(Date date) {
     	 String DATE_FORMAT = "yyyy-MM-dd";
         String datestr = null;
+        if (date == null) {
+            return datestr;
+        }
         SimpleDateFormat df = new SimpleDateFormat(DATE_FORMAT);
         datestr = df.format(date);
         return datestr;

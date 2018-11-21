@@ -1,5 +1,6 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.mapper.*;
@@ -527,9 +528,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         check.setRefuseReason(refuseReason);
         checkMapper.updateByPrimaryKeySelective(check);
         if (result == 1) {
-            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+                return RespData.error(stringMyRespBundle.getMessage());
+            }
         } else if (result == 2) {
-            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+                return RespData.error(stringMyRespBundle.getMessage());
+            }
         }
         return RespData.success();
     }
@@ -549,6 +556,17 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
         if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
             return RespData.error("此项目尚未提交设计案例");
+        }
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
+        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        orderCritera.andProjectNoEqualTo(projectNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if (designerOrders.size()==0){
+            return RespData.error("此项目下暂无设计订单");
+        }
+        if (designerOrders.get(0).getPreviewState().equals(1)){
+            return RespData.error("预交底已完成,请勿重复");
         }
         String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
@@ -659,10 +677,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         DesignerOrder designerOrder = new DesignerOrder();
         designerOrder.setPreviewState(ProjectDataStatus.BASE_STATUS.getValue());
-        DesignerOrderExample orderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
-        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        orderCritera.andProjectNoEqualTo(projectNo);
+
         int i = designerOrderMapper.updateByExampleSelective(designerOrder, orderExample);
         if (i == 0) {
             return RespData.error("修改设计订单预交底状态失败!");

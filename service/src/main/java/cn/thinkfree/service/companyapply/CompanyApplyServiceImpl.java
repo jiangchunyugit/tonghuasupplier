@@ -149,8 +149,19 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     @Override
-    public void sendMessage(String email) {
+    public String sendMessage(String email) {
+        boolean pcflag = pcUserInfoService.isEnable(email);
+        if( StringUtils.isNotBlank(email)){
+            boolean emailFlag = companyApplyService.checkEmail(email);
+            if(emailFlag || pcflag){
+                return "邮箱已被注册!";
+            }
+        }else{
+            return "邮箱不能为空!";
+        }
+
         redisService.saveVerificationCode(email);
+        return "验证码已发送至邮箱";
     }
 
     /**
@@ -387,8 +398,19 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean addApplyInfo(PcApplyInfoSEO pcApplyInfoSEO) {
+        if(StringUtils.isBlank(pcApplyInfoSEO.getEmail())){
+            return false;
+        }
+
+        if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getCompanyName())){
+            boolean name = companyApplyService.checkCompanyName(pcApplyInfoSEO.getCompanyName());
+            if(name){
+                return false;
+            }
+        }
+
         String vc = redisService.validate(pcApplyInfoSEO.getEmail(), pcApplyInfoSEO.getVerifyCode());
-//        if(vc.contains("成功")){
+        if("验证成功!".equals(vc)){
             PcApplyInfo pcApplyInfo = new PcApplyInfo();
 
             SpringBeanUtil.copy(pcApplyInfoSEO,pcApplyInfo);
@@ -402,7 +424,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             if(line > 0){
                 return true;
             }
-//        }
+        }
         return false;
     }
 

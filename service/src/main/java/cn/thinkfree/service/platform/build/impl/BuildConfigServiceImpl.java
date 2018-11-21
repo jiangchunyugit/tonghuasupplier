@@ -279,6 +279,17 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
+    public String getSchemeNoByCompanyId(String companyId) {
+        BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
+        relExample.createCriteria().andCompanyIdEqualTo(companyId);
+        List<BuildSchemeCompanyRel> companyRels = companyRelMapper.selectByExample(relExample);
+        if(companyRels.isEmpty()){
+            return null;
+        }
+        return companyRels.get(0).getBuildSchemeNo();
+    }
+
+    @Override
     public List<BuildSchemeConfig> queryScheme(String searchKey, String companyId, String cityStation, String storeNo) {
 //        if(StringUtils.isBlank(companyId)){
 //            throw new RuntimeException("companyId不能为空");
