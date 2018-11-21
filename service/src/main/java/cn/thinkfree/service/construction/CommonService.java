@@ -112,7 +112,12 @@ public class CommonService extends AbsBaseController {
         return listVo;
     }
 
-    public String getCityNameByCode(String cityCode){
+    /**
+     * 施工订单 城市编码转城市名称
+     *
+     * @return
+     */
+    public String getCityNameByCode(String cityCode) {
         CityExample cityExample = new CityExample();
         cityExample.createCriteria().andCityCodeEqualTo(cityCode);
         List<City> list = cityMapper.selectByExample(cityExample);
@@ -121,6 +126,5 @@ public class CommonService extends AbsBaseController {
         }
         return list.get(0).getCityName();
     }
-
 
 }

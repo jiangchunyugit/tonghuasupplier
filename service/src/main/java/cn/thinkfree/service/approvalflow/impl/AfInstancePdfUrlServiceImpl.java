@@ -12,14 +12,16 @@ import cn.thinkfree.service.approvalflow.AfInstancePdfUrlService;
 import cn.thinkfree.service.approvalflow.RoleService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.config.PdfConfig;
-import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +36,8 @@ import java.util.List;
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
 public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AfInstancePdfUrlServiceImpl.class);
 
     @Autowired
     private AfInstancePdfUrlMapper instancePdfUrlMapper;
@@ -92,6 +96,7 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
 
         String exportFileName = AfUtils.createPdf(pdfConfig, exportPdfVO, instance.getData());
         String pdfUrl = AfUtils.uploadFile(pdfConfig.getExportDir(), exportFileName, pdfConfig.getFileUploadUrl());
+        deleteLocalExportFile(pdfConfig.getExportDir(), exportFileName);
 
         AfInstancePdfUrl instancePdfUrl = new AfInstancePdfUrl();
         instancePdfUrl.setConfigNo(instance.getConfigNo());
@@ -102,6 +107,16 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
         instancePdfUrl.setScheduleSort(instance.getScheduleSort());
 
         insert(instancePdfUrl);
+    }
+
+    private void deleteLocalExportFile(String exportDir, String exportFileName) {
+        File exportFile = new File(exportDir, exportFileName);
+        if(exportFile.exists() && exportFile.isFile()) {
+            boolean delete = exportFile.delete();
+            if (!delete) {
+                LOGGER.error("删除临时文件失败！exportDir:{},exportFileName:{}", exportDir, exportFileName);
+            }
+        }
     }
 
     private void insert(AfInstancePdfUrl instancePdfUrl) {

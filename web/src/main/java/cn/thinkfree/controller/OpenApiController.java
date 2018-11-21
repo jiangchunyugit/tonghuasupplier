@@ -123,7 +123,7 @@ public class OpenApiController extends AbsBaseController {
      * @param companyId
      * @return
      */
-    @GetMapping("/getCompanyOrganizationByCompanyId")
+    @PostMapping("/getCompanyOrganizationByCompanyId")
     @ApiOperation(value = "for徐洋---通过公司编号获取运营平台组织架构---蒋春雨",notes = "通过公司编号获取运营平台组织架构")
     @MyRespBody
     public MyRespBundle<EnterCompanyOrganizationVO> getCompanyOrganizationByCompanyId(@ApiParam("入驻公司id")@RequestParam String companyId){
@@ -136,7 +136,7 @@ public class OpenApiController extends AbsBaseController {
      * @param userId
      * @return
      */
-    @GetMapping("/getCompanyInfoByUserId")
+    @PostMapping("/getCompanyInfoByUserId")
     @ApiOperation(value = "for徐洋---通过用户id获取运营平台组织架构---蒋春雨",notes = "通过用户id获取运营平台组织架构")
     @MyRespBody
     public MyRespBundle<List<CompanyInfo>> getCompanyInfoByUserId(@ApiParam("userId")@RequestParam String userId){

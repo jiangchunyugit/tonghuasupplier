@@ -1294,6 +1294,66 @@ public class DesignerOrderExample {
             addCriterion("style_type not between", value1, value2, "styleType");
             return (Criteria) this;
         }
+
+        public Criteria andPreviewStateIsNull() {
+            addCriterion("preview_state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateIsNotNull() {
+            addCriterion("preview_state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateEqualTo(Integer value) {
+            addCriterion("preview_state =", value, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateNotEqualTo(Integer value) {
+            addCriterion("preview_state <>", value, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateGreaterThan(Integer value) {
+            addCriterion("preview_state >", value, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("preview_state >=", value, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateLessThan(Integer value) {
+            addCriterion("preview_state <", value, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateLessThanOrEqualTo(Integer value) {
+            addCriterion("preview_state <=", value, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateIn(List<Integer> values) {
+            addCriterion("preview_state in", values, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateNotIn(List<Integer> values) {
+            addCriterion("preview_state not in", values, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateBetween(Integer value1, Integer value2) {
+            addCriterion("preview_state between", value1, value2, "previewState");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreviewStateNotBetween(Integer value1, Integer value2) {
+            addCriterion("preview_state not between", value1, value2, "previewState");
+            return (Criteria) this;
+        }
     }
 
     /**
