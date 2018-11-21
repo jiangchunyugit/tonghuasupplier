@@ -1,5 +1,6 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.mapper.*;
@@ -527,9 +528,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         check.setRefuseReason(refuseReason);
         checkMapper.updateByPrimaryKeySelective(check);
         if (result == 1) {
-            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+                return RespData.error(stringMyRespBundle.getMessage());
+            }
         } else if (result == 2) {
-            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+                return RespData.error(stringMyRespBundle.getMessage());
+            }
         }
         return RespData.success();
     }

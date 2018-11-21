@@ -34,6 +34,19 @@ public interface ConstructionStateServiceB {
      */
     MyRespBundle<String> constructionStateOfExamine(String orderNo, int type, int isPass);
 
+
+    /**
+     * 装饰公司
+     * 4合同录入 （完成）
+     */
+    void contractState (String orderNo);
+
+    /**
+     * 装饰公司
+     * 5确认线下签约完成（自动创建工地项目）
+     */
+    void contractCompleteState(String orderNo);
+
     /**
      * 支付
      */

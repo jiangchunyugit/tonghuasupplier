@@ -34,7 +34,6 @@ import cn.thinkfree.database.event.MarginContractEvent;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.CompanyPaymentMapper;
-import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.mapper.ContractInfoMapper;
 import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
 import cn.thinkfree.database.mapper.ContractTermsChildMapper;
@@ -79,8 +78,10 @@ import cn.thinkfree.service.constants.AuditStatus;
 import cn.thinkfree.service.constants.CompanyFinancialType;
 import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.ExcelData;
@@ -149,7 +150,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	
 	@Autowired
 	DesignerOrderMapper designerOrderMapper;
+	
+	@Autowired
+	DesignDispatchService designDispatchService;
 
+	
+	@Autowired
+	ConstructionStateServiceB constructionStateServiceB;
 
 
 
@@ -785,7 +792,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setCteateTime( new Date() );
 		record.setUpdateTime( new Date() );
 		record.setOrderNumber( orderNumber );
-		record.setContractType("2");
+		record.setAuditType("2");
 		/* record.setConractUrlPdf(url); */
 		orderContractMapper.insertSelective( record );
 		newSchedulingService.createScheduling(orderNumber);
@@ -816,9 +823,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		return(false);
 	}
 
-	@Transactional
+	
 	@Override
-	public boolean createOrderContract(String orderNumber) {
+	public boolean createOrderContractpdf(String orderNumber) {
 		try {
 			// 订单合同
 			OrderContractExample record = new OrderContractExample();
@@ -903,7 +910,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	@Transactional
+	
 	@Override
 	public  Map<String,Object> insertDesignOrderContract( String orderNumber, Map<String, String> paramMap )
 	{
@@ -956,6 +963,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					pcContractTermsMapper.insertSelective( terms );
 				}
 			}
+			//生成pdf
+			 this.createOrderContractpdf(orderNumber);
 			 resMap.put("code", "true");
 			 resMap.put("msg", "合同录入成功");
 			 return resMap;
@@ -969,7 +978,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	@Transactional
+	
 	@Override
 	public boolean insertRoadWorkOrderContract( String orderNumber, String companyId, Map<String, String> paramMap )
 	{
@@ -999,6 +1008,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					pcContractTermsMapper.insertSelective( terms );
 				}
 			}
+			//生成pdf
+			this.createOrderContractpdf(orderNumber);
 			return(true);
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -1239,5 +1250,93 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		result.setStatus("10");
 
 		return Optional.of(result);
+	}
+
+    @Transactional
+	@Override
+	public boolean examineOrderContract(String orderNumber, String status, String cause) {
+		
+		try {
+			OrderContract record = new OrderContract();
+			record.setAuditType(status);
+			OrderContractExample example = new OrderContractExample();
+			example.createCriteria().andOrderNumberEqualTo(orderNumber);
+			// 查询合同
+			List<OrderContract> list = orderContractMapper.selectByExample(example);
+			if (list == null || list.size() == 0) {
+				throw new RuntimeException("无法找到此订单合同信息");
+			}
+			if (status.equals("1")) {// 通过
+
+				OrderContract contract = list.get(0);
+
+				if (contract.getContractType().equals("02")) {// 设计合同
+					// 查询合同是全款换是分期
+					ContractTermsExample example1 = new ContractTermsExample();
+					example1.createCriteria().andCompanyIdEqualTo(contract.getCompanyId())
+							.andContractNumberEqualTo(contract.getContractNumber());
+					List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+					Map<String, String> chMap = new HashMap<>();
+
+					for (int i = 0; i < childListr.size(); i++) {
+						chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+					}
+					// 1全款合同，2分期合同
+					int type = 1;
+					if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
+						type = 2;
+					}
+					printInfoMes("合同审批调用 订单接口 orderNo{},type{}", orderNumber, type);
+					designDispatchService.reviewPass(orderNumber, type);
+
+				} else {// 施工合同
+					printInfoMes("合同审批调用 订单接口 orderNo{}}", orderNumber);
+					constructionStateServiceB.contractState(orderNumber);
+				}
+
+				record.setSignTime(new Date());// 插入时间
+
+			} else {// 拒绝 插入拒绝原因
+
+				// 查询合同编号
+				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+				String auditPersion = userVO == null ? "" : userVO.getUsername();
+				String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+				/* 添加审核记录表 */
+				PcAuditInfo te = new PcAuditInfo("2", "1", auditPersion, status, new Date(), list.get(0).getCompanyId(),
+						cause, list.get(0).getContractNumber(), new Date(), auditAccount);
+				pcAuditInfoMapper.insertSelective(te);
+
+			}
+			orderContractMapper.updateByExampleSelective(record, example);
+			
+		} catch (Exception e) {
+			e.getStackTrace();
+            printErrorMes("订单编号  orderNumber 合同审核程序异常{}",e.getMessage());
+		}
+		return false;
+	}
+
+
+	@Override
+	public List<PcAuditInfo> getAuditInfoList(String orderNumber) {
+	
+		
+		OrderContractExample example = new OrderContractExample();
+		example.createCriteria().andOrderNumberEqualTo(orderNumber);
+		// 查询合同
+		List<OrderContract> list = orderContractMapper.selectByExample(example);
+		
+		if (list == null || list.size() == 0) {
+			
+			throw new RuntimeException("无法找到此订单合同信息");
+		}
+		//查询不通过的
+		PcAuditInfoExample auexample =new PcAuditInfoExample();
+		auexample.createCriteria().andCompanyIdEqualTo(list.get(0).getCompanyId())
+		.andContractNumberEqualTo(list.get(0).getContractNumber()).andAuditStatusEqualTo("0");
+		List<PcAuditInfo> aulist = pcAuditInfoMapper.selectByExample(auexample);
+		
+		return aulist;
 	}
 }

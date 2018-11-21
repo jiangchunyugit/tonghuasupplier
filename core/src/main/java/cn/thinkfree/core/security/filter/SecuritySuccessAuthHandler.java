@@ -105,7 +105,7 @@ public class SecuritySuccessAuthHandler
         MyRespBundle<Map<String,Object>> resp = new MyRespBundle<>();
         resp.setTimestamp(Instant.now().toEpochMilli());
         resp.setMessage("登录成功!");
-        resp.setCode(200);
+        resp.setCode(1000);
         resp.setData(result);
         response.getWriter().write(new GsonBuilder().serializeNulls().create().toJson(resp));
 

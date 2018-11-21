@@ -22,6 +22,8 @@ public class UserMsgVo {
 
     private String consumerId;
 
+    private String memberEcode;
+
     public UserMsgVo() {
     }
 
@@ -40,6 +42,16 @@ public class UserMsgVo {
         this.userType = userType;
         this.realName = realName;
         this.userIcon = userIcon;
+    }
+
+    public UserMsgVo(String userId, String userName, String userPhone, String userType, String realName, String userIcon, String memberEcode) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.userType = userType;
+        this.realName = realName;
+        this.userIcon = userIcon;
+        this.memberEcode = memberEcode;
     }
 
     public void setUserIcon(String userIcon) {
@@ -104,5 +116,13 @@ public class UserMsgVo {
 
     public String getStaffId() {
         return staffId;
+    }
+
+    public void setMemberEcode(String memberEcode) {
+        this.memberEcode = memberEcode;
+    }
+
+    public String getMemberEcode() {
+        return memberEcode;
     }
 }

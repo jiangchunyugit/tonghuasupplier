@@ -159,4 +159,11 @@ public interface BuildConfigService {
      * @param schemeNo       方案编号
      */
     void companyDelScheme(String companyId, String optionUserId, String optionUserName, String schemeNo);
+
+    /**
+     * 根据公司ID查询方案编号
+     * @param companyId
+     * @return
+     */
+    String getSchemeNoByCompanyId(String companyId);
 }
