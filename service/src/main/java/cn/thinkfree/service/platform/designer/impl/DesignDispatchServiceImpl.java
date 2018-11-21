@@ -1149,7 +1149,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("CKHT");
                 break;
         }
-        if (stateEnum != DesignStateEnum.STATE_270) {
+        if (stateEnum != DesignStateEnum.STATE_270&&stateEnum != DesignStateEnum.STATE_210) {
             return btns;
         }
         if (designerOrder.getPreviewState() == 2) {
