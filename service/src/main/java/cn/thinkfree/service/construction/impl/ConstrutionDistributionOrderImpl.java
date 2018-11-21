@@ -83,6 +83,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
             example.createCriteria().andCompanyNameLike("%"+companyName+"%");
         }
         List<DistributionOrderCityVo> listData = new ArrayList<>();
+        example.createCriteria().andRoleIdLike("%BD%");
         List<CompanyInfo> list = companyInfoMapper.selectByExample(example);
         for (CompanyInfo companyInfo : list){
             CityExample cityExample = new CityExample();
@@ -133,6 +134,9 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         } else {
             return RespData.error(ResultMessage.ERROR.code, "派单失败,请稍后重试");
         }
+
+        //获取施工方案编号
+
     }
 
 }

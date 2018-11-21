@@ -1093,7 +1093,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * @param designOrderNo 设计订单编号
-     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)","HTQY(发起合同签约)",
+     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)",
      * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
      */
     @Override
@@ -1117,7 +1117,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("LFZL");
                 break;
             case STATE_130:
-                btns.add("HTQY");
                 btns.add("CKHT");
                 break;
             case STATE_140:
