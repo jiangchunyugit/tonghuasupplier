@@ -25,7 +25,7 @@ public class SecurityFailAuthHandler extends SimpleUrlAuthenticationFailureHandl
 
         MyRespBundle<String> result = new MyRespBundle<>();
         result.setData("登录失败!");
-        result.setCode(HttpStatus.OK.value());
+        result.setCode(500);
         result.setMessage("登录失败!");
         result.setTimestamp(Instant.now().toEpochMilli());
 
