@@ -229,4 +229,9 @@ public class UserVO extends SecurityUser {
     public void setCompanyUser(CompanyUser companyUser) {
         this.companyUser = companyUser;
     }
+
+    @Override
+    public String getUserID() {
+        return userRegister.getUserId();
+    }
 }
