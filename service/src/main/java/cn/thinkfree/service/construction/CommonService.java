@@ -121,6 +121,9 @@ public class CommonService extends AbsBaseController {
         CityExample cityExample = new CityExample();
         cityExample.createCriteria().andCityCodeEqualTo(cityCode);
         List<City> list = cityMapper.selectByExample(cityExample);
+        if(list == null || list.isEmpty()){
+            return "";
+        }
         return list.get(0).getCityName();
     }
 
