@@ -85,7 +85,7 @@ public interface CompanyApplyService {
      * 发送邮件验证码
      * @param email
      */
-    void sendMessage(String email);
+    String sendMessage(String email);
 
     /**
      * 校验公司名称是否重复
