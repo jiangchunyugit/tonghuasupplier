@@ -459,7 +459,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andTypeEqualTo(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
+        criteria.andTypeEqualTo(ProjectDataStatus.QUOTATION_STATUS.getValue());
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
         for (ProjectData projectData : projectDataList) {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
