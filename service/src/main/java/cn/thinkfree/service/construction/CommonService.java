@@ -69,12 +69,14 @@ public class CommonService extends AbsBaseController {
     public boolean updateStateCodeByOrderNo(String orderNo, int stateCode) {
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+
         ConstructionOrder constructionOrder = new ConstructionOrder();
         constructionOrder.setOrderStage(stateCode);
 
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
         //同步到project表中
-        int isUpdateProject = updateToProject(constructionOrder.getProjectNo(),stateCode);
+        int isUpdateProject = updateToProject(list.get(0).getProjectNo(),stateCode);
         if (isUpdate == 1 && isUpdateProject ==1) {
             return true;
         } else {
@@ -112,12 +114,19 @@ public class CommonService extends AbsBaseController {
         return listVo;
     }
 
-    public String getCityNameByCode(String cityCode){
+    /**
+     * 施工订单 城市编码转城市名称
+     *
+     * @return
+     */
+    public String getCityNameByCode(String cityCode) {
         CityExample cityExample = new CityExample();
         cityExample.createCriteria().andCityCodeEqualTo(cityCode);
         List<City> list = cityMapper.selectByExample(cityExample);
+        if(list == null || list.isEmpty()){
+            return "";
+        }
         return list.get(0).getCityName();
     }
-
 
 }

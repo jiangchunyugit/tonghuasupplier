@@ -549,8 +549,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         Project project = queryProjectByNo(projectNo);
         List<String> userIds = new ArrayList<>();
-        userIds.add(designerOrder.getUserId());
-        userIds.add(project.getOwnerId());
+        userIds.add(projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER));
+        userIds.add(projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.DESIGN_POWER));
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);

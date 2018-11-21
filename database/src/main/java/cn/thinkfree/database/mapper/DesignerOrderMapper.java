@@ -1,5 +1,6 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.DesignOrderVo;
 import cn.thinkfree.database.appvo.OrderPlayVo;
 import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.model.DesignerOrder;
@@ -129,4 +130,5 @@ public interface DesignerOrderMapper {
     Integer selectContractCount(@Param("designContractVO") DesignContractVO designContractVO);
 
 
+    List<DesignOrderVo> selectByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status);
 }

@@ -91,7 +91,25 @@ public class AppProjectController {
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
     @ApiOperation(value = "APP-确认资料")
     public MyRespBundle<String> confirmVolumeRoomData( @RequestBody  @ApiParam(name = "dataVo", value = "确认资料 ") CaseDataVo dataVo) {
-        return newProjectService.confirmVolumeRoomData(dataVo);
+        try{
+            return newProjectService.confirmVolumeRoomData(dataVo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("此阶段无法提交资料信息!");
+        }
+    }
+
+    @RequestMapping(value = "confirmVolumeRoomDataUser", method = RequestMethod.POST)
+    @ApiOperation(value = "C端确认资料")
+    public MyRespBundle<String> confirmVolumeRoomDataUser(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ")String projectNo,
+            @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号,测试请用 ")Integer category) {
+        try{
+            return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+        }
     }
 
     @RequestMapping(value = "getProjectStatus", method = RequestMethod.POST)
@@ -113,5 +131,13 @@ public class AppProjectController {
             @RequestParam("cancelReason") @ApiParam(name = "cancelReason", value = "取消原因",required = true) String cancelReason) {
         return newProjectService.applyRefund(orderNo, payOrderNo, otherReason, money, moneyName, userId, cancelReason);
     }
+
+    @RequestMapping(value = "getDesignOrderData",method = {RequestMethod.GET,RequestMethod.POST})
+    @ApiOperation("根据设计师ID获取设计信息")
+    public MyRespBundle<List<DesignOrderVo>> getDesignOrderData(
+            @RequestParam("designerId")@ApiParam(name = "designerId",value = "设计师ID")String designerId){
+        return newProjectService.getDesignOrderData(designerId);
+    }
+
 }
 

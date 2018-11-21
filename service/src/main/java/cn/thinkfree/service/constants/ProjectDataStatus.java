@@ -105,6 +105,18 @@ public enum ProjectDataStatus {
      */
     PLAY_TASK_RED(1,"E95548"),
     /**
+     * 量房资料
+     */
+    VOLUME_DATA(1,"量房资料"),
+    /**
+     * 设计资料
+     */
+    DESIGN_DATA(2,"设计资料"),
+    /**
+     * 施工资料
+     */
+    CONSTRUCTION_DATA(3,"施工资料"),
+    /**
      * 导航展示内容颜色-灰色
      */
     PLAY_TASK_GRAY(2,"5D5D5D");

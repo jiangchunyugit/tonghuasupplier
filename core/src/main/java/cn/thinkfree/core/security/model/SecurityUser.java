@@ -20,5 +20,7 @@ public abstract class SecurityUser extends BaseModel implements UserDetails {
 
     public abstract Short getType();
 
+    public abstract String getUserID();
+
 }
 

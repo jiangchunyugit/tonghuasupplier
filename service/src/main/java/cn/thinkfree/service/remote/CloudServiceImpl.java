@@ -50,7 +50,7 @@ public class CloudServiceImpl implements CloudService {
     String smallSchedulingUrl;
     @Value("${shanghai.priceUrl}")
     String priceUrl;
-    @Value("${message.remindConsumerUrl}")
+    @Value("${shanghai.priceUrl}")
     String remindConsumerUrl;
 
     @Value("${custom.cloud.syncMerchantUrl}")

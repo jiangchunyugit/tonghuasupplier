@@ -1,5 +1,6 @@
 package cn.thinkfree.service.neworder;
 
+import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.mapper.*;
@@ -53,6 +54,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ConstructionStateServiceB constructionStateServiceB;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
+    @Autowired
+    ProjectDataMapper projectDataMapper;
+    @Autowired
+    DesignerOrderMapper designerOrderMapper;
 
     /**
      * 获取精准报价
@@ -523,9 +528,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         check.setRefuseReason(refuseReason);
         checkMapper.updateByPrimaryKeySelective(check);
         if (result == 1) {
-            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+                return RespData.error(stringMyRespBundle.getMessage());
+            }
         } else if (result == 2) {
-            constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+                return RespData.error(stringMyRespBundle.getMessage());
+            }
         }
         return RespData.success();
     }
@@ -533,12 +544,31 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     /**
      * 获取上海报价信息
      *
-     * @param designId
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle getShangHaiPriceDetail(String designId, String projectNo) {
+    public MyRespBundle getShangHaiPriceDetail(String projectNo) {
+        ProjectDataExample dataExample = new ProjectDataExample();
+        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+        dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        dataCriteria.andProjectNoEqualTo(projectNo);
+        List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
+        if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
+            return RespData.error("此项目尚未提交设计案例");
+        }
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
+        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        orderCritera.andProjectNoEqualTo(projectNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if (designerOrders.size()==0){
+            return RespData.error("此项目下暂无设计订单");
+        }
+        if (designerOrders.get(0).getPreviewState().equals(1)){
+            return RespData.error("预交底已完成,请勿重复");
+        }
+        String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
         if (result.trim().isEmpty()) {
             return RespData.error("获取上海报价信息失败!");
@@ -639,7 +669,19 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (constructionOrders.size() == 0) {
             return RespData.error("查无此施工订单");
         }
-        constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+        try {
+            constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("修改项目状态失败!");
+        }
+        DesignerOrder designerOrder = new DesignerOrder();
+        designerOrder.setPreviewState(ProjectDataStatus.BASE_STATUS.getValue());
+
+        int i = designerOrderMapper.updateByExampleSelective(designerOrder, orderExample);
+        if (i == 0) {
+            return RespData.error("修改设计订单预交底状态失败!");
+        }
         return RespData.success();
     }
 }
