@@ -823,9 +823,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		return(false);
 	}
 
-	@Transactional
+	
 	@Override
-	public boolean createOrderContract(String orderNumber) {
+	public boolean createOrderContractpdf(String orderNumber) {
 		try {
 			// 订单合同
 			OrderContractExample record = new OrderContractExample();
@@ -910,7 +910,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	@Transactional
+	
 	@Override
 	public  Map<String,Object> insertDesignOrderContract( String orderNumber, Map<String, String> paramMap )
 	{
@@ -963,6 +963,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					pcContractTermsMapper.insertSelective( terms );
 				}
 			}
+			//生成pdf
+			 this.createOrderContractpdf(orderNumber);
 			 resMap.put("code", "true");
 			 resMap.put("msg", "合同录入成功");
 			 return resMap;
@@ -976,7 +978,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-	@Transactional
+	
 	@Override
 	public boolean insertRoadWorkOrderContract( String orderNumber, String companyId, Map<String, String> paramMap )
 	{
@@ -1006,6 +1008,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					pcContractTermsMapper.insertSelective( terms );
 				}
 			}
+			//生成pdf
+			this.createOrderContractpdf(orderNumber);
 			return(true);
 		} catch ( Exception e ) {
 			e.printStackTrace();
