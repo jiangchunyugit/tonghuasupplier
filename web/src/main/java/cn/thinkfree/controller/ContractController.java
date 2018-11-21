@@ -196,22 +196,7 @@ public class ContractController extends AbsBaseController{
      }
 
     
-    /**
-     * 设计合同录入
-     *
-     */
 
-    @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
-    @PostMapping("/insertDesignOrderContract/{orderNumber}/{companyId}")
-    @MyRespBody
-    public MyRespBundle<String> insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
-    		@PathVariable("companyId") String companyId,
-    		@ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
-
-    	boolean flag  = contractService.insertDesignOrderContract(orderNumber, companyId, paramMap);
-
-    	return sendJsonData(ResultMessage.SUCCESS,flag);
-    }
 
 
     /**
@@ -224,7 +209,7 @@ public class ContractController extends AbsBaseController{
     		@PathVariable("companyId") String companyId,
     		@ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
 
-        boolean flag  = contractService.insertDesignOrderContract(orderNumber, companyId, paramMap);
+        boolean flag  = contractService.insertRoadWorkOrderContract(orderNumber, companyId, paramMap);
 
     	return sendJsonData(ResultMessage.SUCCESS,flag);
     }
