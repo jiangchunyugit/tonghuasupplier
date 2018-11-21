@@ -1094,6 +1094,76 @@ public class ProjectDataExample {
             addCriterion("photo_panorama_url not between", value1, value2, "photoPanoramaUrl");
             return (Criteria) this;
         }
+
+        public Criteria andHsDesignidIsNull() {
+            addCriterion("hs_designId is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidIsNotNull() {
+            addCriterion("hs_designId is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidEqualTo(String value) {
+            addCriterion("hs_designId =", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidNotEqualTo(String value) {
+            addCriterion("hs_designId <>", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidGreaterThan(String value) {
+            addCriterion("hs_designId >", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidGreaterThanOrEqualTo(String value) {
+            addCriterion("hs_designId >=", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidLessThan(String value) {
+            addCriterion("hs_designId <", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidLessThanOrEqualTo(String value) {
+            addCriterion("hs_designId <=", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidLike(String value) {
+            addCriterion("hs_designId like", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidNotLike(String value) {
+            addCriterion("hs_designId not like", value, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidIn(List<String> values) {
+            addCriterion("hs_designId in", values, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidNotIn(List<String> values) {
+            addCriterion("hs_designId not in", values, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidBetween(String value1, String value2) {
+            addCriterion("hs_designId between", value1, value2, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andHsDesignidNotBetween(String value1, String value2) {
+            addCriterion("hs_designId not between", value1, value2, "hsDesignid");
+            return (Criteria) this;
+        }
     }
 
     /**

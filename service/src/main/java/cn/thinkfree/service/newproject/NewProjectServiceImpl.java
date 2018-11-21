@@ -508,6 +508,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getUserId().isEmpty()) {
             return RespData.error("请给userid赋值");
         }
+        if (dataVo.getHsDesignId()==null||dataVo.getHsDesignId().trim().isEmpty()){
+            return RespData.error("hsDesignId 不可为空");
+        }
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(dataVo.getUserId());
@@ -526,6 +529,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setCategory(dataVo.getType());
             projectData.setProjectNo(dataVo.getProjectNo());
             projectData.setCaseId(dataVo.getCaseId());
+            projectData.setHsDesignid(dataVo.getHsDesignId());
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
             if(dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())){
