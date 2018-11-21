@@ -795,6 +795,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
+        }else{
+            updateProjectState(projectNo,orderState);
         }
     }
 
@@ -819,6 +821,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
+        }else{
+            updateProjectState(projectNo,orderState);
         }
     }
 
