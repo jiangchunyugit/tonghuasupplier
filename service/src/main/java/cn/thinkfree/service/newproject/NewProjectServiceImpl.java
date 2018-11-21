@@ -673,6 +673,24 @@ public class NewProjectServiceImpl implements NewProjectService {
         if(i==ProjectDataStatus.INSERT_FAILD.getValue()){
             return RespData.error("确认失败");
         }
+        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
+        if(category == 1){
+            designDispatchService.confirmedDeliveries(projectNo, ownerId);
+        }else if(category == 2){
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_170;
+            }
+            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+        }else if(category == 3){
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_190;
+            }
+            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+        }
         return RespData.success();
     }
 }
