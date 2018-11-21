@@ -203,7 +203,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         Project project = projects.get(0);
         ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
         //添加进度展示
-        if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
+        if (project.getStage() >= ConstructionStateEnumB.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
@@ -328,6 +328,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
             //存放展示信息
             OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            if(constructionOrderPlayVo == null){
+                constructionOrderPlayVo = new OrderPlayVo();
+            }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
             //存放人员信息
             List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
