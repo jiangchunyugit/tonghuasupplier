@@ -69,12 +69,14 @@ public class CommonService extends AbsBaseController {
     public boolean updateStateCodeByOrderNo(String orderNo, int stateCode) {
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+
         ConstructionOrder constructionOrder = new ConstructionOrder();
         constructionOrder.setOrderStage(stateCode);
 
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example);
         //同步到project表中
-        int isUpdateProject = updateToProject(constructionOrder.getProjectNo(),stateCode);
+        int isUpdateProject = updateToProject(list.get(0).getProjectNo(),stateCode);
         if (isUpdate == 1 && isUpdateProject ==1) {
             return true;
         } else {
