@@ -668,6 +668,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category) {
         ProjectData projectData = new ProjectData();
         projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
@@ -695,7 +696,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
-                stateEnum = DesignStateEnum.STATE_190;
+                stateEnum = DesignStateEnum.STATE_200;
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         }
