@@ -52,7 +52,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
         PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(companyNo, pageNum, pageSize, projectNo, appointmentTime,
                 addressDetail, owner, phone, orderStage);
         DecorationOrderCommonVo decorationOrderCommonVo = new DecorationOrderCommonVo();
-        decorationOrderCommonVo.setCountPageNum(pageInfo.getSize());
+        decorationOrderCommonVo.setCountPageNum(pageInfo.getPageNum());
         decorationOrderCommonVo.setOrderList(pageInfo.getList());
         return RespData.success(decorationOrderCommonVo);
     }
