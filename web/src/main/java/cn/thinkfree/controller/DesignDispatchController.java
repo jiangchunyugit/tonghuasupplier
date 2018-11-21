@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.vo.ContractMsgVo;
 import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
@@ -576,6 +577,17 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo){
         try{
             return sendJsonData(ResultMessage.SUCCESS,designDispatchService.showBtn(designOrderNo));
+        }catch (Exception e){
+            return sendFailMessage(e.getMessage());
+        }
+    }
+    @ApiOperation("根据项目编号查询业主和公司信息")
+    @MyRespBody
+    @RequestMapping(value = "queryContractMsg", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<ContractMsgVo> queryContractMsg(
+            @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo){
+        try{
+            return sendJsonData(ResultMessage.SUCCESS,designDispatchService.queryContractMsg(projectNo));
         }catch (Exception e){
             return sendFailMessage(e.getMessage());
         }

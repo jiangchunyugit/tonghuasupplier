@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.ContractInfo;
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.ContractClauseVO;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
@@ -155,6 +156,8 @@ public interface ContractService {
        */
       Map<String,Object> insertDesignOrderContract(String orderNumber,Map<String,String> paramMap);
       
+      
+      
       /**
        * 新增施工合同
        * @param  orderNumber 
@@ -200,4 +203,18 @@ public interface ContractService {
      * @return
      */
     Optional<SyncOrderVO> selectSyncDateByOrder(String contractID);
+    
+    /**
+     * 审批合同
+     * @param orderNumber
+     * @return
+     */
+    boolean examineOrderContract(String orderNumber,String status,String cause);
+    
+    /**
+     * 查询订单合同不通的原因
+     * 根据订单编号
+     * 
+     */
+    List<PcAuditInfo> getAuditInfoList(String orderNumber);
 }

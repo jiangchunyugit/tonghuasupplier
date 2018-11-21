@@ -53,7 +53,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     private String getAllUserByIds = "/userapi/other/api/getListUserByUserIds";
 
     @Override
-    public String getUrl(String suffix){
+    public String getUrl(String suffix) {
         return "http://" + userCenterIp + ":" + userCenterPort + suffix;
     }
 
@@ -76,7 +76,7 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public UserMsgVo registerUser(String userName, String userPhone, boolean isOwner) {
         UserMsgVo userMsgVo = queryByPhone(userPhone);
-        if(userMsgVo == null){
+        if (userMsgVo == null) {
             userMsgVo = register(userName, userPhone, isOwner);
         }
         return userMsgVo;
@@ -84,22 +84,23 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     /**
      * 注册用户
+     *
      * @param userName
      * @param userPhone
      * @param isOwner
      */
-    private UserMsgVo register(String userName, String userPhone, boolean isOwner){
-        if(isOwner){
-            return registerC(userName,userPhone);
-        }else{
-            return registerS(userName,userPhone);
+    private UserMsgVo register(String userName, String userPhone, boolean isOwner) {
+        if (isOwner) {
+            return registerC(userName, userPhone);
+        } else {
+            return registerS(userName, userPhone);
         }
     }
 
-    private UserMsgVo registerC(String userName, String userPhone){
-        Map<String,String> params = new HashMap<>();
-        params.put("userName",userName);
-        params.put("userPhone",userPhone);
+    private UserMsgVo registerC(String userName, String userPhone) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userName", userName);
+        params.put("userPhone", userPhone);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(registerC), HttpUtils.mapToParams(params));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
@@ -111,7 +112,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         }
         JSONObject msgs = jsonObject.getJSONObject("data");
         JSONObject user = msgs.getJSONObject(userPhone);
-        if(user == null){
+        if (user == null) {
             throw new RuntimeException("注册失败");
         }
         UserMsgVo msgVo = new UserMsgVo();
@@ -122,11 +123,11 @@ public class UserCenterServiceImpl implements UserCenterService {
         return msgVo;
     }
 
-    private UserMsgVo registerS(String userName, String userPhone){
-        Map<String,String> params = new HashMap<>();
-        params.put("userName",userName);
-        params.put("userPhone",userPhone);
-        List<Map<String,String>> mapList = new ArrayList<>();
+    private UserMsgVo registerS(String userName, String userPhone) {
+        Map<String, String> params = new HashMap<>();
+        params.put("userName", userName);
+        params.put("userPhone", userPhone);
+        List<Map<String, String>> mapList = new ArrayList<>();
         mapList.add(params);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getUrl(registerS), JSONObject.toJSONString(mapList));
         if (httpRespMsg.getResponseCode() != 200) {
@@ -139,7 +140,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         }
         JSONObject msgs = jsonObject.getJSONObject("data");
         JSONObject user = msgs.getJSONObject(userPhone);
-        if(user == null){
+        if (user == null) {
             throw new RuntimeException("注册失败");
         }
         UserMsgVo msgVo = new UserMsgVo();
@@ -152,11 +153,12 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     /**
      * 根据手机号查询用户信息
+     *
      * @param userPhone
      */
-    private UserMsgVo queryByPhone(String userPhone){
-        Map<String,String> queryUserParams = new HashMap<>();
-        queryUserParams.put("phone",userPhone);
+    private UserMsgVo queryByPhone(String userPhone) {
+        Map<String, String> queryUserParams = new HashMap<>();
+        queryUserParams.put("phone", userPhone);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserUrl), HttpUtils.mapToParams(queryUserParams));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
@@ -167,7 +169,7 @@ public class UserCenterServiceImpl implements UserCenterService {
             throw new RuntimeException(jsonObject.getString("msg"));
         }
         JSONArray jsonArray = jsonObject.getJSONArray("data");
-        if(jsonArray.size() < 1){
+        if (jsonArray.size() < 1) {
             return null;
         }
         JSONObject msgObj = jsonArray.getJSONObject(0);
@@ -177,18 +179,19 @@ public class UserCenterServiceImpl implements UserCenterService {
         msgVo.setUserIcon(msgObj.getString("headPortraits"));
         msgVo.setConsumerId(msgObj.getString("consumerId"));
         msgVo.setStaffId(msgObj.getString("staffId"));
+        msgVo.setMemberEcode(msgObj.getString("memberEcode"));
         return msgVo;
     }
 
     @Override
-    public UserMsgVo queryUserMsgOne(String roleCode,String userId) {
-        Map<String,EmployeeMsg> employeeMsgMap = new HashMap<>();
+    public UserMsgVo queryUserMsgOne(String roleCode, String userId) {
+        Map<String, EmployeeMsg> employeeMsgMap = new HashMap<>();
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setUserId(userId);
         employeeMsg.setRoleCode(roleCode);
-        employeeMsgMap.put(userId,employeeMsg);
+        employeeMsgMap.put(userId, employeeMsg);
         List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
-        if(userMsgVos != null || !userMsgVos.isEmpty()){
+        if (userMsgVos != null || !userMsgVos.isEmpty()) {
             return userMsgVos.get(0);
         }
         return null;
@@ -217,23 +220,25 @@ public class UserCenterServiceImpl implements UserCenterService {
             String userName = userMsg.getString("nickName");
             String phone = userMsg.getString("phone");
             String headPortraits = userMsg.getString("headPortraits");
-            userMsgVos.add(new UserMsgVo(userId, userName, phone, employeeMsg.getRoleCode(), employeeMsg.getRealName(), headPortraits));
+            String memberEcode = userMsg.getString("memberEcode");
+            userMsgVos.add(new UserMsgVo(userId, userName, phone, employeeMsg.getRoleCode(), employeeMsg.getRealName(), headPortraits, memberEcode));
         }
         return userMsgVos;
     }
+
     @Override
     public List<UserMsgVo> queryUserMsg(String userMsg) {
         long phone;
-        try{
+        try {
             phone = Long.parseLong(userMsg);
-        }catch (Exception e){
+        } catch (Exception e) {
             phone = -1;
         }
-        Map<String,String> queryUserParams = new HashMap<>();
-        if(phone > 0){
-            queryUserParams.put("phone",userMsg);
-        }else {
-            queryUserParams.put("nickName",userMsg);
+        Map<String, String> queryUserParams = new HashMap<>();
+        if (phone > 0) {
+            queryUserParams.put("phone", userMsg);
+        } else {
+            queryUserParams.put("nickName", userMsg);
         }
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserByPhoneAndName), HttpUtils.mapToParams(queryUserParams));
         if (httpRespMsg.getResponseCode() != 200) {
@@ -246,13 +251,13 @@ public class UserCenterServiceImpl implements UserCenterService {
         }
         JSONArray array = jsonObject.getJSONArray("data");
         List<UserMsgVo> userMsgVos = new ArrayList<>();
-        for (int i = 0 ; i < array.size() ; i ++) {
+        for (int i = 0; i < array.size(); i++) {
             JSONObject userObj = array.getJSONObject(i);
             String userName = userObj.getString("nickName");
             String userPhone = userObj.getString("phone");
             String headPortraits = userObj.getString("headPortraits");
             String consumerId = userObj.getString("consumerId");
-            if(StringUtils.isBlank(consumerId)){
+            if (StringUtils.isBlank(consumerId)) {
                 continue;
             }
             userMsgVos.add(new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits));

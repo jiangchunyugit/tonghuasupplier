@@ -144,12 +144,12 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             String projectMessageStatus = cloudService.getProjectMessageStatus(project.getProjectNo(), project.getOwnerId());
             if (projectMessageStatus.trim().isEmpty()) {
-                return RespData.error("获取徐洋消息信息失败!");
+                return RespData.error("获取动态消息信息失败!");
             }
             JSONObject messageJson = JSONObject.parseObject(projectMessageStatus);
             JSONObject data = messageJson.getJSONObject("data");
             if (!messageJson.getInteger("code").equals(ErrorCode.OK.getCode())) {
-                return RespData.error("获取徐洋消息信息失败!");
+                return RespData.error("获取动态消息信息失败!");
             }
             String dataString = JSONObject.toJSONString(data);
             OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
@@ -216,12 +216,12 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         String projectMessageStatus = cloudService.getProjectMessageStatus(projectNo, project.getOwnerId());
         if (projectMessageStatus.trim().isEmpty()) {
-            return RespData.error("获取徐洋消息信息失败!");
+            return RespData.error("获取动态消息信息失败!");
         }
         JSONObject messageJson = JSONObject.parseObject(projectMessageStatus);
         JSONObject data = messageJson.getJSONObject("data");
         if (!messageJson.getInteger("code").equals(ErrorCode.OK.getCode())) {
-            return RespData.error("获取徐洋消息信息失败!");
+            return RespData.error("获取动态消息信息失败!");
         }
         String dataString = JSONObject.toJSONString(data);
         OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);

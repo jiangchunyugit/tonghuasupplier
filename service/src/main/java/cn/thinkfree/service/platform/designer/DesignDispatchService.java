@@ -3,6 +3,7 @@ package cn.thinkfree.service.platform.designer;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
+import cn.thinkfree.service.platform.vo.ContractMsgVo;
 import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
 import cn.thinkfree.service.platform.vo.PageVo;
@@ -277,4 +278,11 @@ public interface DesignDispatchService {
 
 
     void updateProjectState(String projectNo, int state);
+
+    /**
+     *
+     * @param projectNo
+     * @return
+     */
+    ContractMsgVo queryContractMsg(String projectNo);
 }

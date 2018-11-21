@@ -262,6 +262,24 @@ public class ContractController extends AbsBaseController{
 
        return sendJsonData(ResultMessage.SUCCESS,resList);
     }
+    
+    
+    /**
+     * 设计或者施工合同审批
+     * @param companyId
+     * @author lvqidong
+     */
+    
+    @ApiOperation(value = "设计或者施工合同审批", notes = "设计或者施工合同审批")
+    @PostMapping("/examineOrderContract")
+    @MyRespBody
+    public MyRespBundle<String> examineOrderContract(@ApiParam("订单编号")@RequestParam String orderNumber,@ApiParam("审核状态 0 不通过1通过")@RequestParam String status,
+    		@ApiParam("不通过原因")@RequestParam String cause){
+    	
+    	boolean  flag  = contractService.examineOrderContract(orderNumber, status, cause);
+    	   
+        return sendJsonData(ResultMessage.SUCCESS,flag);
+    }
 
 
     
