@@ -120,4 +120,11 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category);
+
+    /**
+     * 更具设计师ID获取设计信息
+     * @param designerId
+     * @return
+     */
+    MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId);
 }

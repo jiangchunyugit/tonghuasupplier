@@ -475,4 +475,20 @@
       preview_state = #{previewState,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+
+  <select id="selectByDesignerId" resultType="cn.thinkfree.database.appvo.DesignOrderVo">
+    SELECT
+        oo.project_no projectNo,
+        oo.order_stage stage,
+        oo.order_no designerOrderNo,
+        P .create_time projectCreateTime
+    FROM
+        order_user ou
+    LEFT JOIN designer_order oo ON ou.project_no = oo.project_no
+    LEFT JOIN project P ON oo.project_no = P .project_no
+    WHERE
+        ou.role_code = 'CD'
+    AND ou.user_id =#{designerId}
+    AND oo.status =#{status}
+  </select>
 </mapper>

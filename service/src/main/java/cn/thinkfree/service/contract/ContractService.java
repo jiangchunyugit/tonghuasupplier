@@ -153,7 +153,7 @@ public interface ContractService {
        * @param  orderNumber 
        * @param  orderNumber 
        */
-      boolean insertDesignOrderContract(String orderNumber,String companyId,Map<String,String> paramMap);
+      Map<String,Object> insertDesignOrderContract(String orderNumber,Map<String,String> paramMap);
       
       /**
        * 新增施工合同

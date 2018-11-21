@@ -34,10 +34,12 @@ import cn.thinkfree.database.event.MarginContractEvent;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.CompanyPaymentMapper;
+import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.mapper.ContractInfoMapper;
 import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
 import cn.thinkfree.database.mapper.ContractTermsChildMapper;
 import cn.thinkfree.database.mapper.ContractTermsMapper;
+import cn.thinkfree.database.mapper.DesignerOrderMapper;
 import cn.thinkfree.database.mapper.MyContractInfoMapper;
 import cn.thinkfree.database.mapper.OrderContractMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
@@ -54,6 +56,8 @@ import cn.thinkfree.database.model.ContractTerms;
 import cn.thinkfree.database.model.ContractTermsChild;
 import cn.thinkfree.database.model.ContractTermsChildExample;
 import cn.thinkfree.database.model.ContractTermsExample;
+import cn.thinkfree.database.model.DesignerOrder;
+import cn.thinkfree.database.model.DesignerOrderExample;
 import cn.thinkfree.database.model.OrderContract;
 import cn.thinkfree.database.model.OrderContractExample;
 import cn.thinkfree.database.model.PcAuditInfo;
@@ -142,6 +146,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	ContractTemplateDictMapper contractTemplateDictMapper;
+	
+	@Autowired
+	DesignerOrderMapper designerOrderMapper;
 
 
 
@@ -898,11 +905,33 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Transactional
 	@Override
-	public boolean insertDesignOrderContract( String orderNumber, String companyId, Map<String, String> paramMap )
+	public  Map<String,Object> insertDesignOrderContract( String orderNumber, Map<String, String> paramMap )
 	{
+		Map<String, Object> resMap = new HashMap<>();
+		//设计订单
+		DesignerOrderExample examploder = new DesignerOrderExample();
+		examploder.createCriteria().andOrderNoEqualTo(orderNumber);
+		List<DesignerOrder> oderlist = designerOrderMapper.selectByExample(examploder);
+		if(oderlist == null || oderlist.size()==0){
+			 resMap.put("code", "false");
+			 resMap.put("msg", "该订单不存在");
+			 return resMap;
+		}
+		
+		OrderContractExample expo = new OrderContractExample();
+		expo.createCriteria().andOrderNumberEqualTo(orderNumber);
+		//插入订单合同是否录入
+		 List<OrderContract> list = orderContractMapper.selectByExample(expo);
+		 if(list.size() > 0){
+			 resMap.put("code", "false");
+			 resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
+			 return resMap;
+		 }
+		 
 		try {
+			String companyId = oderlist.get(0).getCompanyId();
 			/* 插入合同主表 */
-			String contractNumber = this.createOrderContract( companyId, orderNumber, "02" );
+			String contractNumber = this.createOrderContract(companyId, orderNumber, "02" );
 			/* 插入合同iterm 详情 */
 			if ( paramMap != null )
 			{
@@ -927,11 +956,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					pcContractTermsMapper.insertSelective( terms );
 				}
 			}
-			return true;
+			 resMap.put("code", "true");
+			 resMap.put("msg", "合同录入成功");
+			 return resMap;
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			return false;
+			 resMap.put("code", "false");
+			 resMap.put("msg", "服务异常,请联系管理员");
 		}
+		
+		return resMap;
 	}
 
 

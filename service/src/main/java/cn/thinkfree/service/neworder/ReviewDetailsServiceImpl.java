@@ -550,6 +550,17 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
             return RespData.error("此项目尚未提交设计案例");
         }
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
+        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        orderCritera.andProjectNoEqualTo(projectNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if (designerOrders.size()==0){
+            return RespData.error("此项目下暂无设计订单");
+        }
+        if (designerOrders.get(0).getPreviewState().equals(1)){
+            return RespData.error("预交底已完成,请勿重复");
+        }
         String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
         if (result.trim().isEmpty()) {
@@ -659,10 +670,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         DesignerOrder designerOrder = new DesignerOrder();
         designerOrder.setPreviewState(ProjectDataStatus.BASE_STATUS.getValue());
-        DesignerOrderExample orderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
-        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        orderCritera.andProjectNoEqualTo(projectNo);
+
         int i = designerOrderMapper.updateByExampleSelective(designerOrder, orderExample);
         if (i == 0) {
             return RespData.error("修改设计订单预交底状态失败!");
