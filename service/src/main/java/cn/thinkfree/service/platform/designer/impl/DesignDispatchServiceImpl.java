@@ -4,8 +4,11 @@ import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.pcvo.ConstructionOrderVO;
+import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
@@ -1158,5 +1161,36 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Project project = new Project();
         project.setStage(state);
         projectMapper.updateByExampleSelective(project, projectExample);
+    }
+
+    @Override
+    public ContractMsgVo queryContractMsg(String projectNo) {
+        Project project = queryProjectByNo(projectNo);
+        CompanyInfoVo companyInfo = getCompanyMsg(projectNo);
+        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
+        UserMsgVo userMsgVo = userService.queryUser(ownerId);
+        ContractMsgVo contractMsgVo = new ContractMsgVo();
+        contractMsgVo.setOwnerAddress(project.getAddressDetail());
+        contractMsgVo.setOwnerCardNo(userMsgVo.getMemberEcode());
+        contractMsgVo.setOwnerEmaile("");
+        contractMsgVo.setOwnerName(userMsgVo.getUserName());
+        contractMsgVo.setOwnerPhone(userMsgVo.getUserPhone());
+        contractMsgVo.setCompanyName(companyInfo.getCompanyName());
+        contractMsgVo.setCompanyLegalPerson(companyInfo.getLegalName());
+        return contractMsgVo;
+    }
+
+    private CompanyInfoVo getCompanyMsg(String projectNo) {
+        CompanyInfoVo companyInfo;ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        String companyId = null;
+        if(!constructionOrders.isEmpty()){
+            companyId = constructionOrders.get(0).getCompanyId();
+        }else{
+            return null;
+        }
+        companyInfo = companyInfoMapper.selectByCompanyId(companyId);
+        return companyInfo;
     }
 }
