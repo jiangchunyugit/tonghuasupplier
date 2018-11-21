@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.EnterCompanyOrganizationVO;
 import cn.thinkfree.database.vo.ProjectQuotationVO;
@@ -165,6 +166,44 @@ public class OpenApiController extends AbsBaseController {
     	Map<String,Object>  map  = contractService.insertDesignOrderContract(orderNumber, paramMap);
 
         return sendJsonData(ResultMessage.SUCCESS,map);
+    }
+
+    
+    
+    
+
+    /**
+     * 根据设计设计设计定单 no
+     * 返回pdf
+     *
+     */
+
+    @ApiOperation(value = "B端--根据订单编号返回pdf url--吕启栋", notes = "返回pdf",consumes = "application/json")
+    @PostMapping("/getDesignOrderContract/{orderNumber}")
+    @MyRespBody
+    public MyRespBundle<String> getDesignOrderContract(@PathVariable("orderNumber") String orderNumber){
+
+    	String  pdfUrl  = contractService.getPdfUrlByOrderNumber(orderNumber);
+
+        return sendJsonData(ResultMessage.SUCCESS,pdfUrl);
+    }
+    
+    
+
+    /**
+     * 根据设计设计设计定单 no
+     * 返回pdf
+     *
+     */
+
+    @ApiOperation(value = "B端--订单合同不通的原因--吕启栋", notes = "返回pdf",consumes = "application/json")
+    @PostMapping("/getDesignOrderContractNoPassCase/{orderNumber}")
+    @MyRespBody
+    public MyRespBundle< List<PcAuditInfo> > getDesignOrderContractNoPassCase(@PathVariable("orderNumber") String orderNumber){
+
+    	 List<PcAuditInfo> list   = contractService.getAuditInfoList(orderNumber);
+
+        return sendJsonData(ResultMessage.SUCCESS,list);
     }
 
 }
