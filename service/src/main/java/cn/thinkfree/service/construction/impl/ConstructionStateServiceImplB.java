@@ -77,7 +77,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
     /**
      * 装饰公司
-     * 1派单给服务人员 2施工报价完成  4合同录入 5确认线下签约完成（自动创建工地项目）
+     * 1派单给服务人员 2施工报价完成  5确认线下签约完成（自动创建工地项目）
      */
     @Override
     public MyRespBundle<String> constructionState(String orderNo, int type) {
@@ -94,11 +94,6 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             case 2:
                 stage = ConstructionStateEnumB.STATE_520.getState();
                 nextStateCode = ConstructionStateEnumB.STATE_520.getNextStates();
-                break;
-
-            case 4:
-                stage = ConstructionStateEnumB.STATE_540.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_540.getNextStates();
                 break;
             case 5:
                 stage = ConstructionStateEnumB.STATE_550.getState();
@@ -149,7 +144,23 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         return RespData.error(ResultMessage.ERROR.code, "状态更新失败状态-请稍后重试");
     }
+    /**
+     * 装饰公司
+     * 4合同录入 （完成）
+     */
+    @Override
+    public void contractState(String orderNo){
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState());
+    }
 
+    /**
+     * 装饰公司
+     * 5确认线下签约完成（自动创建工地项目）
+     */
+    @Override
+    public void contractCompleteState(String orderNo){
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_550.getState());
+    }
 
     /**
      * 支付
