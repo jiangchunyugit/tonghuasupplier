@@ -158,13 +158,10 @@ public interface DesignDispatchService {
     /**
      * 合同审核通过
      *
-     * @param projectNo    项目编号
+     * @param orderNo      设计订单编号
      * @param contractType 合同类型，1全款合同，2分期合同
-     * @param companyId    公司ID
-     * @param optionId     操作人ID
-     * @param optionName   操作人名称
      */
-    void reviewPass(String projectNo, int contractType, String companyId, String optionId, String optionName);
+    void reviewPass(String orderNo, int contractType);
 
     /**
      * 业主确认交付物

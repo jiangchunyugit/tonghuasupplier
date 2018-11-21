@@ -351,13 +351,10 @@ public class DesignDispatchController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "reviewPass", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewPass(
-            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
-            @ApiParam(name = "contractType", required = false, value = "合同类型，1全款合同，2分期款合同") @RequestParam(name = "contractType", required = false, defaultValue = "-1") int contractType,
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
-            @ApiParam(name = "optionId", required = false, value = "操作人Id") @RequestParam(name = "optionId", required = false) String optionId,
-            @ApiParam(name = "optionName", required = false, value = "操作人名称") @RequestParam(name = "optionName", required = false) String optionName) {
+            @ApiParam(name = "orderNo", required = false, value = "设计订单编号") @RequestParam(name = "orderNo", required = false) String orderNo,
+            @ApiParam(name = "contractType", required = false, value = "合同类型，1全款合同，2分期款合同") @RequestParam(name = "contractType", required = false, defaultValue = "-1") int contractType) {
         try {
-            designDispatchService.reviewPass(projectNo, contractType, companyId, optionId, optionName);
+            designDispatchService.reviewPass(orderNo, contractType);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -572,7 +569,7 @@ public class DesignDispatchController extends AbsBaseController {
         }
         return sendSuccessMessage(null);
     }
-    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"HTQY(发起合同签约)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\"]")
+    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\"]")
     @MyRespBody
     @RequestMapping(value = "showBtn", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<String>> showBtn(
