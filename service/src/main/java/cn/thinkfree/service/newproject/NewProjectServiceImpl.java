@@ -225,10 +225,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         String dataString = JSONObject.toJSONString(data);
         OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
-        projectVo.setProjectDynamic(Integer.valueOf(operationVo.getProjectDynamic())> 0 ? 1 : 0);
-        projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder())> 0 ? 1 : 0);
-        projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData())> 0 ? 1 : 0);
-        projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice())> 0 ? 1 : 0);
+        projectVo.setProjectDynamic(Integer.valueOf(operationVo.getProjectDynamic()) > 0 ? 1 : 0);
+        projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()) > 0 ? 1 : 0);
+        projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()) > 0 ? 1 : 0);
+        projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()) > 0 ? 1 : 0);
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
@@ -453,8 +453,10 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<List<UrlDetailVo>> getConstructionData(String projectNo) {
+    public MyRespBundle<ConstructionDataVo> getConstructionData(String projectNo) {
+        ConstructionDataVo constructionDataVo = new ConstructionDataVo();
         List<UrlDetailVo> urlList = new ArrayList<>();
+        Integer confirm = 0;
         ProjectDataExample example = new ProjectDataExample();
         ProjectDataExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
@@ -462,13 +464,18 @@ public class NewProjectServiceImpl implements NewProjectService {
         criteria.andTypeEqualTo(ProjectDataStatus.QUOTATION_STATUS.getValue());
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
         for (ProjectData projectData : projectDataList) {
+            if (projectData.getIsConfirm() != null){
+                confirm = projectData.getIsConfirm();
+            }
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
             urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
             urlList.add(urlDetailVo);
         }
-        return RespData.success(urlList);
+        constructionDataVo.setUrlList(urlList);
+        constructionDataVo.setConfirm(confirm);
+        return RespData.success(constructionDataVo);
     }
 
     /**
@@ -712,4 +719,5 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         return RespData.success(designOrderVos);
     }
+
 }
