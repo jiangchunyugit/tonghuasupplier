@@ -44,8 +44,9 @@ public class CompanyApplyController extends AbsBaseController {
     @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--设计/装饰公司申请--发送邮件验证码--李阳")
-    public void sendMessage(@ApiParam("邮箱") @RequestParam String email){
-        companyApplyService.sendMessage(email);
+    public MyRespBundle<String> sendMessage(@ApiParam("邮箱") @RequestParam String email){
+        String mes = companyApplyService.sendMessage(email);
+        return sendJsonData(ResultMessage.SUCCESS, mes);
     }
 
     /**
@@ -61,7 +62,7 @@ public class CompanyApplyController extends AbsBaseController {
         if(flag){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
-        return sendJsonData(ResultMessage.FAIL, "操作失败");
+        return sendJsonData(ResultMessage.FAIL, "操作失败,验证码错误或公司名称已被注册。");
     }
 
     /**
