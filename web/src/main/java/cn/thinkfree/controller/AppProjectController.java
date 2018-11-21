@@ -104,7 +104,12 @@ public class AppProjectController {
     public MyRespBundle<String> confirmVolumeRoomDataUser(
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ")String projectNo,
             @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号,测试请用 ")Integer category) {
-        return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
+        try{
+            return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+        }
     }
 
     @RequestMapping(value = "getProjectStatus", method = RequestMethod.POST)
