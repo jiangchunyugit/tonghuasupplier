@@ -687,19 +687,6 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             //延期天数
             siteDetailsVo.setDeferredDays(projectScheduling.getDelay());
         }
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        designerOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.size() != 1){
-            return RespData.error("查询到结果不止一个");
-        }
-        if (designerOrders.size() == 1) {
-            DesignerOrder designerOrder = designerOrders.get(0);
-            //订单编号
-            siteDetailsVo.setOrderNo(designerOrder.getOrderNo());
-            //订单类型
-            siteDetailsVo.setOrderType(designerOrder.getStyleType());
-        }
         //业主
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoEqualTo(siteDetailsVo.getProjectNo());
@@ -720,6 +707,10 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
         if (constructionOrders.size() == 1) {
             ConstructionOrder constructionOrder = constructionOrders.get(0);
+            //订单编号
+            siteDetailsVo.setOrderNo(constructionOrder.getOrderNo());
+            //订单类型
+            siteDetailsVo.setOrderType(constructionOrder.getType());
             //合同款
             siteDetailsVo.setContractFunds(constructionOrder.getMoney());
         }

@@ -158,7 +158,7 @@ public class OpenApiController extends AbsBaseController {
      */
 
     @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
-    @PostMapping("/insertDesignOrderContract/{orderNumber}")
+    @PostMapping("/insertDesignOrderContract")
     @MyRespBody
     public MyRespBundle<Map<String,Object> > insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
                                                           @ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
@@ -179,9 +179,9 @@ public class OpenApiController extends AbsBaseController {
      */
 
     @ApiOperation(value = "B端--根据订单编号返回pdf url--吕启栋", notes = "返回pdf",consumes = "application/json")
-    @PostMapping("/getDesignOrderContract/{orderNumber}")
+    @PostMapping("/getDesignOrderContract")
     @MyRespBody
-    public MyRespBundle<String> getDesignOrderContract(@PathVariable("orderNumber") String orderNumber){
+    public MyRespBundle<String> getDesignOrderContract(@ApiParam("合同编号orderNumber") @RequestParam String orderNumber){
 
     	String  pdfUrl  = contractService.getPdfUrlByOrderNumber(orderNumber);
 
@@ -197,13 +197,14 @@ public class OpenApiController extends AbsBaseController {
      */
 
     @ApiOperation(value = "B端--订单合同不通的原因--吕启栋", notes = "返回pdf",consumes = "application/json")
-    @PostMapping("/getDesignOrderContractNoPassCase/{orderNumber}")
+    @PostMapping("/getDesignOrderContractNoPassCase/pdfUrl")
     @MyRespBody
-    public MyRespBundle< List<PcAuditInfo> > getDesignOrderContractNoPassCase(@PathVariable("orderNumber") String orderNumber){
+    public MyRespBundle< List<PcAuditInfo> > getDesignOrderContractNoPassCase(@ApiParam("合同编号orderNumber")@RequestParam  String orderNumber){
 
     	 List<PcAuditInfo> list   = contractService.getAuditInfoList(orderNumber);
 
         return sendJsonData(ResultMessage.SUCCESS,list);
     }
+
 
 }

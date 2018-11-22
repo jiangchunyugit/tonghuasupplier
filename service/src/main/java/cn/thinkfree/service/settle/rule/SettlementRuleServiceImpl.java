@@ -71,14 +71,14 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                 settlementRuleVO.setCreateTime(new Date());
                 settlementRuleVO.setUpdateTime(new Date());
                 settlementRuleVO.setCreateUser(auditPersion);
-                settlementRuleVO.setInvalidStatus(OneTrue.YesOrNo.NO.toString());
+                settlementRuleVO.setInvalidStatus(OneTrue.YesOrNo.NO.val.toString());
 
                 // 新增未待审核
                 // 当前时间大于结束时间作废
                 if (this.datecompare(settlementRuleVO.getEndTime())>0) {
                     settlementRuleVO.setStatus(SettlementStatus.AuditCAN.getCode());
                     // 作废标签
-                    settlementRuleVO.setInvalidStatus(OneTrue.YesOrNo.YES.toString());
+                    settlementRuleVO.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
                 } else {
                     settlementRuleVO.setStatus(SettlementStatus.AuditWait.getCode());
                 }
@@ -114,7 +114,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             rule.setCreateTime(new Date());
             rule.setUpdateTime(new Date());
             rule.setCreateUser(auditPersion);
-            rule.setInvalidStatus(OneTrue.YesOrNo.NO.toString());
+            rule.setInvalidStatus(OneTrue.YesOrNo.NO.val.toString());
             int  flag = settlementRuleInfoMapper.insertSelective(rule);
 
             SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
@@ -174,7 +174,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         //作废
         record.setStatus(SettlementStatus.AuditCAN.getCode());
         // 作废标签
-        record.setInvalidStatus(OneTrue.YesOrNo.YES.toString());
+        record.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
         int  falg = 	settlementRuleInfoMapper.updateByExampleSelective(record, example);
         if(falg >  0 ){
             return true;
@@ -322,7 +322,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                 if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
                  recordT.setStatus(SettlementStatus.AuditCAN.getCode());
                     // 作废标签
-                    recordT.setInvalidStatus(OneTrue.YesOrNo.YES.toString());
+                    recordT.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
                 } else {
                     recordT.setStatus(SettlementStatus.AuditPass.getCode());
                 }
@@ -339,7 +339,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                 } else {
                     recordT.setStatus(SettlementStatus.AuditCAN.getCode());
                     // 作废标签
-                    recordT.setInvalidStatus(OneTrue.YesOrNo.YES.toString());
+                    recordT.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
                 }
             }
 
