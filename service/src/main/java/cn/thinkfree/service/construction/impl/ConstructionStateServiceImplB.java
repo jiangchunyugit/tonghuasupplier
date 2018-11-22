@@ -130,11 +130,11 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         if (stageCode.equals(stage)) {
             if (isPass == 1) {   //下一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState())) {
                     return RespData.success();
                 }
             } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(1).getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_520.getState())) {
                     return RespData.success();
                 }
             }
@@ -144,12 +144,13 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         return RespData.error(ResultMessage.ERROR.code, "状态更新失败状态-请稍后重试");
     }
+
     /**
      * 装饰公司
      * 4合同录入 （完成）
      */
     @Override
-    public void contractState(String orderNo){
+    public void contractState(String orderNo) {
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState());
     }
 
@@ -158,7 +159,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 5确认线下签约完成（自动创建工地项目）
      */
     @Override
-    public void contractCompleteState(String orderNo){
+    public void contractCompleteState(String orderNo) {
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_550.getState());
     }
 
@@ -292,7 +293,6 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     }
 
 
-
     /**
      * 消费者
      * 取消订单
@@ -370,14 +370,14 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * &审核通过
      */
     @Override
-    public MyRespBundle<String> customerCancelOrderForPay(String orderNo,int type) {
+    public MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
-        if (type == 1){
+        if (type == 1) {
             commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_720.getState());
-        }else {
+        } else {
             commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_730.getState());
         }
 
