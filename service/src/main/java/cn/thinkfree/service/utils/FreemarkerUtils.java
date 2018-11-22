@@ -1,13 +1,11 @@
 package cn.thinkfree.service.utils;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URL;
 import java.util.Map;
 
+import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.core.utils.LogUtil;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
@@ -26,9 +24,11 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.junit.Assert;
 
 public class FreemarkerUtils {
-	
+
+	 static  MyLogger logger = LogUtil.getLogger(FreemarkerUtils.class);
 
 	/**
 	 * 
@@ -51,15 +51,23 @@ public class FreemarkerUtils {
 			fltName = "constructionContract.ftl";
 		}
 		//fltName = "template.ftl";
-		URL fileResource = FreemarkerUtils.class.getResource("/templates");
-		File baseDir = new File(fileResource.getFile());
-		if (baseDir == null || !baseDir.isDirectory() || globalMap == null || fltName == null || "".equals(fltName)) {
-			throw new IllegalArgumentException("Directory file 加载模板错误");
-		}
+
+//		InputStream classpath = FreemarkerUtils.class.getClassLoader().getResourceAsStream("templates/"+fltName);
+////		URL fileResource = FreemarkerUtils.class.getClassLoader().getResource("templates");
+//		Assert.assertNotNull(classpath);
+////		String fl = fileResource.getFile();
+//		logger.error("File",classpath);
+////		ByteArrayInputStream bio = new ByteArrayInputStream(classpath.r)
+////		logger.error("Res",fileResource);
+//		File baseDir = new File("");
+//		if (baseDir == null  || globalMap == null || fltName == null || "".equals(fltName)) {
+//			throw new IllegalArgumentException("Directory file 加载模板错误");
+//		}
 
 		Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
 		try {
-			cfg.setDirectoryForTemplateLoading(baseDir);
+			cfg.setClassLoaderForTemplateLoading(FreemarkerUtils.class.getClassLoader(),"templates");
+//			cfg.setDirectoryForTemplateLoading(baseDir);
 			cfg.setDefaultEncoding("UTF-8");
 			cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);// .RETHROW
 			cfg.setClassicCompatible(true);
@@ -102,10 +110,14 @@ public class FreemarkerUtils {
 		ByteArrayInputStream by = new ByteArrayInputStream(html.getBytes());
 		ConverterProperties props = new ConverterProperties();
 		DefaultFontProvider defaultFontProvider = new DefaultFontProvider(false, false, false);
-		URL fileResource = FreemarkerUtils.class.getResource("/templates/font/SimSun.ttf");
-		//String  classpath=FreemarkerUtils.class.getClassLoader().getResource("/templates/font/SimSun.ttf").getPath();
-        String url= fileResource.getPath();
-		defaultFontProvider.addFont(url);
+//		InputStream fileResource = FreemarkerUtils.class.getClassLoader().getResourceAsStream("templates/font/SimSun.ttf");
+//		URL fileResource = FreemarkerUtils.class.getClassLoader().getResource("/data/font/SimSun.ttf");
+//
+////		String  classpath=FreemarkerUtils.class.getClassLoader().getResource("/templates/font/SimSun.ttf").getPath();
+//        String url= fileResource.getPath();
+//		byte[] fontBytes = new byte[fileResource.available()];
+//		fileResource.read(fontBytes);
+		defaultFontProvider.addFont("/data/font/SimSun.ttf");
 		props.setFontProvider(defaultFontProvider);
 		PdfWriter writer = new PdfWriter(DEST);
 		PdfDocument pdf = new PdfDocument(writer);
