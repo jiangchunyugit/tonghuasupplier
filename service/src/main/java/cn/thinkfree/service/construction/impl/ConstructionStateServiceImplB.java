@@ -148,6 +148,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     /**
      * 装饰公司
      * 4合同录入 （完成）
+     * TODO 不用了
      */
     @Override
     public void contractState(String orderNo) {
