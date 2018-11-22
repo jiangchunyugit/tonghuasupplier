@@ -377,7 +377,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderPlayVo != null) {
             projectTitleVo.setCost(orderPlayVo.getCost());
             projectTitleVo.setDelay(orderPlayVo.getDelay());
-            projectTitleVo.setSchedule(orderPlayVo.getSchedule());
+            projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(),project.getPlanEndTime()));
             projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
             projectTitleVo.setIsConfirm(orderPlayVo.getIsConfirm());
         }

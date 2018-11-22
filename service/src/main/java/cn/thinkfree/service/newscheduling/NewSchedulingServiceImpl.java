@@ -100,6 +100,21 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         }
         Date bigStartTime = project.getPlanStartTime();
         Collections.sort(projectBigSchedulings);
+        //生成总排期信息
+        ProjectScheduling projectScheduling = new ProjectScheduling();
+        projectScheduling.setDelay(0);
+        projectScheduling.setChangeNum(0);
+        projectScheduling.setIsConfirm(0);
+        projectScheduling.setTaskNum(5);
+        projectScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
+        projectScheduling.setRate(projectBigSchedulings.get(0).getSort());
+        projectScheduling.setProjectNo(projectNo);
+        projectScheduling.setStartTime(project.getPlanStartTime());
+        projectScheduling.setEndTime(project.getPlanEndTime());
+        int bigResult = projectSchedulingMapper.insertSelective(projectScheduling);
+        if (bigResult != Scheduling.INSERT_SUCCESS.getValue()) {
+            return RespData.error("生成排期失败!!");
+        }
         //生成排期
         for (int i = 0; i < projectBigSchedulings.size(); i++) {
             ProjectBigScheduling bigScheduling = projectBigSchedulings.get(i);
@@ -246,15 +261,30 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         if (!newOrderUserService.checkJurisdiction(projectNo, bigList.get(0).getUserId(), UserJobs.Foreman.roleCode)) {
             return RespData.error("此操作者没有此项目编辑排期的权限!");
         }
+        ProjectBigSchedulingDetailsExample bigExample = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria bigCriteria = bigExample.createCriteria();
+        bigCriteria.andProjectNoEqualTo(projectNo);
+        bigCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        List<ProjectBigSchedulingDetails> projectBigSchedulingDetailsList = projectBigSchedulingDetailsMapper.selectByExample(bigExample);
+        if (projectBigSchedulingDetailsList.size()==0){
+            return RespData.error("此项目不存在有效排期");
+        }
+        String schemeNo = projectBigSchedulingDetailsList.get(0).getSchemeNo();
+        if (schemeNo==null||schemeNo.isEmpty()){
+            return RespData.error("此排期不存在方案编号");
+        }
         //将原数据置为失效
         Integer i = projectBigSchedulingDetailsMapper.updateByProjectNo(projectNo, Scheduling.INVALID_STATUS.getValue());
         if (i == 0) {
             return RespData.error("确认排期失败,原因:原数据失效失败!");
         }
+
+
         for (ProjectBigSchedulingDetailsVO detailsVO : bigList) {
             ProjectBigSchedulingDetails projectBigSchedulingDetails = BaseToVoUtils.getVo(detailsVO, ProjectBigSchedulingDetails.class);
             projectBigSchedulingDetails.setStatus(Scheduling.BASE_STATUS.getValue());
             projectBigSchedulingDetails.setCreateTime(new Date());
+            projectBigSchedulingDetails.setSchemeNo(schemeNo);
             int result = projectBigSchedulingDetailsMapper.insertSelective(projectBigSchedulingDetails);
             if (result != Scheduling.INSERT_SUCCESS.getValue()) {
                 return RespData.error("插入失败!!");
