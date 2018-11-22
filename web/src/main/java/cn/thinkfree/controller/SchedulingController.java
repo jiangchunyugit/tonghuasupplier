@@ -47,6 +47,7 @@ public class SchedulingController extends AbsBaseController {
         return sendSuccessMessage(result);
     }
 
+
     @RequestMapping(value = "updateProjectScheduling", method = RequestMethod.POST)
     @ApiOperation(value = "APP-确认排期")
     public MyRespBundle confirmProjectScheduling(@RequestBody @ApiParam(name = "projectBigSchedulingDetailsVO", value = "大排期信息") List<ProjectBigSchedulingDetailsVO> bigList) {
