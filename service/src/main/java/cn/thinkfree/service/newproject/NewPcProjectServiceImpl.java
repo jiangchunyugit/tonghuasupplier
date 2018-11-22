@@ -137,7 +137,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         DesignerOrder designerOrder = designerOrders.get(0);
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
-        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState())) {
+        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState())||designerOrder.getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
             designerOrderVo.setComplete(true);
         } else {
             designerOrderVo.setComplete(false);

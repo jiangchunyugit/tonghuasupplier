@@ -651,7 +651,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (designerOrders.size() == 0) {
             return RespData.error("查无此项目");
         }
-        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState())) {
+        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState())||designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
             //如果设计订单完成,则请求施工订单更改状态
             constructionStateServiceB.customerCancelOrder(userId, orderNo, cancelReason);
         } else {

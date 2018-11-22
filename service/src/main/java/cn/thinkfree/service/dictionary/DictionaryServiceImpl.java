@@ -84,22 +84,23 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public List<City> findCityByProvince(String province) {
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        CityExample cityExample = new CityExample();
         if(userVO != null) {
+            // 是否入驻
             if (userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY.shortVal())) {
-                CityExample cityExample = new CityExample();
                 cityExample.createCriteria().andProvinceCodeEqualTo(province);
-                return cityMapper.selectByExample(cityExample);
             } else {
-                CityExample cityExample = new CityExample();
-                cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
-                return cityMapper.selectByExample(cityExample);
-
+                // 运营超管
+                if(UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
+                    cityExample.createCriteria().andProvinceCodeEqualTo(province);
+                }else{
+                    cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
+                }
             }
         }else{
-            CityExample cityExample = new CityExample();
             cityExample.createCriteria().andProvinceCodeEqualTo(province);
-            return cityMapper.selectByExample(cityExample);
         }
+        return cityMapper.selectByExample(cityExample);
     }
 
     /**
