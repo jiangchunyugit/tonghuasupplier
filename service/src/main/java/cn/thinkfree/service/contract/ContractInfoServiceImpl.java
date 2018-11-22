@@ -16,6 +16,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.service.constants.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,10 +75,6 @@ import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
-import cn.thinkfree.service.constants.AuditStatus;
-import cn.thinkfree.service.constants.CompanyFinancialType;
-import cn.thinkfree.service.constants.CompanyType;
-import cn.thinkfree.service.constants.ContractStatus;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
@@ -463,13 +460,14 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				root.put("code" + childList.get(i).getCostType(), childListr);
 			}
 		}
+		String signedTime = DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss");
 		/* 判断公司类型 */
 		 /* 装修公司 */
-		if (companyInfo.getCompanyInfo().getRoleId().equals(CompanyType.BD.stringVal()))
+		if (companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.BD.code))
 
 		{
-			if (!StringUtils.isEmpty(newVo.getSignedTime())) {
-				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));// 合同生效时间
+			if (!StringUtils.isEmpty(signedTime)) {
+				root.put("signedTime", DateUtil.formateToDate(signedTime, "yyyy-MM-dd"));// 合同生效时间
 			} else {
 				root.put("signedTime", "");
 			}
@@ -488,12 +486,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				e.printStackTrace();
 				printErrorMes("生成pdf合同发生错误", e.getMessage());
 			}
-
-		} else if (companyInfo.getCompanyInfo().getRoleId().equals(CompanyType.SJ.stringVal()))/* 设计公司 */
+			/* 设计公司 */
+		} else if (companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.SJ.code))
 
 		{
-			if (!StringUtils.isEmpty(newVo.getSignedTime())) {
-				root.put("signedTime", DateUtil.formateToDate(newVo.getSignedTime(), "yyyy-MM-dd"));// 合同生效时间
+			if (!StringUtils.isEmpty(signedTime)) {
+				root.put("signedTime", DateUtil.formateToDate(signedTime, "yyyy-MM-dd"));// 合同生效时间
 			} else {
 				root.put("signedTime", "");
 			}
