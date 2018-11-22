@@ -45,7 +45,7 @@ public interface NewProjectService {
      * @param projectNo
      * @return
      */
-    MyRespBundle<List<UrlDetailVo>> getConstructionData(String projectNo);
+    MyRespBundle<ConstructionDataVo> getConstructionData(String projectNo);
 
     /**
      * 获取报价单资料

@@ -19,6 +19,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -71,10 +72,19 @@ public class OrderListCommonService {
     /**
      * 用户中心地址接口
      */
-    private static String userCenterUrl = "http://10.240.10.169:5000/userapi/other/api/user/getListUserByUserIds";
+    @Value("${custom.service.ip}")
+    private String userCenterIp;
+
+    @Value("${custom.service.port}")
+    private String userCenterPort;
+
+    private static String userCenterUrl = "/userapi/other/api/user/getListUserByUserIds";
 
     public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
 
+    public String getUrl(String suffix) {
+        return "http://" + userCenterIp + ":" + userCenterPort + suffix;
+    }
 
     /**
      * 施工订单
@@ -553,7 +563,7 @@ public class OrderListCommonService {
         if(listUserNo == null || listUserNo.isEmpty()){
             return new ArrayList<>();
         }
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(userCenterUrl, JSONObject.toJSONString(listUserNo));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getUrl(userCenterUrl), JSONObject.toJSONString(listUserNo));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");

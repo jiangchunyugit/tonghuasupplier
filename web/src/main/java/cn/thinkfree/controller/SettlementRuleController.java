@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,7 +92,10 @@ public class SettlementRuleController extends AbsBaseController {
         BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
 
         boolean  result= settlementRuleService.insertOpiateSettlementRule(settlementRuleVO);
-        return sendJsonData(ResultMessage.SUCCESS,result);
+        if (result) {
+            return sendJsonData(ResultMessage.SUCCESS,result);
+        }
+        return sendJsonData(ResultMessage.ERROR,result);
     }
 
     @ApiOperation(value = "查看作废---提交结算规则", notes = "编辑结算规则")
@@ -103,8 +107,10 @@ public class SettlementRuleController extends AbsBaseController {
         BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
 
         boolean  result= settlementRuleService.updateSettlementRule(settlementRuleVO);
-
-        return sendJsonData(ResultMessage.SUCCESS,result);
+        if (result) {
+            return sendJsonData(ResultMessage.SUCCESS,result);
+        }
+        return sendJsonData(ResultMessage.ERROR,result);
     }
 
     /**
@@ -136,7 +142,10 @@ public class SettlementRuleController extends AbsBaseController {
         BeanValidator.validate(ruleNumber);
 
         boolean  result= settlementRuleService.copySettlementRule(ruleNumber);
-        return sendJsonData(ResultMessage.SUCCESS,result);
+        if (result) {
+            return sendJsonData(ResultMessage.SUCCESS,result);
+        }
+        return sendJsonData(ResultMessage.ERROR,result);
     }
 
     /**
@@ -150,7 +159,10 @@ public class SettlementRuleController extends AbsBaseController {
     public MyRespBundle<String> cancellatSettlementRule(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 
         boolean  result= settlementRuleService.cancelledSettlementRule(ruleNumber);
-        return sendJsonData(ResultMessage.SUCCESS,result);
+        if (result) {
+            return sendJsonData(ResultMessage.SUCCESS,result);
+        }
+        return sendJsonData(ResultMessage.ERROR,result);
     }
 
     /**
@@ -192,8 +204,15 @@ public class SettlementRuleController extends AbsBaseController {
     public MyRespBundle<String> batchcCheckSettlementRule(SettlementRuleParam param){
 
         BeanValidator.validate(param);
-        boolean  result= settlementRuleService.batchCheckSettlementRule(param.getRuleNumbers(),param.getAuditStatus(),param.getAuditCase());
-        return sendJsonData(ResultMessage.SUCCESS,result);
+        if (param.getRuleNumbers()!=null&&param.getRuleNumbers().size()>0) {
+            boolean  result= settlementRuleService.batchCheckSettlementRule(param.getRuleNumbers()==null?new ArrayList<>():param.getRuleNumbers(),param.getAuditStatus(),param.getAuditCase());
+            if (result) {
+                return sendJsonData(ResultMessage.SUCCESS,result);
+            }
+            return sendJsonData(ResultMessage.ERROR,result);
+        } else {
+            return sendJsonData(ResultMessage.FAIL,"参数错误");
+        }
     }
 
     /**
@@ -207,6 +226,9 @@ public class SettlementRuleController extends AbsBaseController {
     public MyRespBundle<String> applicationInvalid(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 
         boolean  result= settlementRuleService.applicationInvalid(ruleNumber);
-        return sendJsonData(ResultMessage.SUCCESS,result);
+        if (result) {
+            return sendJsonData(ResultMessage.SUCCESS,result);
+        }
+        return sendJsonData(ResultMessage.ERROR,result);
     }
 }

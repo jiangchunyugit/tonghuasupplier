@@ -131,7 +131,7 @@ public interface ContractService {
        * 财务审核通过 生成合同pdf
        *
        */
-      boolean createOrderContract(String orderNumber);
+      boolean createOrderContractpdf(String orderNumber,  String CompanyId,Map<String, Object> paramMap);
 
       /**
        * 根据订单号获取

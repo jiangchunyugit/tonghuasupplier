@@ -65,10 +65,9 @@ public class AppProjectController {
 
     @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
     @ApiOperation(value = "APP/PC-获取施工资料")
-    public MyRespBundle<List<UrlDetailVo>> getConstructionData(
+    public MyRespBundle<ConstructionDataVo> getConstructionData(
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
-        MyRespBundle<List<UrlDetailVo>> dataDetailVo = newProjectService.getConstructionData(projectNo);
-        return dataDetailVo;
+        return newProjectService.getConstructionData(projectNo);
     }
 
     @RequestMapping(value = "getQuotationData", method = RequestMethod.POST)
