@@ -1,5 +1,6 @@
 package cn.thinkfree.database.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,6 +12,7 @@ import java.util.Date;
  */
 @ApiModel(value = "ProjectBigSchedulingDetailsVO,大排期详情实体")
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProjectBigSchedulingDetailsVO {
 
     /**

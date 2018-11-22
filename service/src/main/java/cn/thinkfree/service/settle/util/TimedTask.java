@@ -29,6 +29,7 @@ public class TimedTask extends AbsLogPrinter {
 
     @Autowired
     SettlementRatioInfoMapper settlementRatioInfoMapper;
+
     @Scheduled(cron = "${schedules}")
     public void ruleTimedTask () {
 
@@ -51,7 +52,7 @@ public class TimedTask extends AbsLogPrinter {
                     // 作废
                     settlementRuleInfo.setStatus(SettlementStatus.AuditCAN.getCode());
                     // 作废标签
-                    settlementRuleInfo.setInvalidStatus(OneTrue.YesOrNo.YES.toString());
+                    settlementRuleInfo.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
                 } else if (SettlementStatus.CANDecline.getCode().equals(settlementRuleInfo.getStatus())
                         ||SettlementStatus.AuditPass.getCode().equals(settlementRuleInfo.getStatus())) {
                     // 失效

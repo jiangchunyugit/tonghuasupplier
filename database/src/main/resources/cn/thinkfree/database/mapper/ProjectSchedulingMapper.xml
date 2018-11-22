@@ -13,11 +13,11 @@
     <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
     <result column="task_num" jdbcType="INTEGER" property="taskNum" />
     <result column="delay" jdbcType="INTEGER" property="delay" />
-    <result column="change_num" jdbcType="SMALLINT" property="changeNum" />
-    <result column="rate" jdbcType="SMALLINT" property="rate" />
+    <result column="change_num" jdbcType="INTEGER" property="changeNum" />
+    <result column="rate" jdbcType="INTEGER" property="rate" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="is_confirm" jdbcType="SMALLINT" property="isConfirm" />
+    <result column="is_confirm" jdbcType="INTEGER" property="isConfirm" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -151,8 +151,8 @@
       )
     values (#{id,jdbcType=BIGINT}, #{companyId,jdbcType=INTEGER}, #{projectNo,jdbcType=VARCHAR}, 
       #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{taskNum,jdbcType=INTEGER}, 
-      #{delay,jdbcType=INTEGER}, #{changeNum,jdbcType=SMALLINT}, #{rate,jdbcType=SMALLINT}, 
-      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{isConfirm,jdbcType=SMALLINT}
+      #{delay,jdbcType=INTEGER}, #{changeNum,jdbcType=INTEGER}, #{rate,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{isConfirm,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ProjectScheduling">
@@ -222,10 +222,10 @@
         #{delay,jdbcType=INTEGER},
       </if>
       <if test="changeNum != null">
-        #{changeNum,jdbcType=SMALLINT},
+        #{changeNum,jdbcType=INTEGER},
       </if>
       <if test="rate != null">
-        #{rate,jdbcType=SMALLINT},
+        #{rate,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -234,7 +234,7 @@
         #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="isConfirm != null">
-        #{isConfirm,jdbcType=SMALLINT},
+        #{isConfirm,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -277,10 +277,10 @@
         delay = #{record.delay,jdbcType=INTEGER},
       </if>
       <if test="record.changeNum != null">
-        change_num = #{record.changeNum,jdbcType=SMALLINT},
+        change_num = #{record.changeNum,jdbcType=INTEGER},
       </if>
       <if test="record.rate != null">
-        rate = #{record.rate,jdbcType=SMALLINT},
+        rate = #{record.rate,jdbcType=INTEGER},
       </if>
       <if test="record.status != null">
         status = #{record.status,jdbcType=INTEGER},
@@ -289,7 +289,7 @@
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="record.isConfirm != null">
-        is_confirm = #{record.isConfirm,jdbcType=SMALLINT},
+        is_confirm = #{record.isConfirm,jdbcType=INTEGER},
       </if>
     </set>
     <if test="_parameter != null">
@@ -309,11 +309,11 @@
       end_time = #{record.endTime,jdbcType=TIMESTAMP},
       task_num = #{record.taskNum,jdbcType=INTEGER},
       delay = #{record.delay,jdbcType=INTEGER},
-      change_num = #{record.changeNum,jdbcType=SMALLINT},
-      rate = #{record.rate,jdbcType=SMALLINT},
+      change_num = #{record.changeNum,jdbcType=INTEGER},
+      rate = #{record.rate,jdbcType=INTEGER},
       status = #{record.status,jdbcType=INTEGER},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
-      is_confirm = #{record.isConfirm,jdbcType=SMALLINT}
+      is_confirm = #{record.isConfirm,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -344,10 +344,10 @@
         delay = #{delay,jdbcType=INTEGER},
       </if>
       <if test="changeNum != null">
-        change_num = #{changeNum,jdbcType=SMALLINT},
+        change_num = #{changeNum,jdbcType=INTEGER},
       </if>
       <if test="rate != null">
-        rate = #{rate,jdbcType=SMALLINT},
+        rate = #{rate,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -356,7 +356,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="isConfirm != null">
-        is_confirm = #{isConfirm,jdbcType=SMALLINT},
+        is_confirm = #{isConfirm,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -373,11 +373,11 @@
       end_time = #{endTime,jdbcType=TIMESTAMP},
       task_num = #{taskNum,jdbcType=INTEGER},
       delay = #{delay,jdbcType=INTEGER},
-      change_num = #{changeNum,jdbcType=SMALLINT},
-      rate = #{rate,jdbcType=SMALLINT},
+      change_num = #{changeNum,jdbcType=INTEGER},
+      rate = #{rate,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      is_confirm = #{isConfirm,jdbcType=SMALLINT}
+      is_confirm = #{isConfirm,jdbcType=INTEGER}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
