@@ -1,6 +1,7 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.base.AbsBaseController;
+import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
@@ -161,7 +162,12 @@ public class ReviewDetailsController extends AbsBaseController {
             @RequestParam(name = "projectNo") @ApiParam(value = "提交精准报价", name = "projectNo",required = true) String projectNo,
             @RequestParam(name = "result", defaultValue = "-1") @ApiParam(value = "审核结果(1,通过 2,不通过)", name = "result",required = true) int result,
             @RequestParam(name = "refuseReason") @ApiParam(value = "不通过原因", name = "refuseReason") String refuseReason){
-        return reviewDetailsService.reviewOffer(projectNo, result, refuseReason);
+        try {
+            return reviewDetailsService.reviewOffer(projectNo, result, refuseReason);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+        }
     }
 
     @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
