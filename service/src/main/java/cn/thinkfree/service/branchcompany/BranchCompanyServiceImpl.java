@@ -188,8 +188,9 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
             // 权限等级
             short level = userVO.getPcUserInfo().getLevel();
 
-            // 省账号
-            if (UserLevel.Company_Province.code == level && userVO.getBranchCompany() != null
+            // 省账号或者市账号
+            if ((UserLevel.Company_Admin.code != level)
+                    && userVO.getBranchCompany() != null
                     && StringUtils.isNotBlank(userVO.getBranchCompany().getBranchCompanyCode())) {
                 criteria.andBranchCompanyCodeEqualTo(userVO.getBranchCompany().getBranchCompanyCode());
             }
