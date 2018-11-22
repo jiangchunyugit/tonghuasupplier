@@ -24,6 +24,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -790,8 +792,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setCteateTime( new Date() );
 		record.setUpdateTime( new Date() );
 		record.setOrderNumber( orderNumber );
-		record.setContractType("2");
+		record.setAuditType("2");
 		/* record.setConractUrlPdf(url); */
+		//每个订单只有一个合同
+		OrderContractExample example = new OrderContractExample();
+		example.createCriteria().andOrderNumberEqualTo(orderNumber);
+		orderContractMapper.deleteByExample(example);
+		
 		orderContractMapper.insertSelective( record );
 		newSchedulingService.createScheduling(orderNumber);
 		return(contractNumber);
@@ -823,15 +830,15 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	
 	@Override
-	public boolean createOrderContractpdf(String orderNumber) {
+	public boolean createOrderContractpdf(String orderNumber, String CompanyId,Map<String, Object> root) {
 		try {
 			// 订单合同
 			OrderContractExample record = new OrderContractExample();
-			record.createCriteria().andOrderNumberEqualTo(orderNumber);
+			record.createCriteria().andOrderNumberEqualTo(orderNumber).andCompanyIdEqualTo(CompanyId);
 			List<OrderContract> list = orderContractMapper.selectByExample(record);
 			OrderContract contrat = list.get(0);
 
-			Map<String, Object> root = new HashMap<>();
+			/*Map<String, Object> root = new HashMap<>();
 			// 查询合同信息
 			ContractTermsExample exp = new ContractTermsExample();
 			exp.createCriteria().andContractNumberEqualTo(contrat.getContractNumber());
@@ -839,7 +846,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			for (int i = 0; i < listTerm.size(); i++) {
 				root.put(listTerm.get(i).getContractDictCode(), listTerm.get(i).getContractValue());
 			}
-
+*/
 			String pdfUrl = "";
 
 			if (contrat.getContractType().equals("02")) {
@@ -854,7 +861,28 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 
 			} else if (contrat.getContractType().equals("03")) {
-
+				if(root != null && root.size() > 0 ){
+					try {
+						JSONArray arr = JSONArray.parseArray(String.valueOf(root.get("c08")));
+						List<Map<String,String>> listR = new ArrayList<>();
+						Map<String,String> mapR = new HashMap<>();
+						for (int i = 0; i < arr.size(); i++) {
+							 JSONObject job = arr.getJSONObject(i); 
+							mapR.put("code01", job.getString("progressName"));
+							mapR.put("code02", job.getString("stageCode"));
+							mapR.put("code03", job.getString("payPercentum"));
+							mapR.put("code04", job.getString("payMoney"));
+							listR.add(mapR);
+						}
+						root.put("c08",listR);
+					} catch (Exception e) {
+						e.printStackTrace();
+						printErrorMes("生成合同pdf 解析json 错误{}", e.getMessage());
+						throw new RuntimeException("系统数据异常");
+					}
+				}else{
+					throw new RuntimeException("设计合同生成pdf 数据异常  数据为 null or ''");
+				}
 				try {
 					String filePath = FreemarkerUtils.savePdf(filePathDir + orderNumber, "3", root);
 					/* 上传 */
@@ -962,7 +990,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 			}
 			//生成pdf
-			 this.createOrderContractpdf(orderNumber);
+			 //this.createOrderContractpdf(orderNumber);
 			 resMap.put("code", "true");
 			 resMap.put("msg", "合同录入成功");
 			 return resMap;
@@ -984,6 +1012,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			/* 插入合同主表 */
 			String contractNumber = this.createOrderContract( companyId, orderNumber, "03" );
 			/* 插入合同iterm 详情 */
+			Map<String,Object> root = new HashMap<>();
 			if ( paramMap != null )
 			{
 				Iterator<Map.Entry<String, String> > entries = paramMap.entrySet().iterator();
@@ -1004,10 +1033,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					.andContractNumberEqualTo( contractNumber );
 					pcContractTermsMapper.deleteByExample( exp );
 					pcContractTermsMapper.insertSelective( terms );
+					root.put(key,value);
 				}
 			}
 			//生成pdf
-			this.createOrderContractpdf(orderNumber);
+			this.createOrderContractpdf(orderNumber,companyId,root);
 			return(true);
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -1289,7 +1319,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 				} else {// 施工合同
 					printInfoMes("合同审批调用 订单接口 orderNo{}}", orderNumber);
-					constructionStateServiceB.contractState(orderNumber);
+					constructionStateServiceB.contractCompleteState(orderNumber);
 				}
 
 				record.setSignTime(new Date());// 插入时间

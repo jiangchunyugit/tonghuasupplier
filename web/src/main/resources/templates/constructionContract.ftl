@@ -86,24 +86,24 @@
 <body>
     <h1 class="text-algin">家庭居室装饰装修施工合同</h1>
     <div>
-        <span>甲方：</span>
-        <span style="margin-left: 22%">乙方：</span>
+        <span>甲方：${c01}</span>
+        <span style="margin-left: 22%">乙方：${c01}</span>
     </div>
     <div>
-        <span>甲方电话：</span>
-        <span style="margin-left: 20%">营业执照号：</span>
+        <span>甲方电话：${c09}</span>
+        <span style="margin-left: 20%">营业执照号：${c13}</span>
     </div>
     <div>
-        <span>会员卡号：</span>
-        <span style="margin-left: 20%">建筑资质等级证书号：</span>
+        <span>会员卡号：${c05}</span>
+        <span style="margin-left: 20%">建筑资质等级证书号：${c10}</span>
     </div>
     <div>
-        <span>电子邮箱：</span>
-        <span style="margin-left: 20%">组织机构代码证：</span>
+        <span>电子邮箱：${c11}</span>
+        <span style="margin-left: 20%">组织机构代码证：${c15}</span>
     </div>
     <div>
-        <span>装修地址：</span>
-        <span style="margin-left: 20%">法人代表：</span>
+        <span>装修地址：${c12}</span>
+        <span style="margin-left: 20%">法人代表：${c16}</span>
     </div>
     <div class="header">
         <p style="text-align: center;">前 言</p>
@@ -196,30 +196,30 @@
         </tr>
         <tr>
             <td>
-                <span>1.1 装修面积（套内建筑面积）：</span>
+                <span>1.1 装修面积（套内建筑面积）：${c18} 平米</span>
             </td>
         </tr>
+       
         <tr>
             <td>
-                <span>1.2 装修户型：</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span>1.3 装修承包方式：</span>
+                <span>1.2 装修承包方式：</span>
             </td>
         </tr>
     </table>
-    <section class='indent'>
-        套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
-    </section>
-    <section class='indent'>
-        个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
-    </section>
+      
+    <#if c03 == 2>
+	    <section class='indent'>
+	                套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
+	    </section>
+	    <#else>
+	    <section class='indent'>
+	               个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
+	    </section>
+   </#if>
     <table>
         <tr>
             <td>
-                <span>1.4 装修内容及施工方法：详见《施工图纸》和《清单式报价书》</span>
+                <span>1.3 装修内容及施工方法：详见《施工图纸》和《清单式报价书》</span>
             </td>
         </tr>
         <tr>
@@ -234,20 +234,18 @@
         </tr>
         <tr>
             <td>
-                <span>2.2 计划开工日期：</span>
+                <span>2.2 计划开工日期：${c19}</span>
             </td>
+           
+        </tr>
+        <tr>
             <td>
-                <span>2.2 计划开工日期：</span>
+                <span>2.3&nbsp;&nbsp;工期：${c04} 天</span>
             </td>
         </tr>
         <tr>
             <td>
-                <span>&nbsp;&nbsp;工期：</span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <span>3 .合同额、支付方式及先行赔付</span>
+                <span>2.4合同额  ${c17}</span>
             </td>
         </tr>
     </table>
@@ -282,28 +280,17 @@
         <tr>
             <th>工程进度</th>
             <th>付款时间</th>
+             <th>支付比例</th>
             <th>金额（元）</th>
         </tr>
+        <#list c08 as c>
         <tr>
-            <td>对预算、设计方案认可</td>
-            <td>签订合同当日</td>
-            <td></td>
+            <td>${c.code01}</td>
+            <td>工程第${c.code02}阶段</td>
+            <td>${c.code03}%</td>
+             <td>${c.code04}</td>
         </tr>
-        <tr>
-            <td>隐蔽工程竣工</td>
-            <td>水、电管线隐蔽工程验收通过3日内</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>工程进度过半</td>
-            <td>中期工程验收通过3日内</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>竣工</td>
-            <td>竣工验收通过3日内</td>
-            <td></td>
-        </tr>
+        </#list>
     </table>
     <section>
         （2）双方协商一致的其他支付方式：<p class="placeholder"></p>
