@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -192,7 +193,7 @@ public class SettlementRuleController extends AbsBaseController {
     public MyRespBundle<String> batchcCheckSettlementRule(SettlementRuleParam param){
 
         BeanValidator.validate(param);
-        boolean  result= settlementRuleService.batchCheckSettlementRule(param.getRuleNumbers(),param.getAuditStatus(),param.getAuditCase());
+        boolean  result= settlementRuleService.batchCheckSettlementRule(param.getRuleNumbers()==null?new ArrayList<>():param.getRuleNumbers(),param.getAuditStatus(),param.getAuditCase());
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
 
