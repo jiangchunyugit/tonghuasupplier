@@ -42,9 +42,11 @@ public class ContractNum {
     	String statSt = "";
     	if("SJ".equals(type)){
     		statSt = "SJHT";
-    	}else if("SJ".equals(type)){
-    		statSt = "DBHT";
-    	}
+    	}else if("BD".equals(type)){
+    		statSt = "BDHT";
+    	}else{
+            statSt = "HT";
+        }
         String datastr = getNowDateStr();
         if (datastr.equals(now)) {
             count++;// 自增
