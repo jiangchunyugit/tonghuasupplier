@@ -30,7 +30,7 @@ public class DelayTiming {
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
 
-    @Scheduled(cron = "${schedules}")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void timing() {
         try {
             LOGGER.info("开始执行定时任务");

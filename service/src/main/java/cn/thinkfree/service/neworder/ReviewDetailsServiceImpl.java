@@ -12,6 +12,7 @@ import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
@@ -58,6 +59,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ProjectDataMapper projectDataMapper;
     @Autowired
     DesignerOrderMapper designerOrderMapper;
+    @Autowired
+    NewSchedulingService schedulingService;
 
     /**
      * 获取精准报价
@@ -495,6 +498,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason) {
         //审核结果(1,通过 2,不通过)
         if (result != 1 && result != 2) {
@@ -531,6 +535,11 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
             if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
                 return RespData.error(stringMyRespBundle.getMessage());
+            }
+            //生成排期信息
+            MyRespBundle scheduling = schedulingService.createScheduling(constructionOrders.get(0).getOrderNo());
+            if (!scheduling.getCode().equals(ErrorCode.OK.getCode())){
+                throw new RuntimeException("不能进行该操作");
             }
         } else if (result == 2) {
             MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
