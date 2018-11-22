@@ -591,7 +591,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             if (projectCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && projectCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
                 if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
                     // 进度验收
-                    if (scheduleSort == null) {
+                    if (scheduleSort == 0) {
                         // 开工准备:开工申请
                         getInstances(instanceVOs, AfConfigs.START_APPLICATION.configNo, userId, projectNo);
                         // 开工准备:开工报告
