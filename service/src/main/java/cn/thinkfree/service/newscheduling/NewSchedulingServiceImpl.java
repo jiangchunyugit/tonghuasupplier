@@ -245,8 +245,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         ProjectBigSchedulingDetailsVO otherVo = new ProjectBigSchedulingDetailsVO();
         otherVo.setBigName("开工报告");
         otherVo.setBigSort(0);
-        otherVo.setPlanEndTime(new Date());
-        otherVo.setPlanEndTime(new Date());
+        otherVo.setPlanEndTime(new Date(0));
+        otherVo.setPlanEndTime(new Date(0));
         return RespData.success(playBigList);
     }
 
@@ -365,6 +365,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String projectStart(String projectNo, Integer bigSort) {
         ProjectBigSchedulingDetails bigSchedulingDetails = new ProjectBigSchedulingDetails();
         bigSchedulingDetails.setActualStartTime(new Date());
@@ -375,6 +376,17 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         detailsCriteria.andBigSortEqualTo(bigSort);
         int i = projectBigSchedulingDetailsMapper.updateByExampleSelective(bigSchedulingDetails, detailsExample);
         if (i == 0) {
+            return "修改排期实际开始时间失败!";
+        }
+        ProjectScheduling projectScheduling = new ProjectScheduling();
+        projectScheduling.setIsConfirm(Scheduling.COMPLETED_YES.getValue());
+        ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
+        ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
+        schedulingCriteria.andProjectNoEqualTo(projectNo);
+        schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        schedulingCriteria.andRateEqualTo(1);
+        int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
+        if (result == 0) {
             return "修改排期实际开始时间失败!";
         }
         return "修改成功";
