@@ -252,6 +252,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         otherVo.setPlanEndTime(new Date(0));
         otherVo.setPlanEndTime(new Date(0));
         playBigList.add(otherVo);
+        Collections.sort(playBigList);
         return RespData.success(playBigList);
     }
 
