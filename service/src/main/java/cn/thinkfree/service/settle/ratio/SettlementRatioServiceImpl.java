@@ -223,10 +223,18 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	@Override
 	public Map<String, String> getCostNames() {
 		Map<String, String> map = new HashMap<>();
-		map.put("01", "设计费");
-		map.put("02", "产品服务费");
-		map.put("03", "施工服务费");
-		map.put("04", "合同保证金");
+		map.put("03", "施工平台管理服务费");
+		map.put("04", "设计平台管理服务费");
+		map.put("05", "产品服务费");
+		map.put("06", "租金");
+		map.put("07", "物业费");
+		map.put("08", "其他收费");
+		map.put("09", "材料推荐服务费");
+		map.put("10", "施工服务费");
+		map.put("11", "先行赔付款");
+		map.put("12", "客户赔偿款");
+		map.put("13", "合同保证金");
+		map.put("14", "入驻费");
 		return map;
 	}
 
@@ -277,7 +285,9 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 					recordT.setStatus(SettlementStatus.AuditCAN.getCode());
 				}
 			}
-			settlementRatioInfoMapper.updateByExampleSelective(recordT, example);
+			if (StringUtils.isNotBlank(recordT.getStatus())) {
+				settlementRatioInfoMapper.updateByExampleSelective(recordT, example);
+			}
 			return true;
 		}
 		return false;
