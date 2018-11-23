@@ -16,6 +16,8 @@ import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
@@ -70,6 +72,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfInstancePdfUrlService instancePdfUrlService;
     @Autowired
     private ConstructionStateServiceB constructionStateServiceB;
+    @Autowired
+    private EmployeeService employeeService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -115,13 +119,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setRoleId(role.getRoleCode());
             approvalLogVO.setRoleName(role.getRoleName());
             approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_UNAPPROVAL);
-            AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), approvalLogVO.getUserId(), approvalLogVO.getRoleId());
+            AfUserDTO userDTO = getUserInfo(approvalLogVO.getUserId(), approvalLogVO.getRoleId());
             approvalLogVO.setUserName(userDTO.getUsername());
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
             approvalLogVOs.add(approvalLogVO);
         }
         String customerId = project.getOwnerId();
-        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
+        AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
         AfConfig config = configService.findByNo(configNo);
         instanceDetailVO.setConfigNo(configNo);
         instanceDetailVO.setConfigName(config.getName());
@@ -130,6 +134,25 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setCustomerName(customerInfo.getUsername());
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         return instanceDetailVO;
+    }
+
+    private AfUserDTO getUserInfo(String userId, String roleId) {
+        AfUserDTO userDTO;
+        if (Role.CC.id.equals(roleId)) {
+            userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), userId, roleId);
+        } else {
+            userDTO = new AfUserDTO();
+            EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
+            if (employeeMsg == null) {
+                LOGGER.error("未查询到用户信息：userId:{}", userId);
+                throw new RuntimeException();
+            }
+            userDTO.setHeadPortrait(employeeMsg.getIconUrl());
+            userDTO.setUsername(employeeMsg.getRealName());
+            userDTO.setUserId(userId);
+            userDTO.setPhone(employeeMsg.getPhone());
+        }
+        return userDTO;
     }
 
     @Override
@@ -316,7 +339,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
         String customerId = project.getOwnerId();
-        AfUserDTO customer = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
+        AfUserDTO customer = getUserInfo(customerId, Role.CC.id);
         List<UserRoleSet> roles = roleService.findAll();
 
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
@@ -337,7 +360,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     break;
                 }
             }
-            AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), approvalLog.getUserId(), approvalLog.getRoleId());
+            AfUserDTO userDTO = getUserInfo(approvalLog.getUserId(), approvalLog.getRoleId());
             approvalLogVO.setUserName(userDTO.getUsername());
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
 
@@ -1032,7 +1055,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instanceVO.setConfigName(config.getName());
                 instanceVO.setCreateTime(instance.getCreateTime());
                 instanceVO.setCreateUserId(instance.getCreateUserId());
-                AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), instance.getCreateUserId(), instance.getCreateRoleId());
+                AfUserDTO userDTO = getUserInfo(instance.getCreateUserId(), instance.getCreateRoleId());
                 instanceVO.setCreateUsername(userDTO.getUsername());
                 instanceVO.setScheduleSort(instance.getScheduleSort());
                 instanceVO.setRemark(approvalLog.getRemark());
