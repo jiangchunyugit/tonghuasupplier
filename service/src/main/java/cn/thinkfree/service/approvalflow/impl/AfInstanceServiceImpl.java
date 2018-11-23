@@ -551,7 +551,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (AfConfigs.START_REPORT.configNo.equals(instance.getConfigNo())) {
             schedulingService.projectStart(instance.getProjectNo(), 1);
             constructionStateServiceB.constructionPlan(instance.getProjectNo(), "0", "A");
-        } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getProjectNo())) {
+        } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getConfigNo())) {
             schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
             constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "B");
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
@@ -1034,7 +1034,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     LOGGER.error("未查询到审批流信息，instanceNo:{}", approvalLog.getInstanceNo());
                     throw new RuntimeException();
                 }
-                UserRoleSet role = roleService.findById(approvalLog.getRoleId());
+                UserRoleSet role = roleService.findById(instance.getCreateRoleId());
                 if (role == null) {
                     LOGGER.error("未查询到角色信息，roleId:{}", approvalLog.getRoleId());
                     throw new RuntimeException();
