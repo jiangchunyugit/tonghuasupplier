@@ -10,6 +10,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
@@ -541,6 +542,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public PageVo<List<DesignContractVO>> queryContractByPage(DesignContractVO designContractVO, Integer pageNum, Integer pageSize) {
+        designContractVO.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         List<DesignContractVO> voList = designerOrderMapper.selectContractByPage(designContractVO, pageNum, pageSize);
         //装业主模糊的list
         List<DesignContractVO> newList = new ArrayList();
@@ -606,6 +608,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public PageVo<List<ConstructionContractVO>> queryConstructionContractByPage(ConstructionContractVO constructionContractVO, int pageNum, int pageSize) {
+        constructionContractVO.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         List<ConstructionContractVO> voList = constructionOrderMapper.selectConstructionContractByPage(constructionContractVO, pageNum, pageSize);
         List<ConstructionContractVO> newList = new ArrayList();
         if (voList.size() > 0) {
@@ -666,7 +669,9 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
     public MyRespBundle<SiteDetailsVo> getSiteDetails(String projectNo) {
         SiteDetailsVo siteDetailsVo = new SiteDetailsVo();
         ProjectSchedulingExample projectSchedulingExample = new ProjectSchedulingExample();
-        projectSchedulingExample.createCriteria().andProjectNoEqualTo(projectNo);
+        ProjectSchedulingExample.Criteria criteria = projectSchedulingExample.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(projectSchedulingExample);
         if(projectSchedulings == null || projectSchedulings.size() == 0){
             return RespData.error("未查询到此项目信息");

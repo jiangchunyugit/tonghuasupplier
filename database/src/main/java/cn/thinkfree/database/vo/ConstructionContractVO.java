@@ -50,4 +50,6 @@ public class ConstructionContractVO {
     private Integer auditType;
     @ApiModelProperty("合同状态(模糊条件)：0：不通过 1：通过")
     private String flag;
+    @ApiModelProperty("施工合同状态:状态(1,正常  2,失效)")
+    private Integer status;
 }
