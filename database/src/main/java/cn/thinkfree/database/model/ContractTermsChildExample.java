@@ -875,52 +875,62 @@ public class ContractTermsChildExample extends cn.thinkfree.core.model.AbstractD
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdEqualTo(String value) {
             addCriterion("settlement_rule_id =", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdNotEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdNotEqualTo(String value) {
             addCriterion("settlement_rule_id <>", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdGreaterThan(Integer value) {
+        public Criteria andSettlementRuleIdGreaterThan(String value) {
             addCriterion("settlement_rule_id >", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdGreaterThanOrEqualTo(String value) {
             addCriterion("settlement_rule_id >=", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdLessThan(Integer value) {
+        public Criteria andSettlementRuleIdLessThan(String value) {
             addCriterion("settlement_rule_id <", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdLessThanOrEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdLessThanOrEqualTo(String value) {
             addCriterion("settlement_rule_id <=", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdIn(List<Integer> values) {
+        public Criteria andSettlementRuleIdLike(String value) {
+            addCriterion("settlement_rule_id like", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdNotLike(String value) {
+            addCriterion("settlement_rule_id not like", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdIn(List<String> values) {
             addCriterion("settlement_rule_id in", values, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdNotIn(List<Integer> values) {
+        public Criteria andSettlementRuleIdNotIn(List<String> values) {
             addCriterion("settlement_rule_id not in", values, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdBetween(Integer value1, Integer value2) {
+        public Criteria andSettlementRuleIdBetween(String value1, String value2) {
             addCriterion("settlement_rule_id between", value1, value2, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andSettlementRuleIdNotBetween(String value1, String value2) {
             addCriterion("settlement_rule_id not between", value1, value2, "settlementRuleId");
             return (Criteria) this;
         }
