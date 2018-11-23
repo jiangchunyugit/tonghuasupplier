@@ -636,10 +636,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                         if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
                             int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
                             if (scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
-                                if (isNeedCheck(schedulingDetailsVOs, scheduleSort)) {
-                                    // 获取验收、完工申请发起菜单
-                                    getCheckAndCompleteStartMenus(startMenus, userId, projectNo, schedulingDetailsVOs, scheduleSort);
-                                }
+                                // 获取验收、完工申请发起菜单
+                                getCheckAndCompleteStartMenus(startMenus, userId, projectNo, schedulingDetailsVOs, scheduleSort);
                             }
                         }
                     }
