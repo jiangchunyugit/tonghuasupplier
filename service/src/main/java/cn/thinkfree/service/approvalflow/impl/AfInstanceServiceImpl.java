@@ -1079,4 +1079,19 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
         return pdfUrls;
     }
+
+    @Override
+    public int getStartReportStatus(String projectNo) {
+        return getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+    }
+
+    @Override
+    public int getScheduleEditable(String projectNo) {
+        int instanceStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
+        if (instanceStatus == AfConstants.APPROVAL_STATUS_SUCCESS || instanceStatus == AfConstants.APPROVAL_STATUS_START) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }
