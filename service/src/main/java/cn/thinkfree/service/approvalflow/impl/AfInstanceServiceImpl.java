@@ -1058,7 +1058,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 AfUserDTO userDTO = getUserInfo(instance.getCreateUserId(), instance.getCreateRoleId());
                 instanceVO.setCreateUsername(userDTO.getUsername());
                 instanceVO.setScheduleSort(instance.getScheduleSort());
-                instanceVO.setRemark(approvalLog.getRemark());
+                instanceVO.setRemark(instance.getRemark());
                 instanceVO.setRoleId(role.getRoleCode());
                 instanceVO.setRoleName(role.getRoleName());
 
