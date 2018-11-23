@@ -240,6 +240,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         ProjectBigSchedulingDetailsVO otherVo = new ProjectBigSchedulingDetailsVO();
