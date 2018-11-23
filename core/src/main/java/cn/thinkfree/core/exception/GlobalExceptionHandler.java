@@ -104,7 +104,7 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		e.printStackTrace();
 		MyRespBundle<String> resp = buildErrorInfo(code, e.getMessage(), req);
 		resp.setData(e.getMessage());
-		resp.setMessage("参数错误");
+		resp.setMsg("参数错误");
 		return  resp;
 	}
 
@@ -121,7 +121,7 @@ public class GlobalExceptionHandler extends AbsLogPrinter {
 		MyRespBundle<String> myRespBundle = new MyRespBundle<>();
 		myRespBundle.setCode(code.value());
 		myRespBundle.setData(message);
-		myRespBundle.setMessage(message);
+		myRespBundle.setMsg(message);
 		myRespBundle.setVersion(VersionUtil.getVersion());
 		myRespBundle.setTimestamp(Instant.now().toEpochMilli());
 //		if(req != null){

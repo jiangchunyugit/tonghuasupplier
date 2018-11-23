@@ -16,7 +16,7 @@ public class MyRespBundle<T> {
      * 消息
      */
     @ApiModelProperty("错误信息")
-    private String message;
+    private String msg;
 //    private Map<String,Object> datas;
     /**
      * 版本号
@@ -52,12 +52,12 @@ public class MyRespBundle<T> {
         this.timestamp = timestamp;
     }
 
-    public String getMessage() {
-        return message;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public String getVersion() {
@@ -81,9 +81,9 @@ public class MyRespBundle<T> {
     public MyRespBundle() {
     }
 
-    public MyRespBundle(Integer code,String message,T data){
+    public MyRespBundle(Integer code,String msg,T data){
         this.code = code;
-        this.message = message;
+        this.msg = msg;
         this.data = data;
     }
 
@@ -91,7 +91,7 @@ public class MyRespBundle<T> {
     public String toString() {
         return "MyRespBundle{" +
                 "code=" + code +
-                ", message='" + message + '\'' +
+                ", msg='" + msg + '\'' +
                 ", version='" + version + '\'' +
                 ", data=" + data +
                 ", timestamp=" + timestamp +

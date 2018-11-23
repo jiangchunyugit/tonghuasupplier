@@ -119,7 +119,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                         httpServletResponse.setHeader("Access-Control-Allow-Origin","*");
                         MyRespBundle<String> resp = new MyRespBundle<>();
                         resp.setTimestamp(Instant.now().toEpochMilli());
-                        resp.setMessage("操作成功!");
+                        resp.setMsg("操作成功!");
                         resp.setCode(1000);
                         resp.setData("操作成功");
                         httpServletResponse.getWriter().write(new Gson().toJson(resp));

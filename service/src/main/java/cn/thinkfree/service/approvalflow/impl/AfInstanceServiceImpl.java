@@ -590,6 +590,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
             if (projectCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && projectCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
                 if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
+                    if (scheduleSort == null) {
+                        LOGGER.error("没有传入相应的排期编号！");
+                        throw new RuntimeException();
+                    }
                     // 进度验收
                     if (scheduleSort == 0) {
                         // 开工准备:开工申请
@@ -720,16 +724,23 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param completeConfigNo 完成审批编号
      */
     private void getStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo, String startConfigNo, String completeConfigNo) {
-        // 发起菜单
-        addStartMenu(startMenus, projectNo, startConfigNo, userId);
-        List<AfInstance> startInstances = findByConfigNoAndProjectNo(startConfigNo, projectNo);
-        List<AfInstance> completeInstances = findByConfigNoAndProjectNo(completeConfigNo, projectNo);
-        int startCount = getSuccessCount(startInstances);
-        int completeCount = getStartAndSuccessCount(completeInstances);
-        if (startCount > completeCount) {
-            // 发起完成菜单
-            addStartMenu(startMenus, projectNo, completeConfigNo, userId);
+        if (startReportSuccess(projectNo)) {
+            // 发起菜单
+            addStartMenu(startMenus, projectNo, startConfigNo, userId);
+            List<AfInstance> startInstances = findByConfigNoAndProjectNo(startConfigNo, projectNo);
+            List<AfInstance> completeInstances = findByConfigNoAndProjectNo(completeConfigNo, projectNo);
+            int startCount = getSuccessCount(startInstances);
+            int completeCount = getStartAndSuccessCount(completeInstances);
+            if (startCount > completeCount) {
+                // 发起完成菜单
+                addStartMenu(startMenus, projectNo, completeConfigNo, userId);
+            }
         }
+    }
+
+    private boolean startReportSuccess(String projectNo) {
+        int instanceStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+        return instanceStatus == AfConstants.APPROVAL_STATUS_SUCCESS;
     }
 
     /**
@@ -845,7 +856,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo 项目编号
      */
     private void getDelayStartMenus(List<AfStartMenuVO> startMenus, String configNo, String userId, String projectNo){
-        addStartMenu(startMenus, projectNo, configNo, userId);
+        if (startReportSuccess(projectNo)) {
+            addStartMenu(startMenus, projectNo, configNo, userId);
+        }
     }
 
     /**

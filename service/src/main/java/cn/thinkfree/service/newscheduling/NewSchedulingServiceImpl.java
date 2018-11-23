@@ -240,7 +240,11 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         example.setOrderByClause("big_sort asc");
         ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
+        if (bigList.size()==0){
+            return RespData.error("此项目下无排期信息");
+        }
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         ProjectBigSchedulingDetailsVO otherVo = new ProjectBigSchedulingDetailsVO();
         otherVo.setBigName("开工报告");
@@ -248,6 +252,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         otherVo.setPlanEndTime(new Date(0));
         otherVo.setPlanEndTime(new Date(0));
         playBigList.add(otherVo);
+        Collections.sort(playBigList);
         return RespData.success(playBigList);
     }
 

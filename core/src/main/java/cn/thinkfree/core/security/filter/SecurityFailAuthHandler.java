@@ -2,7 +2,6 @@ package cn.thinkfree.core.security.filter;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import com.google.gson.Gson;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -26,7 +25,7 @@ public class SecurityFailAuthHandler extends SimpleUrlAuthenticationFailureHandl
         MyRespBundle<String> result = new MyRespBundle<>();
         result.setData("登录失败!");
         result.setCode(500);
-        result.setMessage("登录失败!");
+        result.setMsg("登录失败!");
         result.setTimestamp(Instant.now().toEpochMilli());
 
         response.setHeader("Access-Control-Allow-Origin","*");
