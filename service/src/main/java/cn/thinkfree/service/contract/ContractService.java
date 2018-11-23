@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.model.FundsCompanyCash;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.database.model.ContractInfo;
@@ -19,6 +20,14 @@ import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 
 public interface ContractService {
+
+    /**
+     * 保证金记录表流水记录
+     * @param fundsCompanyCash 合同编号
+     * @param money  金额
+     * @return
+     */
+    boolean saveCash(String fundsCompanyCash, String money);
 
 	/**
 	 * 

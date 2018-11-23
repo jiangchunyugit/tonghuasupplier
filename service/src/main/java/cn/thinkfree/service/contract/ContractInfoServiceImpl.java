@@ -16,6 +16,8 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,30 +49,6 @@ import cn.thinkfree.database.mapper.OrderContractMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.database.mapper.ProvinceMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
-import cn.thinkfree.database.model.CompanyPayment;
-import cn.thinkfree.database.model.ContractInfo;
-import cn.thinkfree.database.model.ContractInfoExample;
-import cn.thinkfree.database.model.ContractTemplateDict;
-import cn.thinkfree.database.model.ContractTemplateDictExample;
-import cn.thinkfree.database.model.ContractTerms;
-import cn.thinkfree.database.model.ContractTermsChild;
-import cn.thinkfree.database.model.ContractTermsChildExample;
-import cn.thinkfree.database.model.ContractTermsExample;
-import cn.thinkfree.database.model.DesignerOrder;
-import cn.thinkfree.database.model.DesignerOrderExample;
-import cn.thinkfree.database.model.OrderContract;
-import cn.thinkfree.database.model.OrderContractExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditInfoExample;
-import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.ContractClauseVO;
-import cn.thinkfree.database.vo.ContractSEO;
-import cn.thinkfree.database.vo.ContractVo;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
@@ -158,6 +136,26 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	ConstructionStateServiceB constructionStateServiceB;
 
 
+	@Override
+	public boolean saveCash(String contractNumber, String money) {
+		if(StringUtils.isBlank(contractNumber)){
+			return false;
+		}
+		ContractInfoExample example = new ContractInfoExample();
+		example.createCriteria().andContractNumberEqualTo(contractNumber);
+		List<ContractInfo> contractInfo = contractInfoMapper.selectByExample(example);
+		if(contractInfo.size() == 1){
+			CompanyInfoVo companyInfoVo = companyInfoMapper.selectByCompanyId(contractInfo.get(0).getCompanyId());
+			if(companyInfoVo == null){
+				return false;
+			}
+			  //todo 添加保证金记录
+		}else{
+			return false;
+		}
+		FundsCompanyCash fundsCompanyCash = new FundsCompanyCash();
+		return false;
+	}
 
 	@Override
 	public PageInfo<ContractVo> pageContractBySEO( ContractSEO contractSEO )
