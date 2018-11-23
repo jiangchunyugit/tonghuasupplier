@@ -242,6 +242,9 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
+        if (bigList.size()==0){
+            return RespData.error("此项目下无排期信息");
+        }
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
         ProjectBigSchedulingDetailsVO otherVo = new ProjectBigSchedulingDetailsVO();
         otherVo.setBigName("开工报告");
