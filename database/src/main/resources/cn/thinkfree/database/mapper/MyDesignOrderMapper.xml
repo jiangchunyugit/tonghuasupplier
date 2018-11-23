@@ -81,6 +81,7 @@
     <select id="selectContractByPage" resultType="cn.thinkfree.database.vo.DesignContractVO">
         SELECT
         dor.order_no AS sunOrderNo,
+        dor.status AS status,
         p.project_no AS projectNo,
         P .order_source AS orderSource,
         P .province AS orderAddress,
@@ -92,7 +93,7 @@
         LEFT JOIN project P ON P .project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         WHERE
-        dor.company_id = #{designContractVO.companyId}
+        dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
         <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{designContractVO.contractNo},'%' )
         </if>
@@ -137,7 +138,7 @@
         LEFT JOIN project P ON P .project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         WHERE
-        dor.company_id = #{designContractVO.companyId}
+        dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
         <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{designContractVO.contractNo},'%' )
         </if>
