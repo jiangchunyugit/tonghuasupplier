@@ -958,12 +958,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			 resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
 			 return resMap;
 		 }
-		 
+		 String companyId = oderlist.get(0).getCompanyId();
 		try {
-			String companyId = oderlist.get(0).getCompanyId();
+			
 			/* 插入合同主表 */
 			String contractNumber = this.createOrderContract(companyId, orderNumber, "02" );
 			/* 插入合同iterm 详情 */
+			Map<String,Object> root = new HashMap<>();
 			if ( paramMap != null )
 			{
 				Iterator<Map.Entry<String, String> > entries = paramMap.entrySet().iterator();
@@ -985,10 +986,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					.andContractNumberEqualTo( contractNumber );
 					pcContractTermsMapper.deleteByExample( exp );
 					pcContractTermsMapper.insertSelective( terms );
+					root.put(key,value);
 				}
 			}
 			//生成pdf
-			 //this.createOrderContractpdf(orderNumber);
+			 this.createOrderContractpdf(orderNumber,companyId , root);
 			 resMap.put("code", "true");
 			 resMap.put("msg", "合同录入成功");
 			 return resMap;
