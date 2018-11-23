@@ -1,5 +1,6 @@
 package cn.thinkfree.database.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,7 +12,8 @@ import java.util.Date;
  */
 @ApiModel(value = "ProjectBigSchedulingDetailsVO,大排期详情实体")
 @Data
-public class ProjectBigSchedulingDetailsVO {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ProjectBigSchedulingDetailsVO implements Comparable<ProjectBigSchedulingDetailsVO>{
 
     /**
      * 公司编号
@@ -127,5 +129,17 @@ public class ProjectBigSchedulingDetailsVO {
     @ApiModelProperty(value = "人员ID")
     private String userId;
 
-
+    @Override
+    public int compareTo(ProjectBigSchedulingDetailsVO o) {
+        int result = 0;
+        double i = this.getBigSort() - o.getBigSort();
+        if (i > 0) {
+            result = 1;
+        } else if (i < 0) {
+            result = -1;
+        } else {
+            result = 0;
+        }
+        return result;
+    }
 }
