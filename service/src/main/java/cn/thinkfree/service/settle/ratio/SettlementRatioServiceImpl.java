@@ -193,7 +193,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		example.createCriteria().andRatioNumberEqualTo(ratioNumber);
 		List<SettlementRatioInfo>  list = settlementRatioInfoMapper.selectByExample(example);
 		SettlementRatioInfo ratio = (list!=null && list.size() > 0)?list.get(0):null;
-		if(ratio != null && StringUtils.isEmpty(ratio.getFeeDicId())){
+		if(ratio != null && !StringUtils.isEmpty(ratio.getFeeDicId())){
 			Map<String, String> paream = getCostNames();
 			ratio.setFeeDicId(paream.get(ratio.getFeeDicId()));//翻译
 		}
@@ -223,10 +223,18 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	@Override
 	public Map<String, String> getCostNames() {
 		Map<String, String> map = new HashMap<>();
-		map.put("01", "设计费");
-		map.put("02", "产品服务费");
-		map.put("03", "施工管理费");
-		map.put("04", "合同保证金");
+		map.put("03", "施工平台管理服务费");
+		map.put("04", "设计平台管理服务费");
+		map.put("05", "产品服务费");
+		map.put("06", "租金");
+		map.put("07", "物业费");
+		map.put("08", "其他收费");
+		map.put("09", "材料推荐服务费");
+		map.put("10", "施工服务费");
+		map.put("11", "先行赔付款");
+		map.put("12", "客户赔偿款");
+		map.put("13", "合同保证金");
+		map.put("14", "入驻费");
 		return map;
 	}
 
@@ -277,7 +285,9 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 					recordT.setStatus(SettlementStatus.AuditCAN.getCode());
 				}
 			}
-			settlementRatioInfoMapper.updateByExampleSelective(recordT, example);
+			if (StringUtils.isNotBlank(recordT.getStatus())) {
+				settlementRatioInfoMapper.updateByExampleSelective(recordT, example);
+			}
 			return true;
 		}
 		return false;
@@ -345,7 +355,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 
 		if(!StringUtils.isEmpty(ratio.getRatioStatus())){
 			//1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
-			example.createCriteria().andStatusEqualTo(ratio.getAuditStatus());
+			example.createCriteria().andStatusEqualTo(ratio.getRatioStatus());
 		}
 	}
 

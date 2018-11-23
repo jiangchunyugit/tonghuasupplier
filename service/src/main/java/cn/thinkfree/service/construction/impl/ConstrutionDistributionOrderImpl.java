@@ -140,7 +140,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         // 改变订单状态
         MyRespBundle<String> r = constructionStateServiceB.operateDispatchToConstruction(orderNo);
         if (!ResultMessage.SUCCESS.code.equals(r.getCode())){
-            return RespData.error(ResultMessage.ERROR.code, r.getMessage());
+            return RespData.error(ResultMessage.ERROR.code, r.getMsg());
         }
 
         // 绑定装饰公司

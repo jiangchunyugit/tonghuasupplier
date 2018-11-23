@@ -7,7 +7,6 @@ import cn.thinkfree.core.event.model.UserLoginAfter;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.core.security.utils.JwtUtils;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,7 +103,7 @@ public class SecuritySuccessAuthHandler
         response.setHeader("Access-Control-Allow-Origin","*");
         MyRespBundle<Map<String,Object>> resp = new MyRespBundle<>();
         resp.setTimestamp(Instant.now().toEpochMilli());
-        resp.setMessage("登录成功!");
+        resp.setMsg("登录成功!");
         resp.setCode(1000);
         resp.setData(result);
         response.getWriter().write(new GsonBuilder().serializeNulls().create().toJson(resp));

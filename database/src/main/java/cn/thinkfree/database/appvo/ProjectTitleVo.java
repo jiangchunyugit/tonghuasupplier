@@ -31,7 +31,7 @@ public class ProjectTitleVo {
     private Integer schedule;
     @ApiModelProperty(name = "delay",value = "延迟天数")
     private Integer delay;
-    @ApiModelProperty(value = "排期是否可以编辑(0,不可以 1,可以)")
+    @ApiModelProperty(value = "排期是否可以编辑(0,可以 1,不可以)")
     private Integer isConfirm;
     @ApiModelProperty(value = "项目开始时间")
     private Date projectStartTime;

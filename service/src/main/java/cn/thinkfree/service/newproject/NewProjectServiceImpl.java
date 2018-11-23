@@ -9,6 +9,7 @@ import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
@@ -73,6 +74,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     UserCenterService userCenterService;
     @Autowired
     BasicsDataMapper basicsDataMapper;
+    @Autowired
+    AfInstanceService afInstanceService;
 
 
     /**
@@ -377,10 +380,17 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderPlayVo != null) {
             projectTitleVo.setCost(orderPlayVo.getCost());
             projectTitleVo.setDelay(orderPlayVo.getDelay());
-            projectTitleVo.setSchedule(orderPlayVo.getSchedule());
+            projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(),project.getPlanEndTime()));
             projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
-            projectTitleVo.setIsConfirm(orderPlayVo.getIsConfirm());
         }
+        int confirm ;
+        try {
+            confirm = afInstanceService.getProjectCheckResult(projectNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("获取排期编辑状态失败");
+        }
+        projectTitleVo.setIsConfirm(confirm);
         //添加进度展示
         projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
         projectTitleVo.setGanttChartUrl("https://www.baidu.com");
@@ -423,7 +433,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                         detailVo.setCategory(projectData.getCategory());
                         urlDetailVo.setImgUrl(projectData.getUrl());
                         urlDetailVo.setPhoto360Url(projectData.getPhotoPanoramaUrl());
-                        urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
+                        urlDetailVo.setUploadTime(projectData.getUploadTime());
                         //TODO 设计资料后期优化
                         if (urlList.size() < 4) {
                             urlList.add(urlDetailVo);
@@ -470,7 +480,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-            urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
+            urlDetailVo.setUploadTime(projectData.getUploadTime());
             urlList.add(urlDetailVo);
         }
         constructionDataVo.setUrlList(urlList);
