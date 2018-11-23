@@ -550,7 +550,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private void executeSuccessAction(AfInstance instance) {
         if (AfConfigs.START_REPORT.configNo.equals(instance.getConfigNo())) {
             schedulingService.projectStart(instance.getProjectNo(), 1);
-            constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "A");
+            constructionStateServiceB.constructionPlan(instance.getProjectNo(), "0", "A");
         } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getProjectNo())) {
             schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
             constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "B");
