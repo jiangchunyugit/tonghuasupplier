@@ -52,7 +52,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
                     response.setHeader("Access-Control-Allow-Origin","*");
                     MyRespBundle<String> resp = new MyRespBundle<>();
                     resp.setTimestamp(Instant.now().toEpochMilli());
-                    resp.setMessage("非法授权!");
+                    resp.setMsg("非法授权!");
                     resp.setCode(HttpStatus.FORBIDDEN.value());
                     resp.setData("非法授权");
                     response.getWriter().write(new Gson().toJson(resp));

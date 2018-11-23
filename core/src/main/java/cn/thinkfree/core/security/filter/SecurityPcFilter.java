@@ -102,7 +102,7 @@ import java.time.Instant;
 	private MyRespBundle<String> buildErrorResp() {
 		MyRespBundle<String> myRespBundle = new MyRespBundle<>();
 		myRespBundle.setCode(HttpServletResponse.SC_NOT_ACCEPTABLE);
-		myRespBundle.setMessage("无权访问");
+		myRespBundle.setMsg("无权访问");
 		myRespBundle.setVersion(VersionUtil.getVersion());
 		myRespBundle.setTimestamp(Instant.now().toEpochMilli());
 		return myRespBundle;

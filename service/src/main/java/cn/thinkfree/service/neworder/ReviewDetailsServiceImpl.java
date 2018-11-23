@@ -534,7 +534,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (result == 1) {
             MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
             if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
-                return RespData.error(stringMyRespBundle.getMessage());
+                return RespData.error(stringMyRespBundle.getMsg());
             }
             //生成排期信息
             MyRespBundle scheduling = schedulingService.createScheduling(constructionOrders.get(0).getOrderNo());
@@ -544,7 +544,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         } else if (result == 2) {
             MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
             if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
-                return RespData.error(stringMyRespBundle.getMessage());
+                return RespData.error(stringMyRespBundle.getMsg());
             }
         }
         return RespData.success();
