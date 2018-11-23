@@ -423,7 +423,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                         detailVo.setCategory(projectData.getCategory());
                         urlDetailVo.setImgUrl(projectData.getUrl());
                         urlDetailVo.setPhoto360Url(projectData.getPhotoPanoramaUrl());
-                        urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
+                        urlDetailVo.setUploadTime(projectData.getUploadTime());
                         //TODO 设计资料后期优化
                         if (urlList.size() < 4) {
                             urlList.add(urlDetailVo);
@@ -470,7 +470,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-            urlDetailVo.setUploadTime(projectData.getUploadTime().toString());
+            urlDetailVo.setUploadTime(projectData.getUploadTime());
             urlList.add(urlDetailVo);
         }
         constructionDataVo.setUrlList(urlList);
