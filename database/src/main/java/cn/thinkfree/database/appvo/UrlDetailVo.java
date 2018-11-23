@@ -24,7 +24,7 @@ public class UrlDetailVo {
     private String photo360Url;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value = "效果图时间--上传时间")
-    private String uploadTime;
+    private Date uploadTime;
     @ApiModelProperty(value = "资料名字")
     private String name;
 }

@@ -16,6 +16,8 @@ import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
@@ -70,6 +72,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfInstancePdfUrlService instancePdfUrlService;
     @Autowired
     private ConstructionStateServiceB constructionStateServiceB;
+    @Autowired
+    private EmployeeService employeeService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -115,13 +119,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setRoleId(role.getRoleCode());
             approvalLogVO.setRoleName(role.getRoleName());
             approvalLogVO.setStatus(AfConstants.APPROVAL_OPTION_UNAPPROVAL);
-            AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), approvalLogVO.getUserId(), approvalLogVO.getRoleId());
+            AfUserDTO userDTO = getUserInfo(approvalLogVO.getUserId(), approvalLogVO.getRoleId());
             approvalLogVO.setUserName(userDTO.getUsername());
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
             approvalLogVOs.add(approvalLogVO);
         }
         String customerId = project.getOwnerId();
-        AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
+        AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
         AfConfig config = configService.findByNo(configNo);
         instanceDetailVO.setConfigNo(configNo);
         instanceDetailVO.setConfigName(config.getName());
@@ -130,6 +134,25 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setCustomerName(customerInfo.getUsername());
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         return instanceDetailVO;
+    }
+
+    private AfUserDTO getUserInfo(String userId, String roleId) {
+        AfUserDTO userDTO;
+        if (Role.CC.id.equals(roleId)) {
+            userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), userId, roleId);
+        } else {
+            userDTO = new AfUserDTO();
+            EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
+            if (employeeMsg == null) {
+                LOGGER.error("未查询到用户信息：userId:{}", userId);
+                throw new RuntimeException();
+            }
+            userDTO.setHeadPortrait(employeeMsg.getIconUrl());
+            userDTO.setUsername(employeeMsg.getRealName());
+            userDTO.setUserId(userId);
+            userDTO.setPhone(employeeMsg.getPhone());
+        }
+        return userDTO;
     }
 
     @Override
@@ -316,7 +339,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
         String customerId = project.getOwnerId();
-        AfUserDTO customer = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
+        AfUserDTO customer = getUserInfo(customerId, Role.CC.id);
         List<UserRoleSet> roles = roleService.findAll();
 
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
@@ -337,7 +360,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     break;
                 }
             }
-            AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), approvalLog.getUserId(), approvalLog.getRoleId());
+            AfUserDTO userDTO = getUserInfo(approvalLog.getUserId(), approvalLog.getRoleId());
             approvalLogVO.setUserName(userDTO.getUsername());
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
 
@@ -526,8 +549,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      */
     private void executeSuccessAction(AfInstance instance) {
         if (AfConfigs.START_REPORT.configNo.equals(instance.getConfigNo())) {
-            schedulingService.projectStart(instance.getProjectNo(), instance.getScheduleSort());
-            constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "A");
+            schedulingService.projectStart(instance.getProjectNo(), 1);
+            constructionStateServiceB.constructionPlan(instance.getProjectNo(), "0", "A");
         } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getProjectNo())) {
             schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
             constructionStateServiceB.constructionPlan(instance.getProjectNo(), instance.getScheduleSort().toString(), "B");
@@ -590,8 +613,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
             if (projectCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && projectCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
                 if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
-                    // 进度验收
                     if (scheduleSort == null) {
+                        LOGGER.error("没有传入相应的排期编号！");
+                        throw new RuntimeException();
+                    }
+                    // 进度验收
+                    if (scheduleSort == 0) {
                         // 开工准备:开工申请
                         getInstances(instanceVOs, AfConfigs.START_APPLICATION.configNo, userId, projectNo);
                         // 开工准备:开工报告
@@ -720,16 +747,23 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param completeConfigNo 完成审批编号
      */
     private void getStartMenus(List<AfStartMenuVO> startMenus, String userId, String projectNo, String startConfigNo, String completeConfigNo) {
-        // 发起菜单
-        addStartMenu(startMenus, projectNo, startConfigNo, userId);
-        List<AfInstance> startInstances = findByConfigNoAndProjectNo(startConfigNo, projectNo);
-        List<AfInstance> completeInstances = findByConfigNoAndProjectNo(completeConfigNo, projectNo);
-        int startCount = getSuccessCount(startInstances);
-        int completeCount = getStartAndSuccessCount(completeInstances);
-        if (startCount > completeCount) {
-            // 发起完成菜单
-            addStartMenu(startMenus, projectNo, completeConfigNo, userId);
+        if (startReportSuccess(projectNo)) {
+            // 发起菜单
+            addStartMenu(startMenus, projectNo, startConfigNo, userId);
+            List<AfInstance> startInstances = findByConfigNoAndProjectNo(startConfigNo, projectNo);
+            List<AfInstance> completeInstances = findByConfigNoAndProjectNo(completeConfigNo, projectNo);
+            int startCount = getSuccessCount(startInstances);
+            int completeCount = getStartAndSuccessCount(completeInstances);
+            if (startCount > completeCount) {
+                // 发起完成菜单
+                addStartMenu(startMenus, projectNo, completeConfigNo, userId);
+            }
         }
+    }
+
+    private boolean startReportSuccess(String projectNo) {
+        int instanceStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+        return instanceStatus == AfConstants.APPROVAL_STATUS_SUCCESS;
     }
 
     /**
@@ -845,7 +879,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo 项目编号
      */
     private void getDelayStartMenus(List<AfStartMenuVO> startMenus, String configNo, String userId, String projectNo){
-        addStartMenu(startMenus, projectNo, configNo, userId);
+        if (startReportSuccess(projectNo)) {
+            addStartMenu(startMenus, projectNo, configNo, userId);
+        }
     }
 
     /**
@@ -1019,7 +1055,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instanceVO.setConfigName(config.getName());
                 instanceVO.setCreateTime(instance.getCreateTime());
                 instanceVO.setCreateUserId(instance.getCreateUserId());
-                AfUserDTO userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), instance.getCreateUserId(), instance.getCreateRoleId());
+                AfUserDTO userDTO = getUserInfo(instance.getCreateUserId(), instance.getCreateRoleId());
                 instanceVO.setCreateUsername(userDTO.getUsername());
                 instanceVO.setScheduleSort(instance.getScheduleSort());
                 instanceVO.setRemark(approvalLog.getRemark());
@@ -1065,5 +1101,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         }
         return pdfUrls;
+    }
+
+    @Override
+    public int getStartReportStatus(String projectNo) {
+        return getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+    }
+
+    @Override
+    public int getScheduleEditable(String projectNo) {
+        int instanceStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
+        if (instanceStatus == AfConstants.APPROVAL_STATUS_SUCCESS || instanceStatus == AfConstants.APPROVAL_STATUS_START) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }

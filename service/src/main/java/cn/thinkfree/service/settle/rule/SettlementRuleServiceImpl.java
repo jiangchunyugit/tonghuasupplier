@@ -344,7 +344,9 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             }
 
             // 更新当前规则
-            settlementRuleInfoMapper.updateByExampleSelective(recordT, example);
+            if (StringUtils.isNotBlank(recordT.getStatus())) {
+                settlementRuleInfoMapper.updateByExampleSelective(recordT, example);
+            }
             return true;
         }
 
