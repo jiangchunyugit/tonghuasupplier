@@ -47,6 +47,7 @@ import cn.thinkfree.database.mapper.OrderContractMapper;
 import cn.thinkfree.database.mapper.PcAuditInfoMapper;
 import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
 import cn.thinkfree.database.mapper.ProvinceMapper;
+import cn.thinkfree.database.model.BasicsData;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.CompanyInfoExample;
 import cn.thinkfree.database.model.CompanyPayment;
@@ -80,7 +81,9 @@ import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.CommonGroupUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.ExcelData;
@@ -156,6 +159,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	
 	@Autowired
 	ConstructionStateServiceB constructionStateServiceB;
+	
+	@Autowired
+	BasicsService basicsService;
 
 
 
@@ -883,6 +889,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}else{
 					throw new RuntimeException("设计合同生成pdf 数据异常  数据为 null or ''");
 				}
+//				//翻译质量标准
+//				PageVo<List<BasicsData>> page = basicsService.queryData("QUALITY_ITEM", 10, 1);
+//				if(page !=null ){
+//					
+//				}
 				try {
 					String filePath = FreemarkerUtils.savePdf(filePathDir + orderNumber, "3", root);
 					/* 上传 */
@@ -965,6 +976,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			String companyId = oderlist.get(0).getCompanyId();
 			/* 插入合同主表 */
 			String contractNumber = this.createOrderContract(companyId, orderNumber, "02" );
+			Map<String,Object> root = new HashMap<>();
 			/* 插入合同iterm 详情 */
 			if ( paramMap != null )
 			{
@@ -987,10 +999,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					.andContractNumberEqualTo( contractNumber );
 					pcContractTermsMapper.deleteByExample( exp );
 					pcContractTermsMapper.insertSelective( terms );
+					root.put(key,value);
 				}
 			}
 			//生成pdf
-			 //this.createOrderContractpdf(orderNumber);
+			 this.createOrderContractpdf(orderNumber,companyId,root);
 			 resMap.put("code", "true");
 			 resMap.put("msg", "合同录入成功");
 			 return resMap;
