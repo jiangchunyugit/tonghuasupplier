@@ -301,12 +301,18 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
                         int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
                         if (scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_BEFORE_START || scheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_FAIL) {
-
-                            if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
-                                    && countEqual(projectNo, AfConfigs.CHECK_APPLICATION.configNo, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
-                                    && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
-                                    && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
-                                result = true;
+                            if (schedulingDetailsVOs.get(schedulingDetailsVOs.size() - 1).getBigSort().equals(scheduleSort)) {
+                                if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
+                                        && countEqual(projectNo, AfConfigs.CHECK_APPLICATION.configNo, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                                        && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                                        && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+                                    result = true;
+                                }
+                            } else {
+                                if (getCount(projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_START) == 0
+                                        && countEqual(projectNo, AfConfigs.CHECK_APPLICATION.configNo, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+                                    result = true;
+                                }
                             }
                         }
                     }
@@ -836,6 +842,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private long getCount(String projectNo, String configNo, int status) {
         AfInstanceExample example = new AfInstanceExample();
         example.createCriteria().andProjectNoEqualTo(projectNo).andConfigNoEqualTo(configNo).andStatusEqualTo(status);
+        return instanceMapper.countByExample(example);
+    }
+
+    private long getCount(String projectNo, int scheuleSort, int status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheuleSort).andStatusEqualTo(status);
         return instanceMapper.countByExample(example);
     }
 
