@@ -404,62 +404,52 @@ public class ConstructionOrderPayExample {
             return (Criteria) this;
         }
 
-        public Criteria andSortEqualTo(String value) {
+        public Criteria andSortEqualTo(Short value) {
             addCriterion("sort =", value, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortNotEqualTo(String value) {
+        public Criteria andSortNotEqualTo(Short value) {
             addCriterion("sort <>", value, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortGreaterThan(String value) {
+        public Criteria andSortGreaterThan(Short value) {
             addCriterion("sort >", value, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortGreaterThanOrEqualTo(String value) {
+        public Criteria andSortGreaterThanOrEqualTo(Short value) {
             addCriterion("sort >=", value, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortLessThan(String value) {
+        public Criteria andSortLessThan(Short value) {
             addCriterion("sort <", value, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortLessThanOrEqualTo(String value) {
+        public Criteria andSortLessThanOrEqualTo(Short value) {
             addCriterion("sort <=", value, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortLike(String value) {
-            addCriterion("sort like", value, "sort");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortNotLike(String value) {
-            addCriterion("sort not like", value, "sort");
-            return (Criteria) this;
-        }
-
-        public Criteria andSortIn(List<String> values) {
+        public Criteria andSortIn(List<Short> values) {
             addCriterion("sort in", values, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortNotIn(List<String> values) {
+        public Criteria andSortNotIn(List<Short> values) {
             addCriterion("sort not in", values, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortBetween(String value1, String value2) {
+        public Criteria andSortBetween(Short value1, Short value2) {
             addCriterion("sort between", value1, value2, "sort");
             return (Criteria) this;
         }
 
-        public Criteria andSortNotBetween(String value1, String value2) {
+        public Criteria andSortNotBetween(Short value1, Short value2) {
             addCriterion("sort not between", value1, value2, "sort");
             return (Criteria) this;
         }

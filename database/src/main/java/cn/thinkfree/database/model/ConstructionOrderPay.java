@@ -52,7 +52,7 @@ public class ConstructionOrderPay extends BaseModel {
      *
      * @mbg.generated
      */
-    private String sort;
+    private Short sort;
 
     /**
      * Database Column Remarks:
@@ -156,7 +156,7 @@ public class ConstructionOrderPay extends BaseModel {
      *
      * @mbg.generated
      */
-    public String getSort() {
+    public Short getSort() {
         return sort;
     }
 
@@ -168,8 +168,8 @@ public class ConstructionOrderPay extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setSort(String sort) {
-        this.sort = sort == null ? null : sort.trim();
+    public void setSort(Short sort) {
+        this.sort = sort;
     }
 
     /**
