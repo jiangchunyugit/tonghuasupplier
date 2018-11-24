@@ -308,41 +308,42 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         int flagon = pcAuditInfoMapper.insertSelective( record );
 
         // TODO 初始化保证金流水
-		String fullMoney = "0";
-		String firstMoney = "0";
+		if(auditStatus.equals( AuditStatus.AuditPass.shortVal())){
+			String fullMoney = "0";
+			String firstMoney = "0";
 
-		ContractTermsExample contractTermsExample = new ContractTermsExample();
-		ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
-                .andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+			ContractTermsExample contractTermsExample = new ContractTermsExample();
+			ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
+					.andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
 
-        Function<Optional<ContractTerms>,String> eval = c-> c.isPresent() ? c.get().getContractValue() : "0";
-        BiFunction<Stream<ContractTerms>,String,Optional<ContractTerms>> filter =(list,code)-> list
-                .filter(c -> code.equalsIgnoreCase(c.getContractDictCode())).findFirst();
+			Function<Optional<ContractTerms>,String> eval = c-> c.isPresent() ? c.get().getContractValue() : "0";
+			BiFunction<Stream<ContractTerms>,String,Optional<ContractTerms>> filter =(list,code)-> list
+					.filter(c -> code.equalsIgnoreCase(c.getContractDictCode())).findFirst();
 
-		if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
-		    String fullMoneyCode = "c15";
-		    String firstMoneyCode = "c16";
-		    criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
-            List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
-            Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
-            fullMoney = eval.apply(fullMoneyVO);
-            Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
-            firstMoney = eval.apply(firstMoneyVO);
+			if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+				String fullMoneyCode = "c15";
+				String firstMoneyCode = "c16";
+				criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
+				List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+				Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				fullMoney = eval.apply(fullMoneyVO);
+				Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				firstMoney = eval.apply(firstMoneyVO);
 
-		}else if("BDHT".equalsIgnoreCase(contractNumber.substring(0,4))){
-		    String fullMoneyCode = "c17";
-		    String firstMoneyCode = "c18";
-            criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
-            List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+			}else if("BDHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+				String fullMoneyCode = "c17";
+				String firstMoneyCode = "c18";
+				criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
+				List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
 
-            Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
-            fullMoney = eval.apply(fullMoneyVO);
-            Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
-            firstMoney = eval.apply(firstMoneyVO);
-        }
+				Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				fullMoney = eval.apply(fullMoneyVO);
+				Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				firstMoney = eval.apply(firstMoneyVO);
+			}
+			saveCash(contractNumber,fullMoney,firstMoney);
+		}
 
-
-		saveCash(contractNumber,fullMoney,firstMoney);
 
 
         if ( flag > 0 && flagT > 0 && flagon > 0 ) {
