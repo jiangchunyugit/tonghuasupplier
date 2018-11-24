@@ -12,6 +12,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -74,6 +75,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private ConstructionStateServiceB constructionStateServiceB;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private ConstructionAndPayStateService constructionAndPayStateService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -430,7 +433,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Override
     public Integer approval(String instanceNo, String userId, Integer option, String remark) {
 
-        Integer instanceStatus = AfConstants.APPROVAL_STATUS_START;
+        Integer instanceStatus;
 
         if (option != AfConstants.OPTION_REFUSAL && option != AfConstants.OPTION_AGREE) {
             LOGGER.error("未传入正确的参数，option:{}", option);
@@ -865,21 +868,23 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 addStartMenu(startMenus, projectNo, AfConfigs.START_APPLICATION.configNo, userId);
             }
         }
-        if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
-            if (checkApplicationCount == checkReportCount) {
-                if (needCheck && checkApplicationCount == 0) {
-                    return;
-                }
-                if (getLargestScheduleSort(schedulingDetailsVOs).equals(scheduleSort)) {
-                    // 当前阶段为最后一个阶段
-                    if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
-                            && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
-                            && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+        if (constructionAndPayStateService.isBeComplete(projectNo, scheduleSort)) {
+            if (checkApplicationStatus != AfConstants.APPROVAL_STATUS_START && checkReportStatus != AfConstants.APPROVAL_STATUS_START) {
+                if (checkApplicationCount == checkReportCount) {
+                    if (needCheck && checkApplicationCount == 0) {
+                        return;
+                    }
+                    if (getLargestScheduleSort(schedulingDetailsVOs).equals(scheduleSort)) {
+                        // 当前阶段为最后一个阶段
+                        if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
+                                && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                                && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
+                            addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
+                        }
+                    } else {
+                        // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
                         addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
                     }
-                } else {
-                    // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
-                    addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
                 }
             }
         }
@@ -963,7 +968,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS ) {
             int startReportStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
             if (startReportStatus == 0 || startReportStatus == AfConstants.APPROVAL_STATUS_FAIL ) {
-                addStartMenu(startMenus, projectNo, AfConfigs.START_REPORT.configNo, userId);
+                if (constructionAndPayStateService.isBeComplete(projectNo, 0)) {
+                    addStartMenu(startMenus, projectNo, AfConfigs.START_REPORT.configNo, userId);
+                }
             }
         }
     }
