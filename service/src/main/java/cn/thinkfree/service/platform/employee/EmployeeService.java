@@ -18,9 +18,8 @@ public interface EmployeeService {
      *
      * @param userId    用户ID
      * @param authState 审核状态1未认证，2已认证，3实名认证审核中，4审核不通过
-     * @param companyId 公司ID
      */
-    void reviewEmployee(String userId, int authState, String companyId);
+    void reviewEmployee(String userId, int authState);
 
     /**
      * 处理员工申请
@@ -167,4 +166,16 @@ public interface EmployeeService {
      * @return
      */
     PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex);
+
+    /**
+     * 查询提交了实名认证信息的用户
+     *
+     * @param phone     手机号
+     * @param name      员工
+     * @param cardNo    证件号码
+     * @param pageSize  每页多少条
+     * @param pageIndex 第几页
+     * @return
+     */
+    PageVo<List<EmployeeMsgVo>> queryAllEmployee(String phone, String name, String cardNo, int pageSize, int pageIndex);
 }

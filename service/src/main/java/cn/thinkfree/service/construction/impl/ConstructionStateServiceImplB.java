@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Max;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -39,6 +37,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     @Autowired
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
+
     /**
      * 查询当前状态
      *
@@ -53,6 +52,26 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
         return RespData.success(stateInfo);
+    }
+
+    /**
+     * 查询当前状态/付款施工详细阶段
+     *
+     * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
+     * @return
+     */
+    @Override
+    public MyRespBundle<Map<String,String>>getStateDetailInfo(String orderNo, int type) {
+        if (StringUtils.isBlank(orderNo)) {
+            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+        }
+        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
+        String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
+        String stateDetailInfo = commonService.queryStateCodeDetailByOrderNo(orderNo);
+        Map<String,String> map = new HashMap<>();
+        map.put("bigStage",stateInfo);
+        map.put("detailStage",stateDetailInfo);
+        return RespData.success(map);
     }
 
     /**
@@ -196,7 +215,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         switch (isEnd) {
             case "0":
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_630.getState());
                 break;
             case "1":
                 commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState());

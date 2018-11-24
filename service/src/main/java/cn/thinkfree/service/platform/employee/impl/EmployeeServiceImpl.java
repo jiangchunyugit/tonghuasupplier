@@ -41,10 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private BasicsService basicsService;
 
     @Override
-    public void reviewEmployee(String userId, int authState, String companyId) {
-        checkCompanyExit(companyId);
+    public void reviewEmployee(String userId, int authState) {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andUserIdEqualTo(userId).andCompanyIdEqualTo(companyId);
+        msgExample.createCriteria().andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         if (employeeMsgs.isEmpty()) {
             throw new RuntimeException("没有查询到该员工");
@@ -69,6 +68,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             dissolutionApply(userId, employeeApplyState, companyId);
         } else if (employeeApplyState == 1) {
             EmployeeMsg employeeMsg = checkEmployeeMsg(userId);
+            if(employeeMsg.getAuthState() != 2){
+                throw new RuntimeException("请先进行实名认证");
+            }
             if (Arrays.asList(new Integer[]{3, 4, 5}).contains(employeeMsg.getEmployeeApplyState())) {
                 throw new RuntimeException("无效的操作");
             }
@@ -266,7 +268,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             roleSetExample.or().andRoleNameLike("%" + searchKey + "%");
         }
         long total = roleSetMapper.countByExample(roleSetExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
         List<RoleVo> roleVos = new ArrayList<>();
         for (UserRoleSet userRoleSet : roleSets) {
@@ -437,7 +439,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             msgExample.or().andCertificateLike("%" + searchKey + "%");
         }
         long total = employeeMsgMapper.countByExample(msgExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
         if (msgs.isEmpty()) {
             PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -579,6 +581,51 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public PageVo<List<EmployeeMsgVo>> queryAllEmployee(String phone, String name, String cardNo, int pageSize, int pageIndex) {
+        List<UserMsgVo> msgVos = userCenterService.queryUserMsg(null,phone);
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria();
+        if(msgVos != null && msgVos.size() > 0){
+            List<String> userIds = ReflectUtils.getList(msgVos,"staffId");
+            criteria.andUserIdIn(userIds);
+        }
+        if(StringUtils.isNotBlank(name)){
+            criteria.andRealNameLike("%" + name + "%");
+        }
+        if(StringUtils.isNotBlank(cardNo)){
+            criteria.andCertificateLike("%" + cardNo + "%");
+        }
+        criteria.andAuthStateNotEqualTo(1);
+        long total = employeeMsgMapper.countByExample(msgExample);
+        PageHelper.startPage(pageIndex, pageSize);
+        List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
+        if (msgs.isEmpty()) {
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> userIds = ReflectUtils.getList(msgs, "userId");
+        List<RoleVo> roleVos = queryRoles(null,-1,10000,1).getData();
+        Map<String, String> roleMap = ReflectUtils.listToMap(roleVos, "roleCode", "roleName");
+        Map<String, UserMsgVo> userMsgVoMap = userCenterService.queryUserMap(userIds);
+        List<BasicsData> cardTypes = basicsService.cardTypes();
+        List<BasicsData> countryCodes = basicsService.countryType();
+        Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
+        Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
+        List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        for (EmployeeMsg employeeMsg : msgs) {
+            UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
+            String roleName = roleMap.get(employeeMsg.getRoleCode());
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            employeeMsgVos.add(msgVo);
+        }
+        PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(employeeMsgVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
+    }
+
+    @Override
     public PageVo<List<EmployeeMsgVo>> queryEmployee(String companyId, String roleCode, String searchKey, int pageSize, int pageIndex) {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司ID不能为空");
@@ -594,15 +641,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             msgExample.or().andCertificateLike("%" + searchKey + "%");
         }
         long total = employeeMsgMapper.countByExample(msgExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<EmployeeMsg> msgs = employeeMsgMapper.selectByExample(msgExample);
         if (msgs.isEmpty()) {
-            PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
-            pageVo.setPageSize(pageSize);
-            pageVo.setTotal(total);
-            pageVo.setData(new ArrayList<>());
-            pageVo.setPageIndex(pageIndex);
-            return pageVo;
+            return PageVo.def(new ArrayList<>());
         }
         List<String> userIds = ReflectUtils.getList(msgs, "userId");
         List<RoleVo> roleVos = queryRoles(null,-1,10000,1).getData();
@@ -709,7 +751,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .andIsCheckEqualTo(Short.parseShort("1")).andAuditStatusEqualTo("8");
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
         if(companyInfos.isEmpty()){
-            throw new RuntimeException("没有查询到该公司");
+            return new CompanyInfo();
         }
         return companyInfos.get(0);
     }
