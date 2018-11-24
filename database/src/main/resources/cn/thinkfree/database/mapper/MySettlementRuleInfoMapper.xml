@@ -24,7 +24,7 @@
     FROM
     pc_settlement_rule_info
     WHERE
-    start_time &lt;= now( ) AND end_time &gt;= now( )
+    status = 7
     AND collection_type =  #{collectionType,jdbcType=VARCHAR}
     AND fee_name = #{feeName,jdbcType=VARCHAR}
   </select>
