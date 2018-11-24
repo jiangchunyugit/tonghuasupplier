@@ -10,5 +10,5 @@ public interface ConstructionAndPayStateService {
     MyRespBundle<Boolean> isStagePay(String orderNo);
 
 
-    boolean isBeComplete(String projectNo, int sort);
+    boolean isBeComplete(String projectNo, Integer sort);
 }

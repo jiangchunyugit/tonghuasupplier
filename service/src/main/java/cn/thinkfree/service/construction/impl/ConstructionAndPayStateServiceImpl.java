@@ -91,7 +91,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
      * 内部服务-传让
      */
     @Override
-    public boolean isBeComplete(String projectNo, int sort) {
+    public boolean isBeComplete(String projectNo, Integer sort) {
 
         //通过projectNo查询orderNo
         ConstructionOrderExample example = new ConstructionOrderExample();
@@ -115,7 +115,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
         else {
             sort +=1;
             ConstructionOrderPayExample example1 = new ConstructionOrderPayExample();
-            example1.createCriteria().andSortEqualTo((short) sort).andIsEndEqualTo("pay");
+            example1.createCriteria().andSortEqualTo(sort.shortValue()).andIsEndEqualTo("pay");
             List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(example1);
             if (list.isEmpty()) {
                 return false;
