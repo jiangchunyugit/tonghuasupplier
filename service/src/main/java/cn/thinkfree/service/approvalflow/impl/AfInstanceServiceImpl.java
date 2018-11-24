@@ -133,6 +133,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setCustomerId(customerId);
         instanceDetailVO.setCustomerName(customerInfo.getUsername());
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
+        instanceDetailVO.setAddress(project.getAddressDetail());
         return instanceDetailVO;
     }
 
@@ -401,7 +402,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
         instanceDetailVO.setInstanceNo(instanceNo);
-        instanceDetailVO.setAddress(project.getAddressDetail() + project.getAddressDetail());
+        instanceDetailVO.setAddress(project.getAddressDetail());
         instanceDetailVO.setConfigNo(instance.getConfigNo());
         instanceDetailVO.setConfigName(config.getName());
         instanceDetailVO.setData(instance.getData());
