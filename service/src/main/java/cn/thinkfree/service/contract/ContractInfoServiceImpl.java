@@ -14,6 +14,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -22,6 +25,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.constants.*;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -304,19 +308,41 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         int flagon = pcAuditInfoMapper.insertSelective( record );
 
         // TODO 初始化保证金流水
+		String fullMoney = "0";
 		String firstMoney = "0";
-		if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
-			String firstMoneyCode = "c16";
-			ContractTermsExample contractTermsExample = new ContractTermsExample();
-			contractTermsExample.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
-					.andContractDictCodeEqualTo(firstMoneyCode);
-			List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
-			if (contractTerms != null && contractTerms.size() == 1){
-				// 数据异常是否丢弃
-				firstMoney = contractTerms.get(0).getContractValue();
-			}
-		}
 
+		ContractTermsExample contractTermsExample = new ContractTermsExample();
+		ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
+                .andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+
+        Function<Optional<ContractTerms>,String> eval = c-> c.isPresent() ? c.get().getContractValue() : "0";
+        BiFunction<Stream<ContractTerms>,String,Optional<ContractTerms>> filter =(list,code)-> list
+                .filter(c -> code.equalsIgnoreCase(c.getContractDictCode())).findFirst();
+
+		if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+		    String fullMoneyCode = "c15";
+		    String firstMoneyCode = "c16";
+		    criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
+            List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+            Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+            fullMoney = eval.apply(fullMoneyVO);
+            Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+            firstMoney = eval.apply(firstMoneyVO);
+
+		}else if("BDHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+		    String fullMoneyCode = "c17";
+		    String firstMoneyCode = "c18";
+            criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
+            List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+
+            Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+            fullMoney = eval.apply(fullMoneyVO);
+            Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+            firstMoney = eval.apply(firstMoneyVO);
+        }
+
+
+		saveCash(contractNumber,fullMoney,firstMoney);
 
 
         if ( flag > 0 && flagT > 0 && flagon > 0 ) {
