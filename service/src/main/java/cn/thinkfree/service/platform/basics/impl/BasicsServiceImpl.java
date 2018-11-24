@@ -48,7 +48,7 @@ public class BasicsServiceImpl implements BasicsService {
         BasicsDataExample dataExample = new BasicsDataExample();
         dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andDelStateEqualTo(2);
         long total = basicsDataMapper.countByExample(dataExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<BasicsData> dataList = basicsDataMapper.selectByExample(dataExample);
         PageVo<List<BasicsData>> pageVo = new PageVo<>();
         pageVo.setData(dataList);

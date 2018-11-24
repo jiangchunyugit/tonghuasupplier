@@ -167,4 +167,16 @@ public interface EmployeeService {
      * @return
      */
     PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex);
+
+    /**
+     * 查询提交了实名认证信息的用户
+     *
+     * @param phone     手机号
+     * @param name      员工
+     * @param cardNo    证件号码
+     * @param pageSize  每页多少条
+     * @param pageIndex 第几页
+     * @return
+     */
+    PageVo<List<EmployeeMsgVo>> queryAllEmployee(String phone, String name, String cardNo, int pageSize, int pageIndex);
 }
