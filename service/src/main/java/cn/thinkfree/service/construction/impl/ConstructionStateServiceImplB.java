@@ -215,7 +215,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         switch (isEnd) {
             case "0":
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_630.getState());
                 break;
             case "1":
                 commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState());
