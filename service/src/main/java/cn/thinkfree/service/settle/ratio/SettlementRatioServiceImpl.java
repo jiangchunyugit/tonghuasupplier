@@ -49,6 +49,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 	public PageInfo<SettlementRatioInfo> pageSettlementRatioBySEO(SettlementRatioSEO ratio) {
 		PageHelper.startPage(ratio.getPage(), ratio.getRows());
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
+		example.setOrderByClause("create_time DESC");
 		this.searchRef(example,ratio);
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
 		printInfoMes("查询 结算比例数量 {}", list.size());
