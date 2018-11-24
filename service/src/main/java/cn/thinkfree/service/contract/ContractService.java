@@ -27,7 +27,7 @@ public interface ContractService {
      * @param money  金额
      * @return
      */
-    boolean saveCash(String fundsCompanyCash, String money);
+    boolean saveCash(String fundsCompanyCash, String money,String disposableMoney);
 
 	/**
 	 * 
