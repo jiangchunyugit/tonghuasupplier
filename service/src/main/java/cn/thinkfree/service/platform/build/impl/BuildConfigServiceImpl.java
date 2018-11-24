@@ -136,7 +136,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         BuildPayConfigExample configExample = new BuildPayConfigExample();
         configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateEqualTo(2);
         long total = payConfigMapper.countByExample(configExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<BuildPayConfig> payConfigs = payConfigMapper.selectByExample(configExample);
         PageVo<List<BuildPayConfig>> pageVo = new PageVo<>();
         pageVo.setPageSize(pageSize);

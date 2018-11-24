@@ -295,4 +295,22 @@ public class EmployeeController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("查询所有已提交实名认证审核的用户数据--->运营后台用")
+    @MyRespBody
+    @RequestMapping(value = "queryAllEmployee", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<EmployeeMsgVo>>> queryAllEmployee(
+            @ApiParam(name = "phone", required = false, value = "手机号（模糊）") @RequestParam(name = "phone", required = false) String phone,
+            @ApiParam(name = "name", required = false, value = "员工姓名（模糊）") @RequestParam(name = "name", required = false) String name,
+            @ApiParam(name = "cardNo", required = false, value = "证件号码（模糊）") @RequestParam(name = "cardNo", required = false) String cardNo,
+            @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
+        try {
+            PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryAllEmployee(phone, name, cardNo, pageSize, pageIndex);
+            return sendJsonData(ResultMessage.SUCCESS, pageVo);
+        } catch (Exception e) {
+            logger.error("e:", e);
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
 }

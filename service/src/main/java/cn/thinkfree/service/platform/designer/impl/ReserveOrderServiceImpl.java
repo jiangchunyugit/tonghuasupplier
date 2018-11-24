@@ -101,7 +101,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
             criteria.andPhoneLike("%" + phone + "%");
         }
         long total = reserveProjectMapper.countByExample(reserveProjectExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<ReserveProject> reserveProjects = reserveProjectMapper.selectByExample(reserveProjectExample);
         PageVo<List<ReserveProject>> pageVo = new PageVo<>();
         pageVo.setData(reserveProjects);

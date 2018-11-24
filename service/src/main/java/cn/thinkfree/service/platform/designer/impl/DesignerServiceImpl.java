@@ -129,7 +129,7 @@ public class DesignerServiceImpl implements DesignerService {
             criteria.andWeightEqualTo(Long.parseLong(sort));
         }
         long total = designerMsgMapper.countByExample(msgExample);
-        PageHelper.startPage(pageIndex - 1, pageSize);
+        PageHelper.startPage(pageIndex, pageSize);
         List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
         List<DesignerMsgListVo> msgVos = new ArrayList<>();
         for (DesignerMsg msg : designerMsgs) {
