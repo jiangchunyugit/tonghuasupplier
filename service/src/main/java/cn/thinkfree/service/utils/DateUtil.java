@@ -257,9 +257,11 @@ public class DateUtil {
      * @param date2
      * @return
      */
-    public static int differentDaysByMillisecond(Date date1,Date date2)
-    {
-        return (int) ((date2.getTime() - date1.getTime()) / (1000*3600*24));
+    public static int differentDaysByMillisecond(Date date1, Date date2) {
+        BigDecimal bigDecimalOne = new BigDecimal(date2.getTime() - date1.getTime());
+        BigDecimal bigDecimalTwo = new BigDecimal(1000 * 3600 * 24);
+        BigDecimal i = bigDecimalOne.divide(bigDecimalTwo, BigDecimal.ROUND_DOWN);
+        return i.intValue();
     }
 
     /**
@@ -280,7 +282,6 @@ public class DateUtil {
         int i = bigDecimalOne.divide(bigDecimalTwo, 0, BigDecimal.ROUND_UP).intValue();
         return i;
     }
-
 
     public static void main(String[] args) {
         Date date1 = formateToDate("2018-08-09 00:00:00", FORMAT);

@@ -247,20 +247,23 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
             example2.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo()).andSortEqualTo(Integer.parseInt(sort));
             List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
-            for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
+            //开工报告 传值0
+            if (schedulingList2.size() > 0){
+                for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
 
-                constructionOrderPay.setFeeName(projectBigScheduling.getName());
-                // A开工报告 B阶段验收 C竣工验收
-                if (isEnd.equals("B")) {
-                    if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())) {
-                        constructionOrderPay.setIsEnd("C");
-                    } else {
-                        constructionOrderPay.setIsEnd("B");
+                    constructionOrderPay.setFeeName(projectBigScheduling.getName());
+                    // A开工报告 B阶段验收 C竣工验收
+                    if (isEnd.equals("B")) {
+                        if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())) {
+                            constructionOrderPay.setIsEnd("C");
+                        } else {
+                            constructionOrderPay.setIsEnd("B");
+                        }
                     }
-                } else {
-                    constructionOrderPay.setIsEnd("A");
                 }
-
+            }else {
+                constructionOrderPay.setFeeName("开工报告");
+                constructionOrderPay.setIsEnd("A");
             }
 
             // 入库

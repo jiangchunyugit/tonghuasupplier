@@ -169,7 +169,7 @@
     <section class='indent'>
         1. 甲方在对应《设计合同》收到客户支付相应设计费后分三次与乙方结算设计费款项，分别为：
         <ul class="list">
-             <#list code04 as c>
+             <#list code01 as c>
                <li>${c.costName}  ${c.costValue}%；</li>
              </#list>
         </ul>
@@ -181,7 +181,7 @@
         3. 甲方向乙方支付客户采购产品实交款总额<p class="placeholderT">10%</p>的产品服务费，甲方分两次与乙方结算产品服务费款项。
         <ul class="list">
             <ul class="list">
-             <#list code02 as c>
+             <#list code05 as c>
                  <li>${c.costName}  ${c.costValue}%；</li>
              </#list>
             </ul>
@@ -197,7 +197,7 @@
         5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">${c12}</p>
         作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：
         <ul class="list">
-             <#list code03 as c>
+             <#list code10 as c>
                  <li>${c.costName}  ${c.costValue}%；</li>
              </#list>
         </ul>
@@ -205,8 +205,24 @@
     <section class='indent'>
         6. 甲方在支付乙方产品服务费、施工管理费同时乙方应根据法律为甲方开具税率为6%的增值税专用发票，如无法提供定额税点发票则甲方有权扣除差额部分税点作为对甲方税点损失的补偿。
     </section>
+     <section class='indent'>
+        7. 保证金金额 <p class="placeholderT">${c15}</p>元
+         <ul class="list">
+             <#list code13 as c>
+                 <li>${c.costName}  ${c.costValue}
+                 <#if c.cType == 0>
+                    %
+                    </#if>
+                    <#if c.cType == 1>
+                                                                       元
+                    </#if>
+                 ;
+                 </li>
+             </#list>
+        </ul>
+    </section>
     <section class='indent'>
-        7. 上述所有付款，甲乙双方于每月20至25日之间结算上月度款项。
+        8. 上述所有付款，甲乙双方于每月20至25日之间结算上月度款项。
     </section>
     <h4>五、违约责任</h4>
     <section class='indent'>

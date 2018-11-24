@@ -90,12 +90,11 @@ public class AfInstanceController extends AbsBaseController {
             @ApiImplicitParam(name = "option", value = "用户选择，1；同意，0：拒绝", required = true),
             @ApiImplicitParam(name = "remark", value = "备注")
     })
-    public MyRespBundle approval(@RequestParam(name = "instanceNo") String instanceNo,
+    public MyRespBundle<Integer> approval(@RequestParam(name = "instanceNo") String instanceNo,
                                  @RequestParam(name = "userId") String userId,
                                  @RequestParam(name = "option") Integer option,
                                  @RequestParam(name = "remark", required = false) String remark){
-        instanceService.approval(instanceNo, userId, option, remark);
-        return sendSuccessMessage(ResultMessage.SUCCESS.message);
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.approval(instanceNo, userId, option, remark));
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)

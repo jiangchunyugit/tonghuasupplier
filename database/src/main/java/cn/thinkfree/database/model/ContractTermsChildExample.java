@@ -875,53 +875,133 @@ public class ContractTermsChildExample extends cn.thinkfree.core.model.AbstractD
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdEqualTo(String value) {
             addCriterion("settlement_rule_id =", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdNotEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdNotEqualTo(String value) {
             addCriterion("settlement_rule_id <>", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdGreaterThan(Integer value) {
+        public Criteria andSettlementRuleIdGreaterThan(String value) {
             addCriterion("settlement_rule_id >", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdGreaterThanOrEqualTo(String value) {
             addCriterion("settlement_rule_id >=", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdLessThan(Integer value) {
+        public Criteria andSettlementRuleIdLessThan(String value) {
             addCriterion("settlement_rule_id <", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdLessThanOrEqualTo(Integer value) {
+        public Criteria andSettlementRuleIdLessThanOrEqualTo(String value) {
             addCriterion("settlement_rule_id <=", value, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdIn(List<Integer> values) {
+        public Criteria andSettlementRuleIdLike(String value) {
+            addCriterion("settlement_rule_id like", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdNotLike(String value) {
+            addCriterion("settlement_rule_id not like", value, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSettlementRuleIdIn(List<String> values) {
             addCriterion("settlement_rule_id in", values, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdNotIn(List<Integer> values) {
+        public Criteria andSettlementRuleIdNotIn(List<String> values) {
             addCriterion("settlement_rule_id not in", values, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdBetween(Integer value1, Integer value2) {
+        public Criteria andSettlementRuleIdBetween(String value1, String value2) {
             addCriterion("settlement_rule_id between", value1, value2, "settlementRuleId");
             return (Criteria) this;
         }
 
-        public Criteria andSettlementRuleIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andSettlementRuleIdNotBetween(String value1, String value2) {
             addCriterion("settlement_rule_id not between", value1, value2, "settlementRuleId");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeIsNull() {
+            addCriterion("c_type is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeIsNotNull() {
+            addCriterion("c_type is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeEqualTo(String value) {
+            addCriterion("c_type =", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeNotEqualTo(String value) {
+            addCriterion("c_type <>", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeGreaterThan(String value) {
+            addCriterion("c_type >", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeGreaterThanOrEqualTo(String value) {
+            addCriterion("c_type >=", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeLessThan(String value) {
+            addCriterion("c_type <", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeLessThanOrEqualTo(String value) {
+            addCriterion("c_type <=", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeLike(String value) {
+            addCriterion("c_type like", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeNotLike(String value) {
+            addCriterion("c_type not like", value, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeIn(List<String> values) {
+            addCriterion("c_type in", values, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeNotIn(List<String> values) {
+            addCriterion("c_type not in", values, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeBetween(String value1, String value2) {
+            addCriterion("c_type between", value1, value2, "cType");
+            return (Criteria) this;
+        }
+
+        public Criteria andCTypeNotBetween(String value1, String value2) {
+            addCriterion("c_type not between", value1, value2, "cType");
             return (Criteria) this;
         }
     }
