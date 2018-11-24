@@ -302,12 +302,13 @@ public class BuildConfigServiceImpl implements BuildConfigService {
 //        }
         BuildSchemeConfigExample configExample = new BuildSchemeConfigExample();
         BuildSchemeConfigExample.Criteria criteria = configExample.createCriteria();
-        criteria
+//        criteria
 //                .andCompanyIdEqualTo(companyId).andCityStationEqualTo(cityStation).andStoreNoEqualTo(storeNo)
-                .andDelStateEqualTo(2).andIsEnableEqualTo(1);
         if(StringUtils.isNotBlank(searchKey)){
-            criteria.andSchemeNameLike("%" + searchKey + "%");
-            criteria.andSchemeNoLike("%" + searchKey + "%");
+            configExample.or().andSchemeNameLike("%" + searchKey + "%").andDelStateEqualTo(2).andIsEnableEqualTo(1);
+            configExample.or().andSchemeNoLike("%" + searchKey + "%").andDelStateEqualTo(2).andIsEnableEqualTo(1);
+        }else{
+            criteria.andDelStateEqualTo(2).andIsEnableEqualTo(1);
         }
         return schemeConfigMapper.selectByExample(configExample);
     }

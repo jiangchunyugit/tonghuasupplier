@@ -83,4 +83,18 @@ public interface AfInstanceService {
      * @return
      */
     List<String> projectApprovalList(String projectNo);
+
+    /**
+     * 获取项目开工报告的状态
+     * @param projectNo
+     * @return
+     */
+    int getStartReportStatus(String projectNo);
+
+    /**
+     * 获取项目开工报告的状态
+     * @param projectNo
+     * @return
+     */
+    int getScheduleEditable(String projectNo);
 }

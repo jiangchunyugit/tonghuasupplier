@@ -635,52 +635,52 @@ public class ProjectSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumEqualTo(Short value) {
+        public Criteria andChangeNumEqualTo(Integer value) {
             addCriterion("change_num =", value, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumNotEqualTo(Short value) {
+        public Criteria andChangeNumNotEqualTo(Integer value) {
             addCriterion("change_num <>", value, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumGreaterThan(Short value) {
+        public Criteria andChangeNumGreaterThan(Integer value) {
             addCriterion("change_num >", value, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumGreaterThanOrEqualTo(Short value) {
+        public Criteria andChangeNumGreaterThanOrEqualTo(Integer value) {
             addCriterion("change_num >=", value, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumLessThan(Short value) {
+        public Criteria andChangeNumLessThan(Integer value) {
             addCriterion("change_num <", value, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumLessThanOrEqualTo(Short value) {
+        public Criteria andChangeNumLessThanOrEqualTo(Integer value) {
             addCriterion("change_num <=", value, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumIn(List<Short> values) {
+        public Criteria andChangeNumIn(List<Integer> values) {
             addCriterion("change_num in", values, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumNotIn(List<Short> values) {
+        public Criteria andChangeNumNotIn(List<Integer> values) {
             addCriterion("change_num not in", values, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumBetween(Short value1, Short value2) {
+        public Criteria andChangeNumBetween(Integer value1, Integer value2) {
             addCriterion("change_num between", value1, value2, "changeNum");
             return (Criteria) this;
         }
 
-        public Criteria andChangeNumNotBetween(Short value1, Short value2) {
+        public Criteria andChangeNumNotBetween(Integer value1, Integer value2) {
             addCriterion("change_num not between", value1, value2, "changeNum");
             return (Criteria) this;
         }
@@ -695,52 +695,52 @@ public class ProjectSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andRateEqualTo(Short value) {
+        public Criteria andRateEqualTo(Integer value) {
             addCriterion("rate =", value, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateNotEqualTo(Short value) {
+        public Criteria andRateNotEqualTo(Integer value) {
             addCriterion("rate <>", value, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateGreaterThan(Short value) {
+        public Criteria andRateGreaterThan(Integer value) {
             addCriterion("rate >", value, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateGreaterThanOrEqualTo(Short value) {
+        public Criteria andRateGreaterThanOrEqualTo(Integer value) {
             addCriterion("rate >=", value, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateLessThan(Short value) {
+        public Criteria andRateLessThan(Integer value) {
             addCriterion("rate <", value, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateLessThanOrEqualTo(Short value) {
+        public Criteria andRateLessThanOrEqualTo(Integer value) {
             addCriterion("rate <=", value, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateIn(List<Short> values) {
+        public Criteria andRateIn(List<Integer> values) {
             addCriterion("rate in", values, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateNotIn(List<Short> values) {
+        public Criteria andRateNotIn(List<Integer> values) {
             addCriterion("rate not in", values, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateBetween(Short value1, Short value2) {
+        public Criteria andRateBetween(Integer value1, Integer value2) {
             addCriterion("rate between", value1, value2, "rate");
             return (Criteria) this;
         }
 
-        public Criteria andRateNotBetween(Short value1, Short value2) {
+        public Criteria andRateNotBetween(Integer value1, Integer value2) {
             addCriterion("rate not between", value1, value2, "rate");
             return (Criteria) this;
         }
@@ -875,52 +875,52 @@ public class ProjectSchedulingExample {
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmEqualTo(Short value) {
+        public Criteria andIsConfirmEqualTo(Integer value) {
             addCriterion("is_confirm =", value, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmNotEqualTo(Short value) {
+        public Criteria andIsConfirmNotEqualTo(Integer value) {
             addCriterion("is_confirm <>", value, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmGreaterThan(Short value) {
+        public Criteria andIsConfirmGreaterThan(Integer value) {
             addCriterion("is_confirm >", value, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmGreaterThanOrEqualTo(Short value) {
+        public Criteria andIsConfirmGreaterThanOrEqualTo(Integer value) {
             addCriterion("is_confirm >=", value, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmLessThan(Short value) {
+        public Criteria andIsConfirmLessThan(Integer value) {
             addCriterion("is_confirm <", value, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmLessThanOrEqualTo(Short value) {
+        public Criteria andIsConfirmLessThanOrEqualTo(Integer value) {
             addCriterion("is_confirm <=", value, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmIn(List<Short> values) {
+        public Criteria andIsConfirmIn(List<Integer> values) {
             addCriterion("is_confirm in", values, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmNotIn(List<Short> values) {
+        public Criteria andIsConfirmNotIn(List<Integer> values) {
             addCriterion("is_confirm not in", values, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmBetween(Short value1, Short value2) {
+        public Criteria andIsConfirmBetween(Integer value1, Integer value2) {
             addCriterion("is_confirm between", value1, value2, "isConfirm");
             return (Criteria) this;
         }
 
-        public Criteria andIsConfirmNotBetween(Short value1, Short value2) {
+        public Criteria andIsConfirmNotBetween(Integer value1, Integer value2) {
             addCriterion("is_confirm not between", value1, value2, "isConfirm");
             return (Criteria) this;
         }

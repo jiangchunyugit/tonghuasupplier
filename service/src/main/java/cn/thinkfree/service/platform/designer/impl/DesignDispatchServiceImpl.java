@@ -129,6 +129,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         long total = DesignerOrderMapper.countByExample(orderExample);
         PageHelper.startPage(pageIndex - 1, pageSize);
         List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
         List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
         projectNos.clear();
@@ -203,6 +206,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         long total = DesignerOrderMapper.countByExample(orderExample);
         PageHelper.startPage(pageIndex - 1, pageSize);
         List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
         List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
         List<String> companyIds = new ArrayList<>();

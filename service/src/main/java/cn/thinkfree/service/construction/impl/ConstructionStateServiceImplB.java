@@ -130,11 +130,11 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         if (stageCode.equals(stage)) {
             if (isPass == 1) {   //下一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState())) {
                     return RespData.success();
                 }
             } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(1).getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_520.getState())) {
                     return RespData.success();
                 }
             }
@@ -144,12 +144,14 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         return RespData.error(ResultMessage.ERROR.code, "状态更新失败状态-请稍后重试");
     }
+
     /**
      * 装饰公司
      * 4合同录入 （完成）
+     * TODO 不用了
      */
     @Override
-    public void contractState(String orderNo){
+    public void contractState(String orderNo) {
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState());
     }
 
@@ -158,7 +160,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 5确认线下签约完成（自动创建工地项目）
      */
     @Override
-    public void contractCompleteState(String orderNo){
+    public void contractCompleteState(String orderNo) {
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_550.getState());
     }
 
@@ -245,20 +247,23 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
             example2.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo()).andSortEqualTo(Integer.parseInt(sort));
             List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
-            for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
+            //开工报告 传值0
+            if (schedulingList2.size() > 0){
+                for (ProjectBigScheduling projectBigScheduling : schedulingList2) {
 
-                constructionOrderPay.setFeeName(projectBigScheduling.getName());
-                // A开工报告 B阶段验收 C竣工验收
-                if (isEnd.equals("B")) {
-                    if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())) {
-                        constructionOrderPay.setIsEnd("C");
-                    } else {
-                        constructionOrderPay.setIsEnd("B");
+                    constructionOrderPay.setFeeName(projectBigScheduling.getName());
+                    // A开工报告 B阶段验收 C竣工验收
+                    if (isEnd.equals("B")) {
+                        if (listNum.get(listNum.size() - 1).equals(projectBigScheduling.getSort())) {
+                            constructionOrderPay.setIsEnd("C");
+                        } else {
+                            constructionOrderPay.setIsEnd("B");
+                        }
                     }
-                } else {
-                    constructionOrderPay.setIsEnd("A");
                 }
-
+            }else {
+                constructionOrderPay.setFeeName("开工报告");
+                constructionOrderPay.setIsEnd("A");
             }
 
             // 入库
@@ -290,7 +295,6 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
         return RespData.success();
     }
-
 
 
     /**
@@ -370,14 +374,14 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * &审核通过
      */
     @Override
-    public MyRespBundle<String> customerCancelOrderForPay(String orderNo,int type) {
+    public MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
-        if (type == 1){
+        if (type == 1) {
             commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_720.getState());
-        }else {
+        } else {
             commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_730.getState());
         }
 

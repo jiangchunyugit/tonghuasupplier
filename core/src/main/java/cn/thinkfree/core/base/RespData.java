@@ -45,7 +45,7 @@ public class RespData {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(code.getCode());
         myRespBundle.setData(data);
-        myRespBundle.setMessage(code.getMsg());
+        myRespBundle.setMsg(code.getMsg());
         return myRespBundle;
     }
 
@@ -60,7 +60,7 @@ public class RespData {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(code.getCode());
         myRespBundle.setData(data);
-        myRespBundle.setMessage(msg);
+        myRespBundle.setMsg(msg);
         return myRespBundle;
     }
 
@@ -75,7 +75,7 @@ public class RespData {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(ErrorCode.OK.getCode());
         myRespBundle.setData(data);
-        myRespBundle.setMessage(msg);
+        myRespBundle.setMsg(msg);
         return myRespBundle;
     }
 
@@ -90,7 +90,7 @@ public class RespData {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(code.getCode());
         myRespBundle.setData(null);
-        myRespBundle.setMessage(code.getMsg());
+        myRespBundle.setMsg(code.getMsg());
         return myRespBundle;
     }
 
@@ -105,7 +105,7 @@ public class RespData {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(ErrorCode.FAIL.getCode());
         myRespBundle.setData(null);
-        myRespBundle.setMessage(msg);
+        myRespBundle.setMsg(msg);
         return myRespBundle;
     }
 
@@ -121,7 +121,7 @@ public class RespData {
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(code);
         myRespBundle.setData(null);
-        myRespBundle.setMessage(msg);
+        myRespBundle.setMsg(msg);
         return myRespBundle;
     }
 
@@ -138,13 +138,13 @@ public class RespData {
             MyRespBundle<T> myRespBundle = new MyRespBundle<>();
             myRespBundle.setCode(((CommonException) e).getCode());
             myRespBundle.setData(null);
-            myRespBundle.setMessage(((CommonException) e).getMsg());
+            myRespBundle.setMsg(((CommonException) e).getMsg());
             return myRespBundle;
         }
         MyRespBundle<T> myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(code.getCode());
         myRespBundle.setData(null);
-        myRespBundle.setMessage(code.getMsg());
+        myRespBundle.setMsg(code.getMsg());
         return myRespBundle;
     }
 }

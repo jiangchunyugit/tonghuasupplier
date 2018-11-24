@@ -12,6 +12,8 @@ import cn.thinkfree.service.approvalflow.AfInstancePdfUrlService;
 import cn.thinkfree.service.approvalflow.RoleService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.config.PdfConfig;
+import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
@@ -53,6 +55,8 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
     private AfApprovalLogService approvalLogService;
     @Autowired
     private RoleService roleService;
+    @Autowired
+    private EmployeeService employeeService;
 
     @Override
     public void create(AfInstance instance) {
@@ -107,6 +111,25 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
         instancePdfUrl.setScheduleSort(instance.getScheduleSort());
 
         insert(instancePdfUrl);
+    }
+
+    private AfUserDTO getUserInfo(String userId, String roleId) {
+        AfUserDTO userDTO;
+        if (Role.CC.id.equals(roleId)) {
+            userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), userId, roleId);
+        } else {
+            userDTO = new AfUserDTO();
+            EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
+            if (employeeMsg == null) {
+                LOGGER.error("未查询到用户信息：userId:{}", userId);
+                throw new RuntimeException();
+            }
+            userDTO.setHeadPortrait(employeeMsg.getIconUrl());
+            userDTO.setUsername(employeeMsg.getRealName());
+            userDTO.setUserId(userId);
+            userDTO.setPhone(employeeMsg.getPhone());
+        }
+        return userDTO;
     }
 
     private void deleteLocalExportFile(String exportDir, String exportFileName) {

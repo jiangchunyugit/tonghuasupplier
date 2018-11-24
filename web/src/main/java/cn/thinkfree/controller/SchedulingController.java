@@ -47,13 +47,14 @@ public class SchedulingController extends AbsBaseController {
         return sendSuccessMessage(result);
     }
 
+
     @RequestMapping(value = "updateProjectScheduling", method = RequestMethod.POST)
     @ApiOperation(value = "APP-确认排期")
     public MyRespBundle confirmProjectScheduling(@RequestBody @ApiParam(name = "projectBigSchedulingDetailsVO", value = "大排期信息") List<ProjectBigSchedulingDetailsVO> bigList) {
         return schedulingService.confirmProjectScheduling(bigList);
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(value = "getCheckStage", method = RequestMethod.POST)
     @ApiOperation("APP-获取验收阶段")
     public MyRespBundle<List<ProjectBigSchedulingDetailsVO>> getCheckStage(@RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 111", required = true) String projectNo) {
         return schedulingService.getCheckStage(projectNo);
