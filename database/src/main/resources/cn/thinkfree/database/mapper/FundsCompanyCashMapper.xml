@@ -24,6 +24,7 @@
     <result column="subject_no" jdbcType="VARCHAR" property="subjectNo" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="disposable_money" jdbcType="NUMERIC" property="disposableMoney" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -98,7 +99,7 @@
     -->
     id, company_no, state, contract_money, arrearage_money, remaining_money, direct_money, 
     goods_money, shop_name, shop_no, province_company_name, province_company_no, substation_name, 
-    substation_no, subject_name, subject_no, company_name, type
+    substation_no, subject_name, subject_no, company_name, type, disposable_money
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.FundsCompanyCashExample" resultMap="BaseResultMap">
     <!--
@@ -156,15 +157,15 @@
       direct_money, goods_money, shop_name, 
       shop_no, province_company_name, province_company_no, 
       substation_name, substation_no, subject_name, 
-      subject_no, company_name, type
-      )
+      subject_no, company_name, type, 
+      disposable_money)
     values (#{id,jdbcType=BIGINT}, #{companyNo,jdbcType=VARCHAR}, #{state,jdbcType=SMALLINT}, 
       #{contractMoney,jdbcType=NUMERIC}, #{arrearageMoney,jdbcType=NUMERIC}, #{remainingMoney,jdbcType=NUMERIC}, 
       #{directMoney,jdbcType=NUMERIC}, #{goodsMoney,jdbcType=NUMERIC}, #{shopName,jdbcType=VARCHAR}, 
       #{shopNo,jdbcType=VARCHAR}, #{provinceCompanyName,jdbcType=VARCHAR}, #{provinceCompanyNo,jdbcType=VARCHAR}, 
       #{substationName,jdbcType=VARCHAR}, #{substationNo,jdbcType=VARCHAR}, #{subjectName,jdbcType=VARCHAR}, 
-      #{subjectNo,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}
-      )
+      #{subjectNo,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{disposableMoney,jdbcType=NUMERIC})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.FundsCompanyCash">
     <!--
@@ -227,6 +228,9 @@
       <if test="type != null">
         type,
       </if>
+      <if test="disposableMoney != null">
+        disposable_money,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -282,6 +286,9 @@
       </if>
       <if test="type != null">
         #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="disposableMoney != null">
+        #{disposableMoney,jdbcType=NUMERIC},
       </if>
     </trim>
   </insert>
@@ -356,6 +363,9 @@
       <if test="record.type != null">
         type = #{record.type,jdbcType=VARCHAR},
       </if>
+      <if test="record.disposableMoney != null">
+        disposable_money = #{record.disposableMoney,jdbcType=NUMERIC},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -384,7 +394,8 @@
       subject_name = #{record.subjectName,jdbcType=VARCHAR},
       subject_no = #{record.subjectNo,jdbcType=VARCHAR},
       company_name = #{record.companyName,jdbcType=VARCHAR},
-      type = #{record.type,jdbcType=VARCHAR}
+      type = #{record.type,jdbcType=VARCHAR},
+      disposable_money = #{record.disposableMoney,jdbcType=NUMERIC}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -447,6 +458,9 @@
       <if test="type != null">
         type = #{type,jdbcType=VARCHAR},
       </if>
+      <if test="disposableMoney != null">
+        disposable_money = #{disposableMoney,jdbcType=NUMERIC},
+      </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
@@ -472,7 +486,8 @@
       subject_name = #{subjectName,jdbcType=VARCHAR},
       subject_no = #{subjectNo,jdbcType=VARCHAR},
       company_name = #{companyName,jdbcType=VARCHAR},
-      type = #{type,jdbcType=VARCHAR}
+      type = #{type,jdbcType=VARCHAR},
+      disposable_money = #{disposableMoney,jdbcType=NUMERIC}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.contract;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,8 +17,10 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.constants.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,19 +39,6 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.event.MarginContractEvent;
-import cn.thinkfree.database.mapper.CityMapper;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.CompanyPaymentMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
-import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
-import cn.thinkfree.database.mapper.ContractTermsChildMapper;
-import cn.thinkfree.database.mapper.ContractTermsMapper;
-import cn.thinkfree.database.mapper.DesignerOrderMapper;
-import cn.thinkfree.database.mapper.MyContractInfoMapper;
-import cn.thinkfree.database.mapper.OrderContractMapper;
-import cn.thinkfree.database.mapper.PcAuditInfoMapper;
-import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.mapper.ProvinceMapper;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
@@ -70,6 +60,9 @@ import cn.thinkfree.service.utils.PdfUplodUtils;
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
 	@Autowired
 	MyContractInfoMapper contractInfoMapper;
+
+	@Autowired
+	ContractInfoMapper contractJiangInfoMapper;
 
 	@Autowired
 	ContractInfoMapper cxcontractInfoMapper;
@@ -135,25 +128,61 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
 	ConstructionStateServiceB constructionStateServiceB;
 
+	@Autowired
+	BranchCompanyService branchCompanyService;
+
+	@Autowired
+	FundsCompanyCashMapper fundsCompanyCashMapper;
+
 
 	@Override
-	public boolean saveCash(String contractNumber, String money) {
+	public boolean saveCash(String contractNumber, String money,String disposableMoney) {
 		if(StringUtils.isBlank(contractNumber)){
 			return false;
 		}
 		ContractInfoExample example = new ContractInfoExample();
 		example.createCriteria().andContractNumberEqualTo(contractNumber);
-		List<ContractInfo> contractInfo = contractInfoMapper.selectByExample(example);
+		List<ContractInfo> contractInfo = contractJiangInfoMapper.selectByExample(example);
 		if(contractInfo.size() == 1){
 			CompanyInfoVo companyInfoVo = companyInfoMapper.selectByCompanyId(contractInfo.get(0).getCompanyId());
 			if(companyInfoVo == null){
 				return false;
 			}
 			  //todo 添加保证金记录
-		}else{
-			return false;
+			FundsCompanyCash fundsCompanyCash = new FundsCompanyCash();
+			// 保证金
+			BigDecimal promissMony = StringUtils.isNotBlank(money)?BigDecimal.valueOf(Integer.valueOf(money)):new BigDecimal(0);
+			fundsCompanyCash.setRemainingMoney(promissMony);
+			BigDecimal defaultMony = new BigDecimal(0);
+			fundsCompanyCash.setArrearageMoney(promissMony);
+			fundsCompanyCash.setContractMoney(defaultMony);
+			fundsCompanyCash.setDirectMoney(defaultMony);
+			fundsCompanyCash.setGoodsMoney(defaultMony);
+			fundsCompanyCash.setDisposableMoney(StringUtils.isNotBlank(disposableMoney)?BigDecimal.valueOf(Integer.valueOf(disposableMoney)):new BigDecimal(0));
+			// 公司id不为空获取门店id，名称，公司id，名称。经营主体编号，名称。
+			if (StringUtils.isNotBlank(companyInfoVo.getCompanyId())) {
+				EnterCompanyOrganizationVO enterCompanyOrganizationVO = branchCompanyService.getCompanyOrganizationByCompanyId(companyInfoVo.getCompanyId());
+				if (enterCompanyOrganizationVO != null) {
+
+					// 门店
+					fundsCompanyCash.setShopName(enterCompanyOrganizationVO.getStoreNm());
+					fundsCompanyCash.setShopNo(enterCompanyOrganizationVO.getStoreId());
+					// 分公司
+					fundsCompanyCash.setProvinceCompanyName(enterCompanyOrganizationVO.getBranchCompanyNm());
+					fundsCompanyCash.setProvinceCompanyNo(enterCompanyOrganizationVO.getBranchCompanyCode());
+					// 经营主体
+					fundsCompanyCash.setSubjectName(enterCompanyOrganizationVO.getBusinessEntityNm());
+					fundsCompanyCash.setSubjectNo(enterCompanyOrganizationVO.getBusinessEntityCode());
+					// 城市分站
+					fundsCompanyCash.setSubstationName(enterCompanyOrganizationVO.getCityBranchNm());
+					fundsCompanyCash.setSubstationNo(enterCompanyOrganizationVO.getCityBranchCode());
+				}
+			}
+			int result = fundsCompanyCashMapper.insertSelective(fundsCompanyCash);
+			if (result >0 ) {
+				return true;
+			}
 		}
-		FundsCompanyCash fundsCompanyCash = new FundsCompanyCash();
 		return false;
 	}
 
