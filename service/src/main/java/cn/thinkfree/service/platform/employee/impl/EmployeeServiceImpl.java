@@ -41,10 +41,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private BasicsService basicsService;
 
     @Override
-    public void reviewEmployee(String userId, int authState, String companyId) {
-        checkCompanyExit(companyId);
+    public void reviewEmployee(String userId, int authState) {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andUserIdEqualTo(userId).andCompanyIdEqualTo(companyId);
+        msgExample.createCriteria().andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         if (employeeMsgs.isEmpty()) {
             throw new RuntimeException("没有查询到该员工");

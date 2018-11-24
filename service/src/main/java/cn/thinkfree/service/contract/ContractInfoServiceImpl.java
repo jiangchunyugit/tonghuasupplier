@@ -156,11 +156,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			  //todo 添加保证金记录
 			FundsCompanyCash fundsCompanyCash = new FundsCompanyCash();
 			// 保证金
-			BigDecimal promissMony = StringUtils.isNotBlank(money)?BigDecimal.valueOf(Integer.valueOf(money)):new BigDecimal(0);
-			fundsCompanyCash.setRemainingMoney(promissMony);
 			BigDecimal defaultMony = new BigDecimal(0);
+			BigDecimal promissMony = StringUtils.isNotBlank(money)?BigDecimal.valueOf(Integer.valueOf(money)):new BigDecimal(0);
+			fundsCompanyCash.setRemainingMoney(defaultMony);
 			fundsCompanyCash.setArrearageMoney(promissMony);
-			fundsCompanyCash.setContractMoney(defaultMony);
+			fundsCompanyCash.setContractMoney(promissMony);
 			fundsCompanyCash.setDirectMoney(defaultMony);
 			fundsCompanyCash.setGoodsMoney(defaultMony);
 			fundsCompanyCash.setDisposableMoney(StringUtils.isNotBlank(disposableMoney)?BigDecimal.valueOf(Integer.valueOf(disposableMoney)):new BigDecimal(0));
@@ -181,6 +181,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					// 城市分站
 					fundsCompanyCash.setSubstationName(enterCompanyOrganizationVO.getCityBranchNm());
 					fundsCompanyCash.setSubstationNo(enterCompanyOrganizationVO.getCityBranchCode());
+
+					// 公司名称
+					fundsCompanyCash.setCompanyName(companyInfoVo.getCompanyName());
+					fundsCompanyCash.setCompanyNo(companyInfoVo.getCompanyId());
+					fundsCompanyCash.setType(companyInfoVo.getRoleId());
 				}
 			}
 			int result = fundsCompanyCashMapper.insertSelective(fundsCompanyCash);

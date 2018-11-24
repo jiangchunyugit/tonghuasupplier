@@ -17,9 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Max;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -39,6 +37,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
     @Autowired
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
+
     /**
      * 查询当前状态
      *
@@ -53,6 +52,26 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
         return RespData.success(stateInfo);
+    }
+
+    /**
+     * 查询当前状态/付款施工详细阶段
+     *
+     * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
+     * @return
+     */
+    @Override
+    public MyRespBundle<Map<String,String>>getStateDetailInfo(String orderNo, int type) {
+        if (StringUtils.isBlank(orderNo)) {
+            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+        }
+        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
+        String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
+        String stateDetailInfo = commonService.queryStateCodeDetailByOrderNo(orderNo);
+        Map<String,String> map = new HashMap<>();
+        map.put("bigStage",stateInfo);
+        map.put("detailStage",stateDetailInfo);
+        return RespData.success(map);
     }
 
     /**
@@ -168,7 +187,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 支付
      */
     @Override
-    public MyRespBundle<String> customerPay(String orderNo, String feeName, String sort, String isEnd) {
+    public MyRespBundle<String> customerPay(String orderNo, String feeName, Integer sort, String isEnd) {
         if (StringUtils.isBlank(orderNo)) {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
@@ -182,21 +201,21 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         if (list.size() > 0) {
             ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
             constructionOrderPay.setFeeName(feeName);
-            constructionOrderPay.setSort(sort);
+            constructionOrderPay.setSort(sort.shortValue());
             constructionOrderPay.setIsEnd(isEnd);
             constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, example);
         } else {
             ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
             constructionOrderPay.setOrderNo(orderNo);
             constructionOrderPay.setFeeName(feeName);
-            constructionOrderPay.setSort(sort);
+            constructionOrderPay.setSort(sort.shortValue());
             constructionOrderPay.setIsEnd(isEnd);
             constructionOrderPayMapper.insertSelective(constructionOrderPay);
         }
 
         switch (isEnd) {
             case "0":
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_630.getState());
                 break;
             case "1":
                 commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState());
@@ -215,7 +234,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * 施工阶段方案
      */
     @Override
-    public MyRespBundle<String> constructionPlan(String projectNo, String sort, String isEnd) {
+    public MyRespBundle<String> constructionPlan(String projectNo, Integer sort, String isEnd) {
 
         if (StringUtils.isBlank(projectNo)) {
             return RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
@@ -245,7 +264,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
 
             //查询当前施工阶段
             ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
-            example2.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo()).andSortEqualTo(Integer.parseInt(sort));
+            example2.createCriteria().andSchemeNoEqualTo(constructionOrder.getSchemeNo()).andSortEqualTo(sort);
             List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
             //开工报告 传值0
             if (schedulingList2.size() > 0){
@@ -271,10 +290,10 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             exampleC.createCriteria().andOrderNoEqualTo(constructionOrder.getOrderNo());
             List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(exampleC);
             if (list.size() > 0) {
-                constructionOrderPay.setSort(sort);
+                constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, exampleC);
             } else {
-                constructionOrderPay.setSort(sort);
+                constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPayMapper.insertSelective(constructionOrderPay);
             }
             // 更改状态
