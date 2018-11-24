@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -342,6 +343,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				firstMoney = eval.apply(firstMoneyVO);
 			}
 			saveCash(contractNumber,fullMoney,firstMoney);
+			eventService.publish(new CreateOrder(contractNumber));
 		}
 
 
