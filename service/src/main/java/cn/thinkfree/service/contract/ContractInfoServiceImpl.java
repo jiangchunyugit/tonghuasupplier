@@ -228,31 +228,25 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
      */
     @Override
     @Transactional
-    public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase )
-    {
+    public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase ) {
         Date date = new Date();
         /* 修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝 */
         ContractVo vo = new ContractVo();
         vo.setCompanyId( companyId );
         vo.setContractNumber( contractNumber );
-        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) ) /*  */
-        {
-            vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
-        } else {
-            vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
-        }
+
         /* 修改公司表 */
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCompanyId( companyId );
 
-        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) )   /* 财务审核通过 */
-        {
-            companyInfo.setAuditStatus( CompanyAuditStatus.SUCCESSCHECK.stringVal() );
+        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal())){  /* 财务审核通过 */
+			companyInfo.setAuditStatus( CompanyAuditStatus.SUCCESSCHECK.stringVal() );
             /* 财务审核通过生成合同 */
             String pdfUrl = this.createContractDoc( contractNumber );
-            vo.setContractUrl( pdfUrl );
             String signedTime = DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss");
+            vo.setContractUrl( pdfUrl );
             vo.setSignedTime(signedTime);
+			vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
             try {
             	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
@@ -260,14 +254,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
 			}
            
-        } else {                                                        /* 财务审核不通过 */
+        } else {
+        	/* 财务审核不通过 */
+			vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
             companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
         }
         ContractInfoExample example = new ContractInfoExample();
         example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
         ContractInfo contractInfo = new ContractInfo();
-        contractInfo.setContractStatus( vo.getContractStatus() );
-        contractInfo.setContractUrl( vo.getContractUrl() );
+        contractInfo.setContractStatus(vo.getContractStatus());
+        contractInfo.setContractUrl(vo.getContractUrl());
         int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
         int flagT = companyInfoMapper.updateauditStatus( companyInfo );
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
@@ -278,8 +274,23 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
                 contractNumber, date, auditAccount);
         int flagon = pcAuditInfoMapper.insertSelective( record );
 
-        if ( flag > 0 && flagT > 0 && flagon > 0 )
-        {
+        // TODO 初始化保证金流水
+		String firstMoney = "0";
+		if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+			String firstMoneyCode = "c16";
+			ContractTermsExample contractTermsExample = new ContractTermsExample();
+			contractTermsExample.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
+					.andContractDictCodeEqualTo(firstMoneyCode);
+			List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+			if (contractTerms != null && contractTerms.size() == 1){
+				// 数据异常是否丢弃
+				firstMoney = contractTerms.get(0).getContractValue();
+			}
+		}
+
+
+
+        if ( flag > 0 && flagT > 0 && flagon > 0 ) {
             return true;
         }
 
