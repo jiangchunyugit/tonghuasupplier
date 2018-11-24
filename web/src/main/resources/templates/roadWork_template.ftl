@@ -299,11 +299,24 @@
                 <span>（1）签约平台合作合同时一次性缴纳<p class="placeholderK">${c17}</p>万的质量保证金，</span>
             </td>
         </tr>
-        <tr>
-            <td>
-                <span>（2）承接施工平台合同每个合同再扣除合同额的<p class="placeholderK">${c19}</p>%</span>
-            </td>
-        </tr>
+       <#list code02 as c>
+
+            <tr>
+                <td>
+                   <span> 
+                   
+                   ${c.costName}<p class="placeholderK">${c.costValue}</p>
+                    <#if c.cType == 0>
+                    %
+                    </#if>
+                    <#if c.cType == 1>
+                                                                       元
+                    </#if>
+                    </span>
+                </td>
+            </tr>
+
+        </#list>
     </table>
     <section>
         作为施工质量保证、施工服务保证、售后服务保证和其他违规处罚的担保。在合作期间内，因质量、维修、处罚等原因使用而减少合同保证金的，乙方应及时补足
@@ -332,7 +345,7 @@
     </section>
     <table>
 
-        <#list code03 as c>
+        <#list code02 as c>
 
             <tr>
                 <td>

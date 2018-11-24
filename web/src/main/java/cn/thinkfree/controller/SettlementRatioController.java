@@ -205,7 +205,7 @@ public class SettlementRatioController extends AbsBaseController {
     @GetMapping("/getRatiloListByCostType")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算比例名称")
-    public MyRespBundle<List<String>> getRatiloListByCostType(String CostType){
+    public MyRespBundle<List<String>> getRatiloListByCostType(@ApiParam("结算比例code")@RequestParam  String CostType){
 
     	List<String>  result= settlementRatioService.getRatiloList(CostType);
 
