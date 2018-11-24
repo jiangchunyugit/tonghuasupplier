@@ -51,7 +51,7 @@ public interface AfInstanceService {
      * @param option 用户选择
      * @param remark 备注
      */
-    void approval(String instanceNo, String userId, Integer option, String remark);
+    Integer approval(String instanceNo, String userId, Integer option, String remark);
 
     /**
      * 获取审批流实例列表

@@ -428,7 +428,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     @Override
-    public void approval(String instanceNo, String userId, Integer option, String remark) {
+    public Integer approval(String instanceNo, String userId, Integer option, String remark) {
+
+        Integer instanceStatus = AfConstants.APPROVAL_STATUS_START;
+
         if (option != AfConstants.OPTION_REFUSAL && option != AfConstants.OPTION_AGREE) {
             LOGGER.error("未传入正确的参数，option:{}", option);
             throw new CommonException(500, "未传入正确的参数");
@@ -471,19 +474,23 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
                 instance.setCurrentApprovalLogNo(null);
                 executeSuccessAction(instance);
+                instanceStatus = AfConstants.APPROVAL_STATUS_SUCCESS;
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
                 sendMessageToNext(instance.getProjectNo(), userId, nextApprovalLog.getUserId());
+                instanceStatus = AfConstants.APPROVAL_STATUS_START;
             }
         } else {
             // 不同意
             approvalLog.setOption(option);
             instance.setStatus(AfConstants.APPROVAL_STATUS_FAIL);
             instance.setCurrentApprovalLogNo(null);
+            instanceStatus = AfConstants.APPROVAL_STATUS_FAIL;
         }
 
         updateByPrimaryKey(instance);
         approvalLogService.updateByPrimaryKey(approvalLog);
+        return instanceStatus;
     }
 
     /**
