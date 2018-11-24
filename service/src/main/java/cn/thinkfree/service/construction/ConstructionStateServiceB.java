@@ -3,6 +3,8 @@ package cn.thinkfree.service.construction;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.vo.ConstructionStateVo;
 
+import java.util.Map;
+
 /**
  * 施工状态
  */
@@ -15,6 +17,14 @@ public interface ConstructionStateServiceB {
      * @return
      */
     MyRespBundle<String> getStateInfo(String orderNo, int type);
+
+    /**
+     * 查询当前状态/付款施工详细阶段
+     *
+     * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
+     * @return
+     */
+    MyRespBundle<Map<String,String>> getStateDetailInfo(String orderNo, int type);
 
     /**
      * 运营平台

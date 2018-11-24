@@ -48,6 +48,15 @@ public class ConstructionStateController extends AbsBaseController {
         return constructionStateServiceB.getStateInfo(orderNo,type);
     }
 
+    @ApiOperation("查询当前详细阶段状态(支付/施工)")
+    @MyRespBody
+    @RequestMapping(value = "getStateDetail", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<Map<String,String>> getStateDetail(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
+                                         @RequestParam @ApiParam(value = "1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态",required = true) int type) {
+
+        return constructionStateServiceB.getStateDetailInfo(orderNo,type);
+    }
+
 
     @ApiOperation("运营平台-派单给装饰公司")
     @MyRespBody
