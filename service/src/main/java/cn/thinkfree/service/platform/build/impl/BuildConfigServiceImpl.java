@@ -14,6 +14,8 @@ import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,8 @@ import java.util.Map;
  */
 @Service
 public class BuildConfigServiceImpl implements BuildConfigService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BuildConfigServiceImpl.class);
 
     @Autowired
     private BuildSchemeConfigMapper schemeConfigMapper;
@@ -134,10 +138,28 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     public PageVo<List<BuildPayConfig>> payConfigBySchemeNo(String schemeNo, int pageSize, int pageIndex) {
         checkScheme(schemeNo);
         BuildPayConfigExample configExample = new BuildPayConfigExample();
-        configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateEqualTo(2);
+        List<Integer> deleteStates = new ArrayList<>();
+        deleteStates.add(2);
+        deleteStates.add(3);
+        configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(deleteStates);
+        configExample.setOrderByClause(" create_time asc");
         long total = payConfigMapper.countByExample(configExample);
         PageHelper.startPage(pageIndex - 1, pageSize);
         List<BuildPayConfig> payConfigs = payConfigMapper.selectByExample(configExample);
+        if (total == 0) {
+            if (payConfigs == null) {
+                payConfigs = new ArrayList<>();
+            }
+            BuildPayConfig buildPayConfig = new BuildPayConfig();
+            buildPayConfig.setSchemeNo(schemeNo);
+            buildPayConfig.setPaySchemeNo(OrderNoUtils.getNo("BUC"));
+            buildPayConfig.setProgressName("线下签约完成");
+            buildPayConfig.setStageCode("待支付收款");
+            buildPayConfig.setRemark("线下签约完成");
+            buildPayConfig.setDeleteState(3);
+
+            payConfigs.add(buildPayConfig);
+        }
         PageVo<List<BuildPayConfig>> pageVo = new PageVo<>();
         pageVo.setPageSize(pageSize);
         pageVo.setPageIndex(pageIndex);
@@ -184,6 +206,14 @@ public class BuildConfigServiceImpl implements BuildConfigService {
 
     @Override
     public void delPayConfig(String paySchemeNo) {
+        BuildPayConfig buildPayConfig = payConfigMapper.selectByPrimaryKey(paySchemeNo);
+        if (buildPayConfig != null) {
+            if (buildPayConfig.getDeleteState() == 3) {
+                LOGGER.error("支付方案不可删除，paySchemeNo:{}", paySchemeNo);
+                throw new RuntimeException("此支付方案不可删除！");
+            }
+        }
+
         BuildPayConfig payConfig = new BuildPayConfig();
         payConfig.setPaySchemeNo(paySchemeNo);
         payConfig.setDeleteState(1);
