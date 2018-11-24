@@ -61,7 +61,7 @@
         and company_name = #{branchCompanyName}
       </if>
       <if test="legalName != null and legalName != ''">
-        and (legal_name like #{legalName} OR legal_phone = #{legalName})
+        and (legal_name like #{legalName} OR legal_phone like #{legalName})
       </if>
       <if test="isEnable != null ">
         and is_enable = #{isEnable}

@@ -322,7 +322,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
             constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
-            constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
+//            constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
 //        constructionOrderDetailVo.setPlayTask("提交设计资料");
 //        constructionOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
             Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());

@@ -30,6 +30,15 @@ public interface UserCenterService {
     List<UserMsgVo> queryUserMsg(String userMsg);
 
     /**
+     * 模糊查询业主信息
+     *
+     * @param userName
+     * @param phone
+     * @return
+     */
+    List<UserMsgVo> queryUserMsg(String userName, String phone);
+
+    /**
      * 根据用户id查询用户信息
      *
      * @param userIds

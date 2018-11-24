@@ -1,6 +1,7 @@
 package cn.thinkfree.service.contract;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,10 +14,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.constants.*;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,43 +43,6 @@ import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.event.MarginContractEvent;
-import cn.thinkfree.database.mapper.CityMapper;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.CompanyPaymentMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
-import cn.thinkfree.database.mapper.ContractTemplateDictMapper;
-import cn.thinkfree.database.mapper.ContractTermsChildMapper;
-import cn.thinkfree.database.mapper.ContractTermsMapper;
-import cn.thinkfree.database.mapper.DesignerOrderMapper;
-import cn.thinkfree.database.mapper.MyContractInfoMapper;
-import cn.thinkfree.database.mapper.OrderContractMapper;
-import cn.thinkfree.database.mapper.PcAuditInfoMapper;
-import cn.thinkfree.database.mapper.PcCompanyFinancialMapper;
-import cn.thinkfree.database.mapper.ProvinceMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyInfoExample;
-import cn.thinkfree.database.model.CompanyPayment;
-import cn.thinkfree.database.model.ContractInfo;
-import cn.thinkfree.database.model.ContractInfoExample;
-import cn.thinkfree.database.model.ContractTemplateDict;
-import cn.thinkfree.database.model.ContractTemplateDictExample;
-import cn.thinkfree.database.model.ContractTerms;
-import cn.thinkfree.database.model.ContractTermsChild;
-import cn.thinkfree.database.model.ContractTermsChildExample;
-import cn.thinkfree.database.model.ContractTermsExample;
-import cn.thinkfree.database.model.DesignerOrder;
-import cn.thinkfree.database.model.DesignerOrderExample;
-import cn.thinkfree.database.model.OrderContract;
-import cn.thinkfree.database.model.OrderContractExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditInfoExample;
-import cn.thinkfree.database.model.PcCompanyFinancial;
-import cn.thinkfree.database.model.PcCompanyFinancialExample;
-import cn.thinkfree.database.vo.CompanySubmitVo;
-import cn.thinkfree.database.vo.ContractClauseVO;
-import cn.thinkfree.database.vo.ContractSEO;
-import cn.thinkfree.database.vo.ContractVo;
-import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
@@ -92,6 +64,9 @@ import cn.thinkfree.service.utils.PdfUplodUtils;
 public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractService {
 	@Autowired
 	MyContractInfoMapper contractInfoMapper;
+
+	@Autowired
+	ContractInfoMapper contractJiangInfoMapper;
 
 	@Autowired
 	ContractInfoMapper cxcontractInfoMapper;
@@ -157,7 +132,63 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
 	ConstructionStateServiceB constructionStateServiceB;
 
+	@Autowired
+	BranchCompanyService branchCompanyService;
 
+	@Autowired
+	FundsCompanyCashMapper fundsCompanyCashMapper;
+
+
+	@Override
+	public boolean saveCash(String contractNumber, String money,String disposableMoney) {
+		if(StringUtils.isBlank(contractNumber)){
+			return false;
+		}
+		ContractInfoExample example = new ContractInfoExample();
+		example.createCriteria().andContractNumberEqualTo(contractNumber);
+		List<ContractInfo> contractInfo = contractJiangInfoMapper.selectByExample(example);
+		if(contractInfo.size() == 1){
+			CompanyInfoVo companyInfoVo = companyInfoMapper.selectByCompanyId(contractInfo.get(0).getCompanyId());
+			if(companyInfoVo == null){
+				return false;
+			}
+			  //todo 添加保证金记录
+			FundsCompanyCash fundsCompanyCash = new FundsCompanyCash();
+			// 保证金
+			BigDecimal promissMony = StringUtils.isNotBlank(money)?BigDecimal.valueOf(Integer.valueOf(money)):new BigDecimal(0);
+			fundsCompanyCash.setRemainingMoney(promissMony);
+			BigDecimal defaultMony = new BigDecimal(0);
+			fundsCompanyCash.setArrearageMoney(promissMony);
+			fundsCompanyCash.setContractMoney(defaultMony);
+			fundsCompanyCash.setDirectMoney(defaultMony);
+			fundsCompanyCash.setGoodsMoney(defaultMony);
+			fundsCompanyCash.setDisposableMoney(StringUtils.isNotBlank(disposableMoney)?BigDecimal.valueOf(Integer.valueOf(disposableMoney)):new BigDecimal(0));
+			// 公司id不为空获取门店id，名称，公司id，名称。经营主体编号，名称。
+			if (StringUtils.isNotBlank(companyInfoVo.getCompanyId())) {
+				EnterCompanyOrganizationVO enterCompanyOrganizationVO = branchCompanyService.getCompanyOrganizationByCompanyId(companyInfoVo.getCompanyId());
+				if (enterCompanyOrganizationVO != null) {
+
+					// 门店
+					fundsCompanyCash.setShopName(enterCompanyOrganizationVO.getStoreNm());
+					fundsCompanyCash.setShopNo(enterCompanyOrganizationVO.getStoreId());
+					// 分公司
+					fundsCompanyCash.setProvinceCompanyName(enterCompanyOrganizationVO.getBranchCompanyNm());
+					fundsCompanyCash.setProvinceCompanyNo(enterCompanyOrganizationVO.getBranchCompanyCode());
+					// 经营主体
+					fundsCompanyCash.setSubjectName(enterCompanyOrganizationVO.getBusinessEntityNm());
+					fundsCompanyCash.setSubjectNo(enterCompanyOrganizationVO.getBusinessEntityCode());
+					// 城市分站
+					fundsCompanyCash.setSubstationName(enterCompanyOrganizationVO.getCityBranchNm());
+					fundsCompanyCash.setSubstationNo(enterCompanyOrganizationVO.getCityBranchCode());
+				}
+			}
+			int result = fundsCompanyCashMapper.insertSelective(fundsCompanyCash);
+			if (result >0 ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	@Override
 	public PageInfo<ContractVo> pageContractBySEO( ContractSEO contractSEO )
@@ -230,31 +261,25 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
      */
     @Override
     @Transactional
-    public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase )
-    {
+    public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase ) {
         Date date = new Date();
         /* 修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝 */
         ContractVo vo = new ContractVo();
         vo.setCompanyId( companyId );
         vo.setContractNumber( contractNumber );
-        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) ) /*  */
-        {
-            vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
-        } else {
-            vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
-        }
+
         /* 修改公司表 */
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCompanyId( companyId );
 
-        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal() ) )   /* 财务审核通过 */
-        {
-            companyInfo.setAuditStatus( CompanyAuditStatus.SUCCESSCHECK.stringVal() );
+        if ( auditStatus.equals( AuditStatus.AuditPass.shortVal())){  /* 财务审核通过 */
+			companyInfo.setAuditStatus( CompanyAuditStatus.SUCCESSCHECK.stringVal() );
             /* 财务审核通过生成合同 */
             String pdfUrl = this.createContractDoc( contractNumber );
-            vo.setContractUrl( pdfUrl );
             String signedTime = DateUtil.formartDate(new Date(),"yyyy-MM-dd HH:mm:ss");
+            vo.setContractUrl( pdfUrl );
             vo.setSignedTime(signedTime);
+			vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
             try {
             	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
@@ -262,14 +287,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
 			}
            
-        } else {                                                        /* 财务审核不通过 */
+        } else {
+        	/* 财务审核不通过 */
+			vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
             companyInfo.setAuditStatus( CompanyAuditStatus.FAILCHECK.stringVal() );
         }
         ContractInfoExample example = new ContractInfoExample();
         example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
         ContractInfo contractInfo = new ContractInfo();
-        contractInfo.setContractStatus( vo.getContractStatus() );
-        contractInfo.setContractUrl( vo.getContractUrl() );
+        contractInfo.setContractStatus(vo.getContractStatus());
+        contractInfo.setContractUrl(vo.getContractUrl());
         int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
         int flagT = companyInfoMapper.updateauditStatus( companyInfo );
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
@@ -280,8 +307,46 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
                 contractNumber, date, auditAccount);
         int flagon = pcAuditInfoMapper.insertSelective( record );
 
-        if ( flag > 0 && flagT > 0 && flagon > 0 )
-        {
+        // TODO 初始化保证金流水
+		if(auditStatus.equals( AuditStatus.AuditPass.shortVal())){
+			String fullMoney = "0";
+			String firstMoney = "0";
+
+			ContractTermsExample contractTermsExample = new ContractTermsExample();
+			ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
+					.andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+
+			Function<Optional<ContractTerms>,String> eval = c-> c.isPresent() ? c.get().getContractValue() : "0";
+			BiFunction<Stream<ContractTerms>,String,Optional<ContractTerms>> filter =(list,code)-> list
+					.filter(c -> code.equalsIgnoreCase(c.getContractDictCode())).findFirst();
+
+			if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+				String fullMoneyCode = "c15";
+				String firstMoneyCode = "c16";
+				criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
+				List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+				Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				fullMoney = eval.apply(fullMoneyVO);
+				Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				firstMoney = eval.apply(firstMoneyVO);
+
+			}else if("BDHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+				String fullMoneyCode = "c17";
+				String firstMoneyCode = "c18";
+				criteria.andContractDictCodeIn(Lists.newArrayList(fullMoneyCode,firstMoneyCode));
+				List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+
+				Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				fullMoney = eval.apply(fullMoneyVO);
+				Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
+				firstMoney = eval.apply(firstMoneyVO);
+			}
+			saveCash(contractNumber,fullMoney,firstMoney);
+		}
+
+
+
+        if ( flag > 0 && flagT > 0 && flagon > 0 ) {
             return true;
         }
 
@@ -960,12 +1025,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			 resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
 			 return resMap;
 		 }
-		 
+		 String companyId = oderlist.get(0).getCompanyId();
 		try {
-			String companyId = oderlist.get(0).getCompanyId();
+			
 			/* 插入合同主表 */
 			String contractNumber = this.createOrderContract(companyId, orderNumber, "02" );
 			/* 插入合同iterm 详情 */
+			Map<String,Object> root = new HashMap<>();
 			if ( paramMap != null )
 			{
 				Iterator<Map.Entry<String, String> > entries = paramMap.entrySet().iterator();
@@ -987,10 +1053,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					.andContractNumberEqualTo( contractNumber );
 					pcContractTermsMapper.deleteByExample( exp );
 					pcContractTermsMapper.insertSelective( terms );
+					root.put(key,value);
 				}
 			}
 			//生成pdf
-			 //this.createOrderContractpdf(orderNumber);
+			 this.createOrderContractpdf(orderNumber,companyId , root);
 			 resMap.put("code", "true");
 			 resMap.put("msg", "合同录入成功");
 			 return resMap;

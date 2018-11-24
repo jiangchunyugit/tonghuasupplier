@@ -227,6 +227,46 @@ public class UserCenterServiceImpl implements UserCenterService {
     }
 
     @Override
+    public List<UserMsgVo> queryUserMsg(String nickName, String phone) {
+        if(StringUtils.isBlank(nickName) && StringUtils.isBlank(phone)){
+            return new ArrayList<>();
+        }
+        Map<String, String> queryUserParams = new HashMap<>();
+        if (StringUtils.isNotBlank(phone)) {
+            queryUserParams.put("phone", phone);
+        }
+        if (StringUtils.isNotBlank(nickName)) {
+            queryUserParams.put("nickName", nickName);
+        }
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserByPhoneAndName), HttpUtils.mapToParams(queryUserParams));
+        if (httpRespMsg.getResponseCode() != 200) {
+            //用户中心服务异常
+            return new ArrayList<>();
+        }
+        JSONObject jsonObject = JSONObject.parseObject(httpRespMsg.getContent());
+        if (!"1000".equals(jsonObject.getString("code"))) {
+            return new ArrayList<>();
+        }
+        JSONArray array = jsonObject.getJSONArray("data");
+        List<UserMsgVo> userMsgVos = new ArrayList<>();
+        for (int i = 0; i < array.size(); i++) {
+            JSONObject userObj = array.getJSONObject(i);
+            String userName = userObj.getString("nickName");
+            String userPhone = userObj.getString("phone");
+            String headPortraits = userObj.getString("headPortraits");
+            String consumerId = userObj.getString("consumerId");
+            String staffId = userObj.getString("staffId");
+            if (StringUtils.isBlank(consumerId)) {
+                continue;
+            }
+            UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
+            msgVo.setStaffId(staffId);
+            userMsgVos.add(msgVo);
+        }
+        return userMsgVos;
+    }
+
+    @Override
     public List<UserMsgVo> queryUserMsg(String userMsg) {
         long phone;
         try {
@@ -257,10 +297,13 @@ public class UserCenterServiceImpl implements UserCenterService {
             String userPhone = userObj.getString("phone");
             String headPortraits = userObj.getString("headPortraits");
             String consumerId = userObj.getString("consumerId");
+            String staffId = userObj.getString("staffId");
             if (StringUtils.isBlank(consumerId)) {
                 continue;
             }
-            userMsgVos.add(new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits));
+            UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
+            msgVo.setStaffId(staffId);
+            userMsgVos.add(msgVo);
         }
         return userMsgVos;
     }
