@@ -9,7 +9,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
     <result column="fee_name" jdbcType="VARCHAR" property="feeName" />
-    <result column="sort" jdbcType="VARCHAR" property="sort" />
+    <result column="sort" jdbcType="SMALLINT" property="sort" />
     <result column="is_end" jdbcType="VARCHAR" property="isEnd" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
   </resultMap>
@@ -141,7 +141,7 @@
       sort, is_end, remark
       )
     values (#{id,jdbcType=INTEGER}, #{orderNo,jdbcType=VARCHAR}, #{feeName,jdbcType=VARCHAR}, 
-      #{sort,jdbcType=VARCHAR}, #{isEnd,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
+      #{sort,jdbcType=SMALLINT}, #{isEnd,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.ConstructionOrderPay">
@@ -181,7 +181,7 @@
         #{feeName,jdbcType=VARCHAR},
       </if>
       <if test="sort != null">
-        #{sort,jdbcType=VARCHAR},
+        #{sort,jdbcType=SMALLINT},
       </if>
       <if test="isEnd != null">
         #{isEnd,jdbcType=VARCHAR},
@@ -218,7 +218,7 @@
         fee_name = #{record.feeName,jdbcType=VARCHAR},
       </if>
       <if test="record.sort != null">
-        sort = #{record.sort,jdbcType=VARCHAR},
+        sort = #{record.sort,jdbcType=SMALLINT},
       </if>
       <if test="record.isEnd != null">
         is_end = #{record.isEnd,jdbcType=VARCHAR},
@@ -240,7 +240,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       order_no = #{record.orderNo,jdbcType=VARCHAR},
       fee_name = #{record.feeName,jdbcType=VARCHAR},
-      sort = #{record.sort,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=SMALLINT},
       is_end = #{record.isEnd,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR}
     <if test="_parameter != null">
@@ -261,7 +261,7 @@
         fee_name = #{feeName,jdbcType=VARCHAR},
       </if>
       <if test="sort != null">
-        sort = #{sort,jdbcType=VARCHAR},
+        sort = #{sort,jdbcType=SMALLINT},
       </if>
       <if test="isEnd != null">
         is_end = #{isEnd,jdbcType=VARCHAR},
@@ -280,7 +280,7 @@
     update construction_order_pay
     set order_no = #{orderNo,jdbcType=VARCHAR},
       fee_name = #{feeName,jdbcType=VARCHAR},
-      sort = #{sort,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=SMALLINT},
       is_end = #{isEnd,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
