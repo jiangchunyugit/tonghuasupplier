@@ -13,6 +13,7 @@ import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
@@ -22,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.security.util.Resources_sv;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -61,6 +63,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     DesignerOrderMapper designerOrderMapper;
     @Autowired
     NewSchedulingService schedulingService;
+    @Autowired
+    DesignDispatchService designDispatchService;
 
     /**
      * 获取精准报价
@@ -670,27 +674,44 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 }
             }
         }
+        updateProjectStage(projectNo);
+        //创建施工订单
+        try {
+            designDispatchService.createConstructionOrder(projectNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("创建施工订单失败!");
+        }
+        return RespData.success();
+    }
+
+    /**
+     * 修改项目状态
+     * @param projectNo
+     */
+    public void updateProjectStage(String projectNo){
         ConstructionOrderExample example = new ConstructionOrderExample();
         ConstructionOrderExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
         if (constructionOrders.size() == 0) {
-            return RespData.error("查无此施工订单");
+            throw new RuntimeException("查无此施工订单");
         }
-        try {
-            constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RespData.error("修改项目状态失败!");
+        MyRespBundle<String> stringMyRespBundle = constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+        if (!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+            throw new RuntimeException("修改项目状态失败!");
         }
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
+        orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        orderCritera.andProjectNoEqualTo(projectNo);
         DesignerOrder designerOrder = new DesignerOrder();
         designerOrder.setPreviewState(ProjectDataStatus.BASE_STATUS.getValue());
-
         int i = designerOrderMapper.updateByExampleSelective(designerOrder, orderExample);
         if (i == 0) {
-            return RespData.error("修改设计订单预交底状态失败!");
+            throw new RuntimeException("修改设计订单预交底状态失败!");
         }
-        return RespData.success();
     }
+
 }
