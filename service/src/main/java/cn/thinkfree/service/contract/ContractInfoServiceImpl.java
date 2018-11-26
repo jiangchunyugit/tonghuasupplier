@@ -486,8 +486,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
 		record.setDepositMoney(Integer.valueOf(deposistMoney));
 		CompanyInfoExample companyInfoex = new CompanyInfoExample();
-		companyInfoex.createCriteria().andCompanyIdEqualTo( companyId ); /* 确认已交保证金 */
-
+		companyInfoex.createCriteria().andCompanyIdEqualTo( companyId ); 
+		/* 确认已交保证金 */
 		int flag = companyInfoMapper.updateByExampleSelective(record ,companyInfoex );
 		
 		if ( flag > 0 )
@@ -521,59 +521,6 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
-//	private List<Map<String, Object> > getContractInfo( String contractNumber, ContractVo newVo,
-//							    CompanySubmitVo companyInfo )
-//	{
-//		List<Map<String, Object> > resList = new ArrayList<>();
-//
-//		String			ownerCompanyName	= "居然之家";                                               /* 甲方公司名称 */
-//		String			secondCompanyName	= companyInfo.getCompanyInfo().getCompanyName();        /* 乙方公司名称 */
-//		SimpleDateFormat	sdf			= new SimpleDateFormat( "yyyy-MM-dd" );
-//		DateFormat		format1			= new SimpleDateFormat( "yyyy-MM-dd" );
-//		String			formatstartYear[]	= null;
-//		String			formatendYear[]		= null;
-//		try {
-//			formatstartYear = sdf.format( format1.parse( newVo.getStartTime() ) ).split( "-" );
-//			formatendYear	= sdf.format( format1.parse( newVo.getEndTime() ) ).split( "-" );
-//		} catch ( ParseException e ) {
-//			e.printStackTrace();
-//		}
-//		String	startYear	= formatstartYear[0];                           /* 合同开始年 */
-//		String	startmonth	= formatstartYear[1];                           /* 合同开始年 */
-//		String	startsun	= formatstartYear[2];                           /* 合同开始年 */
-//		String	endYear		= formatendYear[0];                             /* 合同结束年 */
-//		String	endtmonth	= formatendYear[1];                             /* 合同结束月 */
-//		String	endsun		= formatendYear[2];                             /* 合同结束日 */
-//		/* 开户户名 */
-//		PcCompanyFinancial accountinfo = pcCompanyFinancialMapper
-//						 .findPcCompanyFinancialByCompanyId( newVo.getCompanyId() );
-//		String	cardName		= accountinfo.getCardName();            /* 开户行名称 */
-//		String	accounBranchName	= accountinfo.getAccountBranchName();   /* 开户银行名称 */
-//		String	accountNumber		= accountinfo.getAccountNumber() + "";  /* 银行卡卡号 */
-//
-//		Map<String, Object> rmap = balanceInfo( contractNumber, newVo.getCompanyId(),
-//							companyInfo.getCompanyInfo().getRoleId() );
-//
-//		Map<String, Object> rep = new HashMap<>();
-//		rep.put( "ownerCompanyName", ownerCompanyName );
-//		rep.put( "secondCompanyName", secondCompanyName );
-//		rep.put( "startYear", startYear );
-//		rep.put( "startmonth", startmonth );
-//		rep.put( "startsun", startsun );
-//		rep.put( "endYear", endYear );
-//		rep.put( "endtmonth", endtmonth );
-//		rep.put( "endsun", endsun );
-//		rep.put( "cardName", cardName );
-//		rep.put( "accounBranchName", accounBranchName );
-//		rep.put( "accountNumber", accountNumber );
-//
-//		resList.add( rmap ); /* 结算比例 */
-//
-//		return(resList);
-//	}
-
-	
-	
 	
 
 	@Override
@@ -997,18 +944,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			record.createCriteria().andOrderNumberEqualTo(orderNumber).andCompanyIdEqualTo(CompanyId);
 			List<OrderContract> list = orderContractMapper.selectByExample(record);
 			OrderContract contrat = list.get(0);
-
-			/*Map<String, Object> root = new HashMap<>();
-			// 查询合同信息
-			ContractTermsExample exp = new ContractTermsExample();
-			exp.createCriteria().andContractNumberEqualTo(contrat.getContractNumber());
-			List<ContractTerms> listTerm = pcContractTermsMapper.selectByExample(exp);
-			for (int i = 0; i < listTerm.size(); i++) {
-				root.put(listTerm.get(i).getContractDictCode(), listTerm.get(i).getContractValue());
-			}
-*/
 			String pdfUrl = "";
-
 			if (contrat.getContractType().equals("02")) {
 
 				try {
