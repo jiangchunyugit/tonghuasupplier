@@ -189,20 +189,20 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
         				  //项目地址
         				  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
         				  //项目编号
-        				  vo.setProjectNo(conorder.get(0)!=null?"":conorder.get(0).getProjectNo());
+        				  vo.setProjectNo(conorder.get(0)==null?"":conorder.get(0).getProjectNo());
         				  //签约时间
         				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
         				  //是否个性化
-        				  vo.setStyleType(conorder.get(0)!=null?"":conorder.get(0).getStyleType());
+        				  vo.setStyleType(conorder.get(0)==null?"":conorder.get(0).getStyleType());
         				  
         				  vo.setSort("");
 
                           listVo.add(vo);
         			  }else{//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
-        				 // String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
+        				// String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
         				 
         				  
-        				  String jsonSr = resMap.get("c20");
+        				 String jsonSr = resMap.get("c20");
         				  if(!StringUtils.isEmpty(jsonSr)){
 	        				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
 	        				  for (int i = 0; i < jsonArray.size(); i++) {
@@ -241,11 +241,11 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  
 	            				  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
 	            				  //项目编号
-	            				  vo.setProjectNo(conorder!=null?"":conorder.get(0).getProjectNo());
+	            				  vo.setProjectNo(conorder==null?"":conorder.get(0).getProjectNo());
 	            				  //签约时间
 	            				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 	            				  //是否个性化
-	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getStyleType());
+	            				  vo.setStyleType(conorder==null?"":conorder.get(0).getStyleType());
 	            				  
 	            				  vo.setSort(""+(i+1));
 
