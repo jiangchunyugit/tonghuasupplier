@@ -322,7 +322,7 @@ public enum DesignStateEnum {
                     stateName = designStateEnum.stateOwner;
                     break;
             }
-            if(stateName == null || stateNames.contains(stateName)){
+            if(stateName == null){
                 continue;
             }
             stateNames.add(stateName);

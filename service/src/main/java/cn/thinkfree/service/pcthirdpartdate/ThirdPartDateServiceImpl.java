@@ -17,6 +17,7 @@ import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.mapper.ContractInfoMapper;
+import cn.thinkfree.database.mapper.ContractTermsChildMapper;
 import cn.thinkfree.database.mapper.ContractTermsMapper;
 import cn.thinkfree.database.mapper.DesignerOrderMapper;
 import cn.thinkfree.database.mapper.OrderContractMapper;
@@ -27,6 +28,8 @@ import cn.thinkfree.database.model.ConstructionOrderExample;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.ContractInfoExample;
 import cn.thinkfree.database.model.ContractTerms;
+import cn.thinkfree.database.model.ContractTermsChild;
+import cn.thinkfree.database.model.ContractTermsChildExample;
 import cn.thinkfree.database.model.ContractTermsExample;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.DesignerOrderExample;
@@ -36,6 +39,7 @@ import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditInfoExample;
 import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
+import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.utils.DateUtil;
 
@@ -73,6 +77,9 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
     
     @Autowired
     NewSchedulingService newSchedulingService;
+    
+    @Autowired
+	ContractTermsChildMapper contractTermsChildMapper;
     
     
     
@@ -182,20 +189,20 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
         				  //项目地址
         				  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
         				  //项目编号
-        				  vo.setProjectNo(conorder.get(0)!=null?"":conorder.get(0).getProjectNo());
+        				  vo.setProjectNo(conorder.get(0)==null?"":conorder.get(0).getProjectNo());
         				  //签约时间
         				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
         				  //是否个性化
-        				  vo.setStyleType(conorder.get(0)!=null?"":conorder.get(0).getStyleType());
+        				  vo.setStyleType(conorder.get(0)==null?"":conorder.get(0).getStyleType());
         				  
         				  vo.setSort("");
 
                           listVo.add(vo);
         			  }else{//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
-        				 // String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
+        				// String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
         				 
         				  
-        				  String jsonSr = resMap.get("c20");
+        				 String jsonSr = resMap.get("c20");
         				  if(!StringUtils.isEmpty(jsonSr)){
 	        				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
 	        				  for (int i = 0; i < jsonArray.size(); i++) {
@@ -234,11 +241,11 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  
 	            				  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
 	            				  //项目编号
-	            				  vo.setProjectNo(conorder!=null?"":conorder.get(0).getProjectNo());
+	            				  vo.setProjectNo(conorder==null?"":conorder.get(0).getProjectNo());
 	            				  //签约时间
 	            				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 	            				  //是否个性化
-	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getStyleType());
+	            				  vo.setStyleType(conorder==null?"":conorder.get(0).getStyleType());
 	            				  
 	            				  vo.setSort(""+(i+1));
 
@@ -322,6 +329,141 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
         	   
            }
            
+		
+		return listVo;
+	}
+
+	@Override
+	public List<SyncOrderVO> getOrderContractToB(String contractNumber) {
+		
+		List<SyncOrderVO> listVo = new ArrayList<>();
+		
+		//根据合同编号 查询 入住合同
+        ContractInfoExample contractInfoExample = new ContractInfoExample();
+        contractInfoExample.createCriteria().andContractNumberEqualTo(contractNumber);
+        List<ContractInfo> contractInfos = contractInfoMapper.selectByExample(contractInfoExample);
+        if (contractInfos.size() > 0){
+        	ContractInfo contract = contractInfos.get(0);
+        	CompanyInfo companyInfo = companyInfoMapper.selectByCompanyId(contract.getCompanyId());
+        	//合同信息
+        	ContractTermsExample contractTermsExample = new ContractTermsExample();
+			ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
+			.andCompanyIdEqualTo(companyInfo.getCompanyId()).andContractNumberEqualTo(contractNumber);
+			 List<ContractTerms> list = contractTermsMapper.selectByExample( contractTermsExample );
+		    Map<String,String> resMap = new HashMap<>();
+		    if(list != null){
+			    for (int i = 0; i < list.size(); i++) {
+			    	resMap.put(list.get(i).getContractDictCode(), list.get(i).getContractValue());
+			    }
+			}
+        	/*保证金分期*/
+    		ContractTermsChildExample example = new ContractTermsChildExample();
+    		example.createCriteria().
+    		andCompanyIdEqualTo((companyInfo.getCompanyId())).
+    		andContractNumberEqualTo(contractNumber).andCostTypeEqualTo("13");
+    		example.setOrderByClause(" c_type asc");
+    		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
+    		if(childList == null || childList.size() > 2){
+    			throw new RuntimeException("入住合同"+contractNumber+"{}设置保证金金额数据错误");
+    		}
+        	if(companyInfo.getRoleId().equals(CompanyConstants.RoleType.SJ.code)){//设计
+        		
+        		 SyncOrderVO vo = new SyncOrderVO();
+				  //合同金额 全款
+        		  if(childList.size() == 0){
+				      vo.setActualAmount(String.valueOf(resMap.get("c15")));
+        		  }else{
+        			  vo.setActualAmount(String.valueOf(childList.get(1).getCostValue()));
+        		  }
+				  //
+				  vo.setCompanyId(contract.getCompanyId());
+				  //公司名称
+				  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
+				  //支付名称
+				  vo.setTypeSub("7001");
+				  //是否全额支付 ：1全款，2分期
+				  if(childList.size() > 1){
+				     vo.setContractType("2");
+				  }else{
+					 vo.setContractType("1");
+				  }
+				  //业主名称
+				  vo.setConsumerName(companyInfo.getLegalName());//法人名称
+				  //合同开始时间 
+				  vo.setStartTime(String.valueOf(resMap.get("c03")));
+				  //合同结束时间
+				  vo.setEndTime(String.valueOf(resMap.get("c04")));
+				  //订单编号
+				  vo.setFromOrderid(contractNumber);
+				  //是否全额支付
+				  vo.setIsEnd("1");
+				  //合同类型 订单类型：设计1、施工2、合同3
+				  vo.setType("7");
+				  //项目地址
+				  vo.setProjectAddr("");
+				  //项目编号
+				  vo.setProjectNo("");
+				  //签约时间
+				  vo.setSignedTime(contract.getSignedTime()==null?"":DateUtil.formartDate(contract.getSignedTime(), "yyyy-MM-dd"));
+				  //是否个性化
+				  vo.setStyleType("");
+				  
+				  vo.setSort("");
+
+                  listVo.add(vo);
+        		  
+        	}else{//施工
+        		
+        		 SyncOrderVO vo = new SyncOrderVO();
+				  //合同金额 全款
+	       		  if(childList.size() == 0){
+					      vo.setActualAmount(String.valueOf(resMap.get("c17")));
+	       		  }else{
+	       			  vo.setActualAmount(String.valueOf(childList.get(1).getCostValue()));
+	       		  }
+				  //
+				  vo.setCompanyId(contract.getCompanyId());
+				  //公司名称
+				  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
+				  //支付名称
+				  vo.setTypeSub("8001");
+				  //是否全额支付 ：1全款，2分期
+				  if(childList.size() > 1){
+				     vo.setContractType("2");
+				     //是否全额支付
+				  }else{
+					 vo.setContractType("1");
+					 //是否全额支付
+					
+				  }
+				  vo.setIsEnd("1");
+				  //业主名称
+				  vo.setConsumerName(companyInfo.getLegalName());//法人名称
+				  //合同开始时间 
+				  vo.setStartTime(String.valueOf(resMap.get("c08")));
+				  //合同结束时间
+				  vo.setEndTime(String.valueOf(resMap.get("c09")));
+				  //订单编号
+				  vo.setFromOrderid(contractNumber);
+				 
+				  //合同类型 订单类型：设计1、施工2、合同3
+				  vo.setType("8");
+				  //项目地址
+				  vo.setProjectAddr("");
+				  //项目编号
+				  vo.setProjectNo("");
+				  //签约时间
+				  vo.setSignedTime(contract.getSignedTime()==null?"":DateUtil.formartDate(contract.getSignedTime(), "yyyy-MM-dd"));
+				  //是否个性化
+				  vo.setStyleType("");
+				  
+				  vo.setSort("");
+
+                 listVo.add(vo);
+        	}
+        	  
+        }
+		 
 		
 		return listVo;
 	}

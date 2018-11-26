@@ -164,7 +164,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
             throw new RuntimeException("创建订单服务异常");
         }
         JSONObject data = JSONObject.parseObject(httpRespMsg.getContent());
-        if (!"1000".equals(data.getInteger("code"))) {
+        if (!"1000".equals(data.getInteger("code") + "")) {
             throw new RuntimeException(data.getString("msg"));
         }
     }
