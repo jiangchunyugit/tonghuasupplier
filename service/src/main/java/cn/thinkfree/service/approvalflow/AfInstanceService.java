@@ -89,7 +89,7 @@ public interface AfInstanceService {
      * @param projectNo
      * @return
      */
-    int getStartReportStatus(String projectNo);
+    boolean getStartReportSucceed(String projectNo);
 
     /**
      * 获取项目开工报告的状态

@@ -3,18 +3,15 @@ package cn.thinkfree.service.newscheduling;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.AfConstants;
-import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
-import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -260,13 +257,12 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         ProjectBigSchedulingDetailsVO schedulingDetailsVO = new ProjectBigSchedulingDetailsVO();
         schedulingDetailsVO.setBigName("开工报告");
         schedulingDetailsVO.setBigSort(0);
-        int startReportStatus = instanceService.getStartReportStatus(projectNo);
-        if (startReportStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+        boolean succeed = instanceService.getStartReportSucceed(projectNo);
+        if (succeed) {
             schedulingDetailsVO.setIsCompleted(1);
         } else {
             schedulingDetailsVO.setIsCompleted(0);
         }
-        schedulingDetailsVO.setPlanEndTime(new Date(0));
         schedulingDetailsVO.setPlanEndTime(new Date(0));
         return schedulingDetailsVO;
     }

@@ -635,15 +635,16 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private int verifyStartApplicationAndStartReport(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String projectNo, String configNo) {
         int result = 0;
         if (!projectCompleted(schedulingDetailsVOs, projectNo)) {
-            int startApplicationStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
-            if (startApplicationStatus != AfConstants.APPROVAL_STATUS_START && startApplicationStatus != AfConstants.APPROVAL_STATUS_SUCCESS) {
+            long startApplicationStartCount = getCount(projectNo, AfConfigs.START_APPLICATION.configNo, AfConstants.APPROVAL_STATUS_START);
+            long startApplicationSuccessCount = getSuccessCount(projectNo, AfConfigs.START_APPLICATION.configNo);
+            if (startApplicationStartCount == 0 && startApplicationSuccessCount == 0) {
                 result += 1;
                 if (configNo != null && configNo.equals(AfConfigs.START_APPLICATION.configNo)) {
                     return result;
                 }
-            } else if (startApplicationStatus == AfConstants.APPROVAL_STATUS_SUCCESS){
-                int startReportStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
-                if (startReportStatus != AfConstants.APPROVAL_STATUS_START && startReportStatus != AfConstants.APPROVAL_STATUS_SUCCESS) {
+            } else if (startApplicationSuccessCount > 0){
+                long startReportStartAndSuccessCount = getStartAndSuccessCount(projectNo, AfConfigs.START_REPORT.configNo);
+                if (startReportStartAndSuccessCount == 0) {
                     if (constructionAndPayStateService.isBeComplete(projectNo, 0)) {
                         result += 2;
                     }
@@ -656,10 +657,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private int verifyCheckAndComplete(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String projectNo, Integer scheduleSort, String configNo) {
         int result = 0;
         if (!projectCompleted(schedulingDetailsVOs, projectNo)) {
-            int preScheduleSortCompleteStatus = getPreScheduleSortCompleteStatus(projectNo, schedulingDetailsVOs, scheduleSort);
-            if (preScheduleSortCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
-                int scheduleSortCompleteStatus = getScheduleSortCompleteStatus(projectNo, scheduleSort);
-                if (scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_SUCCESS && scheduleSortCompleteStatus != AfConstants.APPROVAL_STATUS_START) {
+            if (getPreScheduleSortSuccceed(projectNo, schedulingDetailsVOs, scheduleSort)) {
+                if (!getScheduleSortSucceed(projectNo, scheduleSort)) {
 
                     long checkApplicationCount = getSuccessCount(projectNo, AfConfigs.CHECK_APPLICATION.configNo, scheduleSort);
                     long checkReportCount = getStartAndSuccessCount(projectNo, AfConfigs.CHECK_REPORT.configNo, scheduleSort);
@@ -757,19 +756,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private boolean projectCompleted(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String projectNo) {
-        int projectCompleteStatus = getProjectCompleteStatus(schedulingDetailsVOs, projectNo);
-        return projectCompleteStatus == AfConstants.APPROVAL_STATUS_START || projectCompleteStatus == AfConstants.APPROVAL_STATUS_SUCCESS;
-    }
-
-    /**
-     * 获取项目的完成状态
-     * @param schedulingDetailsVOs 项目排期信息
-     * @param projectNo 项目编号
-     * @return 完成状态
-     */
-    private int getProjectCompleteStatus(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String projectNo) {
         Integer lastScheduleSort = getLargestScheduleSort(schedulingDetailsVOs);
-        return getInstanceStatus(AfConfigs.COMPLETE_APPLICATION.configNo, projectNo, lastScheduleSort);
+        long startAndSuccessCount = getStartAndSuccessCount(projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, lastScheduleSort);
+        return startAndSuccessCount > 0;
     }
 
     private Integer getLargestScheduleSort(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs) {
@@ -811,19 +800,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param scheduleSort 当前排期编号
      * @return 上一个阶段的完成情况
      */
-    private int getPreScheduleSortCompleteStatus(String projectNo, List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, Integer scheduleSort) {
+    private boolean getPreScheduleSortSuccceed(String projectNo, List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, Integer scheduleSort) {
         Integer preScheduleSort = getPreScheduleSort(schedulingDetailsVOs, scheduleSort);
-        return getScheduleSortCompleteStatus(projectNo, preScheduleSort);
+        return getScheduleSortSucceed(projectNo, preScheduleSort);
     }
 
-    private int getScheduleSortCompleteStatus(String projectNo, Integer scheduleSort) {
-        int status;
+    private boolean getScheduleSortSucceed(String projectNo, Integer scheduleSort) {
+        long successCount;
         if (scheduleSort == null) {
-            status = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+            successCount = getSuccessCount(projectNo, AfConfigs.START_REPORT.configNo);
         } else {
-            status = getInstanceStatus(AfConfigs.COMPLETE_APPLICATION.configNo, projectNo, scheduleSort);
+            successCount = getSuccessCount(projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, scheduleSort);
+
         }
-        return status;
+        return successCount > 0;
     }
 
     /**
@@ -875,8 +865,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private boolean startReportSuccess(String projectNo) {
-        int instanceStatus = getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
-        return instanceStatus == AfConstants.APPROVAL_STATUS_SUCCESS;
+        long successCount = getSuccessCount(projectNo, AfConfigs.START_REPORT.configNo);
+        return successCount > 0;
     }
 
     /**
@@ -1011,51 +1001,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         startMenuVO.setConfigNo(config.getConfigNo());
         startMenuVO.setConfigName(config.getName());
         return startMenuVO;
-    }
-
-    /**
-     * 获取审批流实例状态
-     * @param configNo 审批流配置编号
-     * @param projectNo 项目编号
-     * @return 审批流实例状态
-     */
-    private int getInstanceStatus(String configNo, String projectNo) {
-        List<AfInstance> instances = findByConfigNoAndProjectNo(configNo, projectNo);
-        return getInstanceStatus(instances);
-    }
-
-    /**
-     * 获取审批流实例状态
-     * @param configNo 审批流配置编号
-     * @param projectNo 项目编号
-     * @param scheduleSort 排期编号
-     * @return 审批流实例状态
-     */
-    private int getInstanceStatus(String configNo, String projectNo, Integer scheduleSort) {
-        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSort(configNo, projectNo, scheduleSort);
-        return getInstanceStatus(instances);
-    }
-
-    /**
-     * 获取审批流实例状态
-     * @param instances 审批流实例
-     * @return 审批流实例状态
-     */
-    private int getInstanceStatus(List<AfInstance> instances) {
-        int status = 0;
-        if (instances != null) {
-            for (AfInstance instance : instances) {
-                if (AfConstants.APPROVAL_STATUS_START == instance.getStatus()) {
-                    status = instance.getStatus();
-                    break;
-                } else if (AfConstants.APPROVAL_STATUS_SUCCESS == instance.getStatus()) {
-                    status = instance.getStatus();
-                } else if (status != AfConstants.APPROVAL_STATUS_SUCCESS) {
-                    status = instance.getStatus();
-                }
-            }
-        }
-        return status;
     }
 
     /**
@@ -1198,14 +1143,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     @Override
-    public int getStartReportStatus(String projectNo) {
-        return getInstanceStatus(AfConfigs.START_REPORT.configNo, projectNo);
+    public boolean getStartReportSucceed(String projectNo) {
+        long successCount = getSuccessCount(projectNo, AfConfigs.START_REPORT.configNo);
+        return successCount > 0;
     }
 
     @Override
     public int getScheduleEditable(String projectNo) {
-        int instanceStatus = getInstanceStatus(AfConfigs.START_APPLICATION.configNo, projectNo);
-        if (instanceStatus == AfConstants.APPROVAL_STATUS_SUCCESS || instanceStatus == AfConstants.APPROVAL_STATUS_START) {
+        long startAndSuccessCount = getStartAndSuccessCount(projectNo, AfConfigs.START_APPLICATION.configNo);
+        if (startAndSuccessCount > 0) {
             return 1;
         } else {
             return 0;
