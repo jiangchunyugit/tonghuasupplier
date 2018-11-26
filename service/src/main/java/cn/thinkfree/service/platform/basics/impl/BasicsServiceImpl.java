@@ -149,7 +149,7 @@ public class BasicsServiceImpl implements BasicsService {
             if(basicsData.isEmpty()){
                 break;
             }
-            dataCode = OrderNoUtils.getCode(8);
+            dataCode = OrderNoUtils.getIntCode(8);
             i++;
             if(i > 50){
                 throw new RuntimeException("编码重复");
