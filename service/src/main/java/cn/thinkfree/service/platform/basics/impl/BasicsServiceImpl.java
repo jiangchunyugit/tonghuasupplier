@@ -140,7 +140,7 @@ public class BasicsServiceImpl implements BasicsService {
         return BasicsDataParentEnum.allTypes();
     }
     private String getCode(String groupCode){
-        String dataCode = OrderNoUtils.getCode(6);
+        String dataCode = OrderNoUtils.getIntCode(8);
         int i = 0;
         while (true){
             BasicsDataExample dataExample = new BasicsDataExample();
@@ -149,7 +149,7 @@ public class BasicsServiceImpl implements BasicsService {
             if(basicsData.isEmpty()){
                 break;
             }
-            dataCode = OrderNoUtils.getCode(6);
+            dataCode = OrderNoUtils.getCode(8);
             i++;
             if(i > 50){
                 throw new RuntimeException("编码重复");
