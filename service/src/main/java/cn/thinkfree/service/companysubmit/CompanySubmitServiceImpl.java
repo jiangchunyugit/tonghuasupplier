@@ -161,20 +161,13 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			return auditInfoVO;
 		}
 
-
+		Integer auditType = StringUtils.isBlank(auditInfoVO.getCompanyAuditType()) ? CompanyAuditStatus.AUDITING.code : Integer.parseInt(auditInfoVO.getCompanyAuditType().trim());
 		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
-		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
+		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType().trim())){
 			auditInfoVO.setCompanyAuditName("签约完成");
-		}else if(CompanyAuditStatus.FAILAUDIT.stringVal().equals(auditInfoVO.getCompanyAuditType())){
-			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILAUDIT.mes);
-
-		}else if(CompanyAuditStatus.FAILCHECK.stringVal().equals(auditInfoVO.getCompanyAuditType())){
-			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILCHECK.mes);
-
-		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
-			auditInfoVO.setCompanyAuditName("资质审核中");
+		}else {
+			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.getDesc(auditType));
 		}
-
 
 		return auditInfoVO;
 	}
@@ -206,6 +199,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		CompanyFinancialVO companyFinancials = pcCompanyFinancialMapper.findFinancialVOByCompanyId(companyId);
 
 		companySubmitVo.setPcCompanyFinancial(companyFinancials);
+
 
 
 		return companySubmitVo;
