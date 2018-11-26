@@ -676,6 +676,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (userMsgVo != null) {
             msgVo.setIconUrl(userMsgVo.getUserIcon());
             msgVo.setPhone(userMsgVo.getUserPhone());
+            msgVo.setRegisterTime(userMsgVo.getRegisterTime());
         }
         BasicsData cardType = cardTypeMap.get(employeeMsg.getCertificateType() + "");
         BasicsData countryCode = countryCodeMap.get(employeeMsg.getCountryCode());
