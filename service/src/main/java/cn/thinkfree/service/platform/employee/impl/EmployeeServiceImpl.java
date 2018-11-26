@@ -748,8 +748,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     private CompanyInfo checkCompanyExit(String companyId) {
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2"))
-                .andIsCheckEqualTo(Short.parseShort("1")).andAuditStatusEqualTo("8");
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId);
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
         if(companyInfos.isEmpty()){
             return new CompanyInfo();
