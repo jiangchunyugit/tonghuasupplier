@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONArray;
-
 import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.mapper.ContractSignatureMapper;
 import cn.thinkfree.database.model.ContractSignature;
