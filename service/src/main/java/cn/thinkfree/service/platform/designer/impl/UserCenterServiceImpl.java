@@ -180,6 +180,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         msgVo.setConsumerId(msgObj.getString("consumerId"));
         msgVo.setStaffId(msgObj.getString("staffId"));
         msgVo.setMemberEcode(msgObj.getString("memberEcode"));
+        msgVo.setRegisterTime(msgObj.getString("registerTime"));
         return msgVo;
     }
 
@@ -221,7 +222,10 @@ public class UserCenterServiceImpl implements UserCenterService {
             String phone = userMsg.getString("phone");
             String headPortraits = userMsg.getString("headPortraits");
             String memberEcode = userMsg.getString("memberEcode");
-            userMsgVos.add(new UserMsgVo(userId, userName, phone, employeeMsg.getRoleCode(), employeeMsg.getRealName(), headPortraits, memberEcode));
+            UserMsgVo userMsgVo = new UserMsgVo(userId, userName, phone, employeeMsg.getRoleCode(), employeeMsg.getRealName(), headPortraits, memberEcode);
+            String registerTime = userMsg.getString("registerTime");
+            userMsgVo.setRegisterTime(registerTime);
+            userMsgVos.add(userMsgVo);
         }
         return userMsgVos;
     }
@@ -256,11 +260,13 @@ public class UserCenterServiceImpl implements UserCenterService {
             String headPortraits = userObj.getString("headPortraits");
             String consumerId = userObj.getString("consumerId");
             String staffId = userObj.getString("staffId");
+            String registerTime = userObj.getString("registerTime");
             if (StringUtils.isBlank(consumerId)) {
                 continue;
             }
             UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
             msgVo.setStaffId(staffId);
+            msgVo.setRegisterTime(registerTime);
             userMsgVos.add(msgVo);
         }
         return userMsgVos;

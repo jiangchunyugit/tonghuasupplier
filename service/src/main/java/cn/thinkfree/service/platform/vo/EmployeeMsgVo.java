@@ -50,6 +50,8 @@ public class EmployeeMsgVo {
     private String address;
     @ApiModelProperty("工作年限")
     private String workTime;
+    @ApiModelProperty("注册时间")
+    private String registerTime;
 
     public void setAuthState(int authState) {
         this.authState = authState;
@@ -225,5 +227,13 @@ public class EmployeeMsgVo {
 
     public void setCountryCodeName(String countryCodeName) {
         this.countryCodeName = countryCodeName;
+    }
+
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public String getRegisterTime() {
+        return registerTime;
     }
 }

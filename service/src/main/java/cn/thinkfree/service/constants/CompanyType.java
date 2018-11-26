@@ -10,7 +10,6 @@ public enum CompanyType {
    
     BD(1,"装修公司");
     
-
     private final Integer code;
     private final String mes;
 
@@ -28,4 +27,13 @@ public enum CompanyType {
 		return mes;
 	}
 
+    public static String getNm(String value) {
+        CompanyType[] businessModeEnums = values();
+        for (CompanyType businessModeEnum : businessModeEnums) {
+            if ((businessModeEnum.code+"").equals(value)) {
+                return businessModeEnum.name();
+            }
+        }
+        return null;
+    }
 }

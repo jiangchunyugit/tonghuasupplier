@@ -20,4 +20,11 @@ public interface ThirdPartDateService {
      * 吕启栋
      */
     List<SyncOrderVO> getOrderContract(String orderNumber);
+    
+    /**
+     * to B 保证金 生成预防订单
+     * 2018年11月26日 10:00:35
+     * lqd
+     */
+    List<SyncOrderVO> getOrderContractToB(String orderNumber);
 }

@@ -22,6 +22,8 @@ public class UserMsgVo {
 
     private String consumerId;
 
+    private String registerTime;
+
     private String memberEcode;
 
     public UserMsgVo() {
@@ -124,5 +126,13 @@ public class UserMsgVo {
 
     public String getMemberEcode() {
         return memberEcode;
+    }
+
+    public void setRegisterTime(String registerTime) {
+        this.registerTime = registerTime;
+    }
+
+    public String getRegisterTime() {
+        return registerTime;
     }
 }
