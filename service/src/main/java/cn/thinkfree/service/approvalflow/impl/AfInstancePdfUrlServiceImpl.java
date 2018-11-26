@@ -72,7 +72,7 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
         Project project = projectService.findByProjectNo(instance.getProjectNo());
         exportPdfVO.setAddress(project.getAddressDetail());
         String customerId = project.getOwnerId();
-        AfUserDTO customer = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), customerId, Role.CC.id);
+        AfUserDTO customer = getUserInfo(customerId, Role.CC.id);
         exportPdfVO.setCustomerName(customer.getUsername());
         exportPdfVO.setPhoneNo(customer.getPhone());
 
@@ -80,7 +80,7 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
         List<AfUserVO> userVOs = new ArrayList<>();
         if (approvalLogs != null) {
             for (AfApprovalLog approvalLog : approvalLogs) {
-                AfUserDTO user = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), approvalLog.getUserId(), approvalLog.getRoleId());
+                AfUserDTO user = getUserInfo(approvalLog.getUserId(), approvalLog.getRoleId());
                 UserRoleSet role = roleService.findById(approvalLog.getRoleId());
                 if (approvalLog.getSort() == 0) {
                     exportPdfVO.setCreateUsername(user.getUsername());
