@@ -433,6 +433,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  //合同金额 全款
 			  if(childList.size() == 0){
 				      vo.setActualAmount(String.valueOf(resMap.get("c17")));
+			  }else if(childList.size() == 1){
+				  vo.setActualAmount(String.valueOf(childList.get(0).getCostValue()));
 			  }else{
 				  vo.setActualAmount(String.valueOf(childList.get(1).getCostValue()));
 			  }
@@ -494,8 +496,10 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			CompanyInfo companyInfo, Map<String, String> resMap, List<ContractTermsChild> childList) {
 		SyncOrderVO vo = new SyncOrderVO();
 		  //合同金额 全款
-		  if(childList.size() == 0){
+		  if(childList.size() == 0  ){
 		      vo.setActualAmount(String.valueOf(resMap.get("c15")));
+		  }else if(childList.size() == 1){
+			  vo.setActualAmount(String.valueOf(childList.get(0).getCostValue()));
 		  }else{
 			  vo.setActualAmount(String.valueOf(childList.get(1).getCostValue()));
 		  }
