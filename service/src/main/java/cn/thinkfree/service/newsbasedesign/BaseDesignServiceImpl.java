@@ -1,4 +1,4 @@
-package cn.thinkfree.service.newsBaseDesign;
+package cn.thinkfree.service.newsbasedesign;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
@@ -9,7 +9,6 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.DesignGradeVo;
 import cn.thinkfree.database.pcvo.DesignLabelVo;
 import cn.thinkfree.database.pcvo.GrowthValueIntegralVo;
-import cn.thinkfree.service.constants.ProjectStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * @author gejiaming
+ */
 @Service
 public class BaseDesignServiceImpl implements BaseDesignService {
     @Autowired

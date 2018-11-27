@@ -79,6 +79,12 @@ public class UserCenterServiceImpl implements UserCenterService {
         if (userMsgVo == null) {
             userMsgVo = register(userName, userPhone, isOwner);
         }
+        if(isOwner && StringUtils.isBlank(userMsgVo.getConsumerId())){
+            userMsgVo = register(userName, userPhone, isOwner);
+        }
+        if(isOwner && StringUtils.isBlank(userMsgVo.getStaffId())){
+            userMsgVo = register(userName, userPhone, false);
+        }
         return userMsgVo;
     }
 

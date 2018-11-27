@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @Auther: jiang
+ * @author: jiang
  * @Date: 2018/11/13 11:46
  * @Description:
  */
@@ -487,6 +487,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> addCheckDetail(String projectNo) {
         ProjectQuotationCheck check = new ProjectQuotationCheck();
         check.setSubmitTime(new Date());
