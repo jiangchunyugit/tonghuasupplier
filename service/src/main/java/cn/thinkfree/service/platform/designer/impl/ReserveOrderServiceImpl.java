@@ -160,7 +160,11 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         Project project = new Project();
         project.setProjectNo(OrderNoUtils.getNo("PN"));
         project.setStatus(1);
-        project.setStage(DesignStateEnum.STATE_1.getState());
+        if(companyId != null){
+            project.setStage(DesignStateEnum.STATE_20.getState());
+        }else{
+            project.setStage(DesignStateEnum.STATE_1.getState());
+        }
         project.setCreateTime(new Date());
         project.setReleaseTime(new Date());
         project.setOrderSource(source);
