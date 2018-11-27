@@ -242,9 +242,13 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 
 		              listVo.add(vo);
 				  }
-		  }else{
+		 
+	     }			  
+	   } 
+		else{
 			  printInfoMes("调用订单合同发生错误 ","contractInfos is null or contractInfos.size() > 0 {}",jsonSr.toString());
 		  }
+		  
 	}
 
 	
