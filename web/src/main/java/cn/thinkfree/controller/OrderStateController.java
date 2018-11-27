@@ -8,8 +8,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -17,16 +18,18 @@ import java.util.Map;
 /**
  * @author xusonghui
  */
-@Api(value = "查询所有订单状态",description = "查询所有订单状态")
+@Api(value = "查询所有订单状态", description = "查询所有订单状态")
 @Controller
 @RequestMapping("order")
-public class OrderStateController extends AbsBaseController{
+public class OrderStateController extends AbsBaseController {
 
     @Autowired
     private OrderStateService orderStateService;
+
     @ApiOperation("查询所有订单状态")
-    @GetMapping("allState")
-    public MyRespBundle<List<Map<String,String>>> allState(){
-        return sendJsonData(ResultMessage.SUCCESS,orderStateService.allState());
+    @ResponseBody
+    @RequestMapping(value = "allState", method = {RequestMethod.GET})
+    public MyRespBundle<List<Map<String, Object>>> allState() {
+        return sendJsonData(ResultMessage.SUCCESS, orderStateService.allState());
     }
 }
