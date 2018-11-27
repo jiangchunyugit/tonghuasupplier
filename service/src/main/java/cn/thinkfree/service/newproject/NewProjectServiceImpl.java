@@ -469,6 +469,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         criteria.andTypeEqualTo(ProjectDataStatus.QUOTATION_STATUS.getValue());
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
+        if(projectDataList.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("暂无施工资料");
+        }
         for (ProjectData projectData : projectDataList) {
             if (projectData.getIsConfirm() != null){
                 confirm = projectData.getIsConfirm();
