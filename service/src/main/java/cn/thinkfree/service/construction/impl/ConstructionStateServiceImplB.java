@@ -201,19 +201,21 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
 
+
         ConstructionOrderPayExample example = new ConstructionOrderPayExample();
         example.createCriteria().andOrderNoEqualTo(orderNo);
         List<ConstructionOrderPay> list = constructionOrderPayMapper.selectByExample(example);
+
         if (list.size() > 0) {
             ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
-            constructionOrderPay.setFeeName(feeName);
+            constructionOrderPay.setFeeName(commonService.getSchedulingName(orderNo,sort));
             constructionOrderPay.setSort(sort.shortValue());
             constructionOrderPay.setIsEnd("pay");
             constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, example);
         } else {
             ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
             constructionOrderPay.setOrderNo(orderNo);
-            constructionOrderPay.setFeeName(feeName);
+            constructionOrderPay.setFeeName(commonService.getSchedulingName(orderNo,sort));
             constructionOrderPay.setSort(sort.shortValue());
             constructionOrderPay.setIsEnd("pay");
             constructionOrderPayMapper.insertSelective(constructionOrderPay);
