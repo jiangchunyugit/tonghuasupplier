@@ -423,4 +423,16 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         pageVo.setPageSize(pageSize);
         return pageVo;
     }
+
+    /**
+     * 停用施工方案
+     * @param schemeNo
+     */
+    @Override
+    public void stopPlatformScheme(String schemeNo) {
+        BuildSchemeConfig schemeConfig = new BuildSchemeConfig();
+        schemeConfig.setIsEnable(2);
+        schemeConfig.setSchemeNo(schemeNo);
+        schemeConfigMapper.updateByPrimaryKeySelective(schemeConfig);
+    }
 }
