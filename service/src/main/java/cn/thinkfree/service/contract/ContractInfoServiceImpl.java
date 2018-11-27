@@ -443,6 +443,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         if ( flag > 0 && flagT > 0 && flagon > 0 ) {
             return true;
         }
+        
 
         return false;
     }
