@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 
-import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
@@ -163,7 +162,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
         			  //设计判断是分期 换是全款
         			  
         			  String ctype = String.valueOf(resMap.get("c18"));
-        			  if(ctype.equals("0")){//全款
+        			  if(ctype.equals("1")){//全款
         				  SyncOrderVO vo = new SyncOrderVO();
         				  //合同金额 全款
         				  vo.setActualAmount(String.valueOf(resMap.get("c19")));
@@ -171,7 +170,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
         				  //公司名称
         				  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
         				  //支付名称
-        				  vo.setTypeSub("设计费");
+        				  vo.setTypeSub("1001");
         				  //是否全额支付
         				  vo.setContractType("1");
         				  //业主名称
@@ -189,20 +188,20 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
         				  //项目地址
         				  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
         				  //项目编号
-        				  vo.setProjectNo(conorder.get(0)!=null?"":conorder.get(0).getProjectNo());
+        				  vo.setProjectNo(conorder.get(0)==null?"":conorder.get(0).getProjectNo());
         				  //签约时间
         				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
         				  //是否个性化
-        				  vo.setStyleType(conorder.get(0)!=null?"":conorder.get(0).getStyleType());
+        				  vo.setStyleType(conorder.get(0)==null?"":conorder.get(0).getStyleType());
         				  
         				  vo.setSort("");
 
                           listVo.add(vo);
         			  }else{//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
-        				 // String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
+        				// String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
         				 
         				  
-        				  String jsonSr = resMap.get("c20");
+        				 String jsonSr = resMap.get("c20");
         				  if(!StringUtils.isEmpty(jsonSr)){
 	        				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
 	        				  for (int i = 0; i < jsonArray.size(); i++) {
@@ -215,7 +214,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  //公司名称
 	            				  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
 	            				  //支付名称
-	            				  vo.setTypeSub(jsonMap.get("name"));
+	            				  vo.setTypeSub("100"+(i+1)+"");
 	            				  //是否全额支付
 	            				  vo.setContractType("2");
 	            				  //业主名称
@@ -241,13 +240,13 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  
 	            				  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
 	            				  //项目编号
-	            				  vo.setProjectNo(conorder!=null?"":conorder.get(0).getProjectNo());
+	            				  vo.setProjectNo(conorder==null?"":conorder.get(0).getProjectNo());
 	            				  //签约时间
 	            				  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 	            				  //是否个性化
-	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getStyleType());
+	            				  vo.setStyleType(conorder==null?"":conorder.get(0).getStyleType());
 	            				  
-	            				  vo.setSort(""+(i+1));
+	            				  vo.setSort(String.valueOf(jsonMap.get("stageCode")));
 
 	                              listVo.add(vo);
 							  }
@@ -276,8 +275,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  vo.setCompanyId(contract.getCompanyId());
 	            				  //公司名称
 	            				  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
-	            				  //支付名称
-	            				  vo.setTypeSub(jsonMap.get("progressName"));
+	            				  //支付名称jsonMap.get("progressName")
+	            				  vo.setTypeSub("200"+(i+1)+"");
 	            				  //是否全额支付
 	            				  vo.setContractType("2");
 	            				  //业主名称
@@ -309,7 +308,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	            				  //是否个性化
 	            				  vo.setStyleType(conorder!=null?"":conorder.get(0).getType());
 	            				  
-	            				  vo.setSort(""+(i+1));
+	            				  vo.setSort(jsonMap.get("sortNumber"));
 
 	                              listVo.add(vo);
 							  }

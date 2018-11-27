@@ -544,7 +544,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		 /* 合同信息 */
 		ContractVo newVo = contractInfoMapper.selectContractBycontractNumber(vo);
 		/* 公司信息 */
-		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo((newVo.getCompanyId())); 
+		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo((newVo.getCompanyId()));
+		if(companyInfo == null){
+			throw  new RuntimeException("公司数据为nul");
+		}
+
 		/* 合同详情 */
 		String companyId = newVo.getCompanyId();
 		ContractTermsExample exp = new ContractTermsExample();
@@ -1086,6 +1090,19 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					pcContractTermsMapper.insertSelective( terms );
 					root.put(key,value);
 				}
+			}
+			//处理json数据
+			if(root.size() > 0 && StringUtils.isNotEmpty(String.valueOf(root.get("c20")))){
+				List<Map<String,String>> rootMap = new ArrayList<>();
+				  String jsonSr = String.valueOf(root.get("c20"));
+				  if(!StringUtils.isEmpty(jsonSr)){
+  				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
+  				  for (int i = 0; i < jsonArray.size(); i++) {
+  					Map<String,String> jsonMap = (Map<String, String>) jsonArray.get(i);
+  					rootMap.add(jsonMap);
+  				  }
+				 }
+				  root.put("c100",rootMap);
 			}
 			//生成pdf
 			 this.createOrderContractpdf(orderNumber,companyId , root);

@@ -124,7 +124,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             //添加业主信息
             PersionVo owner = new PersionVo();
             try {
-                Map userName = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());//正式时打开
+                Map userName = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
                 owner.setPhone(userName.get("phone").toString());
                 owner.setName(userName.get("nickName").toString());
             } catch (Exception e) {
@@ -500,7 +500,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-//            urlDetailVo.setUploadTime(projectData.getUploadTime());
             urlList.add(urlDetailVo);
         }
         return RespData.success(urlList);

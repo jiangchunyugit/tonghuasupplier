@@ -6,6 +6,8 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,6 +31,8 @@ public class ConstructionStateController extends AbsBaseController {
 
     @Autowired
     ConstructionStateServiceB constructionStateServiceB;
+    @Autowired
+    ConstructionAndPayStateService constructionAndPayStateService;
 
     @ApiOperation("获取所有订单状态==江宁哥")
     @MyRespBody
@@ -116,20 +120,50 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> constructionOrderPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                      @RequestParam @ApiParam(value = "支付阶段名称",required = true) String feeName,
                                                      @RequestParam @ApiParam(value = "阶段排序",required = true) Integer sort,
-                                                     @RequestParam @ApiParam(value = "首尾阶段",required = true) String isEnd) {
+                                                     @RequestParam @ApiParam(value = "尾款2",required = true) String isComplete) {
 
-        return constructionStateServiceB.customerPay(orderNo,feeName,sort,isEnd);
+        return constructionStateServiceB.customerPay(orderNo,feeName,sort,isComplete);
     }
 
-    @ApiOperation("施工人员-开工报告")
+    /**
+     *  订单是否可以支付-查询
+     */
+    @ApiOperation("消费者-订单支付===刘博")
+    @MyRespBody
+    @RequestMapping(value = "isOrderPay", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<String> isOrderPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
+                                                     @RequestParam @ApiParam(value = "阶段排序",required = true) Integer sort) {
+
+        return constructionAndPayStateService.isStagePay(orderNo,sort);
+    }
+
+
+    @ApiOperation("施工人员-开工报告/施工阶段==传让")
     @MyRespBody
     @RequestMapping(value = "constructionPlan", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionPlan(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
-                                                 @RequestParam @ApiParam(value = "序号",required = true) Integer sort,
-                                                 @RequestParam @ApiParam(value = "订单方案",required = true) String isEnd) {
+                                                 @RequestParam @ApiParam(value = "序号",required = true) Integer sort) {
 
-        return constructionStateServiceB.constructionPlan(projectNo,sort,isEnd);
+        return constructionStateServiceB.constructionPlan(projectNo,sort);
+
     }
+
+    /**
+     *  开工报告/施工阶段 查询
+     */
+    @ApiOperation("开工报告/施工阶段 查询 ==传让")
+    @MyRespBody
+    @RequestMapping(value = "isConstructionPlan", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<Boolean> isConstructionPlan(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
+                                                    @RequestParam @ApiParam(value = "阶段排序",required = true) Integer sort) {
+
+        if (constructionAndPayStateService.isBeComplete(projectNo,sort)){
+            return RespData.success(true);
+        }else {
+            return RespData.error(ResultMessage.ERROR.code, "false");
+        }
+    }
+
 
     @ApiOperation("消费者-取消订单(签约阶段逆向)")
     @MyRespBody
