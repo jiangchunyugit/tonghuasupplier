@@ -408,6 +408,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         categoryList.add(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
         criteria.andCategoryIn(categoryList);
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
+        if(projectDataList.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("暂无设计资料");
+        }
         List<DataDetailVo> dataDetailVoList = new ArrayList<>();
         Set<Integer> set = new HashSet<>();
         for (ProjectData projectData : projectDataList) {
