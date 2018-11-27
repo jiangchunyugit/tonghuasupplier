@@ -166,4 +166,10 @@ public interface BuildConfigService {
      * @return
      */
     String getSchemeNoByCompanyId(String companyId);
+
+    /**
+     * 停用施工方案(平台)
+     * @param schemeNo
+     */
+    void stopPlatformScheme(String schemeNo);
 }

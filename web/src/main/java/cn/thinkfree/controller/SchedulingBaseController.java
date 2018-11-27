@@ -13,10 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -39,14 +36,14 @@ public class SchedulingBaseController extends AbsBaseController {
 
     @RequestMapping(value = "listShangHai", method = RequestMethod.POST)
     @ApiOperation(value = "基础施工项同步(同步)-同步上海基础小排期")
-    public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listShangHai( @ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo) {
+    public MyRespBundle<PageInfo<ProjectSmallSchedulingVO>> listShangHai(@ApiParam(name = "schedulingSeo", value = "排期入参分页实体") SchedulingSeo schedulingSeo) {
         String result = schedulingBaseService.listShangHai(schedulingSeo);
         return sendSuccessMessage(result);
     }
 
     @RequestMapping(value = "addBigScheduling", method = RequestMethod.POST)
     @ApiOperation("施工阶段工期设置-添加基础大排期")
-    public MyRespBundle<String> addBigScheduling(@RequestBody@ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
+    public MyRespBundle<String> addBigScheduling(@RequestBody @ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
         return schedulingBaseService.addBigScheduling(projectBigSchedulingVOList);
     }
 
@@ -67,6 +64,14 @@ public class SchedulingBaseController extends AbsBaseController {
     @ApiOperation(value = "阶段验收配置(修改)-修改基础大排期")
     public MyRespBundle<String> updateBigScheduling(@RequestBody @ApiParam(name = "projectBigSchedulingVO", value = "基础大排期信息") ProjectBigSchedulingVO projectBigSchedulingVOList) {
         return schedulingBaseService.updateBigScheduling(projectBigSchedulingVOList);
+    }
+
+    @RequestMapping(value = "deleteBigScheduling", method = RequestMethod.POST)
+    @ApiOperation(value = "删除基础大排期")
+    public MyRespBundle<String> deleteBigScheduling(
+            @RequestParam(name = "schemeNo") @ApiParam(name = "schemeNo", value = "方案编号") String schemeNo,
+            @RequestParam(name = "sort") @ApiParam(name = "sort", value = "序号") Integer sort) {
+        return schedulingBaseService.deleteBigScheduling(schemeNo, sort);
     }
 
 }

@@ -179,15 +179,15 @@ public class ExampleController extends AbsBaseController {
         List<Object> row = null;
         List<PcUserInfoVo> s = new ArrayList<>();
         PcUserInfoVo ss = new PcUserInfoVo();
-        		ss.setCity("11");;
+//        		ss.setCity("11");;
         		s.add(ss);
        for(int i=0; i<s.size();i++){
            row=new ArrayList();
            row.add("1");
-           row.add(s.get(i).getCity());
-           row.add(s.get(i).getCity());
-           row.add(s.get(i).getCity());
-           row.add(s.get(i).getCity());
+//           row.add(s.get(i).getCity());
+//           row.add(s.get(i).getCity());
+//           row.add(s.get(i).getCity());
+//           row.add(s.get(i).getCity());
            rows.add(row);
 
        }
