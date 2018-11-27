@@ -124,8 +124,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             //添加业主信息
             PersionVo owner = new PersionVo();
             try {
-                Map userName = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());//正式时打开
-//                Map userName = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+                Map userName = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
                 owner.setPhone(userName.get("phone").toString());
                 owner.setName(userName.get("nickName").toString());
             } catch (Exception e) {
@@ -236,8 +235,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
-            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());//正式时打开
-//            Map userName1 = newOrderUserService.getUserName("CC1810301612170000C", "CC");
+            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
             owner.setPhone(userName1.get("phone").toString());
             owner.setName(userName1.get("nickName").toString());
         } catch (Exception e) {
@@ -269,7 +267,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtn(designerOrder.getOrderNo()));
-//        designerOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         for (DesignStateEnum designStateEnum : allCancelState) {
             if (project.getStage().equals(designStateEnum.getState())) {
@@ -322,9 +319,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
             constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
-//            constructionOrderDetailVo.setTaskStage(orderTaskSortVoList1.get(1).getSort());
-//        constructionOrderDetailVo.setPlayTask("提交设计资料");
-//        constructionOrderDetailVo.setPlayTaskColor(ProjectDataStatus.PLAY_TASK_BLUE.getDescription());
             Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
             constructionOrderDetailVo.setCancle(aBoolean);
             //存放订单类型
@@ -340,7 +334,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             for (PersionVo persionVo1 : constructionPersionList) {
                 try {
                     Map persionDetail = newOrderUserService.getUserName(persionVo1.getUserId(), persionVo1.getRole());
-//                Map persionDetail = newOrderUserService.getUserName("CC1810301612170000C", "CC");
                     persionVo1.setPhone(persionDetail.get("phone").toString());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -507,7 +500,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             UrlDetailVo urlDetailVo = new UrlDetailVo();
             urlDetailVo.setImgUrl(projectData.getUrl());
             urlDetailVo.setName(projectData.getFileName());
-//            urlDetailVo.setUploadTime(projectData.getUploadTime());
             urlList.add(urlDetailVo);
         }
         return RespData.success(urlList);

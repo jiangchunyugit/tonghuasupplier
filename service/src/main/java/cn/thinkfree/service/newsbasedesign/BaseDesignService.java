@@ -1,15 +1,15 @@
-package cn.thinkfree.service.newsBaseDesign;
+package cn.thinkfree.service.newsbasedesign;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.model.DesignGrade;
-import cn.thinkfree.database.model.DesignLabel;
-import cn.thinkfree.database.model.GrowthValueIntegral;
 import cn.thinkfree.database.pcvo.DesignGradeVo;
 import cn.thinkfree.database.pcvo.DesignLabelVo;
 import cn.thinkfree.database.pcvo.GrowthValueIntegralVo;
 
 import java.util.List;
 
+/**
+ * @author gejiaming
+ */
 public interface BaseDesignService {
     /**
      * 获取设计师等级列表

@@ -175,9 +175,27 @@
 <section class='indent'>
     1. 采取以下方式付款：
 </section>
+ <#if c18 ==0>
 <section class='indent'>
-    一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK"></p>元。□分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款，即在签订本合同并确认平面方案设计后，支付设计费总额 <p class="placeholderK"></p>%作为设计费首期款，即 <p class="placeholderK"></p>元；甲方确认3D方案设计后支付设计费总额 <p class="placeholderK"></p>%作为设计费中期款，即 <p class="placeholderK"></p>元；甲方确认施工图设计后支付设计费总额 <p class="placeholderK"></p>%作为设计费尾期款，即 <p class="placeholderK"></p>元。
+    一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">${c19}</p>元。
 </section>
+ </#if>
+ <#if c18 ==1>
+<section class='indent'>
+    分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
+ <#list c100 as c>
+ <#if c.sortNumber ==0>
+    ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费首期款，即 <p class="placeholderK">${c.costValue}</p>元；
+ </#if> 
+ <#if c.sortNumber ==1>
+   ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费中期款，即 <p class="placeholderK">${c.costValue}</p>元；
+ </#if> 
+  <#if c.sortNumber ==2>
+ ${c.name} ，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费尾期款，即 <p class="placeholderK">${c.costValue}</p>元。
+  </#if> 
+</section>
+ </#list>
+ </#if>
 <section class='indent'>
     备注：设计合同不超过5万元一次性全额付款。
 </section>

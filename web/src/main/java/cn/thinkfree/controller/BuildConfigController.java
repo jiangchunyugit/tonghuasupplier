@@ -88,6 +88,19 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("停用施工方案====》运营后台====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "stopPlatformScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle stopPlatformScheme(@ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo) {
+        try {
+            logger.info("停用施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
+            buildConfigService.stopPlatformScheme(schemeNo);
+            return sendSuccessMessage(null);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
     @ApiOperation("删除施工方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "delScheme", method = {RequestMethod.POST, RequestMethod.GET})
