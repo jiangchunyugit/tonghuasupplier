@@ -3,10 +3,7 @@ package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
-import cn.thinkfree.database.mapper.CityMapper;
-import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.mapper.ConstructionOrderPayMapper;
-import cn.thinkfree.database.mapper.ProjectMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.vo.ConstructionCityVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +25,9 @@ public class CommonService extends AbsBaseController {
 
     @Autowired
     ProjectMapper projectMapper;
+
+    @Autowired
+    ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
     /**
      * 查询 当前状态值 By projectNo
@@ -144,6 +144,34 @@ public class CommonService extends AbsBaseController {
             return "";
         }
         return list.get(0).getCityName();
+    }
+
+
+    /**
+     *  查询施工阶段名称
+     * @param orderNo
+     * @param sort
+     * @return
+     */
+    public String getSchedulingName (String orderNo,Integer sort){
+
+        //查询订单编号
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        if (list.isEmpty()) {
+            return null;
+        }
+
+        //查询当前施工阶段名称
+        String schedulingNo = list.get(0).getSchemeNo();
+        ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
+        example2.createCriteria().andSchemeNoEqualTo(schedulingNo).andSortEqualTo(sort);
+        List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
+        if (schedulingList2.isEmpty()) {
+            return null;
+        }
+        return schedulingList2.get(0).getName();
     }
 
 }
