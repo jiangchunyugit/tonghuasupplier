@@ -240,6 +240,12 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         if (projectBigSchedulingVO.getSquareMetreEnd() != null) {
             projectBigScheduling.setSquareMetreEnd(projectBigSchedulingVO.getSquareMetreEnd());
         }
+        if (projectBigSchedulingVO.getRoomNum() != null) {
+            projectBigScheduling.setRoomNum(projectBigSchedulingVO.getRoomNum());
+        }
+        if (projectBigSchedulingVO.getWorkload() != null) {
+            projectBigScheduling.setWorkload(projectBigSchedulingVO.getWorkload());
+        }
         if (projectBigSchedulingVO.getIsNeedCheck() != null) {
             projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
         }
