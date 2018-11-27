@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.HrPeopleEntityMapper">
+  <resultMap id="HrPeopleEntityVO" type="cn.thinkfree.database.vo.account.HrPeopleEntityVO" extends="BaseResultMap">
+    <association property="branchCompanyName" column="organization_id" javaType="java.lang.String" select="selectBranchCompanyName"/>
+  </resultMap>
+
+  <select id="selectPeopleVO" parameterType="cn.thinkfree.database.model.HrPeopleEntityExample" resultMap="HrPeopleEntityVO">
+
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from hr_people_entity
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectBranchCompanyName"   resultType="java.lang.String">
+
+    select
+    array_to_string(array(
+    WITH RECURSIVE r AS (
+    SELECT *
+    FROM hr_organization_entity
+    WHERE organization_id = #{id}
+    UNION ALL
+    SELECT hoe.*
+    FROM hr_organization_entity hoe, r
+    WHERE hoe.organization_id = r.superior_organization_id )SELECT organization_text
+    FROM r
+    ),<![CDATA['<-']]>
+    )
+  </select>
+
+</mapper>

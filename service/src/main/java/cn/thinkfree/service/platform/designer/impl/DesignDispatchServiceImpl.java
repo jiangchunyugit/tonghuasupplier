@@ -9,6 +9,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
@@ -71,6 +72,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private CreatePayOrderService createPayOrderService;
     @Autowired
     private BuildConfigService buildConfigService;
+    @Autowired
+    private ConstructionAndPayStateService constructionAndPayStateService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -869,15 +872,23 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 break;
             case STATE_140:
                 stateEnum = DesignStateEnum.STATE_150;
+                // 支付阶段通知
+                constructionAndPayStateService.notifyPay(orderNo,1);
                 break;
             case STATE_170:
                 stateEnum = DesignStateEnum.STATE_180;
+                // 支付阶段通知
+                constructionAndPayStateService.notifyPay(orderNo,2);
                 break;
             case STATE_200:
                 stateEnum = DesignStateEnum.STATE_210;
+                // 支付阶段通知
+                constructionAndPayStateService.notifyPay(orderNo,3);
                 break;
             case STATE_220:
                 stateEnum = DesignStateEnum.STATE_230;
+                // 支付阶段通知
+                constructionAndPayStateService.notifyPay(orderNo,1);
                 break;
             default:
                 throw new RuntimeException("无效的状态");
