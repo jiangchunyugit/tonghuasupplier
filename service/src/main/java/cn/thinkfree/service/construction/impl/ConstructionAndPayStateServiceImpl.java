@@ -47,8 +47,8 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
     private static String contractUrl = "/funds/orderStatusPayable";
 
     public String getUrl(String suffix) {
-        //return "http://" + userCenterIp + ":" + userCenterPort + suffix;
-        return "http://10.240.10.88" + suffix;
+        return "http://" + userCenterIp + ":" + userCenterPort + suffix;
+       // return "http://10.240.10.88" + suffix;
     }
 
     /**
