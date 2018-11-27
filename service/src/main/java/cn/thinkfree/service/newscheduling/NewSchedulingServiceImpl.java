@@ -67,8 +67,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.error("此施工订单无关联的项目");
         }
         String projectNo = constructionOrder.getProjectNo();
-        //获取报价基础信息
-//        Set<Integer> bigSortSet = projectQuotationLogMapper.selectByProjectNo(projectNo);
         //获取项目信息
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();

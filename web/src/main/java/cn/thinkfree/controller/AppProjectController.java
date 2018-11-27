@@ -37,14 +37,14 @@ public class AppProjectController {
     @RequestMapping(value = "getProjectNum", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目个数")
     public MyRespBundle<Integer> getAllProject(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号,默认先写123456",required = true) String userId) {
+            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号",required = true) String userId) {
         return newProjectService.getProjectNum(userId);
     }
 
     @RequestMapping(value = "getAppProjectDetail", method = RequestMethod.POST)
     @ApiOperation(value = "APP-获取项目详情接口")
     public MyRespBundle<ProjectVo> getAppProjectDetail(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         MyRespBundle<ProjectVo> projectVo = newProjectService.getAppProjectDetail(projectNo);
         return projectVo;
     }
@@ -52,21 +52,21 @@ public class AppProjectController {
     @RequestMapping(value = "getAppProjectTitleDetail", method = RequestMethod.POST)
     @ApiOperation(value = "APP-获取项目详情头接口")
     public MyRespBundle<ProjectTitleVo> getAppProjectTitleDetail(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         return newProjectService.getAppProjectTitleDetail(projectNo);
     }
 
     @RequestMapping(value = "getDesignData", method = RequestMethod.POST)
     @ApiOperation(value = "APP-获取设计资料")
     public MyRespBundle<DataVo> getDesignData(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         return newProjectService.getDesignData(projectNo);
     }
 
     @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
     @ApiOperation(value = "APP/PC-获取施工资料")
     public MyRespBundle<ConstructionDataVo> getConstructionData(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         return newProjectService.getConstructionData(projectNo);
     }
 
@@ -101,8 +101,8 @@ public class AppProjectController {
     @RequestMapping(value = "confirmVolumeRoomDataUser", method = RequestMethod.POST)
     @ApiOperation(value = "C端确认资料")
     public MyRespBundle<String> confirmVolumeRoomDataUser(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 ")String projectNo,
-            @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号,测试请用 ")Integer category) {
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号")String projectNo,
+            @RequestParam(name = "category")@ApiParam(name = "category", value = "项目编号")Integer category) {
         try{
             return newProjectService.confirmVolumeRoomDataUser(projectNo,category);
         } catch (Exception e) {
@@ -114,7 +114,7 @@ public class AppProjectController {
     @RequestMapping(value = "getProjectStatus", method = RequestMethod.POST)
     @ApiOperation(value = "APP-获取项目阶段")
     public MyRespBundle<Integer> getProjectStatus(
-            @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号,测试请用 1223098338391",required = true) String projectNo) {
+            @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         return newProjectService.getProjectStatus(projectNo);
     }
 
