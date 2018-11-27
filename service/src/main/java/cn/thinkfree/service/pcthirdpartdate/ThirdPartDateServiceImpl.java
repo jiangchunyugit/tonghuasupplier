@@ -218,7 +218,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  //订单编号
 					  vo.setFromOrderid(orderNumber);
 					  //是否全额支付
-					  if(i == 0){
+					 // if(i == 0){
 //					  vo.setIsEnd("1");
 //					  }else{
 						  if(i == jsonArray.size()-1 ){
@@ -243,11 +243,11 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		              listVo.add(vo);
 				  }
 		 
-	     }			  
-	   } 
-		else{
+	      } 
+		else
+		{
 			  printInfoMes("调用订单合同发生错误 ","contractInfos is null or contractInfos.size() > 0 {}",jsonSr.toString());
-		  }
+		 }
 		  
 	}
 
