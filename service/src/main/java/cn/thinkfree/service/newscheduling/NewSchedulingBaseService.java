@@ -63,4 +63,12 @@ public interface NewSchedulingBaseService {
      * @return
      */
     MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVOList);
+
+    /**
+     * 删除基础大排期
+     * @param schemeNo
+     * @param sort
+     * @return
+     */
+    MyRespBundle<String> deleteBigScheduling(String schemeNo, Integer sort);
 }

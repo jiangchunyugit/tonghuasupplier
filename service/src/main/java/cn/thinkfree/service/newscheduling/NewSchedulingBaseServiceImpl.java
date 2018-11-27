@@ -77,8 +77,8 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> addBigScheduling(List<ProjectBigSchedulingVO> projectBigSchedulingVOList) {
         for (ProjectBigSchedulingVO projectBigSchedulingVO : projectBigSchedulingVOList) {
-            if (projectBigSchedulingVO.getSchemeNo()==null||projectBigSchedulingVO.getSchemeNo().isEmpty()){
-                return RespData.error("请给"+projectBigSchedulingVO.getName()+"的schemo_no赋值");
+            if (projectBigSchedulingVO.getSchemeNo() == null || projectBigSchedulingVO.getSchemeNo().isEmpty()) {
+                return RespData.error("请给" + projectBigSchedulingVO.getName() + "的schemo_no赋值");
             }
             ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
             projectBigScheduling.setSchemeNo(projectBigSchedulingVO.getSchemeNo());
@@ -110,7 +110,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
      */
     @Override
     public MyRespBundle<PageInfo<ProjectBigSchedulingVO>> listBigScheduling(SchedulingSeo schedulingSeo) {
-        if(schedulingSeo==null){
+        if (schedulingSeo == null) {
             return RespData.error("请检查上传参数");
         }
         PageInfo pageInfo = new PageInfo<>();
@@ -118,7 +118,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         projectBigSchedulingExample.setOrderByClause("create_time desc");
         ProjectBigSchedulingExample.Criteria criteria = projectBigSchedulingExample.createCriteria();
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-        if(schedulingSeo.getSchemeNo()==null||schedulingSeo.getSchemeNo().isEmpty()){
+        if (schedulingSeo.getSchemeNo() == null || schedulingSeo.getSchemeNo().isEmpty()) {
             return RespData.error("请上传案例编号");
         }
         criteria.andSchemeNoEqualTo(schedulingSeo.getSchemeNo());
@@ -138,7 +138,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String updateSmallScheduling(List<ProjectSmallSchedulingVO> projectSmallSchedulingVOList) {
-        for (ProjectSmallSchedulingVO projectSmallSchedulingVO:projectSmallSchedulingVOList){
+        for (ProjectSmallSchedulingVO projectSmallSchedulingVO : projectSmallSchedulingVOList) {
             if (projectSmallSchedulingVO.getSort() == null || projectSmallSchedulingVO.getParentSort() == null) {
                 return "请选择施工阶段!!";
             }
@@ -165,10 +165,10 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Transactional(rollbackFor = Exception.class)
     public String listShangHai(SchedulingSeo schedulingSeo) {
         //获取上海基础小排期信息
-        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(), Scheduling.LIMIT.getValue(),schedulingSeo.getCompanyId());
+        String result = cloudService.getBaseScheduling(Scheduling.BASE_STATUS.getValue(), Scheduling.LIMIT.getValue(), schedulingSeo.getCompanyId());
         JSONObject jsonObject = JSON.parseObject(result);
         JSONArray json = jsonObject.getJSONArray("data");
-        if(json.size()==0){
+        if (json.size() == 0) {
             return "上海暂无此公司的施工基础信息!";
         }
         String jsonString = JSONObject.toJSONString(json);
@@ -221,22 +221,52 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> updateBigScheduling(ProjectBigSchedulingVO projectBigSchedulingVO) {
-            if (projectBigSchedulingVO.getSchemeNo().isEmpty()){
-                return RespData.error("请上传案例编号");
-            }
-            ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
-            projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
-            projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
-            projectBigScheduling.setIsWaterTest(projectBigSchedulingVO.getIsWaterTest());
-            ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
-            ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
-            criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-            criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
-            criteria.andSchemeNoEqualTo(projectBigSchedulingVO.getSchemeNo());
-            int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
-            if (i != Scheduling.INSERT_SUCCESS.getValue()) {
-                return RespData.error("操作失败!");
-            }
+        if (projectBigSchedulingVO.getSchemeNo().isEmpty()) {
+            return RespData.error("请上传案例编号");
+        }
+        ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+        projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
+        projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
+        projectBigScheduling.setIsWaterTest(projectBigSchedulingVO.getIsWaterTest());
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        criteria.andSortEqualTo(projectBigSchedulingVO.getSort());
+        criteria.andSchemeNoEqualTo(projectBigSchedulingVO.getSchemeNo());
+        int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
+        if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+            return RespData.error("操作失败!");
+        }
+        return RespData.success();
+    }
+
+    /**
+     * 删除基础大排期
+     *
+     * @param schemeNo
+     * @param sort
+     * @return
+     */
+    @Override
+    public MyRespBundle<String> deleteBigScheduling(String schemeNo, Integer sort) {
+        if (schemeNo == null || schemeNo.isEmpty() || sort == null) {
+            return RespData.error("入参不可为空");
+        }
+        ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
+        projectBigScheduling.setStatus(Scheduling.INVALID_STATUS.getValue());
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        criteria.andSortEqualTo(sort);
+        criteria.andSchemeNoEqualTo(schemeNo);
+        List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example);
+        if (projectBigSchedulings.size() == Scheduling.MATHCHING_NO.getValue()) {
+            return RespData.error("此方案编号下此序号大排期不存在");
+        }
+        int i = projectBigSchedulingMapper.updateByExampleSelective(projectBigScheduling, example);
+        if (i != Scheduling.INSERT_SUCCESS.getValue()) {
+            return RespData.error("操作失败!");
+        }
         return RespData.success();
     }
 }
