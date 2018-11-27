@@ -348,7 +348,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				firstMoney = eval.apply(firstMoneyVO);
 			}
 			saveCash(contractNumber,fullMoney,firstMoney);
-			eventService.publish(new CreateOrder(contractNumber));
+//			eventService.publish(new CreateOrder(contractNumber));
 		}
 
 

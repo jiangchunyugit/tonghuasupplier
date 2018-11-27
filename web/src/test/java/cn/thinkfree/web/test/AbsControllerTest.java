@@ -58,9 +58,9 @@ public  abstract class AbsControllerTest {
         userRegister.setId(22);
         userVO.setUserRegister(userRegister);
 
-        pcUserInfo.setArea("610125");
-        pcUserInfo.setCity("6101");
-        pcUserInfo.setProvince("61");
+//        pcUserInfo.setArea("610125");
+//        pcUserInfo.setCity("6101");
+//        pcUserInfo.setProvince("61");
         pcUserInfo.setRootCompanyId("BD2018080710405900001");
 //        pcUserInfo.setCompanyId("BD2018080710405900001");
         pcUserInfo.setLevel(Short.valueOf("1"));

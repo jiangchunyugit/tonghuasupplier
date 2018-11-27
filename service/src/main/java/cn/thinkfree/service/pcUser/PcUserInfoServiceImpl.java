@@ -564,18 +564,18 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             userInfo.setLevel(UserLevel.Company_City.shortVal());
             userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getCityBranchCode());
             userInfo.setBranchCompanyId(accountVO.getBranchCompany().getBranchCompanyCode());
-            userInfo.setProvince(accountVO.getCityBranch().getProvinceCode().toString());
-            userInfo.setCity(accountVO.getCityBranch().getCityCode().toString());
+//            userInfo.setProvince(accountVO.getCityBranch().getProvinceCode().toString());
+//            userInfo.setCity(accountVO.getCityBranch().getCityCode().toString());
         }else if(accountVO.getBranchCompany() != null &&  accountVO.getCityBranch() == null){
             userInfo.setBranchCompanyId(accountVO.getBranchCompany().getBranchCompanyCode());
-            userInfo.setProvince(accountVO.getBranchCompany().getProvinceCode().toString());
+//            userInfo.setProvince(accountVO.getBranchCompany().getProvinceCode().toString());
             userInfo.setLevel(UserLevel.Company_Province.shortVal());
             userInfo.setCityBranchCompanyId(null);
-            userInfo.setCity(null);
+//            userInfo.setCity(null);
         }else if( accountVO.getBranchCompany() == null  && accountVO.getCityBranch() == null){
             userInfo.setLevel(UserLevel.Company_Admin.shortVal());
-            userInfo.setProvince(null);
-            userInfo.setCity(null);
+//            userInfo.setProvince(null);
+//            userInfo.setCity(null);
             userInfo.setCityBranchCompanyId(null);
             userInfo.setBranchCompanyId(null);
         }
