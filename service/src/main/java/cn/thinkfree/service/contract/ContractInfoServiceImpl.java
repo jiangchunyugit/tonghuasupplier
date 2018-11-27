@@ -20,6 +20,13 @@ import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import cn.thinkfree.database.event.sync.CreateOrder;
+import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.*;
+import cn.thinkfree.service.branchcompany.BranchCompanyService;
+import cn.thinkfree.service.constants.*;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -181,11 +188,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	FundsCompanyCashMapper fundsCompanyCashMapper;
-	
+
 	@Autowired
 	ThirdPartDateService thirdPartDateService;
-	
-	 
+
+
 
 
 	@Override
@@ -341,14 +348,14 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
 			}
             //生成预付订单
-            
+
             List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContractToB(contractNumber);
             for (int i = 0; i < listvo.size(); i++) {
             	  CreateOrder order = new CreateOrder();
                   order.setData(listvo.get(i));
                   eventService.publish(order);
 			}
-           
+
         } else {
         	/* 财务审核不通过 */
 			vo.setContractStatus( ContractStatus.AuditDecline.shortVal() );
@@ -390,7 +397,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
     		andContractNumberEqualTo(contractNumber).andCostTypeEqualTo("13");
     		example.setOrderByClause(" c_type asc");
     		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(examplec);
-    		
+
 			if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
 				String fullMoneyCode = "c15";
 				String firstMoneyCode = "c16";
@@ -409,7 +416,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 						}
 					}
 				}
-				
+
 //				Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
 //				firstMoney = eval.apply(firstMoneyVO);
 
@@ -421,7 +428,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 				Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
 				fullMoney = eval.apply(fullMoneyVO);
-				
+
 				//合同结算表数据为空的话第一次支付等于全额
 				if(childList == null || childList.size() == 0){
 					firstMoney = fullMoney;
@@ -433,7 +440,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 						}
 					}
 				}
-				
+
 //				Optional<ContractTerms> firstMoneyVO = filter.apply(contractTerms.stream(),fullMoneyCode);
 //				firstMoney = eval.apply(firstMoneyVO);
 			}
@@ -443,6 +450,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         if ( flag > 0 && flagT > 0 && flagon > 0 ) {
             return true;
         }
+
 
         return false;
     }
@@ -486,10 +494,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
 		record.setDepositMoney(Integer.valueOf(deposistMoney));
 		CompanyInfoExample companyInfoex = new CompanyInfoExample();
-		companyInfoex.createCriteria().andCompanyIdEqualTo( companyId ); 
+		companyInfoex.createCriteria().andCompanyIdEqualTo( companyId );
 		/* 确认已交保证金 */
 		int flag = companyInfoMapper.updateByExampleSelective(record ,companyInfoex );
-		
+
 		if ( flag > 0 )
 		{
 			return true;

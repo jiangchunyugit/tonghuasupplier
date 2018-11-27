@@ -84,7 +84,7 @@ public class DictionaryControllerTest extends AbsControllerTest {
 
     @Test
     public void thirdPeople() throws Exception {
-        String rs = mvc.perform(get("/dictionary/third/people").param("condition","测试").with(user(userVO)))
+        String rs = mvc.perform(get("/dictionary/third/people").param("condition","侯俊龙").with(user(userVO)))
                 .andExpect(status().isOk())
                 .andDo(print())         //打印出请求和相应的内容
                 .andReturn().getResponse().getContentAsString();

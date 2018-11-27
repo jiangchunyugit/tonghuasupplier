@@ -106,9 +106,9 @@ public class StaffServiceImpl extends AbsLogPrinter implements StaffService {
         // 该处是因为 服务组使用是否不统一
         // 已授权为2 未授权为1
         userInfo.setIsAuth(SysConstants.YesOrNo.YES.shortVal());
-        userInfo.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
-        userInfo.setCityCode(Short.valueOf(userVO.getPcUserInfo().getCity()));
-        userInfo.setAreaCode(Integer.valueOf(userVO.getPcUserInfo().getArea()));
+//        userInfo.setProvinceCode(Short.valueOf(userVO.getPcUserInfo().getProvince()));
+//        userInfo.setCityCode(Short.valueOf(userVO.getPcUserInfo().getCity()));
+//        userInfo.setAreaCode(Integer.valueOf(userVO.getPcUserInfo().getArea()));
         userInfo.setRoleId(companyUserSet.getRoleId());
         userInfo.setName(companyUserSet.getName());
         userInfoMapper.insertSelective(userInfo);

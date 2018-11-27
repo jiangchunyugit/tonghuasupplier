@@ -96,4 +96,5 @@ public interface HrPeopleEntityMapper {
      */
     int updateByPrimaryKey(HrPeopleEntity record);
 
+    List<HrPeopleEntity> selectPeopleVO(HrPeopleEntityExample peopleEntityExample);
 }
