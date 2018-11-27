@@ -225,9 +225,30 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
             return RespData.error("请上传案例编号");
         }
         ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
-        projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
-        projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
-        projectBigScheduling.setIsWaterTest(projectBigSchedulingVO.getIsWaterTest());
+        if (projectBigSchedulingVO.getName() != null && !projectBigSchedulingVO.getName().trim().isEmpty()) {
+            projectBigScheduling.setName(projectBigSchedulingVO.getName());
+        }
+        if (projectBigSchedulingVO.getDescription() != null && !projectBigSchedulingVO.getDescription().trim().isEmpty()) {
+            projectBigScheduling.setDescription(projectBigSchedulingVO.getDescription());
+        }
+        if (projectBigSchedulingVO.getIsNew() != null) {
+            projectBigScheduling.setIsNew(projectBigSchedulingVO.getIsNew());
+        }
+        if (projectBigSchedulingVO.getSquareMetreStart() != null) {
+            projectBigScheduling.setSquareMetreStart(projectBigSchedulingVO.getSquareMetreStart());
+        }
+        if (projectBigSchedulingVO.getSquareMetreEnd() != null) {
+            projectBigScheduling.setSquareMetreEnd(projectBigSchedulingVO.getSquareMetreEnd());
+        }
+        if (projectBigSchedulingVO.getIsNeedCheck() != null) {
+            projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
+        }
+        if (projectBigSchedulingVO.getRename() != null && !projectBigSchedulingVO.getRename().trim().isEmpty()) {
+            projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
+        }
+        if (projectBigSchedulingVO.getIsWaterTest() != null) {
+            projectBigScheduling.setIsWaterTest(projectBigSchedulingVO.getIsWaterTest());
+        }
         ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
         ProjectBigSchedulingExample.Criteria criteria = example.createCriteria();
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
