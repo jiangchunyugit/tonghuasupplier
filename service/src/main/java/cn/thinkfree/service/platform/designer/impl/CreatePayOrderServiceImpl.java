@@ -55,6 +55,10 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
     @Override
     public void createVolumeRoomPay(String projectNo, Integer appointmentAmount) {
         Project project = designDispatchService.queryProjectByNo(projectNo);
+        if(appointmentAmount == null){
+            logger.error("量房费不能为空");
+            throw new RuntimeException("创建量房订单失败");
+        }
         if (project == null) {
             logger.error("没有查询到项目编号为【{}】的项目", projectNo);
             throw new RuntimeException("创建量房订单失败");

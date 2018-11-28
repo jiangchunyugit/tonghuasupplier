@@ -1,11 +1,9 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import com.github.pagehelper.PageInfo;
-import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 
 public interface ConstructionOrderOperate {
 
@@ -22,6 +20,6 @@ public interface ConstructionOrderOperate {
      * @param cityName
      * @return
      */
-    MyRespBundle<ConstructionOrderCommonVo> getOrderList(int pageNum, int pageSize, String cityName);
+    PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName);
 
 }
