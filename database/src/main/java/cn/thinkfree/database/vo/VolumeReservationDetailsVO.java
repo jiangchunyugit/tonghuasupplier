@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Auther: jiang
  * @Date: 2018/11/28 14:44
@@ -36,4 +38,8 @@ public class VolumeReservationDetailsVO {
     private String decorationLocation;
     @ApiModelProperty("量房地点")
     private String measuringRoomLocation;
+    @ApiModelProperty("预约时间")
+    private Date volumeRoomDate;
+    @ApiModelProperty("量房费用")
+    private String appointmentAmount;
 }

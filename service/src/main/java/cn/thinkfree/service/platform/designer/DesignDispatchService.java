@@ -127,7 +127,7 @@ public interface DesignDispatchService {
      * @param designerUserId 设计师ID
      * @param volumeRoomDate 预约时间
      */
-    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Float appointmentAmount);
+    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, String appointmentAmount);
 
     /**
      * 提醒业主

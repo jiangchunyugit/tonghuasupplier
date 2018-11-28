@@ -261,7 +261,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "volumeRoomDate", required = false, value = "预约时间") @RequestParam(name = "volumeRoomDate", required = false) String volumeRoomDate,
             @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId,
-            @ApiParam(name = "appointmentAmount", required = false, value = "量房费") @RequestParam(name = "appointmentAmount", required = false) Float appointmentAmount
+            @ApiParam(name = "appointmentAmount", required = false, value = "量房费") @RequestParam(name = "appointmentAmount", required = false) String appointmentAmount
             ) {
         try {
             designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId, volumeRoomDate,appointmentAmount);
