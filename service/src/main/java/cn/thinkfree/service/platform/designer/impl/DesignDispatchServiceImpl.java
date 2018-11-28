@@ -464,6 +464,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", "合同审核通过");
         saveLog(stateEnum.getState(), project);
         updateProjectState(project.getProjectNo(), stateEnum.getState());
+        // 支付阶段通知
+        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
     }
 
     @Override
@@ -816,6 +818,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         } else {
             updateProjectState(projectNo, orderState);
         }
+        if(orderState == DesignStateEnum.STATE_170.getState()){
+            // 支付阶段通知
+            constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 2);
+        }
+        if(orderState == DesignStateEnum.STATE_200.getState()){
+            // 支付阶段通知
+            constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 3);
+        }
     }
 
     @Override
@@ -841,6 +851,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             createConstructionOrder(projectNo);
         } else {
             updateProjectState(projectNo, orderState);
+        }
+        if(orderState == DesignStateEnum.STATE_170.getState()){
+            // 支付阶段通知
+            constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 2);
+        }
+        if(orderState == DesignStateEnum.STATE_200.getState()){
+            // 支付阶段通知
+            constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 3);
         }
     }
 
@@ -881,23 +899,15 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 break;
             case STATE_140:
                 stateEnum = DesignStateEnum.STATE_150;
-                // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo, 1);
                 break;
             case STATE_170:
                 stateEnum = DesignStateEnum.STATE_180;
-                // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo, 2);
                 break;
             case STATE_200:
                 stateEnum = DesignStateEnum.STATE_210;
-                // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo, 3);
                 break;
             case STATE_220:
                 stateEnum = DesignStateEnum.STATE_230;
-                // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo, 1);
                 break;
             default:
                 throw new RuntimeException("无效的状态");
@@ -928,7 +938,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignStateEnum timeOutState = null;
         switch (designStateEnum) {
             case STATE_40:
-                timeOutState = DesignStateEnum.STATE_80;
+                timeOutState = DesignStateEnum.STATE_42;
                 break;
             case STATE_140:
                 timeOutState = DesignStateEnum.STATE_141;

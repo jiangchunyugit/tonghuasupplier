@@ -49,11 +49,15 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_40(40, "量房待支付", "设计师发起量房预约", new Integer[]{45, 80, 41}, true),
+    STATE_40(40, "量房待支付", "设计师发起量房预约", new Integer[]{45, 42, 41}, true),
     /**
      * 消费者	订单终止
      */
     STATE_ORDER_END_41(41, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
+    /**
+     * 消费者	拒绝支付量房费（超时未支付）
+     */
+    STATE_42(42, "订单关闭", "订单关闭（量房支付超时）", "订单关闭（量房支付超时）", "订单关闭（量房支付超时）", "业主拒绝支付量房费（超时未支付）", new Integer[]{}, false),
     /**
      * 设计师	发起量房预约
      */
@@ -61,7 +65,23 @@ public enum DesignStateEnum {
     /**
      * 消费者	支付量房费
      */
-    STATE_50(50, "量房待交付", "业主支付量房费", new Integer[]{60, 90}, true),
+    STATE_50(50, "量房待交付", "业主支付量房费", new Integer[]{60, 51}, true),
+    /**
+     * 消费者	申请退款
+     */
+    STATE_51(51, "退款中", "量房退款待设计公司审核", "量房退款待审核", "量房退款待审核", "业主对量房款发起了申请退款", new Integer[]{52, 50}, false),
+    /**
+     * 设计公司	同意退款
+     */
+    STATE_52(52, "退款中", "量房退款待平台审核", "量房退款待平台审核", "量房退款待平台审核", "设计公司同意退款", new Integer[]{53, 50}, false),
+    /**
+     * 运营平台	同意退款
+     */
+    STATE_53(53, "退款中", "平台同意退款", new Integer[]{54, 50}, false),
+    /**
+     * 运营平台（财务）	放款
+     */
+    STATE_54(54, "订单关闭", "财务放款", new Integer[]{}, false),
     /**
      * 设计师	上传量房资料
      */
@@ -70,26 +90,6 @@ public enum DesignStateEnum {
      * 消费者	确认量房交付物
      */
     STATE_70(70, "量房已确认", "业主确认量房交付物", new Integer[]{130}, true),
-    /**
-     * 消费者	拒绝支付量房费（超时未支付）
-     */
-    STATE_80(80, "订单关闭", "订单关闭（量房支付超时）", "订单关闭（量房支付超时）", "订单关闭（量房支付超时）", "业主拒绝支付量房费（超时未支付）", new Integer[]{}, false),
-    /**
-     * 消费者	申请退款
-     */
-    STATE_90(90, "退款中", "量房退款待设计公司审核", "量房退款待审核", "量房退款待审核", "业主对量房款发起了申请退款", new Integer[]{100, 50}, false),
-    /**
-     * 设计公司	同意退款
-     */
-    STATE_100(100, "退款中", "量房退款待平台审核", "量房退款待平台审核", "量房退款待平台审核", "设计公司同意退款", new Integer[]{110, 50}, false),
-    /**
-     * 运营平台	同意退款
-     */
-    STATE_110(110, "退款中", "平台同意退款", new Integer[]{120, 50}, false),
-    /**
-     * 运营平台（财务）	放款
-     */
-    STATE_120(120, "订单关闭", "财务放款", new Integer[]{}, false),
     /**
      * 发起设计合同及报价
      */
@@ -332,6 +332,7 @@ public enum DesignStateEnum {
     }
 
     public static List<Map<String, Object>> allState(int state) {
+        states.clear();
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
         List<Map<String, Object>> mapList = new ArrayList<>();
@@ -343,7 +344,7 @@ public enum DesignStateEnum {
         }
         DesignStateEnum stateEnum = enumMap.get(state);
         if (!stateEnum.stateType) {
-            stateEnum = falseState(stateEnums, state);
+            stateEnum = falseState(enumMap, state);
         }
         getData(enumMap, stateEnum, mapList, stateEnum.stateType);
         List<Map<String, Object>> removeData = new ArrayList<>();
@@ -373,13 +374,29 @@ public enum DesignStateEnum {
         return mapList;
     }
 
-    private static DesignStateEnum falseState(DesignStateEnum[] stateEnums, int state) {
-        for (int i = stateEnums.length - 1; i > 0; i--) {
-            if (stateEnums[i].state < state && stateEnums[i].stateType) {
-                return stateEnums[i + 1];
+    private static DesignStateEnum falseState(Map<Integer, DesignStateEnum> enumMap, int state) {
+        DesignStateEnum lastEnum = enumMap.get(state);
+        int i = 0;
+        while (true) {
+            DesignStateEnum stateEnum = getFromState(enumMap, lastEnum.state);
+            if(stateEnum != null && stateEnum.stateType){
+                return lastEnum;
+            }
+            lastEnum = stateEnum;
+            i ++;
+            if(i > DesignStateEnum.values().length){
+                return DesignStateEnum.STATE_1;
             }
         }
-        return stateEnums[1];
+    }
+
+    private static DesignStateEnum getFromState(Map<Integer, DesignStateEnum> enumMap, int state){
+        for (Map.Entry<Integer, DesignStateEnum> stateEnums : enumMap.entrySet()) {
+            if (Arrays.asList(stateEnums.getValue().nextStates).contains(state)) {
+                return stateEnums.getValue();
+            }
+        }
+        return null;
     }
 
     private static List<Integer> states = new ArrayList<>();
