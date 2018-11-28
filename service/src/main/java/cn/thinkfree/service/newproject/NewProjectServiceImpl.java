@@ -90,12 +90,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
         PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
-        PageInfo<ProjectVo> pageInfo = new PageInfo<>();
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size() == 0) {
-            pageInfo.setList(new ArrayList<>());
-            return RespData.success(pageInfo, "此用户尚未分配项目");
+            return RespData.success(new PageInfo<>(), "此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
@@ -133,7 +131,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectVo.setOwner(owner);
             //添加进度展示
-            if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
+            if (project.getStage() >= ConstructionStateEnumB.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
                 projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
@@ -162,7 +160,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setStageNameColor("#50ABD2");
             projectVoList.add(projectVo);
         }
-        pageInfo.setList(projectVoList);
+        PageInfo<ProjectVo> pageInfo = new PageInfo<>(projectVoList);
         return RespData.success(pageInfo);
     }
 
@@ -257,7 +255,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
-        List<Map<String, Object>> maps = DesignStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage());
         for (Map<String, Object> map : maps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setName(map.get("val").toString());
@@ -408,6 +406,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         categoryList.add(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
         criteria.andCategoryIn(categoryList);
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
+        if(projectDataList.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("暂无设计资料");
+        }
         List<DataDetailVo> dataDetailVoList = new ArrayList<>();
         Set<Integer> set = new HashSet<>();
         for (ProjectData projectData : projectDataList) {
@@ -466,6 +467,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         criteria.andTypeEqualTo(ProjectDataStatus.QUOTATION_STATUS.getValue());
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
+        if(projectDataList.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+            return RespData.error("暂无施工资料");
+        }
         for (ProjectData projectData : projectDataList) {
             if (projectData.getIsConfirm() != null){
                 confirm = projectData.getIsConfirm();
@@ -695,7 +699,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         } else if (category == 3) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_200;

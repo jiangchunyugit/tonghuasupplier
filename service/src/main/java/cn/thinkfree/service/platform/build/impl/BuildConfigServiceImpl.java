@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -154,10 +151,10 @@ public class BuildConfigServiceImpl implements BuildConfigService {
             buildPayConfig.setSchemeNo(schemeNo);
             buildPayConfig.setPaySchemeNo(OrderNoUtils.getNo("BUC"));
             buildPayConfig.setProgressName("线下签约完成");
-            buildPayConfig.setStageCode("待支付收款");
+            buildPayConfig.setStageCode("-1");
             buildPayConfig.setRemark("线下签约完成");
             buildPayConfig.setDeleteState(3);
-
+            payConfigMapper.insertSelective(buildPayConfig);
             payConfigs.add(buildPayConfig);
         }
         PageVo<List<BuildPayConfig>> pageVo = new PageVo<>();
@@ -354,7 +351,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         ConstructionOrder constructionOrder = constructionOrders.get(0);
         String schemeNo = constructionOrder.getSchemeNo();
         BuildPayConfigExample configExample = new BuildPayConfigExample();
-        configExample.createCriteria().andSchemeNoEqualTo(schemeNo);
+        configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(Arrays.asList(2,3));
         return payConfigMapper.selectByExample(configExample);
     }
     @Transactional(rollbackFor = {Exception.class})

@@ -147,10 +147,10 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
         int orderState = DesignerOrder.getOrderStage();
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(orderState);
         switch (stateEnum) {
-            case STATE_90:
-            case STATE_100:
-            case STATE_110:
-            case STATE_120:
+            case STATE_51:
+            case STATE_52:
+            case STATE_53:
+            case STATE_54:
                 return DesignStateEnum.STATE_50;
             case STATE_151:
             case STATE_152:
@@ -199,13 +199,13 @@ public class ApplyRefundServiceImpl implements ApplyRefundService {
         switch (stateEnum) {
             //量房退款状态
             case STATE_50:
-                return DesignStateEnum.STATE_90;
-            case STATE_90:
-                return DesignStateEnum.STATE_100;
-            case STATE_100:
-                return DesignStateEnum.STATE_110;
-            case STATE_110:
-                return DesignStateEnum.STATE_120;
+                return DesignStateEnum.STATE_51;
+            case STATE_51:
+                return DesignStateEnum.STATE_52;
+            case STATE_52:
+                return DesignStateEnum.STATE_53;
+            case STATE_53:
+                return DesignStateEnum.STATE_54;
             //首期款退款状态
             case STATE_150:
                 return DesignStateEnum.STATE_151;

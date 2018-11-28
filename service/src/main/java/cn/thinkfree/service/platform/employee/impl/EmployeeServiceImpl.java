@@ -411,7 +411,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return
      */
     public UserRoleSet queryRoleSet(String roleCode) {
-        if (roleCode == null) {
+        if (StringUtils.isBlank(roleCode)) {
             return new UserRoleSet();
         }
         UserRoleSetExample roleSetExample = new UserRoleSetExample();

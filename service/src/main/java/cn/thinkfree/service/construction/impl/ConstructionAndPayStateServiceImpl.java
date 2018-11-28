@@ -44,7 +44,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
     @Value("${custom.service.port}")
     private String userCenterPort;
 
-    private static String contractUrl = "/funds/orderStatusPayable";
+    private static String contractUrl = "/financialapi/funds/orderStatusPayable";
 
     public String getUrl(String suffix) {
         return "http://" + userCenterIp + ":" + userCenterPort + suffix;

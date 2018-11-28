@@ -173,10 +173,18 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         if(users.isEmpty() || users.size() > 1){
             throw new UsernameNotFoundException("用户信息异常");
         }
-        UserRegisterType type = UserRegisterType.values()[Integer.valueOf(detail.getType())];
-        UserDetails userDetails = strategyFactory.getStrategy(type).build(detail.getUserName());
 
-
+        UserRegister user = users.get(0);
+        if(!Short.valueOf(detail.getType()).equals(user.getType())){
+            throw new UsernameNotFoundException("用户账号信息错误");
+        }
+        // 省去一次查询
+        ThreadLocalHolder.set(user);
+        UserRegisterType type = UserRegisterType.values()[Integer.valueOf(user.getType())];
+        SecurityUser userDetails = strategyFactory.getStrategy(type).build(user.getUserId());
+        if(userDetails == null){
+            throw  new UsernameNotFoundException("用户账号信息错误");
+        }
         return userDetails;
     }
 

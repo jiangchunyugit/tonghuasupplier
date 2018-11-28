@@ -296,10 +296,10 @@
     <table>
         <tr>
             <td>
-                <span>（1）签约平台合作合同时一次性缴纳<p class="placeholderK">${c17}</p>万的质量保证金，</span>
+                <span>保证金总金额：<p class="placeholderK">${c17}</p></span>
             </td>
         </tr>
-       <#list code02 as c>
+       <#list code13 as c>
 
             <tr>
                 <td>
