@@ -53,7 +53,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
      * @param projectNo
      */
     @Override
-    public void createVolumeRoomPay(String projectNo, Float appointmentAmount) {
+    public void createVolumeRoomPay(String projectNo, String appointmentAmount) {
         Project project = designDispatchService.queryProjectByNo(projectNo);
         if(appointmentAmount == null){
             logger.error("量房费不能为空");

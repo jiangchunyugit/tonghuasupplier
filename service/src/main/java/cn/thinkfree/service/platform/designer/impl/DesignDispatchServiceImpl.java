@@ -727,7 +727,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Float appointmentAmount) {
+    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, String appointmentAmount) {
         //设计师接单
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
@@ -1346,7 +1346,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (projects.size() == 0) {
             return RespData.error("项目不存在!!");
         }
-        updateOrderState(projectNo, DesignStateEnum.STATE_40.getState(), userId, "");
+        updateOrderState(projectNo, DesignStateEnum.STATE_45.getState(), userId, "");
         return RespData.success();
     }
 }
