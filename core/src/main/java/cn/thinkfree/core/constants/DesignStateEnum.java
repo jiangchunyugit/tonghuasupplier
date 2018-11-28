@@ -13,23 +13,51 @@ public enum DesignStateEnum {
     /**
      * 消费者	发布需求
      */
-    STATE_1(1, "预约中", "待派单", "无", "无", "创建订单", new Integer[]{10, 331, 330}, true),
+    STATE_1(1, "预约中", "待派单", "无", "无", "创建订单", new Integer[]{10, 2, 3}, true),
+    /**
+     * 运营平台手动关闭订单
+     */
+    STATE_CLOSE_PLATFORM(2, "订单关闭", "平台关闭了订单", new Integer[]{}, false),
+    /**
+     * 消费者	订单终止
+     */
+    STATE_ORDER_END_3(3, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 运营平台	运营平台人员派单至设计公司
      */
-    STATE_10(10, "预约中", "平台已派单", "待派单", "无", "运营平台人员派单至设计公司", new Integer[]{20, 1, 330}, true),
+    STATE_10(10, "预约中", "平台已派单", "待派单", "无", "运营平台人员派单至设计公司", new Integer[]{20, 1, 11}, true),
+    /**
+     * 消费者	订单终止
+     */
+    STATE_ORDER_END_11(11, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 设计公司	设计公司派单给设计师
      */
-    STATE_20(20, "预约中", "设计公司已派单", "设计公司已派单", "待接单", "设计公司派单给设计师", new Integer[]{30, 10, 330}, true),
+    STATE_20(20, "预约中", "设计公司已派单", "设计公司已派单", "待接单", "设计公司派单给设计师", new Integer[]{30, 10, 21}, true),
+    /**
+     * 消费者	订单终止
+     */
+    STATE_ORDER_END_21(21, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 设计师	设计师接单
      */
-    STATE_30(30, "服务中", "设计师已接单", "设计师已接单", "设计师已接单", "设计师接单", new Integer[]{40, 330}, true),
+    STATE_30(30, "服务中", "设计师已接单", "设计师已接单", "设计师已接单", "设计师接单", new Integer[]{40, 31}, true),
+    /**
+     * 消费者	订单终止
+     */
+    STATE_ORDER_END_31(31, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 设计师	发起量房预约
      */
-    STATE_40(40, "量房待支付", "设计师发起量房预约", new Integer[]{50, 80, 330}, true),
+    STATE_40(40, "量房待支付", "设计师发起量房预约", new Integer[]{45, 80, 41}, true),
+    /**
+     * 消费者	订单终止
+     */
+    STATE_ORDER_END_41(41, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
+    /**
+     * 设计师	发起量房预约
+     */
+    STATE_45(45, "量房预约已确认", "业主确认了量房预约申请", new Integer[]{50}, true),
     /**
      * 消费者	支付量房费
      */
@@ -75,7 +103,12 @@ public enum DesignStateEnum {
      * 分期款状态<br/>
      * 设计公司	审批合同（通过）
      */
-    STATE_140(140, "首款待支付", "合同审核通过", new Integer[]{150, 280}, true),
+    STATE_140(140, "首款待支付", "合同审核通过", new Integer[]{150, 141}, true),
+    /**
+     * 订单阶段逆行<br/>
+     * 消费者	拒绝支付订单款项（超时未支付）
+     */
+    STATE_141(141, "订单关闭", "订单关闭（支付超时）", "订单关闭（支付超时）", "订单关闭（支付超时）", "业主拒绝支付订单，订单被关闭", new Integer[]{}, false),
     /**
      * 消费者	支付订单首款
      */
@@ -119,7 +152,12 @@ public enum DesignStateEnum {
     /**
      * 消费者	确认3D效果图
      */
-    STATE_170(170, "中期款待支付", "业主确认了3D效果图", new Integer[]{180, 280}, true),
+    STATE_170(170, "中期款待支付", "业主确认了3D效果图", new Integer[]{180, 171}, true),
+    /**
+     * 订单阶段逆行<br/>
+     * 消费者	拒绝支付订单款项（超时未支付）
+     */
+    STATE_171(171, "订单关闭", "订单关闭（支付超时）", "订单关闭（支付超时）", "订单关闭（支付超时）", "业主拒绝支付订单，订单被关闭", new Integer[]{}, false),
     /**
      * 消费者	支付订单中期款
      */
@@ -172,7 +210,12 @@ public enum DesignStateEnum {
      * 全款状态<br/>
      * 设计公司	审批合同通过
      */
-    STATE_220(220, "全款待支付", "合同审核通过", new Integer[]{230, 280}, true),
+    STATE_220(220, "全款待支付", "合同审核通过", new Integer[]{230, 221}, true),
+    /**
+     * 订单阶段逆行<br/>
+     * 消费者	拒绝支付订单款项（超时未支付）
+     */
+    STATE_221(221, "订单关闭", "订单关闭（支付超时）", "订单关闭（支付超时）", "订单关闭（支付超时）", "业主拒绝支付订单，订单被关闭", new Integer[]{}, false),
     /**
      * 消费者	支付订单款项（全款）
      */
@@ -224,20 +267,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	确认交付物	交易完成
      */
-    STATE_270(270, "交易完成", "业主确认了交付物", new Integer[]{}, true),
-    /**
-     * 订单阶段逆行<br/>
-     * 消费者	拒绝支付订单款项（超时未支付）
-     */
-    STATE_280(280, "订单关闭", "订单关闭（支付超时）", "订单关闭（支付超时）", "订单关闭（支付超时）", "业主拒绝支付订单，订单被关闭", new Integer[]{}, false),
-    /**
-     * 消费者	订单终止
-     */
-    STATE_330(330, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
-    /**
-     * 运营平台手动关闭订单
-     */
-    STATE_331(331, "订单关闭", "平台关闭了订单", new Integer[]{}, false);
+    STATE_270(270, "交易完成", "业主确认了交付物", new Integer[]{}, true);
     private int state;
     private String stateCompany;
     private String statePlatform;
@@ -307,14 +337,12 @@ public enum DesignStateEnum {
         List<Map<String, Object>> mapList = new ArrayList<>();
         for (DesignStateEnum stateEnum : stateEnums) {
             enumMap.put(stateEnum.state, stateEnum);
-        }
-        for (DesignStateEnum stateEnum : stateEnums) {
             if (stateEnum.stateType && stateEnum.state <= state) {
                 addList(mapList, stateEnum);
             }
         }
         DesignStateEnum stateEnum = enumMap.get(state);
-        if(!stateEnum.stateType){
+        if (!stateEnum.stateType) {
             stateEnum = falseState(stateEnums, state);
         }
         getData(enumMap, stateEnum, mapList, stateEnum.stateType);
@@ -333,10 +361,10 @@ public enum DesignStateEnum {
             if (!Arrays.asList(stateEnum1.nextStates).contains(lastState)) {
                 endState = lastState;
             }
-            if(endState > 0 && Arrays.asList(stateEnum1.nextStates).contains(endState)){
+            if (endState > 0 && Arrays.asList(stateEnum1.nextStates).contains(endState)) {
                 startState = integer;
             }
-            if(endState > 0 && startState < 0){
+            if (endState > 0 && startState < 0) {
                 removeData.add(map);
             }
             lastState = integer;
@@ -345,17 +373,19 @@ public enum DesignStateEnum {
         return mapList;
     }
 
-    private static DesignStateEnum falseState(DesignStateEnum[] stateEnums, int state){
-        for(int i = stateEnums.length - 1 ; i > 0 ; i --){
-            if(stateEnums[i].state < state && stateEnums[i].stateType){
+    private static DesignStateEnum falseState(DesignStateEnum[] stateEnums, int state) {
+        for (int i = stateEnums.length - 1; i > 0; i--) {
+            if (stateEnums[i].state < state && stateEnums[i].stateType) {
                 return stateEnums[i + 1];
             }
         }
         return stateEnums[1];
     }
+
     private static List<Integer> states = new ArrayList<>();
+
     private static void addList(List<Map<String, Object>> mapList, DesignStateEnum stateEnum) {
-        if(states.contains(stateEnum.state)){
+        if (states.contains(stateEnum.state)) {
             return;
         }
         states.add(stateEnum.state);
@@ -457,7 +487,11 @@ public enum DesignStateEnum {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         List<DesignStateEnum> stateEnums1 = new ArrayList<>();
         for (DesignStateEnum designStateEnum : stateEnums) {
-            if (designStateEnum.getNextStates().contains(DesignStateEnum.STATE_330)) {
+            if (designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_3)
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_11)
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_21)
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_31)
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_41)) {
                 stateEnums1.add(designStateEnum);
             }
         }
