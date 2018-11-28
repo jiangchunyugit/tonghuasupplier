@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 public class Util
 {
     public static void main(String[] args) {
-        System.out.println(JSONObject.toJSONString(DesignStateEnum.allState(2)));
+        System.out.println(JSONObject.toJSONString(DesignStateEnum.allState(41)));
     }
 
     /**

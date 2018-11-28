@@ -927,7 +927,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignStateEnum timeOutState = null;
         switch (designStateEnum) {
             case STATE_40:
-                timeOutState = DesignStateEnum.STATE_80;
+                timeOutState = DesignStateEnum.STATE_42;
                 break;
             case STATE_140:
                 timeOutState = DesignStateEnum.STATE_141;
