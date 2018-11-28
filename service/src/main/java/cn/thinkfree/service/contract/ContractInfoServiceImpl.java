@@ -1335,6 +1335,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			}
 			if (status.equals("1")) {// 通过
 				OrderContract contract = list.get(0);
+				printInfoMes("合同审批调用 生成订单orderNumber{}}", orderNumber);
+				List<SyncOrderVO> listvo = thirdPartDateService.getOrderContract(orderNumber);
+				for (int i = 0; i < listvo.size(); i++) {
+					CreateOrder order = new CreateOrder();
+					order.setData(listvo.get(i));
+					eventService.publish(order);
+				}
 				if (contract.getContractType().equals("02")) {// 设计合同
 					// 查询合同是全款换是分期
 					ContractTermsExample example1 = new ContractTermsExample();
@@ -1359,13 +1366,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					constructionStateServiceB.contractCompleteState(orderNumber);
 				}
 				record.setSignTime(new Date());// 插入时间
-				printInfoMes("合同审批调用 生成订单orderNumber{}}", orderNumber);
-				List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContract(orderNumber);
-				for (int i = 0; i < listvo.size(); i++) {
-					CreateOrder order = new CreateOrder();
-					order.setData(listvo.get(i));
-					eventService.publish(order);
-				}
+
 			} else {// 拒绝 插入拒绝原因
 				// 查询合同编号
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();

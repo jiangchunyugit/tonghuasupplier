@@ -894,7 +894,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder updateOrder = new DesignerOrder();
         DesignStateEnum stateEnum = null;
         switch (designStateEnum) {
-            case STATE_40:
+            case STATE_45:
                 stateEnum = DesignStateEnum.STATE_50;
                 break;
             case STATE_140:

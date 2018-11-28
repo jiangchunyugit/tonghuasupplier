@@ -1,47 +1,24 @@
 package cn.thinkfree.service.pcthirdpartdate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONArray;
-
 import cn.thinkfree.core.logger.AbsLogPrinter;
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.ConstructionOrderMapper;
-import cn.thinkfree.database.mapper.ContractInfoMapper;
-import cn.thinkfree.database.mapper.ContractTermsChildMapper;
-import cn.thinkfree.database.mapper.ContractTermsMapper;
-import cn.thinkfree.database.mapper.DesignerOrderMapper;
-import cn.thinkfree.database.mapper.OrderContractMapper;
-import cn.thinkfree.database.mapper.PcAuditInfoMapper;
-import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.ConstructionOrder;
-import cn.thinkfree.database.model.ConstructionOrderExample;
-import cn.thinkfree.database.model.ContractInfo;
-import cn.thinkfree.database.model.ContractInfoExample;
-import cn.thinkfree.database.model.ContractTerms;
-import cn.thinkfree.database.model.ContractTermsChild;
-import cn.thinkfree.database.model.ContractTermsChildExample;
-import cn.thinkfree.database.model.ContractTermsExample;
-import cn.thinkfree.database.model.DesignerOrder;
-import cn.thinkfree.database.model.DesignerOrderExample;
-import cn.thinkfree.database.model.OrderContract;
-import cn.thinkfree.database.model.OrderContractExample;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditInfoExample;
+import cn.thinkfree.database.mapper.*;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.utils.DateUtil;
+import com.alibaba.fastjson.JSONArray;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author jiangchunyu(后台)
@@ -159,7 +136,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 				// 判断当前合同类型 02设计合同_to_c 03施工合同_to_c
 				if (contract.getContractType().equals("02")) {
 					// 设计合同数据拼接
-					this.designData(orderNumber, listVo, contract, companyInfo, resMap);
+					designData(orderNumber, listVo, contract, companyInfo, resMap);
 
 				} else {
 					// 施工订单
@@ -271,7 +248,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  //设计判断是分期 换是全款
 
 		  String ctype = String.valueOf(resMap.get("c18"));
-		  if(ctype.equals("1")){//全款
+		if (ctype.equals("0")) {//全款
 			  SyncOrderVO vo = new SyncOrderVO();
 			  //合同金额 全款
 			  vo.setActualAmount(String.valueOf(resMap.get("c19")));
@@ -403,11 +380,11 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
     		}
         	if(companyInfo.getRoleId().equals(CompanyConstants.RoleType.SJ.code)){
         		//设计
-        		 this.designDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
+				designDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
         		  
         	}else{
         		//施工
-        		this.roadWorkDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
+				roadWorkDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
         	}
         	  
         }
