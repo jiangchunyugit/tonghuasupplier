@@ -267,8 +267,8 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                         List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
                         if (branchCompanies.size()>0) {
                             BranchCompany branchCompany = branchCompanies.get(0);
-                            enterCompanyOrganizationVO.setBranchCompanyCode(branchCompany.getCompanyName());
-                            enterCompanyOrganizationVO.setBranchCompanyNm(branchCompany.getBranchCompanyCode());
+                            enterCompanyOrganizationVO.setBranchCompanyCode(branchCompany.getBranchCompanyCode());
+                            enterCompanyOrganizationVO.setBranchCompanyNm(branchCompany.getCompanyName());
                         }
                     }
                     // 城市分站
@@ -278,8 +278,8 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                         List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
                         if (cityBranches.size()>0) {
                             CityBranch cityBranch = cityBranches.get(0);
-                            enterCompanyOrganizationVO.setCityBranchCode(cityBranch.getCityBranchName());
-                            enterCompanyOrganizationVO.setCityBranchNm(cityBranch.getCityBranchCode());
+                            enterCompanyOrganizationVO.setCityBranchCode(cityBranch.getCityBranchCode());
+                            enterCompanyOrganizationVO.setCityBranchNm(cityBranch.getCityBranchName());
                         }
                     }
                     // 经营主体
@@ -289,8 +289,8 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                         List<BusinessEntity> businessEntices = businessEntityMapper.selectByExample(businessEntityExample);
                         if (businessEntices.size()>0) {
                             BusinessEntity businessEntity = businessEntices.get(0);
-                            enterCompanyOrganizationVO.setBusinessEntityCode(businessEntity.getEntityName());
-                            enterCompanyOrganizationVO.setBusinessEntityNm(businessEntity.getBusinessEntityCode());
+                            enterCompanyOrganizationVO.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
+                            enterCompanyOrganizationVO.setBusinessEntityNm(businessEntity.getEntityName());
                         }
                     }
                     // 门店名称
