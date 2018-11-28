@@ -229,19 +229,19 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         String companyId = pcApplyInfoSEO.getCompanyId();
 
         //插入账户表
-        int finaLine = updateCompanyFinancial(date, companyId);
+        int finaLine = saveCompanyFinancial(date, companyId);
 
         //插入公司表
-        int infoLine = updateCompanyInfo(pcApplyInfoSEO, date, companyId);
+        int infoLine = saveCompanyInfo(pcApplyInfoSEO, date, companyId);
 
         //插入公司拓展表
-        int expandLine = updateCompanyInfoExpand(pcApplyInfoSEO, date, companyId);
+        int expandLine = saveCompanyInfoExpand(pcApplyInfoSEO, date, companyId);
 
         //运营插入申请表  app更新申请表
         int applyLine = updateApplyInfo(pcApplyInfoSEO);
 
         //插入注册表
-        int registerLine = updateUserRegister(pcApplyInfoSEO, date, companyId);
+        int registerLine = saveUserRegister(pcApplyInfoSEO, date, companyId);
 
         List<Integer> num = new ArrayList<>();
         String[] split = pcApplyInfoSEO.getCompanyRole().split(",");
@@ -337,7 +337,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return applyLine;
     }
 
-    private int updateCompanyFinancial(Date date, String companyId) {
+    private int saveCompanyFinancial(Date date, String companyId) {
         PcCompanyFinancial pcCompanyFinancial = new PcCompanyFinancial();
         pcCompanyFinancial.setCompanyId(companyId);
         pcCompanyFinancial.setCreateTime(date);
@@ -358,7 +358,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", object.toJSONString());
     }
 
-    private int updateUserRegister(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
+    private int saveUserRegister(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
         int registerLine = 0;
         UserRegister userRegister = new UserRegister();
         userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
@@ -377,7 +377,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return registerLine;
     }
 
-    private int updateCompanyInfoExpand(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
+    private int saveCompanyInfoExpand(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
         CompanyInfoExpand companyInfoExpand = new CompanyInfoExpand();
         companyInfoExpand.setCreateTime(date);
         companyInfoExpand.setUpdateTime(date);
@@ -391,7 +391,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return companyInfoExpandMapper.insertSelective(companyInfoExpand);
     }
 
-    private int updateCompanyInfo(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
+    private int saveCompanyInfo(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCreateTime(date);
         companyInfo.setUpdateTime(date);
