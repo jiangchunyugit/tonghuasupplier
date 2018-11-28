@@ -751,7 +751,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         updateOrder.setVolumeRoomTime(date);
         //预约金额
-        updateOrder.setVolumeRoomMoney(new BigDecimal(appointmentAmount).longValue() * 100);
+        updateOrder.setVolumeRoomMoney(new BigDecimal(appointmentAmount).longValue());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
         DesignerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -818,11 +818,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         } else {
             updateProjectState(projectNo, orderState);
         }
-        if(orderState == DesignStateEnum.STATE_170.getState()){
+        if (orderState == DesignStateEnum.STATE_170.getState()) {
             // 支付阶段通知
             constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 2);
         }
-        if(orderState == DesignStateEnum.STATE_200.getState()){
+        if (orderState == DesignStateEnum.STATE_200.getState()) {
             // 支付阶段通知
             constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 3);
         }
@@ -852,11 +852,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         } else {
             updateProjectState(projectNo, orderState);
         }
-        if(orderState == DesignStateEnum.STATE_170.getState()){
+        if (orderState == DesignStateEnum.STATE_170.getState()) {
             // 支付阶段通知
             constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 2);
         }
-        if(orderState == DesignStateEnum.STATE_200.getState()){
+        if (orderState == DesignStateEnum.STATE_200.getState()) {
             // 支付阶段通知
             constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 3);
         }
@@ -994,6 +994,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * 获取关闭订单的状态值
+     *
      * @param stateEnum
      * @return
      */
@@ -1181,7 +1182,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         switch (stateEnum) {
             case STATE_30:
                 btns.add("LFYY");
-            case STATE_40:
+            case STATE_45:
                 btns.add("LFFY");
                 break;
             case STATE_50:
@@ -1316,10 +1317,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         volumeReservationDetailsVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
         volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
         volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());
-        if (designerOrder.getVolumeRoomTime()!=null){
+        if (designerOrder.getVolumeRoomTime() != null) {
             volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime());
         }
-        if (designerOrder.getActualPayMoney()!=null){
+        if (designerOrder.getVolumeRoomMoney() != null) {
             volumeReservationDetailsVO.setAppointmentAmount(designerOrder.getVolumeRoomMoney().toString());
         }
         return RespData.success(volumeReservationDetailsVO);
