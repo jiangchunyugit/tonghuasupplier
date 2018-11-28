@@ -116,6 +116,17 @@ public class ConstructionStateController extends AbsBaseController {
      */
     @ApiOperation("消费者-订单支付===刘博")
     @MyRespBody
+    @RequestMapping(value = "firstPay", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<Boolean> firstPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
+
+        return constructionStateServiceB.firstPay(orderNo);
+    }
+
+    /**
+     *  订单支付
+     */
+    @ApiOperation("消费者-订单支付===刘博")
+    @MyRespBody
     @RequestMapping(value = "constructionOrderPay", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionOrderPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                      @RequestParam @ApiParam(value = "支付阶段名称",required = true) String feeName,
