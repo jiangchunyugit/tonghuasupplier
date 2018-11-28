@@ -200,7 +200,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 //					  }else{
 					  if (i == jsonArray.size() - 1) {
 						  vo.setIsEnd("2");
-					  } else if (i == 0) {
+					  } else if (jsonMap.get("stageCode").equals("-1")) {//施工订单为-1的是首款
 						  vo.setIsEnd("1");
 					  } else {
 						  vo.setIsEnd("0");
