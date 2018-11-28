@@ -612,8 +612,8 @@ public class DesignDispatchController extends AbsBaseController {
 
     @ApiOperation("app-C端确认量房")
     @MyRespBody
-    @RequestMapping(value = "queryContractMsg", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle queryContractMsg(
+    @RequestMapping(value = "confirmeVolumeRoom", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle confirmeVolumeRoom(
             @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId){
         try{
