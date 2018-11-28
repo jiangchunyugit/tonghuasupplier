@@ -332,6 +332,7 @@ public enum DesignStateEnum {
     }
 
     public static List<Map<String, Object>> allState(int state) {
+        states.clear();
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
         List<Map<String, Object>> mapList = new ArrayList<>();
