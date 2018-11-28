@@ -499,6 +499,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (i != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
             return RespData.error("插入失败");
         }
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        if (constructionOrders.size()==0){
+            return RespData.error("此项目下暂无施工订单");
+        }
+        constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
         return RespData.success();
     }
 
