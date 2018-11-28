@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 
-import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
@@ -430,13 +430,18 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		//施工
 			
 			 SyncOrderVO vo = new SyncOrderVO();
+			  //获取支付比例
+			   String firstMoney = "0";
+			   //按条件过滤
+		       List<ContractTermsChild> filterList = childList.stream().filter(child -> child.getcType().equals("1") ).collect(Collectors.toList());
+		       if(filterList !=null && filterList.size() > 0){
+		    	   firstMoney = filterList.get(0).getCostValue();
+		       }
 			  //合同金额 全款
-			  if(childList.size() == 0){
-				      vo.setActualAmount(String.valueOf(resMap.get("c17")));
-			  }else if(childList.size() == 1){
-				  vo.setActualAmount(String.valueOf(childList.get(0).getCostValue()));
+			  if(childList.size() == 0  ){
+			      vo.setActualAmount(String.valueOf(resMap.get("c17")));
 			  }else{
-				  vo.setActualAmount(String.valueOf(childList.get(1).getCostValue()));
+				  vo.setActualAmount(firstMoney);
 			  }
 			  //
 			  vo.setCompanyId(contract.getCompanyId());
@@ -446,12 +451,12 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setTypeSub("8001");
 			  //是否全额支付 ：1全款，2分期
 			  if(childList.size() > 1){
+				  
 			     vo.setContractType("2");
 			     //是否全额支付
 			  }else{
 				 vo.setContractType("1");
 				 //是否全额支付
-				
 			  }
 			  vo.setIsEnd("1");
 			  //业主名称
@@ -495,13 +500,19 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	private void designDataToB(String contractNumber, List<SyncOrderVO> listVo, ContractInfo contract,
 			CompanyInfo companyInfo, Map<String, String> resMap, List<ContractTermsChild> childList) {
 		SyncOrderVO vo = new SyncOrderVO();
+		
+		  //获取支付比例
+		   String firstMoney = "0";
+		   //按条件过滤
+	       List<ContractTermsChild> filterList = childList.stream().filter(child -> child.getcType().equals("1") ).collect(Collectors.toList());
+	       if(filterList !=null && filterList.size() > 0){
+	    	   firstMoney = filterList.get(0).getCostValue();
+	       }
 		  //合同金额 全款
 		  if(childList.size() == 0  ){
 		      vo.setActualAmount(String.valueOf(resMap.get("c15")));
-		  }else if(childList.size() == 1){
-			  vo.setActualAmount(String.valueOf(childList.get(0).getCostValue()));
 		  }else{
-			  vo.setActualAmount(String.valueOf(childList.get(1).getCostValue()));
+			  vo.setActualAmount(firstMoney);
 		  }
 		  //
 		  vo.setCompanyId(contract.getCompanyId());

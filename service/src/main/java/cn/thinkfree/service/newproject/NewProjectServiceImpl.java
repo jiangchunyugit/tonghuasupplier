@@ -133,7 +133,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectVo.setOwner(owner);
             //添加进度展示
-            if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
+            if (project.getStage() >= ConstructionStateEnumB.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
                 projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
