@@ -3,19 +3,16 @@ package cn.thinkfree.service.companyapply;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
-import cn.thinkfree.core.utils.RandomNumUtils;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.CompanyClassify;
-import cn.thinkfree.database.event.account.AccountCreate;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.constants.CompanyApply;
 import cn.thinkfree.service.constants.CompanyConstants;
-import cn.thinkfree.database.constants.UserRegisterType;
-import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
@@ -24,12 +21,9 @@ import cn.thinkfree.service.utils.UserNoUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.apache.catalina.manager.util.SessionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -228,12 +222,76 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
         Map<String, Object> map = new HashMap<>();
         Date date = new Date();
+        if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
+            return map;
+        }
+        //公司id
+        String companyId = pcApplyInfoSEO.getCompanyId();
+
+        //插入账户表
+        int finaLine = saveCompanyFinancial(date, companyId);
+
+        //插入公司表
+        int infoLine = saveCompanyInfo(pcApplyInfoSEO, date, companyId);
+
+        //插入公司拓展表
+        int expandLine = saveCompanyInfoExpand(pcApplyInfoSEO, date, companyId);
+
+        //运营插入申请表  app更新申请表
+        int applyLine = updateApplyInfo(pcApplyInfoSEO);
+
+        //插入注册表
+        int registerLine = saveUserRegister(pcApplyInfoSEO, date, companyId);
+
+        List<Integer> num = new ArrayList<>();
+        String[] split = pcApplyInfoSEO.getCompanyRole().split(",");
+        for (String str : split) {
+            //查询角色信息
+            UserRoleSetExample example = new UserRoleSetExample();
+            example.createCriteria().andRoleCodeEqualTo(str);
+            List<UserRoleSet> userRoleSet = userRoleSetMapper.selectByExample(example);
+
+            //插入角色表
+            CompanyRole companyRole = new CompanyRole();
+            int cLine = saveCompanyRole(pcApplyInfoSEO, date, str, userRoleSet, companyRole);
+            if (cLine > 0) {
+                num.add(1);
+            }
+
+            //插入用户角色关联表
+            int uLine = saveCompanyUserRole(companyId, companyRole);
+            if (uLine > 0) {
+                num.add(1);
+            }
+        }
+
+        //插入审批表
+        String auditPersion = userVO == null ? "" : userVO.getUsername();
+        String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
+                companyId, "", "", date, auditAccount);
+        int line = pcAuditInfoMapper.insertSelective(record);
+
+        //发送短信和邮件
+        sendMessage(pcApplyInfoSEO);
+
+        if (num.size() == split.length * 2 && line > 0 && infoLine > 0 && expandLine > 0 && applyLine > 0 && registerLine > 0 && finaLine > 0) {
+            map.put("code", true);
+            map.put("msg", "操作成功");
+            return map;
+        }
+        map.put("code", false);
+        map.put("msg", "操作失败");
+        return map;
+    }
+
+    private boolean exitsEmailANDCompanyName(PcApplyInfoSEO pcApplyInfoSEO, Map<String, Object> map) {
         if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getCompanyName())){
             boolean name = companyApplyService.checkCompanyName(pcApplyInfoSEO.getCompanyName());
             if(name){
                 map.put("code",false);
                 map.put("msg","公司名称已被注册！");
-                return map;
+                return true;
             }
         }
         boolean pcflag = pcUserInfoService.isEnable(pcApplyInfoSEO.getEmail());
@@ -242,22 +300,98 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             if(email || pcflag){
                 map.put("code",false);
                 map.put("msg","邮箱已被注册！");
-                return map;
+                return true;
             }
         }
-        //公司id
-//        String companyId = generateCompanyId(pcApplyInfoSEO.getCompanyRole());
-        String companyId = pcApplyInfoSEO.getCompanyId();
+        return false;
+    }
 
-        //插入账户表
+    private int saveCompanyUserRole(String companyId, CompanyRole companyRole) {
+        CompanyUserRole companyUserRole = new CompanyUserRole();
+        companyUserRole.setRoleId(companyRole.getId().toString());
+        companyUserRole.setUserId(companyId);
+        return companyUserRoleMapper.insertSelective(companyUserRole);
+    }
+
+    private int saveCompanyRole(PcApplyInfoSEO pcApplyInfoSEO, Date date, String str, List<UserRoleSet> userRoleSet, CompanyRole companyRole) {
+        companyRole.setCreateTime(date);
+        companyRole.setCompanyId(pcApplyInfoSEO.getCompanyId());
+        companyRole.setRoleId(Integer.parseInt(userRoleSet.get(0).getId().toString()));
+        companyRole.setRoleName("公司角色");
+        companyRole.setRoleType(str);
+        return companyRoleMapper.insertSelective(companyRole);
+    }
+
+    private int updateApplyInfo(PcApplyInfoSEO pcApplyInfoSEO) {
+        int applyLine = 0;
+        //是否办理
+        pcApplyInfoSEO.setTransactType(SysConstants.YesOrNo.YES.shortVal());
+        //营运添加
+        if (pcApplyInfoSEO.getApplyType() == 1) {
+            applyLine = pcApplyInfoMapper.insertSelective(pcApplyInfoSEO);
+        } else { //app前端申请
+            PcApplyInfoExample example = new PcApplyInfoExample();
+            example.createCriteria().andIdEqualTo(pcApplyInfoSEO.getId());
+            applyLine = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfoSEO, example);
+        }
+        return applyLine;
+    }
+
+    private int saveCompanyFinancial(Date date, String companyId) {
         PcCompanyFinancial pcCompanyFinancial = new PcCompanyFinancial();
         pcCompanyFinancial.setCompanyId(companyId);
         pcCompanyFinancial.setCreateTime(date);
         pcCompanyFinancial.setUpdateTime(date);
-        int finaLine = pcCompanyFinancialMapper.insertSelective(pcCompanyFinancial);
+        return pcCompanyFinancialMapper.insertSelective(pcCompanyFinancial);
+    }
 
-        //插入公司表
+    private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
+        JSONObject object = new JSONObject();
+        object.put("登录账号", pcApplyInfoSEO.getEmail());
+        object.put("默认密码", "123456");
+        RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), object.toJSONString());
+        if (!rs.isComplete()) {
+            throw new RuntimeException("添加账号发送短信失败");
+        }
 
+        //邮件
+        RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", object.toJSONString());
+    }
+
+    private int saveUserRegister(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
+        int registerLine = 0;
+        UserRegister userRegister = new UserRegister();
+        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
+        userRegister.setRegisterTime(date);
+        userRegister.setUpdateTime(date);
+        userRegister.setType(UserRegisterType.Enterprise.shortVal());
+        MultipleMd5 md5 = new MultipleMd5();
+        if (pcApplyInfoSEO.getPassword() == null) {
+            pcApplyInfoSEO.setPassword("123456");
+        }
+        userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
+
+        userRegister.setPhone(pcApplyInfoSEO.getEmail());
+        userRegister.setUserId(companyId);
+        registerLine = userRegisterMapper.insertSelective(userRegister);
+        return registerLine;
+    }
+
+    private int saveCompanyInfoExpand(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
+        CompanyInfoExpand companyInfoExpand = new CompanyInfoExpand();
+        companyInfoExpand.setCreateTime(date);
+        companyInfoExpand.setUpdateTime(date);
+        companyInfoExpand.setEmail(pcApplyInfoSEO.getEmail());
+        companyInfoExpand.setContactName(pcApplyInfoSEO.getContactName());
+        companyInfoExpand.setContactPhone(pcApplyInfoSEO.getContactPhone());
+        companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
+        companyInfoExpand.setRegisterCityCode(pcApplyInfoSEO.getCityCode());
+        /*companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());*/
+        companyInfoExpand.setCompanyId(companyId);
+        return companyInfoExpandMapper.insertSelective(companyInfoExpand);
+    }
+
+    private int saveCompanyInfo(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCreateTime(date);
         companyInfo.setUpdateTime(date);
@@ -275,104 +409,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setIsDelete(SysConstants.YesOrNoSp.NO.shortVal());
         //公司级别：入驻公司为三级公司
         companyInfo.setCompanyClassify(CompanyClassify.TERTIARY_COMPANY.shortVal());
-        int infoLine = companyInfoMapper.insertSelective(companyInfo);
-
-        //插入公司拓展表
-        CompanyInfoExpand companyInfoExpand = new CompanyInfoExpand();
-        companyInfoExpand.setCreateTime(date);
-        companyInfoExpand.setUpdateTime(date);
-        companyInfoExpand.setEmail(pcApplyInfoSEO.getEmail());
-        companyInfoExpand.setContactName(pcApplyInfoSEO.getContactName());
-        companyInfoExpand.setContactPhone(pcApplyInfoSEO.getContactPhone());
-        companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
-        companyInfoExpand.setRegisterCityCode(pcApplyInfoSEO.getCityCode());
-        /*companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());*/
-        companyInfoExpand.setCompanyId(companyId);
-        int expandLine = companyInfoExpandMapper.insertSelective(companyInfoExpand);
-
-        //运营插入申请表  app更新申请表
-        int applyLine = 0;
-        //是否办理
-        pcApplyInfoSEO.setTransactType(SysConstants.YesOrNo.YES.shortVal());
-        //营运添加
-        if(pcApplyInfoSEO.getApplyType() == 1){
-            applyLine = pcApplyInfoMapper.insertSelective(pcApplyInfoSEO);
-        }else{ //app前端申请
-            PcApplyInfoExample example = new PcApplyInfoExample();
-            example.createCriteria().andIdEqualTo(pcApplyInfoSEO.getId());
-            applyLine = pcApplyInfoMapper.updateByExampleSelective(pcApplyInfoSEO, example);
-        }
-        int registerLine = 0;
-        //插入注册表
-        UserRegister userRegister = new UserRegister();
-        userRegister.setIsDelete(SysConstants.YesOrNo.NO.shortVal());
-        userRegister.setRegisterTime(date);
-        userRegister.setUpdateTime(date);
-        userRegister.setType(UserRegisterType.Enterprise.shortVal());
-        MultipleMd5 md5 = new MultipleMd5();
-        if(pcApplyInfoSEO.getPassword() == null){
-            pcApplyInfoSEO.setPassword("123456");
-        }
-        userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
-
-        userRegister.setPhone(pcApplyInfoSEO.getEmail());
-        userRegister.setUserId(companyId);
-        registerLine = userRegisterMapper.insertSelective(userRegister);
-
-        String[] split = pcApplyInfoSEO.getCompanyRole().split(",");
-        List<Integer> num = new ArrayList<>();
-        for(String str: split){
-            //查询角色信息
-            UserRoleSetExample example = new UserRoleSetExample();
-            example.createCriteria().andRoleCodeEqualTo(str);
-            List<UserRoleSet> userRoleSet = userRoleSetMapper.selectByExample(example);
-
-            //插入角色表
-            CompanyRole companyRole = new CompanyRole();
-            companyRole.setCreateTime(date);
-            companyRole.setCompanyId(pcApplyInfoSEO.getCompanyId());
-            companyRole.setRoleId(Integer.parseInt(userRoleSet.get(0).getId().toString()));
-            companyRole.setRoleName("公司角色");
-            companyRole.setRoleType(str);
-            int cLine = companyRoleMapper.insertSelective(companyRole);
-            if(cLine > 0){
-                num.add(1);
-            }
-
-            //插入用户角色关联表
-            CompanyUserRole companyUserRole = new CompanyUserRole();
-            companyUserRole.setRoleId(companyRole.getId().toString());
-            companyUserRole.setUserId(companyId);
-            int uLine = companyUserRoleMapper.insertSelective(companyUserRole);
-            if(uLine > 0){
-                num.add(1);
-            }
-        }
-
-        //插入审批表
-        String auditPersion = userVO ==null?"":userVO.getUsername();
-        String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
-        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
-                companyId, "", "", date, auditAccount);
-        int line = pcAuditInfoMapper.insertSelective(record);
-
-        JSONObject object = new JSONObject();
-        object.put("登录账号", pcApplyInfoSEO.getEmail());
-        object.put("默认密码", "123456");
-        RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), object.toJSONString());
-        if(!rs.isComplete())throw new RuntimeException("添加账号发送短信失败");
-
-        //邮件
-        RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", object.toJSONString());
-
-        if(num.size() == split.length * 2 && line > 0 && infoLine > 0 && expandLine > 0 && applyLine> 0 && registerLine > 0 && finaLine > 0){
-            map.put("code",true);
-            map.put("msg","操作成功");
-            return map;
-        }
-        map.put("code",false);
-        map.put("msg","操作失败");
-        return map;
+        return companyInfoMapper.insertSelective(companyInfo);
     }
 
     /**
