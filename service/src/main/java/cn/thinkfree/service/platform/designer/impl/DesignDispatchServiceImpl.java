@@ -749,6 +749,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         updateOrder.setVolumeRoomTime(date);
         //预约金额
+        updateOrder.setVolumeRoomMoney(new BigDecimal(appointmentAmount).longValue() * 100);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
         DesignerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -1306,6 +1307,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         volumeReservationDetailsVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
         volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
         volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());
+        volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime());
+        volumeReservationDetailsVO.setAppointmentAmount(designerOrder.getVolumeRoomMoney().toString());
         return RespData.success(volumeReservationDetailsVO);
     }
 
