@@ -1,5 +1,6 @@
 package cn.thinkfree.service.platform.designer;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
@@ -291,5 +292,5 @@ public interface DesignDispatchService {
      * @param projectNo
      * @return
      */
-    VolumeReservationDetailsVO queryVolumeReservationDetails(String projectNo);
+    MyRespBundle<VolumeReservationDetailsVO> queryVolumeReservationDetails(String projectNo);
 }

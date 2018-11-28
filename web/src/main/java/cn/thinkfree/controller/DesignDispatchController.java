@@ -276,8 +276,7 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle<VolumeReservationDetailsVO> queryVolumeReservationDetails(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo ) {
         try {
-            VolumeReservationDetailsVO pageVo = designDispatchService.queryVolumeReservationDetails(projectNo);
-            return sendJsonData(ResultMessage.SUCCESS, pageVo);
+            return designDispatchService.queryVolumeReservationDetails(projectNo);
         } catch (Exception e) {
             e.printStackTrace();
             return sendFailMessage(e.getMessage());
