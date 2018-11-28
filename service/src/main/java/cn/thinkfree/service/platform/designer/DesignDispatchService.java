@@ -1,8 +1,10 @@
 package cn.thinkfree.service.platform.designer;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
+import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.platform.vo.ContractMsgVo;
 import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
 import cn.thinkfree.service.platform.vo.DesignerOrderVo;
@@ -125,7 +127,7 @@ public interface DesignDispatchService {
      * @param designerUserId 设计师ID
      * @param volumeRoomDate 预约时间
      */
-    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate);
+    void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Integer appointmentAmount);
 
     /**
      * 提醒业主
@@ -285,4 +287,10 @@ public interface DesignDispatchService {
      * @return
      */
     ContractMsgVo queryContractMsg(String projectNo);
+    /**
+     *
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<VolumeReservationDetailsVO> queryVolumeReservationDetails(String projectNo);
 }

@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.vo.ContractMsgVo;
@@ -258,13 +259,28 @@ public class DesignDispatchController extends AbsBaseController {
     public MyRespBundle volumeRoom(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "volumeRoomDate", required = false, value = "预约时间") @RequestParam(name = "volumeRoomDate", required = false) String volumeRoomDate,
-            @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId) {
+            @ApiParam(name = "designerUserId", required = false, value = "设计师ID") @RequestParam(name = "designerUserId", required = false) String designerUserId,
+            @ApiParam(name = "appointmentAmount", required = false, value = "量房费") @RequestParam(name = "appointmentAmount", required = false) Integer appointmentAmount
+            ) {
         try {
-            designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId, volumeRoomDate);
+            designDispatchService.makeAnAppointmentVolumeRoom(projectNo, designerUserId, volumeRoomDate,appointmentAmount);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
         return sendSuccessMessage(null);
+    }
+
+    @ApiOperation("设计师发起量房预约详情页---->app使用")
+    @MyRespBody
+    @RequestMapping(value = "volumeReservationDetails", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<VolumeReservationDetailsVO> queryVolumeReservationDetails(
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo ) {
+        try {
+            return designDispatchService.queryVolumeReservationDetails(projectNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
     }
 
     @ApiOperation("提醒业主---->app使用")

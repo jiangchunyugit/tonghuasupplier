@@ -1,15 +1,22 @@
 package cn.thinkfree.service.platform.designer.impl;
 
+import cn.thinkfree.core.base.ErrorCode;
+import cn.thinkfree.core.base.RespData;
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
-import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
+import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
+import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
+import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
@@ -19,10 +26,8 @@ import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.*;
-import cn.thinkfree.service.utils.DateUtils;
-import cn.thinkfree.service.utils.ExcelUtil;
-import cn.thinkfree.service.utils.OrderNoUtils;
-import cn.thinkfree.service.utils.ReflectUtils;
+import cn.thinkfree.service.utils.*;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +79,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private BuildConfigService buildConfigService;
     @Autowired
     private ConstructionAndPayStateService constructionAndPayStateService;
+    @Autowired
+    NewOrderUserService newOrderUserService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -132,7 +139,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         long total = DesignerOrderMapper.countByExample(orderExample);
         PageHelper.startPage(pageIndex, pageSize);
         List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
-        if(designerOrders.isEmpty()){
+        if (designerOrders.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
         List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
@@ -209,7 +216,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         long total = DesignerOrderMapper.countByExample(orderExample);
         PageHelper.startPage(pageIndex, pageSize);
         List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(orderExample);
-        if(designerOrders.isEmpty()){
+        if (designerOrders.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
         List<DesignerOrderVo> DesignerOrderVos = new ArrayList<>();
@@ -720,7 +727,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate) {
+    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Integer appointmentAmount) {
         //设计师接单
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
@@ -741,6 +748,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             throw new RuntimeException("无效的预约时间");
         }
         updateOrder.setVolumeRoomTime(date);
+        //预约金额
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
         DesignerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -749,7 +757,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "设计师【" + optionUserName + "】发起量房预约";
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_40.getState(), project);
-        createPayOrderService.createVolumeRoomPay(projectNo);
+        createPayOrderService.createVolumeRoomPay(projectNo, appointmentAmount);
         updateProjectState(projectNo, DesignStateEnum.STATE_40.getState());
     }
 
@@ -804,8 +812,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
-        }else{
-            updateProjectState(projectNo,orderState);
+        } else {
+            updateProjectState(projectNo, orderState);
         }
     }
 
@@ -830,8 +838,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
             createConstructionOrder(projectNo);
-        }else{
-            updateProjectState(projectNo,orderState);
+        } else {
+            updateProjectState(projectNo, orderState);
         }
     }
 
@@ -873,22 +881,22 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case STATE_140:
                 stateEnum = DesignStateEnum.STATE_150;
                 // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo,1);
+                constructionAndPayStateService.notifyPay(orderNo, 1);
                 break;
             case STATE_170:
                 stateEnum = DesignStateEnum.STATE_180;
                 // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo,2);
+                constructionAndPayStateService.notifyPay(orderNo, 2);
                 break;
             case STATE_200:
                 stateEnum = DesignStateEnum.STATE_210;
                 // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo,3);
+                constructionAndPayStateService.notifyPay(orderNo, 3);
                 break;
             case STATE_220:
                 stateEnum = DesignStateEnum.STATE_230;
                 // 支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo,1);
+                constructionAndPayStateService.notifyPay(orderNo, 1);
                 break;
             default:
                 throw new RuntimeException("无效的状态");
@@ -1166,7 +1174,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 btns.add("CKHT");
                 break;
         }
-        if (stateEnum != DesignStateEnum.STATE_270&&stateEnum != DesignStateEnum.STATE_210) {
+        if (stateEnum != DesignStateEnum.STATE_270 && stateEnum != DesignStateEnum.STATE_210) {
             return btns;
         }
         if (designerOrder.getPreviewState() == 2) {
@@ -1188,7 +1196,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public ContractMsgVo queryContractMsg(String projectNo) {
         Project project = queryProjectByNo(projectNo);
         CompanyInfoVo companyInfo = getCompanyMsg(projectNo);
-        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
+        String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
         UserMsgVo userMsgVo = userService.queryUser(ownerId);
         ContractMsgVo contractMsgVo = new ContractMsgVo();
         contractMsgVo.setOwnerAddress(project.getAddressDetail());
@@ -1201,14 +1209,87 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return contractMsgVo;
     }
 
+    /**
+     * 设计师发起量房预约详情页
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<VolumeReservationDetailsVO> queryVolumeReservationDetails(String projectNo) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空!");
+        }
+        VolumeReservationDetailsVO volumeReservationDetailsVO = new VolumeReservationDetailsVO();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return RespData.error("项目不存在!!");
+        }
+        Project project = projects.get(0);
+        //添加业主信息
+        PersionVo owner = new PersionVo();
+        try {
+            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+            owner.setPhone(userName1.get("phone").toString());
+            owner.setName(userName1.get("nickName").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("调取人员信息失败!");
+        }
+        volumeReservationDetailsVO.setOwnerName(owner.getName());
+        volumeReservationDetailsVO.setOwnerPhone(owner.getPhone());
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(projectNo);
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        OrderPlayVo designOrderPlayVo = DesignerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
+        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+        volumeReservationDetailsVO.setDesignOrderNo(designerOrder.getOrderNo());
+        //订单来源
+        switch (project.getOrderSource()){
+            case 1:
+                volumeReservationDetailsVO.setOrderSource("天猫");
+                break;
+            case 2:
+                volumeReservationDetailsVO.setOrderSource("平台创建");
+                break;
+            case 3:
+                volumeReservationDetailsVO.setOrderSource("设计公司创建");
+                break;
+            default:
+                volumeReservationDetailsVO.setOrderSource("其他");
+                break;
+        }
+
+        volumeReservationDetailsVO.setHouseType(project.getHouseRoom() + "室" + project.getHouseToilet() + "厅");
+        volumeReservationDetailsVO.setPermanentResidents(project.getPeopleNo());
+        volumeReservationDetailsVO.setArea(project.getArea());
+        volumeReservationDetailsVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
+        volumeReservationDetailsVO.setDesignerName(persionVo.getName());
+        volumeReservationDetailsVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
+        volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
+        volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());
+        return RespData.success(volumeReservationDetailsVO);
+    }
+
     private CompanyInfoVo getCompanyMsg(String projectNo) {
-        CompanyInfoVo companyInfo;ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        CompanyInfoVo companyInfo;
+        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
         constructionOrderExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
         String companyId = null;
-        if(!constructionOrders.isEmpty()){
+        if (!constructionOrders.isEmpty()) {
             companyId = constructionOrders.get(0).getCompanyId();
-        }else{
+        } else {
             return null;
         }
         companyInfo = companyInfoMapper.selectByCompanyId(companyId);
