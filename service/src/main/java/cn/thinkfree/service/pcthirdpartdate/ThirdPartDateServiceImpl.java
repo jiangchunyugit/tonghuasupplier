@@ -198,14 +198,16 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					 // if(i == 0){
 //					  vo.setIsEnd("1");
 //					  }else{
-						  if(i == jsonArray.size()-1 ){
-							  vo.setIsEnd("1");
-						  }else{
-							  vo.setIsEnd("2");
-						  }
+					  if (i == jsonArray.size() - 1) {
+						  vo.setIsEnd("2");
+					  } else if (i == 0) {
+						  vo.setIsEnd("1");
+					  } else {
+						  vo.setIsEnd("0");
+					  }
 //					  }
 					  //合同类型 订单类型：设计1、施工2、合同3
-					  vo.setType("1");
+					  vo.setType("2");
 
 					  vo.setProjectAddr(resMap.get("c12"));
 					  //项目编号
@@ -215,7 +217,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  //是否个性化
 					  vo.setStyleType(conorder ==null?"":conorder.get(0).getType());
 
-					  vo.setSort(""+(i+1));
+					  vo.setSort(jsonMap.get("stageCode"));
 
 		              listVo.add(vo);
 				  }
