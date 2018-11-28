@@ -53,7 +53,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
      * @param projectNo
      */
     @Override
-    public void createVolumeRoomPay(String projectNo) {
+    public void createVolumeRoomPay(String projectNo, Integer appointmentAmount) {
         Project project = designDispatchService.queryProjectByNo(projectNo);
         if (project == null) {
             logger.error("没有查询到项目编号为【{}】的项目", projectNo);
@@ -75,6 +75,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
             throw new RuntimeException("创建量房订单失败");
         }
         DesignerMsgVo designerMsgVo = designerService.queryDesignerByUserId(designerMsg.getUserId());
+        designerMsgVo.setVolumeRoomMoney(appointmentAmount.toString());
         if (designerMsgVo == null) {
             throw new RuntimeException("创建量房订单失败");
         }

@@ -9,6 +9,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
@@ -720,7 +721,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate) {
+    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Integer appointmentAmount) {
         //设计师接单
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
@@ -741,6 +742,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             throw new RuntimeException("无效的预约时间");
         }
         updateOrder.setVolumeRoomTime(date);
+        //预约金额
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
         DesignerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -749,7 +751,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "设计师【" + optionUserName + "】发起量房预约";
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_40.getState(), project);
-        createPayOrderService.createVolumeRoomPay(projectNo);
+        createPayOrderService.createVolumeRoomPay(projectNo, appointmentAmount);
         updateProjectState(projectNo, DesignStateEnum.STATE_40.getState());
     }
 
@@ -1199,6 +1201,21 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         contractMsgVo.setCompanyName(companyInfo.getCompanyName());
         contractMsgVo.setCompanyLegalPerson(companyInfo.getLegalName());
         return contractMsgVo;
+    }
+
+    @Override
+    public VolumeReservationDetailsVO queryVolumeReservationDetails(String projectNo) {
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria criteria = designerOrderExample.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(1);
+        List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.size() == 1){
+            VolumeReservationDetailsVO volumeReservationDetailsVO = new VolumeReservationDetailsVO();
+
+        }
+
+        return null;
     }
 
     private CompanyInfoVo getCompanyMsg(String projectNo) {
