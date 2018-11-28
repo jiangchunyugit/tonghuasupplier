@@ -110,6 +110,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         projectScheduling.setProjectNo(projectNo);
         projectScheduling.setStartTime(project.getPlanStartTime());
         projectScheduling.setEndTime(project.getPlanEndTime());
+        projectScheduling.setCompanyId(constructionOrder.getCompanyId());
         int bigResult = projectSchedulingMapper.insertSelective(projectScheduling);
         if (bigResult != Scheduling.INSERT_SUCCESS.getValue()) {
             return RespData.error("生成排期失败!!");

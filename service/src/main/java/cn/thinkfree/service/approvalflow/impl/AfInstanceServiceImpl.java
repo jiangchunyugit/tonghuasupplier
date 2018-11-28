@@ -898,7 +898,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             addStartMenu(startMenus, projectNo, AfConfigs.CHECK_APPLICATION.configNo, userId);
         }
         if (result == 2 || result == 3 || result == 6 || result == 7) {
-            addStartMenu(startMenus, projectNo, AfConfigs.START_APPLICATION.configNo, userId);
+            addStartMenu(startMenus, projectNo, AfConfigs.CHECK_REPORT.configNo, userId);
         }
         if (result == 4 || result == 5 || result == 6 || result == 7) {
             addStartMenu(startMenus, projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, userId);
