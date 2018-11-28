@@ -514,17 +514,17 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrders = queryDesignerOrder(projectNo);
-        checkOrderState(designerOrders, DesignStateEnum.STATE_999);
+        checkOrderState(designerOrders, DesignStateEnum.STATE_331);
         //设置该设计订单所属公司
         DesignerOrder updateOrder = new DesignerOrder();
-        updateOrder.setOrderStage(DesignStateEnum.STATE_999.getState());
+        updateOrder.setOrderStage(DesignStateEnum.STATE_331.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrders.getOrderNo());
         DesignerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //记录操作日志
         saveOptionLog(designerOrders.getOrderNo(), optionUserId, optionUserName, reason);
-        saveLog(DesignStateEnum.STATE_999.getState(), project);
-        updateProjectState(projectNo, DesignStateEnum.STATE_999.getState());
+        saveLog(DesignStateEnum.STATE_331.getState(), project);
+        updateProjectState(projectNo, DesignStateEnum.STATE_331.getState());
     }
 
     /**
