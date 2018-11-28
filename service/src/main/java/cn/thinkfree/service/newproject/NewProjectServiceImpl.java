@@ -701,7 +701,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         } else if (category == 3) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_200;

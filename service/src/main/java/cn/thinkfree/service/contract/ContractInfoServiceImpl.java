@@ -1446,6 +1446,14 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 
 				record.setSignTime(new Date());// 插入时间
+				printInfoMes("合同审批调用 生成订单orderNumber{}}", orderNumber);
+				List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContract(orderNumber);
+				
+				for (int i = 0; i < listvo.size(); i++) {
+					CreateOrder order = new CreateOrder();
+					order.setData(listvo.get(i));
+					eventService.publish(order);
+				}
 
 			} else {// 拒绝 插入拒绝原因
 
