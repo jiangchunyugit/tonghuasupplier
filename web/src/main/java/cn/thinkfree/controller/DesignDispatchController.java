@@ -2,6 +2,7 @@ package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
+import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
@@ -606,6 +607,19 @@ public class DesignDispatchController extends AbsBaseController {
             return sendJsonData(ResultMessage.SUCCESS,designDispatchService.queryContractMsg(projectNo));
         }catch (Exception e){
             return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("app-C端确认量房")
+    @MyRespBody
+    @RequestMapping(value = "queryContractMsg", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle queryContractMsg(
+            @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId){
+        try{
+            return designDispatchService.confirmeVolumeRoom(projectNo,userId);
+        }catch (Exception e){
+            return RespData.error(e.getMessage());
         }
     }
 }
