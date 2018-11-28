@@ -133,7 +133,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectVo.setOwner(owner);
             //添加进度展示
-            if (project.getStage() > ConstructionStateEnumB.STATE_500.getState()) {
+            if (project.getStage() >= ConstructionStateEnumB.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
                 projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
@@ -257,7 +257,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
-        List<Map<String, Object>> maps = DesignStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage());
         for (Map<String, Object> map : maps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setName(map.get("val").toString());
@@ -701,7 +701,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         } else if (category == 3) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
             //1全款合同，2分期合同
             if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
                 stateEnum = DesignStateEnum.STATE_200;

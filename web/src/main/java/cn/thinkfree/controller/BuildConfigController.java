@@ -158,7 +158,7 @@ public class BuildConfigController extends AbsBaseController {
             buildConfigService.savePayConfig(paySchemeNo, schemeNo, progressName, stageCode, payPercentum, payTimeOut, remark);
             return sendSuccessMessage(null);
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -172,7 +172,7 @@ public class BuildConfigController extends AbsBaseController {
             buildConfigService.delPayConfig(paySchemeNo);
             return sendSuccessMessage(null);
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -184,7 +184,7 @@ public class BuildConfigController extends AbsBaseController {
         try {
             return sendJsonData(ResultMessage.SUCCESS, buildConfigService.queryPayScheme(projectNo));
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -201,7 +201,7 @@ public class BuildConfigController extends AbsBaseController {
             buildConfigService.chooseScheme(companyId, schemeNo, optionUserId, optionUserName);
             return sendSuccessMessage(null);
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -228,7 +228,7 @@ public class BuildConfigController extends AbsBaseController {
             buildConfigService.stopScheme(companyId, optionUserId, optionUserName);
             return sendSuccessMessage(null);
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -245,7 +245,7 @@ public class BuildConfigController extends AbsBaseController {
             buildConfigService.companyDelScheme(companyId, optionUserId, optionUserName, schemeNo);
             return sendSuccessMessage(null);
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -262,7 +262,7 @@ public class BuildConfigController extends AbsBaseController {
             buildConfigService.companyEnableScheme(companyId, schemeNo, optionUserId, optionUserName);
             return sendSuccessMessage(null);
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 
@@ -276,7 +276,7 @@ public class BuildConfigController extends AbsBaseController {
         try {
             return sendJsonData(ResultMessage.SUCCESS,buildConfigService.queryByCompanyId(companyId, pageSize, pageIndex));
         } catch (Exception e) {
-            return sendSuccessMessage(e.getMessage());
+            return sendFailMessage(e.getMessage());
         }
     }
 }
