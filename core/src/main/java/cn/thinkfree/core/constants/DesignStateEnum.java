@@ -13,7 +13,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	发布需求
      */
-    STATE_1(1, "预约中", "待派单", "无", "无", "创建订单", new Integer[]{10, 999, 330}, true),
+    STATE_1(1, "预约中", "待派单", "无", "无", "创建订单", new Integer[]{10, 331, 330}, true),
     /**
      * 运营平台	运营平台人员派单至设计公司
      */
@@ -69,7 +69,7 @@ public enum DesignStateEnum {
     /**
      * 公司审核不通过
      */
-    STATE_131(131, "量房已确认", "合同待审核", "审核不通过", "合同审核未通过，待修正", "公司审核不通过", new Integer[]{130}, true),
+    STATE_131(131, "量房已确认", "合同待审核", "审核不通过", "合同审核未通过，待修正", "公司审核不通过", new Integer[]{130}, false),
 
     /**
      * 分期款状态<br/>
@@ -237,7 +237,7 @@ public enum DesignStateEnum {
     /**
      * 运营平台手动关闭订单
      */
-    STATE_999(999, "订单关闭", "平台关闭了订单", new Integer[]{}, false);
+    STATE_331(331, "订单关闭", "平台关闭了订单", new Integer[]{}, false);
     private int state;
     private String stateCompany;
     private String statePlatform;
@@ -274,8 +274,8 @@ public enum DesignStateEnum {
         List<DesignStateEnum> designStateEnums = new ArrayList<>();
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         List<Integer> states = Arrays.asList(nextStates);
-        for(DesignStateEnum stateEnum : stateEnums){
-            if(states.contains(stateEnum.state)){
+        for (DesignStateEnum stateEnum : stateEnums) {
+            if (states.contains(stateEnum.state)) {
                 designStateEnums.add(stateEnum);
             }
         }
@@ -283,11 +283,10 @@ public enum DesignStateEnum {
     }
 
     /**
-     *
      * @param type 1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
      * @return
      */
-    public String getStateName(int type){
+    public String getStateName(int type) {
         switch (type) {
             case 1:
                 return statePlatform;
@@ -298,50 +297,89 @@ public enum DesignStateEnum {
             case 4:
                 return stateOwner;
             default:
-                throw new RuntimeException("无效的类型");
+                return null;
         }
     }
 
-    public static List<Map<String, Object>> allState(int state){
+    public static List<Map<String, Object>> allState(int state) {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
-        List<Map<String,Object>> mapList = new ArrayList<>();
-        for(DesignStateEnum stateEnum : stateEnums){
-            enumMap.put(stateEnum.state,stateEnum);
-            if(stateEnum.stateType && stateEnum.state <= state){
-                Map<String, Object> map = new HashMap<>();
-                map.put("key", stateEnum.state);
-                map.put("val", stateEnum.statePlatform);
-                mapList.add(map);
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        for (DesignStateEnum stateEnum : stateEnums) {
+            enumMap.put(stateEnum.state, stateEnum);
+        }
+        for (DesignStateEnum stateEnum : stateEnums) {
+            if (stateEnum.stateType && stateEnum.state <= state) {
+                addList(mapList, stateEnum);
             }
         }
         DesignStateEnum stateEnum = enumMap.get(state);
+        if(!stateEnum.stateType){
+            stateEnum = falseState(stateEnums, state);
+        }
         getData(enumMap, stateEnum, mapList, stateEnum.stateType);
-//        System.out.println(JSONObject.toJSONString(mapList));
-//        System.out.println(JSONObject.toJSONString(enumMap));
+        List<Map<String, Object>> removeData = new ArrayList<>();
+        int lastState = -1;
+        int endState = -1;
+        int startState = -1;
+        for (int i = (mapList.size() - 1); i >= 0; i--) {
+            Map<String, Object> map = mapList.get(i);
+            int integer = (int) map.get("key");
+            if (lastState < 0) {
+                lastState = integer;
+                continue;
+            }
+            DesignStateEnum stateEnum1 = enumMap.get(integer);
+            if (!Arrays.asList(stateEnum1.nextStates).contains(lastState)) {
+                endState = lastState;
+            }
+            if(endState > 0 && Arrays.asList(stateEnum1.nextStates).contains(endState)){
+                startState = integer;
+            }
+            if(endState > 0 && startState < 0){
+                removeData.add(map);
+            }
+            lastState = integer;
+        }
+        mapList.removeAll(removeData);
         return mapList;
     }
 
-    private static void getData(Map<Integer, DesignStateEnum> enumMap, DesignStateEnum stateEnum, List<Map<String,Object>> mapList, boolean stateType){
+    private static DesignStateEnum falseState(DesignStateEnum[] stateEnums, int state){
+        for(int i = stateEnums.length - 1 ; i > 0 ; i --){
+            if(stateEnums[i].state < state && stateEnums[i].stateType){
+                return stateEnums[i + 1];
+            }
+        }
+        return stateEnums[1];
+    }
+    private static List<Integer> states = new ArrayList<>();
+    private static void addList(List<Map<String, Object>> mapList, DesignStateEnum stateEnum) {
+        if(states.contains(stateEnum.state)){
+            return;
+        }
+        states.add(stateEnum.state);
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", stateEnum.state);
+        map.put("val", stateEnum.statePlatform);
+        mapList.add(map);
+    }
+
+    private static void getData(Map<Integer, DesignStateEnum> enumMap, DesignStateEnum stateEnum, List<Map<String, Object>> mapList, boolean stateType) {
         Integer[] stateInt = stateEnum.nextStates;
-        for(Integer integer : stateInt){
+        for (Integer integer : stateInt) {
             DesignStateEnum stateEnum1 = enumMap.get(integer);
-            if(stateType == stateEnum1.stateType){
-                Map<String, Object> map = new HashMap<>();
-                map.put("key", stateEnum.state);
-                map.put("val", stateEnum.statePlatform);
-                mapList.add(map);
+            if (stateType == stateEnum1.stateType) {
+                addList(mapList, stateEnum);
                 getData(enumMap, stateEnum1, mapList, stateType);
                 break;
             }
         }
-        if(stateInt == null || stateInt.length <= 0){
-            Map<String, Object> map = new HashMap<>();
-            map.put("key", stateEnum.state);
-            map.put("val", stateEnum.statePlatform);
-            mapList.add(map);
+        if (stateInt == null || stateInt.length <= 0) {
+            addList(mapList, stateEnum);
         }
     }
+
     /**
      * 根据类型获取订单状态类型列表
      *
@@ -353,22 +391,8 @@ public enum DesignStateEnum {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         List<String> stateNames = new ArrayList<>();
         for (DesignStateEnum designStateEnum : stateEnums) {
-            String stateName = null;
-            switch (type) {
-                case 1:
-                    stateName = designStateEnum.statePlatform;
-                    break;
-                case 2:
-                    stateName = designStateEnum.stateCompany;
-                    break;
-                case 3:
-                    stateName = designStateEnum.stateDesigner;
-                    break;
-                case 4:
-                    stateName = designStateEnum.stateOwner;
-                    break;
-            }
-            if(stateName == null){
+            String stateName = designStateEnum.getStateName(type);
+            if (stateName == null) {
                 continue;
             }
             stateNames.add(stateName);
@@ -384,24 +408,24 @@ public enum DesignStateEnum {
      * 根据类型获取所有类型值
      *
      * @param state 订单状态值
-     * @param type ，1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
+     * @param type  ，1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
      * @return
      */
-    public static List<Integer> queryStatesByState(int state,int type){
+    public static List<Integer> queryStatesByState(int state, int type) {
         DesignStateEnum designStateEnum = queryByState(state);
         List<Integer> integers = new ArrayList<>();
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         for (DesignStateEnum stateEnum : stateEnums) {
-            if(type == 1 && designStateEnum.statePlatform.equals(stateEnum.statePlatform)){
+            if (type == 1 && designStateEnum.statePlatform.equals(stateEnum.statePlatform)) {
                 integers.add(stateEnum.state);
             }
-            if(type == 2 && designStateEnum.stateCompany.equals(stateEnum.stateCompany)){
+            if (type == 2 && designStateEnum.stateCompany.equals(stateEnum.stateCompany)) {
                 integers.add(stateEnum.state);
             }
-            if(type == 3 && designStateEnum.stateDesigner.equals(stateEnum.stateDesigner)){
+            if (type == 3 && designStateEnum.stateDesigner.equals(stateEnum.stateDesigner)) {
                 integers.add(stateEnum.state);
             }
-            if(type == 4 && designStateEnum.stateOwner.equals(stateEnum.stateOwner)){
+            if (type == 4 && designStateEnum.stateOwner.equals(stateEnum.stateOwner)) {
                 integers.add(stateEnum.state);
             }
         }
@@ -426,9 +450,10 @@ public enum DesignStateEnum {
 
     /**
      * 获取所有可取消的设计订单状态值
+     *
      * @return
      */
-    public static List<DesignStateEnum> getAllCancelState(){
+    public static List<DesignStateEnum> getAllCancelState() {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         List<DesignStateEnum> stateEnums1 = new ArrayList<>();
         for (DesignStateEnum designStateEnum : stateEnums) {

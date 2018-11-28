@@ -1,5 +1,8 @@
 package cn.thinkfree.core.utils;
 
+import cn.thinkfree.core.constants.DesignStateEnum;
+import com.alibaba.fastjson.JSONObject;
+
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.Map.Entry;
@@ -7,6 +10,10 @@ import java.util.Map.Entry;
 
 public class Util
 {
+    public static void main(String[] args) {
+        System.out.println(JSONObject.toJSONString(DesignStateEnum.allState(331)));
+    }
+
     /**
      * 
      * 校验2个对象是否相同
