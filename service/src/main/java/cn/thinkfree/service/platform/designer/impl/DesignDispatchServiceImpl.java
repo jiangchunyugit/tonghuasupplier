@@ -814,7 +814,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveLog(stateEnum.getState(), project);
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
-            createConstructionOrder(projectNo);
+//            createConstructionOrder(projectNo);
         } else {
             updateProjectState(projectNo, orderState);
         }
@@ -848,7 +848,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveLog(stateEnum.getState(), project);
         //订单交易完成
         if (orderState == DesignStateEnum.STATE_270.getState() || orderState == DesignStateEnum.STATE_210.getState()) {
-            createConstructionOrder(projectNo);
+//            createConstructionOrder(projectNo);
         } else {
             updateProjectState(projectNo, orderState);
         }
@@ -922,9 +922,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", remark);
         saveLog(stateEnum.getState(), project);
         //订单交易完成
-        if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
-            createConstructionOrder(project.getProjectNo());
-        }
+//        if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
+//            createConstructionOrder(project.getProjectNo());
+//        }
         updateProjectState(project.getProjectNo(), stateEnum.getState());
     }
 
