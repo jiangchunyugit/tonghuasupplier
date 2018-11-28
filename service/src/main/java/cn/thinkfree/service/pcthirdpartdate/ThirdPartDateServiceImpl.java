@@ -207,7 +207,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  //合同类型 订单类型：设计1、施工2、合同3
 					  vo.setType("1");
 
-					  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
+					  vo.setProjectAddr(resMap.get("c12"));
 					  //项目编号
 					  vo.setProjectNo(conorder ==null?"":conorder.get(0).getProjectNo());
 					  //签约时间
@@ -248,6 +248,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  //设计判断是分期 换是全款
 
 		  String ctype = String.valueOf(resMap.get("c18"));
+		printInfoMes("分期类型｛｝" + ctype);
 		if (ctype.equals("0")) {//全款
 			  SyncOrderVO vo = new SyncOrderVO();
 			  //合同金额 全款
@@ -286,6 +287,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  }else{//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
 			// String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
 			 String jsonSr = resMap.get("c20");
+			printInfoMes("分期json 数据｛｝" + jsonSr);
 			  if(!StringUtils.isEmpty(jsonSr)){
 				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
 				  for (int i = 0; i < jsonArray.size(); i++) {
@@ -293,6 +295,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  //合同金额 全款
 					  @SuppressWarnings("unchecked")
 					  Map<String,String> jsonMap = (Map<String, String>) jsonArray.get(i);
+					  printInfoMes("分期金额" + jsonMap.get("costValue"));
 					  vo.setActualAmount(jsonMap.get("costValue"));
 					  vo.setCompanyId(contract.getCompanyId());
 					  //公司名称
@@ -336,7 +339,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  vo.setStyleType(conorder==null?"":conorder.get(0).getStyleType());
 
 					  vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
-
+					  printInfoMes("json vo 数据｛｝" + vo);
 		              listVo.add(vo);
 				  }
 			  }else{
