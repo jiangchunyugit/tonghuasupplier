@@ -90,12 +90,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
         PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
-        PageInfo<ProjectVo> pageInfo = new PageInfo<>();
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size() == 0) {
-            pageInfo.setList(new ArrayList<>());
-            return RespData.success(pageInfo, "此用户尚未分配项目");
+            return RespData.success(new PageInfo<>(), "此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
@@ -162,7 +160,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setStageNameColor("#50ABD2");
             projectVoList.add(projectVo);
         }
-        pageInfo.setList(projectVoList);
+        PageInfo<ProjectVo> pageInfo = new PageInfo<>(projectVoList);
         return RespData.success(pageInfo);
     }
 
