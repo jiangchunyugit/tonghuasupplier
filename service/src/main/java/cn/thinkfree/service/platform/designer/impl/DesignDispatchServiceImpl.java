@@ -1182,7 +1182,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         switch (stateEnum) {
             case STATE_30:
                 btns.add("LFYY");
-            case STATE_40:
+            case STATE_45:
                 btns.add("LFFY");
                 break;
             case STATE_50:
