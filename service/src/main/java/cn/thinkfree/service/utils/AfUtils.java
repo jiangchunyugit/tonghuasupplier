@@ -129,12 +129,17 @@ public class AfUtils {
     public static void createPdf(String html, String exportDir, String exportFileName, String fontDir, String resources) {
         try {
             FileOutputStream outputStream;
+            File exportFile;
             if (exportDir.startsWith("classpath:")) {
                 URL fileResource = AfUtils.class.getClassLoader().getResource(exportDir.substring("classpath:".length()));
-                outputStream = new FileOutputStream(new File(fileResource.getFile(), exportFileName));
+                exportFile = new File(fileResource.getFile(), exportFileName);
             } else {
-                outputStream = new FileOutputStream(new File(exportDir, exportFileName));
+                exportFile = new File(exportDir, exportFileName);
             }
+            if (! exportFile.getParentFile().exists()) {
+                exportFile.getParentFile().mkdirs();
+            }
+            outputStream = new FileOutputStream(exportFile);
 
             WriterProperties writerProperties = new WriterProperties();
             //Add metadata
@@ -150,7 +155,7 @@ public class AfUtils {
 
             //Set meta tags
             PdfDocumentInfo pdfMetaData = pdfDoc.getDocumentInfo();
-            pdfMetaData.setAuthor("Samuel Huylebroeck");
+            pdfMetaData.setAuthor("song");
             pdfMetaData.addCreationDate();
             pdfMetaData.getProducer();
             pdfMetaData.setCreator("iText Software");
