@@ -589,6 +589,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         JSONObject jsonObject = JSON.parseObject(result);
         JSONObject data = jsonObject.getJSONObject("data");
+        Integer code = jsonObject.getJSONObject("status").getInteger("code");
+        if(code!=0){
+            return RespData.error(jsonObject.getJSONObject("status").getString("message"));
+        }
         if (data == null) {
             return RespData.error(jsonObject.getJSONObject("status").getString("message"));
         }
@@ -675,7 +679,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 }
             }
         }
-        updateProjectStage(projectNo);
+//        updateProjectStage(projectNo);
         //创建施工订单
         try {
             designDispatchService.createConstructionOrder(projectNo);
