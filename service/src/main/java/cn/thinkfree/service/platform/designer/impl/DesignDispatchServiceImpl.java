@@ -758,7 +758,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = "设计师【" + optionUserName + "】发起量房预约";
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_40.getState(), project);
-        createPayOrderService.createVolumeRoomPay(projectNo, appointmentAmount);
+
         updateProjectState(projectNo, DesignStateEnum.STATE_40.getState());
     }
 
@@ -1298,7 +1298,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 volumeReservationDetailsVO.setOrderSource("其他");
                 break;
         }
-
         volumeReservationDetailsVO.setHouseType(project.getHouseRoom() + "室" + project.getHouseToilet() + "厅");
         volumeReservationDetailsVO.setPermanentResidents(project.getPeopleNo());
         volumeReservationDetailsVO.setArea(project.getArea());
@@ -1307,8 +1306,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         volumeReservationDetailsVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
         volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
         volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());
-        volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime());
-        volumeReservationDetailsVO.setAppointmentAmount(designerOrder.getVolumeRoomMoney().toString());
+        if (designerOrder.getVolumeRoomTime()!=null){
+            volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime());
+        }
+        if (designerOrder.getActualPayMoney()!=null){
+            volumeReservationDetailsVO.setAppointmentAmount(designerOrder.getVolumeRoomMoney().toString());
+        }
         return RespData.success(volumeReservationDetailsVO);
     }
 
@@ -1342,14 +1345,17 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (userId == null || userId.trim().isEmpty()) {
             return RespData.error("userId 不可为空!");
         }
-        ProjectExample example = new ProjectExample();
-        ProjectExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(projectNo);
-        List<Project> projects = projectMapper.selectByExample(example);
-        if (projects.size() == 0) {
-            return RespData.error("项目不存在!!");
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(projectNo);
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = DesignerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
         }
+        DesignerOrder designerOrder = designerOrders.get(0);
         updateOrderState(projectNo, DesignStateEnum.STATE_45.getState(), userId, "");
+        createPayOrderService.createVolumeRoomPay(projectNo, designerOrder.getVolumeRoomMoney().toString());
         return RespData.success();
     }
 }
