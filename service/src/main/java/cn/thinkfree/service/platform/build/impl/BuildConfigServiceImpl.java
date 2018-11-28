@@ -354,7 +354,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         ConstructionOrder constructionOrder = constructionOrders.get(0);
         String schemeNo = constructionOrder.getSchemeNo();
         BuildPayConfigExample configExample = new BuildPayConfigExample();
-        configExample.createCriteria().andSchemeNoEqualTo(schemeNo);
+        configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateEqualTo(2);
         return payConfigMapper.selectByExample(configExample);
     }
     @Transactional(rollbackFor = {Exception.class})
