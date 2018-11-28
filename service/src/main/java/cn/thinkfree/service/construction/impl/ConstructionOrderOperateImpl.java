@@ -3,19 +3,21 @@ package cn.thinkfree.service.construction.impl;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
-import cn.thinkfree.database.mapper.*;
-import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.mapper.ConstructionOrderMapper;
+import cn.thinkfree.database.model.ConstructionOrder;
+import cn.thinkfree.database.model.ConstructionOrderExample;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionOrderOperate;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 
 @Service
 public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
@@ -36,14 +38,10 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
      * @return
      */
     @Override
-    public MyRespBundle<ConstructionOrderCommonVo> getOrderList(int pageNum, int pageSize, String cityName) {
+    public PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName) {
         PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName);
-        ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
-        constructionOrderCommonVo.setCountPageNum((int) pageInfo.getTotal());
-        constructionOrderCommonVo.setOrderList(pageInfo.getList());
-        return RespData.success(constructionOrderCommonVo);
+        return pageInfo;
     }
-
 
     /**
      * 施工订单列表统计

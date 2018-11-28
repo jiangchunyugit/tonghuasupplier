@@ -97,8 +97,6 @@ public class OrderListCommonService {
     public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
 
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
-        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
@@ -106,7 +104,6 @@ public class OrderListCommonService {
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
-        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -115,16 +112,16 @@ public class OrderListCommonService {
         }
 
         /* 订单编号List */
-        List<String> listOrdertNo = new ArrayList<>();
-        for (ConstructionOrder constructionOrder : list) {
-            listOrdertNo.add(constructionOrder.getOrderNo());
-        }
+//        List<String> listOrdertNo = new ArrayList<>();
+//        for (ConstructionOrder constructionOrder : list) {
+//            listOrdertNo.add(constructionOrder.getOrderNo());
+//        }
 
         /* 公司编号List */
-        List<String> listCompanyNo = new ArrayList<>();
-        for (ConstructionOrder constructionOrder : list) {
-            listCompanyNo.add(constructionOrder.getCompanyId());
-        }
+//        List<String> listCompanyNo = new ArrayList<>();
+//        for (ConstructionOrder constructionOrder : list) {
+//            listCompanyNo.add(constructionOrder.getCompanyId());
+//        }
         /* 用户编号List */
         List<Map<String, String>> listUserNo = new ArrayList<>();
 
@@ -233,10 +230,7 @@ public class OrderListCommonService {
 
             listVo.add(constructionOrderListVo);
         }
-        pageInfo.setList(listVo);
-        Page p = (Page) pageInfo2.getList();
-        pageInfo.setPageNum(p.getPages());
-        pageInfo.setTotal(pageInfo2.getList().size());
+        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>(listVo);
         return pageInfo;
     }
 

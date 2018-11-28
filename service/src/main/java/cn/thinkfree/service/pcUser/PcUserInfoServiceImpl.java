@@ -9,6 +9,7 @@ import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.RoleScope;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.constants.UserLevel;
+import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.event.account.AccountCreate;
 import cn.thinkfree.database.event.account.ResetPassWord;
 import cn.thinkfree.database.mapper.*;
@@ -20,7 +21,6 @@ import cn.thinkfree.database.vo.account.AccountListVO;
 import cn.thinkfree.database.vo.account.AccountSEO;
 import cn.thinkfree.database.vo.account.AccountVO;
 import cn.thinkfree.database.vo.account.ThirdAccountVO;
-import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.AccountHelper;
 import cn.thinkfree.service.utils.UserNoUtils;
@@ -172,11 +172,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     public boolean isEnable(String name) {
         //判断输入的账号是否已经注册过
         List<String> phones = userRegisterMapper.findPhoneAll();
-        boolean flag = phones.contains(name);
-        if(flag){
-            return true;
-        }
-        return false;
+        return phones.contains(name);
     }
 
     /**
