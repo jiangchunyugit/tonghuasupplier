@@ -293,4 +293,12 @@ public interface DesignDispatchService {
      * @return
      */
     MyRespBundle<VolumeReservationDetailsVO> queryVolumeReservationDetails(String projectNo);
+
+    /**
+     * app-C端确认量房
+     * @param projectNo
+     * @param userId
+     * @return
+     */
+    MyRespBundle confirmeVolumeRoom(String projectNo, String userId);
 }

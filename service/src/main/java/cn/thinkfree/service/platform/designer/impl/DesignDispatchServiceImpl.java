@@ -1255,7 +1255,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
         volumeReservationDetailsVO.setDesignOrderNo(designerOrder.getOrderNo());
         //订单来源
-        switch (project.getOrderSource()){
+        switch (project.getOrderSource()) {
             case 1:
                 volumeReservationDetailsVO.setOrderSource("天猫");
                 break;
@@ -1294,5 +1294,31 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         companyInfo = companyInfoMapper.selectByCompanyId(companyId);
         return companyInfo;
+    }
+
+    /**
+     * app-C端确认量房
+     *
+     * @param projectNo
+     * @param userId
+     * @return
+     */
+    @Override
+    public MyRespBundle confirmeVolumeRoom(String projectNo, String userId) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空!");
+        }
+        if (userId == null || userId.trim().isEmpty()) {
+            return RespData.error("userId 不可为空!");
+        }
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return RespData.error("项目不存在!!");
+        }
+        updateOrderState(projectNo, DesignStateEnum.STATE_40.getState(), userId, "");
+        return RespData.success();
     }
 }
