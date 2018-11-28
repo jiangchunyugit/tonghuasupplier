@@ -9,5 +9,5 @@ public interface CreatePayOrderService {
      * 创建量房订单
      * @param projectNo
      */
-    void createVolumeRoomPay(String projectNo, Integer appointmentAmount);
+    void createVolumeRoomPay(String projectNo, Float appointmentAmount);
 }

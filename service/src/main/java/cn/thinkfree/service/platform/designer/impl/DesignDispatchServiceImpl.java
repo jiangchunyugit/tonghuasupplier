@@ -727,7 +727,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Integer appointmentAmount) {
+    public void makeAnAppointmentVolumeRoom(String projectNo, String designerUserId, String volumeRoomDate, Float appointmentAmount) {
         //设计师接单
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
