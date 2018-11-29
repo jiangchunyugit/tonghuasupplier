@@ -751,7 +751,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         updateOrder.setVolumeRoomTime(date);
         //预约金额
-        updateOrder.setVolumeRoomMoney(new BigDecimal(appointmentAmount).longValue());
+        updateOrder.setVolumeRoomMoney(MathUtil.getFen(appointmentAmount));
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
         DesignerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
@@ -1321,7 +1321,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime());
         }
         if (designerOrder.getVolumeRoomMoney() != null) {
-            volumeReservationDetailsVO.setAppointmentAmount(designerOrder.getVolumeRoomMoney().toString());
+            volumeReservationDetailsVO.setAppointmentAmount(MathUtil.getYuan(designerOrder.getVolumeRoomMoney()));
         }
         return RespData.success(volumeReservationDetailsVO);
     }
@@ -1366,7 +1366,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         DesignerOrder designerOrder = designerOrders.get(0);
         updateOrderState(projectNo, DesignStateEnum.STATE_45.getState(), userId, "");
-        createPayOrderService.createVolumeRoomPay(projectNo, designerOrder.getVolumeRoomMoney().toString());
+        createPayOrderService.createVolumeRoomPay(projectNo, MathUtil.getYuan(designerOrder.getVolumeRoomMoney()));
         return RespData.success();
     }
 }
