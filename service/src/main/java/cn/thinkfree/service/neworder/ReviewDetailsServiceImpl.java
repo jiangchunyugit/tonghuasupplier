@@ -688,7 +688,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 }
             }
         }
-//        updateProjectStage(projectNo);
+        updateProjectStage(projectNo);
         //创建施工订单
         try {
             designDispatchService.createConstructionOrder(projectNo);
@@ -704,18 +704,18 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      * @param projectNo
      */
     public void updateProjectStage(String projectNo){
-        ConstructionOrderExample example = new ConstructionOrderExample();
-        ConstructionOrderExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(projectNo);
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
-        if (constructionOrders.size() == 0) {
-            throw new RuntimeException("查无此施工订单");
-        }
-        MyRespBundle<String> stringMyRespBundle = constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
-        if (!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
-            throw new RuntimeException("修改项目状态失败!");
-        }
+//        ConstructionOrderExample example = new ConstructionOrderExample();
+//        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+//        criteria.andProjectNoEqualTo(projectNo);
+//        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+//        if (constructionOrders.size() == 0) {
+//            throw new RuntimeException("查无此施工订单");
+//        }
+//        MyRespBundle<String> stringMyRespBundle = constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+//        if (!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
+//            throw new RuntimeException("修改项目状态失败!");
+//        }
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
         orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
