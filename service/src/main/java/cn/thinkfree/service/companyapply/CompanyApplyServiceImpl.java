@@ -386,7 +386,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfoExpand.setContactPhone(pcApplyInfoSEO.getContactPhone());
         companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
         companyInfoExpand.setRegisterCityCode(pcApplyInfoSEO.getCityCode());
-        /*companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());*/
+        companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());
         companyInfoExpand.setCompanyId(companyId);
         return companyInfoExpandMapper.insertSelective(companyInfoExpand);
     }
