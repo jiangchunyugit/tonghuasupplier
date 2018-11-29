@@ -58,6 +58,13 @@ public interface ConstructionStateServiceB {
     void contractCompleteState(String orderNo);
 
     /**
+     * 首付款
+     * @param orderNo
+     * @return
+     */
+    MyRespBundle<Boolean> firstPay(String orderNo);
+
+    /**
      * 支付
      */
     MyRespBundle<String> customerPay(String orderNo, String feeName, Integer sort,String isComplete);

@@ -107,7 +107,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
         /* sort==0 开工报告 */
         if (sort == 0) {
             Integer stateCode = commonService.queryStateCodeByOrderNo(orderNo);
-            Integer stage = ConstructionStateEnumB.STATE_550.getState();
+            Integer stage = ConstructionStateEnumB.STATE_600.getState();
             if (stateCode.equals(stage)) {
                 return true;
             } else {
@@ -165,7 +165,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
     public List<String> getBuildPay(String schemeNo) {
         List<String> listStage = new ArrayList<>();
         BuildPayConfigExample example = new BuildPayConfigExample();
-        example.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateEqualTo(2);
+        example.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(Arrays.asList(2, 3));
         List<BuildPayConfig> list = buildPayConfigMapper.selectByExample(example);
         if (list.isEmpty()) {
             return new ArrayList<>();
