@@ -1,10 +1,5 @@
 package cn.thinkfree.service.contractsignature;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.mapper.ContractSignatureMapper;
 import cn.thinkfree.database.model.ContractSignature;
@@ -13,6 +8,10 @@ import cn.thinkfree.database.vo.ContractSignatureVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ContractSignatureServiceImpl implements ContractSignatureService{
@@ -35,11 +34,11 @@ public class ContractSignatureServiceImpl implements ContractSignatureService{
                 e.setContractNumber(contractSignatureVO.getContractNo());
                 contractSignatureMapper.insertSelective(e);
                 List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContract(contractSignatureVO.getContractNo());
-                for (int i = 0; i < listvo.size(); i++) {
+                //for (int i = 0; i < listvo.size(); i++) {
                 	  CreateOrder order = new CreateOrder();
-                      order.setData(listvo.get(i));
+                order.setData(listvo);
                       eventService.publish(order);
-				}
+                //}
               
             });
             return true;

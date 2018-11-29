@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -195,9 +197,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  //订单编号
 					  vo.setFromOrderid(orderNumber);
 					  //是否全额支付
-					 // if(i == 0){
-//					  vo.setIsEnd("1");
-//					  }else{
+
 					  if (i == jsonArray.size() - 1) {
 						  vo.setIsEnd("2");
 					  } else if (jsonMap.get("stageCode").equals("-1")) {//施工订单为-1的是首款
@@ -205,7 +205,6 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  } else {
 						  vo.setIsEnd("0");
 					  }
-//					  }
 					  //合同类型 订单类型：设计1、施工2、合同3
 					  vo.setType("2");
 
@@ -241,115 +240,112 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	 * @param resMap
 	 */
 	private void designData(String orderNumber, List<SyncOrderVO> listVo, OrderContract contract,
-			CompanyInfo companyInfo, Map<String, String> resMap) {
+							CompanyInfo companyInfo, Map<String, String> resMap) {
 		//查询设计订单项目信息
-		  DesignerOrderExample example = new DesignerOrderExample();
-		  example.createCriteria().andOrderNoEqualTo(orderNumber);
-		  List<DesignerOrder> conorder =  designerOrderMapper.selectByExample(example);
+		DesignerOrderExample example = new DesignerOrderExample();
+		example.createCriteria().andOrderNoEqualTo(orderNumber);
+		List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(example);
+		//设计判断是分期 换是全款
+		String cType = String.valueOf(resMap.get("c18"));
+		printInfoMes("分期类型｛｝" + cType);
+		//全款
+		if (cType.equals("0")) {
+			SyncOrderVO vo = new SyncOrderVO();
+			//合同金额 全款
+			BigDecimal amount = new BigDecimal(String.valueOf(resMap.get("c19")));
+			amount = amount.setScale(2, RoundingMode.HALF_UP);
+			vo.setActualAmount(String.valueOf(amount));
+			vo.setCompanyId(contract.getCompanyId());
+			//公司名称
+			vo.setCompanyName(companyInfo == null ? "系统数据错误" : companyInfo.getCompanyName());
+			//支付名称
+			vo.setTypeSub("1001");
+			//是否全额支付
+			vo.setContractType("1");
+			//业主名称
+			vo.setConsumerName(resMap.get("c03"));
+			//合同开始时间
+			vo.setStartTime("");
+			//合同结束时间
+			vo.setEndTime("");
+			//订单编号
+			vo.setFromOrderid(orderNumber);
+			//是否全额支付
+			vo.setIsEnd("2");
+			//合同类型 订单类型：设计1、施工2、合同3
+			vo.setType("1");
+			//项目地址
+			vo.setProjectAddr(resMap.get("c08") + resMap.get("c09") + resMap.get("c10") + resMap.get("c11"));
+			//项目编号
+			vo.setProjectNo(designerOrders.get(0) == null ? "" : designerOrders.get(0).getProjectNo());
+			//签约时间
+			vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
+			//是否个性化
+			vo.setStyleType(designerOrders.get(0) == null ? "" : designerOrders.get(0).getStyleType());
 
-		  //设计判断是分期 换是全款
+			vo.setSort("");
 
-		  String ctype = String.valueOf(resMap.get("c18"));
-		printInfoMes("分期类型｛｝" + ctype);
-		if (ctype.equals("0")) {//全款
-			  SyncOrderVO vo = new SyncOrderVO();
-			  //合同金额 全款
-			  vo.setActualAmount(String.valueOf(resMap.get("c19")));
-			  vo.setCompanyId(contract.getCompanyId());
-			  //公司名称
-			  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
-			  //支付名称
-			  vo.setTypeSub("1001");
-			  //是否全额支付
-			  vo.setContractType("1");
-			  //业主名称
-			  vo.setConsumerName(resMap.get("c03"));
-			  //合同开始时间
-			  vo.setStartTime("");
-			  //合同结束时间
-			  vo.setEndTime("");
-			  //订单编号
-			  vo.setFromOrderid(orderNumber);
-			  //是否全额支付
-			  vo.setIsEnd("2");
-			  //合同类型 订单类型：设计1、施工2、合同3
-			  vo.setType("1");
-			  //项目地址
-			  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
-			  //项目编号
-			  vo.setProjectNo(conorder.get(0)==null?"":conorder.get(0).getProjectNo());
-			  //签约时间
-			  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
-			  //是否个性化
-			  vo.setStyleType(conorder.get(0)==null?"":conorder.get(0).getStyleType());
-
-			  vo.setSort("");
-
-		      listVo.add(vo);
-		  }else{//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
-			// String jsonSr = "[{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]";
-			 String jsonSr = resMap.get("c20");
+			listVo.add(vo);
+		} else {
+			//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
+			String jsonSr = resMap.get("c20");
 			printInfoMes("分期json 数据｛｝" + jsonSr);
-			  if(!StringUtils.isEmpty(jsonSr)){
-				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
-				  for (int i = 0; i < jsonArray.size(); i++) {
-					  SyncOrderVO vo = new SyncOrderVO();
-					  //合同金额 全款
-					  @SuppressWarnings("unchecked")
-					  Map<String,String> jsonMap = (Map<String, String>) jsonArray.get(i);
-					  printInfoMes("分期金额" + jsonMap.get("costValue"));
-					  vo.setActualAmount(jsonMap.get("costValue"));
-					  vo.setCompanyId(contract.getCompanyId());
-					  //公司名称
-					  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
-					  //支付名称
-					  vo.setTypeSub("100"+(i+1)+"");
-					  //是否全额支付
-					  vo.setContractType("2");
-					  //业主名称
-					  vo.setConsumerName(resMap.get("c03"));
-					  //合同开始时间
-					  vo.setStartTime("");
-					  //合同结束时间
-					  vo.setEndTime("");
-					  //订单编号
-					  vo.setFromOrderid(orderNumber);
-					  //是否全额支付
-//					  if(i == 0){
-//					  vo.setIsEnd("1");
-//						  }else{
-//							  if(i == jsonArray.size()-1 ){
-//								  vo.setIsEnd("2");
-//							  }else{
-//								  vo.setIsEnd("0");
-//							  }
-//					  }
-					  if(i == jsonArray.size() - 1 ){
-						  vo.setIsEnd("2");
-					  }else{
-						  vo.setIsEnd("1");
-					  }
-					  //合同类型 订单类型：设计1、施工2、合同3
-					  vo.setType("1");
+			if (!StringUtils.isEmpty(jsonSr)) {
+				JSONArray jsonArray = JSONArray.parseArray(jsonSr);
+				for (int i = 0; i < jsonArray.size(); i++) {
+					SyncOrderVO vo = new SyncOrderVO();
+					//合同金额 全款
+					@SuppressWarnings("unchecked")
+					Map<String, String> jsonMap = (Map<String, String>) jsonArray.get(i);
+					printInfoMes("分期金额" + jsonMap.get("costValue"));
+					//vo.setActualAmount(jsonMap.get("costValue"));
+					BigDecimal amount = new BigDecimal(String.valueOf(jsonMap.get("costValue")) == "" ? "0" : String.valueOf(jsonMap.get("costValue")));
+					amount = amount.setScale(2, RoundingMode.HALF_UP);
+					vo.setActualAmount(String.valueOf(amount));
+					vo.setCompanyId(contract.getCompanyId());
+					//公司名称
+					vo.setCompanyName(companyInfo == null ? "系统数据错误" : companyInfo.getCompanyName());
+					//支付名称
+					vo.setTypeSub("100" + (i + 1) + "");
+					//是否全额支付
+					vo.setContractType("2");
+					//业主名称
+					vo.setConsumerName(resMap.get("c03"));
+					//合同开始时间
+					vo.setStartTime("");
+					//合同结束时间
+					vo.setEndTime("");
+					//订单编号
+					vo.setFromOrderid(orderNumber);
+					//是否全额支付
+					if (i == 0) {
+						vo.setIsEnd("1");
+					} else if (i == jsonArray.size() - 1) {
+						vo.setIsEnd("2");
+					} else {
+						vo.setIsEnd("0");
+					}
+					//合同类型 订单类型：设计1、施工2、合同3
+					vo.setType("1");
 
-					  vo.setProjectAddr(resMap.get("c08")+resMap.get("c09")+resMap.get("c10")+resMap.get("c11"));
-					  //项目编号
-					  vo.setProjectNo(conorder==null?"":conorder.get(0).getProjectNo());
-					  //签约时间
-					  vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
-					  //是否个性化
-					  vo.setStyleType(conorder==null?"":conorder.get(0).getStyleType());
+					vo.setProjectAddr(resMap.get("c08") + resMap.get("c09") + resMap.get("c10") + resMap.get("c11"));
+					//项目编号
+					vo.setProjectNo(designerOrders == null ? "" : designerOrders.get(0).getProjectNo());
+					//签约时间
+					vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
+					//是否个性化
+					vo.setStyleType(designerOrders == null ? "" : designerOrders.get(0).getStyleType());
 
-					  vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
-					  printInfoMes("json vo 数据｛｝" + vo);
-		              listVo.add(vo);
-				  }
-			  }else{
-				  printInfoMes("调用订单合同发生错误 ","contractInfos is null or contractInfos.size() > 0 {}",jsonSr.toString());
-			  }
-		  }
+					vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
+					printInfoMes("json vo 数据｛｝" + vo);
+					listVo.add(vo);
+				}
+			} else {
+				printInfoMes("调用订单合同发生错误 ", "contractInfos is null or contractInfos.size() > 0 {}", jsonSr.toString());
+			}
+		}
 	}
-	
+
 	
 
 	@Override
@@ -358,9 +354,9 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		//根据合同编号 查询 入住合同
         ContractInfoExample contractInfoExample = new ContractInfoExample();
         contractInfoExample.createCriteria().andContractNumberEqualTo(contractNumber);
-        List<ContractInfo> contractInfos = contractInfoMapper.selectByExample(contractInfoExample);
-        if (contractInfos.size() > 0){
-        	ContractInfo contract = contractInfos.get(0);
+		List<ContractInfo> contractInfo = contractInfoMapper.selectByExample(contractInfoExample);
+		if (contractInfo.size() > 0) {
+			ContractInfo contract = contractInfo.get(0);
         	CompanyInfo companyInfo = companyInfoMapper.selectByCompanyId(contract.getCompanyId());
         	//合同信息
         	ContractTermsExample contractTermsExample = new ContractTermsExample();
@@ -421,9 +417,14 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		       }
 			  //合同金额 全款
 			  if(childList.size() == 0  ){
-			      vo.setActualAmount(String.valueOf(resMap.get("c17")));
+				  // vo.setActualAmount(String.valueOf(resMap.get("c17")));
+				  BigDecimal amount = new BigDecimal(String.valueOf(resMap.get("c17")) == "" ? "0" : String.valueOf(resMap.get("c17")));
+				  amount = amount.setScale(2, RoundingMode.HALF_UP);
+				  vo.setActualAmount(String.valueOf(amount));
 			  }else{
-				  vo.setActualAmount(firstMoney);
+				  BigDecimal amount = new BigDecimal(firstMoney == "" ? "0" : firstMoney);
+				  amount = amount.setScale(2, RoundingMode.HALF_UP);
+				  vo.setActualAmount(String.valueOf(amount));
 			  }
 			  //
 			  vo.setCompanyId(contract.getCompanyId());
@@ -492,9 +493,14 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	       }
 		  //合同金额 全款
 		  if(childList.size() == 0  ){
-		      vo.setActualAmount(String.valueOf(resMap.get("c15")));
+			  BigDecimal amount = new BigDecimal(String.valueOf(resMap.get("c15")) == "" ? "0" : String.valueOf(resMap.get("c15")));
+			  amount = amount.setScale(2, RoundingMode.HALF_UP);
+			  vo.setActualAmount(String.valueOf(amount));
+			  // vo.setActualAmount(String.valueOf(resMap.get("c15")));
 		  }else{
-			  vo.setActualAmount(firstMoney);
+			  BigDecimal amount = new BigDecimal(firstMoney == "" ? "0" : firstMoney);
+			  amount = amount.setScale(2, RoundingMode.HALF_UP);
+			  vo.setActualAmount(String.valueOf(amount));
 		  }
 		  //
 		  vo.setCompanyId(contract.getCompanyId());
