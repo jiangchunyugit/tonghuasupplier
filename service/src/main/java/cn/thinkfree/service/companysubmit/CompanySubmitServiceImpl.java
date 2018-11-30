@@ -146,9 +146,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public AuditInfoVO findAuditStatus(String companyId) {
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
-		map.put("auditType", CompanyConstants.AuditType.JOINON.stringVal());
+		List<String>  list = new ArrayList<>();
+		list.add(CompanyConstants.AuditType.JOINON.stringVal());
+		list.add(CompanyConstants.AuditType.CONTRACT.stringVal());
+		map.put("auditType", list);
 
 		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
 		if(auditInfoVO == null){
