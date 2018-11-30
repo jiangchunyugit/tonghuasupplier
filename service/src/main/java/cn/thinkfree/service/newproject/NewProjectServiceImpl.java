@@ -3,6 +3,7 @@ package cn.thinkfree.service.newproject;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.ConstructionStateEnumB;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
@@ -305,6 +306,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         BasicsDataExample basicsDataExample = new BasicsDataExample();
         BasicsDataExample.Criteria dataCriteria = basicsDataExample.createCriteria();
         dataCriteria.andBasicsCodeEqualTo(designerOrderDetailVo.getStyleType());
+        dataCriteria.andBasicsGroupEqualTo(BasicsDataParentEnum.DESIGN_STYLE.getCode());
         List<BasicsData> basicsData = basicsDataMapper.selectByExample(basicsDataExample);
         if (basicsData.size() == 0) {
             designerOrderDetailVo.setStyleType("");
