@@ -333,14 +333,14 @@ public class CloudServiceImpl implements CloudService {
      * @param syncOrderVO
      */
     @Override
-    public RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO) {
+    public RemoteResult<String> syncOrder(List<SyncOrderVO> syncOrderVO) {
 //        MultiValueMap<String, Object> param = initParam();
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
 
         Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
-        String body = gson.toJson(Lists.newArrayList(syncOrderVO));
+        String body = gson.toJson(syncOrderVO);
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
 
         RemoteResult<String> result = null;

@@ -96,7 +96,7 @@ public interface CloudService {
      * 同步订单信息
      * @param syncOrderVO
      */
-    RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO);
+    RemoteResult<String> syncOrder(List<SyncOrderVO> syncOrderVO);
 
     /**
      * 同步合同信息（后台jiangchunyu提供）
