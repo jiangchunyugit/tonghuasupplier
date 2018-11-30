@@ -149,9 +149,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public AuditInfoVO findAuditStatus(String companyId) {
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
-		map.put("auditType", CompanyConstants.AuditType.JOINON.stringVal());
+		List<String> list = new ArrayList<>();
+		list.add(CompanyConstants.AuditType.JOINON.stringVal());
+		list.add(CompanyConstants.AuditType.CONTRACT.stringVal());
+		map.put("auditType", list);
 
 		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
 		if(auditInfoVO == null){
@@ -160,7 +163,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			auditInfoVO.setCompanyAuditName("资质审核中");
 			return auditInfoVO;
 		}
-
 
 		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
 		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType())){
@@ -172,9 +174,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.FAILCHECK.mes);
 
 		}else if(CompanyAuditStatus.NOTPAYBAIL.code > Integer.parseInt(auditInfoVO.getCompanyAuditType())){
-			auditInfoVO.setCompanyAuditName("资质审核中");
+            auditInfoVO.setCompanyAuditName(CompanyAuditStatus.getDesc(Integer.parseInt(auditInfoVO.getCompanyAuditType())));
 		}
-
 
 		return auditInfoVO;
 	}
