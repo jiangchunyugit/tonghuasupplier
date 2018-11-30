@@ -115,7 +115,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         }
         CompanyInfoExample condition = new CompanyInfoExample();
 
-        condition.createCriteria().andCompanyNameLike(name+"%")
+        condition.createCriteria().andCompanyNameLike("%"+name+"%")
                 .andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
 //                .andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
                 .andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.code.toString())
