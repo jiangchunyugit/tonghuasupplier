@@ -209,7 +209,7 @@ public class ExampleController extends AbsBaseController {
         List<SyncOrderVO> listvo = thirdPartDateService.getOrderContract("DO1811280009YS");
         for (int i = 0; i < listvo.size(); i++) {
             CreateOrder order = new CreateOrder();
-            order.setData(listvo.get(i));
+//            order.setData(listvo.get(i));
             eventService.publish(order);
         }
 
