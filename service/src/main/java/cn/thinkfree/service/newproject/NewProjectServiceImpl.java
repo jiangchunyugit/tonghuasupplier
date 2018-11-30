@@ -89,6 +89,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
+        List<OrderUser> allOrder = orderUserMapper.selectByExample(example1);
         PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
@@ -161,6 +162,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVoList.add(projectVo);
         }
         PageInfo<ProjectVo> pageInfo = new PageInfo<>(projectVoList);
+        if (appProjectSEO.getRows() == projects.size()) {
+            if (allOrder.size() > appProjectSEO.getRows() * appProjectSEO.getPage()) {
+                pageInfo.setHasNextPage(true);
+            }
+        }
         return RespData.success(pageInfo);
     }
 
@@ -371,10 +377,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderPlayVo != null) {
             projectTitleVo.setCost(orderPlayVo.getCost());
             projectTitleVo.setDelay(orderPlayVo.getDelay());
-            projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(),project.getPlanEndTime()));
+            projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(), project.getPlanEndTime()));
             projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
         }
-        int confirm ;
+        int confirm;
         try {
             confirm = afInstanceService.getProjectCheckResult(projectNo);
         } catch (Exception e) {
@@ -406,7 +412,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         categoryList.add(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
         criteria.andCategoryIn(categoryList);
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
-        if(projectDataList.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+        if (projectDataList.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("暂无设计资料");
         }
         List<DataDetailVo> dataDetailVoList = new ArrayList<>();
@@ -467,11 +473,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         criteria.andTypeEqualTo(ProjectDataStatus.QUOTATION_STATUS.getValue());
         List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
-        if(projectDataList.size()==ProjectDataStatus.INSERT_FAILD.getValue()){
+        if (projectDataList.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("暂无施工资料");
         }
         for (ProjectData projectData : projectDataList) {
-            if (projectData.getIsConfirm() != null){
+            if (projectData.getIsConfirm() != null) {
                 confirm = projectData.getIsConfirm();
             }
             UrlDetailVo urlDetailVo = new UrlDetailVo();
@@ -657,7 +663,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (designerOrders.size() == 0) {
             return RespData.error("查无此项目");
         }
-        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState())||designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
+        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
             //如果设计订单完成,则请求施工订单更改状态
             constructionStateServiceB.customerCancelOrder(userId, orderNo, cancelReason);
         } else {
