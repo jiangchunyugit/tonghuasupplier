@@ -330,7 +330,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             //存放订单类型
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
             //存放展示信息
-            OrderPlayVo constructionOrderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            List<OrderPlayVo> constructionOrderPlays = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            if (constructionOrderPlays.size() == 0) {
+                return RespData.error("获取公司信息失败");
+            }
+            OrderPlayVo constructionOrderPlayVo = constructionOrderPlays.get(0);
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
             }
@@ -375,7 +379,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectTitleVo.setProjectEndTime(project.getPlanEndTime());
         projectTitleVo.setAddress(project.getAddressDetail());
         projectTitleVo.setProjectNo(projectNo);
-        OrderPlayVo orderPlayVo = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        List<OrderPlayVo> orderPlayVos = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        if (orderPlayVos.size() == 0) {
+            return RespData.error("获取公司信息失败");
+        }
+        OrderPlayVo orderPlayVo = orderPlayVos.get(0);
         if (orderPlayVo != null) {
             projectTitleVo.setCost(orderPlayVo.getCost());
             projectTitleVo.setDelay(orderPlayVo.getDelay());
