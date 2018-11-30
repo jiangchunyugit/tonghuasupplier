@@ -308,7 +308,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         String	auditPersion = userVO == null ? "" : userVO.getUsername();
         String	auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
         /* 添加审核记录表 */
-        PcAuditInfo record = new PcAuditInfo( "1", "2", auditPersion, auditStatus, new Date(), companyId, auditCase,
+		PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(), companyId, auditCase,
                 contractNumber, date, auditAccount);
         int flagon = pcAuditInfoMapper.insertSelective( record );
         // TODO 初始化保证金流水
