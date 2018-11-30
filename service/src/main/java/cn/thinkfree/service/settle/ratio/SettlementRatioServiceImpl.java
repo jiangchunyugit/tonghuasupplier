@@ -1,24 +1,5 @@
 package cn.thinkfree.service.settle.ratio;
 
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
-
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.DateUtils;
@@ -34,6 +15,17 @@ import cn.thinkfree.database.vo.settle.SettlementRatioSEO;
 import cn.thinkfree.service.constants.SettlementStatus;
 import cn.thinkfree.service.utils.ExcelData;
 import cn.thinkfree.service.utils.ExcelUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletResponse;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 public  class SettlementRatioServiceImpl extends AbsLogPrinter implements SettlementRatioService {
@@ -49,7 +41,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		PageHelper.startPage(ratio.getPage(), ratio.getRows());
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
 		example.setOrderByClause("create_time DESC");
-		this.searchRef(example,ratio);
+		searchRef(example, ratio);
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
 		printInfoMes("查询 结算比例数量 {}", list.size());
 		return new PageInfo<>(list);
@@ -85,7 +77,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
         List<Object> row = null;
 		PageHelper.startPage(ratio.getPage(), ratio.getRows());
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
-		this.searchRef(example,ratio);
+		searchRef(example, ratio);
 		List<SettlementRatioInfo> list = settlementRatioInfoMapper.selectByExample(example);
        for(int i=0; i<list.size();i++){
            row=new ArrayList<>();
@@ -126,7 +118,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 				settlementRatioSEO.setCreateUser(auditPersion);
 				// 新增未待审核
 				// 当前时间大于结束时间作废
-				if (this.datecompare(settlementRatioSEO.getEffectEndTime())>0) {
+				if (datecompare(settlementRatioSEO.getEffectEndTime()) > 0) {
 
 					settlementRatioSEO.setStatus(SettlementStatus.AuditCAN.getCode());
 				} else {
@@ -274,11 +266,11 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 			} else if (settlementRatioInfo.getStatus().equals(SettlementStatus.AuditWait.getCode())){
 				if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
 					// 没到有效期 待生效
-					if (this.datecompare(settlementRatioInfo.getEffectStartTime())<0) {
+					if (datecompare(settlementRatioInfo.getEffectStartTime()) < 0) {
 						recordT.setStatus(SettlementStatus.EffectiveWait.getCode());
 					}
 					// 在有效期 生效
-					if (this.datecompare(settlementRatioInfo.getEffectStartTime())>=0 && this.datecompare(settlementRatioInfo.getEffectEndTime())<= 0) {
+					if (datecompare(settlementRatioInfo.getEffectStartTime()) >= 0 && datecompare(settlementRatioInfo.getEffectEndTime()) <= 0) {
 						recordT.setStatus(SettlementStatus.Effective.getCode());
 					}
 				} else {
@@ -320,8 +312,8 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		List<String> resList = new ArrayList<String>();
 		Date now = new Date();
 		SettlementRatioInfoExample example = new SettlementRatioInfoExample();
-		example.createCriteria().andFeeDicIdEqualTo(code).
-		andEffectStartTimeLessThan(now).andEffectEndTimeGreaterThanOrEqualTo(now);
+		example.createCriteria().andFeeDicIdEqualTo(code).andStatusEqualTo("7");
+		//andEffectStartTimeLessThan(now).andEffectEndTimeGreaterThanOrEqualTo(now);
 		List<SettlementRatioInfo>  list = settlementRatioInfoMapper.selectByExample(example);
 		for (int i = 0; i < list.size(); i++) {
 			String amount = list.get(i).getAmount();
