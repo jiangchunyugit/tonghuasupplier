@@ -24,10 +24,10 @@ public class AuthenticationFactory {
         }else{
               token = new MyCustomUserDetailToken(userName,passWord,type);
         }
-        if(token != null){
-            Object details = new WebAuthenticationDetailsSource().buildDetails(httpServletRequest);
-            ((AbstractAuthenticationToken) token).setDetails(details);
-        }
+//        if(token != null){
+//            Object details = new WebAuthenticationDetailsSource().buildDetails(httpServletRequest);
+//            ((AbstractAuthenticationToken) token).setDetails(details);
+//        }
         return token;
     }
 

@@ -271,7 +271,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			//订单编号
 			vo.setFromOrderid(orderNumber);
 			//是否全额支付
-			vo.setIsEnd("2");
+			vo.setIsEnd("1");
 			//合同类型 订单类型：设计1、施工2、合同3
 			vo.setType("1");
 			//项目地址
@@ -432,16 +432,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
 			  //支付名称
 			  vo.setTypeSub("8001");
-			  //是否全额支付 ：1全款，2分期
-			  if(childList.size() > 1){
-				  
-			     vo.setContractType("2");
-			     //是否全额支付
-			  }else{
-				 vo.setContractType("1");
-				 //是否全额支付
-			  }
-			  vo.setIsEnd("1");
+		vo.setContractType("1");
+		vo.setIsEnd("2");
 			  //业主名称
 			  vo.setConsumerName(companyInfo.getLegalName());//法人名称
 			  //合同开始时间 
@@ -509,11 +501,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  //支付名称
 		  vo.setTypeSub("7001");
 		  //是否全额支付 ：1全款，2分期
-		  if(childList.size() > 1){
-		     vo.setContractType("2");
-		  }else{
-			 vo.setContractType("1");
-		  }
+
+		vo.setContractType("1");
 		  //业主名称
 		  vo.setConsumerName(companyInfo.getLegalName());//法人名称
 		  //合同开始时间 
