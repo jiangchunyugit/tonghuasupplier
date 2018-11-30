@@ -63,7 +63,7 @@ public interface PcAuditInfoMapper {
      * @param map
      * @return
      */
-    AuditInfoVO findAuditStatus(Map<String, String> map);
+    AuditInfoVO findAuditStatus(Map<String, Object> map);
 
 
     /**
