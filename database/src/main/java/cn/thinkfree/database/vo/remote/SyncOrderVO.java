@@ -47,7 +47,7 @@ public class SyncOrderVO extends BaseModel {
      */
     private String fromOrderid;
     /**
-     * 是否是合同尾款:是1,否2 
+     * 是否是合同尾款:1首款 2 尾款 0 其它款
      */
     private String isEnd;
     /**
