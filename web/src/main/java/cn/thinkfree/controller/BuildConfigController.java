@@ -79,12 +79,12 @@ public class BuildConfigController extends AbsBaseController {
     @ResponseBody
     @RequestMapping(value = "editScheme", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle editScheme(
-            @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
-            @ApiParam(name = "schemeName", required = false, value = "施工方案名称") @RequestParam(name = "schemeName", required = false) String schemeName,
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
-            @ApiParam(name = "cityStation", required = false, value = "城市站ID") @RequestParam(name = "cityStation", required = false) String cityStation,
-            @ApiParam(name = "storeNo", required = false, value = "门店ID") @RequestParam(name = "storeNo", required = false) String storeNo,
-            @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
+            @ApiParam(name = "schemeNo", value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
+            @ApiParam(name = "schemeName", value = "施工方案名称") @RequestParam(name = "schemeName", required = false) String schemeName,
+            @ApiParam(name = "companyId", value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "cityStation", value = "城市站ID") @RequestParam(name = "cityStation", required = false) String cityStation,
+            @ApiParam(name = "storeNo", value = "门店ID") @RequestParam(name = "storeNo", required = false) String storeNo,
+            @ApiParam(name = "remark", value = "备注") @RequestParam(name = "remark", required = false) String remark) {
         try {
             logger.info("创建施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
             buildConfigService.editScheme(schemeNo, schemeName, companyId, cityStation, storeNo, remark);
