@@ -246,6 +246,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
             throw new RuntimeException();
         }
+        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
         if (AfConfigs.START_APPLICATION.configNo.equals(configNo)) {
             int verify = verifyStartApplicationAndStartReport(schedulingDetailsVOs, projectNo, configNo);
             return verify == 1 || verify == 3;
@@ -584,6 +585,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
             throw new RuntimeException();
         }
+        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
         if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
             if (scheduleSort == null) {
                 LOGGER.error("没有传入相应的排期编号！");
