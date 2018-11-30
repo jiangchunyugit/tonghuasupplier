@@ -12,10 +12,8 @@ import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.event.SendValidateCode;
 import cn.thinkfree.database.event.account.AccountCreate;
 import cn.thinkfree.database.event.account.ResetPassWord;
-import cn.thinkfree.database.event.sync.CreateOrder;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.PcUserInfoVo;
-import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.event.EventService;
@@ -200,18 +198,19 @@ public class ExampleController extends AbsBaseController {
     }
 
     @GetMapping("/test")
+    //@NoRepeatSubmit
     public void test(){
-
-////        eventService.publish(new CompanyJoin("BD2018080710405900001"));
-////        eventService.publish(new FinishContract("SJHT201811091623204760001"));
-//        eventService.publish(new CreateOrder("SJHT201811091623204760001"));
-
-        List<SyncOrderVO> listvo = thirdPartDateService.getOrderContract("DO1811280009YS");
-        for (int i = 0; i < listvo.size(); i++) {
-            CreateOrder order = new CreateOrder();
-//            order.setData(listvo.get(i));
-            eventService.publish(order);
-        }
+//
+//////        eventService.publish(new CompanyJoin("BD2018080710405900001"));
+//////        eventService.publish(new FinishContract("SJHT201811091623204760001"));
+////        eventService.publish(new CreateOrder("SJHT201811091623204760001"));
+//
+//        List<SyncOrderVO> listvo = thirdPartDateService.getOrderContract("DO1811280009YS");
+//        // for (int i = 0; i < listvo.size(); i++) {
+//            CreateOrder order = new CreateOrder();
+//        order.setData(listvo);
+//            eventService.publish(order);
+//        //   }
 
     }
     @GetMapping("/send")

@@ -75,6 +75,25 @@ public class BuildConfigController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("编辑施工方案====》运营后台====》施工配置")
+    @ResponseBody
+    @RequestMapping(value = "editScheme", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle editScheme(
+            @ApiParam(name = "schemeNo", required = false, value = "施工方案编号") @RequestParam(name = "schemeNo", required = false) String schemeNo,
+            @ApiParam(name = "schemeName", required = false, value = "施工方案名称") @RequestParam(name = "schemeName", required = false) String schemeName,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "cityStation", required = false, value = "城市站ID") @RequestParam(name = "cityStation", required = false) String cityStation,
+            @ApiParam(name = "storeNo", required = false, value = "门店ID") @RequestParam(name = "storeNo", required = false) String storeNo,
+            @ApiParam(name = "remark", required = false, value = "备注") @RequestParam(name = "remark", required = false) String remark) {
+        try {
+            logger.info("创建施工方案：{}", JSONObject.toJSONString(HttpUtils.getHttpParams()));
+            buildConfigService.editScheme(schemeNo, schemeName, companyId, cityStation, storeNo, remark);
+            return sendSuccessMessage(ResultMessage.SUCCESS.message);
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
     @ApiOperation("启用施工方案====》运营后台====》施工配置")
     @ResponseBody
     @RequestMapping(value = "enableScheme", method = {RequestMethod.POST, RequestMethod.GET})
