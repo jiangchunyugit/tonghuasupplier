@@ -162,6 +162,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVoList.add(projectVo);
         }
         PageInfo<ProjectVo> pageInfo = new PageInfo<>(projectVoList);
+        int pages = (int) Math.ceil(((double) allOrder.size()) / appProjectSEO.getRows());
+        pageInfo.setPages(pages);
         if (appProjectSEO.getRows() == projects.size()) {
             if (allOrder.size() > appProjectSEO.getRows() * appProjectSEO.getPage()) {
                 pageInfo.setHasNextPage(true);
