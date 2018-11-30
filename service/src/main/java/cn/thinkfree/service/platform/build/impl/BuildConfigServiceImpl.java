@@ -111,6 +111,36 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
+    public void editScheme(String schemeNo, String schemeName, String companyId, String cityStation, String storeNo, String remark) {
+        if(StringUtils.isBlank(schemeNo)){
+            throw new RuntimeException("方案编号不能为空");
+        }
+        BuildSchemeConfig buildSchemeConfig = checkScheme(schemeNo);
+        if(StringUtils.isBlank(schemeName)){
+            throw new RuntimeException("方案名称不能为空");
+        }
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if(StringUtils.isBlank(cityStation)){
+            throw new RuntimeException("城市站不能为空");
+        }
+        if(StringUtils.isBlank(storeNo)){
+            throw new RuntimeException("门店编号不能为空");
+        }
+        if(StringUtils.isBlank(remark)){
+            throw new RuntimeException("请输入备注");
+        }
+
+        buildSchemeConfig.setSchemeName(schemeName);
+        buildSchemeConfig.setCompanyId(companyId);
+        buildSchemeConfig.setCityStation(cityStation);
+        buildSchemeConfig.setStoreNo(storeNo);
+        buildSchemeConfig.setRemark(remark);
+        schemeConfigMapper.updateByPrimaryKey(buildSchemeConfig);
+    }
+
+    @Override
     public void enableScheme(String schemeNo) {
         BuildSchemeConfig schemeConfig = new BuildSchemeConfig();
         schemeConfig.setIsEnable(1);
