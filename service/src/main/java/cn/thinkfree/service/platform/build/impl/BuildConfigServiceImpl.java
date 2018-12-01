@@ -338,7 +338,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     @Override
     public String getSchemeNoByCompanyId(String companyId) {
         BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
-        relExample.createCriteria().andCompanyIdEqualTo(companyId);
+        relExample.createCriteria().andCompanyIdEqualTo(companyId).andDelStateEqualTo(2).andIsEableEqualTo(1);
         List<BuildSchemeCompanyRel> companyRels = companyRelMapper.selectByExample(relExample);
         if(companyRels.isEmpty()){
             return null;

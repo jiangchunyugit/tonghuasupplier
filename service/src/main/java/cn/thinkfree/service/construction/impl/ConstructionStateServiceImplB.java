@@ -248,8 +248,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_630.getState());
 
 
-            Map<String, Object> map = getPayScheduling(projectNo);
-            if (map.get("paySort").equals(map.get("bigSort")) && sort == map.get("paySort")) {
+            Map<String, Integer> map = getPayScheduling(projectNo);
+            if (map.get("paySort").equals(map.get("bigSort")) && sort.equals(map.get("paySort"))) {
                 //支付必须先回调再改状态
                 commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
             }
@@ -265,7 +265,6 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      */
     @Override
     public MyRespBundle<String> constructionPlan(String projectNo, Integer sort) {
-
         if (!constructionAndPayStateService.isBeComplete(projectNo, sort)) {
             throw new RuntimeException("施工阶段状态变更异常");
         }
@@ -318,8 +317,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
                 constructionOrderPay.setIsEnd("construction");
                 commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
 
-                Map<String, Object> map = getPayScheduling(projectNo);
-                if (!map.get("paySort").equals(map.get("bigSort")) && sort > (Integer) map.get("bigSort")) {
+                Map<String, Integer> map = getPayScheduling(projectNo);
+                if (!map.get("paySort").equals(map.get("bigSort")) && sort.equals(map.get("bigSort"))) {
                     //完工即修改状态为订单完成
                     commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
                 }
@@ -341,8 +340,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      * @param projectNo
      * @return
      */
-    public Map<String, Object> getPayScheduling(String projectNo) {
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, Integer> getPayScheduling(String projectNo) {
+        Map<String, Integer> map = new HashMap<>();
         //获取排期详情
         ProjectBigSchedulingDetailsExample detailsExample = new ProjectBigSchedulingDetailsExample();
         ProjectBigSchedulingDetailsExample.Criteria detailsCriteria = detailsExample.createCriteria();
@@ -371,7 +370,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         }
         Integer paySort = 0;
         for (BuildPayConfig buildPayConfig : buildPayConfigList) {
-            if (!buildPayConfig.getStageCode().equals("-1") && Integer.parseInt(buildPayConfig.getStageCode()) > bigSort) {
+            if (!buildPayConfig.getStageCode().equals("-1") && Integer.parseInt(buildPayConfig.getStageCode()) > paySort) {
                 paySort = Integer.parseInt(buildPayConfig.getStageCode());
             }
         }

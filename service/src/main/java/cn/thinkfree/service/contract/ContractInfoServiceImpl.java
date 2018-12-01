@@ -19,7 +19,6 @@ import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.*;
 import cn.thinkfree.service.construction.ConstructionStateServiceB;
 import cn.thinkfree.service.event.EventService;
-import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.utils.*;
@@ -96,8 +95,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
     @Autowired
     EventService eventService;
 
-	@Autowired
-	NewSchedulingService newSchedulingService;
+	//@Autowired
+	//NewSchedulingService newSchedulingService;
 
 	@Value( "${custom.cloud.fileUpload}" )
 	private String fileUploadUrl;
@@ -842,7 +841,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		orderContractMapper.deleteByExample(example);
 		
 		orderContractMapper.insertSelective( record );
-		newSchedulingService.createScheduling(orderNumber);
+		//newSchedulingService.createScheduling(orderNumber);
 		return(contractNumber);
 	}
 

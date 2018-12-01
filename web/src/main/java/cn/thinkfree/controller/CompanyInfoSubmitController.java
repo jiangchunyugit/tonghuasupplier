@@ -123,6 +123,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @MyRespBody
     public MyRespBundle<String> auditChangeCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
         String msg = companySubmitService.auditChangeCompany(pcAuditInfo);
+
         return sendJsonData(ResultMessage.SUCCESS, msg);
 
     }

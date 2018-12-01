@@ -39,18 +39,18 @@ import java.util.*;
 @Service
 public class CompanySubmitServiceImpl implements CompanySubmitService {
 
-    @Autowired
-    CompanyInfoExpandMapper qcompanyInfoExpandMapper;
+	@Autowired
+	CompanyInfoExpandMapper qcompanyInfoExpandMapper;
 
-    @Autowired
-    PcCompanyFinancialMapper pcCompanyFinancialMapper;
+	@Autowired
+	PcCompanyFinancialMapper pcCompanyFinancialMapper;
 
-    @Autowired
-    CompanyInfoMapper companyInfoMapper;
-    
-    @Autowired
+	@Autowired
+	CompanyInfoMapper companyInfoMapper;
+
+	@Autowired
 	MyContractInfoMapper contractInfoMapper;
-	
+
 	@Autowired
 	PcAuditInfoMapper pcAuditInfoMapper;
 
@@ -67,10 +67,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	PcApplyInfoMapper pcApplyInfoMapper;
 
 	@Autowired
-    ContractTermsMapper pcContractTermsMapper;
+	ContractTermsMapper pcContractTermsMapper;
 
 	@Autowired
-    ContractTermsChildMapper contractTermsChildMapper;
+	ContractTermsChildMapper contractTermsChildMapper;
 
 	@Autowired
 	ContractInfoMapper contractInfoMappers;
@@ -100,7 +100,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		list.add(auditType);
 		list.add(CompanyConstants.AuditType.ENTRY.stringVal());
 
-        //审批信息
+		//审批信息
 		PcAuditInfoExample autit = new PcAuditInfoExample();
 		if(CompanyConstants.AuditType.JOINON.stringVal().equals(auditType)){
 			autit.createCriteria().andCompanyIdEqualTo(companyId)
@@ -131,10 +131,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		List<PcAuditInfo> auList =  pcAuditInfoMapper.selectByExample(autit);
 		companyDetailsVO.setPcAuditInfo(auList);
 
-        return companyDetailsVO;
+		return companyDetailsVO;
 	}
 
-    @Override
+	@Override
 	public PcAuditInfo findAuditCase(String companyId) {
 		PcAuditInfo pcAuditInfo = pcAuditInfoMapper.findAuditCase(companyId);
 
@@ -146,9 +146,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public AuditInfoVO findAuditStatus(String companyId) {
-		Map<String, String> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>();
 		map.put("companyId", companyId);
-		map.put("auditType", CompanyConstants.AuditType.JOINON.stringVal());
+		List<String>  list = new ArrayList<>();
+		list.add(CompanyConstants.AuditType.JOINON.stringVal());
+		list.add(CompanyConstants.AuditType.CONTRACT.stringVal());
+		map.put("auditType", list);
 
 		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
 		if(auditInfoVO == null){
@@ -429,32 +432,32 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
 	@Override
-    @Transactional(rollbackFor = Exception.class)
-    public boolean upCompanyInfo(CompanySubmitVo companySubmitVo) {
-        Date date = new Date();
+	@Transactional(rollbackFor = Exception.class)
+	public boolean upCompanyInfo(CompanySubmitVo companySubmitVo) {
+		Date date = new Date();
 		if(companySubmitVo == null){
 			return false;
 		}
 
-        //1.更新表company_info
-        int ci = updateCompanyInfo(companySubmitVo, date);
+		//1.更新表company_info
+		int ci = updateCompanyInfo(companySubmitVo, date);
 
-        //2.更新表pc_company_financial
-        int pcf = updateFinancial(companySubmitVo, date);
+		//2.更新表pc_company_financial
+		int pcf = updateFinancial(companySubmitVo, date);
 
-        //3.更新表company_info_expand
-        int cie = updateCompanyExpand(companySubmitVo, date);
+		//3.更新表company_info_expand
+		int cie = updateCompanyExpand(companySubmitVo, date);
 
-        if(ci > 0 && pcf > 0 && cie > 0){
-            return true;
-        }
-        return false;
-    }
+		if(ci > 0 && pcf > 0 && cie > 0){
+			return true;
+		}
+		return false;
+	}
 
-    private int updateCompanyExpand(CompanySubmitVo companySubmitVo, Date date) {
+	private int updateCompanyExpand(CompanySubmitVo companySubmitVo, Date date) {
 
-        CompanyInfoExpand companyInfoExpand = companySubmitVo.getCompanyInfoExpand();
-        if(companyInfoExpand != null){
+		CompanyInfoExpand companyInfoExpand = companySubmitVo.getCompanyInfoExpand();
+		if(companyInfoExpand != null){
 			companyInfoExpand.setUpdateTime(date);
 //			companyInfoExpand.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
 			CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
@@ -462,13 +465,13 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 					.andCompanyIdEqualTo(companySubmitVo.getCompanyInfo().getCompanyId());
 			return companyInfoExpandMapper.updateByExampleSelective(companyInfoExpand,companyInfoExpandExample);
 		}else{
-        	return 1;
+			return 1;
 		}
-    }
+	}
 
-    private int updateFinancial(CompanySubmitVo companySubmitVo, Date date) {
+	private int updateFinancial(CompanySubmitVo companySubmitVo, Date date) {
 
-        PcCompanyFinancial pcCompanyFinancial = companySubmitVo.getPcCompanyFinancial();
+		PcCompanyFinancial pcCompanyFinancial = companySubmitVo.getPcCompanyFinancial();
 		if(pcCompanyFinancial != null){
 //			pcCompanyFinancial.setCompanyId(companySubmitVo.getCompanyInfo().getCompanyId());
 			pcCompanyFinancial.setUpdateTime(date);
@@ -479,20 +482,20 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			return 1;
 		}
 
-    }
+	}
 
-    private int updateCompanyInfo(CompanySubmitVo companySubmitVo, Date date) {
-        CompanyInfo companyInfo = companySubmitVo.getCompanyInfo();
+	private int updateCompanyInfo(CompanySubmitVo companySubmitVo, Date date) {
+		CompanyInfo companyInfo = companySubmitVo.getCompanyInfo();
 
-        companyInfo.setPhone(companyInfo.getLegalPhone());
-        companyInfo.setUpdateTime(date);
-        //资质上传成功后审批状态改为资质待审核
-        companyInfo.setAuditStatus(CompanyAuditStatus.AUDITING.stringVal());
+		companyInfo.setPhone(companyInfo.getLegalPhone());
+		companyInfo.setUpdateTime(date);
+		//资质上传成功后审批状态改为资质待审核
+		companyInfo.setAuditStatus(CompanyAuditStatus.AUDITING.stringVal());
 
-        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
-        return companyInfoMapper.updateByExampleSelective(companyInfo,companyInfoExample);
-    }
+		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyInfo.getCompanyId());
+		return companyInfoMapper.updateByExampleSelective(companyInfo,companyInfoExample);
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -589,8 +592,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	}
 
 	@Override
-    public boolean signSuccess(String companyId, String contractNumber) {
-	    boolean aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal());
+	public boolean signSuccess(String companyId, String contractNumber) {
+		boolean aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal());
 
 		ContractInfo contractInfo = new ContractInfo();
 		contractInfo.setCompanyId(companyId);
@@ -602,8 +605,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		if(aLine && line > 0){
 			return true;
 		}
-	    return false;
-    }
+		return false;
+	}
 
 	@Override
 	public boolean isEdit(String companyId) {
@@ -654,22 +657,22 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		return auditInfoVO;
 	}
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Integer updateByParam(String companyId, String platformType, String isDelete) {
-        Date date = new Date();
-        Map<String, Object> map = new HashMap<>();
-        map.put("updateTime", date);
-        map.put("companyId", companyId);
-        if(StringUtils.isNotBlank(platformType)){
-            map.put("platformType", Short.valueOf(platformType));
-        }
-        if(StringUtils.isNotBlank(isDelete)){
-            map.put("isDelete", Short.valueOf(isDelete));
-        }
-        int line = companyInfoMapper.updateByParam(map);
-        return line;
-    }
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Integer updateByParam(String companyId, String platformType, String isDelete) {
+		Date date = new Date();
+		Map<String, Object> map = new HashMap<>();
+		map.put("updateTime", date);
+		map.put("companyId", companyId);
+		if(StringUtils.isNotBlank(platformType)){
+			map.put("platformType", Short.valueOf(platformType));
+		}
+		if(StringUtils.isNotBlank(isDelete)){
+			map.put("isDelete", Short.valueOf(isDelete));
+		}
+		int line = companyInfoMapper.updateByParam(map);
+		return line;
+	}
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
