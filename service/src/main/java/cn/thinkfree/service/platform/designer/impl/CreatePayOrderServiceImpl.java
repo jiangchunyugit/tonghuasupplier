@@ -159,6 +159,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
         params.put("type", "1");
         //费用类型：量房费
         params.put("typeSub", "1");
+        params.put("typeSubName", "量房费");
         //业主id
         params.put("userId", ownerMsg.getUserId());
         List<Map<String, String>> listParams = new ArrayList<>();
