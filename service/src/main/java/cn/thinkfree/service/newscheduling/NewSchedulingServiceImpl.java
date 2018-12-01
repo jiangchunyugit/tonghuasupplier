@@ -89,10 +89,11 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         ProjectBigSchedulingExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         criteria1.andSchemeNoEqualTo(constructionOrder.getSchemeNo());
-        criteria1.andIsNewEqualTo(project.getHouseType());
-        criteria1.andRoomNumEqualTo(project.getHouseRoom());
-        criteria1.andSquareMetreStartLessThanOrEqualTo(project.getArea());
-        criteria1.andSquareMetreEndGreaterThanOrEqualTo(project.getArea());
+        //暂时不用房间+面积+新旧做匹配
+//        criteria1.andIsNewEqualTo(project.getHouseType());
+//        criteria1.andRoomNumEqualTo(project.getHouseRoom());
+//        criteria1.andSquareMetreStartLessThanOrEqualTo(project.getArea());
+//        criteria1.andSquareMetreEndGreaterThanOrEqualTo(project.getArea());
         List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example1);
         if (projectBigSchedulings.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("此方案尚未添加施工阶段信息!");
