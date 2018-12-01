@@ -9,16 +9,16 @@ import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderPayMapper;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingMapper;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.utils.HttpUtils;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -34,6 +34,8 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
     @Autowired
     BuildPayConfigMapper buildPayConfigMapper;
+    @Autowired
+    private NewSchedulingService schedulingService;
 
     /**
      * 支付阶段地址接口
@@ -132,7 +134,10 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
             // 查询 sort 上一个阶段 付款配置
             List<String> listStage = getBuildPay(schemeNo);
 
-            if (listStage.contains(String.valueOf(sort-1))){
+            List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
+            Integer preSort = getPreScheduleSort(schedulingDetailsVOs, sort);
+
+            if (listStage.contains(preSort.toString())) {
                 if ("pay".equals(isEnd)) {
                     return true;
                 } else {
@@ -156,6 +161,18 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
 
     }
 
+    private Integer getPreScheduleSort(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, Integer currentSort) {
+        Integer preScheduleSort = 0;
+        for (ProjectBigSchedulingDetailsVO schedulingDetailsVO : schedulingDetailsVOs) {
+            if (currentSort.equals(schedulingDetailsVO.getBigSort())) {
+                break;
+            }
+            preScheduleSort = schedulingDetailsVO.getBigSort();
+        }
+
+        return preScheduleSort;
+    }
+
     /**
      * 施工支付配置
      *
@@ -167,9 +184,6 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
         BuildPayConfigExample example = new BuildPayConfigExample();
         example.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(Arrays.asList(2, 3));
         List<BuildPayConfig> list = buildPayConfigMapper.selectByExample(example);
-        if (list.isEmpty()) {
-            return new ArrayList<>();
-        }
         for (BuildPayConfig buildPayConfig : list) {
             listStage.add(buildPayConfig.getStageCode());
         }
