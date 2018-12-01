@@ -102,6 +102,10 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
             throw new RuntimeException();
         }
         String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
+        if (StringUtils.isEmpty(roleId)) {
+            LOGGER.error("未查询到角色信息，projectNo：{}，userId：{}", projectNo, userId);
+            throw new RuntimeException();
+        }
         AfConfigScheme configScheme = findByConfigNoAndSchemeNoAndRoleId(configNo, schemeNo, roleId);
         return configScheme != null ? configScheme.getConfigSchemeNo() : null;
     }
