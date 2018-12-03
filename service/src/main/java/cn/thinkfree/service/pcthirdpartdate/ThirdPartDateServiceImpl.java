@@ -9,6 +9,7 @@ import cn.thinkfree.service.constants.CompanyConstants;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.utils.DateUtil;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,10 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -175,6 +173,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  String jsonSr = resMap.get("c08");
 		  if(!StringUtils.isEmpty(jsonSr)){
 				  JSONArray jsonArray=JSONArray.parseArray(jsonSr);
+			  //排序
+			  jsonArray.sort(Comparator.comparing(obj -> ((JSONObject) obj).getShort("stageCode")));
 				  for (int i = 0; i < jsonArray.size(); i++) {
 					  SyncOrderVO vo = new SyncOrderVO();
 					  //合同金额 全款
@@ -217,7 +217,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  vo.setStyleType(conorder ==null?"":conorder.get(0).getType());
 
 					  vo.setSort(jsonMap.get("stageCode"));
-
+					  //阶段名称
+					  vo.setTypeSubName(jsonMap.get("progressName"));
 		              listVo.add(vo);
 				  }
 		 
@@ -337,6 +338,9 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					vo.setStyleType(designerOrders == null ? "" : designerOrders.get(0).getStyleType());
 
 					vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
+					//阶段名称
+					vo.setTypeSubName(String.valueOf(jsonMap.get("progressName")));
+
 					printInfoMes("json vo 数据｛｝" + vo);
 					listVo.add(vo);
 				}
