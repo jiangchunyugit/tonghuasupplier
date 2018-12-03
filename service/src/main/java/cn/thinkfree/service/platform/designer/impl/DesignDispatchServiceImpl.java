@@ -805,17 +805,15 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private void sendMessage(String projectNo, String sendUserId, String subUserId, String content) {
         Map<String, String> requestMsg = new HashMap<>();
         requestMsg.put("projectNo", projectNo);
-        requestMsg.put("userNo", "[" + sendUserId + "]");
+        requestMsg.put("userNo", "[\"" + subUserId + "\"]");
         requestMsg.put("senderId", sendUserId);
         requestMsg.put("content", content);
         requestMsg.put("dynamicId", "0");
         requestMsg.put("type", "2");
         LOGGER.info("发送消息：requestMsg：{}", requestMsg);
         try {
-            ThreadManager.getThreadPollProxy().execute(()->{
                 HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
                 LOGGER.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
-            });
         } catch (Exception e) {
             LOGGER.error("发送消息出错", e);
         }
