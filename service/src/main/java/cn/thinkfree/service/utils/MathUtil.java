@@ -213,12 +213,32 @@ public class MathUtil {
         return null;
     }
 
+    /**
+     * 元转分
+     * @param money
+     * @return
+     */
+    public static Long getFen(String money){
+        BigDecimal b1 = new BigDecimal(money);
+        BigDecimal b2 = new BigDecimal(100);
+        long result = b1.multiply(b2).longValue();
+        return result;
+    }
+
+    /**
+     * 分转元
+     * @param money
+     * @return
+     */
+    public static String getYuan(Long money){
+        BigDecimal b1 = new BigDecimal(money);
+        BigDecimal b2 = new BigDecimal(100);
+        String result = b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).toString();
+        return result;
+    }
+
     public static void main(String[] args) {
-        Date date1 = formateToDate("2018-08-09 17:53:50", NORM_DATETIME_PATTERN);
-        Date date2 = formateToDate("2018-08-11 20:04:01", NORM_DATETIME_PATTERN);
-        System.out.println(getProgress(date1, date2).compareTo(BigDecimal.valueOf(100)) < 0);
-
-
+        System.out.println(getYuan((long)1));
     }
 
 }

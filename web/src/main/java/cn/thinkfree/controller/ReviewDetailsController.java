@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * @Auther: jiang
+ * @author: jiang
  * @Date: 2018/11/13 10:24
  * @Description: 审核详情页
  */
@@ -37,12 +37,12 @@ public class ReviewDetailsController extends AbsBaseController {
     @RequestMapping(value = "getPriceDetail", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation("获取精准报价")
     public MyRespBundle<List<QuotationVo>> getPriceDetail(
-            @RequestParam("projectNo") @ApiParam( name = "projectNo",value = "项目编号  1223098338391",required =true ) String projectNo) {
+            @RequestParam("projectNo") @ApiParam( name = "projectNo",value = "项目编号",required =true ) String projectNo) {
         return reviewDetailsService.getPriceDetail(projectNo);
     }
 
     @RequestMapping(value = "saveSoftQuote", method = RequestMethod.POST)
-    @ApiOperation(value = "新增软装保价", notes = "")
+    @ApiOperation(value = "新增软装保价")
     public MyRespBundle<String> saveSoftQuote(
             @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo",required = true) String projectNo,
             @RequestParam(name = "roomType") @ApiParam(value = "房间类型", name = "roomType",required = true) String roomType,
@@ -71,7 +71,7 @@ public class ReviewDetailsController extends AbsBaseController {
     }
 
     @RequestMapping(value = "saveHardQuote", method = RequestMethod.POST)
-    @ApiOperation(value = "新增硬装保价", notes = "")
+    @ApiOperation(value = "新增硬装保价")
     public MyRespBundle<String> saveHardQuote(
             @RequestParam(name = "projectNo") @ApiParam(value = "项目编号", name = "projectNo",required = true) String projectNo,
             @RequestParam(name = "materialName") @ApiParam(value = "产品名称", name = "materialName",required = true) String materialName,
@@ -125,13 +125,13 @@ public class ReviewDetailsController extends AbsBaseController {
     }
 
     @RequestMapping(value = "delSoftQuote", method = RequestMethod.POST)
-    @ApiOperation(value = "删除软装保价", notes = "")
+    @ApiOperation(value = "删除软装保价")
     public MyRespBundle<String> delSoftQuote(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id",required = true) String id) {
         return reviewDetailsService.delSoftQuote(id);
     }
 
     @RequestMapping(value = "delHardQuote", method = RequestMethod.POST)
-    @ApiOperation(value = "删除硬装保价", notes = "")
+    @ApiOperation(value = "删除硬装保价")
     public MyRespBundle<String> delHardQuote(@RequestParam(name = "id") @ApiParam(value = "主键ID", name = "id",required = true) String id) {
         return reviewDetailsService.delHardQuote(id);
     }
@@ -173,7 +173,7 @@ public class ReviewDetailsController extends AbsBaseController {
     @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation("获取上海报价信息")
     public MyRespBundle getShangHaiPriceDetail(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号 1223098338391",required = true) String projectNo) {
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         return reviewDetailsService.getShangHaiPriceDetail(projectNo);
     }
 

@@ -1,31 +1,25 @@
 package cn.thinkfree.controller;
 
 
-import java.util.Map;
-
-import cn.thinkfree.database.constants.CompanyAuditStatus;
-import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfo;
-import cn.thinkfree.database.vo.*;
-
-import cn.thinkfree.service.constants.CompanyConstants;
-import com.github.pagehelper.PageInfo;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.model.PcAuditInfo;
+import cn.thinkfree.database.model.PcAuditTemporaryInfo;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.contracttemplate.ContractTemplateService;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 
 /**
@@ -129,6 +123,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @MyRespBody
     public MyRespBundle<String> auditChangeCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
         String msg = companySubmitService.auditChangeCompany(pcAuditInfo);
+
         return sendJsonData(ResultMessage.SUCCESS, msg);
 
     }
@@ -176,7 +171,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @PostMapping("/getContractDetailInfo")
     public MyRespBundle<Map<String,Object>> getContractDetailInfo(@ApiParam("合同编号")@RequestParam(required = true) String contractNumber,
     		@ApiParam("公司编号")@RequestParam(required = true) String companyId){
-    	Map<String,Object>  resMap  =  contractService.getContractDetailInfo(contractNumber, companyId);
+        Map<String, Object> resMap = contractService.getContractDetailInfo(contractNumber, companyId);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     /**
@@ -189,7 +184,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同--合同条款字典--吕启栋", notes = "合同条款设置(设置合同条款需要查询字典接口)")
     @PostMapping("/queryContractDic")
     public MyRespBundle<String> queryContractDic(@RequestParam String type){
-    	 Map<String,String>  resMap  = contractTemplateService.queryContractDic(type);
+        Map<String, String> resMap = contractTemplateService.queryContractDic(type);
         return sendJsonData(ResultMessage.SUCCESS,resMap);
     }
     
@@ -207,8 +202,8 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     public MyRespBundle<String> settingContractClause(@PathVariable("contractNumber") String contractNumber,
     		@PathVariable("companyId") String companyId,
     		@ApiParam("合同条款key和value值")@RequestBody ContractClauseVO contractClausevo){
-    	
-    	boolean  flag  =  contractService.insertContractClause(contractNumber, companyId, contractClausevo);
+
+        boolean flag = contractService.insertContractClause(contractNumber, companyId, contractClausevo);
     	 
         return sendJsonData(ResultMessage.SUCCESS,flag);
     }

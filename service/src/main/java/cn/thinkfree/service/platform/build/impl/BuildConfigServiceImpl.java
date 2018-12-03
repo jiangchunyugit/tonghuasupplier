@@ -21,10 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -114,6 +111,36 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     }
 
     @Override
+    public void editScheme(String schemeNo, String schemeName, String companyId, String cityStation, String storeNo, String remark) {
+        if(StringUtils.isBlank(schemeNo)){
+            throw new RuntimeException("方案编号不能为空");
+        }
+        BuildSchemeConfig buildSchemeConfig = checkScheme(schemeNo);
+        if(StringUtils.isBlank(schemeName)){
+            throw new RuntimeException("方案名称不能为空");
+        }
+        if(StringUtils.isBlank(companyId)){
+            throw new RuntimeException("公司ID不能为空");
+        }
+        if(StringUtils.isBlank(cityStation)){
+            throw new RuntimeException("城市站不能为空");
+        }
+        if(StringUtils.isBlank(storeNo)){
+            throw new RuntimeException("门店编号不能为空");
+        }
+        if(StringUtils.isBlank(remark)){
+            throw new RuntimeException("请输入备注");
+        }
+
+        buildSchemeConfig.setSchemeName(schemeName);
+        buildSchemeConfig.setCompanyId(companyId);
+        buildSchemeConfig.setCityStation(cityStation);
+        buildSchemeConfig.setStoreNo(storeNo);
+        buildSchemeConfig.setRemark(remark);
+        schemeConfigMapper.updateByPrimaryKey(buildSchemeConfig);
+    }
+
+    @Override
     public void enableScheme(String schemeNo) {
         BuildSchemeConfig schemeConfig = new BuildSchemeConfig();
         schemeConfig.setIsEnable(1);
@@ -154,10 +181,10 @@ public class BuildConfigServiceImpl implements BuildConfigService {
             buildPayConfig.setSchemeNo(schemeNo);
             buildPayConfig.setPaySchemeNo(OrderNoUtils.getNo("BUC"));
             buildPayConfig.setProgressName("线下签约完成");
-            buildPayConfig.setStageCode("待支付收款");
+            buildPayConfig.setStageCode("-1");
             buildPayConfig.setRemark("线下签约完成");
             buildPayConfig.setDeleteState(3);
-
+            payConfigMapper.insertSelective(buildPayConfig);
             payConfigs.add(buildPayConfig);
         }
         PageVo<List<BuildPayConfig>> pageVo = new PageVo<>();
@@ -311,7 +338,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
     @Override
     public String getSchemeNoByCompanyId(String companyId) {
         BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
-        relExample.createCriteria().andCompanyIdEqualTo(companyId);
+        relExample.createCriteria().andCompanyIdEqualTo(companyId).andDelStateEqualTo(2).andIsEableEqualTo(1);
         List<BuildSchemeCompanyRel> companyRels = companyRelMapper.selectByExample(relExample);
         if(companyRels.isEmpty()){
             return null;
@@ -354,7 +381,7 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         ConstructionOrder constructionOrder = constructionOrders.get(0);
         String schemeNo = constructionOrder.getSchemeNo();
         BuildPayConfigExample configExample = new BuildPayConfigExample();
-        configExample.createCriteria().andSchemeNoEqualTo(schemeNo);
+        configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(Arrays.asList(2,3));
         return payConfigMapper.selectByExample(configExample);
     }
     @Transactional(rollbackFor = {Exception.class})
@@ -422,5 +449,17 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         pageVo.setPageIndex(pageIndex);
         pageVo.setPageSize(pageSize);
         return pageVo;
+    }
+
+    /**
+     * 停用施工方案
+     * @param schemeNo
+     */
+    @Override
+    public void stopPlatformScheme(String schemeNo) {
+        BuildSchemeConfig schemeConfig = new BuildSchemeConfig();
+        schemeConfig.setIsEnable(2);
+        schemeConfig.setSchemeNo(schemeNo);
+        schemeConfigMapper.updateByPrimaryKeySelective(schemeConfig);
     }
 }

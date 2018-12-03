@@ -21,10 +21,10 @@ FROM
 	pc_audit_info auditInfo
 	LEFT JOIN company_info companyInfo ON auditInfo.company_id = companyInfo.company_id
 WHERE
-	auditInfo.company_id = #{companyId}
-	  and auditInfo.audit_type in <foreach item="item" index="index" collection="auditType" open="(" separator="," close=")">
-	  								#{item}
-                                  </foreach>
+	auditInfo.company_id = #{companyId} and auditInfo.audit_type in
+	  <foreach item="item" index="index" collection="auditType" open="(" separator="," close=")">
+		  #{item}
+	  </foreach>
 	  <if test="contractNumber != null and contractNumber != ''">
 		  and auditInfo.contract_number = #{contractNumber}
 	  </if>

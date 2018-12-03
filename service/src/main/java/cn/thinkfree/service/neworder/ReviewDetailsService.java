@@ -10,35 +10,31 @@ import cn.thinkfree.database.vo.SoftQuoteVO;
 import java.util.List;
 
 /**
- * @Auther: jiang
+ * @author : jiang
  * @Date: 2018/11/13 11:46
  * @Description:
  */
 public interface ReviewDetailsService {
 
     /**
-     * @Author jiang
-     * @Description 新增软保价
-     * @Date
-     * @Param
+     * 新增软保价
+     * @param softQuoteVO
      * @return
-     **/
+     */
     MyRespBundle<String> saveSoftQuote(SoftQuoteVO softQuoteVO);
+
     /**
-     * @Author jiang
-     * @Description 新增硬保价
-     * @Date
-     * @Param
+     * 新增硬保价
+     * @param hardQuoteVO
      * @return
-     **/
+     */
     MyRespBundle<String> saveHardQuote(HardQuoteVO hardQuoteVO);
+
     /**
-     * @Author jiang
-     * @Description 新增施工基础保价
-     * @Date
-     * @Param
+     * 新增施工基础保价
+     * @param basisConstructionVO
      * @return
-     **/
+     */
     MyRespBundle<String> saveBasisConstructionVO(BasisConstructionVO basisConstructionVO);
 
     /**
@@ -94,6 +90,7 @@ public interface ReviewDetailsService {
 
     /**
      * 获取上海报价信息
+     * @param projectNo
      * @return
      */
     MyRespBundle getShangHaiPriceDetail(String projectNo);

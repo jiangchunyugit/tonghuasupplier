@@ -53,8 +53,12 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
      * @param projectNo
      */
     @Override
-    public void createVolumeRoomPay(String projectNo) {
+    public void createVolumeRoomPay(String projectNo, String appointmentAmount) {
         Project project = designDispatchService.queryProjectByNo(projectNo);
+        if(appointmentAmount == null){
+            logger.error("量房费不能为空");
+            throw new RuntimeException("创建量房订单失败");
+        }
         if (project == null) {
             logger.error("没有查询到项目编号为【{}】的项目", projectNo);
             throw new RuntimeException("创建量房订单失败");
@@ -75,6 +79,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
             throw new RuntimeException("创建量房订单失败");
         }
         DesignerMsgVo designerMsgVo = designerService.queryDesignerByUserId(designerMsg.getUserId());
+        designerMsgVo.setVolumeRoomMoney(appointmentAmount.toString());
         if (designerMsgVo == null) {
             throw new RuntimeException("创建量房订单失败");
         }
@@ -154,6 +159,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
         params.put("type", "1");
         //费用类型：量房费
         params.put("typeSub", "1");
+        params.put("typeSubName", "量房费");
         //业主id
         params.put("userId", ownerMsg.getUserId());
         List<Map<String, String>> listParams = new ArrayList<>();
@@ -164,7 +170,7 @@ public class CreatePayOrderServiceImpl implements CreatePayOrderService {
             throw new RuntimeException("创建订单服务异常");
         }
         JSONObject data = JSONObject.parseObject(httpRespMsg.getContent());
-        if (!"1000".equals(data.getInteger("code"))) {
+        if (!"1000".equals(data.getInteger("code") + "")) {
             throw new RuntimeException(data.getString("msg"));
         }
     }

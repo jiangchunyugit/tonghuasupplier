@@ -63,7 +63,7 @@ public class DictionaryServiceImpl implements DictionaryService {
             Short level = userVO.getPcUserInfo().getLevel();
             if (level.equals(UserLevel.Company_Province.shortVal()) || level.equals(UserLevel.Company_City.shortVal())) {
                 ProvinceExample example = new ProvinceExample();
-                example.createCriteria().andProvinceCodeEqualTo(userVO.getPcUserInfo().getProvince());
+//                example.createCriteria().andProvinceCodeEqualTo(userVO.getPcUserInfo().getProvince());
                 return provinceMapper.selectByExample(example);
             } else {
                 return provinceMapper.selectByExample(null);
@@ -94,7 +94,7 @@ public class DictionaryServiceImpl implements DictionaryService {
                 if(UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
                     cityExample.createCriteria().andProvinceCodeEqualTo(province);
                 }else{
-                    cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
+//                    cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
                 }
             }
         }else{
@@ -215,8 +215,9 @@ public class DictionaryServiceImpl implements DictionaryService {
     @Override
     public List<HrPeopleEntity> findThirdPeople(String condition) {
         HrPeopleEntityExample peopleEntityExample = new HrPeopleEntityExample();
-        peopleEntityExample.createCriteria().andPeopleNameLike(condition+"%");
-        return hrPeopleEntityMapper.selectByExample(peopleEntityExample);
+        peopleEntityExample.createCriteria().andActIoNotEqualTo("Q").andPeopleNameLike(condition+"%");
+//        return hrPeopleEntityMapper.selectByExample(peopleEntityExample);
+        return hrPeopleEntityMapper.selectPeopleVO(peopleEntityExample);
     }
 
 //    /**

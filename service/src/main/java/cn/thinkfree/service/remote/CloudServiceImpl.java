@@ -1,20 +1,13 @@
 package cn.thinkfree.service.remote;
 
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
+import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -26,7 +19,10 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import cn.thinkfree.database.model.SystemMessage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CloudServiceImpl implements CloudService {
@@ -337,15 +333,19 @@ public class CloudServiceImpl implements CloudService {
      * @param syncOrderVO
      */
     @Override
-    public RemoteResult<String> syncOrder(SyncOrderVO syncOrderVO) {
-        MultiValueMap<String, Object> param = initParam();
-        Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
+    public RemoteResult<String> syncOrder(List<SyncOrderVO> syncOrderVO) {
+//        MultiValueMap<String, Object> param = initParam();
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
 
-        param.setAll(gson.fromJson(gson.toJson(syncOrderVO), Map.class));
+        Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
+        String body = gson.toJson(syncOrderVO);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
 
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(syncOrderUrl, param);
+            result = invokeRemoteMethodForJson(syncOrderUrl, requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();

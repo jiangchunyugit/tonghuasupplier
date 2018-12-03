@@ -29,7 +29,7 @@ public class ProjectScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    private Integer companyId;
+    private String companyId;
 
     /**
      * Database Column Remarks:
@@ -182,7 +182,7 @@ public class ProjectScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public Integer getCompanyId() {
+    public String getCompanyId() {
         return companyId;
     }
 
@@ -194,8 +194,8 @@ public class ProjectScheduling extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setCompanyId(Integer companyId) {
-        this.companyId = companyId;
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId == null ? null : companyId.trim();
     }
 
     /**

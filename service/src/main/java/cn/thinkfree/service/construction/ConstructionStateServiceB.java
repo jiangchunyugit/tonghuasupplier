@@ -24,7 +24,7 @@ public interface ConstructionStateServiceB {
      * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
      * @return
      */
-    MyRespBundle<Map<String,String>> getStateDetailInfo(String orderNo, int type);
+    MyRespBundle<Map<String, String>> getStateDetailInfo(String orderNo, int type);
 
     /**
      * 运营平台
@@ -49,7 +49,7 @@ public interface ConstructionStateServiceB {
      * 装饰公司
      * 4合同录入 （完成）
      */
-    void contractState (String orderNo);
+    void contractState(String orderNo);
 
     /**
      * 装饰公司
@@ -58,14 +58,21 @@ public interface ConstructionStateServiceB {
     void contractCompleteState(String orderNo);
 
     /**
+     * 首付款
+     * @param orderNo
+     * @return
+     */
+    MyRespBundle<Boolean> firstPay(String orderNo);
+
+    /**
      * 支付
      */
-    MyRespBundle<String> customerPay(String orderNo, String feeName, Integer sort, String isEnd);
+    MyRespBundle<String> customerPay(String orderNo, String feeName, Integer sort,String isComplete);
 
     /**
      * 施工阶段方案
      */
-    MyRespBundle<String> constructionPlan(String projectNo, Integer sort, String isEnd);
+    MyRespBundle<String> constructionPlan(String projectNo, Integer sort);
 
     /**
      * 消费者
@@ -88,5 +95,6 @@ public interface ConstructionStateServiceB {
      * 取消订单
      * 支付未开工逆向
      */
-    MyRespBundle<String> customerCancelOrderForPay(String orderNo,int type);
+    MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type);
+
 }

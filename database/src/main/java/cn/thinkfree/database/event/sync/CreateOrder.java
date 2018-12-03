@@ -1,5 +1,7 @@
 package cn.thinkfree.database.event.sync;
 
+import java.util.List;
+
 import cn.thinkfree.core.event.AbsBaseEvent;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 
@@ -10,7 +12,7 @@ import cn.thinkfree.database.vo.remote.SyncOrderVO;
 
     private String source;
 
-    private SyncOrderVO data;
+    private List<SyncOrderVO> data;
 
     public CreateOrder(String source) {
         this.source = source;
@@ -33,14 +35,15 @@ import cn.thinkfree.database.vo.remote.SyncOrderVO;
         this.source = source;
     }
 
-    public SyncOrderVO getData() {
-        return data;
-    }
+	public List<SyncOrderVO> getData() {
+		return data;
+	}
 
-    public void setData(SyncOrderVO data) {
-        this.data = data;
-    }
+	public void setData(List<SyncOrderVO> data) {
+		this.data = data;
+	}
 
+   
 
 
 }

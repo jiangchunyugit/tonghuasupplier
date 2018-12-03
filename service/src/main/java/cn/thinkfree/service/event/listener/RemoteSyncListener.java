@@ -18,6 +18,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import com.google.common.collect.Lists;
+
+import java.util.ArrayList;
 import java.util.Optional;
 
 /**
@@ -85,11 +88,9 @@ public class RemoteSyncListener extends AbsLogPrinter {
        }else{
            Optional<SyncOrderVO> syncOrderVO = contractService.selectSyncDateByOrder(createOrder.getSource());
            if(syncOrderVO.isPresent()){
-               cloudService.syncOrder(syncOrderVO.get());
+               cloudService.syncOrder(Lists.newArrayList(syncOrderVO.get()));
            }
        }
-
-
 
     }
 

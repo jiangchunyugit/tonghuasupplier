@@ -3,18 +3,15 @@ package cn.thinkfree.service.newscheduling;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.AfConstants;
-import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
-import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,8 +67,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.error("此施工订单无关联的项目");
         }
         String projectNo = constructionOrder.getProjectNo();
-        //获取报价基础信息
-//        Set<Integer> bigSortSet = projectQuotationLogMapper.selectByProjectNo(projectNo);
         //获取项目信息
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
@@ -94,10 +89,11 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         ProjectBigSchedulingExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         criteria1.andSchemeNoEqualTo(constructionOrder.getSchemeNo());
-        criteria1.andIsNewEqualTo(project.getHouseType());
-        criteria1.andRoomNumEqualTo(project.getHouseRoom());
-        criteria1.andSquareMetreStartLessThanOrEqualTo(project.getArea());
-        criteria1.andSquareMetreEndGreaterThanOrEqualTo(project.getArea());
+        //暂时不用房间+面积+新旧做匹配
+//        criteria1.andIsNewEqualTo(project.getHouseType());
+//        criteria1.andRoomNumEqualTo(project.getHouseRoom());
+//        criteria1.andSquareMetreStartLessThanOrEqualTo(project.getArea());
+//        criteria1.andSquareMetreEndGreaterThanOrEqualTo(project.getArea());
         List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example1);
         if (projectBigSchedulings.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("此方案尚未添加施工阶段信息!");
@@ -115,6 +111,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         projectScheduling.setProjectNo(projectNo);
         projectScheduling.setStartTime(project.getPlanStartTime());
         projectScheduling.setEndTime(project.getPlanEndTime());
+        projectScheduling.setCompanyId(constructionOrder.getCompanyId());
         int bigResult = projectSchedulingMapper.insertSelective(projectScheduling);
         if (bigResult != Scheduling.INSERT_SUCCESS.getValue()) {
             return RespData.error("生成排期失败!!");
@@ -260,13 +257,12 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         ProjectBigSchedulingDetailsVO schedulingDetailsVO = new ProjectBigSchedulingDetailsVO();
         schedulingDetailsVO.setBigName("开工报告");
         schedulingDetailsVO.setBigSort(0);
-        int startReportStatus = instanceService.getStartReportStatus(projectNo);
-        if (startReportStatus == AfConstants.APPROVAL_STATUS_SUCCESS) {
+        boolean succeed = instanceService.getStartReportSucceed(projectNo);
+        if (succeed) {
             schedulingDetailsVO.setIsCompleted(1);
         } else {
             schedulingDetailsVO.setIsCompleted(0);
         }
-        schedulingDetailsVO.setPlanEndTime(new Date(0));
         schedulingDetailsVO.setPlanEndTime(new Date(0));
         return schedulingDetailsVO;
     }

@@ -1,13 +1,10 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.model.DesignGrade;
-import cn.thinkfree.database.model.DesignLabel;
-import cn.thinkfree.database.model.GrowthValueIntegral;
 import cn.thinkfree.database.pcvo.DesignGradeVo;
 import cn.thinkfree.database.pcvo.DesignLabelVo;
 import cn.thinkfree.database.pcvo.GrowthValueIntegralVo;
-import cn.thinkfree.service.newsBaseDesign.BaseDesignService;
+import cn.thinkfree.service.newsbasedesign.BaseDesignService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;

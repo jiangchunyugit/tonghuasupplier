@@ -43,6 +43,18 @@ public interface BuildConfigService {
     String createScheme(String schemeName, String companyId, String cityStation, String storeNo, String remark);
 
     /**
+     * 编辑施工配置方案
+     *
+     * @param schemeNo  方案编号
+     * @param schemeName  方案名称
+     * @param companyId   公司ID
+     * @param cityStation 城市站ID
+     * @param storeNo     门店编号
+     * @param remark      备注
+     */
+    void editScheme(String schemeNo, String schemeName, String companyId, String cityStation, String storeNo, String remark);
+
+    /**
      * 启用施工方案
      *
      * @param schemeNo
@@ -166,4 +178,10 @@ public interface BuildConfigService {
      * @return
      */
     String getSchemeNoByCompanyId(String companyId);
+
+    /**
+     * 停用施工方案(平台)
+     * @param schemeNo
+     */
+    void stopPlatformScheme(String schemeNo);
 }

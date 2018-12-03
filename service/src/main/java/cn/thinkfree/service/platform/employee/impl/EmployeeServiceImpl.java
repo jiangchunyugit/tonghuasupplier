@@ -411,7 +411,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return
      */
     public UserRoleSet queryRoleSet(String roleCode) {
-        if (roleCode == null) {
+        if (StringUtils.isBlank(roleCode)) {
             return new UserRoleSet();
         }
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
@@ -676,6 +676,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (userMsgVo != null) {
             msgVo.setIconUrl(userMsgVo.getUserIcon());
             msgVo.setPhone(userMsgVo.getUserPhone());
+            msgVo.setRegisterTime(userMsgVo.getRegisterTime());
         }
         BasicsData cardType = cardTypeMap.get(employeeMsg.getCertificateType() + "");
         BasicsData countryCode = countryCodeMap.get(employeeMsg.getCountryCode());
@@ -747,8 +748,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     private CompanyInfo checkCompanyExit(String companyId) {
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andIsDeleteEqualTo(Short.parseShort("2"))
-                .andIsCheckEqualTo(Short.parseShort("1")).andAuditStatusEqualTo("8");
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId);
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
         if(companyInfos.isEmpty()){
             return new CompanyInfo();
