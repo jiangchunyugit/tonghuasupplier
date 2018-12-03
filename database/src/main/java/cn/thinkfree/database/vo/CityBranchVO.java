@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.CityBranch;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 /**
@@ -15,20 +16,54 @@ import java.util.List;
 public class CityBranchVO extends CityBranch {
 
     @ApiModelProperty("分公司名称")
+    private String ebsBranchCompanyNm;
+
+    @ApiModelProperty("省分站名称")
     private String branchCompanyNm;
 
     @ApiModelProperty("城市名称")
     private String cityNm;
 
-    @ApiModelProperty("经营主体：门店")
-    private List<BusinessEntityVO> businessEntityVOS;
+    @ApiModelProperty("省份名称")
+    private String provinceNm;
 
-    public List<BusinessEntityVO> getBusinessEntityVOS() {
-        return businessEntityVOS;
+    @ApiModelProperty("门店数")
+    private String count;
+
+    @ApiModelProperty("经营主体：门店")
+    @NotEmpty(message = "门店不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
+    private List<StoreInfoVO> storeInfoVOList;
+
+    public String getCount() {
+        return count;
     }
 
-    public void setBusinessEntityVOS(List<BusinessEntityVO> businessEntityVOS) {
-        this.businessEntityVOS = businessEntityVOS;
+    public void setCount(String count) {
+        this.count = count;
+    }
+
+    public String getEbsBranchCompanyNm() {
+        return ebsBranchCompanyNm;
+    }
+
+    public void setEbsBranchCompanyNm(String ebsBranchCompanyNm) {
+        this.ebsBranchCompanyNm = ebsBranchCompanyNm;
+    }
+
+    public String getProvinceNm() {
+        return provinceNm;
+    }
+
+    public void setProvinceNm(String provinceNm) {
+        this.provinceNm = provinceNm;
+    }
+
+    public List<StoreInfoVO> getStoreInfoVOList() {
+        return storeInfoVOList;
+    }
+
+    public void setStoreInfoVOList(List<StoreInfoVO> storeInfoVOList) {
+        this.storeInfoVOList = storeInfoVOList;
     }
 
     public String getCityNm() {

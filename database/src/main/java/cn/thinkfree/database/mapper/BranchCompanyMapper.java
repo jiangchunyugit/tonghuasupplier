@@ -106,4 +106,10 @@ public interface BranchCompanyMapper {
      * @return
      */
     List<CompanyRelationVO> selectCompanyRelation();
+
+    /**
+     * 城市分站创建时，分公司数据
+     * @return
+     */
+    List<BranchCompanyVO> selectBranchCompanyForCityBranchCreat();
 }

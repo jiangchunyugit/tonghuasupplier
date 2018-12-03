@@ -4,9 +4,19 @@
 
   <resultMap id="branchCompanyPageResultMap" type="cn.thinkfree.database.vo.BranchCompanyVO" extends="BaseResultMap">
 
-    <result column="province_name" jdbcType="VARCHAR" property="provinceNm" />
+    <result column="organization_text" jdbcType="VARCHAR" property="ebsBranchCompanyNm" />
+    <collection property="provinceList" ofType="cn.thinkfree.database.model.Province" javaType="java.util.ArrayList" select="getProvince"
+                column="branch_company_code">
+    </collection>
   </resultMap>
 
+  <resultMap id="CityBranchCompanyResultMap" type="cn.thinkfree.database.vo.BranchCompanyVO" extends="BaseResultMap">
+
+    <result column="organization_text" jdbcType="VARCHAR" property="ebsBranchCompanyNm" />
+    <collection property="provinceList" ofType="cn.thinkfree.database.model.Province" javaType="java.util.ArrayList" select="getProvince"
+                column="branch_company_code">
+    </collection>
+  </resultMap>
   <resultMap id="companyRelationResultMap" type="cn.thinkfree.database.vo.CompanyRelationVO" extends="BaseResultMap">
     <collection property="cityBranchList" ofType="cn.thinkfree.database.model.CityBranch" javaType="java.util.ArrayList" select="getCityBranchs"
                 column="branch_company_code">
@@ -30,13 +40,20 @@
     <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
   </resultMap>
 
+  <resultMap id="ProvinceResultMap" type="cn.thinkfree.database.model.Province">
+
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+    <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+  </resultMap>
+
   <!--权限分公司关系图-->
   <select id="selectCompanyRelation" parameterType="java.lang.Integer" resultMap="companyRelationResultMap">
     SELECT
 	*
     FROM
 	pc_branch_company
-	WHERE pc_branch_company.is_enable = 1
+	WHERE pc_branch_company.is_enable = 1 AND pc_branch_company.is_del = 2
   </select>
   <select id="getCityBranchs" resultMap="cityBranchResultMap" parameterType="java.lang.String">
     SELECT
@@ -44,17 +61,17 @@
     FROM
 	pc_city_branch
     WHERE
-	pc_city_branch.is_enable = 1 AND branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
+	pc_city_branch.is_enable = 1 AND pc_city_branch.is_del = 2 AND branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
   </select>
 
   <!--分页查询-->
   <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.BranchCompanySEO" resultMap="branchCompanyPageResultMap">
     SELECT
     pbc.*,
-    p.province_name
+    hr.organization_text
     FROM
     pc_branch_company pbc
-    LEFT JOIN province p ON pbc.province_code = p.province_code
+    LEFT JOIN hr_organization_entity hr ON pbc.branch_comp_ebsid = hr.organization_id
     <where>
        is_del = 2
       <if test="branchCompanyName != null and branchCompanyName != ''">
@@ -66,7 +83,7 @@
       <if test="isEnable != null ">
         and is_enable = #{isEnable}
       </if>
-      order by to_char(create_time, 'YYYY/MM/DD')
+      order by pbc.create_time DESC
     </where>
   </select>
 
@@ -74,12 +91,34 @@
   <select id="selectBranchCompanyWithPro" parameterType="java.lang.Integer" resultMap="branchCompanyPageResultMap">
     SELECT
     pbc.*,
-    p.province_name
+    hr.organization_text
     FROM
     pc_branch_company pbc
-    LEFT JOIN province p ON pbc.province_code = p.province_code
+    LEFT JOIN hr_organization_entity hr ON pbc.branch_comp_ebsid = hr.organization_id
     <where>
       pbc.id = #{id,jdbcType=INTEGER}
     </where>
+  </select>
+
+  <!--省份信息-->
+  <select id="getProvince" resultMap="ProvinceResultMap" parameterType="java.lang.String">
+    SELECT * FROM province WHERE province.province_code IN (
+      SELECT
+          bcp.province_code
+          FROM
+          pc_branch_company_province bcp
+          WHERE
+           bcp.branch_company_code = #{branch_company_code,jdbcType=VARCHAR}
+      )
+  </select>
+
+  <select id="selectBranchCompanyForCityBranchCreat"  resultMap="CityBranchCompanyResultMap">
+    SELECT
+    pbc.*,
+    hr.organization_text
+    FROM
+    pc_branch_company pbc
+    LEFT JOIN hr_organization_entity hr ON pbc.branch_comp_ebsid = hr.organization_id
+    WHERE pbc.is_enable = 1 AND pbc.is_del = 2
   </select>
 </mapper>

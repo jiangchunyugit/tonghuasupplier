@@ -2,6 +2,7 @@ package cn.thinkfree.service.branchcompany;
 
 import cn.thinkfree.database.model.BranchCompany;
 import cn.thinkfree.database.model.CompanyInfo;
+import cn.thinkfree.database.model.HrOrganizationEntity;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 
@@ -15,18 +16,37 @@ import java.util.List;
 public interface BranchCompanyService {
 
     /**
-     * 添加分公司
-     * @param branchCompany
+     * 校验重复信息
+     * @param branchCompanyVO
      * @return
      */
-    int addBranchCompany(BranchCompany branchCompany);
+    boolean checkRepeat(BranchCompanyVO branchCompanyVO);
+
+    /**
+     * 埃森哲分公司
+     * @return
+     */
+    List<HrOrganizationEntity> ebsBranchCompanylist();
+    /**
+     * 添加分公司
+     * @param branchCompanyVO
+     * @return
+     */
+    boolean addBranchCompany(BranchCompanyVO branchCompanyVO);
 
     /**
      * 修改分公司信息
+     * @param branchCompanyVO
+     * @return
+     */
+    boolean updateBranchCompany(BranchCompanyVO branchCompanyVO);
+
+    /**
+     * 启用禁用删除分公司信息
      * @param branchCompany
      * @return
      */
-    int updateBranchCompany(BranchCompany branchCompany);
+    boolean enableBranchCompany(BranchCompany branchCompany);
 
     /**
      * 查询分公司信息(分页)
@@ -51,11 +71,10 @@ public interface BranchCompanyService {
     List<BranchCompany> branchCompanies(Integer flag);
 
     /**
-     * 分公司信息（不带城市分站）
-     * @param id
+     * 城市分站创建时。分公司数据
      * @return
      */
-    BranchCompany branchCompanyById(Integer id);
+    List<BranchCompanyVO> addCitybranchCompany();
 
     /**
      * 分公司和其所属城市分站信息
@@ -71,10 +90,9 @@ public interface BranchCompanyService {
 
     /**
      * 通过省份编码查询分公司信息（过滤入驻权限）
-     * @param provinceCode
      * @return
      */
-    List<BranchCompany> getBranchCompanyByIdList(Integer provinceCode);
+    List<BranchCompany> getBranchCompanyByIdList();
 
     /**
      * 根据用户查询用户组织架构

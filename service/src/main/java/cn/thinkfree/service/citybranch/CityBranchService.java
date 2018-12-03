@@ -4,7 +4,6 @@ import cn.thinkfree.database.model.City;
 import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.vo.CityBranchSEO;
 import cn.thinkfree.database.vo.CityBranchVO;
-import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -17,18 +16,31 @@ import java.util.List;
 public interface CityBranchService {
 
     /**
-     * 添加城市分站
-     * @param cityBranch
+     * 校验重复信息
+     * @param cityBranchVO
      * @return
      */
-    int addCityBranch(CityBranch cityBranch);
+    boolean checkRepeat(CityBranchVO cityBranchVO);
+    /**
+     * 添加城市分站
+     * @param cityBranchVO
+     * @return
+     */
+    boolean addCityBranch(CityBranchVO cityBranchVO);
 
     /**
      * 修改城市分站信息
+     * @param cityBranchVO
+     * @return
+     */
+    boolean updateCityBranch(CityBranchVO cityBranchVO);
+
+    /**
+     * 启用禁用城市分站信息
      * @param cityBranch
      * @return
      */
-    int updateCityBranch(CityBranch cityBranch);
+    boolean enableCityBranch(CityBranch cityBranch);
 
     /**
      * 查询城市分站信息
@@ -38,13 +50,6 @@ public interface CityBranchService {
     PageInfo<CityBranchVO> cityBranchList(CityBranchSEO cityBranchSEO);
 
     /**
-     * 分公司查看详细城市分站
-     * @param cityBranchSEO
-     * @return
-     */
-    PageInfo<CityBranchWtihProCitVO> cityBranchWithProList(CityBranchSEO cityBranchSEO);
-
-    /**
      * 根据城市分站id查询详情(带有店面信息)
      * @param id
      * @return
@@ -52,20 +57,11 @@ public interface CityBranchService {
     CityBranchVO cityBranchDetails(Integer id);
 
     /**
-     * 更新城市分站状态（启动，禁用，删除）
-     * @return
-     * @param cityBranch
-     * @return
-     */
-    int updateCityBranchStatus(CityBranch cityBranch);
-
-    /**
      * 根据城市查询城市分站（过滤入驻权限）
      * @param branchCompanyCode
-     * @param cityCode
      * @return
      */
-    List<CityBranch> selectByProCit(String branchCompanyCode, Integer cityCode);
+    List<CityBranch> selectByProCit(String branchCompanyCode);
 
     /**
      * 根据省市查询城市分站
@@ -73,7 +69,7 @@ public interface CityBranchService {
      * @param city
      * @return
      */
-    List<CityBranch> selectByProCitCode(Integer province,Integer city);
+    List<CityBranch> selectByProCitCode(String province,String city);
 
     /**
      * 城市分站城市信息
@@ -89,17 +85,17 @@ public interface CityBranchService {
     CityBranchVO cityBranchById (Integer id);
 
     /**
-     * 通过分公司id查询全部城市分站信息
-     * @param id
-     * @return
-     */
-    List<CityBranch> cityBranchesByCompany(Integer id);
-
-    /**
      * 通过分公司编号查询全部城市分站信息
      * @param flag
      * @param branchCompanyCode
      * @return
      */
     List<CityBranch> cityBranchesByCompanyCode (Integer flag,String branchCompanyCode);
+
+    /**
+     * 删除城市分站
+     * @param cityBranch
+     * @return
+     */
+    boolean deleteCityBranch(CityBranch cityBranch);
 }

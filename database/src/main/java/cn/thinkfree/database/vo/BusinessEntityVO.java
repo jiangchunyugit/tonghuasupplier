@@ -2,6 +2,7 @@ package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.BusinessEntity;
 import cn.thinkfree.database.model.StoreInfo;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -15,36 +16,36 @@ import java.util.List;
 @ApiModel("经营主体信息")
 public class BusinessEntityVO extends BusinessEntity {
 
-    @ApiModelProperty("选择分公司")
+    @ApiModelProperty("分公司名称")
+    private String ebsBranchCompanyNm;
+
+    @ApiModelProperty("省分站名称")
     private String branchCompanyNm;
 
-    @ApiModelProperty("站点")
-    private String cityBranchNm;
+    @ApiModelProperty("分站信息")
+    private List<BusinessEntityRelationVO> businessEntityRelationVOS;
 
-    @ApiModelProperty("店面名称")
-    private List<StoreInfo> storeInfoList;
+    public List<BusinessEntityRelationVO> getBusinessEntityRelationVOS() {
+        return businessEntityRelationVOS;
+    }
 
-    public String getBranchCompanyNm() {
+    public void setBusinessEntityRelationVOS(List<BusinessEntityRelationVO> businessEntityRelationVOS) {
+        this.businessEntityRelationVOS = businessEntityRelationVOS;
+    }
+
+    public String getEbsBranchCompanyNm() {
+        return ebsBranchCompanyNm;
+    }
+
+    public void setEbsBranchCompanyNm(String ebsBranchCompanyNm) {
+        this.ebsBranchCompanyNm = ebsBranchCompanyNm;
+    }
+
+    public String getBranchcompanyNm() {
         return branchCompanyNm;
     }
 
-    public void setBranchCompanyNm(String branchCompanyNm) {
-        this.branchCompanyNm = branchCompanyNm;
-    }
-
-    public String getCityBranchNm() {
-        return cityBranchNm;
-    }
-
-    public void setCityBranchNm(String cityBranchNm) {
-        this.cityBranchNm = cityBranchNm;
-    }
-
-    public List<StoreInfo> getStoreInfoList() {
-        return storeInfoList;
-    }
-
-    public void setStoreInfoList(List<StoreInfo> storeInfoList) {
-        this.storeInfoList = storeInfoList;
+    public void setBranchcompanyNm(String branchcompanyNm) {
+        this.branchCompanyNm = branchcompanyNm;
     }
 }

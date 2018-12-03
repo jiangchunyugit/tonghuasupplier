@@ -1,6 +1,5 @@
 package cn.thinkfree.database.vo;
 
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
@@ -21,11 +20,19 @@ public class CityBranchSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("法人电话号码")
     private String legalPhone;
 
-    @ApiModelProperty("分公司code")
+    @ApiModelProperty("分公司编号")
     private String branchCompanyCode;
 
-    @ApiModelProperty("城市code")
-    private Integer cityCode;
+    @ApiModelProperty("城市分站编号")
+    private String cityBranchCode;
+
+    public String getCityBranchCode() {
+        return cityBranchCode;
+    }
+
+    public void setCityBranchCode(String cityBranchCode) {
+        this.cityBranchCode = cityBranchCode;
+    }
 
     public Integer getIsEnable() {
         return isEnable;
@@ -57,13 +64,5 @@ public class CityBranchSEO extends AbsPageSearchCriteria  {
 
     public void setBranchCompanyCode(String branchCompanyCode) {
         this.branchCompanyCode = branchCompanyCode;
-    }
-
-    public Integer getCityCode() {
-        return cityCode;
-    }
-
-    public void setCityCode(Integer cityCode) {
-        this.cityCode = cityCode;
     }
 }

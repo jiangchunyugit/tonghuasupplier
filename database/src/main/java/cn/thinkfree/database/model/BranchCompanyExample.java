@@ -325,63 +325,73 @@ public class BranchCompanyExample extends cn.thinkfree.core.model.AbstractDataAu
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeIsNull() {
-            addCriterion("province_code is null");
+        public Criteria andPointNameIsNull() {
+            addCriterion("point_name is null");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeIsNotNull() {
-            addCriterion("province_code is not null");
+        public Criteria andPointNameIsNotNull() {
+            addCriterion("point_name is not null");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeEqualTo(Short value) {
-            addCriterion("province_code =", value, "provinceCode");
+        public Criteria andPointNameEqualTo(String value) {
+            addCriterion("point_name =", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeNotEqualTo(Short value) {
-            addCriterion("province_code <>", value, "provinceCode");
+        public Criteria andPointNameNotEqualTo(String value) {
+            addCriterion("point_name <>", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeGreaterThan(Short value) {
-            addCriterion("province_code >", value, "provinceCode");
+        public Criteria andPointNameGreaterThan(String value) {
+            addCriterion("point_name >", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeGreaterThanOrEqualTo(Short value) {
-            addCriterion("province_code >=", value, "provinceCode");
+        public Criteria andPointNameGreaterThanOrEqualTo(String value) {
+            addCriterion("point_name >=", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeLessThan(Short value) {
-            addCriterion("province_code <", value, "provinceCode");
+        public Criteria andPointNameLessThan(String value) {
+            addCriterion("point_name <", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeLessThanOrEqualTo(Short value) {
-            addCriterion("province_code <=", value, "provinceCode");
+        public Criteria andPointNameLessThanOrEqualTo(String value) {
+            addCriterion("point_name <=", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeIn(List<Short> values) {
-            addCriterion("province_code in", values, "provinceCode");
+        public Criteria andPointNameLike(String value) {
+            addCriterion("point_name like", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeNotIn(List<Short> values) {
-            addCriterion("province_code not in", values, "provinceCode");
+        public Criteria andPointNameNotLike(String value) {
+            addCriterion("point_name not like", value, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeBetween(Short value1, Short value2) {
-            addCriterion("province_code between", value1, value2, "provinceCode");
+        public Criteria andPointNameIn(List<String> values) {
+            addCriterion("point_name in", values, "pointName");
             return (Criteria) this;
         }
 
-        public Criteria andProvinceCodeNotBetween(Short value1, Short value2) {
-            addCriterion("province_code not between", value1, value2, "provinceCode");
+        public Criteria andPointNameNotIn(List<String> values) {
+            addCriterion("point_name not in", values, "pointName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointNameBetween(String value1, String value2) {
+            addCriterion("point_name between", value1, value2, "pointName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPointNameNotBetween(String value1, String value2) {
+            addCriterion("point_name not between", value1, value2, "pointName");
             return (Criteria) this;
         }
 
@@ -795,52 +805,62 @@ public class BranchCompanyExample extends cn.thinkfree.core.model.AbstractDataAu
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidEqualTo(Integer value) {
+        public Criteria andBranchCompEbsidEqualTo(String value) {
             addCriterion("branch_comp_ebsid =", value, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidNotEqualTo(Integer value) {
+        public Criteria andBranchCompEbsidNotEqualTo(String value) {
             addCriterion("branch_comp_ebsid <>", value, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidGreaterThan(Integer value) {
+        public Criteria andBranchCompEbsidGreaterThan(String value) {
             addCriterion("branch_comp_ebsid >", value, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidGreaterThanOrEqualTo(Integer value) {
+        public Criteria andBranchCompEbsidGreaterThanOrEqualTo(String value) {
             addCriterion("branch_comp_ebsid >=", value, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidLessThan(Integer value) {
+        public Criteria andBranchCompEbsidLessThan(String value) {
             addCriterion("branch_comp_ebsid <", value, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidLessThanOrEqualTo(Integer value) {
+        public Criteria andBranchCompEbsidLessThanOrEqualTo(String value) {
             addCriterion("branch_comp_ebsid <=", value, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidIn(List<Integer> values) {
+        public Criteria andBranchCompEbsidLike(String value) {
+            addCriterion("branch_comp_ebsid like", value, "branchCompEbsid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompEbsidNotLike(String value) {
+            addCriterion("branch_comp_ebsid not like", value, "branchCompEbsid");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompEbsidIn(List<String> values) {
             addCriterion("branch_comp_ebsid in", values, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidNotIn(List<Integer> values) {
+        public Criteria andBranchCompEbsidNotIn(List<String> values) {
             addCriterion("branch_comp_ebsid not in", values, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidBetween(Integer value1, Integer value2) {
+        public Criteria andBranchCompEbsidBetween(String value1, String value2) {
             addCriterion("branch_comp_ebsid between", value1, value2, "branchCompEbsid");
             return (Criteria) this;
         }
 
-        public Criteria andBranchCompEbsidNotBetween(Integer value1, Integer value2) {
+        public Criteria andBranchCompEbsidNotBetween(String value1, String value2) {
             addCriterion("branch_comp_ebsid not between", value1, value2, "branchCompEbsid");
             return (Criteria) this;
         }

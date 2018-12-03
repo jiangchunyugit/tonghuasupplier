@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.BusinessEntityRelationMapper">
+
+  <resultMap id="BusinessEntityRelationVOResultMap" type="cn.thinkfree.database.vo.BusinessEntityRelationVO" extends="BaseResultMap">
+    <result column="point_name" jdbcType="VARCHAR" property="branchCompanyNm" />
+    <result column="city_branch_name" jdbcType="VARCHAR" property="cityBranchNm" />
+    <collection property="businessEntityStoreList" ofType="cn.thinkfree.database.model.BusinessEntityStore" column="id" select="getBusinessEntityStoreInfos"></collection>
+  </resultMap>
+
+  <resultMap id="BusinessEntityStoreResultMap" type="cn.thinkfree.database.model.BusinessEntityStore">
+    <result column="city_branch_code" jdbcType="VARCHAR" property="cityBranchCode" />
+    <result column="store_nm" jdbcType="VARCHAR" property="storeNm" />
+    <result column="business_entity_code" jdbcType="VARCHAR" property="businessEntityCode" />
+    <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+    <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
+    <result column="entity_name" jdbcType="VARCHAR" property="entityName" />
+    <result column="business_entity_relation_id" jdbcType="INTEGER" property="businessEntityRelationId" />
+  </resultMap>
+
+  <select id="selectBusinessEntityRelationVO" resultMap="BusinessEntityRelationVOResultMap" parameterType="java.lang.String">
+
+    SELECT *,
+    pbc.point_name,
+    pcb.city_branch_name
+    FROM pc_business_entity_relation ber
+    LEFT JOIN pc_branch_company pbc ON pbc.branch_company_code	= ber.branch_company_code
+    LEFT JOIN pc_city_branch pcb ON pcb.city_branch_code = ber.city_branch_code
+    WHERE ber.business_entity_code = #{businessEntityCode}
+  </select>
+
+  <select id="getBusinessEntityStoreInfos" resultMap="BusinessEntityStoreResultMap" parameterType="java.lang.Integer">
+
+    select
+    bes.store_id,
+    hoe.organization_text as store_nm
+    from pc_business_entity_store bes
+    LEFT JOIN hr_organization_entity hoe ON bes.store_id = hoe.organization_id
+    WHERE bes.business_entity_relation_id = #{id}
+  </select>
+</mapper>

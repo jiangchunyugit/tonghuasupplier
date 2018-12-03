@@ -5,6 +5,7 @@ import cn.thinkfree.database.vo.Severitys;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -40,6 +41,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="legalName法人姓名")
+    @NotBlank(message = "姓名不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
     private String legalName;
 
     /**
@@ -52,6 +54,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="legalPhone法人电话号")
+    @NotBlank(message = "电话不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
     private String legalPhone;
 
     /**
@@ -100,6 +103,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="entityName经营主体名称")
+    @NotBlank(message = "名称不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
     private String entityName;
 
     /**
@@ -112,6 +116,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="sampleName简称")
+    @NotBlank(message = "简称不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
     private String sampleName;
 
     /**
@@ -124,7 +129,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="ebsid")
-    private Integer ebsid;
+    private String ebsid;
 
     /**
      * Database Column Remarks:
@@ -148,6 +153,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="mail邮箱地址")
+    @NotBlank(message = "邮箱不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
     private String mail;
 
     /**
@@ -160,6 +166,7 @@ public class BusinessEntity extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="adress地址")
+    @NotBlank(message = "地址不可为空",groups = {Severitys.Insert.class,Severitys.Update.class})
     private String adress;
 
     /**
@@ -207,8 +214,8 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @NotNull(message = "城市分站不可为空",groups = {Severitys.Update.class,Severitys.Insert.class})
-    @ApiModelProperty(value="cityBranchCode城市分站编号")
+//    @NotNull(message = "城市分站不可为空",groups = {Severitys.Update.class,Severitys.Insert.class})
+    @ApiModelProperty(value="作废")
     private String cityBranchCode;
 
     /**
@@ -220,8 +227,8 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    @NotNull(message = "分公司不可为空",groups = {Severitys.Update.class,Severitys.Insert.class})
-    @ApiModelProperty(value="branchCompanyCode分公司编号")
+//    @NotNull(message = "分公司不可为空",groups = {Severitys.Update.class,Severitys.Insert.class})
+    @ApiModelProperty(value="作废")
     private String branchCompanyCode;
 
     @ApiModelProperty(value="businessEntityCode经营主体编号")
@@ -428,7 +435,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    public Integer getEbsid() {
+    public String getEbsid() {
         return ebsid;
     }
 
@@ -440,7 +447,7 @@ public class BusinessEntity extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setEbsid(Integer ebsid) {
+    public void setEbsid(String ebsid) {
         this.ebsid = ebsid;
     }
 

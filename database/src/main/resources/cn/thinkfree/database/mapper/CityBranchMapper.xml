@@ -16,10 +16,10 @@
     <result column="city_branch_ebsid" jdbcType="INTEGER" property="cityBranchEbsid" />
     <result column="mail" jdbcType="VARCHAR" property="mail" />
     <result column="mark" jdbcType="VARCHAR" property="mark" />
-    <result column="branch_comp_ebsid" jdbcType="INTEGER" property="branchCompEbsid" />
+    <result column="branch_comp_ebsid" jdbcType="VARCHAR" property="branchCompEbsid" />
     <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
-    <result column="province_code" jdbcType="SMALLINT" property="provinceCode" />
-    <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
+    <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
     <result column="city_branch_code" jdbcType="VARCHAR" property="cityBranchCode" />
   </resultMap>
   <sql id="Example_Where_Clause">
@@ -156,8 +156,8 @@
     values (#{id,jdbcType=INTEGER}, #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{isDel,jdbcType=SMALLINT}, #{isEnable,jdbcType=SMALLINT}, 
       #{cityBranchName,jdbcType=VARCHAR}, #{cityBranchEbsid,jdbcType=INTEGER}, #{mail,jdbcType=VARCHAR}, 
-      #{mark,jdbcType=VARCHAR}, #{branchCompEbsid,jdbcType=INTEGER}, #{branchCompanyCode,jdbcType=VARCHAR}, 
-      #{provinceCode,jdbcType=SMALLINT}, #{cityCode,jdbcType=SMALLINT}, #{cityBranchCode,jdbcType=VARCHAR}
+      #{mark,jdbcType=VARCHAR}, #{branchCompEbsid,jdbcType=VARCHAR}, #{branchCompanyCode,jdbcType=VARCHAR}, 
+      #{provinceCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, #{cityBranchCode,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CityBranch">
@@ -245,16 +245,16 @@
         #{mark,jdbcType=VARCHAR},
       </if>
       <if test="branchCompEbsid != null">
-        #{branchCompEbsid,jdbcType=INTEGER},
+        #{branchCompEbsid,jdbcType=VARCHAR},
       </if>
       <if test="branchCompanyCode != null">
         #{branchCompanyCode,jdbcType=VARCHAR},
       </if>
       <if test="provinceCode != null">
-        #{provinceCode,jdbcType=SMALLINT},
+        #{provinceCode,jdbcType=VARCHAR},
       </if>
       <if test="cityCode != null">
-        #{cityCode,jdbcType=SMALLINT},
+        #{cityCode,jdbcType=VARCHAR},
       </if>
       <if test="cityBranchCode != null">
         #{cityBranchCode,jdbcType=VARCHAR},
@@ -309,16 +309,16 @@
         mark = #{record.mark,jdbcType=VARCHAR},
       </if>
       <if test="record.branchCompEbsid != null">
-        branch_comp_ebsid = #{record.branchCompEbsid,jdbcType=INTEGER},
+        branch_comp_ebsid = #{record.branchCompEbsid,jdbcType=VARCHAR},
       </if>
       <if test="record.branchCompanyCode != null">
         branch_company_code = #{record.branchCompanyCode,jdbcType=VARCHAR},
       </if>
       <if test="record.provinceCode != null">
-        province_code = #{record.provinceCode,jdbcType=SMALLINT},
+        province_code = #{record.provinceCode,jdbcType=VARCHAR},
       </if>
       <if test="record.cityCode != null">
-        city_code = #{record.cityCode,jdbcType=SMALLINT},
+        city_code = #{record.cityCode,jdbcType=VARCHAR},
       </if>
       <if test="record.cityBranchCode != null">
         city_branch_code = #{record.cityBranchCode,jdbcType=VARCHAR},
@@ -344,10 +344,10 @@
       city_branch_ebsid = #{record.cityBranchEbsid,jdbcType=INTEGER},
       mail = #{record.mail,jdbcType=VARCHAR},
       mark = #{record.mark,jdbcType=VARCHAR},
-      branch_comp_ebsid = #{record.branchCompEbsid,jdbcType=INTEGER},
+      branch_comp_ebsid = #{record.branchCompEbsid,jdbcType=VARCHAR},
       branch_company_code = #{record.branchCompanyCode,jdbcType=VARCHAR},
-      province_code = #{record.provinceCode,jdbcType=SMALLINT},
-      city_code = #{record.cityCode,jdbcType=SMALLINT},
+      province_code = #{record.provinceCode,jdbcType=VARCHAR},
+      city_code = #{record.cityCode,jdbcType=VARCHAR},
       city_branch_code = #{record.cityBranchCode,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -388,16 +388,16 @@
         mark = #{mark,jdbcType=VARCHAR},
       </if>
       <if test="branchCompEbsid != null">
-        branch_comp_ebsid = #{branchCompEbsid,jdbcType=INTEGER},
+        branch_comp_ebsid = #{branchCompEbsid,jdbcType=VARCHAR},
       </if>
       <if test="branchCompanyCode != null">
         branch_company_code = #{branchCompanyCode,jdbcType=VARCHAR},
       </if>
       <if test="provinceCode != null">
-        province_code = #{provinceCode,jdbcType=SMALLINT},
+        province_code = #{provinceCode,jdbcType=VARCHAR},
       </if>
       <if test="cityCode != null">
-        city_code = #{cityCode,jdbcType=SMALLINT},
+        city_code = #{cityCode,jdbcType=VARCHAR},
       </if>
       <if test="cityBranchCode != null">
         city_branch_code = #{cityBranchCode,jdbcType=VARCHAR},
@@ -420,10 +420,10 @@
       city_branch_ebsid = #{cityBranchEbsid,jdbcType=INTEGER},
       mail = #{mail,jdbcType=VARCHAR},
       mark = #{mark,jdbcType=VARCHAR},
-      branch_comp_ebsid = #{branchCompEbsid,jdbcType=INTEGER},
+      branch_comp_ebsid = #{branchCompEbsid,jdbcType=VARCHAR},
       branch_company_code = #{branchCompanyCode,jdbcType=VARCHAR},
-      province_code = #{provinceCode,jdbcType=SMALLINT},
-      city_code = #{cityCode,jdbcType=SMALLINT},
+      province_code = #{provinceCode,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
       city_branch_code = #{cityBranchCode,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
