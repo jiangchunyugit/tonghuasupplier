@@ -39,7 +39,7 @@ public class VolumeReservationDetailsVO {
     @ApiModelProperty("量房地点")
     private String measuringRoomLocation;
     @ApiModelProperty("预约时间")
-    private Date volumeRoomDate;
+    private Long volumeRoomDate;
     @ApiModelProperty("量房费用")
     private String appointmentAmount;
 }

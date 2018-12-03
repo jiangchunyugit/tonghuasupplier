@@ -1318,7 +1318,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
         volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());
         if (designerOrder.getVolumeRoomTime() != null) {
-            volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime());
+            volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
         }
         if (designerOrder.getVolumeRoomMoney() != null) {
             volumeReservationDetailsVO.setAppointmentAmount(MathUtil.getYuan(designerOrder.getVolumeRoomMoney()));
