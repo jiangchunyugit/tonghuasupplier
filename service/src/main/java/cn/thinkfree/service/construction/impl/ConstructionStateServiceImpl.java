@@ -13,6 +13,7 @@ import cn.thinkfree.service.construction.ConstructionStateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -21,6 +22,7 @@ import java.util.*;
  * 施工状态
  */
 @Service
+@Transactional(rollbackFor = RuntimeException.class)
 public class ConstructionStateServiceImpl implements ConstructionStateService {
 
     @Autowired
