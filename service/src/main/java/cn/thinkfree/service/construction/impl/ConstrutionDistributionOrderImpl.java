@@ -2,14 +2,14 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
 import cn.thinkfree.service.construction.vo.ConstructionOrderDistributionNumVo;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
@@ -17,15 +17,17 @@ import cn.thinkfree.service.platform.build.BuildConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional(rollbackFor = RuntimeException.class)
 public class ConstrutionDistributionOrderImpl implements ConstrutionDistributionOrder {
 
     @Autowired
-    ConstructionStateServiceB constructionStateServiceB;
+    ConstructionStateService constructionStateService;
     @Autowired
     CompanyInfoMapper companyInfoMapper;
     @Autowired
@@ -53,13 +55,13 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnumB.STATE_500.getState() || stage == ConstructionStateEnumB.STATE_510.getState()) {
+            if (stage == ConstructionStateEnum.STATE_500.getState() || stage == ConstructionStateEnum.STATE_510.getState()) {
                 waitDistributionOrder++;//待派单
             }
-            if (stage == ConstructionStateEnumB.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_520.getState()) {
                 waitReceipt++;//待接单
             }
-            if (stage > ConstructionStateEnumB.STATE_520.getState() && stage < ConstructionStateEnumB.STATE_700.getState()) {
+            if (stage > ConstructionStateEnum.STATE_520.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
                 alreadyReceipt++;//已接单
             }
         }
@@ -138,7 +140,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         constructionOrder.setSchemeNo(schemeNo);
 
         // 改变订单状态
-        MyRespBundle<String> r = constructionStateServiceB.operateDispatchToConstruction(orderNo);
+        MyRespBundle<String> r = constructionStateService.operateDispatchToConstruction(orderNo);
         if (!ResultMessage.SUCCESS.code.equals(r.getCode())){
             return RespData.error(ResultMessage.ERROR.code, r.getMsg());
         }

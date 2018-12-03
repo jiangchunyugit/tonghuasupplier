@@ -26,6 +26,7 @@ public interface NewProjectService {
 
     /**
      * 确认资料
+     *
      * @param dataVo
      * @return
      */
@@ -61,7 +62,7 @@ public interface NewProjectService {
      * @param projectNo
      * @return
      */
-    MyRespBundle<ProjectVo> getAppProjectDetail(String projectNo);
+    MyRespBundle<ProjectVo> getAppProjectDetail(String userId, String projectNo);
 
     /**
      * 获取项目阶段
@@ -115,6 +116,7 @@ public interface NewProjectService {
 
     /**
      * C端确认资料
+     *
      * @param projectNo
      * @param category
      * @return
@@ -123,6 +125,7 @@ public interface NewProjectService {
 
     /**
      * 更具设计师ID获取设计信息
+     *
      * @param designerId
      * @return
      */

@@ -7,7 +7,6 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.vo.ConstructionStageNunVO;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
-import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.SiteDetailsVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import io.swagger.annotations.Api;

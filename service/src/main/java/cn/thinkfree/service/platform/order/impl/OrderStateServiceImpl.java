@@ -1,9 +1,8 @@
 package cn.thinkfree.service.platform.order.impl;
 
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.service.platform.order.OrderStateService;
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ public class OrderStateServiceImpl implements OrderStateService {
             state.put("val","设计订单--" + designOrderStates.get(i).get("val"));
             maps.add(state);
         }
-        List<Map<String, Object>> conOrderStates = ConstructionStateEnumB.allStates(1);
+        List<Map<String, Object>> conOrderStates = ConstructionStateEnum.allStates(1);
         for (int i = 0; i < conOrderStates.size(); i++) {
             Map<String,Object> state = new HashMap<>();
             state.put("key",conOrderStates.get(i).get("key"));

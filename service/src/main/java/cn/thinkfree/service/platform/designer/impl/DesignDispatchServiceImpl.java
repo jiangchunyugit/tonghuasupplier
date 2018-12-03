@@ -1,9 +1,8 @@
 package cn.thinkfree.service.platform.designer.impl;
 
-import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
@@ -12,16 +11,13 @@ import cn.thinkfree.core.utils.ThreadManager;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.vo.CompanyInfoVo;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.constants.ProjectDataStatus;
-import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.basics.BasicsService;
-import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.platform.designer.CreatePayOrderService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -30,7 +26,6 @@ import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.*;
-import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -504,14 +499,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         constructionOrder.setCreateTime(new Date());
         constructionOrder.setProjectNo(projectNo);
         constructionOrder.setStatus(1);
-        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_500.getState());
+        constructionOrder.setOrderStage(ConstructionStateEnum.STATE_500.getState());
         // 1小包，2大包
         if (project.getContractType() != null && project.getContractType() == 2) {
             DesignerOrder designerOrders = queryDesignerOrder(projectNo);
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
             constructionOrder.setSchemeNo(buildConfigService.getSchemeNoByCompanyId(companyId));
-            constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_520.getState());
+            constructionOrder.setOrderStage(ConstructionStateEnum.STATE_520.getState());
         }
         constructionOrderMapper.insertSelective(constructionOrder);
         updateProjectState(projectNo, constructionOrder.getOrderStage());
@@ -1327,6 +1322,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         OrderPlayVo designOrderPlayVo = DesignerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+        if (persionVo != null){
+            volumeReservationDetailsVO.setDesignerName(persionVo.getName());
+        }
         volumeReservationDetailsVO.setDesignOrderNo(designerOrder.getOrderNo());
         //订单来源
         switch (project.getOrderSource()) {
@@ -1347,7 +1345,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         volumeReservationDetailsVO.setPermanentResidents(project.getPeopleNo());
         volumeReservationDetailsVO.setArea(project.getArea());
         volumeReservationDetailsVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
-        volumeReservationDetailsVO.setDesignerName(persionVo.getName());
         volumeReservationDetailsVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
         volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
         volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());
