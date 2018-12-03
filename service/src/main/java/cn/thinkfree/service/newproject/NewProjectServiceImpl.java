@@ -200,7 +200,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<ProjectVo> getAppProjectDetail(String userId,String projectNo) {
+    public MyRespBundle<ProjectVo> getAppProjectDetail(String userId, String projectNo) {
         List<ProjectOrderDetailVo> projectOrderDetailVoList = new ArrayList<>();
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
@@ -291,7 +291,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         List<PersionVo> persionList = new ArrayList<>();
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        if (!designerId.equals(userId)){
+        if (!designerId.equals(userId)) {
             PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
             try {
                 UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
@@ -384,15 +384,16 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectTitleVo.setAddress(project.getAddressDetail());
         projectTitleVo.setProjectNo(projectNo);
         List<OrderPlayVo> orderPlayVos = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
-        if (orderPlayVos.size() == 0) {
-            return RespData.error("获取公司信息失败");
-        }
-        OrderPlayVo orderPlayVo = orderPlayVos.get(0);
-        if (orderPlayVo != null) {
-            projectTitleVo.setCost(orderPlayVo.getCost());
-            projectTitleVo.setDelay(orderPlayVo.getDelay());
-            projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(), project.getPlanEndTime()));
-            projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
+        if (orderPlayVos.size() != 0) {
+            OrderPlayVo orderPlayVo = orderPlayVos.get(0);
+            if (orderPlayVo != null) {
+                projectTitleVo.setCost(orderPlayVo.getCost());
+                projectTitleVo.setDelay(orderPlayVo.getDelay());
+                projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(), project.getPlanEndTime()));
+                projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
+            }
+            //添加进度展示
+            projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
         }
         int confirm;
         try {
@@ -402,8 +403,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("获取排期编辑状态失败");
         }
         projectTitleVo.setIsConfirm(confirm);
-        //添加进度展示
-        projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
         projectTitleVo.setGanttChartUrl("https://www.baidu.com");
         return RespData.success(projectTitleVo);
     }
