@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.Map;
 
 
@@ -39,9 +40,18 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @Autowired
     ContractTemplateService contractTemplateService;
 
-
-
-
+    /**
+     * 查询资质变更审批信息
+     * @param companyId
+     * @return
+     */
+    @RequestMapping(value = "/findTempAudit", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--运营后台--公司管理--点击资质变更办理--公司详情--审批状态查询--李阳")
+    public MyRespBundle<PcAuditInfo> findTempAudit(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
+        PcAuditInfo auditInfo = companySubmitService.findTempAudit(companyId);
+        return sendJsonData(success, "操作成功", auditInfo);
+    }
 
     /**
      * 查询审批不通过的原因
@@ -115,14 +125,14 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 
     /**
      * 入驻公司资质变更审批
-     * @param pcAuditInfo
+     * @param auditInfoVO
      * @return
      */
     @ApiOperation(value = "前端--运营后台----公司详情--公司变更审批--李阳", notes = "运营审核")
     @PostMapping("/auditChangeCompany")
     @MyRespBody
-    public MyRespBundle<String> auditChangeCompany(@ApiParam("审批参数")PcAuditInfo pcAuditInfo){
-        String msg = companySubmitService.auditChangeCompany(pcAuditInfo);
+    public MyRespBundle<String> auditChangeCompany(@ApiParam("审批参数")PcAuditInfoVO auditInfoVO){
+        String msg = companySubmitService.auditChangeCompany(auditInfoVO);
 
         return sendJsonData(ResultMessage.SUCCESS, msg);
 

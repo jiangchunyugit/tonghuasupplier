@@ -21,17 +21,22 @@ FROM
 	pc_audit_info auditInfo
 	LEFT JOIN company_info companyInfo ON auditInfo.company_id = companyInfo.company_id
 WHERE
-	auditInfo.company_id = #{companyId} and auditInfo.audit_type in
-	  <foreach item="item" index="index" collection="auditType" open="(" separator="," close=")">
-		  #{item}
-	  </foreach>
+	auditInfo.company_id = #{companyId} and 1=1
+	AND auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info
+	  where 1=1
+	  <if test="auditType != null">
+		  and audit_type in
+		  <foreach item="item" index="index" collection="auditType" open="(" separator="," close=")">
+			  #{item}
+		  </foreach>
+	  </if>
 	  <if test="contractNumber != null and contractNumber != ''">
-		  and auditInfo.contract_number = #{contractNumber}
+		  and contract_number = #{contractNumber}
 	  </if>
 	  <if test="auditLevel != null and auditLevel != ''">
-		  and auditInfo.audit_level = #{auditLevel}
+		  and audit_level = #{auditLevel}
 	  </if>
-	AND auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
+	  GROUP BY company_id )
   </select>
 
 	<select id="findTempAuditStatus" resultMap="AuditInfoVO" parameterType="java.util.Map">
@@ -49,13 +54,27 @@ WHERE
 FROM
 	pc_audit_info auditInfo
 	LEFT JOIN pc_audit_temporary_info companyInfo ON auditInfo.company_id = companyInfo.company_id
-	WHERE auditInfo.company_id = #{companyId} and auditInfo.audit_type = #{auditType}
-	and auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info GROUP BY company_id )
+	WHERE auditInfo.company_id = #{companyId}
+	and auditInfo.id IN ( SELECT max( id ) FROM pc_audit_info
+	 where
+	 audit_type = #{auditType}
+	 GROUP BY company_id )
 	</select>
 
-	<select id="findAuditCase" resultMap="BaseResultMap" parameterType="java.lang.String">
-		select * from pc_audit_info
+	<select id="findAuditCase" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select <include refid="Base_Column_List" /> from pc_audit_info
 		where company_id = #{companyId}
-		and id in (select max(id) from pc_audit_info group by company_id)
+		and id in (select max(id) from pc_audit_info
+		where 1=1
+		<if test="auditType != null">
+			and audit_type in
+			<foreach item="item" index="index" collection="auditType" open="(" separator="," close=")">
+				#{item}
+			</foreach>
+		</if>
+		<if test="auditLevel != null and auditLevel != ''">
+			and audit_level = #{auditLevel}
+		</if>
+		group by company_id)
 	</select>
 </mapper>

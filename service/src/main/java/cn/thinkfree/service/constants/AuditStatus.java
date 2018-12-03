@@ -1,5 +1,7 @@
 package cn.thinkfree.service.constants;
 
+import cn.thinkfree.database.constants.CompanyAuditStatus;
+
 /**
  * 审核状态
  */
@@ -32,4 +34,13 @@ public enum AuditStatus {
          return code.toString();
     }
 
+    public static String getDesc(Integer value) {
+        AuditStatus[] auditStatus = values();
+        for (AuditStatus auditStatu : auditStatus) {
+            if (auditStatu.code == value) {
+                return auditStatu.mes;
+            }
+        }
+        return null;
+    }
 }
