@@ -134,8 +134,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
             // 查询 sort 上一个阶段 付款配置
             List<String> listStage = getBuildPay(schemeNo);
 
-            List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
-            Integer preSort = getPreScheduleSort(schedulingDetailsVOs, sort);
+            Integer preSort = getPreScheduleSort(projectNo, sort);
 
             if (listStage.contains(preSort.toString())) {
                 if ("pay".equals(isEnd)) {
@@ -161,7 +160,9 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
 
     }
 
-    private Integer getPreScheduleSort(List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, Integer currentSort) {
+    private Integer getPreScheduleSort(String projectNo, Integer currentSort) {
+        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
+        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
         Integer preScheduleSort = 0;
         for (ProjectBigSchedulingDetailsVO schedulingDetailsVO : schedulingDetailsVOs) {
             if (currentSort.equals(schedulingDetailsVO.getBigSort())) {
