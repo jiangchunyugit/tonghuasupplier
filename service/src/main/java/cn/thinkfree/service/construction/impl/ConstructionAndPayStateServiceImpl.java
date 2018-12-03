@@ -2,7 +2,7 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.BuildPayConfigMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
@@ -109,7 +109,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
         /* sort==0 开工报告 */
         if (sort == 0) {
             Integer stateCode = commonService.queryStateCodeByOrderNo(orderNo);
-            Integer stage = ConstructionStateEnumB.STATE_600.getState();
+            Integer stage = ConstructionStateEnum.STATE_600.getState();
             if (stateCode.equals(stage)) {
                 return true;
             } else {

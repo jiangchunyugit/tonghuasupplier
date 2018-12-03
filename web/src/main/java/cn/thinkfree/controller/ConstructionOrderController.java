@@ -47,8 +47,8 @@ public class ConstructionOrderController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "页码", defaultValue = "1"),
-            @ApiImplicitParam(name = "pageSize", value = "每页条数", defaultValue = "10"),
+            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, defaultValue = "1"),
+            @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, defaultValue = "10"),
             @ApiImplicitParam(name = "cityName", value = "城市名称")
     })
     public MyRespBundle<PageInfo<ConstructionOrderListVo>> getConstructionInfoList(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam(required = false) String cityName){

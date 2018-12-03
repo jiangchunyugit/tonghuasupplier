@@ -1,14 +1,13 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.service.construction.vo.ConstructionStateVo;
 
 import java.util.Map;
 
 /**
  * 施工状态
  */
-public interface ConstructionStateServiceB {
+public interface ConstructionStateService {
 
     /**
      * 查询当前状态

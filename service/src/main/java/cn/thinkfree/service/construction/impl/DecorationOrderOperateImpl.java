@@ -2,7 +2,7 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
@@ -60,10 +60,10 @@ public class DecorationOrderOperateImpl implements DecorationOrderOperate {
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnumB.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_520.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnumB.STATE_540.getState()) {
+            if (stage == ConstructionStateEnum.STATE_540.getState()) {
                 waitSign++;
             }
         }
