@@ -1293,6 +1293,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         OrderPlayVo designOrderPlayVo = DesignerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+        if (persionVo != null){
+            volumeReservationDetailsVO.setDesignerName(persionVo.getName());
+        }
         volumeReservationDetailsVO.setDesignOrderNo(designerOrder.getOrderNo());
         //订单来源
         switch (project.getOrderSource()) {
@@ -1313,7 +1316,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         volumeReservationDetailsVO.setPermanentResidents(project.getPeopleNo());
         volumeReservationDetailsVO.setArea(project.getArea());
         volumeReservationDetailsVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
-        volumeReservationDetailsVO.setDesignerName(persionVo.getName());
         volumeReservationDetailsVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
         volumeReservationDetailsVO.setDecorationLocation(project.getAddressDetail());
         volumeReservationDetailsVO.setMeasuringRoomLocation(project.getAddressDetail());

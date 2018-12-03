@@ -200,7 +200,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<ProjectVo> getAppProjectDetail(String projectNo) {
+    public MyRespBundle<ProjectVo> getAppProjectDetail(String userId,String projectNo) {
         List<ProjectOrderDetailVo> projectOrderDetailVoList = new ArrayList<>();
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
@@ -291,16 +291,18 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         List<PersionVo> persionList = new ArrayList<>();
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
-        try {
-            UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
-            persionVo.setPhone(userMsgVo.getUserPhone());
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.info("调取人员信息失败!");
+        if (!designerId.equals(userId)){
+            PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+            try {
+                UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
+                persionVo.setPhone(userMsgVo.getUserPhone());
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("调取人员信息失败!");
+            }
+            persionVo.setRole(UserJobs.Designer.mes);
+            persionList.add(persionVo);
         }
-        persionVo.setRole(UserJobs.Designer.mes);
-        persionList.add(persionVo);
         designOrderPlayVo.setPersionList(persionList);
         designerOrderDetailVo.setOrderPlayVo(designOrderPlayVo);
         BasicsDataExample basicsDataExample = new BasicsDataExample();
