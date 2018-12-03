@@ -6,6 +6,7 @@ import cn.thinkfree.core.model.BaseModel;
  * 同步订单
  */
 public class SyncOrderVO extends BaseModel {
+    private static final long serialVersionUID = 6417881173287943326L;
     /**
      * 实际支付费用：总费用扣除<积分优惠券抵扣>剩下的金额
      */
@@ -87,33 +88,47 @@ public class SyncOrderVO extends BaseModel {
      */
     private  String sort;
 
-    public SyncOrderVO() {
-        this.actualAmount = "";
-        this.companyId = "";
-        this.companyName = "";
-        this.constructionStage = "";
-        this.consumerName = "";
-        this.contractType = "";
-        this.designId = "";
-        this.designUserId = "";
-        this.endTime = "";
-        this.fromOrderid = "";
-        this.isEnd = "";
-        this.projectAddr = "";
-        this.projectNo = "";
-        this.signedTime = "";
-        this.startTime = "";
-        this.styleType = "";
-        this.type = "";
-        this.typeSub = "";
-        this.userId = "";
-        this.sort = "";
+    public String getTypeSubName() {
+        return typeSubName;
     }
 
-    public SyncOrderVO(String actualAmount, String companyId, String companyName, String constructionStage, String consumerName, 
-    		String contractType, String designId, String designUserId, String endTime, String fromOrderid, String isEnd, 
-    		String projectAddr, String projectNo, String signedTime, String startTime, String styleType, 
-    		String type, String typeSub, String userId,String sort) {
+    public void setTypeSubName(String typeSubName) {
+        this.typeSubName = typeSubName;
+    }
+
+    /**
+     * 訂單階段名稱
+     */
+    private String typeSubName;
+
+    public SyncOrderVO() {
+        actualAmount = "";
+        companyId = "";
+        companyName = "";
+        constructionStage = "";
+        consumerName = "";
+        contractType = "";
+        designId = "";
+        designUserId = "";
+        endTime = "";
+        fromOrderid = "";
+        isEnd = "";
+        projectAddr = "";
+        projectNo = "";
+        signedTime = "";
+        startTime = "";
+        styleType = "";
+        type = "";
+        typeSub = "";
+        userId = "";
+        sort = "";
+        typeSubName = "";
+    }
+
+    public SyncOrderVO(String actualAmount, String companyId, String companyName, String constructionStage, String consumerName,
+                       String contractType, String designId, String designUserId, String endTime, String fromOrderid, String isEnd,
+                       String projectAddr, String projectNo, String signedTime, String startTime, String styleType,
+                       String type, String typeSub, String userId, String sort, String typeSubName) {
         this.actualAmount = actualAmount;
         this.companyId = companyId;
         this.companyName = companyName;
@@ -134,6 +149,7 @@ public class SyncOrderVO extends BaseModel {
         this.typeSub = typeSub;
         this.userId = userId;
         this.sort = sort;
+        this.typeSubName = typeSubName;
     }
 
     public String getActualAmount() {

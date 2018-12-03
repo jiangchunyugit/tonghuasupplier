@@ -1,9 +1,5 @@
 package cn.thinkfree.service.utils;
 
-import java.io.*;
-import java.net.URL;
-import java.util.Map;
-
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.utils.LogUtil;
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -19,12 +15,16 @@ import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.LineSeparator;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import org.junit.Assert;
+
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.Map;
 
 public class FreemarkerUtils {
 
@@ -162,7 +162,7 @@ public class FreemarkerUtils {
 		 */
 		@Override
 		public void draw(PdfCanvas pdfCanvas, Rectangle rect) {
-			this.y = rect.getY();
+			y = rect.getY();
 		}
 
 		/*
