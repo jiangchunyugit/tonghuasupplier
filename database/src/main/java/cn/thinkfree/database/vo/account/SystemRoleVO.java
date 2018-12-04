@@ -1,5 +1,6 @@
 package cn.thinkfree.database.vo.account;
 
+import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.database.constants.RoleScope;
 import cn.thinkfree.database.model.SystemRole;
 import io.swagger.annotations.ApiModel;
@@ -67,9 +68,8 @@ public class SystemRoleVO extends SystemRole {
     }
     @ApiModelProperty("是否选中总部")
     public Integer getSelectedRoot(){
-        return (getScope() == null || getScope() == 0) ? 0 :
-                RoleScope.COMMON.code.equals(getScope()) ? 1:
-                        RoleScope.ROOT.code.equals(getScope()) ? 1:0;
+
+        return (getScope() == null || getScope() == 0) ? 0 : (RoleScope.ROOT.code.intValue() < getScope()) ? 1 : 0  ;
     }
 
     public void setRoot(Integer root) {
@@ -81,9 +81,16 @@ public class SystemRoleVO extends SystemRole {
     }
     @ApiModelProperty("是否选中省级")
     public Integer getSelectedProvince(){
-        return (getScope() == null || getScope() == 0) ? 0 :
-                RoleScope.COMMON.code.equals(getScope()) ? 1:
-                        RoleScope.PROVINCE.code.equals(getScope()) ? 1:0;
+        if(getScope() == null || getScope() == 0){
+            return Integer.valueOf(SysConstants.YesOrNo.NO.val.toString());
+        }
+        if(RoleScope.COMMON.code.equals(getScope()) || RoleScope.PROVINCE.code.equals(getScope())){
+            return Integer.valueOf(SysConstants.YesOrNo.YES.val.toString());
+        }
+        if(getScope() == 3 || getScope() == 6){
+            return Integer.valueOf(SysConstants.YesOrNo.YES.val.toString());
+        }
+        return Integer.valueOf(SysConstants.YesOrNo.NO.val.toString());
     }
 
     public void setProvince(Integer province) {
@@ -95,9 +102,16 @@ public class SystemRoleVO extends SystemRole {
     }
     @ApiModelProperty("是否选中市级")
     public Integer getSelectedCity(){
-        return (getScope() == null || getScope() == 0) ? 0 :
-                RoleScope.COMMON.code.equals(getScope()) ? 1:
-                        RoleScope.CITY.code.equals(getScope()) ? 1:0;
+        if(getScope() == null || getScope() == 0){
+            return Integer.valueOf(SysConstants.YesOrNo.NO.val.toString());
+        }
+        if(RoleScope.COMMON.code.equals(getScope()) || RoleScope.PROVINCE.code.equals(getScope())){
+            return Integer.valueOf(SysConstants.YesOrNo.YES.val.toString());
+        }
+        if(getScope() == 2 || getScope() == 5){
+            return Integer.valueOf(SysConstants.YesOrNo.YES.val.toString());
+        }
+        return Integer.valueOf(SysConstants.YesOrNo.NO.val.toString());
     }
 
     public void setCity(Integer city) {
