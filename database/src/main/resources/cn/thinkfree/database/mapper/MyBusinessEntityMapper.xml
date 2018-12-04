@@ -40,7 +40,7 @@
       and pbe.branch_company_code = #{branchCompanyCode}
     </if>
     <if test="cityBranchCode != null and cityBranchCode != ''">
-      and pbe.city_branch_code = #{cityBranchCode}
+      and pbe.business_entity_code in(SELECT ber.business_entity_code FROM pc_business_entity_relation ber WHERE ber.city_branch_code = #{cityBranchCode})
     </if>
     <if test="businessEntityNm != null and businessEntityNm != ''">
       and (pbe.entity_name like #{businessEntityNm})
