@@ -283,9 +283,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 			//是否个性化
 			vo.setStyleType(designerOrders.get(0) == null ? "" : designerOrders.get(0).getStyleType());
-
 			vo.setSort("");
-
+			vo.setTypeSubName("设计费总额");
 			listVo.add(vo);
 		} else {
 			//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
@@ -426,7 +425,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 				  amount = amount.setScale(2, RoundingMode.HALF_UP);
 				  vo.setActualAmount(String.valueOf(amount));
 			  }else{
-				  BigDecimal amount = new BigDecimal(firstMoney == "" ? "0" : firstMoney);
+				  BigDecimal amount = new BigDecimal(firstMoney);
 				  amount = amount.setScale(2, RoundingMode.HALF_UP);
 				  vo.setActualAmount(String.valueOf(amount));
 			  }
@@ -436,6 +435,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
 			  //支付名称
 			  vo.setTypeSub("8001");
+		//合同類型
 		vo.setContractType("1");
 		vo.setIsEnd("2");
 			  //业主名称
@@ -459,7 +459,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setStyleType("");
 			  
 			  vo.setSort("");
-
+		vo.setTypeSubName("保证金");
 		     listVo.add(vo);
 	}
 
@@ -494,7 +494,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setActualAmount(String.valueOf(amount));
 			  // vo.setActualAmount(String.valueOf(resMap.get("c15")));
 		  }else{
-			  BigDecimal amount = new BigDecimal(firstMoney == "" ? "0" : firstMoney);
+			  BigDecimal amount = new BigDecimal(firstMoney);
 			  amount = amount.setScale(2, RoundingMode.HALF_UP);
 			  vo.setActualAmount(String.valueOf(amount));
 		  }
@@ -529,7 +529,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  vo.setStyleType("");
 		  
 		  vo.setSort("");
-
+		vo.setTypeSubName("保证金");
 		  listVo.add(vo);
 	}
 	
