@@ -100,6 +100,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     public BusinessEntityStoreVO businessEntityStoreDetails(Integer id) {
         BusinessEntity businessEntity = businessEntityMapper.selectByPrimaryKey(id);
         BusinessEntityStoreVO businessEntityStoreVO = new BusinessEntityStoreVO();
+        businessEntityStoreVO.setBusinessEntityRelationVOS(new ArrayList<>());
         Optional.ofNullable(businessEntity).map(u->u.getBusinessEntityCode()).ifPresent((String u) ->{
             if (this.storeCount(u)) {
                 List<BusinessEntityRelationVO> businessEntityRelationVOList = businessEntityRelationMapper.selectBusinessEntityRelationVO(u);

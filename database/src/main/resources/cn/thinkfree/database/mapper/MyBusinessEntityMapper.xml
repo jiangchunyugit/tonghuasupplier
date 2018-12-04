@@ -49,7 +49,7 @@
       and pbe.is_enable = #{isEnable}
     </if>
     </where>
-    order by to_char(pbe.create_time, 'YYYY/MM/DD')
+    order by pbe.create_time DESC
   </select>
 
   <select id="getRelationInfos" resultMap="storeInfoWithHrResultMap" parameterType="java.lang.String">
