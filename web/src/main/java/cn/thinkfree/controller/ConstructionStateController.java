@@ -5,10 +5,10 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -30,7 +30,7 @@ import java.util.Map;
 public class ConstructionStateController extends AbsBaseController {
 
     @Autowired
-    ConstructionStateServiceB constructionStateServiceB;
+    ConstructionStateService constructionStateService;
     @Autowired
     ConstructionAndPayStateService constructionAndPayStateService;
 
@@ -38,7 +38,7 @@ public class ConstructionStateController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "getAllState", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<Map<String, Object>>> getAllState(@RequestParam @ApiParam(value = "1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态",required = true) int type) {
-        List<Map<String, Object>> list = ConstructionStateEnumB.allStates(type);
+        List<Map<String, Object>> list = ConstructionStateEnum.allStates(type);
         return  RespData.success(list,"操作成功!");
     }
 
@@ -49,7 +49,7 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> getState(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                          @RequestParam @ApiParam(value = "1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态",required = true) int type) {
 
-        return constructionStateServiceB.getStateInfo(orderNo,type);
+        return constructionStateService.getStateInfo(orderNo,type);
     }
 
     @ApiOperation("查询当前详细阶段状态(支付/施工)")
@@ -58,7 +58,7 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<Map<String,String>> getStateDetail(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                          @RequestParam @ApiParam(value = "1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态",required = true) int type) {
 
-        return constructionStateServiceB.getStateDetailInfo(orderNo,type);
+        return constructionStateService.getStateDetailInfo(orderNo,type);
     }
 
 
@@ -67,7 +67,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "upOperateDispatch", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> operateDispatchToConstruction(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.operateDispatchToConstruction(orderNo);
+        return constructionStateService.operateDispatchToConstruction(orderNo);
     }
 
     @ApiOperation("装饰公司-派单给服务人员")
@@ -75,7 +75,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "constructionForEmployee", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionStateForEmployee(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.constructionState(orderNo,1);
+        return constructionStateService.constructionState(orderNo,1);
     }
 
     @ApiOperation("装饰公司-施工报价完成")
@@ -83,7 +83,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "constructionPriceComplete", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionPriceComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.constructionState(orderNo,2);
+        return constructionStateService.constructionState(orderNo,2);
     }
 
     @ApiOperation("装饰公司-审核完成(是否通过)")
@@ -92,7 +92,7 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> constructionExamineComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                             @RequestParam @ApiParam(value = "审核是否通过",required = true) Integer isPass) {
 
-        return constructionStateServiceB.constructionStateOfExamine(orderNo,3,isPass);
+        return constructionStateService.constructionStateOfExamine(orderNo,3,isPass);
     }
 
     @ApiOperation("装饰公司-合同录入")
@@ -100,7 +100,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "constructionContractEntry", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionContractEntry(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.constructionState(orderNo,4);
+        return constructionStateService.constructionState(orderNo,4);
     }
 
     @ApiOperation("装饰公司-确认线下签约完成（自动创建工地项目）")
@@ -108,7 +108,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "constructionSignComplete", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionSignComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.constructionState(orderNo,5);
+        return constructionStateService.constructionState(orderNo,5);
     }
 
     /**
@@ -119,7 +119,7 @@ public class ConstructionStateController extends AbsBaseController {
     @RequestMapping(value = "firstPay", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<Boolean> firstPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
 
-        return constructionStateServiceB.firstPay(orderNo);
+        return constructionStateService.firstPay(orderNo);
     }
 
     /**
@@ -133,7 +133,7 @@ public class ConstructionStateController extends AbsBaseController {
                                                      @RequestParam @ApiParam(value = "阶段排序",required = true) Integer sort,
                                                      @RequestParam @ApiParam(value = "尾款2",required = true) String isComplete) {
 
-        return constructionStateServiceB.customerPay(orderNo,feeName,sort,isComplete);
+        return constructionStateService.customerPay(orderNo,feeName,sort,isComplete);
     }
 
     /**
@@ -155,7 +155,7 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> constructionPlan(@RequestParam @ApiParam(value = "项目编号",required = true) String projectNo,
                                                  @RequestParam @ApiParam(value = "序号",required = true) Integer sort) {
 
-        return constructionStateServiceB.constructionPlan(projectNo,sort);
+        return constructionStateService.constructionPlan(projectNo,sort);
 
     }
 
@@ -183,7 +183,7 @@ public class ConstructionStateController extends AbsBaseController {
                                                     @RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                     @RequestParam(required = false) @ApiParam(value = "理由")  String cancelReason) {
 
-        return constructionStateServiceB.customerCancelOrder(userId, orderNo,cancelReason);
+        return constructionStateService.customerCancelOrder(userId, orderNo,cancelReason);
     }
 
     @ApiOperation("消费者-取消订单(支付未开工逆向)&审核是否通过")
@@ -192,7 +192,7 @@ public class ConstructionStateController extends AbsBaseController {
     public MyRespBundle<String> customerCancelOrderForPay(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                           @RequestParam @ApiParam(value = "1消费者取消,2审核是否通过",required = true) int type) {
 
-        return constructionStateServiceB.customerCancelOrderForPay(orderNo,type);
+        return constructionStateService.customerCancelOrderForPay(orderNo,type);
     }
 
 

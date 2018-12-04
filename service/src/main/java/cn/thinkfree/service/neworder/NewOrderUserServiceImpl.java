@@ -3,7 +3,7 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.mapper.*;
@@ -801,13 +801,13 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         // 订单状态 统计
         for (ConstructionOrder constructionOrder : list) {
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnumB.STATE_600.getState()) {
+            if (stage == ConstructionStateEnum.STATE_600.getState()) {
                 waitStart++;
             }
-            if (stage > ConstructionStateEnumB.STATE_600.getState() && stage < ConstructionStateEnumB.STATE_700.getState()) {
+            if (stage > ConstructionStateEnum.STATE_600.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
                 underConstruction++;
             }
-            if (stage == ConstructionStateEnumB.STATE_700.getState()) {
+            if (stage == ConstructionStateEnum.STATE_700.getState()) {
                 completed++;
             }
         }

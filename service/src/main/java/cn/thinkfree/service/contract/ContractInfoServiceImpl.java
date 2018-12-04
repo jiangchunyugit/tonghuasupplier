@@ -17,7 +17,7 @@ import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.*;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -115,7 +115,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	
 	@Autowired
-	ConstructionStateServiceB constructionStateServiceB;
+	ConstructionStateService constructionStateService;
 
 	@Autowired
 	BranchCompanyService branchCompanyService;
@@ -1357,7 +1357,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 				} else {// 施工合同
 					printInfoMes("合同审批调用 订单接口 orderNo{}}", orderNumber);
-					constructionStateServiceB.contractCompleteState(orderNumber);
+					constructionStateService.contractCompleteState(orderNumber);
 				}
 				record.setSignTime(new Date());// 插入时间
 				printInfoMes("合同审批调用 生成订单orderNumber{}}", orderNumber);

@@ -3,16 +3,17 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -21,7 +22,8 @@ import java.util.*;
  * 施工状态
  */
 @Service
-public class ConstructionStateServiceImplB implements ConstructionStateServiceB {
+@Transactional(rollbackFor = RuntimeException.class)
+public class ConstructionStateServiceImpl implements ConstructionStateService {
 
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
@@ -53,7 +55,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
+        String stateInfo = ConstructionStateEnum.queryStateByRole(stageCode, type);
         return RespData.success(stateInfo);
     }
 
@@ -69,7 +71,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        String stateInfo = ConstructionStateEnumB.queryStateByRole(stageCode, type);
+        String stateInfo = ConstructionStateEnum.queryStateByRole(stageCode, type);
         String stateDetailInfo = commonService.queryStateCodeDetailByOrderNo(orderNo);
         Map<String, String> map = new HashMap<>();
         map.put("bigStage", stateInfo);
@@ -87,8 +89,8 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_500.getNextStates();
-        if (stageCode.equals(ConstructionStateEnumB.STATE_500.getState())) {
+        List<ConstructionStateEnum> nextStateCode = ConstructionStateEnum.STATE_500.getNextStates();
+        if (stageCode.equals(ConstructionStateEnum.STATE_500.getState())) {
             if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
                 return RespData.success();
             }
@@ -107,19 +109,19 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stage = null;
-        List<ConstructionStateEnumB> nextStateCode = new ArrayList<>();
+        List<ConstructionStateEnum> nextStateCode = new ArrayList<>();
         switch (type) {
             case 1:
-                stage = ConstructionStateEnumB.STATE_510.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_510.getNextStates();
+                stage = ConstructionStateEnum.STATE_510.getState();
+                nextStateCode = ConstructionStateEnum.STATE_510.getNextStates();
                 break;
             case 2:
-                stage = ConstructionStateEnumB.STATE_520.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_520.getNextStates();
+                stage = ConstructionStateEnum.STATE_520.getState();
+                nextStateCode = ConstructionStateEnum.STATE_520.getNextStates();
                 break;
             case 5:
-                stage = ConstructionStateEnumB.STATE_550.getState();
-                nextStateCode = ConstructionStateEnumB.STATE_550.getNextStates();
+                stage = ConstructionStateEnum.STATE_550.getState();
+                nextStateCode = ConstructionStateEnum.STATE_550.getNextStates();
                 break;
             default:
                 break;
@@ -145,18 +147,18 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         }
 
 
-        Integer stage = ConstructionStateEnumB.STATE_530.getState();
+        Integer stage = ConstructionStateEnum.STATE_530.getState();
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
 
-        List<ConstructionStateEnumB> nextStateCode = ConstructionStateEnumB.STATE_530.getNextStates();
+        List<ConstructionStateEnum> nextStateCode = ConstructionStateEnum.STATE_530.getNextStates();
 
         if (stageCode.equals(stage)) {
             if (isPass == 1) {   //下一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_540.getState())) {
                     return RespData.success();
                 }
             } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_520.getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_520.getState())) {
                     return RespData.success();
                 }
             }
@@ -174,7 +176,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      */
     @Override
     public void contractState(String orderNo) {
-        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_540.getState());
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_540.getState());
     }
 
     /**
@@ -183,7 +185,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      */
     @Override
     public void contractCompleteState(String orderNo) {
-        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_550.getState());
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_550.getState());
     }
 
     /**
@@ -191,7 +193,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      */
     @Override
     public MyRespBundle<Boolean> firstPay(String orderNo) {
-        return RespData.success(commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState()));
+        return RespData.success(commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_600.getState()));
     }
 
 
@@ -243,15 +245,15 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         }
         // sort=0 支付首款
         if (sort == 0) {
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_600.getState());
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_600.getState());
         } else {
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_630.getState());
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_630.getState());
 
 
             Map<String, Integer> map = getPayScheduling(projectNo);
             if (map.get("paySort").equals(map.get("bigSort")) && sort.equals(map.get("paySort"))) {
                 //支付必须先回调再改状态
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
             }
 
         }
@@ -295,13 +297,13 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
             constructionOrderPay.setSort(sort.shortValue());
             constructionOrderPay.setIsEnd("construction");
             constructionOrderPayMapper.insertSelective(constructionOrderPay);
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_610.getState());
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_610.getState());
         } else {
             if (sort == 0) {
                 constructionOrderPay.setFeeName("开工报告");
                 constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPay.setIsEnd("construction");
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_610.getState());
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_610.getState());
             } else {
                 //查询当前施工阶段名称
                 ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
@@ -315,12 +317,12 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
                 constructionOrderPay.setFeeName(schedulingName);
                 constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPay.setIsEnd("construction");
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_620.getState());
+                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_620.getState());
 
                 Map<String, Integer> map = getPayScheduling(projectNo);
                 if (!map.get("paySort").equals(map.get("bigSort")) && sort.equals(map.get("bigSort"))) {
                     //完工即修改状态为订单完成
-                    commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
+                    commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
                 }
 
                 //支付阶段通知
@@ -403,14 +405,14 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         }
 
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (ConstructionStateEnumB.STATE_600.getState() <= stageCode) {
+        if (ConstructionStateEnum.STATE_600.getState() <= stageCode) {
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能取消订单");
         }
 
         ConstructionOrderExample example2 = new ConstructionOrderExample();
         example2.createCriteria().andOrderNoEqualTo(orderNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
-        constructionOrder.setOrderStage(ConstructionStateEnumB.STATE_710.getState());
+        constructionOrder.setOrderStage(ConstructionStateEnum.STATE_710.getState());
         constructionOrder.setRemark(cancelReason);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
         if (isUpdate == 1) {
@@ -444,7 +446,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         }
 
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (ConstructionStateEnumB.STATE_600.getState() <= stageCode) {
+        if (ConstructionStateEnum.STATE_600.getState() <= stageCode) {
             return false;
         }
         return true;
@@ -463,9 +465,9 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
         }
 
         if (type == 1) {
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_720.getState());
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_720.getState());
         } else {
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_730.getState());
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_730.getState());
         }
 
         return RespData.success();
@@ -479,7 +481,7 @@ public class ConstructionStateServiceImplB implements ConstructionStateServiceB 
      */
     public void constructionComplete(String orderNo) {
 
-        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnumB.STATE_700.getState());
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
     }
 
 

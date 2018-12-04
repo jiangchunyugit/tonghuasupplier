@@ -2,41 +2,41 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.DecorationDistributionOrder;
 import cn.thinkfree.service.construction.OrderListCommonService;
-import cn.thinkfree.service.construction.vo.*;
+import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.construction.vo.DecorationOrderCommonVo;
+import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
+import cn.thinkfree.service.construction.vo.appointWorkerListVo;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
 @Service
+@Transactional(rollbackFor = RuntimeException.class)
 public class DecorationDistributionOrderImpl implements DecorationDistributionOrder {
 
     @Autowired
-    ConstructionStateServiceB constructionStateServiceB;
-
-
+    ConstructionStateService constructionStateService;
     @Autowired
     CompanyInfoMapper companyInfoMapper;
     @Autowired
     CityMapper cityMapper;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
-
     @Autowired
     OrderListCommonService orderListCommonService;
-
     @Autowired
     EmployeeMsgMapper employeeMsgMapper;
-
     @Autowired
     OrderUserMapper orderUserMapper;
 
@@ -75,10 +75,10 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnumB.STATE_530.getState()) {
+            if (stage == ConstructionStateEnum.STATE_530.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnumB.STATE_550.getState()) {
+            if (stage == ConstructionStateEnum.STATE_550.getState()) {
                 waitSign++;
             }
         }
@@ -195,7 +195,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
         }
 
         // 改变订单状态
-        MyRespBundle<String> r = constructionStateServiceB.constructionState(workerInfo.get(0).get("orderNo"), 1);
+        MyRespBundle<String> r = constructionStateService.constructionState(workerInfo.get(0).get("orderNo"), 1);
         if (!ResultMessage.SUCCESS.code.equals(r.getCode())) {
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能分配施工人员");
         }

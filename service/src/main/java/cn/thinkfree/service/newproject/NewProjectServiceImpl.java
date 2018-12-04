@@ -4,7 +4,7 @@ import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.BasicsDataParentEnum;
-import cn.thinkfree.core.constants.ConstructionStateEnumB;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.appvo.*;
@@ -13,7 +13,7 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -28,7 +28,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +67,7 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
     CloudService cloudService;
     @Autowired
-    ConstructionStateServiceB constructionStateServiceB;
+    ConstructionStateService constructionStateService;
     @Autowired
     ProjectUserService projectUserService;
     @Autowired
@@ -133,12 +132,12 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectVo.setOwner(owner);
             //添加进度展示
-            if (project.getStage() >= ConstructionStateEnumB.STATE_500.getState()) {
+            if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
                 projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-                projectVo.setStageConsumerName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(4));
-                projectVo.setStageDesignName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(3));
+                projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
+                projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
             } else {
                 projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
                 projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -200,7 +199,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<ProjectVo> getAppProjectDetail(String userId,String projectNo) {
+    public MyRespBundle<ProjectVo> getAppProjectDetail(String userId, String projectNo) {
         List<ProjectOrderDetailVo> projectOrderDetailVoList = new ArrayList<>();
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
@@ -212,12 +211,12 @@ public class NewProjectServiceImpl implements NewProjectService {
         Project project = projects.get(0);
         ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
         //添加进度展示
-        if (project.getStage() >= ConstructionStateEnumB.STATE_500.getState()) {
+        if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-            projectVo.setStageDesignName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(3));
-            projectVo.setStageConsumerName(ConstructionStateEnumB.queryByState(project.getStage()).getStateName(4));
+            projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
+            projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
         } else {
             projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
             projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -291,7 +290,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         List<PersionVo> persionList = new ArrayList<>();
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        if (!designerId.equals(userId)){
+        if (!designerId.equals(userId)) {
             PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
             try {
                 UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
@@ -320,7 +319,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
-            List<Map<String, Object>> maps1 = ConstructionStateEnumB.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
+            List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
             for (Map<String, Object> map : maps1) {
                 OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
                 orderTaskSortVo.setSort((Integer) map.get("key"));
@@ -329,7 +328,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
             constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
-            Boolean aBoolean = constructionStateServiceB.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
+            Boolean aBoolean = constructionStateService.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
             constructionOrderDetailVo.setCancle(aBoolean);
             //存放订单类型
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
@@ -384,15 +383,16 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectTitleVo.setAddress(project.getAddressDetail());
         projectTitleVo.setProjectNo(projectNo);
         List<OrderPlayVo> orderPlayVos = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
-        if (orderPlayVos.size() == 0) {
-            return RespData.error("获取公司信息失败");
-        }
-        OrderPlayVo orderPlayVo = orderPlayVos.get(0);
-        if (orderPlayVo != null) {
-            projectTitleVo.setCost(orderPlayVo.getCost());
-            projectTitleVo.setDelay(orderPlayVo.getDelay());
-            projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(), project.getPlanEndTime()));
-            projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
+        if (orderPlayVos.size() != 0) {
+            OrderPlayVo orderPlayVo = orderPlayVos.get(0);
+            if (orderPlayVo != null) {
+                projectTitleVo.setCost(orderPlayVo.getCost());
+                projectTitleVo.setDelay(orderPlayVo.getDelay());
+                projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(), project.getPlanEndTime()));
+                projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
+            }
+            //添加进度展示
+            projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
         }
         int confirm;
         try {
@@ -402,8 +402,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("获取排期编辑状态失败");
         }
         projectTitleVo.setIsConfirm(confirm);
-        //添加进度展示
-        projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
         projectTitleVo.setGanttChartUrl("https://www.baidu.com");
         return RespData.success(projectTitleVo);
     }
@@ -679,7 +677,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
             //如果设计订单完成,则请求施工订单更改状态
-            constructionStateServiceB.customerCancelOrder(userId, orderNo, cancelReason);
+            constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
         } else {
             designDispatchService.endOrder(projectNo, userId, cancelReason);
         }

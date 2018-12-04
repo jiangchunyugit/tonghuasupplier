@@ -88,6 +88,18 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	final static String TARGET = "static/";
 
 
+	@Override
+	public PcAuditInfo findTempAudit(String companyId) {
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		List auditType = new ArrayList();
+		auditType.add(CompanyConstants.AuditType.CHANGE.code);
+		map.put("auditType", auditType);
+		map.put("auditLevel", CompanyConstants.auditLevel.JOINON.stringVal());
+		PcAuditInfo pcAuditInfo = pcAuditInfoMapper.findAuditCase(map);
+
+		return pcAuditInfo;
+	}
 
 	@Override
 	public CompanyDetailsVO companyDetails(String contractNumber, String companyId, String auditType, String applyDate) {
@@ -136,7 +148,13 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	public PcAuditInfo findAuditCase(String companyId) {
-		PcAuditInfo pcAuditInfo = pcAuditInfoMapper.findAuditCase(companyId);
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyId", companyId);
+		List auditType = new ArrayList();
+		auditType.add(CompanyConstants.AuditType.JOINON.code);
+		auditType.add(CompanyConstants.AuditType.CONTRACT.code);
+		map.put("auditType", auditType);
+		PcAuditInfo pcAuditInfo = pcAuditInfoMapper.findAuditCase(map);
 
 //		if(pcAuditInfos.size() > 0){
 //			return pcAuditInfos.get(0);
@@ -200,8 +218,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 		companySubmitVo.setPcCompanyFinancial(companyFinancials);
 
-
-
 		return companySubmitVo;
 	}
 
@@ -242,10 +258,17 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public String auditChangeCompany(PcAuditInfo pcAuditInfo) {
-		String companyId = pcAuditInfo.getCompanyId();
+	public String auditChangeCompany(PcAuditInfoVO auditInfoVO) {
+		String companyId = auditInfoVO.getCompanyId();
+
+		PcAuditInfo pcAuditInfo = new PcAuditInfo();
+		 SpringBeanUtil.copy(auditInfoVO, pcAuditInfo);
+
 		//获取登陆用户信息
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+		//改变申请信息状态
+		updateApply(auditInfoVO);
 
 		Date date = new Date();
 		//1：查询公司资质临时表
@@ -258,34 +281,35 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		if(pcAuditTemporaryInfo.size() <= 0){
 			return "审批失败";
 		}
+
 		if(AuditStatus.AuditPass.shortVal().equals(pcAuditInfo.getAuditStatus())){
 
 			//2：修改公司临时表状态：change_status:资质变更状态：0：审批成功 1：审批失败 2:审批中
 			pcAuditTemporaryInfo.get(0).setChangeStatus(Short.valueOf(AuditStatus.AuditPass.shortVal()));
 			int addLine = pcAuditTemporaryInfoMapper.updateByExampleSelective(pcAuditTemporaryInfo.get(0), example);
 			if(addLine <= 0){
-				return "审批失败";
+				throw new RuntimeException("审批失败");
 			}
 			//3：审批通过，临时表数据更新到公司表
 			int companyLine = updateTempTOCompanyInfo(companyId, date, pcAuditTemporaryInfo);
 			if(companyLine <= 0){
-				return "审批失败";
+				throw new RuntimeException("审批失败");
 			}
 
 			//4:审批通过，临时表数据更新到公司拓展表
 			int companyExpandLine = updateTempTOCompanyInfoExpand(companyId, date, pcAuditTemporaryInfo);
 			if(companyExpandLine <= 0){
-				return "审批失败";
+				throw new RuntimeException("审批失败");
 			}
 
 			//5:审批通过，临时表数据更新到公司银行账户表
 			int financialLine = updateTempTOCompanyFinancial(companyId, date, pcAuditTemporaryInfo);
 			if(financialLine <= 0){
-				return "审批失败";
+				throw new RuntimeException("审批失败");
 			}
 
 			//运营审核通过添加一条审批记录
-			int flagi = saveAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), pcAuditInfo, userVO, date, "");
+			int flagi = saveAuditInfo(CompanyConstants.AuditType.CHANGE.stringVal(), pcAuditInfo, userVO, date, "");
 			if(flagi <= 0){
 				return "审批失败";
 			}
@@ -293,7 +317,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 		}else{//审核失败
 
-			int line = saveAuditInfo(CompanyConstants.AuditType.CHANGE.toString(), pcAuditInfo, userVO, date, "");
+			int line = saveAuditInfo(CompanyConstants.AuditType.CHANGE.stringVal(), pcAuditInfo, userVO, date, "");
 			//2：修改公司临时表状态：change_status:资质变更状态：0：审批失败 1：审批成功
 			pcAuditTemporaryInfo.get(0).setChangeStatus(Short.valueOf(AuditStatus.AuditDecline.shortVal()));
 			int addLine = pcAuditTemporaryInfoMapper.updateByExampleSelective(pcAuditTemporaryInfo.get(0), example);
@@ -302,6 +326,15 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			}
 			return "审批成功";
 		}
+	}
+
+	private boolean updateApply(PcAuditInfoVO auditInfoVO) {
+		//是否办理
+		PcApplyInfo applyInfo = new PcApplyInfo();
+		applyInfo.setTransactType(SysConstants.YesOrNo.YES.shortVal());
+		PcApplyInfoExample exampleApply = new PcApplyInfoExample();
+		exampleApply.createCriteria().andIdEqualTo(Integer.parseInt(auditInfoVO.getApplyId()));
+		return pcApplyInfoMapper.updateByExampleSelective(applyInfo, exampleApply) == 1 ? true: false;
 	}
 
 	private int saveAuditInfo(String auditType, PcAuditInfo pcAuditInfo, UserVO userVO, Date date, String contractNumber) {
@@ -350,6 +383,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Override
 	public PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId) {
 		PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfoMapper.findCompanyTemporaryInfo(companyId);
+
+
 		return pcAuditTemporaryInfo;
 	}
 
@@ -652,7 +687,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 			auditInfoVO.setCompanyAuditType(CompanyAuditStatus.AUDITING.stringVal());
 			auditInfoVO.setCompanyAuditName("资质审核中");
 		}else{
-			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.getDesc(Integer.parseInt(auditInfoVO.getCompanyAuditType())));
+			auditInfoVO.setCompanyAuditName(AuditStatus.getDesc(Integer.parseInt(auditInfoVO.getCompanyAuditType())));
 		}
 		return auditInfoVO;
 	}

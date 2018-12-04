@@ -11,7 +11,7 @@ import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
-import cn.thinkfree.service.construction.ConstructionStateServiceB;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.remote.CloudService;
@@ -23,7 +23,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.security.util.Resources_sv;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Autowired
     CloudService cloudService;
     @Autowired
-    ConstructionStateServiceB constructionStateServiceB;
+    ConstructionStateService constructionStateService;
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
@@ -507,7 +506,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (constructionOrders.size()==0){
             return RespData.error("此项目下暂无施工订单");
         }
-        constructionStateServiceB.constructionState(constructionOrders.get(0).getOrderNo(), 2);
+        constructionStateService.constructionState(constructionOrders.get(0).getOrderNo(), 2);
         return RespData.success();
     }
 
@@ -546,7 +545,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         check.setRefuseReason(refuseReason);
         checkMapper.updateByPrimaryKeySelective(check);
         if (result == 1) {
-            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateService.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 1);
             if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
                 return RespData.error(stringMyRespBundle.getMsg());
             }
@@ -556,7 +555,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 throw new RuntimeException("不能进行该操作");
             }
         } else if (result == 2) {
-            MyRespBundle<String>  stringMyRespBundle = constructionStateServiceB.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
+            MyRespBundle<String>  stringMyRespBundle = constructionStateService.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
             if(!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())){
                 return RespData.error(stringMyRespBundle.getMsg());
             }

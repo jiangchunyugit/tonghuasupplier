@@ -8,25 +8,26 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.OtherService;
-import cn.thinkfree.service.construction.vo.PrecisionPriceVo;
 import cn.thinkfree.service.construction.vo.OfferProjectVo;
+import cn.thinkfree.service.construction.vo.PrecisionPriceVo;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.ReflectUtils;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional(rollbackFor = RuntimeException.class)
 public class OtherServiceImpl implements OtherService {
     @Autowired
     private ConstructionOrderMapper constructionOrderMapper;

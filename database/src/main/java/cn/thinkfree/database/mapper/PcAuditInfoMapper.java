@@ -75,8 +75,8 @@ public interface PcAuditInfoMapper {
 
     /**
      * 查询入驻公司审批原因
-     * @param companyId
+     * @param map
      * @return
      */
-    PcAuditInfo findAuditCase(@Param(value = "companyId") String companyId);
+    PcAuditInfo findAuditCase(Map<String, Object> map);
 }

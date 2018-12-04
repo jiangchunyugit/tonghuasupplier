@@ -1,5 +1,6 @@
 package cn.thinkfree.service.companysubmit;
 
+import java.util.List;
 import java.util.Map;
 
 import cn.thinkfree.database.model.PcAuditInfo;
@@ -15,6 +16,13 @@ import javax.servlet.http.HttpServletResponse;
  * 公司入驻业务
  */
 public interface CompanySubmitService {
+
+    /**
+     * 查询资质变更审批信息
+     * @param companyId
+     * @return
+     */
+    PcAuditInfo findTempAudit(String companyId);
 
     /**
      * 查询审批不通过的原因
@@ -75,10 +83,10 @@ public interface CompanySubmitService {
 
     /**
      * 入驻公司资质变更审批
-     * @param pcAuditInfo
+     * @param auditInfoVO
      * @return
      */
-    String auditChangeCompany(PcAuditInfo pcAuditInfo);
+    String auditChangeCompany(PcAuditInfoVO auditInfoVO);
 
     /**
      * 入驻公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口
