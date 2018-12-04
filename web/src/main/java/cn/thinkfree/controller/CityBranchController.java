@@ -11,7 +11,6 @@ import cn.thinkfree.database.model.CityBranch;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.CityBranchSEO;
 import cn.thinkfree.database.vo.CityBranchVO;
-import cn.thinkfree.database.vo.CityBranchWtihProCitVO;
 import cn.thinkfree.database.vo.Severitys;
 import cn.thinkfree.service.citybranch.CityBranchService;
 import com.github.pagehelper.PageInfo;
@@ -19,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,13 +41,20 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/saveCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：创建分站")
-    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息")  CityBranch cityBranch){
-        BeanValidator.validate(cityBranch, Severitys.Insert.class);
-        int line = cityBranchService.addCityBranch(cityBranch);
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
+    public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息") CityBranchVO cityBranchVO){
+        BeanValidator.validate(cityBranchVO, Severitys.Insert.class);
+        if (cityBranchService.checkRepeat(cityBranchVO)) {
+            return sendFailMessage("城市分站名称已存在");
         }
-        return sendJsonData(ResultMessage.FAIL, line);
+        try {
+            if(cityBranchService.addCityBranch(cityBranchVO)){
+                return sendJsonData(ResultMessage.SUCCESS,"操作成功");
+            }
+        } catch (DataAccessException e) {
+            return sendFailMessage("门店已存在,请重新选择");
+        }
+
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
     /**
@@ -56,26 +63,20 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/updateCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：编辑分站")
-    public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息") CityBranch cityBranch){
-        BeanValidator.validate(cityBranch, Severitys.Update.class);
-        int line = cityBranchService.updateCityBranch(cityBranch);
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
+    public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息") CityBranchVO cityBranchVO){
+        BeanValidator.validate(cityBranchVO, Severitys.Update.class);
+        if (cityBranchService.checkRepeat(cityBranchVO)) {
+            return sendFailMessage("城市分站名称已存在");
         }
-        return sendJsonData(ResultMessage.FAIL, line);
-    }
+        try {
+            if(cityBranchService.updateCityBranch(cityBranchVO)){
+                return sendJsonData(ResultMessage.SUCCESS,"操作成功");
+            }
+        } catch (DataAccessException e) {
+            return sendFailMessage("门店已存在,请重新选择");
+        }
 
-    /**
-     * 查询城市分站信息
-     */
-    @GetMapping(value = "/cityBranchlistByCompanyId")
-    @MyRespBody
-    @ApiOperation(value="城市分站：分站详情（根据分公司id进行分站联动查询）")
-    public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyId(@ApiParam("分公司编号")Integer id){
-
-        List<CityBranch> cityBranchList = cityBranchService.cityBranchesByCompany(id);
-
-        return sendJsonData(ResultMessage.SUCCESS, cityBranchList);
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
     /**
@@ -83,7 +84,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchlistByCompanyCode")
     @MyRespBody
-    @ApiOperation(value="城市分站：分站详情（根据分公司编号进行分站联动查询）")
+    @ApiOperation(value="城市分站：分站详情（选择已启用分站根据分公司编号进行分站联动查询）")
     public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyCode(@ApiParam("分公司编号")@RequestParam String branchCompanyCode){
 
         int flag = 1;
@@ -97,7 +98,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @GetMapping(value = "/cityBranchlistByCompanyCodeSearch")
     @MyRespBody
-    @ApiOperation(value="城市分站：分站详情（根据分公司编号进行分站联动查询）")
+    @ApiOperation(value="城市分站：分站详情（根据分公司编号进行分站联动）作为查询条件")
     public MyRespBundle<List<CityBranch>> cityBranchlistByCompanyCodeSearch(@ApiParam("分公司编号")@RequestParam String branchCompanyCode){
 
         int flag = 0;
@@ -115,20 +116,9 @@ public class CityBranchController extends AbsBaseController{
     public MyRespBundle<PageInfo<CityBranchVO>> cityBranchlist(@ApiParam("查询城市分站参数")CityBranchSEO cityBranchSEO){
 
         PageInfo<CityBranchVO> pageInfo = cityBranchService.cityBranchList(cityBranchSEO);
-
         return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }
-    /**
-     * 查询城市分站信息
-     */
-    @GetMapping(value = "/cityBranchlistOfCompany")
-    @MyRespBody
-    @ApiOperation(value="城市分站管理：分站管理>分站详情>分站信息(分站省地区查看分站市地区详情（分页查询）)")
-    public MyRespBundle<PageInfo<CityBranchWtihProCitVO>> cityBranchlistOfCompany(@ApiParam("查询城市分站参数")CityBranchSEO cityBranchSEO){
 
-        PageInfo<CityBranchWtihProCitVO> pageInfo = cityBranchService.cityBranchWithProList(cityBranchSEO);
-        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
-    }
     /**
      * 城市分站详情
      */
@@ -164,8 +154,7 @@ public class CityBranchController extends AbsBaseController{
         CityBranch cityBranch = new CityBranch();
         cityBranch.setId(id);
         cityBranch.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
-        int line = cityBranchService.updateCityBranchStatus(cityBranch);
-        if(line > 0){
+        if(cityBranchService.deleteCityBranch(cityBranch)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -182,8 +171,7 @@ public class CityBranchController extends AbsBaseController{
         CityBranch cityBranch = new CityBranch();
         cityBranch.setId(id);
         cityBranch.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
-        int line = cityBranchService.updateCityBranchStatus(cityBranch);
-        if(line > 0){
+        if(cityBranchService.enableCityBranch(cityBranch)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -200,8 +188,7 @@ public class CityBranchController extends AbsBaseController{
         CityBranch cityBranch = new CityBranch();
         cityBranch.setId(id);
         cityBranch.setIsEnable(UserEnabled.Disable.shortVal());
-        int line = cityBranchService.updateCityBranchStatus(cityBranch);
-        if(line > 0){
+        if(cityBranchService.enableCityBranch(cityBranch)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -213,9 +200,9 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/cityBranchRuZhuAdd")
     @MyRespBody
     @ApiOperation(value="城市分站：城市分站")
-    public MyRespBundle<List<CityBranch>> cityBranchRuZhuAdd(@ApiParam("分公司编码")String branchCompanyCode, @ApiParam("城市code") Integer cityCode){
+    public MyRespBundle<List<CityBranch>> cityBranchRuZhuAdd(@ApiParam("分公司编码")String branchCompanyCode){
 
-        return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(branchCompanyCode,cityCode));
+        return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(branchCompanyCode));
     }
 
     /**
@@ -224,7 +211,8 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/cityBranchRuZhu")
     @MyRespBody
     @ApiOperation(value="城市分站：城市分站")
-    public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份code")@RequestParam(value = "provinceCode") Integer provinceCode, @ApiParam("城市code")@RequestParam(value = "cityCode") Integer cityCode){
+    public MyRespBundle<List<CityBranch>> cityBranchRuZhu(@ApiParam("省份code")@RequestParam(value = "provinceCode") String provinceCode
+            , @ApiParam("城市code")@RequestParam(value = "cityCode") String cityCode){
 
         return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCitCode(provinceCode,cityCode));
     }

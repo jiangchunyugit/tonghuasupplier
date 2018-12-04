@@ -9,6 +9,7 @@ import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.model.BusinessEntity;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.BusinessEntitySEO;
+import cn.thinkfree.database.vo.BusinessEntityStoreVO;
 import cn.thinkfree.database.vo.BusinessEntityVO;
 import cn.thinkfree.database.vo.Severitys;
 import cn.thinkfree.service.businessentity.BusinessEntityService;
@@ -17,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,13 +42,15 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/saveBusinessEntity")
     @MyRespBody
     @ApiOperation(value="经营主体数据：创建主体")
-    public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntityVO businessEntityVO){
-        BeanValidator.validate(businessEntityVO, Severitys.Insert.class);
-        int line = businessEntityService.addBusinessEntity(businessEntityVO);
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
+    public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntity businessEntity){
+        BeanValidator.validate(businessEntity, Severitys.Insert.class);
+        if (businessEntityService.checkRepeat(businessEntity)) {
+            return sendFailMessage("经营主体名称已存在");
         }
-        return sendJsonData(ResultMessage.FAIL, line);
+        if(businessEntityService.addBusinessEntity(businessEntity)){
+            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
     /**
@@ -55,13 +59,46 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/updateBusinessEntity")
     @MyRespBody
     @ApiOperation(value="经营主体数据：编辑主体")
-    public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntityVO businessEntityVO){
-        BeanValidator.validate(businessEntityVO, Severitys.Update.class);
-        int line = businessEntityService.updateBusinessEntity(businessEntityVO);
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
+    public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntity businessEntity){
+        BeanValidator.validate(businessEntity, Severitys.Update.class);
+        if (businessEntityService.checkRepeat(businessEntity)) {
+            return sendFailMessage("经营主体名称已存在");
         }
-        return sendJsonData(ResultMessage.FAIL, line);
+        if(businessEntityService.updateBusinessEntity(businessEntity)){
+            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
+    }
+
+    /**
+     * 经营主体详情
+     */
+    @GetMapping(value = "/businessEntityByid")
+    @MyRespBody
+    @ApiOperation(value="经营主体数据：编辑回写")
+    public MyRespBundle<BusinessEntityVO> businessEntityByid(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
+
+        BusinessEntity businessEntity = businessEntityService.businessEntityById(id);
+        return sendJsonData(ResultMessage.SUCCESS, businessEntity);
+    }
+
+    /**
+     * 编辑经营主体信息
+     */
+    @PostMapping(value = "/businessEntityStore")
+    @MyRespBody
+    @ApiOperation(value="经营主体数据：经营主体门店保存")
+    public MyRespBundle<String> businessEntityStore(@ApiParam("经营主体信息")BusinessEntityStoreVO businessEntityStoreVO){
+        BeanValidator.validate(businessEntityStoreVO, Severitys.Insert.class);
+        try {
+            if(businessEntityService.insertBusinessEntityStore(businessEntityStoreVO)){
+                return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+            }
+        }catch (DataAccessException e) {
+            return sendFailMessage("门店已存在,请重新选择");
+        }
+
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
     /**
@@ -82,11 +119,23 @@ public class BusinessEntityController extends AbsBaseController{
      */
     @GetMapping(value = "/businessEntityDetails")
     @MyRespBody
-    @ApiOperation(value="经营主体数据：查看主体")
+    @ApiOperation(value="经营主体数据：查看主体详情")
     public MyRespBundle<BusinessEntityVO> businessEntityDetails(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BusinessEntityVO businessEntityVO = businessEntityService.businessEntityDetails(id);
         return sendJsonData(ResultMessage.SUCCESS, businessEntityVO);
+    }
+
+    /**
+     * 经营主体详情
+     */
+    @GetMapping(value = "/businessEntityStoreInfos")
+    @MyRespBody
+    @ApiOperation(value="经营主体数据：选择门店回写")
+    public MyRespBundle<BusinessEntityStoreVO> businessEntityStoreInfos(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
+
+        BusinessEntityStoreVO businessEntityStoreVO = businessEntityService.businessEntityStoreDetails(id);
+        return sendJsonData(ResultMessage.SUCCESS, businessEntityStoreVO);
     }
 
     /**
@@ -110,11 +159,10 @@ public class BusinessEntityController extends AbsBaseController{
     @ApiOperation(value="经营主体数据：删除")
     public MyRespBundle<String> businessEntityDelete(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
-        BusinessEntityVO businessEntityVO = new BusinessEntityVO();
-        businessEntityVO.setId(id);
-        businessEntityVO.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
-        int line = businessEntityService.updateBusinessEntity(businessEntityVO);
-        if(line > 0){
+        BusinessEntity businessEntity = new BusinessEntity();
+        businessEntity.setId(id);
+        businessEntity.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
+        if(businessEntityService.deleteBusinessEntity(businessEntity)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -131,8 +179,7 @@ public class BusinessEntityController extends AbsBaseController{
         BusinessEntityVO businessEntity = new BusinessEntityVO();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
-        int line = businessEntityService.enableBusinessEntity(businessEntity);
-        if(line > 0){
+        if(businessEntityService.updateBusinessEntity(businessEntity)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -149,8 +196,7 @@ public class BusinessEntityController extends AbsBaseController{
         BusinessEntityVO businessEntity = new BusinessEntityVO();
         businessEntity.setId(id);
         businessEntity.setIsEnable(UserEnabled.Disable.shortVal());
-        int line = businessEntityService.enableBusinessEntity(businessEntity);
-        if(line > 0){
+        if(businessEntityService.updateBusinessEntity(businessEntity)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");

@@ -1,7 +1,9 @@
 package cn.thinkfree.service.businessentity;
 
 import cn.thinkfree.database.model.BusinessEntity;
+import cn.thinkfree.database.vo.BranchCompanyVO;
 import cn.thinkfree.database.vo.BusinessEntitySEO;
+import cn.thinkfree.database.vo.BusinessEntityStoreVO;
 import cn.thinkfree.database.vo.BusinessEntityVO;
 import com.github.pagehelper.PageInfo;
 
@@ -15,18 +17,24 @@ import java.util.List;
 public interface BusinessEntityService {
 
     /**
-     * 添加经营主体
-     * @param businessEntityVO
+     * 校验重复信息
+     * @param businessEntity
      * @return
      */
-    int addBusinessEntity(BusinessEntityVO businessEntityVO);
+    boolean checkRepeat(BusinessEntity businessEntity);
+    /**
+     * 添加经营主体
+     * @param businessEntity
+     * @return
+     */
+    boolean addBusinessEntity(BusinessEntity businessEntity);
 
     /**
      * 修改经营主体信息
-     * @param businessEntityVO
+     * @param businessEntity
      * @return
      */
-    int updateBusinessEntity(BusinessEntityVO businessEntityVO);
+    boolean updateBusinessEntity(BusinessEntity businessEntity);
 
     /**
      * 查询经营主体信息
@@ -43,22 +51,36 @@ public interface BusinessEntityService {
     BusinessEntityVO businessEntityDetails(Integer id);
 
     /**
+     * 门店回写
+     * @param id
+     * @return
+     */
+    BusinessEntityStoreVO businessEntityStoreDetails(Integer id);
+
+    /**
+     * 选择门店保存
+     * @param businessEntityStoreVO
+     * @return
+     */
+    boolean insertBusinessEntityStore(BusinessEntityStoreVO businessEntityStoreVO);
+
+    /**
      * 经营主体list
      * @return
      */
     List<BusinessEntity> businessEntices();
 
     /**
-     * 查询经营主体（没有店面信息）
+     * 编辑回写
      * @param id
      * @return
      */
     BusinessEntity businessEntityById(Integer id);
 
     /**
-     * 启用禁用
-     * @param businessEntityVO
+     * 删除主体
+     * @param businessEntity
      * @return
      */
-    int enableBusinessEntity(BusinessEntityVO businessEntityVO);
+    boolean deleteBusinessEntity(BusinessEntity businessEntity);
 }

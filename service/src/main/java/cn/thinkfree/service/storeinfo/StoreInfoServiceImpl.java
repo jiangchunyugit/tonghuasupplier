@@ -2,10 +2,7 @@ package cn.thinkfree.service.storeinfo;
 
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
-import cn.thinkfree.database.mapper.BusinessEntityMapper;
-import cn.thinkfree.database.mapper.CityBranchMapper;
-import cn.thinkfree.database.mapper.HrOrganizationEntityMapper;
-import cn.thinkfree.database.mapper.StoreInfoMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,24 +32,18 @@ public class StoreInfoServiceImpl implements StoreInfoService {
     @Autowired
     CityBranchMapper cityBranchMapper;
 
+    @Autowired
+    BusinessEntityStoreMapper businessEntityStoreMapper;
+
+    @Autowired
+    BranchCompanyMapper branchCompanyMapper;
+
     @Override
     public List<StoreInfo> storeInfoListByCityId(String cityCode) {
 
-        // 经营主体获取门店（启用）
-        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
-        businessEntityExample.createCriteria().andCityBranchCodeEqualTo(cityCode)
-                .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal())
-                .andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
-        List<BusinessEntity> businessEntities = businessEntityMapper.selectByExample(businessEntityExample);
-        List<String> businessEntityCodes= businessEntities.stream().filter(e->StringUtils.isNotBlank(e.getBusinessEntityCode())).map(e->e.getBusinessEntityCode()).collect(Collectors.toList());
         StoreInfoExample storeInfoExample = new StoreInfoExample();
-        if (businessEntityCodes.size() > 0) {
-
-            // 获取门店信息
-            storeInfoExample.createCriteria().andBusinessEntityCodeIn(businessEntityCodes);
-            return storeInfoMapper.selectByCityBranchCode(storeInfoExample);
-        }
-        return new ArrayList<>();
+        storeInfoExample.createCriteria().andCityBranchCodeEqualTo(cityCode);
+        return storeInfoMapper.selectByCityBranchCode(storeInfoExample);
     }
 
     @Override
@@ -66,44 +57,69 @@ public class StoreInfoServiceImpl implements StoreInfoService {
                 .andBranchCompanyCodeEqualTo(branchCompanyCode);
         List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
         List<String> cityBranchCodes= cityBranches.stream().filter(e->StringUtils.isNotBlank(e.getCityBranchCode())).map(e->e.getCityBranchCode()).collect(Collectors.toList());
-        if (cityBranchCodes.size() > 0 ) {
+        StoreInfoExample storeInfoExample = new StoreInfoExample();
+        if (cityBranchCodes.size() > 0) {
 
-            // 获取经营主体编号
-            BusinessEntityExample businessEntityExample = new BusinessEntityExample();
-            businessEntityExample.createCriteria().andCityBranchCodeIn(cityBranchCodes)
-                    .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal())
-                    .andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
-            List<BusinessEntity> businessEntities = businessEntityMapper.selectByExample(businessEntityExample);
-            List<String> businessEntityCodes= businessEntities.stream().filter(e->StringUtils.isNotBlank(e.getBusinessEntityCode())).map(e->e.getBusinessEntityCode()).collect(Collectors.toList());
-            StoreInfoExample storeInfoExample = new StoreInfoExample();
-            if (businessEntityCodes.size() > 0) {
-
-                // 获取门店
-                storeInfoExample.createCriteria().andBusinessEntityCodeIn(businessEntityCodes);
-                return storeInfoMapper.selectByCityBranchCode(storeInfoExample);
-            }
+            // 获取门店
+            storeInfoExample.createCriteria().andCityBranchCodeIn(cityBranchCodes);
+            return storeInfoMapper.selectByCityBranchCode(storeInfoExample);
         }
         return new ArrayList<>();
-    }
-
-    @Override
-    public StoreInfo storeInfoById(String id) {
-
-        StoreInfoExample storeInfoExample = new StoreInfoExample();
-        storeInfoExample.createCriteria().andStoreIdEqualTo(id);
-
-        List<StoreInfo> storeInfos = storeInfoMapper.selectByExample(storeInfoExample);
-        StoreInfo storeInfo = new StoreInfo();
-        if (storeInfos.size()>0) {
-            storeInfo = storeInfos.get(0);
-        }
-        return storeInfo;
     }
 
     @Override
     public List<HrOrganizationEntity> getHrOrganizationEntity() {
 
         HrOrganizationEntityExample hrOrganizationEntityExample = new HrOrganizationEntityExample();
+        hrOrganizationEntityExample.createCriteria().andZbizType2EqualTo("04");
         return hrOrganizationEntityMapper.selectByExample(hrOrganizationEntityExample);
+    }
+
+    @Override
+    public List<HrOrganizationEntity> storeInfoListByEbsCompanyId(String organizationId,String cityBranchCode) {
+        BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
+        branchCompanyExample.createCriteria().andBranchCompEbsidEqualTo(organizationId);
+        List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
+        List<String> storeIds= new ArrayList<>();
+        if (branchCompanies.size()>0) {
+            StoreInfoExample storeInfoExample = new StoreInfoExample();
+            StoreInfoExample.Criteria criteria = storeInfoExample.createCriteria();
+            if (StringUtils.isNotBlank(branchCompanies.get(0).getBranchCompanyCode())) {
+
+                if (StringUtils.isNotBlank(cityBranchCode)) {
+                    criteria.andCityBranchCodeNotEqualTo(cityBranchCode);
+                }
+                criteria.andBranchCompanyCodeEqualTo(branchCompanies.get(0).getBranchCompanyCode());
+                List<StoreInfo> storeInfos = storeInfoMapper.selectByExample(storeInfoExample);
+                if (storeInfos.size()>0) {
+                    storeIds = storeInfos.stream().map(e->e.getStoreId()).collect(Collectors.toList());
+                }
+            }
+        }
+        HrOrganizationEntityExample hrOrganizationEntityExample = new HrOrganizationEntityExample();
+        HrOrganizationEntityExample.Criteria criteria = hrOrganizationEntityExample.createCriteria();
+        criteria.andSuperiorOrganizationIdEqualTo(organizationId);
+        criteria.andZbizType2EqualTo("04");
+        if (storeIds.size() >0) {
+            criteria.andOrganizationIdNotIn(storeIds);
+        }
+        return hrOrganizationEntityMapper.selectByExample(hrOrganizationEntityExample);
+    }
+
+    @Override
+    public List<StoreInfo> businessEntityStoreByCityBranchCode(String cityBranchCode,String businessEntityCode) {
+
+        BusinessEntityStoreExample businessEntityStoreExample = new BusinessEntityStoreExample();
+        businessEntityStoreExample.createCriteria().andCityBranchCodeEqualTo(cityBranchCode)
+                .andBusinessEntityCodeNotEqualTo(businessEntityCode);
+        List<BusinessEntityStore> businessEntityStores = businessEntityStoreMapper.selectByExample(businessEntityStoreExample);
+        List<String> storeIdList = businessEntityStores.stream().map(e->e.getStoreId()).collect(Collectors.toList());
+        StoreInfoExample storeInfoExample = new StoreInfoExample();
+        StoreInfoExample.Criteria criteria= storeInfoExample.createCriteria();
+        criteria.andCityBranchCodeEqualTo(cityBranchCode);
+        if (storeIdList.size()>0) {
+            criteria.andStoreIdNotIn(storeIdList);
+        }
+        return storeInfoMapper.selectByCityBranchCode(storeInfoExample);
     }
 }
