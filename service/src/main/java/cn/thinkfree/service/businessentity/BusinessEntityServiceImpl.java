@@ -114,6 +114,13 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     @Override
     public PageInfo<BusinessEntityVO> businessEntityList(BusinessEntitySEO businessEntitySEO) {
 
+        if(StringUtils.isNotBlank(businessEntitySEO.getBusinessEntityNm())) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("%");
+            stringBuffer.append(businessEntitySEO.getBusinessEntityNm());
+            stringBuffer.append("%");
+            businessEntitySEO.setBusinessEntityNm(stringBuffer.toString());
+        }
         PageHelper.startPage(businessEntitySEO.getPage(),businessEntitySEO.getRows());
         List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntitySEO);
         return new PageInfo<>(businessEntityVOS);
