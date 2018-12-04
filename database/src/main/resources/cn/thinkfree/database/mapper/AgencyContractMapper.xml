@@ -22,6 +22,7 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="pdf_url" jdbcType="VARCHAR" property="pdfUrl" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -96,7 +97,7 @@
     -->
     id, contract_number, company_id, end_time, status, filiale_name, filiale_id, metro_name, 
     metro_id, store_name, store_id, owner_name, agent_name, create_time, update_time, 
-    pdf_url
+    pdf_url, company_name
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.AgencyContractExample" resultMap="BaseResultMap">
     <!--
@@ -136,13 +137,13 @@
       filiale_id, metro_name, metro_id, 
       store_name, store_id, owner_name, 
       agent_name, create_time, update_time, 
-      pdf_url)
+      pdf_url, company_name)
     values (#{id,jdbcType=INTEGER}, #{contractNumber,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, 
       #{endTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, #{filialeName,jdbcType=VARCHAR}, 
       #{filialeId,jdbcType=VARCHAR}, #{metroName,jdbcType=VARCHAR}, #{metroId,jdbcType=VARCHAR}, 
       #{storeName,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, #{ownerName,jdbcType=VARCHAR}, 
       #{agentName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
-      #{pdfUrl,jdbcType=VARCHAR})
+      #{pdfUrl,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.AgencyContract">
     <!--
@@ -199,6 +200,9 @@
       <if test="pdfUrl != null">
         pdf_url,
       </if>
+      <if test="companyName != null">
+        company_name,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -248,6 +252,9 @@
       </if>
       <if test="pdfUrl != null">
         #{pdfUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="companyName != null">
+        #{companyName,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -316,6 +323,9 @@
       <if test="record.pdfUrl != null">
         pdf_url = #{record.pdfUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.companyName != null">
+        company_name = #{record.companyName,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -342,7 +352,8 @@
       agent_name = #{record.agentName,jdbcType=VARCHAR},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-      pdf_url = #{record.pdfUrl,jdbcType=VARCHAR}
+      pdf_url = #{record.pdfUrl,jdbcType=VARCHAR},
+      company_name = #{record.companyName,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
