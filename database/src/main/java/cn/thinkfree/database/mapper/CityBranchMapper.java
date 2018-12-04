@@ -95,6 +95,13 @@ public interface CityBranchMapper {
     CityBranchVO selectBranchDetails(Integer id);
 
     /**
+     * 城市分站编辑回写
+     * @param id
+     * @return
+     */
+    CityBranchVO selectCityBranchById(Integer id);
+
+    /**
      * 城市分站分页查询
      * @param cityBranchSEO
      * @return

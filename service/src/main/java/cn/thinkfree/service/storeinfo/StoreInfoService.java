@@ -13,13 +13,6 @@ import java.util.List;
 public interface StoreInfoService {
 
     /**
-     * 通过id查询门店详细信息
-     * @param id
-     * @return
-     */
-    StoreInfo storeInfoById (String id);
-
-    /**
      * 通过城市编码查询门店
      * @param cityBranchCode
      * @return
@@ -34,8 +27,24 @@ public interface StoreInfoService {
     List<StoreInfo> storeInfoListByCompanyId(String branchCompanyCode);
 
     /**
-     * 查询全部门店信息
+     * 通过埃森哲分公司id查询门店
+     * @param organizationId
+     * @return
+     */
+    List<HrOrganizationEntity> storeInfoListByEbsCompanyId(String organizationId,String cityBranchCode);
+
+    /**
+     * 主体选择门店
+     * @param cityBranchCode
+     * @return
+     */
+    List<StoreInfo> businessEntityStoreByCityBranchCode(String cityBranchCode,String businessEntityCode);
+
+    /**
+     * 获取所有门店信息
      * @return
      */
     List<HrOrganizationEntity> getHrOrganizationEntity();
+
+//    List
 }

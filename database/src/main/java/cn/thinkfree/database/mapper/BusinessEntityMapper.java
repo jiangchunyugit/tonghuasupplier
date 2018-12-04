@@ -98,7 +98,7 @@ public interface BusinessEntityMapper {
      * @param id
      * @return
      */
-    List<BusinessEntityVO> selectWithId(Integer id);
+    BusinessEntityVO selectWithId(Integer id);
 
     /**
      * 通过城市分站编号查询

@@ -725,52 +725,62 @@ public class BusinessEntityExample extends cn.thinkfree.core.model.AbstractDataA
             return (Criteria) this;
         }
 
-        public Criteria andEbsidEqualTo(Integer value) {
+        public Criteria andEbsidEqualTo(String value) {
             addCriterion("ebsid =", value, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidNotEqualTo(Integer value) {
+        public Criteria andEbsidNotEqualTo(String value) {
             addCriterion("ebsid <>", value, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidGreaterThan(Integer value) {
+        public Criteria andEbsidGreaterThan(String value) {
             addCriterion("ebsid >", value, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidGreaterThanOrEqualTo(Integer value) {
+        public Criteria andEbsidGreaterThanOrEqualTo(String value) {
             addCriterion("ebsid >=", value, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidLessThan(Integer value) {
+        public Criteria andEbsidLessThan(String value) {
             addCriterion("ebsid <", value, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidLessThanOrEqualTo(Integer value) {
+        public Criteria andEbsidLessThanOrEqualTo(String value) {
             addCriterion("ebsid <=", value, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidIn(List<Integer> values) {
+        public Criteria andEbsidLike(String value) {
+            addCriterion("ebsid like", value, "ebsid");
+            return (Criteria) this;
+        }
+
+        public Criteria andEbsidNotLike(String value) {
+            addCriterion("ebsid not like", value, "ebsid");
+            return (Criteria) this;
+        }
+
+        public Criteria andEbsidIn(List<String> values) {
             addCriterion("ebsid in", values, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidNotIn(List<Integer> values) {
+        public Criteria andEbsidNotIn(List<String> values) {
             addCriterion("ebsid not in", values, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidBetween(Integer value1, Integer value2) {
+        public Criteria andEbsidBetween(String value1, String value2) {
             addCriterion("ebsid between", value1, value2, "ebsid");
             return (Criteria) this;
         }
 
-        public Criteria andEbsidNotBetween(Integer value1, Integer value2) {
+        public Criteria andEbsidNotBetween(String value1, String value2) {
             addCriterion("ebsid not between", value1, value2, "ebsid");
             return (Criteria) this;
         }

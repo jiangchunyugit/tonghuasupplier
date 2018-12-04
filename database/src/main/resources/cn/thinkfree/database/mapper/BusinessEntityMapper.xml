@@ -14,7 +14,7 @@
     <result column="is_enable" jdbcType="SMALLINT" property="isEnable" />
     <result column="entity_name" jdbcType="VARCHAR" property="entityName" />
     <result column="sample_name" jdbcType="VARCHAR" property="sampleName" />
-    <result column="ebsid" jdbcType="INTEGER" property="ebsid" />
+    <result column="ebsid" jdbcType="VARCHAR" property="ebsid" />
     <result column="city_branch_ebsid" jdbcType="INTEGER" property="cityBranchEbsid" />
     <result column="mail" jdbcType="VARCHAR" property="mail" />
     <result column="adress" jdbcType="VARCHAR" property="adress" />
@@ -160,7 +160,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{isDel,jdbcType=SMALLINT}, #{isEnable,jdbcType=SMALLINT}, 
-      #{entityName,jdbcType=VARCHAR}, #{sampleName,jdbcType=VARCHAR}, #{ebsid,jdbcType=INTEGER}, 
+      #{entityName,jdbcType=VARCHAR}, #{sampleName,jdbcType=VARCHAR}, #{ebsid,jdbcType=VARCHAR}, 
       #{cityBranchEbsid,jdbcType=INTEGER}, #{mail,jdbcType=VARCHAR}, #{adress,jdbcType=VARCHAR}, 
       #{mark,jdbcType=VARCHAR}, #{branchCompEbsid,jdbcType=INTEGER}, #{organizationCode,jdbcType=VARCHAR}, 
       #{cityBranchCode,jdbcType=VARCHAR}, #{branchCompanyCode,jdbcType=VARCHAR}, #{businessEntityCode,jdbcType=VARCHAR}
@@ -254,7 +254,7 @@
         #{sampleName,jdbcType=VARCHAR},
       </if>
       <if test="ebsid != null">
-        #{ebsid,jdbcType=INTEGER},
+        #{ebsid,jdbcType=VARCHAR},
       </if>
       <if test="cityBranchEbsid != null">
         #{cityBranchEbsid,jdbcType=INTEGER},
@@ -327,7 +327,7 @@
         sample_name = #{record.sampleName,jdbcType=VARCHAR},
       </if>
       <if test="record.ebsid != null">
-        ebsid = #{record.ebsid,jdbcType=INTEGER},
+        ebsid = #{record.ebsid,jdbcType=VARCHAR},
       </if>
       <if test="record.cityBranchEbsid != null">
         city_branch_ebsid = #{record.cityBranchEbsid,jdbcType=INTEGER},
@@ -375,7 +375,7 @@
       is_enable = #{record.isEnable,jdbcType=SMALLINT},
       entity_name = #{record.entityName,jdbcType=VARCHAR},
       sample_name = #{record.sampleName,jdbcType=VARCHAR},
-      ebsid = #{record.ebsid,jdbcType=INTEGER},
+      ebsid = #{record.ebsid,jdbcType=VARCHAR},
       city_branch_ebsid = #{record.cityBranchEbsid,jdbcType=INTEGER},
       mail = #{record.mail,jdbcType=VARCHAR},
       adress = #{record.adress,jdbcType=VARCHAR},
@@ -418,7 +418,7 @@
         sample_name = #{sampleName,jdbcType=VARCHAR},
       </if>
       <if test="ebsid != null">
-        ebsid = #{ebsid,jdbcType=INTEGER},
+        ebsid = #{ebsid,jdbcType=VARCHAR},
       </if>
       <if test="cityBranchEbsid != null">
         city_branch_ebsid = #{cityBranchEbsid,jdbcType=INTEGER},
@@ -463,7 +463,7 @@
       is_enable = #{isEnable,jdbcType=SMALLINT},
       entity_name = #{entityName,jdbcType=VARCHAR},
       sample_name = #{sampleName,jdbcType=VARCHAR},
-      ebsid = #{ebsid,jdbcType=INTEGER},
+      ebsid = #{ebsid,jdbcType=VARCHAR},
       city_branch_ebsid = #{cityBranchEbsid,jdbcType=INTEGER},
       mail = #{mail,jdbcType=VARCHAR},
       adress = #{adress,jdbcType=VARCHAR},

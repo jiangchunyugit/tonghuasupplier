@@ -2,21 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.CityBranchMapper">
 
-    <!--分公司名称VO-->
+    <!--分站信息分公司名称，省分站名称，省份，城市-->
     <resultMap id="CityBranchListResultMap" type="cn.thinkfree.database.vo.CityBranchVO" extends="BaseResultMap">
-        <result column="company_name" jdbcType="VARCHAR" property="branchCompanyNm" />
+        <result column="organization_text" jdbcType="VARCHAR" property="ebsBranchCompanyNm" />
+        <result column="point_name" jdbcType="VARCHAR" property="branchCompanyNm" />
+        <result column="province_name" jdbcType="VARCHAR" property="provinceNm" />
         <result column="city_name" jdbcType="VARCHAR" property="cityNm" />
+        <association property="count" column="city_branch_code" select="selectStoreCount"/>
+    </resultMap>
+    
+    <resultMap id="StoreCountResultMap" type="cn.thinkfree.database.vo.CityBranchVO">
+        <result column="count" jdbcType="VARCHAR" property="count" />
     </resultMap>
 
     <!--店面信息VO-->
     <resultMap id="BranchDetailsResultMap" type="cn.thinkfree.database.vo.CityBranchVO" extends="CityBranchListResultMap">
-        <collection property="storeInfoVOList" ofType="cn.thinkfree.database.vo.StoreInfoVO">
-            <id column="storeInfoId" jdbcType="INTEGER" property="id" />
-            <result column="city_branch_id" jdbcType="INTEGER" property="cityBranchId" />
-            <result column="store_nm" jdbcType="VARCHAR" property="storeNm" />
-            <result column="business_entity_id" jdbcType="INTEGER" property="businessEntityId" />
-            <result column="entity_name" jdbcType="VARCHAR" property="businessEntityNm" />
+        <collection property="storeInfoVOList" ofType="cn.thinkfree.database.vo.StoreInfoVO" column="city_branch_code" select="SelectStoreInfo">
         </collection>
+    </resultMap>
+
+    <!--店面信息info-->
+    <resultMap id="SelectStoreInfoResultMap" type="cn.thinkfree.database.vo.StoreInfoVO">
+        <result column="entity_name" jdbcType="VARCHAR" property="businessEntityNm" />
+        <result column="city_branch_code" jdbcType="VARCHAR" property="cityBranchCode" />
+        <result column="store_nm" jdbcType="VARCHAR" property="storeNm" />
+        <result column="business_entity_code" jdbcType="VARCHAR" property="businessEntityCode" />
+        <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+        <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
     </resultMap>
 
     <!--带有省份，城市VO-->
@@ -28,16 +40,22 @@
     <!--分页查询城市分站信息-->
     <select id="selectBranchCompanyByParam" parameterType="cn.thinkfree.database.vo.CityBranchSEO" resultMap="CityBranchListResultMap">
         SELECT
-        pcb.*,pbc.company_name
+        pcb.*,pbc.point_name,
+        p.province_name,
+        c.city_name,
+        hoe.organization_text
         FROM
         pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_company_code = pbc.branch_company_code
+        LEFT JOIN province p ON pcb.province_code = p.province_code
+        LEFT JOIN city c ON pcb.city_code = c.city_code
+        LEFT JOIN hr_organization_entity hoe ON pcb.branch_comp_ebsid = hoe.organization_id
         <where>
           pcb.is_del = 2
           <if test="branchCompanyCode != null and branchCompanyCode != ''">
             and pcb.branch_company_code = #{branchCompanyCode}
           </if>
-          <if test="cityCode != null and cityCode != ''">
-            and pcb.city_code = #{cityCode}
+          <if test="cityBranchCode != null and cityBranchCode != ''">
+            and pcb.city_branch_code = #{cityBranchCode}
           </if>
           <if test="legalName != null and legalName != ''">
             and (pcb.legal_name like #{legalName} OR pcb.legal_phone like #{legalName})
@@ -45,40 +63,70 @@
           <if test="isEnable != null ">
             and pcb.is_enable = #{isEnable}
           </if>
-          order by to_char(pcb.create_time, 'YYYY/MM/DD')
+          order by pcb.create_time DESC
         </where>
     </select>
 
+    <select id="selectStoreCount" resultType="java.lang.String" parameterType="java.lang.String">
+        select count(*) FROM pc_store_info psi WHERE psi.city_branch_code = #{city_branch_code}
+    </select>
     <!--查看城市分站详细信息带有店面信息-->
-    <select id="selectBranchDetails" parameterType="java.lang.Integer" resultMap="CityBranchListResultMap">
+    <!--<select id="selectBranchDetails" parameterType="java.lang.Integer" resultMap="CityBranchListResultMap">-->
+        <!--SELECT-->
+        <!--pcb.*,-->
+        <!--pbc.company_name,-->
+        <!--C.city_name-->
+        <!--FROM-->
+        <!--pc_city_branch pcb-->
+        <!--LEFT JOIN pc_branch_company pbc ON pbc.branch_company_code = pcb.branch_company_code-->
+        <!--LEFT JOIN city C ON C.city_code = pcb.city_code-->
+        <!--WHERE-->
+        <!--pcb.ID =#{id,jdbcType=INTEGER}-->
+    <!--</select>-->
+
+    <!--编辑回写,查看详情-->
+    <select id="selectCityBranchById" parameterType="java.lang.Integer" resultMap="BranchDetailsResultMap">
         SELECT
-        pcb.*,
-        pbc.company_name,
-        C.city_name
+        pcb.*,pbc.point_name,
+        p.province_name,
+        c.city_name,
+        hoe.organization_text
         FROM
-        pc_city_branch pcb
-        LEFT JOIN pc_branch_company pbc ON pbc.branch_company_code = pcb.branch_company_code
-        LEFT JOIN city C ON C.city_code = pcb.city_code
+        pc_city_branch pcb LEFT JOIN pc_branch_company pbc ON pcb.branch_company_code = pbc.branch_company_code
+        LEFT JOIN province p ON pcb.province_code = p.province_code
+        LEFT JOIN city c ON pcb.city_code = c.city_code
+        LEFT JOIN hr_organization_entity hoe ON pcb.branch_comp_ebsid = hoe.organization_id
         WHERE
         pcb.ID =#{id,jdbcType=INTEGER}
     </select>
-    <select id="selectBranchDetails_bk" parameterType="java.lang.Integer" resultMap="CityBranchListResultMap">
-        SELECT
-            pcb.*,
-            pbc.company_name,
-            psi.ID AS storeInfoId,
-            psi.city_branch_id,
-            psi.store_nm,
-            psi.business_entity_id,
-            pbe.entity_name
+    <select id="SelectStoreInfo" resultMap="SelectStoreInfoResultMap" parameterType="java.lang.String">
+         SELECT
+            psi.store_id,
+            hoe.organization_text as store_nm,
+            bns.entity_name
         FROM
-          pc_city_branch pcb
-        LEFT JOIN pc_branch_company pbc ON pbc.ID = pcb.branch_comp_id
-        LEFT JOIN pc_store_info psi ON psi.city_branch_id = #{id,jdbcType=INTEGER}
-        LEFT JOIN pc_business_entity pbe ON psi.business_entity_id = pbe.ID
-        WHERE
-	      pcb.ID = #{id,jdbcType=INTEGER}
+            pc_store_info psi
+            LEFT JOIN hr_organization_entity hoe ON psi.store_id = hoe.organization_id
+            LEFT JOIN pc_business_entity_store bns ON bns.store_id = psi.store_id
+        WHERE psi.city_branch_code = #{city_branch_code}
     </select>
+    <!--<select id="selectBranchDetails_bk" parameterType="java.lang.Integer" resultMap="CityBranchListResultMap">-->
+        <!--SELECT-->
+            <!--pcb.*,-->
+            <!--pbc.company_name,-->
+            <!--psi.ID AS storeInfoId,-->
+            <!--psi.city_branch_id,-->
+            <!--psi.store_nm,-->
+            <!--psi.business_entity_id,-->
+            <!--pbe.entity_name-->
+        <!--FROM-->
+          <!--pc_city_branch pcb-->
+        <!--LEFT JOIN pc_branch_company pbc ON pbc.ID = pcb.branch_comp_id-->
+        <!--LEFT JOIN pc_store_info psi ON psi.city_branch_id = #{id,jdbcType=INTEGER}-->
+        <!--LEFT JOIN pc_business_entity pbe ON psi.business_entity_id = pbe.ID-->
+        <!--WHERE-->
+	      <!--pcb.ID = #{id,jdbcType=INTEGER}-->
+    <!--</select>-->
 
     <!--查看城市分站详细信息带有省份城市名称-->
     <select id="selectCityBranchWithProCit" parameterType="java.lang.String" resultMap="CityBranchWithProCitResultMap">

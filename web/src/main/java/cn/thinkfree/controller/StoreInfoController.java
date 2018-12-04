@@ -12,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -53,11 +54,36 @@ public class StoreInfoController extends AbsBaseController {
     /**
      * 查询城市分站信息
      */
-    @GetMapping(value = "/storeInfoList")
+    @GetMapping(value = "/storeInfoListByEbsCompanyId")
     @MyRespBody
-    @ApiOperation(value="门店：全部门店信息")
-    public MyRespBundle<List<StoreInfo>> storeInfoList(){
+    @ApiOperation(value="门店：根据埃森哲分公司查询门店")
+    public MyRespBundle<List<StoreInfo>> storeInfoListByEbsCompanyId(@ApiParam("埃森哲分公司id")
+                                                                         @RequestParam(value = "branchCompEbsid") String branchCompEbsid){
 
-        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.getHrOrganizationEntity());
+        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByEbsCompanyId(branchCompEbsid,""));
+    }
+
+    /**
+     * 查询城市分站信息
+     */
+    @GetMapping(value = "/updateStoreInfoListByCityBranchCode")
+    @MyRespBody
+    @ApiOperation(value="门店：城市分站编辑查询门店")
+    public MyRespBundle<List<StoreInfo>> updateStoreInfoListByCityBranchCode(@ApiParam("埃森哲分公司id")@RequestParam(value = "branchCompEbsid") String branchCompEbsid
+            ,@ApiParam("城市分站编号")@RequestParam(value = "cityBranchCode") String cityBranchCode){
+
+        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByEbsCompanyId(branchCompEbsid,cityBranchCode));
+    }
+
+    /**
+     * 查询城市分站信息
+     */
+    @GetMapping(value = "/businessEntityStoreByCityBranchCode")
+    @MyRespBody
+    @ApiOperation(value="门店：查询城市站点下分站")
+    public MyRespBundle<List<StoreInfo>> businessEntityStoreByCityBranchCode(@ApiParam("城市分站编码")@RequestParam(value = "cityBranchCode") String cityBranchCode
+            ,@ApiParam("经营主体编码") @RequestParam(value = "businessEntityCode") String businessEntityCode){
+
+        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.businessEntityStoreByCityBranchCode(cityBranchCode,businessEntityCode));
     }
 }

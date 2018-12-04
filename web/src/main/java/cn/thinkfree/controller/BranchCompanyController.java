@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.model.BranchCompany;
+import cn.thinkfree.database.model.HrOrganizationEntity;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
@@ -31,18 +32,31 @@ public class BranchCompanyController extends AbsBaseController{
     BranchCompanyService branchCompanyService;
 
     /**
+     * 查询分公司信息
+     */
+    @RequestMapping(value = "/ebsBranchCompanylist", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="分公司站点：埃森哲分公司")
+    public MyRespBundle<List<HrOrganizationEntity>> ebsBranchCompanylist(){
+
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.ebsBranchCompanylist());
+    }
+
+    /**
      * 创建分公司
      */
     @RequestMapping(value = "/saveBranchCompany", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="分公司站点：创建分站")
-    public MyRespBundle<String> saveBranchCompany(@ApiParam("分公司信息") BranchCompany branchCompany){
-        BeanValidator.validate(branchCompany,Severitys.Insert.class);
-        int line = branchCompanyService.addBranchCompany(branchCompany);
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
+    public MyRespBundle<String> saveBranchCompany(@ApiParam("分公司信息") BranchCompanyVO branchCompanyVO){
+        BeanValidator.validate(branchCompanyVO,Severitys.Insert.class);
+        if (branchCompanyService.checkRepeat(branchCompanyVO)) {
+            return sendFailMessage("站点名称已存在");
         }
-        return sendJsonData(ResultMessage.FAIL, line);
+        if(branchCompanyService.addBranchCompany(branchCompanyVO)){
+            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
     /**
@@ -51,13 +65,15 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/updateBranchCompany", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="分公司站点：编辑分站(id不可为空)")
-    public MyRespBundle<String> updateBranchCompany(@ApiParam("分公司信息")BranchCompany branchCompany){
-        BeanValidator.validate(branchCompany, Severitys.Update.class);
-        int line = branchCompanyService.updateBranchCompany(branchCompany);
-        if(line > 0){
-            return sendJsonData(ResultMessage.SUCCESS, line);
+    public MyRespBundle<String> updateBranchCompany(@ApiParam("分公司信息")BranchCompanyVO branchCompanyVO){
+        BeanValidator.validate(branchCompanyVO, Severitys.Update.class);
+        if (branchCompanyService.checkRepeat(branchCompanyVO)) {
+            return sendFailMessage("站点名称已存在");
         }
-        return sendJsonData(ResultMessage.FAIL, line);
+        if(branchCompanyService.updateBranchCompany(branchCompanyVO)){
+            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+        }
+        return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
 
     /**
@@ -78,23 +94,11 @@ public class BranchCompanyController extends AbsBaseController{
      */
     @RequestMapping(value = "/branchCompanyDetails", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="分公司站点：查看分站")
+    @ApiOperation(value="分公司站点：查看分站||编辑回写")
     public MyRespBundle<BranchCompanyVO> branchCompanyDetails(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BranchCompanyVO branchCompanyVO = branchCompanyService.branchCompanyDetails(id);
         return sendJsonData(ResultMessage.SUCCESS, branchCompanyVO);
-    }
-
-    /**
-     * 分公司详情
-     */
-    @RequestMapping(value = "/branchCompanyById", method = RequestMethod.GET)
-    @MyRespBody
-    @ApiOperation(value="分公司站点：编辑回写")
-    public MyRespBundle<BranchCompany> branchCompanyById(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
-
-        BranchCompany branchCompany = branchCompanyService.branchCompanyById(id);
-        return sendJsonData(ResultMessage.SUCCESS, branchCompany);
     }
 
     /**
@@ -128,6 +132,19 @@ public class BranchCompanyController extends AbsBaseController{
     /**
      * 分公司
      */
+    @RequestMapping(value = "/citybranchCompany", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="分公司站点：城市分站创建分公司")
+    public MyRespBundle<List<BranchCompanyVO>> citybranchCompany(){
+
+        List<BranchCompanyVO> branchCompanies = branchCompanyService.addCitybranchCompany();
+
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanies);
+    }
+
+    /**
+     * 分公司
+     */
     @RequestMapping(value = "/companyRelations", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="分公司站点：分公司全部信息和所属期城市分站信息")
@@ -149,8 +166,7 @@ public class BranchCompanyController extends AbsBaseController{
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
         branchCompany.setIsDel(OneTrue.YesOrNo.YES.val.shortValue());
-        int line = branchCompanyService.updateBranchCompany(branchCompany);
-        if(line > 0){
+        if(branchCompanyService.enableBranchCompany(branchCompany)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -167,8 +183,7 @@ public class BranchCompanyController extends AbsBaseController{
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
         branchCompany.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
-        int line = branchCompanyService.updateBranchCompany(branchCompany);
-        if(line > 0){
+        if(branchCompanyService.enableBranchCompany(branchCompany)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -185,8 +200,7 @@ public class BranchCompanyController extends AbsBaseController{
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
         branchCompany.setIsEnable(UserEnabled.Disable.shortVal());
-        int line = branchCompanyService.updateBranchCompany(branchCompany);
-        if(line > 0){
+        if(branchCompanyService.enableBranchCompany(branchCompany)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
@@ -203,9 +217,9 @@ public class BranchCompanyController extends AbsBaseController{
     @GetMapping(value = "/branchCompanyByIdList")
     @MyRespBody
     @ApiOperation(value = "(权限)运营平台---站点信息")
-    public MyRespBundle<List<BranchCompany>> branchCompanyByIdList(@ApiParam("省code") Integer provinceCode) {
+    public MyRespBundle<List<BranchCompany>> branchCompanyByIdList() {
 
-        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList(provinceCode));
+        return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList());
     }
 }
 
