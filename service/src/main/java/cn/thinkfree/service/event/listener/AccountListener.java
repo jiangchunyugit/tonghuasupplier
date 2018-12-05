@@ -79,6 +79,7 @@ public class AccountListener extends AbsLogPrinter {
      */
     @EventListener
     public void resetPwdInForgetPassWordAfter(ForgetPwd forgetPwd){
+
         // TODO 发送通知 记录日志
         System.out.println("我需要发送通知");
         System.out.println("我还得记录日志");
