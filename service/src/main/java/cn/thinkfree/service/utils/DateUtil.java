@@ -21,6 +21,17 @@ public class DateUtil {
     private static final SimpleDateFormat SDF_TWO = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
+     * 时间格式化
+     * @param time
+     * @param formart
+     * @return
+     */
+    public static String getStringDate(Date time,String formart){
+        SimpleDateFormat format = new SimpleDateFormat(formart);
+        return format.format(time);
+    }
+
+    /**
      * 判断时间是否在时间段内
      *
      * @param nowTime
