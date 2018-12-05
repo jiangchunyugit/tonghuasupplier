@@ -72,7 +72,7 @@
         SELECT
         dor.order_no AS sunOrderNo,
         dor.status AS status,
-        p.project_no AS projectNo,
+        p.project_no AS orderNo,
         P .order_source AS orderSource,
         P .province AS orderAddress,
         po.contract_number AS contractNo,
@@ -88,7 +88,7 @@
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
         <if test="constructionContractVO.orderNo!=null and constructionContractVO.orderNo!=''">
-            and dor.order_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
+            and p.project_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
         </if>
         <if test="constructionContractVO.orderSource!=null and constructionContractVO.orderSource!=''">
             and P .order_source like CONCAT('%',#{constructionContractVO.orderSource},'%' )
@@ -134,7 +134,7 @@
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
         <if test="constructionContractVO.orderNo!=null and constructionContractVO.orderNo!=''">
-            and dor.order_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
+            and p.project_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
         </if>
         <if test="constructionContractVO.orderSource!=null and constructionContractVO.orderSource!=''">
             and P .order_source like CONCAT('%',#{constructionContractVO.orderSource},'%' )
