@@ -13,7 +13,7 @@
         b.is_three_to_one, b.tax_code_photo_url, b.contact_name, b.contact_phone, b.is_taxpayer, b.comapny_nature,
         b.change_status, b.change_date, b.account_province, b.account_city, b.account_district, b.account_name,
         b.card_name, b.account_branch_name, b.account_number, b.license_url, b.account_area, b.account_type,
-        b.taxpayer_registration_number
+        b.taxpayer_registration_number, b.company_register_no, b.organization_code_url
     </sql>
     <select id="findCompanyTemporaryInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
     SELECT

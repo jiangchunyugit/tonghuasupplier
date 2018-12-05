@@ -165,7 +165,12 @@ public class CompanyConstants{
         /**
          * SJ
          */
-        SJ("SJ","角色：设计");
+        SJ("SJ","角色：设计"),
+
+        /**
+         * DR
+         */
+        DR("DR", "角色：经销商");
 
         public final String code;
         public final String mes;

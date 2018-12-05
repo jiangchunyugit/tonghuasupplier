@@ -43,12 +43,12 @@
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <!--<javaClientGenerator-->
-                <!--targetPackage="cn.thinkfree.database.mapper"-->
-                <!--targetProject="src/main/java/"-->
-                <!--type="XMLMAPPER">-->
-            <!--<property name="enableSubPackages" value="false"/>-->
-        <!--</javaClientGenerator>        -->
+        <javaClientGenerator
+                targetPackage="cn.thinkfree.database.mapper"
+                targetProject="src/main/java/"
+                type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
         <!-- 表-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
@@ -132,6 +132,7 @@
         <!--<table tableName="project_quotation_rooms_soft_decoration" domainObjectName="ProjectQuotationRoomsSoftDecoration"/>-->
         <!--<table tableName="project_quotation_check" domainObjectName="ProjectQuotationCheck"/>-->
         <!--<table tableName="funds_order_fee" domainObjectName="FundsOrderFee"/>        -->
+        <!--<table tableName="project_predating" domainObjectName="ProjectPredating"/>-->
         <!--Scheduling end-->
         <!--approval flow start-->
         <!--<table tableName="a_f_config" domainObjectName="AfConfig"/>-->
@@ -159,5 +160,6 @@
         <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
         <!-- new approval flow end -->
         <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
+
     </context>
 </generatorConfiguration>
