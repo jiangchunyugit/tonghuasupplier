@@ -1424,6 +1424,146 @@ public class CompanyInfoExpandExample extends cn.thinkfree.core.model.AbstractDa
             addCriterion("comapny_nature not between", value1, value2, "comapnyNature");
             return (Criteria) this;
         }
+
+        public Criteria andCompanyRegisterNoIsNull() {
+            addCriterion("company_register_no is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoIsNotNull() {
+            addCriterion("company_register_no is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoEqualTo(String value) {
+            addCriterion("company_register_no =", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoNotEqualTo(String value) {
+            addCriterion("company_register_no <>", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoGreaterThan(String value) {
+            addCriterion("company_register_no >", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoGreaterThanOrEqualTo(String value) {
+            addCriterion("company_register_no >=", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoLessThan(String value) {
+            addCriterion("company_register_no <", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoLessThanOrEqualTo(String value) {
+            addCriterion("company_register_no <=", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoLike(String value) {
+            addCriterion("company_register_no like", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoNotLike(String value) {
+            addCriterion("company_register_no not like", value, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoIn(List<String> values) {
+            addCriterion("company_register_no in", values, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoNotIn(List<String> values) {
+            addCriterion("company_register_no not in", values, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoBetween(String value1, String value2) {
+            addCriterion("company_register_no between", value1, value2, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andCompanyRegisterNoNotBetween(String value1, String value2) {
+            addCriterion("company_register_no not between", value1, value2, "companyRegisterNo");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlIsNull() {
+            addCriterion("organization_code_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlIsNotNull() {
+            addCriterion("organization_code_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlEqualTo(String value) {
+            addCriterion("organization_code_url =", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlNotEqualTo(String value) {
+            addCriterion("organization_code_url <>", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlGreaterThan(String value) {
+            addCriterion("organization_code_url >", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("organization_code_url >=", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlLessThan(String value) {
+            addCriterion("organization_code_url <", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlLessThanOrEqualTo(String value) {
+            addCriterion("organization_code_url <=", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlLike(String value) {
+            addCriterion("organization_code_url like", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlNotLike(String value) {
+            addCriterion("organization_code_url not like", value, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlIn(List<String> values) {
+            addCriterion("organization_code_url in", values, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlNotIn(List<String> values) {
+            addCriterion("organization_code_url not in", values, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlBetween(String value1, String value2) {
+            addCriterion("organization_code_url between", value1, value2, "organizationCodeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andOrganizationCodeUrlNotBetween(String value1, String value2) {
+            addCriterion("organization_code_url not between", value1, value2, "organizationCodeUrl");
+            return (Criteria) this;
+        }
     }
 
     /**

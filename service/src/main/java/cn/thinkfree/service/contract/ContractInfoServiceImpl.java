@@ -304,8 +304,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
         int flagT = companyInfoMapper.updateauditStatus( companyInfo );
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        String	auditPersion = userVO == null ? "" : userVO.getUsername();
-        String	auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+		String auditPersion = userVO == null ? "" : userVO.getName();
+		String auditAccount = userVO == null ? "" : userVO.getUsername();
         /* 添加审核记录表 */
 		PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(), companyId, auditCase,
                 contractNumber, date, auditAccount);
@@ -1370,8 +1370,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			} else {// 拒绝 插入拒绝原因
 				// 查询合同编号
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-				String auditPersion = userVO == null ? "" : userVO.getUsername();
-				String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+				String auditPersion = userVO == null ? "" : userVO.getName();
+				String auditAccount = userVO == null ? "" : userVO.getUsername();
 				/* 添加审核记录表 */
 				PcAuditInfo te = new PcAuditInfo("2", "1", auditPersion, status, new Date(), list.get(0).getCompanyId(),
 						cause, list.get(0).getContractNumber(), new Date(), auditAccount);

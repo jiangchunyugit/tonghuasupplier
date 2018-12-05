@@ -10,7 +10,7 @@
     info.id, info.company_id, info.create_time, info.update_time, info.register_province_code, info.register_city_code,
     info.register_area_code, info.register_address, info.postcode, info.email, info.company_type, info.unify_social_credit_code,
     info.official_seal_url, info.is_three_to_one, info.tax_code_photo_url, info.contact_name, info.contact_phone,
-    info.is_taxpayer, info.comapny_nature
+    info.is_taxpayer, info.comapny_nature, info.company_register_no ,info.organization_code_url
   </sql>
   <select id="findCompanyExpand" parameterType="java.lang.String" resultMap="CompanyExpandInfoVo">
     select <include refid="Base_Column_List_VO" />,

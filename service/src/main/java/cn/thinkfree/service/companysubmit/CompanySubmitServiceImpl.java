@@ -339,8 +339,8 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 
 	private int saveAuditInfo(String auditType, PcAuditInfo pcAuditInfo, UserVO userVO, Date date, String contractNumber) {
 		//CompanyConstants.AuditType.CHANGE.toString()
-		String auditPersion = userVO == null ? "" : userVO.getUsername();
-		String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+		String auditPersion = userVO == null ? "" : userVO.getName();
+		String auditAccount = userVO == null ? "" : userVO.getUsername();
 		//添加审核记录表
 		PcAuditInfo record = new PcAuditInfo(auditType, pcAuditInfo.getAuditLevel(), auditPersion, pcAuditInfo.getAuditStatus(), date,
 				pcAuditInfo.getCompanyId(), pcAuditInfo.getAuditCase(), contractNumber, date, auditAccount);
@@ -383,7 +383,6 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 	@Override
 	public PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId) {
 		PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfoMapper.findCompanyTemporaryInfo(companyId);
-
 
 		return pcAuditTemporaryInfo;
 	}
@@ -651,7 +650,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		exampleC.createCriteria().andCompanyIdEqualTo(companyId);
 		List<CompanyInfo>  companyInfos = companyInfoMapper.selectByExample(exampleC);
 		PcAuditTemporaryInfoExample example = new PcAuditTemporaryInfoExample();
-		example.createCriteria().andCompanyIdEqualTo(companyId);
+		example.createCriteria().andCompanyIdEqualTo(companyId).andChangeStatusEqualTo(AuditStatus.AUDITING.code.shortValue());
 		List<PcAuditTemporaryInfo> pcAuditTemporaryInfos = pcAuditTemporaryInfoMapper.selectByExample(example);
 		//公司状态只有是入驻成功才可以编辑资质
 		if(companyInfos.size() > 0){
@@ -660,13 +659,10 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 				flag = true;
 			}
 		}
-		//如果资质变更表没有信息或者审批状态是通过或者未通过都可以对资质进行编辑
+		//查询资质变更表中change_status状态为申请中数据，如果size大于0不能编辑，如果资质变更表没有信息或者审批状态是通过或者未通过都可以对资质进行编辑
 		if(pcAuditTemporaryInfos.size() > 0){
-			PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfos.get(0);
-			if(!AuditStatus.AUDITING.shortVal().equals(pcAuditTemporaryInfo.getChangeStatus().toString())){
-				aflag = true;
-			}
-		}else if(pcAuditTemporaryInfos.size() == 0){
+			aflag = false;
+		}else {
 			aflag = true;
 		}
 
