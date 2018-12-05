@@ -15,6 +15,7 @@ import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import cn.thinkfree.service.utils.PageInfoUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -221,17 +222,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             }
             listVo.add(constructionOrderListVo);
         }
-        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
-        pageInfo.setTotal(orderPageInfo.getTotal());
-        pageInfo.setList(listVo);
-        pageInfo.setPageNum(orderPageInfo.getPageNum());
-        pageInfo.setHasNextPage(orderPageInfo.isHasNextPage());
-        pageInfo.setPages(orderPageInfo.getPages());
-        pageInfo.setPageSize(orderPageInfo.getPageSize());
-        pageInfo.setEndRow(orderPageInfo.getEndRow());
-        pageInfo.setFirstPage(orderPageInfo.getFirstPage());
-        pageInfo.setHasPreviousPage(orderPageInfo.isHasPreviousPage());
-        pageInfo.setIsFirstPage(orderPageInfo.isIsFirstPage());
+        PageInfo<ConstructionOrderListVo> pageInfo = PageInfoUtils.pageInfo(orderPageInfo,listVo);
         return pageInfo;
     }
 
@@ -254,8 +245,6 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
         }
 
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
-        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
@@ -265,9 +254,8 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
         if (list.size() <= 0) {
             RespData.error(ResultMessage.ERROR.code, "订单编号不符");
         }
+        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>(list);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
-
-        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -381,10 +369,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             listVo.add(constructionOrderListVo);
         }
 
-        pageInfo.setList(listVo);
-        Page p = (Page) pageInfo2.getList();
-        pageInfo.setPageNum(p.getPages());
-        pageInfo.setTotal(pageInfo2.getList().size());
+        PageInfo<ConstructionOrderListVo> pageInfo = PageInfoUtils.pageInfo(pageInfo2,listVo);
         return pageInfo;
     }
 

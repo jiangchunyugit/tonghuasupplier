@@ -2,6 +2,7 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.mapper.*;
@@ -10,10 +11,12 @@ import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.OtherService;
 import cn.thinkfree.service.construction.vo.OfferProjectVo;
 import cn.thinkfree.service.construction.vo.PrecisionPriceVo;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
+import cn.thinkfree.service.utils.PageInfoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -51,6 +54,8 @@ public class OtherServiceImpl implements OtherService {
     private CompanyInfoMapper companyInfoMapper;
     @Autowired
     private DesignerOrderMapper designerOrderMapper;
+    @Autowired
+    private BasicsService basicsService;
 
     /**
      * 精准报价
@@ -65,7 +70,6 @@ public class OtherServiceImpl implements OtherService {
             return RespData.error(ResultMessage.ERROR.code, "公司编号不能为空");
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<PrecisionPriceVo> pageInfo = new PageInfo<>();
         PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
@@ -117,9 +121,7 @@ public class OtherServiceImpl implements OtherService {
             }
             listVo.add(precisionPriceVo);
         }
-        pageInfo.setList(listVo);
-        pageInfo.setTotal(pageInfo2.getList().size());
-        return RespData.success(pageInfo);
+        return RespData.success(PageInfoUtils.pageInfo(pageInfo2,listVo));
     }
 
     @Override
@@ -132,7 +134,7 @@ public class OtherServiceImpl implements OtherService {
         }
         Project project = projects.get(0);
         String designerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.DESIGN_POWER);
-        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.DESIGN_POWER);
+        String ownerId = projectUserService.queryUserIdOne(projectNo,RoleFunctionEnum.OWNER_POWER);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andProjectNoEqualTo(projectNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
@@ -145,8 +147,18 @@ public class OtherServiceImpl implements OtherService {
         OfferProjectVo projectVo = new OfferProjectVo();
         projectVo.setAddress(project.getAddressDetail());
         projectVo.setDesignerName(employeeMsg.getRealName());
-        projectVo.setHouseType(project.getHouseType() + "");
-        projectVo.setHuxing(project.getHouseHuxing() + "");
+        String houseType = "--";
+        BasicsData basicsData = basicsService.queryDataOne(BasicsDataParentEnum.HOUSE_TYPE.getCode(),project.getHouseType() + "");
+        if(basicsData != null){
+            houseType = basicsData.getBasicsName();
+        }
+        projectVo.setHouseType(houseType);
+        String huxing = "--";
+        basicsData = basicsService.queryDataOne(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode(),project.getHouseType() + "");
+        if(basicsData != null){
+            huxing = basicsData.getBasicsName();
+        }
+        projectVo.setHuxing(huxing);
         projectVo.setOwnerName(ownerMsg.getUserName());
         projectVo.setPhone(ownerMsg.getUserPhone());
         projectVo.setIsDesign("是");
