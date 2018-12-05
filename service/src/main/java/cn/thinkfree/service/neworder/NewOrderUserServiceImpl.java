@@ -573,10 +573,19 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             }
         }
         //模糊业主
-        if (designContractVO.getOwnerName() != null) {
-            for (int i = 0; i < voList.size(); i++) {
-                if (voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())) {
-                    newList.add(voList.get(i));
+        if (designContractVO.getOwnerName() != null || designContractVO.getOwnerPhone() != null) {
+            if(designContractVO.getOwnerName() != null){
+                for (int i = 0; i < voList.size(); i++) {
+                    if (voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())) {
+                        newList.add(voList.get(i));
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < voList.size(); i++) {
+                    if (voList.get(i).getOwnerPhone().contains(designContractVO.getOwnerPhone())) {
+                        newList.add(voList.get(i));
+                    }
                 }
             }
             PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
