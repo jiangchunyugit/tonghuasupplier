@@ -53,6 +53,8 @@ public class DesignerServiceImpl implements DesignerService {
     private BasicsService basicsService;
     @Autowired
     private RoleFunctionService functionService;
+    @Autowired
+    private CompanyInfoMapper companyInfoMapper;
 
     /**
      * @param designerName          设计师用户名
@@ -120,6 +122,10 @@ public class DesignerServiceImpl implements DesignerService {
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
         Map<String, DesignerMsg> designerMsgMap = getStringDesignerMsgMap(employeeMsgs);
         List<DesignerMsgListVo> msgVos = new ArrayList<>();
+        Map<String,String> provinceMap = basicsService.getProvince();
+        Map<String,String> cityMap = basicsService.getCity();
+        Map<String,String> areaMap = basicsService.getArea();
+        Map<String, CompanyInfo> companyInfoMap = getStringCompanyInfoMap(employeeMsgs);
         for (EmployeeMsg employeeMsg : employeeMsgs) {
             DesignerMsgListVo msgVo = new DesignerMsgListVo();
             DesignerMsg msg = designerMsgMap.get(employeeMsg.getUserId());
@@ -130,9 +136,12 @@ public class DesignerServiceImpl implements DesignerService {
                 msgVo.setTag(msg.getTag() + "");
                 msgVo.setUserId(msg.getUserId());
             }
-            msgVo.setAddress(employeeMsg.getProvince() + "," + employeeMsg.getCity() + "," + employeeMsg.getArea());
+            msgVo.setAddress(provinceMap.get(employeeMsg.getProvince()) + "," + cityMap.get(employeeMsg.getCity()) + "," + areaMap.get(employeeMsg.getArea()));
             msgVo.setAuthState(employeeMsg.getAuthState() + "");
-            msgVo.setCompanyName(employeeMsg.getCompanyId());
+            CompanyInfo companyInfo = companyInfoMap.get(employeeMsg.getCompanyId());
+            if(companyInfo != null){
+                msgVo.setCompanyName(companyInfo.getCompanyName());
+            }
             msgVo.setRegistrationTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
             msgVo.setSex(employeeMsg.getSex() + "");
             msgVo.setRealName(employeeMsg.getRealName());
@@ -145,6 +154,17 @@ public class DesignerServiceImpl implements DesignerService {
         msgVo.setData(msgVos);
         msgVo.setPageIndex(pageIndex);
         return msgVo;
+    }
+
+    private Map<String, CompanyInfo> getStringCompanyInfoMap(List<EmployeeMsg> employeeMsgs) {
+        if(employeeMsgs == null || employeeMsgs.isEmpty()){
+            return new HashMap<>();
+        }
+        List<String> companyIds = ReflectUtils.getList(employeeMsgs,"companyId");
+        CompanyInfoExample infoExample = new CompanyInfoExample();
+        infoExample.createCriteria().andCompanyIdIn(companyIds);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(infoExample);
+        return ReflectUtils.listToMap(companyInfos,"companyId");
     }
 
     private Map<String, DesignerMsg> getStringDesignerMsgMap(List<EmployeeMsg> employeeMsgs) {
