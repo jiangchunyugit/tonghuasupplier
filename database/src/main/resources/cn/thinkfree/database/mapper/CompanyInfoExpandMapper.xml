@@ -25,6 +25,8 @@
     <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
     <result column="is_taxpayer" jdbcType="SMALLINT" property="isTaxpayer" />
     <result column="comapny_nature" jdbcType="SMALLINT" property="comapnyNature" />
+    <result column="company_register_no" jdbcType="VARCHAR" property="companyRegisterNo" />
+    <result column="organization_code_url" jdbcType="VARCHAR" property="organizationCodeUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -100,7 +102,7 @@
     id, company_id, create_time, update_time, register_province_code, register_city_code, 
     register_area_code, register_address, postcode, email, company_type, unify_social_credit_code, 
     official_seal_url, is_three_to_one, tax_code_photo_url, contact_name, contact_phone, 
-    is_taxpayer, comapny_nature
+    is_taxpayer, comapny_nature, company_register_no, organization_code_url
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.CompanyInfoExpandExample" resultMap="BaseResultMap">
     <!--
@@ -159,14 +161,16 @@
       email, company_type, unify_social_credit_code, 
       official_seal_url, is_three_to_one, tax_code_photo_url, 
       contact_name, contact_phone, is_taxpayer, 
-      comapny_nature)
+      comapny_nature, company_register_no, organization_code_url
+      )
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP}, #{registerProvinceCode,jdbcType=SMALLINT}, #{registerCityCode,jdbcType=SMALLINT}, 
       #{registerAreaCode,jdbcType=INTEGER}, #{registerAddress,jdbcType=VARCHAR}, #{postcode,jdbcType=VARCHAR}, 
       #{email,jdbcType=VARCHAR}, #{companyType,jdbcType=SMALLINT}, #{unifySocialCreditCode,jdbcType=VARCHAR}, 
       #{officialSealUrl,jdbcType=VARCHAR}, #{isThreeToOne,jdbcType=SMALLINT}, #{taxCodePhotoUrl,jdbcType=VARCHAR}, 
       #{contactName,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, #{isTaxpayer,jdbcType=SMALLINT}, 
-      #{comapnyNature,jdbcType=SMALLINT})
+      #{comapnyNature,jdbcType=SMALLINT}, #{companyRegisterNo,jdbcType=VARCHAR}, #{organizationCodeUrl,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CompanyInfoExpand">
     <!--
@@ -232,6 +236,12 @@
       <if test="comapnyNature != null">
         comapny_nature,
       </if>
+      <if test="companyRegisterNo != null">
+        company_register_no,
+      </if>
+      <if test="organizationCodeUrl != null">
+        organization_code_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -290,6 +300,12 @@
       </if>
       <if test="comapnyNature != null">
         #{comapnyNature,jdbcType=SMALLINT},
+      </if>
+      <if test="companyRegisterNo != null">
+        #{companyRegisterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCodeUrl != null">
+        #{organizationCodeUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -367,6 +383,12 @@
       <if test="record.comapnyNature != null">
         comapny_nature = #{record.comapnyNature,jdbcType=SMALLINT},
       </if>
+      <if test="record.companyRegisterNo != null">
+        company_register_no = #{record.companyRegisterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organizationCodeUrl != null">
+        organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -396,7 +418,9 @@
       contact_name = #{record.contactName,jdbcType=VARCHAR},
       contact_phone = #{record.contactPhone,jdbcType=VARCHAR},
       is_taxpayer = #{record.isTaxpayer,jdbcType=SMALLINT},
-      comapny_nature = #{record.comapnyNature,jdbcType=SMALLINT}
+      comapny_nature = #{record.comapnyNature,jdbcType=SMALLINT},
+      company_register_no = #{record.companyRegisterNo,jdbcType=VARCHAR},
+      organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -462,6 +486,12 @@
       <if test="comapnyNature != null">
         comapny_nature = #{comapnyNature,jdbcType=SMALLINT},
       </if>
+      <if test="companyRegisterNo != null">
+        company_register_no = #{companyRegisterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCodeUrl != null">
+        organization_code_url = #{organizationCodeUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -488,7 +518,9 @@
       contact_name = #{contactName,jdbcType=VARCHAR},
       contact_phone = #{contactPhone,jdbcType=VARCHAR},
       is_taxpayer = #{isTaxpayer,jdbcType=SMALLINT},
-      comapny_nature = #{comapnyNature,jdbcType=SMALLINT}
+      comapny_nature = #{comapnyNature,jdbcType=SMALLINT},
+      company_register_no = #{companyRegisterNo,jdbcType=VARCHAR},
+      organization_code_url = #{organizationCodeUrl,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -804,6 +804,216 @@ public class DesignerMsgExample {
             addCriterion("designer_money_high not between", value1, value2, "designerMoneyHigh");
             return (Criteria) this;
         }
+
+        public Criteria andPersonalHomeUrlIsNull() {
+            addCriterion("personal_home_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlIsNotNull() {
+            addCriterion("personal_home_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlEqualTo(String value) {
+            addCriterion("personal_home_url =", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlNotEqualTo(String value) {
+            addCriterion("personal_home_url <>", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlGreaterThan(String value) {
+            addCriterion("personal_home_url >", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("personal_home_url >=", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlLessThan(String value) {
+            addCriterion("personal_home_url <", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlLessThanOrEqualTo(String value) {
+            addCriterion("personal_home_url <=", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlLike(String value) {
+            addCriterion("personal_home_url like", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlNotLike(String value) {
+            addCriterion("personal_home_url not like", value, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlIn(List<String> values) {
+            addCriterion("personal_home_url in", values, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlNotIn(List<String> values) {
+            addCriterion("personal_home_url not in", values, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlBetween(String value1, String value2) {
+            addCriterion("personal_home_url between", value1, value2, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalHomeUrlNotBetween(String value1, String value2) {
+            addCriterion("personal_home_url not between", value1, value2, "personalHomeUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileIsNull() {
+            addCriterion("personal_profile is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileIsNotNull() {
+            addCriterion("personal_profile is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileEqualTo(String value) {
+            addCriterion("personal_profile =", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileNotEqualTo(String value) {
+            addCriterion("personal_profile <>", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileGreaterThan(String value) {
+            addCriterion("personal_profile >", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileGreaterThanOrEqualTo(String value) {
+            addCriterion("personal_profile >=", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileLessThan(String value) {
+            addCriterion("personal_profile <", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileLessThanOrEqualTo(String value) {
+            addCriterion("personal_profile <=", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileLike(String value) {
+            addCriterion("personal_profile like", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileNotLike(String value) {
+            addCriterion("personal_profile not like", value, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileIn(List<String> values) {
+            addCriterion("personal_profile in", values, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileNotIn(List<String> values) {
+            addCriterion("personal_profile not in", values, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileBetween(String value1, String value2) {
+            addCriterion("personal_profile between", value1, value2, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalProfileNotBetween(String value1, String value2) {
+            addCriterion("personal_profile not between", value1, value2, "personalProfile");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeIsNull() {
+            addCriterion("certificate_prize is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeIsNotNull() {
+            addCriterion("certificate_prize is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeEqualTo(String value) {
+            addCriterion("certificate_prize =", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeNotEqualTo(String value) {
+            addCriterion("certificate_prize <>", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeGreaterThan(String value) {
+            addCriterion("certificate_prize >", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeGreaterThanOrEqualTo(String value) {
+            addCriterion("certificate_prize >=", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeLessThan(String value) {
+            addCriterion("certificate_prize <", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeLessThanOrEqualTo(String value) {
+            addCriterion("certificate_prize <=", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeLike(String value) {
+            addCriterion("certificate_prize like", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeNotLike(String value) {
+            addCriterion("certificate_prize not like", value, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeIn(List<String> values) {
+            addCriterion("certificate_prize in", values, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeNotIn(List<String> values) {
+            addCriterion("certificate_prize not in", values, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeBetween(String value1, String value2) {
+            addCriterion("certificate_prize between", value1, value2, "certificatePrize");
+            return (Criteria) this;
+        }
+
+        public Criteria andCertificatePrizeNotBetween(String value1, String value2) {
+            addCriterion("certificate_prize not between", value1, value2, "certificatePrize");
+            return (Criteria) this;
+        }
     }
 
     /**

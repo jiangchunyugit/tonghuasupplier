@@ -3,17 +3,20 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
+import cn.thinkfree.database.vo.PredatingVo;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
+import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import com.alibaba.fastjson.JSON;
@@ -25,10 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author: jiang
@@ -64,6 +64,16 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     NewSchedulingService schedulingService;
     @Autowired
     DesignDispatchService designDispatchService;
+    @Autowired
+    ProjectPredatingMapper projectPredatingMapper;
+    @Autowired
+    ProjectMapper projectMapper;
+    @Autowired
+    NewOrderUserService newOrderUserService;
+    @Autowired
+    ProjectUserService projectUserService;
+    @Autowired
+    EmployeeMsgMapper employeeMsgMapper;
 
     /**
      * 获取精准报价
@@ -564,41 +574,101 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     }
 
     /**
-     * 获取上海报价信息
+     * 设计师发起预交底详情页---->app使用
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<PredatingVo> queryPredatingDetails(String projectNo) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空!");
+        }
+        PredatingVo predatingVo = new PredatingVo();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return RespData.error("项目不存在!!");
+        }
+        Project project = projects.get(0);
+        //添加业主信息
+        PersionVo owner = new PersionVo();
+        try {
+            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+            owner.setPhone(userName1.get("phone").toString());
+            owner.setName(userName1.get("nickName").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("调取人员信息失败!");
+        }
+        predatingVo.setOwnerName(owner.getName());
+        predatingVo.setOwnerPhone(owner.getPhone());
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(projectNo);
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        predatingVo.setHouseType(project.getHouseRoom() + "室" + project.getHouseToilet() + "厅");
+        predatingVo.setArea(project.getArea());
+        predatingVo.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
+        predatingVo.setDecorationLocation(project.getAddressDetail());
+
+        ProjectPredatingExample projectPredatingExample = new ProjectPredatingExample();
+        ProjectPredatingExample.Criteria predatingCriteria = projectPredatingExample.createCriteria();
+        predatingCriteria.andProjectNoEqualTo(projectNo);
+        List<ProjectPredating> projectPredatings = projectPredatingMapper.selectByExample(projectPredatingExample);
+        if (projectPredatings.size()>0){
+            predatingVo.setPredatingTime(projectPredatings.get(0).getPredatingTime().getTime());
+            predatingVo.setRemark(projectPredatings.get(0).getRemark());
+        }
+        return RespData.success(predatingVo);
+    }
+
+    /**
+     * 获取上海报价信息(预交底)
      *
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle getShangHaiPriceDetail(String projectNo) {
+    public MyRespBundle getShangHaiPriceDetail(String projectNo, Date predatingTime, String remark) {
+        ProjectPredating projectPredating = new ProjectPredating();
+        projectPredating.setUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+        projectPredating.setPredatingTime(predatingTime);
+        projectPredating.setRemark(remark);
+        projectPredating.setProjectNo(projectNo);
+        int result1 = projectPredatingMapper.insertSelective(projectPredating);
+        if (result1 == 0) {
+            return RespData.error("预交底失败(记录预交底信息失败)");
+        }
         ProjectDataExample dataExample = new ProjectDataExample();
         ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
         dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         dataCriteria.andProjectNoEqualTo(projectNo);
         List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
         if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
-            return RespData.error("此项目尚未提交设计案例");
+            throw new RuntimeException("此项目尚未提交设计案例");
         }
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderCritera = orderExample.createCriteria();
         orderCritera.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         orderCritera.andProjectNoEqualTo(projectNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
-        if (designerOrders.size()==0){
-            return RespData.error("此项目下暂无设计订单");
+        if (designerOrders.size() == 0) {
+            throw new RuntimeException("此项目下暂无设计订单");
         }
-        if (designerOrders.get(0).getPreviewState().equals(1)){
-            return RespData.error("预交底已完成,请勿重复");
+        if (designerOrders.get(0).getPreviewState().equals(1)) {
+            throw new RuntimeException("预交底已完成,请勿重复");
         }
         String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
         if (result.trim().isEmpty()) {
-            return RespData.error("获取上海报价信息失败!");
+            throw new RuntimeException("获取上海报价信息失败!");
         }
         JSONObject jsonObject = JSON.parseObject(result);
         JSONObject data = jsonObject.getJSONObject("data");
         Integer code = jsonObject.getJSONObject("status").getInteger("code");
-        if(code!=0){
+        if (code != 0) {
             return RespData.error(jsonObject.getJSONObject("status").getString("message"));
         }
         if (data == null) {
@@ -697,6 +767,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         return RespData.success();
     }
+
 
     /**
      * 修改项目状态
