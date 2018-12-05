@@ -237,7 +237,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		for (int i = 0; i < ratioNumbers.size(); i++) {
 				//添加审核记录表
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-				String auditPersion = userVO == null ? "" : userVO.getUsername();
+				String auditPersion = userVO == null ? "" : userVO.getName();
 				String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
 				String companyId = userVO==null?"":userVO.getCompanyID();
 				String ratioNumber = String.valueOf(ratioNumbers.get(i));

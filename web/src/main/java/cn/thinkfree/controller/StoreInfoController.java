@@ -46,7 +46,7 @@ public class StoreInfoController extends AbsBaseController {
     @GetMapping(value = "/storeInfoListByCompanyId")
     @MyRespBody
     @ApiOperation(value="门店：门店信息（通过分公司编号查询门店信息）")
-    public MyRespBundle<List<StoreInfo>> storeInfoListByCompanyId(@ApiParam("城市分站编号")String branchCompanyCode){
+    public MyRespBundle<List<StoreInfo>> storeInfoListByCompanyId(@ApiParam("省分站分站编号")String branchCompanyCode){
 
         return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByCompanyId(branchCompanyCode));
     }

@@ -3,6 +3,9 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.AgencyContract;
 import cn.thinkfree.database.model.AgencyContractExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.agency.AgencySEO;
+import cn.thinkfree.database.vo.agency.MyAgencyContract;
 import org.apache.ibatis.annotations.Param;
 
 public interface AgencyContractMapper {
@@ -61,4 +64,11 @@ public interface AgencyContractMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") AgencyContract record, @Param("example") AgencyContractExample example);
+
+
+    /**
+     *分页查询 经销商合同
+     */
+    List<MyAgencyContract> selectPageList(AgencySEO example);
+
 }

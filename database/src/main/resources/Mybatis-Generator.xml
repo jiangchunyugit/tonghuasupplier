@@ -160,5 +160,6 @@
         <!--<table tableName="user_role_fun_rel" domainObjectName="UserRoleFunRel"/>-->
         <!-- new approval flow end -->
         <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
+
     </context>
 </generatorConfiguration>
