@@ -7,7 +7,6 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.core.utils.JSONUtil;
-import cn.thinkfree.core.utils.ThreadManager;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -184,11 +183,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     @Override
     public PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
-            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+            String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String money, String acreage, int designerOrderState, String optionUserName,
             String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司缺失");
+        }
+        if (orderTpye == null) {
+            throw new RuntimeException("请输入订单类别");
         }
         // 模糊查询用户信息
         List<String> queryProjectNo = queryProjectNos(userMsg);
@@ -196,6 +198,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<String> projectNos = getProjectNos(projectNo, orderSource, money, queryProjectNo);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
+        if(orderTpye == 1){
+            orderExampleCriteria.andOrderStageEqualTo(DesignStateEnum.STATE_10.getState()).andCompanyIdEqualTo(companyId);
+        }
+        if(orderTpye == 2){
+            orderExampleCriteria.andOrderStageGreaterThan(DesignStateEnum.STATE_30.getState());
+        }
         if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
         }

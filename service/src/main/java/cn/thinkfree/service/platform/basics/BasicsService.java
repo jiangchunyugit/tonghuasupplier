@@ -104,4 +104,8 @@ public interface BasicsService {
      * @return
      */
     List<Map<String, String>> pua(int type, String parentCode);
+
+    Map<String,String> getProvince();
+    Map<String,String> getCity();
+    Map<String,String> getArea();
 }
