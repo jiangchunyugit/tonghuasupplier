@@ -400,7 +400,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<BasicsData> countryCodes = basicsService.countryType();
         Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
         Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
-        EmployeeMsgVo msgVo = getEmployeeMsgVo(userRoleSet.getRoleName(),cardTypeMap,countryCodeMap,employeeMsg,userMsgVo);
+        Map<String,String> provinceMap = basicsService.getProvince();
+        Map<String,String> cityMap = basicsService.getCity();
+        Map<String,String> areaMap = basicsService.getArea();
+        EmployeeMsgVo msgVo = getEmployeeMsgVo(userRoleSet.getRoleName(),cardTypeMap,countryCodeMap,employeeMsg,userMsgVo, provinceMap, cityMap, areaMap);
         return msgVo;
     }
 
@@ -457,11 +460,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<BasicsData> countryCodes = basicsService.countryType();
         Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
         Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
+        Map<String,String> provinceMap = basicsService.getProvince();
+        Map<String,String> cityMap = basicsService.getCity();
+        Map<String,String> areaMap = basicsService.getArea();
         List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
         for (EmployeeMsg employeeMsg : msgs) {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
-            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -510,11 +516,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<BasicsData> countryCodes = basicsService.countryType();
         Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
         Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
+        Map<String,String> provinceMap = basicsService.getProvince();
+        Map<String,String> cityMap = basicsService.getCity();
+        Map<String,String> areaMap = basicsService.getArea();
         List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
         for (EmployeeMsg employeeMsg : msgs) {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
-            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -628,10 +637,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
         Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
         List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        Map<String,String> provinceMap = basicsService.getProvince();
+        Map<String,String> cityMap = basicsService.getCity();
+        Map<String,String> areaMap = basicsService.getArea();
         for (EmployeeMsg employeeMsg : msgs) {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
-            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -672,10 +684,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
         Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
         List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
+        Map<String,String> provinceMap = basicsService.getProvince();
+        Map<String,String> cityMap = basicsService.getCity();
+        Map<String,String> areaMap = basicsService.getArea();
         for (EmployeeMsg employeeMsg : msgs) {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
-            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo);
+            EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -687,7 +702,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private EmployeeMsgVo getEmployeeMsgVo(String roleName, Map<String, BasicsData> cardTypeMap, Map<String, BasicsData> countryCodeMap,
-                                           EmployeeMsg employeeMsg, UserMsgVo userMsgVo) {
+                                           EmployeeMsg employeeMsg, UserMsgVo userMsgVo,Map<String,String> provinceMap,Map<String,String> cityMap,Map<String,String> areaMap) {
         EmployeeMsgVo msgVo = new EmployeeMsgVo();
         msgVo.setAuthState(employeeMsg.getAuthState());
         if (userMsgVo != null) {
@@ -717,10 +732,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         msgVo.setCertificatePhotoUrl3(employeeMsg.getCertificatePhotoUrl3());
         msgVo.setCertificateType(employeeMsg.getCertificateType() + "");
         msgVo.setCountryCode(employeeMsg.getCountryCode());
-        msgVo.setSex(employeeMsg.getSex() + "");
+        if(employeeMsg.getSex() != null){
+            msgVo.setSex(employeeMsg.getSex() + "");
+        }else{
+            msgVo.setSex("--");
+        }
         msgVo.setEmail(employeeMsg.getEmail());
-        msgVo.setWorkTime(employeeMsg.getWorkingTime() + "");
-        msgVo.setAddress(employeeMsg.getProvince() + "," + employeeMsg.getCity());
+        if(employeeMsg.getWorkingTime() != null){
+            msgVo.setWorkTime(employeeMsg.getWorkingTime() + "");
+        }else{
+            msgVo.setWorkTime("--");
+        }
+        msgVo.setAddress(provinceMap.get(employeeMsg.getProvince()) + "," + cityMap.get(employeeMsg.getCity()) + "," + areaMap.get(employeeMsg.getArea()));
         if(cardType != null){
             msgVo.setCertificateTypeName(cardType.getBasicsName());
         }
