@@ -6,6 +6,8 @@ import cn.thinkfree.database.mapper.DesignerMsgMapper;
 import cn.thinkfree.database.mapper.DesignerStyleRelationMapper;
 import cn.thinkfree.database.mapper.EmployeeMsgMapper;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.DesignerDataVo;
+import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editSex(String userId, Integer sex) {
+        if (sex == null) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesigner(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -64,6 +69,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editBirthday(String userId, String birthday) {
+        if (birthday.trim().isEmpty()) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesigner(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -91,6 +99,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editAdress(String userId, String province, String city, String area) {
+        if (province.trim().isEmpty() || city.trim().isEmpty() || area.trim().isEmpty()) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesigner(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -117,6 +128,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editYears(String userId, Integer years) {
+        if (years == null) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesigner(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -141,6 +155,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editVolumeRoomMoney(String userId, String volumeRoomMoney) {
+        if (volumeRoomMoney.trim().isEmpty()) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesignerDetails(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -166,6 +183,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editDesignFee(String userId, String moneyLow, String moneyHigh) {
+        if (moneyLow.trim().isEmpty() || moneyHigh.trim().isEmpty()) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesignerDetails(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -195,6 +215,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
      */
     @Override
     public MyRespBundle editPersonalProfile(String userId, String personalProfile) {
+        if (personalProfile.trim().isEmpty()) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesignerDetails(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -221,6 +244,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
      */
     @Override
     public MyRespBundle editCertificatePrize(String userId, String certificatePrize) {
+        if (certificatePrize.trim().isEmpty()) {
+            return RespData.error("请上传参数");
+        }
         Map<String, Object> map = checkDesignerDetails(userId);
         if (!(boolean) map.get("result")) {
             return RespData.error(map.get("message").toString());
@@ -248,6 +274,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editDesignerStyle(String userId, List<String> styleCodes) {
+        if (styleCodes.size() == 0) {
+            return RespData.error("请上传参数");
+        }
         DesignerStyleRelationExample example = new DesignerStyleRelationExample();
         DesignerStyleRelationExample.Criteria criteria = example.createCriteria();
         criteria.andDesignerIdEqualTo(userId);
@@ -307,5 +336,61 @@ public class DesignerDataServiceImpl implements DesignerDataService {
         map.put("result", true);
         map.put("example", example);
         return map;
+    }
+
+    /**
+     * 获取设计师个人资料
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public MyRespBundle<DesignerDataVo> getData(String userId) {
+        DesignerDataVo designerDataVo = new DesignerDataVo();
+        //获取员工表信息
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectForUserId(userId);
+        if (employeeMsgs.size() == 0) {
+            return RespData.error("查无此员工");
+        }
+        EmployeeMsg employeeMsg = employeeMsgs.get(0);
+        if (employeeMsg.getSex() != null) {
+            designerDataVo.setSex(employeeMsg.getSex());
+        }
+        if (employeeMsg.getBindDate() != null) {
+            designerDataVo.setBirthday(DateUtil.getStringDate(employeeMsg.getBindDate(), "yyyy-MM-dd"));
+        }
+        if (employeeMsg.getProvince() != null) {
+            designerDataVo.setProvince(employeeMsg.getProvince());
+        }
+        if (employeeMsg.getCity() != null) {
+            designerDataVo.setCity(employeeMsg.getCity());
+        }
+        if (employeeMsg.getArea() != null) {
+            designerDataVo.setArea(employeeMsg.getArea());
+        }
+        //获取设计师信息
+        DesignerMsgExample example1 = new DesignerMsgExample();
+        DesignerMsgExample.Criteria criteria1 = example1.createCriteria();
+        criteria1.andUserIdEqualTo(userId);
+        List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(example1);
+        if (designerMsgs.size() > 0) {
+            DesignerMsg designerMsg = designerMsgs.get(0);
+            if (designerMsg.getVolumeRoomMoney() != null) {
+                designerDataVo.setVolumeRoomMoney(designerMsg.getVolumeRoomMoney().toString());
+            }
+            if (designerMsg.getDesignerMoneyLow() != null) {
+                designerDataVo.setMoneyLow(designerMsg.getDesignerMoneyLow().toString());
+            }
+            if (designerMsg.getDesignerMoneyHigh() != null) {
+                designerDataVo.setMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
+            }
+            if (designerMsg.getPersonalProfile() != null) {
+                designerDataVo.setPersonalProfile(designerMsg.getPersonalProfile());
+            }
+            if (designerMsg.getCertificatePrize() != null) {
+                designerDataVo.setCertificatePrize(designerMsg.getCertificatePrize());
+            }
+        }
+        return RespData.success(designerDataVo);
     }
 }

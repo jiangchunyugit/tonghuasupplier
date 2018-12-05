@@ -1,6 +1,7 @@
 package cn.thinkfree.service.designerdata;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.vo.DesignerDataVo;
 
 import java.util.List;
 
@@ -82,4 +83,11 @@ public interface DesignerDataService {
      * @return
      */
     MyRespBundle editDesignerStyle(String userId, List<String> styleCodes);
+
+    /**
+     * 获取设计师个人资料
+     * @param userId
+     * @return
+     */
+    MyRespBundle<DesignerDataVo> getData(String userId);
 }

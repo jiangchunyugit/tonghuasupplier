@@ -582,4 +582,36 @@
     WHERE
         em.user_id =#{ userId }
   </select>
+
+  <select id="selectForUserId" resultType="cn.thinkfree.database.model.EmployeeMsg">
+    SELECT
+        user_id,
+        company_id,
+        certificate,
+        real_name,
+        certificate_type,
+        auth_state,
+        role_code,
+        sex,
+        pr.province_name province,
+        ci.city_name city,
+        ar.area_name area,
+        email,
+        apply_time,
+        employee_state,
+        leavedate,
+        bind_date,
+        working_time,
+        employee_apply_state,
+        certificate_photo_url1,
+        certificate_photo_url2,
+        certificate_photo_url3,
+        country_code,
+        birthday
+    FROM
+        employee_msg em
+    LEFT JOIN province pr ON em.province = pr.province_code
+    LEFT JOIN city ci ON em.city = ci.city_code
+    LEFT JOIN area ar ON em.area = ar.area_code
+  </select>
 </mapper>
