@@ -5,8 +5,10 @@ import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
+import cn.thinkfree.database.vo.PredatingVo;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -89,11 +91,20 @@ public interface ReviewDetailsService {
     MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason);
 
     /**
-     * 获取上海报价信息
+     * 获取上海报价信息(预交底)
+     * @param projectNo
+     * @param predatingTime
+     * @param remark
+     * @return
+     */
+    MyRespBundle getShangHaiPriceDetail(String projectNo, Date predatingTime, String remark);
+
+    /**
+     * 设计师发起预交底详情页---->app使用
      * @param projectNo
      * @return
      */
-    MyRespBundle getShangHaiPriceDetail(String projectNo);
+    MyRespBundle<PredatingVo> queryPredatingDetails(String projectNo);
 
 
 }
