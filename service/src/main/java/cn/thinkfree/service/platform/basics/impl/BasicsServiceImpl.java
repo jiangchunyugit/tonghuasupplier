@@ -8,6 +8,7 @@ import cn.thinkfree.service.platform.vo.CardTypeVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.utils.HttpUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
+import cn.thinkfree.service.utils.ReflectUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -212,5 +213,23 @@ public class BasicsServiceImpl implements BasicsService {
             }
         }
         return listMap;
+    }
+
+    @Override
+    public Map<String, String> getProvince() {
+        List<Province> provinces = provinceMapper.selectByExample(new ProvinceExample());
+        return ReflectUtils.listToMap(provinces,"provinceCode","provinceName");
+    }
+
+    @Override
+    public Map<String, String> getCity() {
+        List<City> cities = cityMapper.selectByExample(new CityExample());
+        return ReflectUtils.listToMap(cities,"cityCode","cityName");
+    }
+
+    @Override
+    public Map<String, String> getArea() {
+        List<Area> areas = areaMapper.selectByExample(new AreaExample());
+        return ReflectUtils.listToMap(areas,"areaCode","areaName");
     }
 }
