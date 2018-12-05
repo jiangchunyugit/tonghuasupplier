@@ -526,16 +526,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex) {
+    public PageVo<List<EmployeeApplyVo>> waitDealList(String searchKey, String companyId, int companyType, int pageSize, int pageIndex) {
+        List<String> userIds = new ArrayList<>();
         EmployeeApplyLogExample applyLogExample = new EmployeeApplyLogExample();
-        applyLogExample.createCriteria().andCompanyIdEqualTo(companyId);
+        EmployeeApplyLogExample.Criteria criteria = applyLogExample.createCriteria();
+        criteria.andCompanyIdEqualTo(companyId);
+        if(searchKey != null && searchKey.length() > 0){
+            List<UserMsgVo> msgVos = userCenterService.queryUserMsg(searchKey);
+            if(msgVos != null){
+                userIds.addAll(ReflectUtils.getList(msgVos,"staffId"));
+            }
+            EmployeeMsgExample msgExample = new EmployeeMsgExample();
+            msgExample.or().andRealNameLike("%" + searchKey + "%");
+            msgExample.or().andCertificateLike("%" + searchKey + "%");
+            List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+            if(!employeeMsgs.isEmpty()){
+                userIds.addAll(ReflectUtils.getList(employeeMsgs,"userId"));
+            }
+            criteria.andUserIdIn(userIds);
+        }
         long total = applyLogMapper.countByExample(applyLogExample);
         PageHelper.startPage(pageIndex, pageSize);
         List<EmployeeApplyLog> employeeApplyLogs = applyLogMapper.selectByExample(applyLogExample);
         if(employeeApplyLogs.isEmpty()){
             return PageVo.def(new ArrayList<>());
         }
-        List<String> userIds = ReflectUtils.getList(employeeApplyLogs,"userId");
+        userIds.clear();
+        userIds = ReflectUtils.getList(employeeApplyLogs,"userId");
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdIn(userIds);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);

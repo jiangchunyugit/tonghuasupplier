@@ -35,11 +35,12 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
      * @param pageNum
      * @param pageSize
      * @param cityName
+     * @param orderType
      * @return
      */
     @Override
-    public PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName) {
-        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName);
+    public PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName, int orderType) {
+        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName, orderType);
         return pageInfo;
     }
 

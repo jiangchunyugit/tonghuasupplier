@@ -199,10 +199,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
         if(orderTpye == 1){
-            orderExampleCriteria.andOrderStageEqualTo(DesignStateEnum.STATE_10.getState()).andCompanyIdEqualTo(companyId);
+            orderExampleCriteria.andOrderStageLessThan(DesignStateEnum.STATE_30.getState());
         }
         if(orderTpye == 2){
-            orderExampleCriteria.andOrderStageGreaterThan(DesignStateEnum.STATE_30.getState());
+            orderExampleCriteria.andOrderStageGreaterThanOrEqualTo(DesignStateEnum.STATE_30.getState());
         }
         if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
@@ -605,6 +605,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Override
     public void refuseOrder(String projectNo, String companyId, String reason, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(reason)){
+            throw new RuntimeException("必须填写不接单原因");
+        }
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         if (!designerOrder.getCompanyId().equals(companyId)) {

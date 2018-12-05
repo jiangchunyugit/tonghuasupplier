@@ -281,12 +281,13 @@ public class EmployeeController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "waitDealList", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<EmployeeApplyVo>>> waitDealList(
+            @ApiParam(name = "searchKey", required = false, value = "搜索关键字（证件号，姓名，手机号）") @RequestParam(name = "searchKey", required = false) String searchKey,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "companyType", required = false, value = "公司类型，1装饰，2设计") @RequestParam(name = "companyType", required = false) int companyType,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
-            PageVo<List<EmployeeApplyVo>> pageVo = employeeService.waitDealList(companyId, companyType, pageSize, pageIndex);
+            PageVo<List<EmployeeApplyVo>> pageVo = employeeService.waitDealList(searchKey, companyId, companyType, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             logger.error("e:", e);

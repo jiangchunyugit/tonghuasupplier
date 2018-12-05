@@ -773,7 +773,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public MyRespBundle<ConstructionOrderCommonVo> getConstructionSiteList(int pageNum, int pageSize, String cityName) {
-        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName);
+        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName, 2);
         ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
         constructionOrderCommonVo.setCountPageNum(pageInfo.getSize());
         constructionOrderCommonVo.setOrderList(pageInfo.getList());

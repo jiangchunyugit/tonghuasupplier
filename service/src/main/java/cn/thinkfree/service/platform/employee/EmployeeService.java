@@ -161,11 +161,12 @@ public interface EmployeeService {
     /**
      * 查询员工申请记录表
      *
+     * @param searchKey   搜索关键字
      * @param companyId   公司ID
      * @param companyType 公司类型，1装饰，2设计
      * @return
      */
-    PageVo<List<EmployeeApplyVo>> waitDealList(String companyId, int companyType, int pageSize, int pageIndex);
+    PageVo<List<EmployeeApplyVo>> waitDealList(String searchKey, String companyId, int companyType, int pageSize, int pageIndex);
 
     /**
      * 查询提交了实名认证信息的用户
