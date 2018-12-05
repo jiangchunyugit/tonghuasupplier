@@ -616,6 +616,13 @@ public class AccountController extends AbsBaseController {
         result.put("name",userVO.getName());
         result.put("first",userService.isFirstLogin());
         result.put("companyId", userVO.getCompanyID());
+        if(userVO.getCityBranch() != null){
+            result.put("branchName",userVO.getCityBranch().getCityBranchName());
+        }else if(userVO.getBranchCompany() != null){
+            result.put("branchName",userVO.getBranchCompany().getCompanyName());
+        }else{
+            result.put("branchName","");
+        }
         if(userVO.getCompanyInfo() != null){
             result.put("auditStatus", userVO.getCompanyInfo().getAuditStatus());
         }
