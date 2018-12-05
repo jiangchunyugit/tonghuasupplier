@@ -84,7 +84,7 @@
         dor.status AS status,
         p.project_no AS orderNo,
         p.order_source AS orderSource,
-        p.province AS orderAddress,
+        pr.province_name AS orderAddress,
         po.contract_number AS contractNo,
         po.sign_time AS signingTime,
         po.audit_type AS auditType
@@ -92,6 +92,7 @@
         designer_order dor
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
+        LEFT JOIN province pr ON pr.province_code = p.province
         WHERE
         dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
         <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
@@ -104,7 +105,7 @@
             and p.order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
         </if>
         <if test="designContractVO.orderAddress!=null and designContractVO.orderAddress!=''">
-            and p.province like CONCAT('%',#{designContractVO.orderAddress},'%' )
+            and pr.province_name like CONCAT('%',#{designContractVO.orderAddress},'%' )
         </if>
         <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
             and po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
@@ -137,6 +138,7 @@
         designer_order dor
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
+        LEFT JOIN province pr ON pr.province_code = p.province
         WHERE
         dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
         <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
@@ -149,7 +151,7 @@
             and p.order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
         </if>
         <if test="designContractVO.orderAddress!=null and designContractVO.orderAddress!=''">
-            and p.province like CONCAT('%',#{designContractVO.orderAddress},'%' )
+            and pr.province_name like CONCAT('%',#{designContractVO.orderAddress},'%' )
         </if>
         <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
             and po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
