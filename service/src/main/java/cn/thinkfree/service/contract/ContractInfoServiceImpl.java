@@ -339,7 +339,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					firstMoney = fullMoney;
 				}else{
 					for (int i = 0; i < childList.size(); i++) {
-						if(childList.get(i).getcType().equals("1")){
+						if("1".equals(childList.get(i).getcType())){
 							firstMoney = 	childList.get(i).getCostValue();
 							break;
 						}
@@ -361,7 +361,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					firstMoney = fullMoney;
 				}else{
 					for (int i = 0; i < childList.size(); i++) {
-						if(childList.get(i).getcType().equals("1")){
+						if("1".equals(childList.get(i).getcType())){
 							firstMoney = 	childList.get(i).getCostValue();
 							break;
 						}
