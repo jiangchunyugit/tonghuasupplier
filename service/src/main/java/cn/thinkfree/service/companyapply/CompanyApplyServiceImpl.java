@@ -17,6 +17,7 @@ import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
+import cn.thinkfree.service.utils.AccountHelper;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
@@ -225,6 +226,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
             return map;
         }
+
+        //todo 登陆密码级别低需要修改
+//        String password = AccountHelper.createUserPassWord();
+        String password = "123456";
+        pcApplyInfoSEO.setPassword(password);
+
         //公司id
         String companyId = pcApplyInfoSEO.getCompanyId();
 
@@ -266,9 +273,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         }
 
         //插入审批表
-        String auditPersion = userVO == null ? "" : userVO.getUsername();
-        String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
-        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
+        String auditPersion = userVO == null ? "" : userVO.getName();
+        String auditAccount = userVO == null ? "" : userVO.getUsername();
+        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, SysConstants.YesOrNo.YES.toString(), date,
                 companyId, "", "", date, auditAccount);
         int line = pcAuditInfoMapper.insertSelective(record);
 
@@ -348,7 +355,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
         JSONObject object = new JSONObject();
         object.put("登录账号", pcApplyInfoSEO.getEmail());
-        object.put("默认密码", "123456");
+        object.put("默认密码", pcApplyInfoSEO.getPassword());
         RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), object.toJSONString());
         if (!rs.isComplete()) {
             throw new RuntimeException("添加账号发送短信失败");
@@ -366,9 +373,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         userRegister.setUpdateTime(date);
         userRegister.setType(UserRegisterType.Enterprise.shortVal());
         MultipleMd5 md5 = new MultipleMd5();
-        if (pcApplyInfoSEO.getPassword() == null) {
-            pcApplyInfoSEO.setPassword("123456");
-        }
         userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
 
         userRegister.setPhone(pcApplyInfoSEO.getEmail());

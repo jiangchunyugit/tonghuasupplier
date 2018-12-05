@@ -31,7 +31,7 @@
 		left join area ar on p.area_code = ar.area_code
 		left join user_role_set se on p.role_id = se.role_code
       <where>
-            and  (p.audit_status = '2' or p.audit_status = '3' or p.audit_status = '4' or p.audit_status = '5' or  p.audit_status = '7' )
+            and  (p.audit_status = '2' or p.audit_status = '3' or p.audit_status = '4' or p.audit_status = '5' or  p.audit_status = '7' or  p.audit_status = '8' )
             and c.contract_status !='0'
            
           <if test="contractNumber != null and contractNumber !='' ">
