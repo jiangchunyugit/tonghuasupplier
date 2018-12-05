@@ -83,14 +83,14 @@
         dor.order_no AS sunOrderNo,
         dor.status AS status,
         p.project_no AS orderNo,
-        P .order_source AS orderSource,
-        P .province AS orderAddress,
+        p.order_source AS orderSource,
+        p.province AS orderAddress,
         po.contract_number AS contractNo,
         po.sign_time AS signingTime,
         po.audit_type AS auditType
         FROM
         designer_order dor
-        LEFT JOIN project P ON P .project_no = dor.project_no
+        LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         WHERE
         dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
@@ -101,10 +101,10 @@
             and p.project_no like CONCAT('%',#{designContractVO.orderNo},'%' )
         </if>
         <if test="designContractVO.orderSource!=null and designContractVO.orderSource!=''">
-            and P .order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
+            and p.order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
         </if>
         <if test="designContractVO.orderAddress!=null and designContractVO.orderAddress!=''">
-            and P .province like CONCAT('%',#{designContractVO.orderAddress},'%' )
+            and p.province like CONCAT('%',#{designContractVO.orderAddress},'%' )
         </if>
         <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
             and po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
@@ -135,7 +135,7 @@
         count(1)
         FROM
         designer_order dor
-        LEFT JOIN project P ON P .project_no = dor.project_no
+        LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         WHERE
         dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
@@ -146,13 +146,13 @@
             and p.project_no like CONCAT('%',#{designContractVO.orderNo},'%' )
         </if>
         <if test="designContractVO.orderSource!=null and designContractVO.orderSource!=''">
-            and P .order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
+            and p.order_source like CONCAT('%',#{designContractVO.orderSource},'%' )
         </if>
         <if test="designContractVO.orderAddress!=null and designContractVO.orderAddress!=''">
-            and P .province like CONCAT('%',#{designContractVO.orderAddress},'%' )
+            and p.province like CONCAT('%',#{designContractVO.orderAddress},'%' )
         </if>
         <if test="designContractVO.auditType!=null and designContractVO.auditType!=''">
-            and P .po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
+            and po.audit_type like CONCAT('%',#{designContractVO.auditType},'%' )
         </if>
         <if test="designContractVO.startSign != null and designContractVO.startSign != ''">AND po.sign_time <![CDATA[>=]]> #{designContractVO.startSign}</if>
         <if test="designContractVO.endSign != null and designContractVO.endSign != ''">AND po.sign_time <![CDATA[<=]]>#{designContractVO.endSign}</if>
