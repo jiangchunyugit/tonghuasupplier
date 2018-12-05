@@ -22,10 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -121,11 +118,7 @@ public class DesignerServiceImpl implements DesignerService {
         long total = employeeMsgMapper.countByExample(employeeMsgExample);
         PageHelper.startPage(pageIndex, pageSize);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
-        userIds = ReflectUtils.getList(employeeMsgs, "userId");
-        DesignerMsgExample msgExample = new DesignerMsgExample();
-        msgExample.createCriteria().andUserIdIn(userIds);
-        List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
-        Map<String,DesignerMsg> designerMsgMap = ReflectUtils.listToMap(designerMsgs,"userId");
+        Map<String, DesignerMsg> designerMsgMap = getStringDesignerMsgMap(employeeMsgs);
         List<DesignerMsgListVo> msgVos = new ArrayList<>();
         for (EmployeeMsg employeeMsg : employeeMsgs) {
             DesignerMsgListVo msgVo = new DesignerMsgListVo();
@@ -152,6 +145,17 @@ public class DesignerServiceImpl implements DesignerService {
         msgVo.setData(msgVos);
         msgVo.setPageIndex(pageIndex);
         return msgVo;
+    }
+
+    private Map<String, DesignerMsg> getStringDesignerMsgMap(List<EmployeeMsg> employeeMsgs) {
+        if(employeeMsgs == null || employeeMsgs.isEmpty()){
+            return new HashMap<>();
+        }
+        List<String> userIds = ReflectUtils.getList(employeeMsgs, "userId");
+        DesignerMsgExample msgExample = new DesignerMsgExample();
+        msgExample.createCriteria().andUserIdIn(userIds);
+        List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
+        return ReflectUtils.listToMap(designerMsgs,"userId");
     }
 
     private List<String> getDesignerMsgs(String level, String identity, String source, String tag, String sort) {
