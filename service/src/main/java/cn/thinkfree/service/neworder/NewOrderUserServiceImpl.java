@@ -550,7 +550,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             for (DesignContractVO vo : voList) {
                 //业主
                 ProjectExample projectExample = new ProjectExample();
-                projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+                projectExample.createCriteria().andProjectNoEqualTo(vo.getOrderNo());
                 List<Project> projects = projectMapper.selectByExample(projectExample);
                 if (projects.size() > 0) {
                     for (Project pr : projects) {
@@ -615,7 +615,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             for (ConstructionContractVO vo : voList) {
                 //业主
                 ProjectExample projectExample = new ProjectExample();
-                projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+                projectExample.createCriteria().andProjectNoEqualTo(vo.getOrderNo());
                 List<Project> projects = projectMapper.selectByExample(projectExample);
                 if (projects.size() > 0) {
                     for (Project pr : projects) {
