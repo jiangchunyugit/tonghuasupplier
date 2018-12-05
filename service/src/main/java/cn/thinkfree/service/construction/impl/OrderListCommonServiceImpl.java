@@ -98,6 +98,9 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      */
     @Override
     public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName, int orderType) {
+        if(pageSize < 5){
+            pageSize = 5;
+        }
         PageHelper.startPage(pageNum, pageSize);
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
@@ -243,6 +246,9 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      */
     @Override
     public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo, int pageNum, int pageSize) {
+        if(pageSize < 5){
+            pageSize = 5;
+        }
         if (StringUtils.isBlank(companyNo)) {
             RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
