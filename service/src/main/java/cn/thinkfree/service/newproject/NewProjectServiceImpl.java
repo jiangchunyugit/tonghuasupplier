@@ -19,6 +19,7 @@ import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
@@ -170,6 +171,110 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
         }
         return RespData.success(pageInfo);
+    }
+
+    /**
+     * C/B-项目列表--施工端
+     *
+     * @param pageSize
+     * @param pageNum
+     * @param userId
+     * @param inputData
+     * @return
+     */
+    @Override
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(int pageSize, int pageNum, String userId, String inputData) {
+        if (userId.trim().isEmpty()) {
+            return RespData.error("参数userId不可为空");
+        }
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andUserIdEqualTo(userId);
+        List<OrderUser> allOrders = orderUserMapper.selectByExample(userExample);
+        if (inputData.trim().isEmpty()) {
+            PageHelper.startPage(pageNum, pageSize);
+        }
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() == 0) {
+            return RespData.success(new PageVo<>(), "此用户尚未分配项目");
+        }
+        List<String> list = new ArrayList<>();
+        for (OrderUser orderUser : orderUsers) {
+            list.add(orderUser.getProjectNo());
+        }
+        ConstructionOrderExample orderExample = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria orderCriteria = orderExample.createCriteria();
+        orderCriteria.andProjectNoIn(list);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(orderExample);
+        if (constructionOrders.size() == 0) {
+            return RespData.error("暂无此项目");
+        }
+        List<ConstructionProjectVo> constructionProjectVos = new ArrayList<>();
+        for (ConstructionOrder constructionOrder : constructionOrders) {
+            ConstructionProjectVo constructionProjectVo = new ConstructionProjectVo();
+            //项目分类
+
+            constructionProjectVo.setProjectNo(constructionOrder.getProjectNo());
+            constructionProjectVo.setOrderNo(constructionOrder.getOrderNo());
+            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm;ss"));
+            constructionProjectVo.setType(constructionOrder.getType());
+            constructionProjectVo.setStage(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
+            //装修地址
+            ProjectExample projectExample = new ProjectExample();
+            ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
+            projectCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+            projectCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+            if (projects.size() != 0) {
+                constructionProjectVo.setAddress(projects.get(0).getAddressDetail());
+                //业主信息
+                Map user = new HashMap();
+                try {
+                    user = newOrderUserService.getUserName(projects.get(0).getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.info("调取人员信息失败!");
+                }
+                constructionProjectVo.setOwner(user.get("nickName") == null ? "" : user.get("nickName").toString());
+                constructionProjectVo.setPhone(user.get("phone") == null ? "" : user.get("phone").toString());
+            }
+            //3d图片地址
+            ProjectDataExample dataExample = new ProjectDataExample();
+            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+            dataCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+            dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            dataCriteria.andTypeEqualTo(ProjectDataStatus.DESIGN_DATA.getValue());
+            List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
+            if (projectDatas.size() != 0) {
+                constructionProjectVo.setThirdUrl(projectDatas.get(0).getPhotoPanoramaUrl());
+            }
+            constructionProjectVos.add(constructionProjectVo);
+        }
+        PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageNum);
+        //搜索
+        if (!inputData.trim().isEmpty()) {
+            List<ConstructionProjectVo> playProjects = new ArrayList<>();
+            List<ConstructionProjectVo> allProjects = new ArrayList<>();
+            Integer count = 0;
+            for (ConstructionProjectVo projectVo : constructionProjectVos) {
+                if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
+                    if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                        playProjects.add(projectVo);
+                    }
+                    allProjects.add(projectVo);
+                    count++;
+                }
+            }
+
+            pageVo.setTotal((long) allProjects.size());
+            pageVo.setData(playProjects);
+        } else {
+            pageVo.setTotal((long) allOrders.size());
+            pageVo.setData(constructionProjectVos);
+        }
+        return RespData.success(pageVo);
     }
 
     /**
@@ -378,6 +483,13 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("项目不存在!!");
         }
         Project project = projects.get(0);
+        //添加进度展示
+        if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
+            //添加进度信息
+            projectTitleVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
+        } else {
+            projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
+        }
         projectTitleVo.setProjectStartTime(project.getPlanStartTime());
         projectTitleVo.setProjectEndTime(project.getPlanEndTime());
         projectTitleVo.setAddress(project.getAddressDetail());

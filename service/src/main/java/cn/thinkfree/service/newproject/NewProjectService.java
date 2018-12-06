@@ -5,6 +5,7 @@ import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.model.OrderApplyRefund;
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.pcvo.PcProjectDetailVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -130,4 +131,15 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId);
+
+    /**
+     * C/B-项目列表--施工端
+     *
+     * @param pageSize
+     * @param pageNum
+     * @param userId
+     * @param inputData
+     * @return
+     */
+    MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(int pageSize, int pageNum, String userId, String inputData);
 }

@@ -5,6 +5,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.newproject.NewProjectService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +33,16 @@ public class AppProjectController {
             @ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO) {
         MyRespBundle<PageInfo<ProjectVo>> page = newProjectService.getAllProject(appProjectSEO);
         return page;
+    }
+
+    @RequestMapping(value = "getConstructionAllProject", method = RequestMethod.POST)
+    @ApiOperation(value = "项目列表--施工端")
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") @ApiParam(name = "pageSize", required = false, value = "每页条数") int pageSize,
+            @RequestParam(name = "pageNum", required = false, defaultValue = "1") @ApiParam(name = "pageNum", required = false, value = "第几页") int pageNum,
+            @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "inputData", required = false) @ApiParam(name = "inputData", value = "筛选输入值", required = false) String inputData) {
+        return newProjectService.getConstructionAllProject(pageSize, pageNum, userId, inputData);
     }
 
     @RequestMapping(value = "getProjectNum", method = RequestMethod.POST)

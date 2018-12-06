@@ -357,7 +357,7 @@ public class DesignerDataServiceImpl implements DesignerDataService {
             designerDataVo.setSex(employeeMsg.getSex());
         }
         if (employeeMsg.getBindDate() != null) {
-            designerDataVo.setBirthday(DateUtil.getStringDate(employeeMsg.getBindDate(), "yyyy-MM-dd"));
+            designerDataVo.setBirthday(DateUtil.getStringDate(employeeMsg.getBirthday(), "yyyy-MM-dd"));
         }
         if (employeeMsg.getProvince() != null) {
             designerDataVo.setProvince(employeeMsg.getProvince());

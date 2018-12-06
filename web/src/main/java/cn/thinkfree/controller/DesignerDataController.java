@@ -35,7 +35,7 @@ public class DesignerDataController {
             @RequestParam(value = "city", required = false) @ApiParam(name = "city", value = "城市编码", required = false) String city,
             @RequestParam(value = "area", required = false) @ApiParam(name = "area", value = "地区编码", required = false) String area,
             @RequestParam(value = "years", required = false) @ApiParam(name = "years", value = "从业年限", required = false) Integer years,
-            @RequestParam(value = "volumeRoomMoney", required = false) @ApiParam(name = "volumeRoomMoney", value = "", required = false) String volumeRoomMoney,
+            @RequestParam(value = "volumeRoomMoney", required = false) @ApiParam(name = "volumeRoomMoney", value = "量房费", required = false) String volumeRoomMoney,
             @RequestParam(value = "moneyLow", required = false) @ApiParam(name = "moneyLow", value = "设计费用最低(单位：元/m2)", required = false) String moneyLow,
             @RequestParam(value = "moneyHigh", required = false) @ApiParam(name = "moneyHigh", value = "设计费用最高(单位：元/m2)", required = false) String moneyHigh,
             @RequestParam(value = "styleCode", required = false) @ApiParam(name = "styleCode", value = "风格编码", required = false) List<String> styleCodes,
