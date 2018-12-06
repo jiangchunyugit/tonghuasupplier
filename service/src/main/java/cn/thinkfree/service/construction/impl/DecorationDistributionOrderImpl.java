@@ -168,37 +168,34 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
      * @return
      */
     @Override
-    public MyRespBundle<String> appointWorker(List<Map<String,String>> workerInfo) {
+    public void appointWorker(List<Map<String,String>> workerInfo) {
 
         Set<String> setOrderNo = new LinkedHashSet<>();
         Set<String> setProjectNO = new LinkedHashSet<>();
 
         for (Map<String,String> map1 : workerInfo) {
             if (StringUtils.isBlank(map1.get("orderNo"))) {
-                return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+                throw new RuntimeException("订单编号不能为空");
             }
             if (StringUtils.isBlank(map1.get("projectNo"))) {
-                return RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+                throw new RuntimeException("项目编号不能为空");
             }
             if (StringUtils.isBlank(map1.get("workerNo"))) {
-                return RespData.error(ResultMessage.ERROR.code, "员工编号不能为空");
+                throw new RuntimeException("员工编号不能为空");
             }
             if (StringUtils.isBlank(map1.get("roleName"))) {
-                return RespData.error(ResultMessage.ERROR.code, "角色名称不能为空");
+                throw new RuntimeException("角色名称不能为空");
             }
             setOrderNo.add(map1.get("orderNo"));
             setProjectNO.add(map1.get("projectNo"));
         }
 
         if (setOrderNo.size() != 1 && setProjectNO.size() != 1){
-            return RespData.error(ResultMessage.ERROR.code, "出现不同订单编号或项目编号");
+            throw new RuntimeException("出现不同订单编号或项目编号");
         }
 
         // 改变订单状态
-        MyRespBundle<String> r = constructionStateService.constructionState(workerInfo.get(0).get("orderNo"), 1);
-        if (!ResultMessage.SUCCESS.code.equals(r.getCode())) {
-            return RespData.error(ResultMessage.ERROR.code, "当前状态不能分配施工人员");
-        }
+        constructionStateService.constructionState(workerInfo.get(0).get("orderNo"), 1);
 
         for (Map<String,String> map : workerInfo) {
 
@@ -222,8 +219,6 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
             }
 
         }
-
-        return RespData.success();
     }
 
 }

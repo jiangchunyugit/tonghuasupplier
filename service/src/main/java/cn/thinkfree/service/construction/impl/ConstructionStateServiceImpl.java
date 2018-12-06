@@ -22,7 +22,7 @@ import java.util.*;
  * 施工状态
  */
 @Service
-@Transactional(rollbackFor = RuntimeException.class)
+@Transactional(rollbackFor = Exception.class)
 public class ConstructionStateServiceImpl implements ConstructionStateService {
 
     @Autowired
@@ -104,9 +104,10 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
      * 1派单给服务人员 2施工报价完成  5确认线下签约完成（自动创建工地项目）
      */
     @Override
-    public MyRespBundle<String> constructionState(String orderNo, int type) {
+    @Transactional(rollbackFor = Exception.class)
+    public void constructionState(String orderNo, int type) {
         if (StringUtils.isBlank(orderNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+            throw new RuntimeException("订单编号不能为空");
         }
         Integer stage = null;
         List<ConstructionStateEnum> nextStateCode = new ArrayList<>();
@@ -128,11 +129,10 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         if (stageCode.equals(stage)) {
-            if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
-                return RespData.success();
-            }
+            commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState());
+        }else{
+            throw new RuntimeException("操作失败-请稍后重试");
         }
-        return RespData.error(ResultMessage.ERROR.code, "操作失败-请稍后重试");
     }
 
     /**

@@ -35,7 +35,7 @@ public interface ConstructionStateService {
      * 装饰公司
      * 1派单给服务人员 2施工报价完成 4合同录入 5确认线下签约完成（自动创建工地项目）
      */
-    MyRespBundle<String> constructionState(String orderNo, int type);
+    void constructionState(String orderNo, int type);
 
     /**
      * 装饰公司

@@ -10,14 +10,7 @@ import java.util.List;
 
 public interface CloudService {
 
-    /**
-     * 项目上线通知
-     *
-     * @param projectNo 项目编码
-     * @param status    项目状态
-     * @return
-     */
-    RemoteResult<String> projectUpOnline(String projectNo, Short status);
+
 
     /**
      * 发送短信 激活码
@@ -42,7 +35,7 @@ public interface CloudService {
      *
      * @param fileName
      */
-    public String uploadFile(String fileName);
+    String uploadFile(String fileName);
 
     /**
      * 同步公司信息

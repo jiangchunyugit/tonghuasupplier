@@ -62,7 +62,7 @@ public class CloudServiceImpl implements CloudService {
     String sendCreateAccountNotice;
 
     Integer SuccessCode = 1000;
-    Integer ProjectUpFailCode = 2005;
+
 
 
     private RemoteResult buildFailResult() {
@@ -71,28 +71,7 @@ public class CloudServiceImpl implements CloudService {
         return remoteResult;
     }
 
-    @Transactional
-    @Override
-    public RemoteResult<String> projectUpOnline(String projectNo, Short status) {
 
-        MultiValueMap<String, Object> param = initParam();
-        param.add("projectNo", projectNo);
-        param.add("state", status);
-
-
-        RemoteResult<String> result = null;
-
-        try {
-            result = restTemplate.postForObject(projectUpOnlineUrl, param, RemoteResult.class);
-            System.out.println(result);
-            result.setIsComplete(SuccessCode.equals(result.getCode()));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return buildFailResult();
-        }
-        return result;
-    }
 
     /**
      * 发送短信 激活码
@@ -197,7 +176,7 @@ public class CloudServiceImpl implements CloudService {
         param.add("vendorCode", syncTransactionVO.getVendorCode());
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendNotice, param);
+            result = invokeRemoteMethod(syncMerchantUrl, param);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
