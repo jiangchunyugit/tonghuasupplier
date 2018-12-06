@@ -77,7 +77,7 @@ public class OtherServiceImpl implements OtherService {
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
         pageInfo2.setList(constructionOrders);
         if (constructionOrders.size() <= 0){
-            return new MyRespBundle<>();
+            return RespData.success(PageInfoUtils.pageInfo(pageInfo2,new ArrayList<>()));
         }
         /* 项目编号List */
         List<String> projectNos = ReflectUtils.getList(constructionOrders,"projectNo");
