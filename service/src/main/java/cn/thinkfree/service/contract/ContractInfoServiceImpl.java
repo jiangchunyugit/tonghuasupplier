@@ -14,6 +14,7 @@ import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
+import cn.thinkfree.service.businessentity.BusinessEntityService;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.*;
@@ -125,6 +126,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	ThirdPartDateService thirdPartDateService;
+
+	@Autowired
+	BusinessEntityService businessEntityService;
 
 
 
@@ -1311,8 +1315,15 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));
 			result.setCity(cityMapper.convertCodeToName(companyInfo.getCityCode()));
 			result.setFddm(companyInfo.getSiteCompanyId());
-			// TODO 需要埃森哲数据 经营主体编码
-			result.setGsdm(105);
+			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
+			if(StringUtils.isNotBlank(code)){
+				try{
+					result.setGsdm( Integer.valueOf(code));
+				}catch (Exception e){
+					printErrorMes(e.getMessage());
+				}
+			}
+//			result.setGsdm(105);
 		}
 		// 10 有效 20无效
 		result.setStatus("10");
