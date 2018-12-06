@@ -840,6 +840,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             throw new RuntimeException("插入报价总表信息失败!");
         }
         JSONArray rooms = data.getJSONArray("rooms");
+        if(rooms.size() <= 0){
+            throw new RuntimeException("房屋报价信息有误，没有发现房屋信息，请至上海3D工具重新进行报价");
+        }
         for (int i = 0; i < rooms.size(); i++) {
             JSONObject room = rooms.getJSONObject(i);
             //添加报价房屋信息表
