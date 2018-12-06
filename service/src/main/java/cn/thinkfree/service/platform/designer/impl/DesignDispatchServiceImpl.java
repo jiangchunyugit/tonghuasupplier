@@ -541,6 +541,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(reason)){
+            throw new RuntimeException("必须填写不派单原因");
+        }
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrders = queryDesignerOrder(projectNo);
         checkOrderState(designerOrders, DesignStateEnum.STATE_CLOSE_PLATFORM);

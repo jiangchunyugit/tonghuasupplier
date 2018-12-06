@@ -90,7 +90,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         roomsCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectQuotationRooms> projectQuotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
         if (projectQuotationRooms.size() == 0) {
-            throw new RuntimeException("没有查询到房屋报价信息");
+            return RespData.success(new ArrayList<>());
         }
         if (projectQuotationRooms.size() > 0) {
             for (ProjectQuotationRooms room : projectQuotationRooms) {
