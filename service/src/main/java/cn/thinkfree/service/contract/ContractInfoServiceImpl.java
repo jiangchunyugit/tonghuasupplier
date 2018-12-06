@@ -697,7 +697,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public boolean insertContractClause( String contractNumber, String companyId, ContractClauseVO contractClausevo )
 	{
-
+		Date date = new Date();
 	     try {
 			if ( contractClausevo.getParamMap() != null )
 			{
@@ -774,7 +774,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
 			cxcontractInfoMapper.updateByExampleSelective(record, example);
 			// 修改公司状态
-			companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal());
+			companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal(), date);
 		} catch (Exception e) {
 			printErrorMes("设置合同条款服务异常 {}" + e.getMessage());
 			return false;
