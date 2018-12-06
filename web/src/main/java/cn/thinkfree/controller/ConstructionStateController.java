@@ -74,16 +74,26 @@ public class ConstructionStateController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "constructionForEmployee", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionStateForEmployee(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateService.constructionState(orderNo,1);
+        try{
+            constructionStateService.constructionState(orderNo,1);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("装饰公司-施工报价完成")
     @MyRespBody
     @RequestMapping(value = "constructionPriceComplete", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionPriceComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateService.constructionState(orderNo,2);
+        try{
+            constructionStateService.constructionState(orderNo,2);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("装饰公司-审核完成(是否通过)")
@@ -99,16 +109,26 @@ public class ConstructionStateController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "constructionContractEntry", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionContractEntry(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateService.constructionState(orderNo,4);
+        try{
+            constructionStateService.constructionState(orderNo,4);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("装饰公司-确认线下签约完成（自动创建工地项目）")
     @MyRespBody
     @RequestMapping(value = "constructionSignComplete", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> constructionSignComplete(@RequestParam @ApiParam(value = "订单编号",required = true) String orderNo) {
-
-        return constructionStateService.constructionState(orderNo,5);
+        try{
+            constructionStateService.constructionState(orderNo,5);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     /**
