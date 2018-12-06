@@ -121,7 +121,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
         if(orderTpye == 1){
-            orderExampleCriteria.andOrderStageEqualTo(DesignStateEnum.STATE_10.getState()).andCompanyIdEqualTo(companyId);
+            orderExampleCriteria.andOrderStageLessThanOrEqualTo(DesignStateEnum.STATE_30.getState());
         }
         if(orderTpye == 2){
             orderExampleCriteria.andOrderStageGreaterThan(DesignStateEnum.STATE_30.getState());
