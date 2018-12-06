@@ -7,6 +7,7 @@ import cn.thinkfree.database.vo.PcApplyInfoSEO;
 import cn.thinkfree.database.vo.PcApplyInfoVo;
 import com.github.pagehelper.PageInfo;
 
+import java.util.Date;
 import java.util.Map;
 
 
@@ -22,7 +23,7 @@ public interface CompanyApplyService {
      * @param status
      * @return
      */
-    boolean updateStatus(String companyId, String status);
+    boolean updateStatus(String companyId, String status, Date date);
 
     /**
      * 公司申请事项（运营人员添加入驻信息）
@@ -100,4 +101,11 @@ public interface CompanyApplyService {
      * @return
      */
     boolean checkEmail(String email);
+
+    /**
+     * 判断公司id是否重复
+     * @param companyId
+     * @return
+     */
+    boolean ExistCompanyId(String companyId);
 }
