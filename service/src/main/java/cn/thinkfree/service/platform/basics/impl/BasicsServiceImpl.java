@@ -44,6 +44,18 @@ public class BasicsServiceImpl implements BasicsService {
     }
 
     @Override
+    public BasicsData queryDataOne(String groupCode, String code) {
+        //暂时写死
+        BasicsDataExample dataExample = new BasicsDataExample();
+        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andBasicsCodeEqualTo(code);
+        List<BasicsData> basicsDatas = basicsDataMapper.selectByExample(dataExample);
+        if(basicsDatas.isEmpty()){
+            return null;
+        }
+        return basicsDatas.get(0);
+    }
+
+    @Override
     public PageVo<List<BasicsData>> queryData(String groupCode, int pageSize, int pageIndex) {
         //暂时写死
         BasicsDataExample dataExample = new BasicsDataExample();
