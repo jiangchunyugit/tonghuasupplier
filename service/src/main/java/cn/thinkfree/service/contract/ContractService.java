@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import cn.thinkfree.database.model.FundsCompanyCash;
 import com.github.pagehelper.PageInfo;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.ContractClauseVO;
@@ -62,7 +63,7 @@ public interface ContractService {
 	 * @param ContractSEO
 	 * @return String mess
 	 */
-    boolean  ackEarnestMoney(String contractNumber,String companyId);
+    Map<String,String> ackEarnestMoney(String contractNumber,String companyId);
     
     
     
