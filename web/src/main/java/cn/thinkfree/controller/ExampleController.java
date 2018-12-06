@@ -12,6 +12,7 @@ import cn.thinkfree.core.utils.WebFileUtil;
 import cn.thinkfree.database.event.SendValidateCode;
 import cn.thinkfree.database.event.account.AccountCreate;
 import cn.thinkfree.database.event.account.ResetPassWord;
+import cn.thinkfree.database.event.sync.CompanyJoin;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.service.contract.ContractService;
@@ -218,10 +219,10 @@ public class ExampleController extends AbsBaseController {
 
 //        eventService.publish(new CompanyJoin("BD2018080710405900001"));
 //        eventService.publish(new FinishContract("SJHT201811091623204760001"));
-
-        eventService.publish(new AccountCreate("${code}","530495062@qq.com","${pwd}","${name}"));
-        eventService.publish(new ResetPassWord( "530495062@qq.com","530495062@qq.com","${pwd}"));
-        eventService.publish(new SendValidateCode( "530495062@qq.com","530495062@qq.com","${code}"));
+        eventService.publish(new CompanyJoin("SJ1812050027"));
+//        eventService.publish(new AccountCreate("${code}","530495062@qq.com","${pwd}","${name}"));
+//        eventService.publish(new ResetPassWord( "530495062@qq.com","530495062@qq.com","${pwd}"));
+//        eventService.publish(new SendValidateCode( "530495062@qq.com","530495062@qq.com","${code}"));
     }
 
 }
