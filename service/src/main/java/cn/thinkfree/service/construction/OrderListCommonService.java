@@ -27,9 +27,10 @@ public interface OrderListCommonService {
      * @param pageNum
      * @param pageSize
      * @param cityName
+     * @param orderType
      * @return
      */
-    PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName);
+    PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName, int orderType);
 
     /**
      * 施工订单 (装饰公司)

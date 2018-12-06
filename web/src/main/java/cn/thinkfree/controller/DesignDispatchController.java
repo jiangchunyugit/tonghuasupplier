@@ -50,6 +50,7 @@ public class DesignDispatchController extends AbsBaseController {
     @RequestMapping(value = "orderList", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<DesignerOrderVo>>> queryDesignerOrder(
             @ApiParam(name = "queryStage", required = false, value = "查询的数据阶段，具体字段待定，非必填，设计合同列表(DOCL)") @RequestParam(name = "queryStage", required = false) String queryStage,
+            @ApiParam(name = "orderTpye", required = false, value = "订单类别 必传1:订单派单 2:订单列表") @RequestParam(name = "orderTpye", required = false) Integer orderTpye,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userMsg", required = false, value = "业主姓名或电话") @RequestParam(name = "userMsg", required = false) String userMsg,
@@ -68,7 +69,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
-            PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+            PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage,orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
@@ -112,6 +113,7 @@ public class DesignDispatchController extends AbsBaseController {
     @RequestMapping(value = "designOrderExcel", method = {RequestMethod.POST, RequestMethod.GET})
     public void designOrderExcel(
             @ApiParam(name = "queryStage", required = false, value = "查询的数据阶段，具体字段待定，非必填，设计合同列表(DOCL)") @RequestParam(name = "queryStage", required = false) String queryStage,
+            @ApiParam(name = "orderTpye", required = false, value = "订单类别 必传1:订单派单 2:订单列表") @RequestParam(name = "orderTpye", required = false) Integer orderTpye,
             @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "userMsg", required = false, value = "业主姓名或电话") @RequestParam(name = "userMsg", required = false) String userMsg,
@@ -131,7 +133,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
             @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response) {
         try {
-            designDispatchService.designerOrderExcel(companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+            designDispatchService.designerOrderExcel(orderTpye,companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                     money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
         } catch (Exception e) {
             e.printStackTrace();

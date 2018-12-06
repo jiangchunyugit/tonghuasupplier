@@ -1,6 +1,7 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.vo.DesignerDataVo;
 import cn.thinkfree.service.designerdata.DesignerDataService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,84 +25,61 @@ public class DesignerDataController {
     @Autowired
     DesignerDataService designerDataService;
 
-    @ApiOperation("编辑性别")
-    @RequestMapping(value = "editSex", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editSex(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("sex") @ApiParam(name = "sex", value = "性别 1男，2女", required = true) Integer sex) {
-        return designerDataService.editSex(userId, sex);
+    @ApiOperation("编辑资料")
+    @RequestMapping(value = "editData", method = {RequestMethod.GET, RequestMethod.POST})
+    public MyRespBundle editData(
+            @RequestParam(value = "userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
+            @RequestParam(value = "type") @ApiParam(name = "type", value = "1,编辑性别  2,编辑生日 3,编辑所在地区 4,编辑从业年限  5,编辑量房费  6,编辑设计费  7,编辑设计师擅长风格  8,编辑个人简介  9,编辑证书与奖项", required = true) Integer type,
+            @RequestParam(value = "birthday", required = false) @ApiParam(name = "birthday", value = "日期 yyyy-MM-dd", required = false) String birthday,
+            @RequestParam(value = "province", required = false) @ApiParam(name = "province", value = "省份编码", required = false) String province,
+            @RequestParam(value = "city", required = false) @ApiParam(name = "city", value = "城市编码", required = false) String city,
+            @RequestParam(value = "area", required = false) @ApiParam(name = "area", value = "地区编码", required = false) String area,
+            @RequestParam(value = "years", required = false) @ApiParam(name = "years", value = "从业年限", required = false) Integer years,
+            @RequestParam(value = "volumeRoomMoney", required = false) @ApiParam(name = "volumeRoomMoney", value = "", required = false) String volumeRoomMoney,
+            @RequestParam(value = "moneyLow", required = false) @ApiParam(name = "moneyLow", value = "设计费用最低(单位：元/m2)", required = false) String moneyLow,
+            @RequestParam(value = "moneyHigh", required = false) @ApiParam(name = "moneyHigh", value = "设计费用最高(单位：元/m2)", required = false) String moneyHigh,
+            @RequestParam(value = "styleCode", required = false) @ApiParam(name = "styleCode", value = "风格编码", required = false) List<String> styleCodes,
+            @RequestParam(value = "personalProfile", required = false) @ApiParam(name = "personalProfile", value = "个人简介", required = false) String personalProfile,
+            @RequestParam(value = "certificatePrize", required = false) @ApiParam(name = "certificatePrize", value = "证书与奖项", required = false) String certificatePrize,
+            @RequestParam(value = "sex", required = false) @ApiParam(name = "sex", value = "性别 1男，2女", required = false) Integer sex) {
+        MyRespBundle result;
+        switch (type) {
+            case 1:
+                result = designerDataService.editSex(userId, sex);
+                break;
+            case 2:
+                result = designerDataService.editBirthday(userId, birthday);
+                break;
+            case 3:
+                result = designerDataService.editAdress(userId, province, city, area);
+                break;
+            case 4:
+                result = designerDataService.editYears(userId, years);
+                break;
+            case 5:
+                result = designerDataService.editVolumeRoomMoney(userId, volumeRoomMoney);
+                break;
+            case 6:
+                result = designerDataService.editDesignFee(userId, moneyLow, moneyHigh);
+                break;
+            case 7:
+                result = designerDataService.editDesignerStyle(userId, styleCodes);
+                break;
+            case 8:
+                result = designerDataService.editPersonalProfile(userId, personalProfile);
+                break;
+            default:
+                result = designerDataService.editCertificatePrize(userId, certificatePrize);
+                break;
+
+        }
+        return result;
     }
 
-    @ApiOperation("编辑生日")
-    @RequestMapping(value = "editBirthday", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editBirthday(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("birthday") @ApiParam(name = "birthday", value = "日期 yyyy-MM-dd", required = true) String birthday) {
-        return designerDataService.editBirthday(userId,birthday);
-    }
-    @ApiOperation("编辑所在地区")
-    @RequestMapping(value = "editAdress", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editAdress(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("province") @ApiParam(name = "province", value = "省份编码", required = true) String province,
-            @RequestParam("city") @ApiParam(name = "city", value = "城市编码", required = true) String city,
-            @RequestParam("area") @ApiParam(name = "area", value = "地区编码", required = true) String area) {
-        return designerDataService.editAdress(userId,province,city,area);
-    }
-    @ApiOperation("编辑从业年限")
-    @RequestMapping(value = "editYears", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editYears(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("years") @ApiParam(name = "years", value = "从业年限", required = true) Integer years) {
-        return designerDataService.editYears(userId,years);
-    }
-
-    @ApiOperation("编辑量房费")
-    @RequestMapping(value = "editVolumeRoomMoney", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editVolumeRoomMoney(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("volumeRoomMoney") @ApiParam(name = "volumeRoomMoney", value = "", required = true) String volumeRoomMoney) {
-        return designerDataService.editVolumeRoomMoney(userId,volumeRoomMoney);
-    }
-
-    @ApiOperation("编辑设计费")
-    @RequestMapping(value = "editDesignFee", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editDesignFee(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("moneyLow") @ApiParam(name = "moneyLow", value = "设计费用最低(单位：元/m2)", required = true) String moneyLow,
-            @RequestParam("moneyHigh") @ApiParam(name = "moneyHigh", value = "设计费用最高(单位：元/m2)", required = true) String moneyHigh) {
-        return designerDataService.editDesignFee(userId,moneyLow,moneyHigh);
-    }
-
-//    @ApiOperation("获取设计师擅长风格")
-//    @RequestMapping(value = "getDesignerStyle", method = {RequestMethod.GET, RequestMethod.POST})
-//    public MyRespBundle getDesignerStyle(
-//            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId) {
-//        return designerDataService.getDesignerStyle(userId);
-//    }
-
-    @ApiOperation("编辑设计师擅长风格")
-    @RequestMapping(value = "editDesignerStyle", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editDesignerStyle(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("styleCode") @ApiParam(name = "styleCode", value = "风格编码", required = true) List<String> styleCodes) {
-        return designerDataService.editDesignerStyle(userId,styleCodes);
-    }
-
-    @ApiOperation("编辑个人简介")
-    @RequestMapping(value = "editPersonalProfile", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editPersonalProfile(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("personalProfile") @ApiParam(name = "personalProfile", value = "个人简介", required = true) String personalProfile) {
-        return designerDataService.editPersonalProfile(userId,personalProfile);
-    }
-
-    @ApiOperation("编辑证书与奖项")
-    @RequestMapping(value = "editCertificatePrize", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle editCertificatePrize(
-            @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-            @RequestParam("certificatePrize") @ApiParam(name = "certificatePrize", value = "证书与奖项", required = true) String certificatePrize) {
-        return designerDataService.editCertificatePrize(userId,certificatePrize);
+    @ApiOperation("获取设计师个人资料")
+    @RequestMapping(value = "getData", method = {RequestMethod.GET, RequestMethod.POST})
+    public MyRespBundle<DesignerDataVo> getData(@RequestParam(value = "userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId){
+        return designerDataService.getData(userId);
     }
 
 

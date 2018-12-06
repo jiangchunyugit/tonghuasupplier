@@ -488,7 +488,9 @@ public class DelaySchedulingController extends AbsBaseController {
                                                                               @RequestParam(required = false) @ApiParam(value = "合同状态")  Integer contractStatus,
                                                                               @RequestParam(required = false) @ApiParam(value = "签约时间区间开始") String startSign,
                                                                               @RequestParam(required = false) @ApiParam(value = "签约时间区间结束") String endSign,
-                                                                              @RequestParam(required = false) @ApiParam(value = "业主信息") String ownerName,
+                                                                              @RequestParam(required = false) @ApiParam(value = "业主信息模糊") String ownerName,
+                                                                              @RequestParam(required = false) @ApiParam(value = "业主手机号模糊") String ownerPhone,
+                                                                              @RequestParam(required = false) @ApiParam(value = "审批状态：0：不通过 1：通过2：审核中") Integer auditType,
                                                                               @RequestParam(required = false) @ApiParam(value = "合同状态模糊") String flag
 
 
@@ -508,6 +510,8 @@ public class DelaySchedulingController extends AbsBaseController {
         designContractVO.setStartSign(startSign);
         designContractVO.setEndSign(endSign);
         designContractVO.setOwnerName(ownerName);
+        designContractVO.setOwnerPhone(ownerPhone);
+        designContractVO.setAuditType(auditType);
         designContractVO.setFlag(flag);
         return sendJsonData(ResultMessage.SUCCESS, newOrderUserService.queryContractByPage(designContractVO, (pageNum - 1) * pageSize, pageSize));
     }

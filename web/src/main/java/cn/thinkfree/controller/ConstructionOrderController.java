@@ -47,12 +47,17 @@ public class ConstructionOrderController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "getOperateList", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "pageNum", value = "页码", required = true, defaultValue = "1"),
-            @ApiImplicitParam(name = "pageSize", value = "每页条数", required = true, defaultValue = "10"),
-            @ApiImplicitParam(name = "cityName", value = "城市名称")
+            @ApiImplicitParam(name = "pageNum", value = "页码"),
+            @ApiImplicitParam(name = "pageSize", value = "每页条数"),
+            @ApiImplicitParam(name = "cityName", value = "城市名称"),
+            @ApiImplicitParam(name = "orderType", value = "订单类型，1派单列表，2订单列表"),
     })
-    public MyRespBundle<PageInfo<ConstructionOrderListVo>> getConstructionInfoList(@RequestParam int pageNum, @RequestParam int pageSize, @RequestParam(required = false) String cityName){
-        return sendJsonData(ResultMessage.SUCCESS, constructionOrderOperate.getOrderList(pageNum,pageSize,cityName));
+    public MyRespBundle<PageInfo<ConstructionOrderListVo>> getConstructionInfoList(
+            @RequestParam(required = false, defaultValue = "1") int pageNum,
+            @RequestParam(required = false, defaultValue = "10")  int pageSize,
+            @RequestParam(required = false) String cityName,
+            @RequestParam(required = false, defaultValue = "1") int orderType){
+        return sendJsonData(ResultMessage.SUCCESS, constructionOrderOperate.getOrderList(pageNum,pageSize,cityName, orderType));
     }
 
     @ApiOperation("运营平台接口（获取施工订单统计/城市）---->孙宇专用")
