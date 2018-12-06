@@ -165,23 +165,36 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO) {
-        MultiValueMap<String, Object> param = initParam();
-
-        param.add("address", syncTransactionVO.getAddress());
-        param.add("code", syncTransactionVO.getCode());
-        param.add("cwgsdm", syncTransactionVO.getCwgsdm());
-        param.add("gssh", syncTransactionVO.getGssh());
-        param.add("jc", syncTransactionVO.getJc());
-        param.add("name", syncTransactionVO.getName());
-        param.add("vendorCode", syncTransactionVO.getVendorCode());
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        String body = new GsonBuilder().serializeNulls().create().toJson(syncTransactionVO);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(syncMerchantUrl, param);
+            result = invokeRemoteMethodForJson(syncMerchantUrl, requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
         }
         return result;
+//        MultiValueMap<String, Object> param = initParam();
+//
+//        param.add("address", syncTransactionVO.getAddress());
+//        param.add("code", syncTransactionVO.getCode());
+//        param.add("cwgsdm", syncTransactionVO.getCwgsdm());
+//        param.add("gssh", syncTransactionVO.getGssh());
+//        param.add("jc", syncTransactionVO.getJc());
+//        param.add("name", syncTransactionVO.getName());
+//        param.add("vendorCode", syncTransactionVO.getVendorCode());
+//        RemoteResult<String> result = null;
+//        try {
+//            result = invokeRemoteMethod(syncMerchantUrl, param);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return buildFailResult();
+//        }
+//        return result;
     }
 
     /**
