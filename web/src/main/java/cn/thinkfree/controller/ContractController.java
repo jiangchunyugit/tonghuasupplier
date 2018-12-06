@@ -104,7 +104,7 @@ public class ContractController extends AbsBaseController{
     	
     	Map<String,String>  map = contractService.ackEarnestMoney(contractNumber, companyId);
     	
-    	if(String.valueOf(map.get("flag")).equals("true")){
+    	if(String.valueOf(map.get("falg")).equals("true")){
     		
     		return sendJsonData(ResultMessage.SUCCESS,true);
     		

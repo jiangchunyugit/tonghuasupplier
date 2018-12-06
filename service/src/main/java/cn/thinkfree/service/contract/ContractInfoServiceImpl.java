@@ -422,7 +422,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo( companyId );
 				String deposistMoney = "";
 				//装修
-			    if( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.BD.stringVal() )){
+			    if( companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.BD.code)){
 			    	if(resMap != null ){
 			    	  deposistMoney = String.valueOf(resMap.get("c17"));
 			    	}
