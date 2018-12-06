@@ -164,7 +164,7 @@ public class ReviewDetailsController extends AbsBaseController {
     public MyRespBundle<String> reviewOffer(
             @RequestParam(name = "projectNo") @ApiParam(value = "提交精准报价", name = "projectNo",required = true) String projectNo,
             @RequestParam(name = "result", defaultValue = "-1") @ApiParam(value = "审核结果(1,通过 2,不通过)", name = "result",required = true) int result,
-            @RequestParam(name = "refuseReason") @ApiParam(value = "不通过原因", name = "refuseReason") String refuseReason){
+            @RequestParam(name = "refuseReason") @ApiParam(value = "不通过原因", name = "refuseReason", required = false) String refuseReason){
         try {
             return reviewDetailsService.reviewOffer(projectNo, result, refuseReason);
         } catch (Exception e) {

@@ -90,7 +90,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         roomsCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectQuotationRooms> projectQuotationRooms = projectQuotationRoomsMapper.selectByExample(roomsExample);
         if (projectQuotationRooms.size() == 0) {
-            return RespData.error("查无此房屋报价信息");
+            throw new RuntimeException("没有查询到房屋报价信息");
         }
         if (projectQuotationRooms.size() > 0) {
             for (ProjectQuotationRooms room : projectQuotationRooms) {
@@ -486,7 +486,15 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             vo.setCheckNum(projectQuotationChecks.size());
             return RespData.success(vo);
         }
-        return RespData.error("暂无审核信息");
+        ProjectQuotationCheckVo vo = new ProjectQuotationCheckVo();
+        vo.setCheckNum(0);
+        vo.setApprovalId("");
+        vo.setCheckStatus(-1);
+        vo.setProjectNo(projectNo);
+        vo.setRefuseReason("无");
+        vo.setResult(-1);
+        vo.setSubmitTime(new Date(0));
+        return RespData.success(vo);
     }
 
     /**
@@ -529,6 +537,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         if (result == 2 && StringUtils.isBlank(refuseReason)) {
             return RespData.error("必须填写不通过原因");
+        }
+        if (result == 1 && StringUtils.isBlank(refuseReason)) {
+            refuseReason = "审核通过";
         }
         ConstructionOrderExample example = new ConstructionOrderExample();
         ConstructionOrderExample.Criteria criteria = example.createCriteria();
