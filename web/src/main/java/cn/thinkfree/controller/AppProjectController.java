@@ -41,9 +41,34 @@ public class AppProjectController {
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") @ApiParam(name = "pageSize", required = false, value = "每页条数") int pageSize,
             @RequestParam(name = "pageNum", required = false, defaultValue = "1") @ApiParam(name = "pageNum", required = false, value = "第几页") int pageNum,
             @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "projectType", required = false) @ApiParam(name = "projectType", value = "项目分类 1,全部 2,待签约 3,待开工 4,施工中 5,已竣工 6,停工中 7,已关闭", required = false) Integer projectType,
             @RequestParam(name = "inputData", required = false) @ApiParam(name = "inputData", value = "筛选输入值", required = false) String inputData) {
-        return newProjectService.getConstructionAllProject(pageSize, pageNum, userId, inputData);
+        return newProjectService.getConstructionAllProject(pageSize, pageNum, userId, inputData, projectType);
     }
+
+    @ApiOperation(value = "获取施工端项目搜索项(进度阶段+验收阶段)")
+    @RequestMapping(value = "getProjectScreen", method = {RequestMethod.GET, RequestMethod.POST})
+    public MyRespBundle<ProjectScreenVo> getProjectScreen(
+            @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo) {
+        return newProjectService.getProjectScreen(userId, projectNo);
+    }
+
+    @ApiOperation("施工端项目列表--筛选")
+    @RequestMapping(value = "getProjectByScreen", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") @ApiParam(name = "pageSize", required = false, value = "每页条数") int pageSize,
+            @RequestParam(name = "pageNum", required = false, defaultValue = "1") @ApiParam(name = "pageNum", required = false, value = "第几页") int pageNum,
+            @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "delayBegin", required = false) @ApiParam(name = "delayBegin", value = "逾期天数 开始天数", required = false) Integer delayBegin,
+            @RequestParam(name = "delayEnd", required = false) @ApiParam(name = "delayEnd", value = "逾期天数 结束天数", required = false) Integer delayEnd,
+            @RequestParam(name = "schedulingSort", required = false) @ApiParam(name = "schedulingSort", value = "进度阶段 sort值", required = false) Integer schedulingSort,
+            @RequestParam(name = "checkSort", required = false) @ApiParam(name = "checkSort", value = "验收阶段 sort值", required = false) Integer checkSort,
+            @RequestParam(name = "checkComplete", required = false) @ApiParam(name = "checkComplete", value = "是否完成验收 1,是 2,否", required = false) Integer checkComplete,
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo) {
+        return newProjectService.getProjectByScreen(pageSize,pageNum,userId,delayBegin,delayEnd,schedulingSort,checkSort,checkComplete,projectNo);
+    }
+
 
     @RequestMapping(value = "getProjectNum", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目个数")

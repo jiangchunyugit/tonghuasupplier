@@ -10,8 +10,10 @@ import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.neworder.NewOrderService;
@@ -77,6 +79,10 @@ public class NewProjectServiceImpl implements NewProjectService {
     BasicsDataMapper basicsDataMapper;
     @Autowired
     AfInstanceService afInstanceService;
+    @Autowired
+    ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
+    @Autowired
+    ProjectSchedulingMapper projectSchedulingMapper;
 
 
     /**
@@ -183,20 +189,225 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(int pageSize, int pageNum, String userId, String inputData) {
-        if (userId.trim().isEmpty()) {
-            return RespData.error("参数userId不可为空");
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(int pageSize, int pageNum, String userId, String inputData, Integer projectType) {
+        if (userId == null || userId.trim().isEmpty() || projectType == null || projectType == 0) {
+            return RespData.error("参数userId 和 projectType 不可为空");
         }
+        List<ConstructionProjectVo> constructionProjectVos = getAllConstructionProject(userId);
+        PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageNum);
+        Map<String, Object> playMap = getPlayList(constructionProjectVos, pageSize, pageNum, inputData, projectType);
+        List<ConstructionProjectVo> playProjects = (List<ConstructionProjectVo>) playMap.get("data");
+        pageVo.setData(playProjects);
+        pageVo.setTotal((Integer) playMap.get("total"));
+        return RespData.success(pageVo);
+    }
+
+    /**
+     * 施工端项目列表项目筛选
+     *
+     * @param list
+     * @param pageSize
+     * @param pageNum
+     * @param inputData
+     * @param projectType
+     * @return
+     */
+    public Map<String, Object> getPlayList(List<ConstructionProjectVo> list, int pageSize, int pageNum, String inputData, Integer projectType) {
+        Map<String, Object> map = new HashMap<>();
+        if (inputData != null && !inputData.trim().isEmpty()) {
+            List<ConstructionProjectVo> playProjects = new ArrayList<>();
+            List<ConstructionProjectVo> allProjects = new ArrayList<>();
+            Integer count = 0;
+            for (ConstructionProjectVo projectVo : list) {
+                if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
+                    //传让提供接口后把他放到逻辑与条件中
+                    if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                        playProjects.add(projectVo);
+                    }
+                    allProjects.add(projectVo);
+                    count++;
+                }
+            }
+            map.put("data", playProjects);
+            map.put("total", allProjects.size());
+        } else {
+            List<ConstructionProjectVo> playProjects = new ArrayList<>();
+            List<ConstructionProjectVo> allProjects = new ArrayList<>();
+            Integer count = 0;
+            for (ConstructionProjectVo projectVo : list) {
+                //传让提供接口后把他放到逻辑与条件中
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                allProjects.add(projectVo);
+                count++;
+            }
+            map.put("data", playProjects);
+            map.put("total", allProjects.size());
+        }
+        return map;
+    }
+
+    /**
+     * 获取施工端项目搜索项(进度阶段+验收阶段)
+     *
+     * @param userId
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<ProjectScreenVo> getProjectScreen(String userId, String projectNo) {
+        ProjectScreenVo projectScreenVo = new ProjectScreenVo();
+        ProjectBigSchedulingDetailsExample example = new ProjectBigSchedulingDetailsExample();
+        example.setOrderByClause("big_sort asc");
+        ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
+        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
+        List<ProjectBigSchedulingDetails> checkBigList = projectBigSchedulingDetailsMapper.selectByExample(example);
+        if (bigList.size() == 0) {
+            return RespData.error("此项目下无排期信息");
+        }
+        List<ProjectBigSchedulingDetailsVO> playBigList = new ArrayList<>();
+        for (ProjectBigSchedulingDetails details : bigList) {
+            ProjectBigSchedulingDetailsVO detailsVO = new ProjectBigSchedulingDetailsVO();
+            detailsVO.setBigSort(details.getBigSort());
+            detailsVO.setBigName(details.getBigName());
+            playBigList.add(detailsVO);
+        }
+        List<ProjectBigSchedulingDetailsVO> playCheckList = new ArrayList<>();
+        for (ProjectBigSchedulingDetails details : checkBigList) {
+            ProjectBigSchedulingDetailsVO detailsVO = new ProjectBigSchedulingDetailsVO();
+            detailsVO.setBigSort(details.getBigSort());
+            detailsVO.setRenameBig(details.getRenameBig());
+            playCheckList.add(detailsVO);
+        }
+        Collections.sort(playBigList);
+        Collections.sort(playCheckList);
+        projectScreenVo.setCheckList(playCheckList);
+        projectScreenVo.setSchedulingList(playBigList);
+        return RespData.success(projectScreenVo);
+    }
+
+    /**
+     * 施工端项目列表--筛选
+     *
+     * @param pageSize       每页条数
+     * @param pageNum        页码
+     * @param userId         用户id
+     * @param delayBegin     延期开始时间
+     * @param delayEnd       延期结束时间
+     * @param schedulingSort 进度阶段sort值
+     * @param checkSort      验收阶段sort值
+     * @param checkComplete  验收是否完成
+     * @param projectNo      项目编号
+     * @return
+     */
+    @Override
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(
+            int pageSize, int pageNum, String userId,
+            Integer delayBegin, Integer delayEnd,
+            Integer schedulingSort, Integer checkSort,
+            Integer checkComplete, String projectNo) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return RespData.error("请检查入参:userId=" + userId);
+        }
+        List<ConstructionProjectVo> constructionProjectVos = getAllConstructionProject(userId);
+        List<ConstructionProjectVo> playProjects = new ArrayList<>();
+        List<ConstructionProjectVo> allProjects = new ArrayList<>();
+        Integer count = 0;
+        Boolean result = false;
+        for (ConstructionProjectVo projectVo : constructionProjectVos) {
+            if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort == null && checkComplete == null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort == null && checkComplete == null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort())) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && checkSort.equals(projectVo.getSort())) {
+                //暂未添加传让接口
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
+                //暂未添加传让接口
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort == null && checkComplete == null && schedulingSort.equals(projectVo.getSort())) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
+                //暂未添加传让接口
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort != null && checkComplete != null && checkSort.equals(projectVo.getSort())) {
+                //暂未添加传让接口
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort == null && checkComplete == null) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                    count++;
+                }
+                allProjects.add(projectVo);
+                result = true;
+            }
+
+        }
+        if (!result) {
+            return RespData.error("请检查入参:userId=" + userId + ";delayBegin=" + delayBegin + ";delayEnd=" + delayEnd + ";=schedulingSort=" + schedulingSort + ";checkSort=" + checkSort + ";checkComplete=" + checkComplete);
+        }
+        PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageNum);
+        pageVo.setData(playProjects);
+        pageVo.setTotal(allProjects.size());
+        return RespData.success(pageVo);
+    }
+
+    /**
+     * 获取施工端所有项目
+     *
+     * @return
+     */
+    public List<ConstructionProjectVo> getAllConstructionProject(String userId) {
+        List<ConstructionProjectVo> constructionProjectVos = new ArrayList<>();
         OrderUserExample userExample = new OrderUserExample();
         OrderUserExample.Criteria userCriteria = userExample.createCriteria();
         userCriteria.andUserIdEqualTo(userId);
-        List<OrderUser> allOrders = orderUserMapper.selectByExample(userExample);
-        if (inputData.trim().isEmpty()) {
-            PageHelper.startPage(pageNum, pageSize);
-        }
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
         if (orderUsers.size() == 0) {
-            return RespData.success(new PageVo<>(), "此用户尚未分配项目");
+            return constructionProjectVos;
         }
         List<String> list = new ArrayList<>();
         for (OrderUser orderUser : orderUsers) {
@@ -207,18 +418,16 @@ public class NewProjectServiceImpl implements NewProjectService {
         orderCriteria.andProjectNoIn(list);
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(orderExample);
         if (constructionOrders.size() == 0) {
-            return RespData.error("暂无此项目");
+            return constructionProjectVos;
         }
-        List<ConstructionProjectVo> constructionProjectVos = new ArrayList<>();
         for (ConstructionOrder constructionOrder : constructionOrders) {
             ConstructionProjectVo constructionProjectVo = new ConstructionProjectVo();
-            //项目分类
-
             constructionProjectVo.setProjectNo(constructionOrder.getProjectNo());
             constructionProjectVo.setOrderNo(constructionOrder.getOrderNo());
             constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm;ss"));
             constructionProjectVo.setType(constructionOrder.getType());
-            constructionProjectVo.setStage(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
+            constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
+            constructionProjectVo.setStage(constructionOrder.getOrderStage());
             //装修地址
             ProjectExample projectExample = new ProjectExample();
             ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
@@ -239,42 +448,28 @@ public class NewProjectServiceImpl implements NewProjectService {
                 constructionProjectVo.setPhone(user.get("phone") == null ? "" : user.get("phone").toString());
             }
             //3d图片地址
-            ProjectDataExample dataExample = new ProjectDataExample();
-            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
-            dataCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
-            dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-            dataCriteria.andTypeEqualTo(ProjectDataStatus.DESIGN_DATA.getValue());
-            List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
-            if (projectDatas.size() != 0) {
-                constructionProjectVo.setThirdUrl(projectDatas.get(0).getPhotoPanoramaUrl());
+//            ProjectDataExample dataExample = new ProjectDataExample();
+//            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+//            dataCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+//            dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//            dataCriteria.andTypeEqualTo(ProjectDataStatus.DESIGN_DATA.getValue());
+//            List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
+//            if (projectDatas.size() != 0) {
+//                constructionProjectVo.setThirdUrl(projectDatas.get(0).getPhotoPanoramaUrl());
+//            }
+            //延期天数
+            ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
+            ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
+            schedulingCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+            schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+            List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
+            if (projectSchedulings.size() > 0) {
+                constructionProjectVo.setDelay(projectSchedulings.get(0).getDelay());
+                constructionProjectVo.setSort(projectSchedulings.get(0).getRate());
             }
             constructionProjectVos.add(constructionProjectVo);
         }
-        PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
-        pageVo.setPageSize(pageSize);
-        pageVo.setPageIndex(pageNum);
-        //搜索
-        if (!inputData.trim().isEmpty()) {
-            List<ConstructionProjectVo> playProjects = new ArrayList<>();
-            List<ConstructionProjectVo> allProjects = new ArrayList<>();
-            Integer count = 0;
-            for (ConstructionProjectVo projectVo : constructionProjectVos) {
-                if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
-                    if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
-                        playProjects.add(projectVo);
-                    }
-                    allProjects.add(projectVo);
-                    count++;
-                }
-            }
-
-            pageVo.setTotal((long) allProjects.size());
-            pageVo.setData(playProjects);
-        } else {
-            pageVo.setTotal((long) allOrders.size());
-            pageVo.setData(constructionProjectVos);
-        }
-        return RespData.success(pageVo);
+        return constructionProjectVos;
     }
 
     /**

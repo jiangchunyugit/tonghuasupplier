@@ -2,9 +2,7 @@ package cn.thinkfree.service.designerdata;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.mapper.DesignerMsgMapper;
-import cn.thinkfree.database.mapper.DesignerStyleRelationMapper;
-import cn.thinkfree.database.mapper.EmployeeMsgMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.DesignerDataVo;
 import cn.thinkfree.service.utils.DateUtil;
@@ -356,7 +354,7 @@ public class DesignerDataServiceImpl implements DesignerDataService {
         if (employeeMsg.getSex() != null) {
             designerDataVo.setSex(employeeMsg.getSex());
         }
-        if (employeeMsg.getBindDate() != null) {
+        if (employeeMsg.getBirthday() != null) {
             designerDataVo.setBirthday(DateUtil.getStringDate(employeeMsg.getBirthday(), "yyyy-MM-dd"));
         }
         if (employeeMsg.getProvince() != null) {
@@ -367,6 +365,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
         }
         if (employeeMsg.getArea() != null) {
             designerDataVo.setArea(employeeMsg.getArea());
+        }
+        if (employeeMsg.getWorkingTime() != null) {
+            designerDataVo.setYears(employeeMsg.getWorkingTime());
         }
         //获取设计师信息
         DesignerMsgExample example1 = new DesignerMsgExample();
@@ -391,6 +392,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
                 designerDataVo.setCertificatePrize(designerMsg.getCertificatePrize());
             }
         }
+        //获取设计师设计风格
+        List<String> designerTypes = designerStyleRelationMapper.selectByUserId(userId);
+        designerDataVo.setStyleCodes(designerTypes);
         return RespData.success(designerDataVo);
     }
 }
