@@ -1297,6 +1297,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         contractMsgVo.setOwnerPhone(userMsgVo.getUserPhone());
         contractMsgVo.setCompanyName(companyInfo.getCompanyName());
         contractMsgVo.setCompanyLegalPerson(companyInfo.getLegalName());
+        contractMsgVo.setCompanyOrganizationCode(companyInfo.getOrganizationCode());
         return contractMsgVo;
     }
 
