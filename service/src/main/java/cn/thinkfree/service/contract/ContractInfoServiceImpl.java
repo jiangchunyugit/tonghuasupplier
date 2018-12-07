@@ -925,9 +925,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					try {
 						JSONArray arr = JSONArray.parseArray(String.valueOf(root.get("c08")));
 						List<Map<String,String>> listR = new ArrayList<>();
-						Map<String,String> mapR = new HashMap<>();
+
 						for (int i = 0; i < arr.size(); i++) {
-							 JSONObject job = arr.getJSONObject(i); 
+							 JSONObject job = arr.getJSONObject(i);
+							Map<String,String> mapR = new HashMap<>();
 							mapR.put("code01", job.getString("progressName"));
 							mapR.put("code02", job.getString("stageCode"));
 							mapR.put("code03", job.getString("payPercentum"));
@@ -1341,7 +1342,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));
 			result.setCity(cityMapper.convertCodeToName(companyInfo.getCityCode()));
 			result.setFddm(companyInfo.getSiteCompanyId());
-			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
+//			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
 //			if(StringUtils.isNotBlank(code)){
 //				try{
 //					result.setGsdm( Integer.valueOf(code));
