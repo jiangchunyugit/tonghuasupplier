@@ -113,26 +113,6 @@ public class AgencySEO extends AbsPageSearchCriteria {
         this.metroId = metroId;
     }
 
-    public String getStartDate() {
-        return startDate;
-    }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
-    }
-
-    public String getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(String endDate) {
-        this.endDate = endDate;
-    }
-
-    @ApiModelProperty(value = "开始时间")
-    private String startDate;
-
-    @ApiModelProperty(value = "结束时间")
-    private String endDate;
 
 }
