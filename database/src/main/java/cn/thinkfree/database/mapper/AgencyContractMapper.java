@@ -71,4 +71,17 @@ public interface AgencyContractMapper {
      */
     List<MyAgencyContract> selectPageList(AgencySEO example);
 
+
+    /**
+     *分页查询 经销商合同(运营审批列表)
+     */
+    List<MyAgencyContract> selectoperatingPageList(AgencySEO example);
+
+    /**
+     * 财务审批列表
+     * @param example
+     * @return
+     */
+    List<MyAgencyContract> selectFinancialPageList(AgencySEO example);
+
 }

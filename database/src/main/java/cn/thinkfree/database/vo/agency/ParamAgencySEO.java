@@ -6,12 +6,11 @@ import cn.thinkfree.database.model.PcAuditInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
 @ApiModel(description = "经销商合同新增入参")
-public class ParamAgency  {
+public class ParamAgencySEO {
 
 
     public AgencyContract getAgencyContract() {
@@ -37,15 +36,5 @@ public class ParamAgency  {
     private AgencyContractTerms  agencyContractTerms;
 
 
-    public List<PcAuditInfo> getAuditInfo() {
-        return auditInfo;
-    }
-
-    public void setAuditInfo(List<PcAuditInfo> auditInfo) {
-        this.auditInfo = auditInfo;
-    }
-
-    @ApiModelProperty("审核信息")
-    private List<PcAuditInfo> auditInfo;
 
 }

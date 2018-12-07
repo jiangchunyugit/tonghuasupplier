@@ -89,7 +89,10 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Value("${depositMoney:-500000}")
     private String depositMoney;
 
-
+    @Value("${custom.cloud.designLoginUrl}")
+    private String designLoginUrl;
+    @Value("${custom.cloud.decorateLoginPage}")
+    private String decorateLoginPage;
 
     /**
      * 更新公司入驻状态
@@ -372,8 +375,16 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
         Map<String,Object> para = new HashMap<>();
-        para.put("登录账号", pcApplyInfoSEO.getEmail());
-        para.put("默认密码",pcApplyInfoSEO.getPassword());
+        para.put("userName",pcApplyInfoSEO.getEmail());
+        para.put("pwd",pcApplyInfoSEO.getPassword());
+        if(CompanyConstants.RoleType.BD.code.equalsIgnoreCase(pcApplyInfoSEO.getCompanyRole())){
+                para.put("http",decorateLoginPage);
+        }else if(CompanyConstants.RoleType.SJ.code.equalsIgnoreCase(pcApplyInfoSEO.getCompanyRole())){
+            para.put("http",designLoginUrl);
+        }else {
+            // TODO 经销商是个神奇的东西
+            para.put("http", "");
+        }
         cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
                 ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
 

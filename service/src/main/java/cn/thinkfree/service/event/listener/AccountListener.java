@@ -28,8 +28,10 @@ public class AccountListener extends AbsLogPrinter {
     @Autowired
     CloudService cloudService;
 
-    @Value("${custom.cloud.userLoginUrl}")
-    private String UserLoginUrl;
+    @Value("${custom.cloud.designLoginUrl}")
+    private String designLoginUrl;
+    @Value("${custom.cloud.decorateLoginPage}")
+    private String decorateLoginPage;
 
     /**
      * 账号创建后事件
@@ -43,7 +45,7 @@ public class AccountListener extends AbsLogPrinter {
         Map<String,Object> para = new HashMap<>();
         para.put("userName",accountCreate.getUserName());
         para.put("pwd",accountCreate.getPassword());
-        para.put("http", UserLoginUrl);
+        para.put("http", designLoginUrl);
         if(accountCreate.isPhone()){
             cloudService.sendCreateAccountNotice(accountCreate.getEmail()
                     ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
