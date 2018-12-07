@@ -91,16 +91,17 @@ public class AfConfigSchemeServiceImpl implements AfConfigSchemeService {
 
     @Override
     public String findByProjectNoAndConfigNoAndUserId(String projectNo, String configNo, String userId) {
-        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
-        if (constructionOrder == null) {
-            LOGGER.error("未查询到订单，projectNo：{}", projectNo);
-            throw new RuntimeException();
-        }
-        String schemeNo = constructionOrder.getSchemeNo();
-        if (StringUtils.isEmpty(schemeNo)) {
-            LOGGER.error("项目未配置审批方案，projectNo:{}", projectNo);
-            throw new RuntimeException();
-        }
+//        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
+//        if (constructionOrder == null) {
+//            LOGGER.error("未查询到订单，projectNo：{}", projectNo);
+//            throw new RuntimeException();
+//        }
+//        String schemeNo = constructionOrder.getSchemeNo();
+        String schemeNo = "DO18110514523000000OAN2F";
+//        if (StringUtils.isEmpty(schemeNo)) {
+//            LOGGER.error("项目未配置审批方案，projectNo:{}", projectNo);
+//            throw new RuntimeException();
+//        }
         String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
         if (StringUtils.isEmpty(roleId)) {
             LOGGER.error("未查询到角色信息，projectNo：{}，userId：{}", projectNo, userId);

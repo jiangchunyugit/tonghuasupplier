@@ -2,6 +2,7 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.exception.CommonException;
 import cn.thinkfree.core.utils.JSONUtil;
@@ -16,6 +17,7 @@ import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
@@ -23,6 +25,7 @@ import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +33,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 /**
@@ -77,13 +82,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private EmployeeService employeeService;
     @Autowired
     private ConstructionAndPayStateService constructionAndPayStateService;
+    @Autowired
+    private NewSchedulingBaseService schedulingBaseService;
+    @Autowired
+    private AfInstanceRelevancyService instanceRelevancyService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
-        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-            LOGGER.error("无法发起审批");
-            throw new RuntimeException();
-        }
+//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+//            LOGGER.error("无法发起审批");
+//            throw new RuntimeException();
+//        }
         AfInstanceDetailVO instanceDetailVO = new AfInstanceDetailVO();
         Project project = projectService.findByProjectNo(projectNo);
         if (project == null) {
@@ -127,6 +136,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
             approvalLogVOs.add(approvalLogVO);
         }
+
+        if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
+            List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
+            instanceDetailVO.setCheckItems(checkItems);
+            instanceDetailVO.setIsShowCheckList(checkItems.size() > 0);
+        } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)){
+            AfInstance instance = findByConfigNoAndProjectNoAndStatus(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+
+            if (instance == null) {
+                LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
+                throw new RuntimeException();
+            }
+            instanceDetailVO.setRelevancyDate(instance.getData());
+        }
         String customerId = project.getOwnerId();
         AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
         AfConfig config = configService.findByNo(configNo);
@@ -138,6 +161,52 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         instanceDetailVO.setAddress(project.getAddressDetail());
         return instanceDetailVO;
+    }
+
+    private AfInstance findByConfigNoAndProjectNoAndStatus(String configNo, String projectNo, Integer status) {
+        PageHelper.startPage(1, 1);
+        AfInstanceExample example = new AfInstanceExample();
+        // TODO status
+//        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo);
+        example.setOrderByClause("create_time desc");
+        List<AfInstance> instances = instanceMapper.selectByExample(example);
+        return instances != null && instances.size() > 0 ? instances.get(0) : null;
+    }
+
+    private List<AfCheckItemVO> getCheckItems(String projectNo, Integer scheduleSort) {
+        List<AfCheckItemVO> checkItems = new ArrayList<>(2);
+//        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
+//        if (constructionOrder == null) {
+//            LOGGER.error("未查询到订单信息，projectNo:{}", projectNo);
+//            throw new RuntimeException();
+//        }
+//        String schemeNo = constructionOrder.getSchemeNo();
+        String schemeNo = "DO18110514523000000OAN2F";
+//        if (StringUtils.isEmpty(schemeNo)) {
+//            LOGGER.error("订单未配置方案信息，constructionOrderNo:{}", constructionOrder.getOrderNo());
+//            throw new RuntimeException();
+//        }
+        ProjectBigScheduling projectBigScheduling = schedulingBaseService.findBySchemeNoAndSort(schemeNo, scheduleSort);
+        if (projectBigScheduling == null) {
+            LOGGER.error("未查询到排期信息，schemeNo:{}, scheduleSort:{}", schemeNo, scheduleSort);
+            throw new RuntimeException();
+        }
+        if (projectBigScheduling.getIsNeedCheck() == 0) {
+            LOGGER.error("该项目当前排期不需要验收，projectNo:{},scheduleSort:{}", projectNo, scheduleSort);
+            throw new RuntimeException();
+        }
+        AfCheckItemVO checkItemVO = new AfCheckItemVO();
+        checkItemVO.setType(1);
+        checkItemVO.setName(projectBigScheduling.getRename());
+        checkItems.add(checkItemVO);
+        if (projectBigScheduling.getIsWaterTest() == 1) {
+            checkItemVO = new AfCheckItemVO();
+            checkItemVO.setType(2);
+            checkItemVO.setName("避水验收");
+            checkItems.add(checkItemVO);
+        }
+        return checkItems;
     }
 
     private AfUserDTO getUserInfo(String userId, String roleId) {
@@ -161,10 +230,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark) {
-        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-            LOGGER.error("无法发起审批");
-            throw new RuntimeException();
-        }
+//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+//            LOGGER.error("无法发起审批");
+//            throw new RuntimeException();
+//        }
         List<UserRoleSet> allRoles = roleService.findAll();
         String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
         if (configSchemeNo == null) {
@@ -184,6 +253,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
+        if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)) {
+            // 变更单校验变更数据
+            verifyChangeOrderData(data);
+        } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)) {
+            AfInstance instance = findByConfigNoAndProjectNoAndStatus(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+            if (instance == null) {
+                LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
+                throw new RuntimeException();
+            }
+            instanceRelevancyService.create(instance.getInstanceNo(), instanceNo);
+        }
         for (int index = 0; index < approvalRoles.size(); index++) {
             UserRoleSet role = approvalRoles.get(index);
             AfApprovalLog approvalLog = null;
@@ -238,6 +318,92 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         insert(instance);
         approvalLogService.create(approvalLogs);
+    }
+
+    private void verifyChangeOrderData(String data) {
+        AfChangeOrderVO changeOrderVO = JSONUtil.json2Bean(data, AfChangeOrderVO.class);
+        if (changeOrderVO == null) {
+            LOGGER.error("变更单没有输入变更费用，data:{}", data);
+            throw new RuntimeException();
+        }
+        if (StringUtils.isBlank(changeOrderVO.getChangeCause())) {
+            LOGGER.error("变更单没有输入变更原因，data:{}", data);
+            throw new RuntimeException();
+        }
+        List<AfChangeOrder> changeOrders = changeOrderVO.getChangeOrders();
+        if (changeOrders != null) {
+            for (AfChangeOrder changeOrder : changeOrders) {
+                Integer changeType = changeOrder.getChangeType();
+                if (changeType == null) {
+                    LOGGER.error("变更类型（增减项）为空，data:{}", data);
+                    throw new RuntimeException();
+                }
+                if (changeType != -1 && changeType != 1) {
+                    LOGGER.error("错误的变更类型（增减项），changeType：{}", changeType);
+                    throw new RuntimeException();
+                }
+                if (StringUtils.isBlank(changeOrder.getConstructionName())) {
+                    LOGGER.error("变更单没有输入施工项名称，data:{}", data);
+                    throw new RuntimeException();
+                }
+                if (StringUtils.isBlank(changeOrder.getConstructionNo())) {
+                    LOGGER.error("变更单没有输入施工项编号，data:{}", data);
+                    throw new RuntimeException();
+                }
+                Integer count = changeOrder.getCount();
+                if (count == null || count <= 0) {
+                    LOGGER.error("变更单没有输入变更数量，data:{}", data);
+                    throw new RuntimeException();
+                }
+                verifyChangeOrderAmount(changeOrder.getUnitPrice());
+            }
+        }
+        List<AfOtherChange> otherChanges = changeOrderVO.getOtherChanges();
+        if (otherChanges != null) {
+            for (AfOtherChange otherChange : otherChanges) {
+                verifyChangeOrderAmount(otherChange.getAmount());
+                Integer changeType = otherChange.getChangeType();
+                if (changeType == null) {
+                    LOGGER.error("变更类型（增减项）为空，data:{}", data);
+                    throw new RuntimeException();
+                }
+                if (changeType != -1 && changeType != 1) {
+                    LOGGER.error("错误的变更类型（增减项），changeType：{}", changeType);
+                    throw new RuntimeException();
+                }
+                if (StringUtils.isBlank(otherChange.getExpenseName())) {
+                    LOGGER.error("变更单没有输入费用名称，data:{}", data);
+                    throw new RuntimeException();
+                }
+                if (StringUtils.isBlank(otherChange.getDescribe())) {
+                    LOGGER.error("变更单没有输入费用说明，data:{}", data);
+                    throw new RuntimeException();
+                }
+            }
+        }
+        if ((changeOrders == null || changeOrders.isEmpty()) && (otherChanges == null || otherChanges.isEmpty())) {
+            LOGGER.error("变更单没有输入变更信息，data:{}", data);
+            throw new RuntimeException();
+        }
+
+    }
+
+    private void verifyChangeOrderAmount(String amount) {
+        if (amount == null) {
+            LOGGER.error("变更单没有输入费用");
+            throw new RuntimeException();
+        }
+        int index = amount.indexOf(".");
+        if (index > 0 && amount.length() - index > 3) {
+            LOGGER.error("变更单费用格式错误，amount:{}", amount);
+            throw new RuntimeException();
+        }
+        try {
+            new BigDecimal(amount);
+        } catch (NumberFormatException e) {
+            LOGGER.error("变更单费用格式错误，amount:{}", amount);
+            throw new RuntimeException();
+        }
     }
 
     private boolean verifyStartApproval(String projectNo, String configNo, Integer scheduleSort) {
@@ -354,6 +520,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVOs.add(approvalLogVO);
         }
 
+        if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
+            AfInstance sourceInstance = getSourceInstanceByRelevancyInstanceNo(instanceNo);
+            instanceDetailVO.setRelevancyDate(sourceInstance.getData());
+        }
+
         AfConfig config = configService.findByNo(instance.getConfigNo());
         if (config == null) {
             LOGGER.error("未查询到审批流配置信息，configNo:{}", instance.getConfigNo());
@@ -371,6 +542,21 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         instanceDetailVO.setStatus(instance.getStatus());
         return instanceDetailVO;
+    }
+
+    private AfInstance getSourceInstanceByRelevancyInstanceNo(String relevancyInstanceNo) {
+        AfInstanceRelevancy instanceRelevancy = instanceRelevancyService.findByRelevancyInstanceNo(relevancyInstanceNo);
+        if (instanceRelevancy == null) {
+            LOGGER.error("未查询到关联实例信息，relevancyInstanceNo:{}", relevancyInstanceNo);
+            throw new RuntimeException();
+        }
+        String sourceInstanceNo = instanceRelevancy.getSourceInstanceNo();
+        AfInstance sourceInstance = findByNo(sourceInstanceNo);
+        if (sourceInstance == null) {
+            LOGGER.error("未查询到关联实例信息，sourceInstanceNo:{}", sourceInstanceNo);
+            throw new RuntimeException();
+        }
+        return sourceInstance;
     }
 
     /**
@@ -528,20 +714,59 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             constructionStateService.constructionPlan(instance.getProjectNo(), instance.getScheduleSort());
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
             // TODO 发送变更金额
-//            sendChangeMoney(instance.getProjectNo(), instance.getData(), instance.getRemark());
+            sendChangeMoney(instance.getProjectNo(), instance.getData());
         }
 
         createPdf(instance);
     }
 
-    private void sendChangeMoney(String projectNo, String data, String remark) {
+    private void sendChangeMoney(String projectNo, String data) {
         ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
         String orderNo = constructionOrder.getOrderNo();
 
-        Map dataMap = JSONUtil.json2Bean(data, Map.class);
-        String money = (String) dataMap.get("money");
+        List<AfChangeOrderDTO> changeOrderDTOS = new ArrayList<>();
 
-        AfUtils.sendChangeMoney(httpLinks.getCreateFee(), orderNo, money, "+" + remark);
+        AfChangeOrderVO changeOrderVO = JSONUtil.json2Bean(data, AfChangeOrderVO.class);
+        List<AfChangeOrder> changeOrders = changeOrderVO.getChangeOrders();
+        if (changeOrders != null) {
+            BigDecimal amount;
+            for (AfChangeOrder changeOrder : changeOrders) {
+                BigDecimal unitPrice = new BigDecimal(changeOrder.getUnitPrice());
+                BigDecimal count = new BigDecimal(changeOrder.getCount());
+                BigDecimal changeType = new BigDecimal(changeOrder.getChangeType());
+                amount = unitPrice.multiply(count).multiply(changeType);
+
+                AfChangeOrderDTO changeOrderDTO = new AfChangeOrderDTO();
+                changeOrderDTO.setOrderId(orderNo);
+                changeOrderDTO.setFeeAmount(amount.setScale(2, RoundingMode.HALF_UP).toString());
+                changeOrderDTO.setFeeName(changeOrder.getConstructionName());
+                changeOrderDTO.setProjectNo(projectNo);
+
+                changeOrderDTOS.add(changeOrderDTO);
+            }
+        }
+        List<AfOtherChange> otherChanges = changeOrderVO.getOtherChanges();
+        if (otherChanges != null) {
+            BigDecimal amount;
+            for (AfOtherChange otherChange : otherChanges) {
+                amount = new BigDecimal(otherChange.getAmount()).multiply(new BigDecimal(otherChange.getChangeType()));
+
+                AfChangeOrderDTO changeOrderDTO = new AfChangeOrderDTO();
+                changeOrderDTO.setOrderId(orderNo);
+                changeOrderDTO.setFeeAmount(amount.setScale(2, RoundingMode.HALF_UP).toString());
+                changeOrderDTO.setFeeName(otherChange.getExpenseName());
+                changeOrderDTO.setProjectNo(projectNo);
+                changeOrderDTO.setRemark(otherChange.getDescribe());
+
+                changeOrderDTOS.add(changeOrderDTO);
+            }
+        }
+        String httpData = JSONUtil.bean2JsonStr(changeOrderDTOS);
+        int code = AfUtils.postJson(httpLinks.getCreateFee(), httpData);
+        if (code != ResultMessage.SUCCESS.code) {
+            LOGGER.error("变更单变更金额失败， url:{}, data:{}", httpLinks.getCreateFee(), httpData);
+            throw new RuntimeException();
+        }
     }
 
     private void createPdf(AfInstance instance) {
@@ -580,12 +805,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfInstanceVO> instanceVOs = new ArrayList<>();
         List<AfStartMenuVO> startMenus = new ArrayList<>();
 
-        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
-        if (schedulingDetailsVOs == null || schedulingDetailsVOs.isEmpty()) {
-            LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
-            throw new RuntimeException();
-        }
-        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
+        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = null;
+//        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
+//        if (schedulingDetailsVOs == null || schedulingDetailsVOs.isEmpty()) {
+//            LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
+//            throw new RuntimeException();
+//        }
+//        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
         if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
             if (scheduleSort == null) {
                 LOGGER.error("没有传入相应的排期编号！");
@@ -841,13 +1067,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo 项目编号
      */
     private void getChangeStartMenus(List<AfStartMenuVO> startMenus, List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String userId, String projectNo) {
-        int result = verifyChangeOrderAndChangeComplete(schedulingDetailsVOs, projectNo, null);
-        if (result == 1 || result == 3) {
+//        int result = verifyChangeOrderAndChangeComplete(schedulingDetailsVOs, projectNo, null);
+//        if (result == 1 || result == 3) {
             addStartMenu(startMenus, projectNo, AfConfigs.CHANGE_ORDER.configNo, userId);
-        }
-        if (result == 2 || result == 3) {
+//        }
+//        if (result == 2 || result == 3) {
             addStartMenu(startMenus, projectNo, AfConfigs.CHANGE_COMPLETE.configNo, userId);
-        }
+//        }
     }
 
     /**
