@@ -22,6 +22,7 @@ public interface DesignDispatchService {
      * 查询设计订单
      *
      * @param queryStage         具体查询的列表数据编码
+     * @param orderTpye
      * @param companyId          公司ID
      * @param projectNo          订单编号
      * @param userMsg            业主姓名或电话
@@ -42,12 +43,12 @@ public interface DesignDispatchService {
      * @return
      */
     PageVo<List<DesignerOrderVo>> queryDesignerOrder(
-            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+            String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
     PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
-            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+            String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
@@ -250,7 +251,7 @@ public interface DesignDispatchService {
      * @param fileName           excel文件名
      * @param response           返回数据对象
      */
-    void designerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
+    void designerOrderExcel(Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
                             String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
                             String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 

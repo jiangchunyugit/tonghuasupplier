@@ -15,6 +15,7 @@ import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import cn.thinkfree.service.utils.PageInfoUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -25,10 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
@@ -96,39 +94,34 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param pageNum
      * @param pageSize
      * @param cityName
+     * @param orderType 1派单列表，2订单列表
      * @return
      */
-    public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName) {
-
+    @Override
+    public PageInfo<ConstructionOrderListVo> getConstructionOrderList(int pageNum, int pageSize, String cityName, int orderType) {
+        if(pageSize < 5){
+            pageSize = 5;
+        }
         PageHelper.startPage(pageNum, pageSize);
-
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
-        example.createCriteria().andStatusEqualTo(1);
-
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
+        if(orderType == 1){
+            criteria.andOrderStageIn(Arrays.asList(ConstructionStateEnum.STATE_500.getState(),ConstructionStateEnum.STATE_510.getState()));
+        }else{
+            criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_520.getState());
+        }
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
+        PageInfo<ConstructionOrder> orderPageInfo = new PageInfo<>(list);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
-
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
         for (ConstructionOrder constructionOrder : list) {
             listProjectNo.add(constructionOrder.getProjectNo());
         }
-
-        /* 订单编号List */
-//        List<String> listOrdertNo = new ArrayList<>();
-//        for (ConstructionOrder constructionOrder : list) {
-//            listOrdertNo.add(constructionOrder.getOrderNo());
-//        }
-
-        /* 公司编号List */
-//        List<String> listCompanyNo = new ArrayList<>();
-//        for (ConstructionOrder constructionOrder : list) {
-//            listCompanyNo.add(constructionOrder.getCompanyId());
-//        }
         /* 用户编号List */
         List<Map<String, String>> listUserNo = new ArrayList<>();
-
         // 所属地区 & 项目地址 & 预约日期
         List<Project> list1 = getProjectInfo(listProjectNo);
         // 项目经理
@@ -141,7 +134,6 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
         Map<String, Integer> Map5 = getApprove(listProjectNo);
         // 合同金额/时间
         List<FundsOrder> list6 = getFundsOrder(listProjectNo);
-
         continueOut:
         for (ConstructionOrder constructionOrder : list) {
             ConstructionOrderListVo constructionOrderListVo = new ConstructionOrderListVo();
@@ -171,9 +163,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
                         }
                     }
                 }
-
             }
-
             // 订单编号 & 项目编号
             constructionOrderListVo.setOrderNo(constructionOrder.getOrderNo());
             constructionOrderListVo.setProjectNo(constructionOrder.getProjectNo());
@@ -201,7 +191,6 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             } else {
                 constructionOrderListVo.setIsDistribution(0);
             }
-
             //延期天数 开工时间 竣工时间
             for (ProjectScheduling projectScheduling : list4) {
                 if (constructionOrder.getProjectNo().equals(projectScheduling.getProjectNo())) {
@@ -231,10 +220,9 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
                     constructionOrderListVo.setHavePaid(fundsOrder.getPaidAmount());
                 }
             }
-
             listVo.add(constructionOrderListVo);
         }
-        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>(listVo);
+        PageInfo<ConstructionOrderListVo> pageInfo = PageInfoUtils.pageInfo(orderPageInfo,listVo);
         return pageInfo;
     }
 
@@ -247,14 +235,16 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param pageSize
      * @return
      */
+    @Override
     public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo, int pageNum, int pageSize) {
+        if(pageSize < 5){
+            pageSize = 5;
+        }
         if (StringUtils.isBlank(companyNo)) {
-            RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+            return new PageInfo<>();
         }
 
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<ConstructionOrderListVo> pageInfo = new PageInfo<>();
-        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
@@ -262,11 +252,10 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         if (list.size() <= 0) {
-            RespData.error(ResultMessage.ERROR.code, "订单编号不符");
+            return new PageInfo<>();
         }
+        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>(list);
         List<ConstructionOrderListVo> listVo = new ArrayList<>();
-
-        pageInfo2.setList(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -380,10 +369,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             listVo.add(constructionOrderListVo);
         }
 
-        pageInfo.setList(listVo);
-        Page p = (Page) pageInfo2.getList();
-        pageInfo.setPageNum(p.getPages());
-        pageInfo.setTotal(pageInfo2.getList().size());
+        PageInfo<ConstructionOrderListVo> pageInfo = PageInfoUtils.pageInfo(pageInfo2,listVo);
         return pageInfo;
     }
 
@@ -400,11 +386,12 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param orderStage
      * @return
      */
+    @Override
     public PageInfo<DecorationOrderListVo> getDecorationOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                                   String addressDetail, String owner, String phone, String orderStage) {
 
         if (StringUtils.isBlank(companyNo)) {
-            RespData.error(ResultMessage.ERROR.code, "项目编号不能为空");
+            return new PageInfo<>();
         }
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<DecorationOrderListVo> pageInfo = new PageInfo<>();
@@ -542,6 +529,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listProjectNo
      * @return
      */
+    @Override
     public List<Project> getProjectInfo(List<String> listProjectNo) {
         if(listProjectNo == null || listProjectNo.isEmpty()){
             return new ArrayList<>();
@@ -557,6 +545,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listUserNo
      * @return
      */
+    @Override
     public List<PersionVo> getOwnerId (List<Map<String, String>> listUserNo) {
         if(listUserNo == null || listUserNo.isEmpty()){
             return new ArrayList<>();
@@ -593,6 +582,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listProjectNo
      * @return
      */
+    @Override
     public List<Map<String, String>> getEmployeeInfo(List<String> listProjectNo, String role) {
         if(listProjectNo == null || listProjectNo.isEmpty()){
             return new ArrayList<>();
@@ -622,6 +612,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param companyId
      * @return
      */
+    @Override
     public String getCompanyInfo(String companyId) {
         String companyName = constructionOrderMapper.getCompanyName(companyId);
         return companyName;
@@ -633,6 +624,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param stage
      * @return
      */
+    @Override
     public String getContstructionStage(Integer stage) {
         if (null == stage){
             return "";
@@ -652,6 +644,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listProjectNo
      * @return
      */
+    @Override
     public List<ProjectScheduling> getdelayDay(List<String> listProjectNo) {
         if(listProjectNo == null || listProjectNo.isEmpty()){
             return new ArrayList<>();
@@ -667,6 +660,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listProjectNo
      * @return
      */
+    @Override
     public Map<String, Integer> getApprove(List<String> listProjectNo) {
         if(listProjectNo == null || listProjectNo.isEmpty()){
             return new HashMap<>();
@@ -680,6 +674,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listProjectNo
      * @return
      */
+    @Override
     public List<FundsOrder> getFundsOrder(List<String> listProjectNo) {
         if(listProjectNo == null || listProjectNo.isEmpty()){
             return new ArrayList<>();
@@ -696,6 +691,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      * @param listProjectNo
      * @return
      */
+    @Override
     public List<ProjectQuotation> getPrice(List<String> listProjectNo) {
         if(listProjectNo == null || listProjectNo.isEmpty()){
             return new ArrayList<>();

@@ -550,7 +550,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             for (DesignContractVO vo : voList) {
                 //业主
                 ProjectExample projectExample = new ProjectExample();
-                projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+                projectExample.createCriteria().andProjectNoEqualTo(vo.getOrderNo());
                 List<Project> projects = projectMapper.selectByExample(projectExample);
                 if (projects.size() > 0) {
                     for (Project pr : projects) {
@@ -573,10 +573,19 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             }
         }
         //模糊业主
-        if (designContractVO.getOwnerName() != null) {
-            for (int i = 0; i < voList.size(); i++) {
-                if (voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())) {
-                    newList.add(voList.get(i));
+        if (designContractVO.getOwnerName() != null || designContractVO.getOwnerPhone() != null) {
+            if(designContractVO.getOwnerName() != null){
+                for (int i = 0; i < voList.size(); i++) {
+                    if (voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())) {
+                        newList.add(voList.get(i));
+                    }
+                }
+            }
+            else {
+                for (int i = 0; i < voList.size(); i++) {
+                    if (voList.get(i).getOwnerPhone().contains(designContractVO.getOwnerPhone())) {
+                        newList.add(voList.get(i));
+                    }
                 }
             }
             PageVo<List<DesignContractVO>> pageVo = new PageVo<>();
@@ -615,7 +624,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             for (ConstructionContractVO vo : voList) {
                 //业主
                 ProjectExample projectExample = new ProjectExample();
-                projectExample.createCriteria().andProjectNoEqualTo(vo.getProjectNo());
+                projectExample.createCriteria().andProjectNoEqualTo(vo.getOrderNo());
                 List<Project> projects = projectMapper.selectByExample(projectExample);
                 if (projects.size() > 0) {
                     for (Project pr : projects) {
@@ -773,7 +782,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
      **/
     @Override
     public MyRespBundle<ConstructionOrderCommonVo> getConstructionSiteList(int pageNum, int pageSize, String cityName) {
-        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName);
+        PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getConstructionOrderList(pageNum, pageSize, cityName, 2);
         ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
         constructionOrderCommonVo.setCountPageNum(pageInfo.getSize());
         constructionOrderCommonVo.setOrderList(pageInfo.getList());

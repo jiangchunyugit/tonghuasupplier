@@ -1,5 +1,6 @@
 package cn.thinkfree.controller;
 
+import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
@@ -8,6 +9,7 @@ import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
 import cn.thinkfree.database.vo.BasisConstructionVO;
 import cn.thinkfree.database.vo.HardQuoteVO;
+import cn.thinkfree.database.vo.PredatingVo;
 import cn.thinkfree.database.vo.SoftQuoteVO;
 import cn.thinkfree.service.neworder.ReviewDetailsService;
 import io.swagger.annotations.Api;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -161,7 +164,7 @@ public class ReviewDetailsController extends AbsBaseController {
     public MyRespBundle<String> reviewOffer(
             @RequestParam(name = "projectNo") @ApiParam(value = "提交精准报价", name = "projectNo",required = true) String projectNo,
             @RequestParam(name = "result", defaultValue = "-1") @ApiParam(value = "审核结果(1,通过 2,不通过)", name = "result",required = true) int result,
-            @RequestParam(name = "refuseReason") @ApiParam(value = "不通过原因", name = "refuseReason") String refuseReason){
+            @RequestParam(name = "refuseReason") @ApiParam(value = "不通过原因", name = "refuseReason", required = false) String refuseReason){
         try {
             return reviewDetailsService.reviewOffer(projectNo, result, refuseReason);
         } catch (Exception e) {
@@ -170,12 +173,49 @@ public class ReviewDetailsController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("设计师发起预交底详情页---->app使用")
+    @MyRespBody
+    @RequestMapping(value = "queryPredatingDetails", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PredatingVo> queryPredatingDetails(
+            @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo ) {
+        try {
+            return reviewDetailsService.queryPredatingDetails(projectNo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+//    @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
+//    @ApiOperation("获取上海报价信息(预交底)")
+//    public MyRespBundle getShangHaiPriceDetail(
+//            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo,
+//            @RequestParam(name = "predatingTime") @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd",required = true) Date predatingTime,
+//            @RequestParam(name = "remark") @ApiParam(name = "remark", value = "备注",required = true) String remark) {
+//        try {
+//            return reviewDetailsService.getShangHaiPriceDetail(projectNo,predatingTime,remark);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return RespData.error(e.getMessage());
+//        }
+//    }
+
     @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation("获取上海报价信息")
     public MyRespBundle getShangHaiPriceDetail(
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
-        return reviewDetailsService.getShangHaiPriceDetail(projectNo);
+        try{
+            reviewDetailsService.getShangHaiPriceDetail(projectNo);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
+
+
+
+
 
 
 }

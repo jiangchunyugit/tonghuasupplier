@@ -18,8 +18,9 @@ public interface ConstructionOrderOperate {
      * @param pageNum
      * @param pageSize
      * @param cityName
+     * @param orderType
      * @return
      */
-    PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName);
+    PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName, int orderType);
 
 }

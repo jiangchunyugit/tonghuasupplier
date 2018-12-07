@@ -286,7 +286,7 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
                 account.setPassword(new MultipleMd5().encode(pwd));
                 account.setUpdateTime(new Date());
                 userRegisterMapper.updateByPrimaryKey(account);
-                eventService.publish(new ForgetPwd(email));
+                eventService.publish(new ForgetPwd(email,pwd));
             }
         }else{
             return "验证码不正确";

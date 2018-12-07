@@ -382,15 +382,20 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
     		if(childList == null || childList.size() > 2){
     			throw new RuntimeException("入住合同"+contractNumber+"{}设置保证金金额数据错误");
     		}
-        	if(companyInfo.getRoleId().equals(CompanyConstants.RoleType.SJ.code)){
-        		//设计
-				designDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
-        		  
-        	}else{
-        		//施工
-				roadWorkDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
-        	}
-        	  
+    		List<ContractTermsChild> filterList = childList.stream().filter(child -> child.getcType().equals("1") ).collect(Collectors.toList());
+    		printInfoMes("合同保证设置 一次交费记录为｛｝",filterList.size());
+			//如果全部代扣不送数据
+    		if(filterList != null && filterList.size() > 0){
+    			
+	        	if(companyInfo.getRoleId().equals(CompanyConstants.RoleType.SJ.code)){
+	        		//设计
+					designDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
+	        		  
+	        	}else{
+	        		//施工
+					roadWorkDataToB(contractNumber, listVo, contract, companyInfo, resMap, childList);
+	        	}
+    		}
         }
 		return listVo;
 	}
@@ -435,10 +440,10 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
 			  //支付名称
 			  vo.setTypeSub("8001");
-		//合同類型
-		vo.setContractType("1");
-		vo.setIsEnd("2");
-			  //业主名称
+				//合同類型
+			  vo.setContractType("1");
+			  vo.setIsEnd("2");
+					  //业主名称
 			  vo.setConsumerName(companyInfo.getLegalName());//法人名称
 			  //合同开始时间 
 			  vo.setStartTime(String.valueOf(resMap.get("c08")));

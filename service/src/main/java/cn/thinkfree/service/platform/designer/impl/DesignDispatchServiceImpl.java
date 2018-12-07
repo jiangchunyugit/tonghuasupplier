@@ -7,7 +7,6 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ProjectSource;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.core.utils.JSONUtil;
-import cn.thinkfree.core.utils.ThreadManager;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -89,6 +88,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * 查询设计订单，主表为design_order,附表为project
      *
      * @param queryStage         具体查询阶段
+     * @param orderTpye
      * @param projectNo          订单编号（project.project_no）
      * @param userMsg            业主姓名或电话（调用用户中心查询获取userId）
      * @param orderSource        订单来源（project.order_source）
@@ -107,9 +107,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Override
     public PageVo<List<DesignerOrderVo>> queryDesignerOrder(
-            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+            String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String money, String acreage, int designerOrderState, int companyState, String optionUserName,
             String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
+        if (orderTpye == null) {
+            throw new RuntimeException("请输入订单类别");
+        }
         // 模糊查询用户信息
         List<String> queryProjectNo = queryProjectNos(userMsg);
         // 根据公司状态查询公司ID
@@ -117,6 +120,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<String> projectNos = getProjectNos(projectNo, orderSource, money, queryProjectNo);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
+        if(orderTpye == 1){
+            orderExampleCriteria.andOrderStageLessThanOrEqualTo(DesignStateEnum.STATE_30.getState());
+        }
+        if(orderTpye == 2){
+            orderExampleCriteria.andOrderStageGreaterThan(DesignStateEnum.STATE_30.getState());
+        }
         if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
         }
@@ -184,11 +193,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     @Override
     public PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
-            String queryStage, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+            String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String money, String acreage, int designerOrderState, String optionUserName,
             String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司缺失");
+        }
+        if (orderTpye == null) {
+            throw new RuntimeException("请输入订单类别");
         }
         // 模糊查询用户信息
         List<String> queryProjectNo = queryProjectNos(userMsg);
@@ -196,6 +208,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<String> projectNos = getProjectNos(projectNo, orderSource, money, queryProjectNo);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
+        if(orderTpye == 1){
+            orderExampleCriteria.andOrderStageLessThan(DesignStateEnum.STATE_30.getState());
+        }
+        if(orderTpye == 2){
+            orderExampleCriteria.andOrderStageGreaterThanOrEqualTo(DesignStateEnum.STATE_30.getState());
+        }
         if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
         }
@@ -402,10 +420,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     @Override
-    public void designerOrderExcel(String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
+    public void designerOrderExcel(Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
                                    String styleCode, String money, String acreage, int designerOrderState, int companyState, String optionUserName,
                                    String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response) {
-        PageVo<List<DesignerOrderVo>> pageVo = queryDesignerOrder(null, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
+        PageVo<List<DesignerOrderVo>> pageVo = queryDesignerOrder(null, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
                 money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType);
 
         List<List<String>> lists = new ArrayList<>();
@@ -523,6 +541,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void notDispatch(String projectNo, String reason, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(reason)){
+            throw new RuntimeException("必须填写不派单原因");
+        }
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrders = queryDesignerOrder(projectNo);
         checkOrderState(designerOrders, DesignStateEnum.STATE_CLOSE_PLATFORM);
@@ -597,6 +618,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     @Override
     public void refuseOrder(String projectNo, String companyId, String reason, String optionUserId, String optionUserName) {
+        if(StringUtils.isBlank(reason)){
+            throw new RuntimeException("必须填写不接单原因");
+        }
         Project project = queryProjectByNo(projectNo);
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         if (!designerOrder.getCompanyId().equals(companyId)) {

@@ -103,4 +103,6 @@ public interface EmployeeMsgMapper {
     PersionVo selectByUserId(@Param("userId") String userId);
 
     List<PersionVo> selectAllByUserId(@Param("userId") String userId);
+
+    List<EmployeeMsg> selectForUserId(@Param("userId") String userId);
 }

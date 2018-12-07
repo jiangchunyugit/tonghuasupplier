@@ -62,6 +62,14 @@ public interface BasicsService {
     List<BasicsData> queryData(String groupCode);
 
     /**
+     * 查询具体基础数据
+     * @param groupCode
+     * @param code
+     * @return
+     */
+    BasicsData queryDataOne(String groupCode,String code);
+
+    /**
      * 根据分组类型查询基础配置信息
      *
      * @param groupCode 分支类型
@@ -104,4 +112,8 @@ public interface BasicsService {
      * @return
      */
     List<Map<String, String>> pua(int type, String parentCode);
+
+    Map<String,String> getProvince();
+    Map<String,String> getCity();
+    Map<String,String> getArea();
 }

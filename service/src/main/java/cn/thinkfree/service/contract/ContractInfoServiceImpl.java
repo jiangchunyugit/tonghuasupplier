@@ -1,5 +1,7 @@
 package cn.thinkfree.service.contract;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
@@ -14,6 +16,7 @@ import cn.thinkfree.database.vo.contract.ContractDetailsVo;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
 import cn.thinkfree.database.vo.remote.SyncOrderVO;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
+import cn.thinkfree.service.businessentity.BusinessEntityService;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
 import cn.thinkfree.service.constants.*;
@@ -125,6 +128,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	ThirdPartDateService thirdPartDateService;
+
+	@Autowired
+	BusinessEntityService businessEntityService;
 
 
 
@@ -304,8 +310,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
         int flagT = companyInfoMapper.updateauditStatus( companyInfo );
         UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-        String	auditPersion = userVO == null ? "" : userVO.getUsername();
-        String	auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+		String auditPersion = userVO == null ? "" : userVO.getName();
+		String auditAccount = userVO == null ? "" : userVO.getUsername();
         /* 添加审核记录表 */
 		PcAuditInfo record = new PcAuditInfo("1", "1", auditPersion, auditStatus, new Date(), companyId, auditCase,
                 contractNumber, date, auditAccount);
@@ -339,7 +345,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					firstMoney = fullMoney;
 				}else{
 					for (int i = 0; i < childList.size(); i++) {
-						if(childList.get(i).getcType().equals("1")){
+						if("1".equals(childList.get(i).getcType())){
 							firstMoney = 	childList.get(i).getCostValue();
 							break;
 						}
@@ -361,7 +367,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					firstMoney = fullMoney;
 				}else{
 					for (int i = 0; i < childList.size(); i++) {
-						if(childList.get(i).getcType().equals("1")){
+						if("1".equals(childList.get(i).getcType())){
 							firstMoney = 	childList.get(i).getCostValue();
 							break;
 						}
@@ -381,51 +387,75 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 
 	@Override
-	public boolean ackEarnestMoney( String contractNumber, String companyId )
+	public Map<String,String>  ackEarnestMoney( String contractNumber, String companyId )
 	{
-
+		
+    	Map<String,String> resmap = new HashMap<>(2);
 		ContractInfoExample example = new ContractInfoExample();
 		example.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-		ContractInfo contractInfo = new ContractInfo();
-		contractInfo.setContractStatus( "5" );
-		cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
-		 //查询当前合同保证金
-		ContractTermsExample	exp		= new ContractTermsExample();
-	    exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
-	    List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
-	    Map<String,String> resMap = new HashMap<>();
-	    if(list != null){
-		    for (int i = 0; i < list.size(); i++) {
-		    	resMap.put(list.get(i).getContractDictCode(), list.get(i).getContractValue());
-			}
-	    }
-	    //查询公司类型
-	    /* 公司详情 */
-		CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo( companyId );
-		String deposistMoney = "";
-		//装修
-	    if( companyInfo.getCompanyInfo().getRoleId().equals( CompanyType.BD.stringVal() )){
-	    	if(resMap != null ){
-	    	  deposistMoney = String.valueOf(resMap.get("c17"));
-	    	}
-	    }else{
-	    	if(resMap != null){
-	    	  deposistMoney = String.valueOf(resMap.get("c15"));
-	    	}
-	    }
-		/* 修改公司表 */
-		CompanyInfo record  = new CompanyInfo();
-		record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
-		record.setDepositMoney(Integer.valueOf(deposistMoney));
-		CompanyInfoExample companyInfoex = new CompanyInfoExample();
-		companyInfoex.createCriteria().andCompanyIdEqualTo( companyId );
-		/* 确认已交保证金 */
-		int flag = companyInfoMapper.updateByExampleSelective(record ,companyInfoex );
-		if ( flag > 0 )
-		{
-			return true;
-		}
-		return false;
+		//查询当前状态
+		 List<ContractInfo> listc = cxcontractInfoMapper.selectByExample(example);
+		 if(listc == null || listc.size() == 0 ){
+			resmap.put("falg", "flag");
+			resmap.put("msg", "系统异常数据异常");
+			return resmap;
+		 }
+		 //0草稿 1待审批 2 审批通过 3 审批拒绝4待确认保证金5已确认保证金
+		 if(listc.size()> 0 ){
+			int status = Integer.valueOf(listc.get(0)==null?"0":listc.get(0).getContractStatus());
+		    if(status == 4){
+				ContractInfo contractInfo = new ContractInfo();
+				contractInfo.setContractStatus( "5" );
+				cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
+				 //查询当前合同保证金
+				ContractTermsExample	exp		= new ContractTermsExample();
+			    exp.createCriteria().andCompanyIdEqualTo( companyId ).andContractNumberEqualTo( contractNumber );
+			    List<ContractTerms> list = pcContractTermsMapper.selectByExample( exp );
+			    Map<String,String> resMap = new HashMap<>();
+			    if(list != null){
+				    for (int i = 0; i < list.size(); i++) {
+				    	resMap.put(list.get(i).getContractDictCode(), list.get(i).getContractValue());
+					}
+			    }
+			    //查询公司类型
+			    /* 公司详情 */
+				CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo( companyId );
+				String deposistMoney = "";
+				//装修
+			    if( companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.BD.code)){
+			    	if(resMap != null ){
+			    	  deposistMoney = String.valueOf(resMap.get("c17"));
+			    	}
+			    }else{
+			    	if(resMap != null){
+			    	  deposistMoney = String.valueOf(resMap.get("c15"));
+			    	}
+			    }
+				/* 修改公司表 */
+				CompanyInfo record  = new CompanyInfo();
+				record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
+				record.setDepositMoney(Integer.valueOf(deposistMoney));
+				CompanyInfoExample companyInfoex = new CompanyInfoExample();
+				companyInfoex.createCriteria().andCompanyIdEqualTo( companyId );
+				/* 确认已交保证金 */
+				companyInfoMapper.updateByExampleSelective(record ,companyInfoex );
+				
+				resmap.put("falg", "true");
+				resmap.put("msg", "成功");
+				
+				return resmap;
+				
+		   }else{
+			   
+			   resmap.put("falg", "false");
+			   
+			   resmap.put("msg", "当前公司状态无法确认保证金");
+		   }
+		
+		 }
+		 
+	     
+		return resmap;
 	}
 
 
@@ -667,7 +697,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Override
 	public boolean insertContractClause( String contractNumber, String companyId, ContractClauseVO contractClausevo )
 	{
-
+		Date date = new Date();
 	     try {
 			if ( contractClausevo.getParamMap() != null )
 			{
@@ -744,7 +774,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
 			cxcontractInfoMapper.updateByExampleSelective(record, example);
 			// 修改公司状态
-			companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal());
+			companyApplyService.updateStatus(companyId, CompanyAuditStatus.CHECKING.stringVal(), date);
 		} catch (Exception e) {
 			printErrorMes("设置合同条款服务异常 {}" + e.getMessage());
 			return false;
@@ -1311,8 +1341,15 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));
 			result.setCity(cityMapper.convertCodeToName(companyInfo.getCityCode()));
 			result.setFddm(companyInfo.getSiteCompanyId());
-			// TODO 需要埃森哲数据 经营主体编码
-			result.setGsdm(105);
+			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
+			if(StringUtils.isNotBlank(code)){
+				try{
+					result.setGsdm( Integer.valueOf(code));
+				}catch (Exception e){
+					printErrorMes(e.getMessage());
+				}
+			}
+//			result.setGsdm(105);
 		}
 		// 10 有效 20无效
 		result.setStatus("10");
@@ -1370,8 +1407,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			} else {// 拒绝 插入拒绝原因
 				// 查询合同编号
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-				String auditPersion = userVO == null ? "" : userVO.getUsername();
-				String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
+				String auditPersion = userVO == null ? "" : userVO.getName();
+				String auditAccount = userVO == null ? "" : userVO.getUsername();
 				/* 添加审核记录表 */
 				PcAuditInfo te = new PcAuditInfo("2", "1", auditPersion, status, new Date(), list.get(0).getCompanyId(),
 						cause, list.get(0).getContractNumber(), new Date(), auditAccount);

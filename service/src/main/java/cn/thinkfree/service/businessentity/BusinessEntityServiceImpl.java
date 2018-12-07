@@ -44,6 +44,9 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     @Autowired
     BusinessEntityStoreMapper businessEntityStoreMapper;
 
+    @Autowired
+    CompanyInfoMapper companyInfoMapper;
+
     /**
      * 判断查询还是创建
      */
@@ -114,6 +117,13 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     @Override
     public PageInfo<BusinessEntityVO> businessEntityList(BusinessEntitySEO businessEntitySEO) {
 
+        if(StringUtils.isNotBlank(businessEntitySEO.getBusinessEntityNm())) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("%");
+            stringBuffer.append(businessEntitySEO.getBusinessEntityNm());
+            stringBuffer.append("%");
+            businessEntitySEO.setBusinessEntityNm(stringBuffer.toString());
+        }
         PageHelper.startPage(businessEntitySEO.getPage(),businessEntitySEO.getRows());
         List<BusinessEntityVO> businessEntityVOS = businessEntityMapper.selectWithCompany(businessEntitySEO);
         return new PageInfo<>(businessEntityVOS);
@@ -222,5 +232,36 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
             }
         }
         return result;
+    }
+
+    @Override
+    public String getBusinessEbsIdByCompanyId(String companyId) {
+
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+
+        if (companyInfos.size() > FlagZero) {
+            if (StringUtils.isNotBlank(companyInfos.get(0).getSiteCompanyId())) {
+
+                BusinessEntityStoreExample businessEntityStoreExample = new BusinessEntityStoreExample();
+                businessEntityStoreExample.createCriteria().andStoreIdEqualTo(companyInfos.get(0).getSiteCompanyId());
+                List<BusinessEntityStore> businessEntityStores = businessEntityStoreMapper.selectByExample(businessEntityStoreExample);
+                if (businessEntityStores.size() > FlagZero) {
+
+                    if (StringUtils.isNotBlank(businessEntityStores.get(0).getBusinessEntityCode())) {
+
+                        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
+                        businessEntityExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityStores.get(0).getBusinessEntityCode());
+                        List<BusinessEntity> businessEntities = businessEntityMapper.selectByExample(businessEntityExample);
+                        if (businessEntities.size() > FlagZero) {
+
+                            return StringUtils.isNotBlank(businessEntities.get(0).getEbsid())?businessEntities.get(0).getEbsid():"";
+                        }
+                    }
+                }
+            }
+        }
+        return "";
     }
 }

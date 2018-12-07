@@ -108,6 +108,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         params.put("userName", userName);
         params.put("userPhone", userPhone);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(registerC), HttpUtils.mapToParams(params));
+        logger.info("registerC:" + JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -136,6 +137,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         List<Map<String, String>> mapList = new ArrayList<>();
         mapList.add(params);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getUrl(registerS), JSONObject.toJSONString(mapList));
+        logger.info("registerS:" + JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -166,6 +168,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         Map<String, String> queryUserParams = new HashMap<>();
         queryUserParams.put("phone", userPhone);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserUrl), HttpUtils.mapToParams(queryUserParams));
+        logger.info("queryByPhone:" + JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             throw new RuntimeException("用户中心异常");
@@ -207,13 +210,14 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap) {
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(getUrl(getAllUserByIds), getParams(employeeMsgMap));
+        logger.info("queryUserMsg:" + JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
-            throw new RuntimeException("用户中心异常");
+            return new ArrayList<>();
         }
         JSONObject jsonObject = JSONObject.parseObject(httpRespMsg.getContent());
         if (!"1000".equals(jsonObject.getString("code"))) {
-            throw new RuntimeException("无效的用户ID");
+            return new ArrayList<>();
         }
         JSONObject dataObj = jsonObject.getJSONObject("data");
         List<UserMsgVo> userMsgVos = new ArrayList<>();
@@ -249,6 +253,7 @@ public class UserCenterServiceImpl implements UserCenterService {
             queryUserParams.put("nickName", nickName);
         }
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserByPhoneAndName), HttpUtils.mapToParams(queryUserParams));
+        logger.info("queryUserMsg:like:" + JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             return new ArrayList<>();
@@ -293,6 +298,7 @@ public class UserCenterServiceImpl implements UserCenterService {
             queryUserParams.put("nickName", userMsg);
         }
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserByPhoneAndName), HttpUtils.mapToParams(queryUserParams));
+        logger.info("queryUserMsg:like:" + JSONObject.toJSONString(httpRespMsg));
         if (httpRespMsg.getResponseCode() != 200) {
             //用户中心服务异常
             return new ArrayList<>();

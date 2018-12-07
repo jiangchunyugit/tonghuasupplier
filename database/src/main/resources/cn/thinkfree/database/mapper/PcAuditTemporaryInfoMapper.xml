@@ -69,6 +69,8 @@
     <result column="account_area" jdbcType="VARCHAR" property="accountArea" />
     <result column="account_type" jdbcType="SMALLINT" property="accountType" />
     <result column="taxpayer_registration_number" jdbcType="VARCHAR" property="taxpayerRegistrationNumber" />
+    <result column="company_register_no" jdbcType="VARCHAR" property="companyRegisterNo" />
+    <result column="organization_code_url" jdbcType="VARCHAR" property="organizationCodeUrl" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -151,7 +153,7 @@
     is_three_to_one, tax_code_photo_url, contact_name, contact_phone, is_taxpayer, comapny_nature, 
     change_status, change_date, account_province, account_city, account_district, account_name, 
     card_name, account_branch_name, account_number, license_url, account_area, account_type, 
-    taxpayer_registration_number
+    taxpayer_registration_number, company_register_no, organization_code_url
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfoExample" resultMap="BaseResultMap">
     <!--
@@ -207,7 +209,8 @@
       account_city, account_district, account_name, 
       card_name, account_branch_name, account_number, 
       license_url, account_area, account_type, 
-      taxpayer_registration_number)
+      taxpayer_registration_number, company_register_no, 
+      organization_code_url)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -229,7 +232,8 @@
       #{accountCity,jdbcType=VARCHAR}, #{accountDistrict,jdbcType=VARCHAR}, #{accountName,jdbcType=VARCHAR}, 
       #{cardName,jdbcType=VARCHAR}, #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
       #{licenseUrl,jdbcType=VARCHAR}, #{accountArea,jdbcType=VARCHAR}, #{accountType,jdbcType=SMALLINT}, 
-      #{taxpayerRegistrationNumber,jdbcType=VARCHAR})
+      #{taxpayerRegistrationNumber,jdbcType=VARCHAR}, #{companyRegisterNo,jdbcType=VARCHAR}, 
+      #{organizationCodeUrl,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfo">
     <!--
@@ -427,6 +431,12 @@
       <if test="taxpayerRegistrationNumber != null">
         taxpayer_registration_number,
       </if>
+      <if test="companyRegisterNo != null">
+        company_register_no,
+      </if>
+      <if test="organizationCodeUrl != null">
+        organization_code_url,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -617,6 +627,12 @@
       </if>
       <if test="taxpayerRegistrationNumber != null">
         #{taxpayerRegistrationNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="companyRegisterNo != null">
+        #{companyRegisterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationCodeUrl != null">
+        #{organizationCodeUrl,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -826,6 +842,12 @@
       <if test="record.taxpayerRegistrationNumber != null">
         taxpayer_registration_number = #{record.taxpayerRegistrationNumber,jdbcType=VARCHAR},
       </if>
+      <if test="record.companyRegisterNo != null">
+        company_register_no = #{record.companyRegisterNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.organizationCodeUrl != null">
+        organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -899,7 +921,9 @@
       license_url = #{record.licenseUrl,jdbcType=VARCHAR},
       account_area = #{record.accountArea,jdbcType=VARCHAR},
       account_type = #{record.accountType,jdbcType=SMALLINT},
-      taxpayer_registration_number = #{record.taxpayerRegistrationNumber,jdbcType=VARCHAR}
+      taxpayer_registration_number = #{record.taxpayerRegistrationNumber,jdbcType=VARCHAR},
+      company_register_no = #{record.companyRegisterNo,jdbcType=VARCHAR},
+      organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

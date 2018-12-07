@@ -296,7 +296,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         for (int i = 0; i < ruleNumbers.size(); i++) {
             //添加审核记录表
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-            String auditPersion = userVO == null ? "" : userVO.getUsername();
+            String auditPersion = userVO == null ? "" : userVO.getName();
             String companyId = userVO==null?"":userVO.getCompanyID();
             String auditAccount = userVO ==null?"":userVO.getUserRegister().getPhone();
             String ruleNumber = String.valueOf(ruleNumbers.get(i));

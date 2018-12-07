@@ -33,12 +33,12 @@ public class ContractSignatureServiceImpl implements ContractSignatureService{
             contractSignatureVO.getContractSignatures().forEach(e->{
                 e.setContractNumber(contractSignatureVO.getContractNo());
                 contractSignatureMapper.insertSelective(e);
-                List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContract(contractSignatureVO.getContractNo());
-                //for (int i = 0; i < listvo.size(); i++) {
-                	  CreateOrder order = new CreateOrder();
-                order.setData(listvo);
-                      eventService.publish(order);
-                //}
+//                List<SyncOrderVO>  listvo=  thirdPartDateService.getOrderContract(contractSignatureVO.getContractNo());
+//                //for (int i = 0; i < listvo.size(); i++) {
+//                	  CreateOrder order = new CreateOrder();
+//                order.setData(listvo);
+//                      eventService.publish(order);
+//                //}
               
             });
             return true;

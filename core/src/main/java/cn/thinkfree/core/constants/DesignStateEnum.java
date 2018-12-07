@@ -1,7 +1,5 @@
 package cn.thinkfree.core.constants;
 
-import com.alibaba.fastjson.JSONObject;
-
 import java.util.*;
 
 /**
@@ -61,7 +59,9 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_45(45, "量房预约已确认", "业主确认了量房预约申请", new Integer[]{50}, true),
+    STATE_45(45, "量房预约已确认", "业主确认了量房预约申请", new Integer[]{50, 46}, true),
+
+    STATE_ORDER_END_46(46, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 消费者	支付量房费
      */
@@ -332,21 +332,21 @@ public enum DesignStateEnum {
     }
 
     public static List<Map<String, Object>> allState(int state) {
-        states.clear();
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
         List<Map<String, Object>> mapList = new ArrayList<>();
+        List<Integer> states = new ArrayList<>();
         for (DesignStateEnum stateEnum : stateEnums) {
             enumMap.put(stateEnum.state, stateEnum);
             if (stateEnum.stateType && stateEnum.state <= state) {
-                addList(mapList, stateEnum);
+                addList(mapList, states, stateEnum);
             }
         }
         DesignStateEnum stateEnum = enumMap.get(state);
         if (!stateEnum.stateType) {
             stateEnum = falseState(enumMap, state);
         }
-        getData(enumMap, stateEnum, mapList, stateEnum.stateType);
+        getData(enumMap, states, stateEnum, mapList, stateEnum.stateType);
         List<Map<String, Object>> removeData = new ArrayList<>();
         int lastState = -1;
         int endState = -1;
@@ -399,9 +399,7 @@ public enum DesignStateEnum {
         return null;
     }
 
-    private static List<Integer> states = new ArrayList<>();
-
-    private static void addList(List<Map<String, Object>> mapList, DesignStateEnum stateEnum) {
+    private static void addList(List<Map<String, Object>> mapList, List<Integer> states, DesignStateEnum stateEnum) {
         if (states.contains(stateEnum.state)) {
             return;
         }
@@ -412,18 +410,18 @@ public enum DesignStateEnum {
         mapList.add(map);
     }
 
-    private static void getData(Map<Integer, DesignStateEnum> enumMap, DesignStateEnum stateEnum, List<Map<String, Object>> mapList, boolean stateType) {
+    private static void getData(Map<Integer, DesignStateEnum> enumMap, List<Integer> states, DesignStateEnum stateEnum, List<Map<String, Object>> mapList, boolean stateType) {
         Integer[] stateInt = stateEnum.nextStates;
         for (Integer integer : stateInt) {
             DesignStateEnum stateEnum1 = enumMap.get(integer);
             if (stateType == stateEnum1.stateType) {
-                addList(mapList, stateEnum);
-                getData(enumMap, stateEnum1, mapList, stateType);
+                addList(mapList, states, stateEnum);
+                getData(enumMap, states, stateEnum1, mapList, stateType);
                 break;
             }
         }
         if (stateInt == null || stateInt.length <= 0) {
-            addList(mapList, stateEnum);
+            addList(mapList, states, stateEnum);
         }
     }
 
@@ -508,7 +506,8 @@ public enum DesignStateEnum {
                     || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_11)
                     || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_21)
                     || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_31)
-                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_41)) {
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_41)
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_46)) {
                 stateEnums1.add(designStateEnum);
             }
         }

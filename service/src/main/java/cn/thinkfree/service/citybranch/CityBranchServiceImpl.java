@@ -151,6 +151,14 @@ public class CityBranchServiceImpl implements CityBranchService {
     @Override
     public PageInfo<CityBranchVO> cityBranchList(CityBranchSEO cityBranchSEO) {
 
+        // 负责人姓名电话不为空拼接模糊查询条件
+        if(StringUtils.isNotBlank(cityBranchSEO.getLegalName())) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("%");
+            stringBuffer.append(cityBranchSEO.getLegalName());
+            stringBuffer.append("%");
+            cityBranchSEO.setLegalName(stringBuffer.toString());
+        }
         PageHelper.startPage(cityBranchSEO.getPage(),cityBranchSEO.getRows());
         List<CityBranchVO> cityBranchList = cityBranchMapper.selectBranchCompanyByParam(cityBranchSEO);
         return new PageInfo<>(cityBranchList);

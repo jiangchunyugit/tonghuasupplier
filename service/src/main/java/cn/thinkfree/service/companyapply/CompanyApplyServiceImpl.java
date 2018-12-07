@@ -17,10 +17,11 @@ import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
-import cn.thinkfree.service.utils.UserNoUtils;
+import cn.thinkfree.service.utils.AccountHelper;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -98,8 +99,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateStatus(String companyId, String status) {
+    public boolean updateStatus(String companyId, String status, Date date) {
         CompanyInfo companyInfo = new CompanyInfo();
+        if(date == null || date.equals("")){
+            date = new Date();
+        }
+        companyInfo.setUpdateTime(date);
         companyInfo.setCompanyId(companyId);
         companyInfo.setAuditStatus(status);
         CompanyInfoExample example = new CompanyInfoExample();
@@ -191,6 +196,20 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return false;
     }
 
+    @Override
+    public boolean ExistCompanyId(String companyId) {
+        if(companyId == null || StringUtils.isBlank(companyId)){
+            return false;
+        }
+        CompanyInfoExpandExample example = new CompanyInfoExpandExample();
+        example.createCriteria().andEmailEqualTo(companyId);
+        List<CompanyInfoExpand> companyInfoExpands = companyInfoExpandMapper.selectByExample(example);
+        if(companyInfoExpands.size() > 0){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * a:添加账号---》返回公司id
      * @param roleId
@@ -198,8 +217,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     public String generateCompanyId(String roleId) {
-        String companyId = UserNoUtils.getUserNo(roleId);
-        if(isEnable(companyId)){
+        String companyId = AccountHelper.createUserNo(roleId);
+        if(ExistCompanyId(companyId)){
             companyId = generateCompanyId(roleId);
         }
         return companyId;
@@ -225,6 +244,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
             return map;
         }
+
+        //todo 登陆密码级别低需要修改
+//        String password = AccountHelper.createUserPassWord();
+        String password = "123456";
+        pcApplyInfoSEO.setPassword(password);
+
         //公司id
         String companyId = pcApplyInfoSEO.getCompanyId();
 
@@ -266,9 +291,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         }
 
         //插入审批表
-        String auditPersion = userVO == null ? "" : userVO.getUsername();
-        String auditAccount = userVO == null ? "" : userVO.getUserRegister().getPhone();
-        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, CompanyConstants.AuditType.ENTRY.stringVal(), date,
+        String auditPersion = userVO == null ? "" : userVO.getName();
+        String auditAccount = userVO == null ? "" : userVO.getUsername();
+        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, SysConstants.YesOrNo.YES.toString(), date,
                 companyId, "", "", date, auditAccount);
         int line = pcAuditInfoMapper.insertSelective(record);
 
@@ -346,16 +371,15 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
-        JSONObject object = new JSONObject();
-        object.put("登录账号", pcApplyInfoSEO.getEmail());
-        object.put("默认密码", "123456");
-        RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), object.toJSONString());
-        if (!rs.isComplete()) {
-            throw new RuntimeException("添加账号发送短信失败");
-        }
+        Map<String,Object> para = new HashMap<>();
+        para.put("登录账号", pcApplyInfoSEO.getEmail());
+        para.put("默认密码",pcApplyInfoSEO.getPassword());
+        cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
+                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
 
-        //邮件
-        RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", object.toJSONString());
+        cloudService.sendEmail(pcApplyInfoSEO.getEmail(),
+                SysConstants.EmailTemplate.join.code,
+                new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
     }
 
     private int saveUserRegister(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
@@ -366,9 +390,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         userRegister.setUpdateTime(date);
         userRegister.setType(UserRegisterType.Enterprise.shortVal());
         MultipleMd5 md5 = new MultipleMd5();
-        if (pcApplyInfoSEO.getPassword() == null) {
-            pcApplyInfoSEO.setPassword("123456");
-        }
         userRegister.setPassword(md5.encode(pcApplyInfoSEO.getPassword()));
 
         userRegister.setPhone(pcApplyInfoSEO.getEmail());
@@ -395,7 +416,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCreateTime(date);
         companyInfo.setUpdateTime(date);
-        companyInfo.setDepositMoney(Integer.parseInt(depositMoney));
         companyInfo.setCompanyId(companyId);
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
