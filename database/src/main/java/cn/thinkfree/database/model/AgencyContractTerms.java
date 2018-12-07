@@ -22,7 +22,7 @@ public class AgencyContractTerms extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="id主鍵id")
+    @ApiModelProperty(value="id主鍵id",hidden = true)
     private Integer id;
 
     /**
