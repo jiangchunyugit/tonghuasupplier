@@ -158,7 +158,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 //        String code = businessEntityService.getBusinessEbsIdByCompanyId(companyID);
 //        if(StringUtils.isNotBlank(code)){
 //            try{
-                sync.setCwgsdm( Integer.valueOf("789"));
+                sync.setCwgsdm( Integer.valueOf("783"));
 //            }catch (Exception e){
 //                logger.error(e.getMessage());
 //            }

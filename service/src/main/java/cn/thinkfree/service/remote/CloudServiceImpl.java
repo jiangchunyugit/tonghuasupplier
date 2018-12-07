@@ -178,23 +178,6 @@ public class CloudServiceImpl implements CloudService {
             return buildFailResult();
         }
         return result;
-//        MultiValueMap<String, Object> param = initParam();
-//
-//        param.add("address", syncTransactionVO.getAddress());
-//        param.add("code", syncTransactionVO.getCode());
-//        param.add("cwgsdm", syncTransactionVO.getCwgsdm());
-//        param.add("gssh", syncTransactionVO.getGssh());
-//        param.add("jc", syncTransactionVO.getJc());
-//        param.add("name", syncTransactionVO.getName());
-//        param.add("vendorCode", syncTransactionVO.getVendorCode());
-//        RemoteResult<String> result = null;
-//        try {
-//            result = invokeRemoteMethod(syncMerchantUrl, param);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return buildFailResult();
-//        }
-//        return result;
     }
 
     /**
