@@ -676,7 +676,7 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		}
 		if(flag == true){
 			aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSJOIN.stringVal(), date);
-			line = updateContractAudit(companyId, contractNumber, ContractStatus.suredeposit.shortVal());
+			line = updateContractAudit(companyId, contractNumber, ContractStatus.Waitdeposit.shortVal());
 		}else {
 			aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal(), date);
 			line = updateContractAudit(companyId, contractNumber, ContractStatus.Waitdeposit.shortVal());
