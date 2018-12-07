@@ -44,12 +44,12 @@ public interface DesignDispatchService {
      */
     PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
-            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
+            String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage,
+            int designerOrderState, int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
     PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState,
+            String createTimeEnd, String styleCode,String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
     /**
@@ -252,8 +252,8 @@ public interface DesignDispatchService {
      * @param response           返回数据对象
      */
     void designerOrderExcel(Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-                            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
-                            String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
+                            String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,
+                            int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 
     /**
      * 设计师关联案例Id
@@ -302,4 +302,21 @@ public interface DesignDispatchService {
      * @return
      */
     MyRespBundle confirmeVolumeRoom(String projectNo, String userId);
+
+    /**
+     *
+     * @param contractNo
+     * @param projectNo
+     * @param orderSource
+     * @param provinceCode
+     * @param cityCode
+     * @param areaCode
+     * @param contractState
+     * @param signTimeS
+     * @param signTimeE
+     * @param ownerMsg
+     * @return
+     */
+    List<Object> designContract(String contractNo,String projectNo,String orderSource,String provinceCode,String cityCode,String areaCode,
+                                String contractState,String signTimeS,String signTimeE,String ownerMsg);
 }

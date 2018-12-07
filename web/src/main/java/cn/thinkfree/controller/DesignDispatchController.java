@@ -58,6 +58,9 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "createTimeStart", required = false, value = "创建时间开始") @RequestParam(name = "createTimeStart", required = false) String createTimeStart,
             @ApiParam(name = "createTimeEnd", required = false, value = "创建时间结束") @RequestParam(name = "createTimeEnd", required = false) String createTimeEnd,
             @ApiParam(name = "styleCode", required = false, value = "装饰风格") @RequestParam(name = "styleCode", required = false) String styleCode,
+            @ApiParam(name = "provinceCode", required = false, value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
+            @ApiParam(name = "cityCode", required = false, value = "城市编码") @RequestParam(name = "cityCode", required = false) String cityCode,
+            @ApiParam(name = "areaCode", required = false, value = "区域编码") @RequestParam(name = "areaCode", required = false) String areaCode,
             @ApiParam(name = "money", required = false, value = "装修预算") @RequestParam(name = "money", required = false) String money,
             @ApiParam(name = "acreage", required = false, value = "建筑面积") @RequestParam(name = "acreage", required = false) String acreage,
             @ApiParam(name = "designerOrderState", required = false, value = "订单状态") @RequestParam(name = "designerOrderState", required = false, defaultValue = "-1") int designerOrderState,
@@ -70,7 +73,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage,orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,6 +94,9 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "createTimeStart", required = false, value = "创建时间开始") @RequestParam(name = "createTimeStart", required = false) String createTimeStart,
             @ApiParam(name = "createTimeEnd", required = false, value = "创建时间结束") @RequestParam(name = "createTimeEnd", required = false) String createTimeEnd,
             @ApiParam(name = "styleCode", required = false, value = "装饰风格") @RequestParam(name = "styleCode", required = false) String styleCode,
+            @ApiParam(name = "provinceCode", required = false, value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
+            @ApiParam(name = "cityCode", required = false, value = "城市编码") @RequestParam(name = "cityCode", required = false) String cityCode,
+            @ApiParam(name = "areaCode", required = false, value = "区域编码") @RequestParam(name = "areaCode", required = false) String areaCode,
             @ApiParam(name = "money", required = false, value = "装修预算") @RequestParam(name = "money", required = false) String money,
             @ApiParam(name = "acreage", required = false, value = "建筑面积") @RequestParam(name = "acreage", required = false) String acreage,
             @ApiParam(name = "designerOrderState", required = false, value = "订单状态") @RequestParam(name = "designerOrderState", required = false, defaultValue = "-1") int designerOrderState,
@@ -102,7 +108,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrderByCompanyId(queryStage,orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    money, acreage, designerOrderState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -121,6 +127,9 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "createTimeStart", required = false, value = "创建时间开始") @RequestParam(name = "createTimeStart", required = false) String createTimeStart,
             @ApiParam(name = "createTimeEnd", required = false, value = "创建时间结束") @RequestParam(name = "createTimeEnd", required = false) String createTimeEnd,
             @ApiParam(name = "styleCode", required = false, value = "装饰风格") @RequestParam(name = "styleCode", required = false) String styleCode,
+            @ApiParam(name = "provinceCode", required = false, value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
+            @ApiParam(name = "cityCode", required = false, value = "城市编码") @RequestParam(name = "cityCode", required = false) String cityCode,
+            @ApiParam(name = "areaCode", required = false, value = "区域编码") @RequestParam(name = "areaCode", required = false) String areaCode,
             @ApiParam(name = "money", required = false, value = "装修预算") @RequestParam(name = "money", required = false) String money,
             @ApiParam(name = "acreage", required = false, value = "建筑面积") @RequestParam(name = "acreage", required = false) String acreage,
             @ApiParam(name = "designerOrderState", required = false, value = "订单状态") @RequestParam(name = "designerOrderState", required = false, defaultValue = "-1") int designerOrderState,
@@ -134,7 +143,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response) {
         try {
             designDispatchService.designerOrderExcel(orderTpye,companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -624,5 +633,23 @@ public class DesignDispatchController extends AbsBaseController {
         }catch (Exception e){
             return RespData.error(e.getMessage());
         }
+    }
+
+    @ApiOperation("运营平台---设计平台---设计合同管理列表")
+    @MyRespBody
+    @RequestMapping(value = "designContract", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle designContract(
+            @ApiParam(name = "contractNo", required = false, value = "合同编号") @RequestParam(name = "contractNo", required = false) String contractNo,
+            @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "orderSource", required = false, value = "订单来源") @RequestParam(name = "orderSource", required = false) String orderSource,
+            @ApiParam(name = "provinceCode", required = false, value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
+            @ApiParam(name = "cityCode", required = false, value = "城市编码") @RequestParam(name = "cityCode", required = false) String cityCode,
+            @ApiParam(name = "areaCode", required = false, value = "区域编码") @RequestParam(name = "areaCode", required = false) String areaCode,
+            @ApiParam(name = "contractState", required = false, value = "合同状态") @RequestParam(name = "contractState", required = false) String contractState,
+            @ApiParam(name = "signTimeS", required = false, value = "签约时间开始") @RequestParam(name = "signTimeS", required = false) String signTimeS,
+            @ApiParam(name = "signTimeE", required = false, value = "签约时间结束") @RequestParam(name = "contractState", required = false) String signTimeE,
+            @ApiParam(name = "ownerMsg", required = false, value = "业主手机号/姓名") @RequestParam(name = "ownerMsg", required = false) String ownerMsg){
+
+        return sendJsonData(ResultMessage.SUCCESS,null);
     }
 }

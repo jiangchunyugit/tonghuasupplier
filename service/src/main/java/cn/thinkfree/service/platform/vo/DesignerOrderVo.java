@@ -17,6 +17,12 @@ public class DesignerOrderVo {
     private String ownerPhone;
     @ApiModelProperty("所在地")
     private String address;
+    @ApiModelProperty("省份")
+    private String provinceName;
+    @ApiModelProperty("城市")
+    private String cityName;
+    @ApiModelProperty("区")
+    private String regionName;
     @ApiModelProperty("订单来源")
     private String orderSource;
     @ApiModelProperty("创建时间")
@@ -213,5 +219,29 @@ public class DesignerOrderVo {
 
     public String getProjectMoney() {
         return projectMoney;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getRegionName() {
+        return regionName;
+    }
+
+    public void setRegionName(String regionName) {
+        this.regionName = regionName;
     }
 }

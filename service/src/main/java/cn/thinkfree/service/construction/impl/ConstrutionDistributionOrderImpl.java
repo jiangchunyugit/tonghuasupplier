@@ -4,6 +4,7 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.mapper.BuildSchemeCompanyRelMapper;
 import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
@@ -13,7 +14,9 @@ import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.ConstrutionDistributionOrder;
 import cn.thinkfree.service.construction.vo.ConstructionOrderDistributionNumVo;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
@@ -38,6 +42,10 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
     CommonService commonService;
     @Autowired
     BuildConfigService buildConfigService;
+    @Autowired
+    private BuildSchemeCompanyRelMapper relMapper;
+    @Autowired
+    private BasicsService basicsService;
 
 
     /**
@@ -83,30 +91,32 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
     @Override
     public MyRespBundle<List<DistributionOrderCityVo>> getCityList(String companyName) {
 
-        CompanyInfoExample example = new CompanyInfoExample();
-        if (!StringUtils.isBlank(companyName)){
-            example.createCriteria().andCompanyNameLike("%"+companyName+"%");
+        BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
+        relExample.createCriteria().andIsEableEqualTo(1).andDelStateEqualTo(2);
+        List<BuildSchemeCompanyRel> rels = relMapper.selectByExample(relExample);
+        if(rels.isEmpty()){
+            return RespData.success(new ArrayList<>());
         }
-        List<DistributionOrderCityVo> listData = new ArrayList<>();
-        example.createCriteria().andRoleIdLike("%BD%");
+        List<String> companyIds = ReflectUtils.getList(rels,"companyId");
+        CompanyInfoExample example = new CompanyInfoExample();
+        CompanyInfoExample.Criteria criteria = example.createCriteria();
+        if (!StringUtils.isBlank(companyName)){
+            criteria.andCompanyNameLike("%"+companyName+"%");
+        }
+        criteria.andCompanyIdIn(companyIds);
+        criteria.andRoleIdEqualTo("BD").andAuditStatusEqualTo("8");
         List<CompanyInfo> list = companyInfoMapper.selectByExample(example);
+        if(list.isEmpty()){
+            return RespData.success(new ArrayList<>());
+        }
+        Map<String, String> citys = basicsService.getCity();
+        List<DistributionOrderCityVo> listData = new ArrayList<>();
         for (CompanyInfo companyInfo : list){
-            CityExample cityExample = new CityExample();
-            cityExample.createCriteria().andCityCodeEqualTo(String.valueOf(companyInfo.getCityCode()));
-            List<City> listCity = cityMapper.selectByExample(cityExample);
-
-            /* 判断该公司是否又施工方案 */
-            String schemeNo = buildConfigService.getSchemeNoByCompanyId(companyInfo.getCompanyId());
-            if (StringUtils.isBlank(schemeNo)){
-                continue;
-            }
-            for (City city1 :listCity){
-                DistributionOrderCityVo DistributionOrderCityVo = new DistributionOrderCityVo();
-                DistributionOrderCityVo.setCity(city1.getCityName());
-                DistributionOrderCityVo.setCompanyName(companyInfo.getCompanyName());
-                DistributionOrderCityVo.setCompanyId(companyInfo.getCompanyId());
-                listData.add(DistributionOrderCityVo);
-            }
+            DistributionOrderCityVo DistributionOrderCityVo = new DistributionOrderCityVo();
+            DistributionOrderCityVo.setCity(citys.get(companyInfo.getCityCode() + ""));
+            DistributionOrderCityVo.setCompanyName(companyInfo.getCompanyName());
+            DistributionOrderCityVo.setCompanyId(companyInfo.getCompanyId());
+            listData.add(DistributionOrderCityVo);
         }
         return RespData.success(listData);
     }
