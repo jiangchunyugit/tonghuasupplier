@@ -1341,7 +1341,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));
 			result.setCity(cityMapper.convertCodeToName(companyInfo.getCityCode()));
 			result.setFddm(companyInfo.getSiteCompanyId());
-			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
+//			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
 //			if(StringUtils.isNotBlank(code)){
 //				try{
 //					result.setGsdm( Integer.valueOf(code));
