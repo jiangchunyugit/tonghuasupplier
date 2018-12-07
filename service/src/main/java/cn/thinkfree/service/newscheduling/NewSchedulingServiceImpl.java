@@ -430,4 +430,52 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         }
         return RespData.success(stageList);
     }
+
+    /**
+     * 获取项目总排期信息
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<ProjectScheduling> getProjectScheduling(String projectNo) {
+        if (projectNo==null||projectNo.trim().isEmpty()){
+            return RespData.error("请检查参数:projectNo="+projectNo);
+        }
+        ProjectSchedulingExample example = new ProjectSchedulingExample();
+        ProjectSchedulingExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(example);
+        if (projectSchedulings.size()==0){
+            return RespData.error("项目不存在");
+        }
+        return RespData.success(projectSchedulings.get(0));
+    }
+
+    /**
+     * 修改延期天数(延期单审批通过后调用)
+     * @param projectNo
+     * @param delay
+     * @return
+     */
+    @Override
+    public MyRespBundle editProjectDelay(String projectNo, Integer delay) {
+        ProjectSchedulingExample example = new ProjectSchedulingExample();
+        ProjectSchedulingExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(example);
+        if (projectSchedulings.size()==0){
+            return RespData.error("项目不存在");
+        }
+        ProjectScheduling projectScheduling = new ProjectScheduling();
+        if (projectSchedulings.get(0).getDelay()!=null){
+            projectScheduling.setDelay(projectSchedulings.get(0).getDelay()-delay);
+        }
+        int i = projectSchedulingMapper.updateByExampleSelective(projectScheduling, example);
+        if (i==0){
+            return RespData.error("修改失败");
+        }
+        return RespData.success();
+    }
 }

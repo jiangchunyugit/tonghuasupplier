@@ -272,7 +272,7 @@ public class DesignerDataServiceImpl implements DesignerDataService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle editDesignerStyle(String userId, List<String> styleCodes) {
-        if (styleCodes.size() == 0) {
+        if (styleCodes == null || styleCodes.size() == 0) {
             return RespData.error("请上传参数");
         }
         DesignerStyleRelationExample example = new DesignerStyleRelationExample();
