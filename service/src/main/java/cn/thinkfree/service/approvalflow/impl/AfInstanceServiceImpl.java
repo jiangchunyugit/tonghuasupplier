@@ -139,10 +139,33 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
-            List<AfCheckItemVO> checkItems = getCheckApplicationCheckItems(projectNo, scheduleSort);
+//            List<AfCheckItemVO> checkItems = getCheckApplicationCheckItems(projectNo, scheduleSort);
+            // TODO
+            List<AfCheckItemVO> checkItems = new ArrayList<>();
+            AfCheckItemVO checkItemVO = new AfCheckItemVO();
+            checkItemVO.setType(1);
+            checkItemVO.setName("阶段验收");
+            checkItems.add(checkItemVO);
+
+            checkItemVO = new AfCheckItemVO();
+            checkItemVO.setType(2);
+            checkItemVO.setName("避水验收");
+            checkItems.add(checkItemVO);
+
             instanceDetailVO.setCheckItems(checkItems);
         } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)){
-            List<AfCheckItemVO> checkItems = getCheckReportCheckItems(projectNo, scheduleSort);
+//            List<AfCheckItemVO> checkItems = getCheckReportCheckItems(projectNo, scheduleSort);
+            // TODO
+            List<AfCheckItemVO> checkItems = new ArrayList<>();
+            AfCheckItemVO checkItemVO = new AfCheckItemVO();
+            checkItemVO.setType(1);
+            checkItemVO.setName("阶段验收");
+            checkItems.add(checkItemVO);
+
+            checkItemVO = new AfCheckItemVO();
+            checkItemVO.setType(2);
+            checkItemVO.setName("避水验收");
+            checkItems.add(checkItemVO);
             instanceDetailVO.setCheckItems(checkItems);
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)){
             AfInstance instance = getRelevanceChangeOrderInstance(projectNo);
