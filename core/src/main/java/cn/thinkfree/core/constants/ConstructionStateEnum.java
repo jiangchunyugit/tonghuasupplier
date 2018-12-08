@@ -1,6 +1,7 @@
 package cn.thinkfree.core.constants;
 
 
+import cn.thinkfree.core.model.OrderStatusDTO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -217,6 +218,30 @@ public enum ConstructionStateEnum {
             listMap.add(map);
         }
         return listMap;
+    }
+
+    /**
+     * 根据类型获取订单状态类型列表
+     *
+     * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
+     * @return
+     */
+    public static List<OrderStatusDTO> allState(int type, int currentStatus) {
+        List<OrderStatusDTO> orderStatusDTOs  = new ArrayList<>();
+        ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
+
+        for (ConstructionStateEnum constructionState : stateEnums) {
+            String stateName = constructionState.getStateName(type);
+            if (StringUtils.isBlank(stateName)) {
+                continue;
+            }
+            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+            orderStatusDTO.setStatus(constructionState.state);
+            orderStatusDTO.setName(stateName);
+
+            orderStatusDTOs.add(orderStatusDTO);
+        }
+        return orderStatusDTOs;
     }
 
     /**
