@@ -113,7 +113,7 @@ public interface BasicsService {
      */
     List<Map<String, String>> pua(int type, String parentCode);
 
-    Map<String,String> getProvince();
-    Map<String,String> getCity();
-    Map<String,String> getArea();
+    Map<String,String> getProvince(String ...code);
+    Map<String,String> getCity(String ...code);
+    Map<String,String> getArea(String ...code);
 }

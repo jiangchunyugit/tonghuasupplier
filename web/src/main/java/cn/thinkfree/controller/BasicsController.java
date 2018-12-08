@@ -3,7 +3,7 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.ProjectSource;
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.BasicsData;
 import cn.thinkfree.service.platform.basics.BasicsService;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -135,6 +137,14 @@ public class BasicsController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "projectSource", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<Map<String,Object>>> projectSource(){
-        return sendJsonData(ResultMessage.SUCCESS,ProjectSource.queryAllState());
+        List<BasicsData> basicsDatas = basicsService.queryData(BasicsDataParentEnum.PROJECT_SOURCE.getCode());
+        List<Map<String,Object>> mapList = new ArrayList<>();
+        for(BasicsData basicsData : basicsDatas){
+            Map<String,Object> map = new HashMap<>();
+            map.put("code",basicsData.getBasicsCode());
+            map.put("value",basicsData.getBasicsName());
+            mapList.add(map);
+        }
+        return sendJsonData(ResultMessage.SUCCESS,mapList);
     }
 }

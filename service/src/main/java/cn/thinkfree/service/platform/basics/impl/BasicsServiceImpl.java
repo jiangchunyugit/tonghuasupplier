@@ -75,7 +75,11 @@ public class BasicsServiceImpl implements BasicsService {
     public List<BasicsData> queryData(String groupCode, List<String> keyCodes) {
         //暂时写死
         BasicsDataExample dataExample = new BasicsDataExample();
-        dataExample.createCriteria().andBasicsGroupEqualTo(groupCode).andDelStateEqualTo(2).andBasicsCodeIn(keyCodes);
+        BasicsDataExample.Criteria criteria = dataExample.createCriteria();
+        criteria.andBasicsGroupEqualTo(groupCode).andDelStateEqualTo(2);
+        if(keyCodes != null && !keyCodes.isEmpty()){
+            criteria.andBasicsCodeIn(keyCodes);
+        }
         return basicsDataMapper.selectByExample(dataExample);
     }
 
@@ -228,20 +232,32 @@ public class BasicsServiceImpl implements BasicsService {
     }
 
     @Override
-    public Map<String, String> getProvince() {
-        List<Province> provinces = provinceMapper.selectByExample(new ProvinceExample());
+    public Map<String, String> getProvince(String ...code) {
+        ProvinceExample provinceExample = new ProvinceExample();
+        if(code != null && code.length > 0){
+            provinceExample.createCriteria().andProvinceCodeIn(Arrays.asList(code));
+        }
+        List<Province> provinces = provinceMapper.selectByExample(provinceExample);
         return ReflectUtils.listToMap(provinces,"provinceCode","provinceName");
     }
 
     @Override
-    public Map<String, String> getCity() {
-        List<City> cities = cityMapper.selectByExample(new CityExample());
+    public Map<String, String> getCity(String ...code) {
+        CityExample cityExample = new CityExample();
+        if(code != null && code.length > 0){
+            cityExample.createCriteria().andCityCodeIn(Arrays.asList(code));
+        }
+        List<City> cities = cityMapper.selectByExample(cityExample);
         return ReflectUtils.listToMap(cities,"cityCode","cityName");
     }
 
     @Override
-    public Map<String, String> getArea() {
-        List<Area> areas = areaMapper.selectByExample(new AreaExample());
+    public Map<String, String> getArea(String ...code) {
+        AreaExample areaExample = new AreaExample();
+        if(code != null && code.length > 0){
+            areaExample.createCriteria().andAreaCodeIn(Arrays.asList(code));
+        }
+        List<Area> areas = areaMapper.selectByExample(areaExample);
         return ReflectUtils.listToMap(areas,"areaCode","areaName");
     }
 }
