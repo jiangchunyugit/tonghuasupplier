@@ -25,6 +25,7 @@ import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -85,7 +86,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Autowired
     private NewSchedulingBaseService schedulingBaseService;
     @Autowired
-    private AfInstanceRelevancyService instanceRelevancyService;
+    private AfInstanceRelevanceService instanceRelevancyService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -138,11 +139,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
-            List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
+            List<AfCheckItemVO> checkItems = getCheckApplicationCheckItems(projectNo, scheduleSort);
             instanceDetailVO.setCheckItems(checkItems);
-            instanceDetailVO.setIsShowCheckList(checkItems.size() > 0);
+        } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)){
+            List<AfCheckItemVO> checkItems = getCheckReportCheckItems(projectNo, scheduleSort);
+            instanceDetailVO.setCheckItems(checkItems);
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)){
-            AfInstance instance = findByConfigNoAndProjectNoAndStatus(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+            AfInstance instance = getRelevanceChangeOrderInstance(projectNo);
 
             if (instance == null) {
                 LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
@@ -161,6 +164,92 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         instanceDetailVO.setAddress(project.getAddressDetail());
         return instanceDetailVO;
+    }
+
+    /**
+     * 获取验收申请验收项
+     * @param projectNo 项目编号
+     * @param scheduleSort 排期编号
+     * @return 验收项
+     */
+    private List<AfCheckItemVO> getCheckApplicationCheckItems(String projectNo, Integer scheduleSort) {
+        List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
+        if (checkItems.size() > 1) {
+            List<AfCheckItemVO> checkApplicationCheckItems = new ArrayList<>();
+            List<AfInstance> checkApplicationInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_APPLICATION.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+            if (checkApplicationInstances != null) {
+                for (AfInstance checkApplicationInstance : checkApplicationInstances) {
+                    AfCheckItemVO checkItem =  getCheckItem(checkApplicationInstance.getData());
+                    checkApplicationCheckItems.add(checkItem);
+                }
+            }
+            if (checkApplicationCheckItems.size() > 0) {
+                for (AfCheckItemVO checkApplicationCheckItem : checkApplicationCheckItems) {
+                    for (AfCheckItemVO checkItemVO : checkItems) {
+                        if (checkItemVO.getType().equals(checkApplicationCheckItem.getType())) {
+                            checkItems.remove(checkItemVO);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return checkItems;
+    }
+
+    /**
+     * 获取验收报告验收项
+     * @param projectNo 项目编号
+     * @param scheduleSort 排期编号
+     * @return 验收项
+     */
+    private List<AfCheckItemVO> getCheckReportCheckItems(String projectNo, Integer scheduleSort) {
+        List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
+        if (checkItems.size() > 1) {
+            List<AfCheckItemVO> checkApplicationCheckItems = new ArrayList<>();
+            List<AfInstance> checkApplicationInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_APPLICATION.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+            if (checkApplicationInstances != null) {
+                for (AfInstance checkApplicationInstance : checkApplicationInstances) {
+                    AfCheckItemVO checkItem =  getCheckItem(checkApplicationInstance.getData());
+                    checkApplicationCheckItems.add(checkItem);
+                }
+            }
+            if (checkApplicationCheckItems.size() > 1) {
+                List<AfCheckItemVO> checkReportCheckItems = new ArrayList<>();
+                List<AfInstance> checkReportInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+                if (checkReportInstances != null) {
+                    for (AfInstance checkReportInstance : checkReportInstances) {
+                        AfCheckItemVO checkItem =  getCheckItem(checkReportInstance.getData());
+                        checkReportCheckItems.add(checkItem);
+                    }
+                }
+                if (checkReportCheckItems.size() > 0) {
+                    for (AfCheckItemVO checkReportCheckItem : checkReportCheckItems) {
+                        for (AfCheckItemVO checkApplicationCheckItem : checkApplicationCheckItems) {
+                            if (checkApplicationCheckItem.getType().equals(checkReportCheckItem.getType())) {
+                                checkApplicationCheckItems.remove(checkApplicationCheckItem);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            checkItems = checkApplicationCheckItems;
+        }
+        return checkItems;
+    }
+
+    private AfCheckItemVO getCheckItem(String data) {
+        return JSONUtil.json2Bean(data, AfCheckItemVO.class);
+    }
+
+    /**
+     * 获取要关联的变更单
+     * @param projectNo 项目编号
+     * @return 变更单实例
+     */
+    private AfInstance getRelevanceChangeOrderInstance(String projectNo) {
+        return findByConfigNoAndProjectNoAndStatus(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
     }
 
     private AfInstance findByConfigNoAndProjectNoAndStatus(String configNo, String projectNo, Integer status) {
@@ -262,7 +351,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
                 throw new RuntimeException();
             }
-            instanceRelevancyService.create(instance.getInstanceNo(), instanceNo);
+            instanceRelevancyService.create(instance.getInstanceNo(), instanceNo, instance.getData());
         }
         for (int index = 0; index < approvalRoles.size(); index++) {
             UserRoleSet role = approvalRoles.get(index);
@@ -521,8 +610,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
-            AfInstance sourceInstance = getSourceInstanceByRelevancyInstanceNo(instanceNo);
-            instanceDetailVO.setRelevancyDate(sourceInstance.getData());
+            AfInstanceRelevance instanceRelevance = instanceRelevancyService.findByRelevanceInstanceNo(instance.getInstanceNo());
+            instanceDetailVO.setRelevancyDate(instanceRelevance.getData());
         }
 
         AfConfig config = configService.findByNo(instance.getConfigNo());
@@ -542,21 +631,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         instanceDetailVO.setStatus(instance.getStatus());
         return instanceDetailVO;
-    }
-
-    private AfInstance getSourceInstanceByRelevancyInstanceNo(String relevancyInstanceNo) {
-        AfInstanceRelevancy instanceRelevancy = instanceRelevancyService.findByRelevancyInstanceNo(relevancyInstanceNo);
-        if (instanceRelevancy == null) {
-            LOGGER.error("未查询到关联实例信息，relevancyInstanceNo:{}", relevancyInstanceNo);
-            throw new RuntimeException();
-        }
-        String sourceInstanceNo = instanceRelevancy.getSourceInstanceNo();
-        AfInstance sourceInstance = findByNo(sourceInstanceNo);
-        if (sourceInstance == null) {
-            LOGGER.error("未查询到关联实例信息，sourceInstanceNo:{}", sourceInstanceNo);
-            throw new RuntimeException();
-        }
-        return sourceInstance;
     }
 
     /**
@@ -894,11 +968,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
                     boolean needCheck = isNeedCheck(schedulingDetailsVOs, scheduleSort);
                     if (needCheck) {
-                        result += 1;
+                        List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
+                        if (checkItems.size() > checkApplicationCount) {
+                            result += 1;
+                        }
                         if (configNo != null && configNo.equals(AfConfigs.CHECK_APPLICATION.configNo)) {
                             return result;
                         }
-                        if (checkApplicationCount > checkReportCount) {
+                        if (checkApplicationCount > checkReportCount && checkItems.size() > checkReportCount) {
                             // 如果验收申请数量大于验收报告数量，发起验收报告菜单
                             result += 2;
                             if (configNo != null && configNo.equals(AfConfigs.CHECK_REPORT.configNo)) {
@@ -1257,6 +1334,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     /**
+     * 根据审批流配置编号、项目编号、排期编号查询审批实例
+     * @param configNo 审批流配置编号
+     * @param projectNo 项目编号
+     * @param scheduleSort 排期编号
+     * @param status 实例状态
+     * @return 审批实例
+     */
+    private List<AfInstance> findByConfigNoAndProjectNoAndScheduleSortAndStatus(String configNo, String projectNo, Integer scheduleSort, int status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andStatusEqualTo(status);
+        return instanceMapper.selectByExample(example);
+    }
+
+    /**
      * 获取审批流实例
      * @param instanceVOs 审批流实例
      * @param configNo 审批流配置编号
@@ -1384,5 +1475,19 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public boolean getCheckReportSuccess(String projectNo, Integer scheduleSort) {
+        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+        if (instances != null) {
+            for (AfInstance instance : instances) {
+                AfCheckItemVO checkItem = getCheckItem(instance.getData());
+                if (checkItem.getType() == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

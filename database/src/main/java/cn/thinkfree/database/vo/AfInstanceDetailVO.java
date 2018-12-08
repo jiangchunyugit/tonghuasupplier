@@ -45,8 +45,6 @@ public class AfInstanceDetailVO {
     private String remark;
     @ApiModelProperty("拒绝原因")
     private String refusalReason;
-    @ApiModelProperty("是否展示验收项列表")
-    private Boolean isShowCheckList;
     @ApiModelProperty("验收项集合")
     private List<AfCheckItemVO> checkItems;
     @ApiModelProperty("关联实例数据")
