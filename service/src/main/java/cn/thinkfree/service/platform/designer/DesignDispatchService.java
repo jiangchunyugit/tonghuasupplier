@@ -313,6 +313,7 @@ public interface DesignDispatchService {
      * @param ownerMsg      业主姓名
      * @return
      */
-    PageVo<List<ContractListItemVo>> designContract(String contractNo, String projectNo, String orderSource, String provinceCode, String cityCode, String areaCode,
-                                                    String contractState, String signTimeS, String signTimeE, String ownerMsg, int pageSize, int pageIndex);
+    PageVo<List<ContractListItemVo>> designContract(
+            String contractNo, String projectNo, String orderSource, String provinceCode, String cityCode, String areaCode,
+            String contractState, String signTimeS, String signTimeE, String ownerMsg, int pageSize, int pageIndex);
 }

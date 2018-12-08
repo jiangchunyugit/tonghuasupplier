@@ -647,7 +647,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "areaCode", required = false, value = "区域编码") @RequestParam(name = "areaCode", required = false) String areaCode,
             @ApiParam(name = "contractState", required = false, value = "合同状态") @RequestParam(name = "contractState", required = false) String contractState,
             @ApiParam(name = "signTimeS", required = false, value = "签约时间开始") @RequestParam(name = "signTimeS", required = false) String signTimeS,
-            @ApiParam(name = "signTimeE", required = false, value = "签约时间结束") @RequestParam(name = "contractState", required = false) String signTimeE,
+            @ApiParam(name = "signTimeE", required = false, value = "签约时间结束") @RequestParam(name = "signTimeE", required = false) String signTimeE,
             @ApiParam(name = "ownerMsg", required = false, value = "业主手机号/姓名") @RequestParam(name = "ownerMsg", required = false) String ownerMsg,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {

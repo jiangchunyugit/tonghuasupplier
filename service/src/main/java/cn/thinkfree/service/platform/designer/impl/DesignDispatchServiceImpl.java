@@ -1530,6 +1530,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             contractCriteria.andOrderNumberIn(designOrders);
         }
         long total = orderContractMapper.countByExample(contractExample);
+        if(total <= 0){
+            return PageVo.def(new ArrayList<>());
+        }
         PageHelper.startPage(pageIndex,pageSize);
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
         List<String> contractNos = new ArrayList<>();
