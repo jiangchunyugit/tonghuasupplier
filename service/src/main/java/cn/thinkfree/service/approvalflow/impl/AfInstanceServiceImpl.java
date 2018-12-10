@@ -288,17 +288,16 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     private List<AfCheckItemVO> getCheckItems(String projectNo, Integer scheduleSort) {
         List<AfCheckItemVO> checkItems = new ArrayList<>(2);
-//        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
-//        if (constructionOrder == null) {
-//            LOGGER.error("未查询到订单信息，projectNo:{}", projectNo);
-//            throw new RuntimeException();
-//        }
-//        String schemeNo = constructionOrder.getSchemeNo();
-        String schemeNo = "DO18110514523000000OAN2F";
-//        if (StringUtils.isEmpty(schemeNo)) {
-//            LOGGER.error("订单未配置方案信息，constructionOrderNo:{}", constructionOrder.getOrderNo());
-//            throw new RuntimeException();
-//        }
+        ConstructionOrder constructionOrder = orderService.getConstructionOrder(projectNo);
+        if (constructionOrder == null) {
+            LOGGER.error("未查询到订单信息，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
+        String schemeNo = constructionOrder.getSchemeNo();
+        if (StringUtils.isEmpty(schemeNo)) {
+            LOGGER.error("订单未配置方案信息，constructionOrderNo:{}", constructionOrder.getOrderNo());
+            throw new RuntimeException();
+        }
         ProjectBigScheduling projectBigScheduling = schedulingBaseService.findBySchemeNoAndSort(schemeNo, scheduleSort);
         if (projectBigScheduling == null) {
             LOGGER.error("未查询到排期信息，schemeNo:{}, scheduleSort:{}", schemeNo, scheduleSort);
