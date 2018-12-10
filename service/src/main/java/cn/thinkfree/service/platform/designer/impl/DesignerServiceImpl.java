@@ -30,10 +30,6 @@ import java.util.*;
  */
 @Service
 public class DesignerServiceImpl implements DesignerService {
-    /**
-     * 设计师编码code
-     */
-    private static final String DESIGNER_CODE = "CD";
 
     @Autowired
     private DesignerMsgMapper designerMsgMapper;
@@ -81,8 +77,26 @@ public class DesignerServiceImpl implements DesignerService {
             String designerName, String designerRealName, String phone, String authState,
             String province, String city, String area, String level, String identity, String cardNo, String source,
             String tag, String registrationTimeStart, String registrationTimeEnd, String sort, int pageSize, int pageIndex) {
+        List<String> userIds = null;
+        if(!StringUtils.isEmpty(phone)){
+            List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(null, phone);
+            if(userMsgVos == null || userMsgVos.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
+            userIds = new ArrayList<>();
+            userIds.addAll(ReflectUtils.getList(userMsgVos,"staffId"));
+        }
         //调用用户中心，模糊查询用户名信息
-        List<String> userIds = getDesignerMsgs(level, identity, source, tag, sort);
+        List<String> designerMsgIds = getDesignerMsgs(level, identity, source, tag, sort);
+        if(designerMsgIds != null){
+            if(designerMsgIds.isEmpty()){
+               return PageVo.def(new ArrayList<>());
+            }
+            if(userIds == null){
+                userIds = new ArrayList<>();
+            }
+            userIds.addAll(designerMsgIds);
+        }
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria msgExampleCriteria = employeeMsgExample.createCriteria();
         String roleCode = functionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
@@ -90,7 +104,10 @@ public class DesignerServiceImpl implements DesignerService {
             roleCode = "CD";
         }
         msgExampleCriteria.andRoleCodeEqualTo(roleCode);
-        if(!userIds.isEmpty()){
+        if(userIds != null && userIds.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        if(userIds != null && !userIds.isEmpty()){
             msgExampleCriteria.andUserIdIn(userIds);
         }
         if (!StringUtils.isEmpty(designerRealName)) {
@@ -118,13 +135,18 @@ public class DesignerServiceImpl implements DesignerService {
             msgExampleCriteria.andCertificateLike("%" + cardNo + "%");
         }
         long total = employeeMsgMapper.countByExample(employeeMsgExample);
+        if(total == 0){
+            return PageVo.def(new ArrayList<>());
+        }
         PageHelper.startPage(pageIndex, pageSize);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
         Map<String, DesignerMsg> designerMsgMap = getStringDesignerMsgMap(employeeMsgs);
         List<DesignerMsgListVo> msgVos = new ArrayList<>();
-        Map<String,String> provinceMap = basicsService.getProvince();
-        Map<String,String> cityMap = basicsService.getCity();
-        Map<String,String> areaMap = basicsService.getArea();
+        Map<String,String> provinceMap = basicsService.getProvince(ReflectUtils.getList(employeeMsgs,"province").toArray(new String[]{}));
+        Map<String,String> cityMap = basicsService.getCity(ReflectUtils.getList(employeeMsgs,"city").toArray(new String[]{}));
+        Map<String,String> areaMap = basicsService.getArea(ReflectUtils.getList(employeeMsgs,"area").toArray(new String[]{}));
+        List<UserMsgVo> userMsgVos = userCenterService.queryUsers(ReflectUtils.getList(employeeMsgs,"userId"));
+        Map<String,UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos,"staffId");
         Map<String, CompanyInfo> companyInfoMap = getStringCompanyInfoMap(employeeMsgs);
         for (EmployeeMsg employeeMsg : employeeMsgs) {
             DesignerMsgListVo msgVo = new DesignerMsgListVo();
@@ -137,12 +159,19 @@ public class DesignerServiceImpl implements DesignerService {
                 msgVo.setUserId(msg.getUserId());
             }
             msgVo.setAddress(provinceMap.get(employeeMsg.getProvince()) + "," + cityMap.get(employeeMsg.getCity()) + "," + areaMap.get(employeeMsg.getArea()));
+            if(msgVo.getAddress().contains("null")){
+                msgVo.setAddress("");
+            }
             msgVo.setAuthState(employeeMsg.getAuthState() + "");
             CompanyInfo companyInfo = companyInfoMap.get(employeeMsg.getCompanyId());
             if(companyInfo != null){
                 msgVo.setCompanyName(companyInfo.getCompanyName());
             }
-            msgVo.setRegistrationTime(DateUtils.dateToStr(employeeMsg.getBindDate()));
+            UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
+            if(userMsgVo != null){
+                msgVo.setPhone(userMsgVo.getUserPhone());
+                msgVo.setRegistrationTime(userMsgVo.getRegisterTime());
+            }
             msgVo.setSex(employeeMsg.getSex() + "");
             msgVo.setRealName(employeeMsg.getRealName());
             msgVo.setBindCompanyState(employeeMsg.getEmployeeApplyState() + "");
@@ -182,7 +211,7 @@ public class DesignerServiceImpl implements DesignerService {
         DesignerMsgExample msgExample = new DesignerMsgExample();
         DesignerMsgExample.Criteria criteria = msgExample.createCriteria();
         boolean isCondition = false;
-        if (!StringUtils.isEmpty(level)) {
+        if (!StringUtils.isEmpty(level) && Long.parseLong(level) > 0) {
             criteria.andLevelEqualTo(Long.parseLong(level));
             isCondition = true;
         }
@@ -203,7 +232,7 @@ public class DesignerServiceImpl implements DesignerService {
             isCondition = true;
         }
         if(!isCondition){
-            return new ArrayList<>();
+            return null;
         }
         List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(msgExample);
         return ReflectUtils.getList(designerMsgs,"userId");
@@ -418,19 +447,47 @@ public class DesignerServiceImpl implements DesignerService {
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void createDesigner(
-            String phone, String email, String province, String city, String area, String workingTime,
+            String userName, String phone, String email, int sex, String province, String city, String area, String workingTime,
             String masterStyle, String volumeRoomMoney, String designerMoneyLow, String designerMoneyHigh) {
-        // TODO 调用用户中心，注册用户
-        String userId = UUID.randomUUID().toString().replaceAll("-", "");
+        if(StringUtils.isEmpty(userName)){
+            throw new RuntimeException("必须输入设计师姓名");
+        }
+        if(StringUtils.isEmpty(phone)){
+            throw new RuntimeException("必须输入手机号");
+        }
+        if(StringUtils.isEmpty(workingTime)){
+            throw new RuntimeException("必须输入工作年限");
+        }
+        if(StringUtils.isEmpty(masterStyle)){
+           throw new RuntimeException("必须选择擅长风格");
+        }
+        if(StringUtils.isEmpty(volumeRoomMoney)){
+            throw new RuntimeException("必须设置量房费");
+        }
+        if(StringUtils.isEmpty(designerMoneyLow)){
+            throw new RuntimeException("必须设置设计费最低金额");
+        }
+        if(StringUtils.isEmpty(designerMoneyHigh)){
+            throw new RuntimeException("必须设置设计费最高金额");
+        }
+        UserMsgVo userMsgVo = userCenterService.queryByPhone(phone);
+        if(userMsgVo != null){
+            throw new RuntimeException("该用户已注册");
+        }
+        userMsgVo = userCenterService.registerUser(userName, phone,false);
+        String userId = userMsgVo.getStaffId();
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setEmail(email);
         employeeMsg.setProvince(province);
+        employeeMsg.setRealName(userName);
         employeeMsg.setCity(city);
+        employeeMsg.setSex(sex);
         employeeMsg.setArea(area);
         employeeMsg.setWorkingTime(Integer.parseInt(workingTime));
         employeeMsg.setUserId(userId);
+        String roleCode = functionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
         //设计师编码
-        employeeMsg.setRoleCode(DESIGNER_CODE);
+        employeeMsg.setRoleCode(roleCode);
         //未认证状态
         employeeMsg.setAuthState(Integer.parseInt("1"));
         employeeMsgMapper.insertSelective(employeeMsg);
@@ -444,7 +501,7 @@ public class DesignerServiceImpl implements DesignerService {
         //未审核
         designerMsg.setReviewState(1);
         designerMsgMapper.insertSelective(designerMsg);
-        String[] styleCodes = masterStyle.split(",");
+        List<String> styleCodes = JSONObject.parseArray(masterStyle,String.class);
         for (String styleCode : styleCodes) {
             DesignerStyleRelation styleRelation = new DesignerStyleRelation();
             styleRelation.setDesignerId(userId);

@@ -744,6 +744,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             msgVo.setWorkTime("--");
         }
         msgVo.setAddress(provinceMap.get(employeeMsg.getProvince()) + "," + cityMap.get(employeeMsg.getCity()) + "," + areaMap.get(employeeMsg.getArea()));
+        if(msgVo.getAddress().contains("null")){
+            msgVo.setAddress("");
+        }
         if(cardType != null){
             msgVo.setCertificateTypeName(cardType.getBasicsName());
         }
