@@ -102,9 +102,18 @@ public class ContractController extends AbsBaseController{
     public MyRespBundle<String> ackEarnestMoney(@ApiParam("合同编号")@RequestParam String contractNumber,
     		@ApiParam("公司编号")@RequestParam String companyId){
     	
-    	boolean  flag = contractService.ackEarnestMoney(contractNumber, companyId);
+    	Map<String,String>  map = contractService.ackEarnestMoney(contractNumber, companyId);
     	
-    	return sendJsonData(ResultMessage.SUCCESS,flag);
+    	if(String.valueOf(map.get("falg")).equals("true")){
+    		
+    		return sendJsonData(ResultMessage.SUCCESS,true);
+    		
+    	}else{
+    		
+    		return sendJsonData(ResultMessage.ERROR,String.valueOf(map.get("msg")));
+    	}
+    	
+    	
     }
     
     /**

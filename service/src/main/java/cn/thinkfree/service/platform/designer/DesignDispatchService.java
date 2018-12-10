@@ -5,10 +5,7 @@ import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
-import cn.thinkfree.service.platform.vo.ContractMsgVo;
-import cn.thinkfree.service.platform.vo.DesignOrderDelVo;
-import cn.thinkfree.service.platform.vo.DesignerOrderVo;
-import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -44,12 +41,12 @@ public interface DesignDispatchService {
      */
     PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
-            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
+            String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage,
+            int designerOrderState, int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
     PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState,
+            String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,
             String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
     /**
@@ -252,8 +249,8 @@ public interface DesignDispatchService {
      * @param response           返回数据对象
      */
     void designerOrderExcel(Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
-                            String createTimeEnd, String styleCode, String money, String acreage, int designerOrderState, int companyState,
-                            String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
+                            String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,
+                            int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
 
     /**
      * 设计师关联案例Id
@@ -283,13 +280,12 @@ public interface DesignDispatchService {
     void updateProjectState(String projectNo, int state);
 
     /**
-     *
      * @param projectNo
      * @return
      */
     ContractMsgVo queryContractMsg(String projectNo);
+
     /**
-     *
      * @param projectNo
      * @return
      */
@@ -297,9 +293,27 @@ public interface DesignDispatchService {
 
     /**
      * app-C端确认量房
+     *
      * @param projectNo
      * @param userId
      * @return
      */
     MyRespBundle confirmeVolumeRoom(String projectNo, String userId);
+
+    /**
+     * @param contractNo    合同编号
+     * @param projectNo     项目编号
+     * @param orderSource   项目地址
+     * @param provinceCode  省
+     * @param cityCode      市
+     * @param areaCode      区
+     * @param contractState 合同状态
+     * @param signTimeS     签约开始时间
+     * @param signTimeE     签约结束时间
+     * @param ownerMsg      业主姓名
+     * @return
+     */
+    PageVo<List<ContractListItemVo>> designContract(
+            String contractNo, String projectNo, String orderSource, String provinceCode, String cityCode, String areaCode,
+            String contractState, String signTimeS, String signTimeE, String ownerMsg, int pageSize, int pageIndex);
 }

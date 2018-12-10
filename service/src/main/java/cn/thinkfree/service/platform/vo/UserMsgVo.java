@@ -29,14 +29,6 @@ public class UserMsgVo {
     public UserMsgVo() {
     }
 
-    public UserMsgVo(String userId, String userName, String userPhone, String userType, String userIcon) {
-        this.userId = userId;
-        this.userName = userName;
-        this.userPhone = userPhone;
-        this.userType = userType;
-        this.userIcon = userIcon;
-    }
-
     public UserMsgVo(String userId, String userName, String userPhone, String userType, String realName, String userIcon) {
         this.userId = userId;
         this.userName = userName;
@@ -44,6 +36,7 @@ public class UserMsgVo {
         this.userType = userType;
         this.realName = realName;
         this.userIcon = userIcon;
+        this.consumerId = userId;
     }
 
     public UserMsgVo(String userId, String userName, String userPhone, String userType, String realName, String userIcon, String memberEcode) {
@@ -54,6 +47,7 @@ public class UserMsgVo {
         this.realName = realName;
         this.userIcon = userIcon;
         this.memberEcode = memberEcode;
+        this.consumerId = userId;
     }
 
     public void setUserIcon(String userIcon) {

@@ -1,8 +1,10 @@
 package cn.thinkfree.service.company;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.mapper.CompanyInfoMapper;
 import cn.thinkfree.database.model.CompanyInfo;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class CompanyInfoServiceImpl implements CompanyInfoService {
+
+    MyLogger logger = LogUtil.getLogger(CompanyInfoServiceImpl.class);
 
     @Autowired
     CompanyInfoMapper companyInfoMapper;
@@ -146,12 +150,19 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         sync.setAddress(companyInfo.getAddress());
         sync.setName(companyInfo.getCompanyName());
         sync.setJc(companyInfo.getCompanyName());
-        sync.setCode(companyID);
+        sync.setCode(String.valueOf(companyInfo.getId()));
         sync.setVendorCode(companyID);
         sync.setGssh(companyInfo.getTaxCode());
 
-        // TODO 等待业务实体
-//        sync.setCwgsdm();
+
+//        String code = businessEntityService.getBusinessEbsIdByCompanyId(companyID);
+//        if(StringUtils.isNotBlank(code)){
+//            try{
+                sync.setCwgsdm( Integer.valueOf("783"));
+//            }catch (Exception e){
+//                logger.error(e.getMessage());
+//            }
+//        }
 
         return Optional.ofNullable(sync);
     }

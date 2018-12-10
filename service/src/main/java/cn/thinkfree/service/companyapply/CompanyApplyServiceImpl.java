@@ -18,10 +18,10 @@ import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.remote.RemoteResult;
 import cn.thinkfree.service.utils.AccountHelper;
-import cn.thinkfree.service.utils.UserNoUtils;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.GsonBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,7 +89,10 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Value("${depositMoney:-500000}")
     private String depositMoney;
 
-
+    @Value("${custom.cloud.designLoginUrl}")
+    private String designLoginUrl;
+    @Value("${custom.cloud.decorateLoginPage}")
+    private String decorateLoginPage;
 
     /**
      * 更新公司入驻状态
@@ -99,8 +102,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean updateStatus(String companyId, String status) {
+    public boolean updateStatus(String companyId, String status, Date date) {
         CompanyInfo companyInfo = new CompanyInfo();
+        if(date == null || date.equals("")){
+            date = new Date();
+        }
+        companyInfo.setUpdateTime(date);
         companyInfo.setCompanyId(companyId);
         companyInfo.setAuditStatus(status);
         CompanyInfoExample example = new CompanyInfoExample();
@@ -192,6 +199,20 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         return false;
     }
 
+    @Override
+    public boolean ExistCompanyId(String companyId) {
+        if(companyId == null || StringUtils.isBlank(companyId)){
+            return false;
+        }
+        CompanyInfoExpandExample example = new CompanyInfoExpandExample();
+        example.createCriteria().andEmailEqualTo(companyId);
+        List<CompanyInfoExpand> companyInfoExpands = companyInfoExpandMapper.selectByExample(example);
+        if(companyInfoExpands.size() > 0){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * a:添加账号---》返回公司id
      * @param roleId
@@ -199,8 +220,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     public String generateCompanyId(String roleId) {
-        String companyId = UserNoUtils.getUserNo(roleId);
-        if(isEnable(companyId)){
+        String companyId = AccountHelper.createUserNo(roleId);
+        if(ExistCompanyId(companyId)){
             companyId = generateCompanyId(roleId);
         }
         return companyId;
@@ -353,16 +374,23 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
-        JSONObject object = new JSONObject();
-        object.put("登录账号", pcApplyInfoSEO.getEmail());
-        object.put("默认密码", pcApplyInfoSEO.getPassword());
-        RemoteResult<String> rs = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone(), object.toJSONString());
-        if (!rs.isComplete()) {
-            throw new RuntimeException("添加账号发送短信失败");
+        Map<String,Object> para = new HashMap<>();
+        para.put("userName",pcApplyInfoSEO.getEmail());
+        para.put("pwd",pcApplyInfoSEO.getPassword());
+        if(CompanyConstants.RoleType.BD.code.equalsIgnoreCase(pcApplyInfoSEO.getCompanyRole())){
+                para.put("http",decorateLoginPage);
+        }else if(CompanyConstants.RoleType.SJ.code.equalsIgnoreCase(pcApplyInfoSEO.getCompanyRole())){
+            para.put("http",designLoginUrl);
+        }else {
+            // TODO 经销商是个神奇的东西
+            para.put("http", "");
         }
+        cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
+                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
 
-        //邮件
-        RemoteResult<String> result = cloudService.sendEmail(pcApplyInfoSEO.getEmail(), "", object.toJSONString());
+        cloudService.sendEmail(pcApplyInfoSEO.getEmail(),
+                SysConstants.EmailTemplate.join.code,
+                new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
     }
 
     private int saveUserRegister(PcApplyInfoSEO pcApplyInfoSEO, Date date, String companyId) {
@@ -399,7 +427,6 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         CompanyInfo companyInfo = new CompanyInfo();
         companyInfo.setCreateTime(date);
         companyInfo.setUpdateTime(date);
-        companyInfo.setDepositMoney(Integer.parseInt(depositMoney));
         companyInfo.setCompanyId(companyId);
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());

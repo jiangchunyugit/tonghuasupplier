@@ -39,5 +39,5 @@ public interface DecorationDistributionOrder {
      * 项目分配施工人员 （单选）
      * @return
      */
-    MyRespBundle<String> appointWorker(List<Map<String,String>> workerInfo);
+    void appointWorker(List<Map<String,String>> workerInfo);
 }
