@@ -262,7 +262,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
      * @author lvqidong 公司入驻状态 0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金 6入驻成功
      */
     @Override
-    //@Transactional
+    @Transactional
     public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase ) {
         Date date = new Date();
         /* 修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝 */
