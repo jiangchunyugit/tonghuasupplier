@@ -8,6 +8,7 @@ import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.event.MarginContractEvent;
 import cn.thinkfree.database.event.sync.CreateOrder;
+import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -281,7 +282,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
             try {
-            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
+            	// TODO 合同数据与财务数据的纠葛
+            	eventService.publish(new FinishContract(contractNumber));
+//            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
 			} catch (Exception e) {
 				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
 			}
