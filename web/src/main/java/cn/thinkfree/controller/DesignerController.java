@@ -120,18 +120,20 @@ public class DesignerController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "createDesigner", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle createDesigner(
-            @ApiParam(name = "phone", required = true, value = "手机号") @RequestParam(name = "phone", required = true) String phone,
-            @ApiParam(name = "email", required = true, value = "邮箱") @RequestParam(name = "email", required = true) String email,
-            @ApiParam(name = "province", required = true, value = "所在省份") @RequestParam(name = "province", required = true) String province,
-            @ApiParam(name = "city", required = true, value = "所在市") @RequestParam(name = "city", required = true) String city,
-            @ApiParam(name = "area", required = true, value = "所在区") @RequestParam(name = "area", required = true) String area,
+            @ApiParam(name = "userName", required = false, value = "设计师姓名") @RequestParam(name = "userName", required = false) String userName,
+            @ApiParam(name = "phone", required = false, value = "手机号") @RequestParam(name = "phone", required = false) String phone,
+            @ApiParam(name = "email", required = false, value = "邮箱") @RequestParam(name = "email", required = false) String email,
+            @ApiParam(name = "sex", required = false, value = "性别，1男2女") @RequestParam(name = "sex", required = false, defaultValue = "1") int sex,
+            @ApiParam(name = "province", required = false, value = "所在省份") @RequestParam(name = "province", required = false) String province,
+            @ApiParam(name = "city", required = false, value = "所在市") @RequestParam(name = "city", required = false) String city,
+            @ApiParam(name = "area", required = false, value = "所在区") @RequestParam(name = "area", required = false) String area,
             @ApiParam(name = "workingTime", required = false, value = "从业年限") @RequestParam(name = "workingTime", required = false) String workingTime,
             @ApiParam(name = "volumeRoomMoney", required = false, value = "量房费") @RequestParam(name = "volumeRoomMoney", required = false) String volumeRoomMoney,
             @ApiParam(name = "designerMoneyLow", required = false, value = "设计费最低") @RequestParam(name = "designerMoneyLow", required = false) String designerMoneyLow,
             @ApiParam(name = "designerMoneyHigh", required = false, value = "设计费最高") @RequestParam(name = "designerMoneyHigh", required = false) String designerMoneyHigh,
             @ApiParam(name = "masterStyle", required = false, value = "擅长风格") @RequestParam(name = "masterStyle", required = false) String masterStyle) {
         try {
-            designerService.createDesigner(phone, email, province, city, area, workingTime, masterStyle, volumeRoomMoney, designerMoneyLow, designerMoneyHigh);
+            designerService.createDesigner(userName, phone, email, sex, province, city, area, workingTime, masterStyle, volumeRoomMoney, designerMoneyLow, designerMoneyHigh);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

@@ -65,7 +65,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	支付量房费
      */
-    STATE_50(50, "量房待交付", "业主支付量房费", new Integer[]{60, 51}, true),
+    STATE_50(50, "量房待交.付", "业主支付量房费", new Integer[]{60, 51}, true),
     /**
      * 消费者	申请退款
      */

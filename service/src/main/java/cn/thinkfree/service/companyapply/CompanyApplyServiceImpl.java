@@ -470,6 +470,14 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             return false;
         }
 
+        boolean pcflag = pcUserInfoService.isEnable(pcApplyInfoSEO.getEmail());
+        if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getEmail())){
+            boolean email = companyApplyService.checkEmail(pcApplyInfoSEO.getEmail());
+            if(email || pcflag){
+                return false;
+            }
+        }
+
         if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getCompanyName())){
             boolean name = companyApplyService.checkCompanyName(pcApplyInfoSEO.getCompanyName());
             if(name){
