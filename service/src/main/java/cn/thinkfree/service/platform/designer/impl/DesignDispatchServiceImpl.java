@@ -1270,7 +1270,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case STATE_160:
             case STATE_170:
             case STATE_190:
-            case STATE_200:
             case STATE_210:
             case STATE_220:
             case STATE_240:
