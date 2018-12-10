@@ -347,8 +347,7 @@ public class CloudServiceImpl implements CloudService {
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         RemoteResult<String> result = null;
         try {
-            //todo jiangchunyu  更换路径
-//            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
+            result = invokeRemoteMethodForJson(syncContractUrl,requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
