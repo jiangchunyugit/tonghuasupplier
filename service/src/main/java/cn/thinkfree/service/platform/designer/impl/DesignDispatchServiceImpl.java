@@ -1275,7 +1275,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case STATE_220:
             case STATE_240:
             case STATE_260:
-            case STATE_270:
+
             case STATE_150:
             case STATE_230:
                 btns.add("SJZL");
@@ -1293,14 +1293,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //审批状态：0：不通过 1：通过2：审核中
         criteria.andAuditTypeEqualTo(new Short("1"));
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-        if (orderContracts.size() > 0) {
-            btns.add("CKHT");
-        }
         if (stateEnum != DesignStateEnum.STATE_270 && stateEnum != DesignStateEnum.STATE_210) {
             return btns;
         }
         if (designerOrder.getPreviewState() == 2) {
             btns.add("YJD");
+        }
+        if (orderContracts.size() > 0) {
+            btns.add("CKHT");
         }
         return btns;
     }
