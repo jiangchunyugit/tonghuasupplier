@@ -2,8 +2,9 @@ package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
-import cn.thinkfree.service.construction.vo.DecorationOrderCommonVo;
+import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.construction.vo.appointWorkerListVo;
+import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,8 @@ public interface DecorationDistributionOrder {
      *
      * @return
      */
-    MyRespBundle<DecorationOrderCommonVo> getOrderList(String companyNo,int pageNum, int pageSize, String projectNo, String appointmentTime,
-                                                       String addressDetail, String owner, String phone, String orderStage);
+    PageInfo<DecorationOrderListVo> getOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
+                                                 String addressDetail, String owner, String phone, String orderStage);
 
     /**
      * 订单列表统计
