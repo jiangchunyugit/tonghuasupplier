@@ -443,7 +443,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		 //0草稿 1待审批 2 审批通过 3 审批拒绝4待确认保证金5已确认保证金
 		 if(listc.size()> 0 ){
 			int status = Integer.valueOf(listc.get(0)==null?"0":listc.get(0).getContractStatus());
-		    if(status == 4){
+		    if(status == 2){
 				ContractInfo contractInfo = new ContractInfo();
 				contractInfo.setContractStatus( "5" );
 				cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
