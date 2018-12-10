@@ -1334,6 +1334,146 @@ public class AgencyContractExample extends cn.thinkfree.core.model.AbstractDataA
             addCriterion("company_name not between", value1, value2, "companyName");
             return (Criteria) this;
         }
+
+        public Criteria andLegalNameIsNull() {
+            addCriterion("legal_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameIsNotNull() {
+            addCriterion("legal_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameEqualTo(String value) {
+            addCriterion("legal_name =", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameNotEqualTo(String value) {
+            addCriterion("legal_name <>", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameGreaterThan(String value) {
+            addCriterion("legal_name >", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameGreaterThanOrEqualTo(String value) {
+            addCriterion("legal_name >=", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameLessThan(String value) {
+            addCriterion("legal_name <", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameLessThanOrEqualTo(String value) {
+            addCriterion("legal_name <=", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameLike(String value) {
+            addCriterion("legal_name like", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameNotLike(String value) {
+            addCriterion("legal_name not like", value, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameIn(List<String> values) {
+            addCriterion("legal_name in", values, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameNotIn(List<String> values) {
+            addCriterion("legal_name not in", values, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameBetween(String value1, String value2) {
+            addCriterion("legal_name between", value1, value2, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLegalNameNotBetween(String value1, String value2) {
+            addCriterion("legal_name not between", value1, value2, "legalName");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeIsNull() {
+            addCriterion("unify_social_credit_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeIsNotNull() {
+            addCriterion("unify_social_credit_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeEqualTo(String value) {
+            addCriterion("unify_social_credit_code =", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeNotEqualTo(String value) {
+            addCriterion("unify_social_credit_code <>", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeGreaterThan(String value) {
+            addCriterion("unify_social_credit_code >", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("unify_social_credit_code >=", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeLessThan(String value) {
+            addCriterion("unify_social_credit_code <", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeLessThanOrEqualTo(String value) {
+            addCriterion("unify_social_credit_code <=", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeLike(String value) {
+            addCriterion("unify_social_credit_code like", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeNotLike(String value) {
+            addCriterion("unify_social_credit_code not like", value, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeIn(List<String> values) {
+            addCriterion("unify_social_credit_code in", values, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeNotIn(List<String> values) {
+            addCriterion("unify_social_credit_code not in", values, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeBetween(String value1, String value2) {
+            addCriterion("unify_social_credit_code between", value1, value2, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andUnifySocialCreditCodeNotBetween(String value1, String value2) {
+            addCriterion("unify_social_credit_code not between", value1, value2, "unifySocialCreditCode");
+            return (Criteria) this;
+        }
     }
 
     /**

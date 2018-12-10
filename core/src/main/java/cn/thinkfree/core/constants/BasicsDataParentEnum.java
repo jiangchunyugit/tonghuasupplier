@@ -63,6 +63,10 @@ public enum BasicsDataParentEnum {
      * 设计风格
      */
     DESIGN_STYLE("DESIGN_STYLE", "设计风格"),
+    /**
+     * 订单来源设置
+     */
+    PROJECT_SOURCE("PROJECT_SOURCE", "订单来源设置"),
     ;
     private String code;
     private String name;

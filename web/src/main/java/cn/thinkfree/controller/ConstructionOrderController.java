@@ -130,8 +130,13 @@ public class ConstructionOrderController extends AbsBaseController {
     @MyRespBody
     @RequestMapping(value = "appointWorker", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<String> appointWorker(@RequestBody@ApiParam(value = "员工信息",required = true) List<Map<String,String>> workerInfo){
-
-        return decorationDistributionOrder.appointWorker(workerInfo);
+        try{
+            decorationDistributionOrder.appointWorker(workerInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+        return sendSuccessMessage(null);
     }
 
     @ApiOperation("装饰平台接口（获取施工订单列表）---->迎喜专用")

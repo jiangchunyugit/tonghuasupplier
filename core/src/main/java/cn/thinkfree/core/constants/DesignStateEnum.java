@@ -59,7 +59,9 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_45(45, "量房预约已确认", "业主确认了量房预约申请", new Integer[]{50}, true),
+    STATE_45(45, "量房预约已确认", "业主确认了量房预约申请", new Integer[]{50, 46}, true),
+
+    STATE_ORDER_END_46(46, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 消费者	支付量房费
      */
@@ -504,7 +506,8 @@ public enum DesignStateEnum {
                     || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_11)
                     || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_21)
                     || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_31)
-                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_41)) {
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_41)
+                    || designStateEnum.getNextStates().contains(DesignStateEnum.STATE_ORDER_END_46)) {
                 stateEnums1.add(designStateEnum);
             }
         }

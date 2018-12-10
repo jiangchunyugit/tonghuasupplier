@@ -227,6 +227,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		map.put("12", "客户赔偿款");
 		map.put("13", "合同保证金");
 		map.put("14", "入驻费");
+		map.put("15", "经销商平台管理服务费");
 		return map;
 	}
 

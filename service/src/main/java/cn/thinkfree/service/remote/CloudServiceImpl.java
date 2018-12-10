@@ -62,7 +62,7 @@ public class CloudServiceImpl implements CloudService {
     String sendCreateAccountNotice;
 
     Integer SuccessCode = 1000;
-    Integer ProjectUpFailCode = 2005;
+
 
 
     private RemoteResult buildFailResult() {
@@ -71,28 +71,7 @@ public class CloudServiceImpl implements CloudService {
         return remoteResult;
     }
 
-    @Transactional
-    @Override
-    public RemoteResult<String> projectUpOnline(String projectNo, Short status) {
 
-        MultiValueMap<String, Object> param = initParam();
-        param.add("projectNo", projectNo);
-        param.add("state", status);
-
-
-        RemoteResult<String> result = null;
-
-        try {
-            result = restTemplate.postForObject(projectUpOnlineUrl, param, RemoteResult.class);
-            System.out.println(result);
-            result.setIsComplete(SuccessCode.equals(result.getCode()));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return buildFailResult();
-        }
-        return result;
-    }
 
     /**
      * 发送短信 激活码
@@ -186,18 +165,14 @@ public class CloudServiceImpl implements CloudService {
      */
     @Override
     public RemoteResult<String> syncTransaction(SyncTransactionVO syncTransactionVO) {
-        MultiValueMap<String, Object> param = initParam();
-
-        param.add("address", syncTransactionVO.getAddress());
-        param.add("code", syncTransactionVO.getCode());
-        param.add("cwgsdm", syncTransactionVO.getCwgsdm());
-        param.add("gssh", syncTransactionVO.getGssh());
-        param.add("jc", syncTransactionVO.getJc());
-        param.add("name", syncTransactionVO.getName());
-        param.add("vendorCode", syncTransactionVO.getVendorCode());
+        HttpHeaders headers = new HttpHeaders();
+        MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
+        headers.setContentType(type);
+        String body = new GsonBuilder().serializeNulls().create().toJson(syncTransactionVO);
+        HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         RemoteResult<String> result = null;
         try {
-            result = invokeRemoteMethod(sendNotice, param);
+            result = invokeRemoteMethodForJson(syncMerchantUrl, requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();
@@ -372,8 +347,7 @@ public class CloudServiceImpl implements CloudService {
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
         RemoteResult<String> result = null;
         try {
-            //todo jiangchunyu  更换路径
-//            result = invokeRemoteMethodForJson(syncMerchantUrl,requestEntity);
+            result = invokeRemoteMethodForJson(syncContractUrl,requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
             return buildFailResult();

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.companysubmit;
 
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.SpringBeanUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
@@ -31,13 +32,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ying007
  * 公司入驻业务
  */
 @Service
-public class CompanySubmitServiceImpl implements CompanySubmitService {
+public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySubmitService {
 
 	@Autowired
 	CompanyInfoExpandMapper qcompanyInfoExpandMapper;
@@ -559,12 +561,12 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 				List<PcAuditInfo> auditlist = pcAuditInfoMapper.selectByExample(example);
 				if (auditlist.size() >= 2) {
 					//1.修改公司表
-					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString());
+					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString(), date);
 				}else{
-					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.AUDITING.code.toString());
+					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.AUDITING.code.toString(), date);
 				}
 			}else{
-				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString());
+				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString(), date);
 			}
 			String contractNumber =ContractNum.getInstance().GenerateOrder(pcAuditInfo.getRoleId());
 			//	String contractNumber = String.valueOf(UUID.randomUUID());
@@ -587,7 +589,7 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 				return map;
 			}
 		}else{//审核失败
-			applyFlag = companyApplyService.updateStatus(pcAuditInfo.getCompanyId(), CompanyAuditStatus.FAILAUDIT.code.toString());
+			applyFlag = companyApplyService.updateStatus(pcAuditInfo.getCompanyId(), CompanyAuditStatus.FAILAUDIT.code.toString(), date);
 
 			//添加审核记录表
 			int line = saveAuditInfo(CompanyConstants.auditLevel.JOINON.stringVal(), pcAuditInfo, userVO, date, "");
@@ -625,21 +627,76 @@ public class CompanySubmitServiceImpl implements CompanySubmitService {
 		return flag;
 	}
 
+	/**
+	 * 签约成功：如果入驻公司选择全款代扣保证金或者一次性缴纳全款，直接更改公司状态为入驻成功，否则状态改成代缴保证金
+	 * @param companyId
+	 * @param contractNumber
+	 * @return
+	 */
 	@Override
 	public boolean signSuccess(String companyId, String contractNumber) {
-		boolean aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal());
+		boolean aLine = false;
+		boolean line = false;
 
-		ContractInfo contractInfo = new ContractInfo();
-		contractInfo.setCompanyId(companyId);
-		contractInfo.setContractNumber(contractNumber);
-		contractInfo.setContractStatus(ContractStatus.Waitdeposit.shortVal());
-		ContractInfoExample example = new ContractInfoExample();
-		example.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
-		int line = contractInfoMappers.updateByExampleSelective(contractInfo,example);
-		if(aLine && line > 0){
-			return true;
+		Date date = new Date();
+
+		//查询公司信息
+		CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+		companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSCHECK.stringVal());
+		List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+		if(companyInfos.size() != 1){
+			return false;
 		}
-		return false;
+		CompanyInfo companyInfo = companyInfos.get(0);
+
+		//查询合同条款，保证金缴费方式
+		ContractTermsChildExample example = new ContractTermsChildExample();
+		example.createCriteria().
+				andCompanyIdEqualTo(companyId).
+				andContractNumberEqualTo(contractNumber).andCostTypeEqualTo("13");
+		example.setOrderByClause(" c_type asc");
+		List<ContractTermsChild> childList = contractTermsChildMapper.selectByExample(example);
+		if(childList == null || childList.size() > 2){
+			throw new RuntimeException("入住合同"+contractNumber+"{}设置保证金金额数据错误");
+		}
+
+		//代表一次性缴纳金额
+		List<ContractTermsChild> filterList = childList.stream().filter(child -> child.getcType().equals("1") ).collect(Collectors.toList());
+		printInfoMes("合同保证设置 一次交费记录为｛｝",filterList.size());
+		//判断是否直接修改公司为入驻成功
+		boolean flag = false;
+		if(filterList != null && filterList.size() > 0){
+			//1.判断保证金是否一次性缴费
+			if(filterList.get(0).getCostValue().equals(String.valueOf(companyInfo.getDepositMoney()))){
+				flag = true;
+			}
+		}else{
+			//全部代扣
+			flag = true;
+		}
+		if(flag == true){
+			aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSJOIN.stringVal(), date);
+			line = updateContractAudit(companyId, contractNumber, ContractStatus.Waitdeposit.shortVal());
+		}else {
+			aLine = companyApplyService.updateStatus(companyId, CompanyAuditStatus.NOTPAYBAIL.stringVal(), date);
+			line = updateContractAudit(companyId, contractNumber, ContractStatus.Waitdeposit.shortVal());
+		}
+		return aLine && line;
+	}
+
+	private boolean updateContractAudit(String companyId, String contractNumber, String audit) {
+		ContractInfo contractInfo = new ContractInfo();
+//		contractInfo.setCompanyId(companyId);
+//		contractInfo.setContractNumber(contractNumber);
+		contractInfo.setContractStatus(audit);
+		ContractInfoExample contractInfoExample = new ContractInfoExample();
+		contractInfoExample.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+		int line = contractInfoMappers.updateByExampleSelective(contractInfo,contractInfoExample);
+		if(line > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 
 	@Override

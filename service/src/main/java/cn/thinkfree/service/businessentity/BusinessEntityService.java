@@ -83,4 +83,11 @@ public interface BusinessEntityService {
      * @return
      */
     boolean deleteBusinessEntity(BusinessEntity businessEntity);
+
+    /**
+     * 通过公司编号获取经营主体ebsId
+     * @param companyId
+     * @return
+     */
+    String getBusinessEbsIdByCompanyId(String companyId);
 }
