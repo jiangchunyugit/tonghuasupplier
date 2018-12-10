@@ -83,6 +83,10 @@ public class NewProjectServiceImpl implements NewProjectService {
     ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
     @Autowired
     ProjectSchedulingMapper projectSchedulingMapper;
+    @Autowired
+    private BuildSchemeCompanyRelMapper companyRelMapper;
+    @Autowired
+    ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
 
     /**
@@ -259,30 +263,52 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<ProjectScreenVo> getProjectScreen(String userId, String projectNo) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return RespData.error("请上传参数:userId=" + userId);
+        }
         ProjectScreenVo projectScreenVo = new ProjectScreenVo();
-        ProjectBigSchedulingDetailsExample example = new ProjectBigSchedulingDetailsExample();
-        example.setOrderByClause("big_sort asc");
-        ProjectBigSchedulingDetailsExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(projectNo);
-        criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
-        List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
-        criteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
-        List<ProjectBigSchedulingDetails> checkBigList = projectBigSchedulingDetailsMapper.selectByExample(example);
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria msgCriteria = msgExample.createCriteria();
+        msgCriteria.andUserIdEqualTo(userId);
+        List list = new ArrayList();
+        list.add(3);
+        msgCriteria.andEmployeeStateIn(list);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if (employeeMsgs.size()==0){
+            return RespData.error("此用户当前状态无查看项目资格");
+        }
+        BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
+        BuildSchemeCompanyRelExample.Criteria relCriteria = relExample.createCriteria();
+        relCriteria.andCompanyIdEqualTo(employeeMsgs.get(0).getCompanyId());
+        relCriteria.andDelStateEqualTo(2);
+        relCriteria.andIsEableEqualTo(1);
+        List<BuildSchemeCompanyRel> buildSchemeCompanyRels = companyRelMapper.selectByExample(relExample);
+        if (buildSchemeCompanyRels.size()==0){
+            return RespData.error("此公司尚无在用施工方案");
+        }
+        ProjectBigSchedulingExample bigSchedulingExample = new ProjectBigSchedulingExample();
+        bigSchedulingExample.setOrderByClause("big_sort asc");
+        ProjectBigSchedulingExample.Criteria bigCriteria = bigSchedulingExample.createCriteria();
+        bigCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        bigCriteria.andSchemeNoEqualTo(buildSchemeCompanyRels.get(0).getBuildSchemeNo());
+        List<ProjectBigScheduling> bigList = projectBigSchedulingMapper.selectByExample(bigSchedulingExample);
+        bigCriteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
+        List<ProjectBigScheduling> checkBigList = projectBigSchedulingMapper.selectByExample(bigSchedulingExample);
         if (bigList.size() == 0) {
             return RespData.error("此项目下无排期信息");
         }
         List<ProjectBigSchedulingDetailsVO> playBigList = new ArrayList<>();
-        for (ProjectBigSchedulingDetails details : bigList) {
+        for (ProjectBigScheduling details : bigList) {
             ProjectBigSchedulingDetailsVO detailsVO = new ProjectBigSchedulingDetailsVO();
-            detailsVO.setBigSort(details.getBigSort());
-            detailsVO.setBigName(details.getBigName());
+            detailsVO.setBigSort(details.getSort());
+            detailsVO.setBigName(details.getName());
             playBigList.add(detailsVO);
         }
         List<ProjectBigSchedulingDetailsVO> playCheckList = new ArrayList<>();
-        for (ProjectBigSchedulingDetails details : checkBigList) {
+        for (ProjectBigScheduling details : checkBigList) {
             ProjectBigSchedulingDetailsVO detailsVO = new ProjectBigSchedulingDetailsVO();
-            detailsVO.setBigSort(details.getBigSort());
-            detailsVO.setRenameBig(details.getRenameBig());
+            detailsVO.setBigSort(details.getSort());
+            detailsVO.setRenameBig(details.getName());
             playCheckList.add(detailsVO);
         }
         Collections.sort(playBigList);
