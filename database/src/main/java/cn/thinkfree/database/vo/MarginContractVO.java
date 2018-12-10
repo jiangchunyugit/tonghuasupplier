@@ -9,9 +9,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @Description 保证金待结算数据池应收费用单（合同提供）
  */
 @ApiModel("保证金待结算数据池应收费用单（合同提供）")
-public class
-
-MarginContractVO {
+public class MarginContractVO {
 
     @ApiModelProperty("总金额---合同保证金")
     private String amount;
