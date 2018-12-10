@@ -63,6 +63,12 @@ public interface AgencyService {
     ParamAgency getParamAgency(String contractNumber);
 
 
+    /**
+     * 创建ftp
+     */
+     String  createPdf(String contractNumber);
+
+
     /***
      * 获取品牌列表 toDO （需要查徐阳的表）
      *
