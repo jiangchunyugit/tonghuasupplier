@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 
 import com.google.common.collect.Lists;
@@ -65,9 +66,9 @@ public class RemoteSyncListener extends AbsLogPrinter {
      *  2.推送结算信息
      * @param finishContract
      */
-//    @TransactionalEventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
 //    @Async
-    @EventListener
+//    @EventListener
     public void finishContractAfter(FinishContract finishContract){
 
         Optional<SyncContractVO> flag = contractService.selectSyncDateByContractNumber(finishContract.getSource());
