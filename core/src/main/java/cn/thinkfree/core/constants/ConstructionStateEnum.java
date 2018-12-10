@@ -317,59 +317,27 @@ public enum ConstructionStateEnum {
         return state;
     }
 
-    public void setState(int state) {
-        this.state = state;
-    }
-
     public String getOperateInfo() {
         return operateInfo;
-    }
-
-    public void setOperateInfo(String operateInfo) {
-        this.operateInfo = operateInfo;
     }
 
     public String getStateConsumer() {
         return stateConsumer;
     }
 
-    public void setStateConsumer(String stateConsumer) {
-        this.stateConsumer = stateConsumer;
-    }
-
     public String getStatePlatform() {
         return statePlatform;
-    }
-
-    public void setStatePlatform(String statePlatform) {
-        this.statePlatform = statePlatform;
     }
 
     public String getStateConstructionCompany() {
         return stateConstructionCompany;
     }
 
-    public void setStateConstructionCompany(String stateConstructionCompany) {
-        this.stateConstructionCompany = stateConstructionCompany;
-    }
-
     public String getStateConstructor() {
         return stateConstructor;
     }
 
-    public void setStateConstructor(String stateConstructor) {
-        this.stateConstructor = stateConstructor;
-    }
-
-    public void setNextStates(Integer[] nextStates) {
-        this.nextStates = nextStates;
-    }
-
     public boolean isStateType() {
         return stateType;
-    }
-
-    public void setStateType(boolean stateType) {
-        this.stateType = stateType;
     }
 }
