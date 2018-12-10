@@ -1,8 +1,9 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.service.construction.vo.ConstructionOrderCommonVo;
+import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import com.github.pagehelper.PageInfo;
 
 public interface DecorationOrderOperate {
 
@@ -18,5 +19,5 @@ public interface DecorationOrderOperate {
      * @param pageSize
      * @return
      */
-    MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(String companyNo,int pageNum, int pageSize);
+    PageInfo<ConstructionOrderListVo> getDecorationOrderList(String companyNo, int pageNum, int pageSize);
 }

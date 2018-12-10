@@ -47,14 +47,11 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
      * @return
      */
     @Override
-    public MyRespBundle<DecorationOrderCommonVo> getOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
+    public PageInfo<DecorationOrderListVo> getOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
                                                               String addressDetail, String owner, String phone, String orderStage) {
         PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(companyNo, pageNum, pageSize, projectNo, appointmentTime,
                 addressDetail, owner, phone, orderStage);
-        DecorationOrderCommonVo decorationOrderCommonVo = new DecorationOrderCommonVo();
-        decorationOrderCommonVo.setCountPageNum((int) pageInfo.getTotal());
-        decorationOrderCommonVo.setOrderList(pageInfo.getList());
-        return RespData.success(decorationOrderCommonVo);
+        return pageInfo;
     }
 
 

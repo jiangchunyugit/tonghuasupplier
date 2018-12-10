@@ -16,6 +16,7 @@ import cn.thinkfree.database.event.sync.CompanyJoin;
 import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.PcUserInfoVo;
+import cn.thinkfree.service.contract.AgencyService;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.event.EventService;
@@ -63,6 +64,9 @@ public class ExampleController extends AbsBaseController {
    
    @Autowired
    ThirdPartDateService thirdPartDateService;
+
+    @Autowired
+    AgencyService agencyService;
    
     @PostMapping("/file")
     @MyRespBody
@@ -213,7 +217,7 @@ public class ExampleController extends AbsBaseController {
 //        order.setData(listvo);
 //            eventService.publish(order);
 //        //   }
-
+        agencyService.createPdf("131415");
     }
     @GetMapping("/send")
     public void send(){

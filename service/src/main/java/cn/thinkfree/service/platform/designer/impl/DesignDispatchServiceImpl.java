@@ -1275,7 +1275,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case STATE_220:
             case STATE_240:
             case STATE_260:
-
             case STATE_150:
             case STATE_230:
                 btns.add("SJZL");
