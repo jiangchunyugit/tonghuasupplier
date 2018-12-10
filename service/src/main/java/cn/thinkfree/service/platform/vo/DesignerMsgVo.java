@@ -40,10 +40,14 @@ public class DesignerMsgVo {
     private String registerTime;
     @ApiModelProperty("设计师标签")
     private String designTag;
+    @ApiModelProperty("设计师标签")
+    private String designTagCode;
     @ApiModelProperty("设计师等级")
     private int level;
     @ApiModelProperty("设计师身份,1社会化设计师")
     private String identity;
+    @ApiModelProperty("设计师身份,1社会化设计师")
+    private String identityCode;
     @ApiModelProperty("公司名称")
     private String companyName;
     @ApiModelProperty("从业年限")
@@ -56,6 +60,8 @@ public class DesignerMsgVo {
     private String designerMoneyHigh;
     @ApiModelProperty("擅长风格")
     private List<String> designerStyles;
+    @ApiModelProperty("擅长风格")
+    private List<String> designerStyleCodes;
 
     public String getRealName() {
         return realName;
@@ -249,5 +255,41 @@ public class DesignerMsgVo {
 
     public void setDesignerStyles(List<String> designerStyles) {
         this.designerStyles = designerStyles;
+    }
+
+    public void setSex(int sex) {
+        this.sex = sex;
+    }
+
+    public void setAuthState(int authState) {
+        this.authState = authState;
+    }
+
+    public String getDesignTagCode() {
+        return designTagCode;
+    }
+
+    public void setDesignTagCode(String designTagCode) {
+        this.designTagCode = designTagCode;
+    }
+
+    public String getIdentityCode() {
+        return identityCode;
+    }
+
+    public void setIdentityCode(String identityCode) {
+        this.identityCode = identityCode;
+    }
+
+    public void setWorkingTime(int workingTime) {
+        this.workingTime = workingTime;
+    }
+
+    public List<String> getDesignerStyleCodes() {
+        return designerStyleCodes;
+    }
+
+    public void setDesignerStyleCodes(List<String> designerStyleCodes) {
+        this.designerStyleCodes = designerStyleCodes;
     }
 }

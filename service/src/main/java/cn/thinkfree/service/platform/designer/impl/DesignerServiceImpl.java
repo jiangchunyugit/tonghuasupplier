@@ -274,6 +274,7 @@ public class DesignerServiceImpl implements DesignerService {
                 designTag = "待定";
             }
             designerMsgVo.setDesignTag(designTag);
+            designerMsgVo.setDesignTagCode(designerMsg.getTag() + "");
             if (designerMsg.getLevel() != null) {
                 designerMsgVo.setLevel(designerMsg.getLevel().intValue());
             }
@@ -281,6 +282,7 @@ public class DesignerServiceImpl implements DesignerService {
             if (designerMsg.getIdentity() == null || designerMsg.getIdentity() != 1) {
                 identity = "待定";
             }
+            designerMsgVo.setIdentityCode(designerMsg.getIdentity() + "");
             designerMsgVo.setVolumeRoomMoney(designerMsg.getVolumeRoomMoney().toString());
             designerMsgVo.setDesignerMoneyLow(designerMsg.getDesignerMoneyLow().toString());
             designerMsgVo.setDesignerMoneyHigh(designerMsg.getDesignerMoneyHigh().toString());
@@ -290,7 +292,9 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsgVo.setWorkingTime(employeeMsg.getWorkingTime());
         List<DesignerStyleConfigVo> styleConfigs = queryDesignerStyleByUserId(userId);
         List<String> styles = ReflectUtils.getList(styleConfigs, "styleName");
+        List<String> styleCodes = ReflectUtils.getList(styleConfigs, "styleCode");
         designerMsgVo.setDesignerStyles(styles);
+        designerMsgVo.setDesignerStyleCodes(styleCodes);
         return designerMsgVo;
     }
 
