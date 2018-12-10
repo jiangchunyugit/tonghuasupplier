@@ -150,7 +150,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         sync.setAddress(companyInfo.getAddress());
         sync.setName(companyInfo.getCompanyName());
         sync.setJc(companyInfo.getCompanyName());
-        sync.setCode(companyID);
+        sync.setCode(String.valueOf(companyInfo.getId()));
         sync.setVendorCode(companyID);
         sync.setGssh(companyInfo.getTaxCode());
 
