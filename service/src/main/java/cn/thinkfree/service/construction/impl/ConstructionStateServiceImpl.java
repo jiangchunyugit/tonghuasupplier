@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
@@ -484,5 +485,26 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
     }
 
+    @Override
+    public List<OrderStatusDTO> getStates(int type, int currentStatus) {
+        List<OrderStatusDTO> orderStatusDTOs  = new ArrayList<>();
+        ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
+        String preStateName = "";
+        for (ConstructionStateEnum constructionState : stateEnums) {
+            String stateName = constructionState.getStateName(type);
+            if (StringUtils.isBlank(stateName)) {
+                continue;
+            }
+            if (stateName.equals(preStateName)){
+                continue;
+            }
+            preStateName = stateName;
+            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+            orderStatusDTO.setStatus(constructionState.getState());
+            orderStatusDTO.setName(stateName);
 
+            orderStatusDTOs.add(orderStatusDTO);
+        }
+        return orderStatusDTOs;
+    }
 }

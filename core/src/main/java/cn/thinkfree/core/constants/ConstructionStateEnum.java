@@ -1,7 +1,6 @@
 package cn.thinkfree.core.constants;
 
 
-import cn.thinkfree.core.model.OrderStatusDTO;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -221,30 +220,6 @@ public enum ConstructionStateEnum {
     }
 
     /**
-     * 根据类型获取订单状态类型列表
-     *
-     * @param type ，1获取平台状态，2获取装饰公司状态，3获取施工人员状态，4获取消费者状态
-     * @return
-     */
-    public static List<OrderStatusDTO> allState(int type, int currentStatus) {
-        List<OrderStatusDTO> orderStatusDTOs  = new ArrayList<>();
-        ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
-
-        for (ConstructionStateEnum constructionState : stateEnums) {
-            String stateName = constructionState.getStateName(type);
-            if (StringUtils.isBlank(stateName)) {
-                continue;
-            }
-            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
-            orderStatusDTO.setStatus(constructionState.state);
-            orderStatusDTO.setName(stateName);
-
-            orderStatusDTOs.add(orderStatusDTO);
-        }
-        return orderStatusDTOs;
-    }
-
-    /**
      * 根据类型获取所有类型值
      *
      * @param state 订单状态值
@@ -340,5 +315,61 @@ public enum ConstructionStateEnum {
 
     public int getState() {
         return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
+    public String getOperateInfo() {
+        return operateInfo;
+    }
+
+    public void setOperateInfo(String operateInfo) {
+        this.operateInfo = operateInfo;
+    }
+
+    public String getStateConsumer() {
+        return stateConsumer;
+    }
+
+    public void setStateConsumer(String stateConsumer) {
+        this.stateConsumer = stateConsumer;
+    }
+
+    public String getStatePlatform() {
+        return statePlatform;
+    }
+
+    public void setStatePlatform(String statePlatform) {
+        this.statePlatform = statePlatform;
+    }
+
+    public String getStateConstructionCompany() {
+        return stateConstructionCompany;
+    }
+
+    public void setStateConstructionCompany(String stateConstructionCompany) {
+        this.stateConstructionCompany = stateConstructionCompany;
+    }
+
+    public String getStateConstructor() {
+        return stateConstructor;
+    }
+
+    public void setStateConstructor(String stateConstructor) {
+        this.stateConstructor = stateConstructor;
+    }
+
+    public void setNextStates(Integer[] nextStates) {
+        this.nextStates = nextStates;
+    }
+
+    public boolean isStateType() {
+        return stateType;
+    }
+
+    public void setStateType(boolean stateType) {
+        this.stateType = stateType;
     }
 }

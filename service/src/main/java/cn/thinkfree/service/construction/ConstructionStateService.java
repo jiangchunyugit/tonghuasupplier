@@ -1,7 +1,9 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.model.OrderStatusDTO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -95,5 +97,13 @@ public interface ConstructionStateService {
      * 支付未开工逆向
      */
     MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type);
+
+    /**
+     * 根据类型获取订单状态类型列表
+     * @param type 1：获取平台状态；2：获取装饰公司状态；3：获取施工人员状态；4：获取消费者状态
+     * @param currentStatus 当前订单状态值
+     * @return 订单状态信息
+     */
+    List<OrderStatusDTO> getStates(int type, int currentStatus);
 
 }

@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -43,39 +44,39 @@ import java.util.*;
 @Service
 public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
-    OrderUserMapper orderUserMapper;
+    private OrderUserMapper orderUserMapper;
     @Autowired
-    ProjectMapper projectMapper;
+    private ProjectMapper projectMapper;
     @Autowired
-    NewOrderService newOrderService;
+    private NewOrderService newOrderService;
     @Autowired
-    ProjectDataMapper projectDataMapper;
+    private ProjectDataMapper projectDataMapper;
     @Autowired
-    DesignerOrderMapper designerOrderMapper;
+    private DesignerOrderMapper designerOrderMapper;
     @Autowired
-    ConstructionOrderMapper constructionOrderMapper;
+    private ConstructionOrderMapper constructionOrderMapper;
     @Autowired
-    EmployeeMsgMapper employeeMsgMapper;
+    private EmployeeMsgMapper employeeMsgMapper;
     @Autowired
-    OrderApplyRefundMapper orderApplyRefundMapper;
+    private OrderApplyRefundMapper orderApplyRefundMapper;
     @Autowired
-    NewOrderUserService newOrderUserService;
+    private NewOrderUserService newOrderUserService;
     @Autowired
-    ProjectStageLogMapper projectStageLogMapper;
+    private ProjectStageLogMapper projectStageLogMapper;
     @Autowired
-    DesignDispatchService designDispatchService;
+    private DesignDispatchService designDispatchService;
     @Autowired
-    CloudService cloudService;
+    private CloudService cloudService;
     @Autowired
-    ConstructionStateService constructionStateService;
+    private ConstructionStateService constructionStateService;
     @Autowired
-    ProjectUserService projectUserService;
+    private ProjectUserService projectUserService;
     @Autowired
-    UserCenterService userCenterService;
+    private UserCenterService userCenterService;
     @Autowired
-    BasicsDataMapper basicsDataMapper;
+    private BasicsDataMapper basicsDataMapper;
     @Autowired
-    AfInstanceService afInstanceService;
+    private AfInstanceService afInstanceService;
 
 
     /**
@@ -319,11 +320,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
-            List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
-            for (Map<String, Object> map : maps1) {
+            List<OrderStatusDTO> states = constructionStateService.getStates(ProjectDataStatus.PLAY_CONSUMER.getValue(), projects.get(0).getStage());
+            for (OrderStatusDTO orderStatus : states) {
                 OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
-                orderTaskSortVo.setSort((Integer) map.get("key"));
-                orderTaskSortVo.setName(map.get("val").toString());
+                orderTaskSortVo.setSort(orderStatus.getStatus());
+                orderTaskSortVo.setName(orderStatus.getName());
                 orderTaskSortVoList1.add(orderTaskSortVo);
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
