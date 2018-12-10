@@ -80,7 +80,7 @@ public class UserCenterServiceImpl implements UserCenterService {
             userMsgVo = register(userName, userPhone, isOwner);
         }
         if(isOwner && StringUtils.isBlank(userMsgVo.getConsumerId())){
-            userMsgVo = register(userName, userPhone, isOwner);
+            userMsgVo = register(userName, userPhone, true);
         }
         if(isOwner && StringUtils.isBlank(userMsgVo.getStaffId())){
             userMsgVo = register(userName, userPhone, false);
@@ -164,7 +164,8 @@ public class UserCenterServiceImpl implements UserCenterService {
      *
      * @param userPhone
      */
-    private UserMsgVo queryByPhone(String userPhone) {
+    @Override
+    public UserMsgVo queryByPhone(String userPhone) {
         Map<String, String> queryUserParams = new HashMap<>();
         queryUserParams.put("phone", userPhone);
         HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(queryUserUrl), HttpUtils.mapToParams(queryUserParams));
@@ -233,8 +234,8 @@ public class UserCenterServiceImpl implements UserCenterService {
             String headPortraits = userMsg.getString("headPortraits");
             String memberEcode = userMsg.getString("memberEcode");
             UserMsgVo userMsgVo = new UserMsgVo(userId, userName, phone, employeeMsg.getRoleCode(), employeeMsg.getRealName(), headPortraits, memberEcode);
-            String registerTime = userMsg.getString("registerTime");
-            userMsgVo.setRegisterTime(registerTime);
+            userMsgVo.setRegisterTime(userMsg.getString("registerTime"));
+            userMsgVo.setStaffId(userMsg.getString("staffId"));
             userMsgVos.add(userMsgVo);
         }
         return userMsgVos;
