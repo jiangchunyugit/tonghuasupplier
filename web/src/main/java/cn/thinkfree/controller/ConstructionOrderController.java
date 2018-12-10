@@ -106,8 +106,9 @@ public class ConstructionOrderController extends AbsBaseController {
                                                               @RequestParam(required = false) @ApiParam(value = "业主姓名")  String owner,
                                                               @RequestParam(required = false) @ApiParam(value = "业主电话")  String phone,
                                                               @RequestParam(required = false) @ApiParam(value = "订单状态")  String orderStage){
+        PageInfo<DecorationOrderListVo> pageInfo = decorationDistributionOrder.getOrderList(companyNo, pageNum, pageSize, projectNo, appointmentTime, addressDetail, owner, phone, orderStage);
 
-        return decorationDistributionOrder.getOrderList(companyNo,pageNum,pageSize, projectNo, appointmentTime,addressDetail,owner,phone,orderStage);
+        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }
 
     @ApiOperation("装饰平台接口（施工派单-给员工-数码统计）---->迎喜专用")
@@ -146,7 +147,8 @@ public class ConstructionOrderController extends AbsBaseController {
                                                                           @RequestParam @ApiParam(value = "页码",required = true) int pageNum,
                                                                           @RequestParam @ApiParam(value = "每页条数",required = true) int pageSize){
 
-        return decorationOrderOperate.getDecorationOrderList(companyNo,pageNum,pageSize);
+        PageInfo<ConstructionOrderListVo> pageInfo = decorationOrderOperate.getDecorationOrderList(companyNo, pageNum, pageSize);
+        return sendJsonData(ResultMessage.SUCCESS, pageInfo);
     }
 
     @ApiOperation("装饰平台接口（获取施工订单统计）---->迎喜专用")
