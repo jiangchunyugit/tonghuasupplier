@@ -1635,10 +1635,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         for (Project project : projects) {
             String designerNo = orderNoMap.get(project.getProjectNo());
             project.setProvince(provinceMap.get(project.getProvince()));
+            if(project.getProvince() == null || project.getProvince().contains("null")){
+                project.setProvince("");
+            }
             project.setCity(cityMap.get(project.getCity()));
+            if(project.getCity() == null || project.getCity().contains("null")){
+                project.setCity("");
+            }
             project.setRegion(areaMap.get(project.getRegion()));
-            projectMap.put(designerNo, project);
-        }
+            if(project.getRegion() == null || project.getRegion().contains("null")){
+                project.setRegion("");
+            }
+            projectMap.put(designerNo,project);        }
         return projectMap;
     }
 }

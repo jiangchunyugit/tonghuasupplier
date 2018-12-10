@@ -72,6 +72,13 @@ public interface UserCenterService {
     List<UserMsgVo> queryUserMsg(Map<String, EmployeeMsg> employeeMsgMap);
 
     /**
+     * 根据手机号查询用户信息
+     * @param userPhone
+     * @return
+     */
+    UserMsgVo queryByPhone(String userPhone);
+
+    /**
      *
      * @param roleCode
      * @param userId
