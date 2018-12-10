@@ -52,7 +52,7 @@ public class ProjectVo {
     @ApiModelProperty(name = "projectOrderDetailVoList",value = "订单模块集合")
     private List<ProjectOrderDetailVo> projectOrderDetailVoList;
     @ApiModelProperty(value = "消息内容")
-    private String message = "量房资料已提交";
+    private String message ;
     @ApiModelProperty(value = "是否展示 拒绝接单 按钮")
     private Boolean refuseButton;
     @ApiModelProperty(value = "是否展示 立即接单 按钮")
