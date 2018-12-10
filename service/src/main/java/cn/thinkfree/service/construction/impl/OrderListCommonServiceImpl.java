@@ -237,9 +237,9 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      */
     @Override
     public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo, int pageNum, int pageSize) {
-//        if(pageSize < 5){
-//            pageSize = 5;
-//        }
+        if(pageSize < 5){
+            pageSize = 5;
+        }
         if (StringUtils.isBlank(companyNo)) {
             return new PageInfo<>();
         }
