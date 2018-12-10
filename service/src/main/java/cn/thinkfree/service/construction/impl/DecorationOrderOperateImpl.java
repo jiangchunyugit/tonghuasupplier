@@ -38,12 +38,9 @@ public class DecorationOrderOperateImpl implements DecorationOrderOperate {
      * @return
      */
     @Override
-    public MyRespBundle<ConstructionOrderCommonVo> getDecorationOrderList(String companyNo,int pageNum, int pageSize) {
+    public PageInfo<ConstructionOrderListVo> getDecorationOrderList(String companyNo,int pageNum, int pageSize) {
         PageInfo<ConstructionOrderListVo> pageInfo = orderListCommonService.getDecorateOrderList(companyNo,pageNum,pageSize);
-        ConstructionOrderCommonVo constructionOrderCommonVo = new ConstructionOrderCommonVo();
-        constructionOrderCommonVo.setCountPageNum((int) pageInfo.getTotal());
-        constructionOrderCommonVo.setOrderList(pageInfo.getList());
-        return RespData.success(constructionOrderCommonVo);
+        return pageInfo;
     }
 
     /**

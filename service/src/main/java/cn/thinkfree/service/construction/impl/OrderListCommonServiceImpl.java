@@ -394,8 +394,6 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             return new PageInfo<>();
         }
         PageHelper.startPage(pageNum, pageSize);
-        PageInfo<DecorationOrderListVo> pageInfo = new PageInfo<>();
-        PageInfo<ConstructionOrder> pageInfo2 = new PageInfo<>();
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
@@ -408,7 +406,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         List<DecorationOrderListVo> listVo = new ArrayList<>();
 
-        pageInfo2.setList(list);
+        PageInfo pageInfo = new PageInfo<>(list);
 
         /* 项目编号List */
         List<String> listProjectNo = new ArrayList<>();
@@ -516,9 +514,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             listVo.add(decorationOrderListVo);
         }
         pageInfo.setList(listVo);
-        Page p = (Page) pageInfo2.getList();
-        pageInfo.setPageNum(p.getPages());
-        pageInfo.setTotal(pageInfo2.getList().size());
+
         return pageInfo;
     }
 
