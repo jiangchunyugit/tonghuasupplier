@@ -19,7 +19,7 @@ public class RespData {
      * @return
      */
     public static MyRespBundle<String> success() {
-        return success("success", ErrorCode.OK);
+        return success("操作成功", ErrorCode.OK);
     }
 
 
@@ -83,13 +83,12 @@ public class RespData {
      * 失败
      *
      * @param code
-     * @param <T>
      * @return
      */
-    public static <T> MyRespBundle<T> error(ErrorCode code) {
-        MyRespBundle<T> myRespBundle = new MyRespBundle<>();
+    public static MyRespBundle error(ErrorCode code) {
+        MyRespBundle myRespBundle = new MyRespBundle();
         myRespBundle.setCode(code.getCode());
-        myRespBundle.setData(null);
+        myRespBundle.setData(code.getMsg());
         myRespBundle.setMsg(code.getMsg());
         return myRespBundle;
     }
@@ -98,13 +97,12 @@ public class RespData {
      * 失败
      *
      * @param msg
-     * @param <T>
      * @return
      */
-    public static <T> MyRespBundle<T> error(String msg) {
-        MyRespBundle<T> myRespBundle = new MyRespBundle<>();
+    public static MyRespBundle error(String msg) {
+        MyRespBundle myRespBundle = new MyRespBundle<>();
         myRespBundle.setCode(ErrorCode.FAIL.getCode());
-        myRespBundle.setData(null);
+        myRespBundle.setData(msg);
         myRespBundle.setMsg(msg);
         return myRespBundle;
     }
@@ -114,37 +112,14 @@ public class RespData {
      *
      * @param msg
      * @param code
-     * @param <T>
      * @return
      */
-    public static <T> MyRespBundle<T> error(int code, String msg) {
-        MyRespBundle<T> myRespBundle = new MyRespBundle<>();
+    public static MyRespBundle error(int code, String msg) {
+        MyRespBundle myRespBundle = new MyRespBundle();
         myRespBundle.setCode(code);
-        myRespBundle.setData(null);
+        myRespBundle.setData(msg);
         myRespBundle.setMsg(msg);
         return myRespBundle;
     }
 
-    /**
-     * 失败
-     *
-     * @param e
-     * @param <T>
-     * @return
-     */
-    public static <T> MyRespBundle<T> error(Exception e) {
-        ErrorCode code = ErrorCode.UNKNOWN_EXCEPTION;
-        if (e instanceof CommonException) {
-            MyRespBundle<T> myRespBundle = new MyRespBundle<>();
-            myRespBundle.setCode(((CommonException) e).getCode());
-            myRespBundle.setData(null);
-            myRespBundle.setMsg(((CommonException) e).getMsg());
-            return myRespBundle;
-        }
-        MyRespBundle<T> myRespBundle = new MyRespBundle<>();
-        myRespBundle.setCode(code.getCode());
-        myRespBundle.setData(null);
-        myRespBundle.setMsg(code.getMsg());
-        return myRespBundle;
-    }
 }

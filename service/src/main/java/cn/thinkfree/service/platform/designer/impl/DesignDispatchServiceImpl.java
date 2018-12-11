@@ -434,7 +434,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
         DesignerOrderVo.setProjectMoney(project.getDecorationBudget() + "");
         OptionLogExample logExample = new OptionLogExample();
-        logExample.createCriteria().andOptionTypeEqualTo("DO");
+        logExample.createCriteria().andLinkNoEqualTo(DesignerOrder.getOrderNo()).andOptionTypeEqualTo("DO");
         logExample.setOrderByClause(" option_time desc limit 1");
         List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
         if (!optionLogs.isEmpty()) {
