@@ -1376,7 +1376,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		if(!companyInfoList.isEmpty() || companyInfoList.size() == 1){
 			CompanyInfo companyInfo = companyInfoList.get(0);
 			// 编码
-			result.setGhdwdm(companyInfo.getCompanyId());
+			result.setGhdwdm(String.valueOf(companyInfo.getId()));
 			// 名称
 			result.setGhdwmc(companyInfo.getCompanyName());
 			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));

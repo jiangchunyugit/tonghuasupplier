@@ -60,9 +60,9 @@ public class CompanyApplyController extends AbsBaseController {
     public MyRespBundle<String> applyThink(@ApiParam("申请信息")PcApplyInfoSEO pcApplyInfoSEO){
         boolean flag = companyApplyService.addApplyInfo(pcApplyInfoSEO);
         if(flag){
-            return sendJsonData(ResultMessage.SUCCESS, "操作成功");
+            return sendSuccessMessage("操作成功");
         }
-        return sendJsonData(ResultMessage.FAIL, "操作失败,验证码错误或公司名称已被注册。");
+        return sendFailMessage("操作失败,验证码错误或公司名称已被注册。");
     }
 
     /**
