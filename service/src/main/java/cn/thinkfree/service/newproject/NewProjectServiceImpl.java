@@ -76,6 +76,12 @@ public class NewProjectServiceImpl implements NewProjectService {
     BasicsDataMapper basicsDataMapper;
     @Autowired
     AfInstanceService afInstanceService;
+    @Autowired
+    ProvinceMapper provinceMapper;
+    @Autowired
+    CityMapper cityMapper;
+    @Autowired
+    AreaMapper areaMapper;
 
 
     /**
@@ -119,7 +125,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectVo.setAgreeButto(false);
                 projectVo.setRefuseButton(false);
             }
-            projectVo.setAddress(project.getAddressDetail());
+            projectVo.setAddress(getProjectAdress(project.getProjectNo()));
             //添加业主信息
             PersionVo owner = new PersionVo();
             try {
@@ -210,6 +216,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         Project project = projects.get(0);
         ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
+        projectVo.setAddress(getProjectAdress(projectNo));
         //添加进度展示
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
@@ -290,7 +297,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         List<PersionVo> persionList = new ArrayList<>();
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        if (!designerId.equals(userId)) {
+        if (designerId != null && !designerId.equals(userId)) {
             PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
             try {
                 UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
@@ -380,7 +387,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         Project project = projects.get(0);
         projectTitleVo.setProjectStartTime(project.getPlanStartTime());
         projectTitleVo.setProjectEndTime(project.getPlanEndTime());
-        projectTitleVo.setAddress(project.getAddressDetail());
+        projectTitleVo.setAddress(getProjectAdress(projectNo));
         projectTitleVo.setProjectNo(projectNo);
         List<OrderPlayVo> orderPlayVos = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         if (orderPlayVos.size() != 0) {
@@ -743,6 +750,58 @@ public class NewProjectServiceImpl implements NewProjectService {
             designOrderVo.setProjectStage(DesignStateEnum.queryByState(designOrderVo.getStage()).getStateName(3));
         }
         return RespData.success(designOrderVos);
+    }
+
+    /**
+     * 根据项目编号获取地址信息
+     *
+     * @param projectNo
+     * @return
+     */
+    public String getProjectAdress(String projectNo) {
+        StringBuilder builder = new StringBuilder();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return "";
+        }
+        Project project = projects.get(0);
+        //查询省份
+        if (project.getProvince() != null && !project.getProvince().trim().isEmpty()) {
+            ProvinceExample provinceExample = new ProvinceExample();
+            ProvinceExample.Criteria provinceCriteria = provinceExample.createCriteria();
+            provinceCriteria.andProvinceCodeEqualTo(project.getProvince());
+            List<Province> provinces = provinceMapper.selectByExample(provinceExample);
+            if (provinces.size() > 0) {
+                builder.append(provinces.get(0).getProvinceName());
+            }
+        }
+        //查询城市
+        if (project.getCity() != null && !project.getCity().trim().isEmpty()) {
+            CityExample ciytExample = new CityExample();
+            CityExample.Criteria cityCriteria = ciytExample.createCriteria();
+            cityCriteria.andCityCodeEqualTo(project.getCity());
+            List<City> cities = cityMapper.selectByExample(ciytExample);
+            if (cities.size() > 0) {
+                builder.append(cities.get(0).getCityName());
+            }
+        }
+        //查询区域
+        if (project.getRegion() != null && !project.getRegion().trim().isEmpty()) {
+            AreaExample areaExample = new AreaExample();
+            AreaExample.Criteria areaCriteria = areaExample.createCriteria();
+            areaCriteria.andAreaCodeEqualTo(project.getRegion());
+            List<Area> areas = areaMapper.selectByExample(areaExample);
+            if (areas.size() > 0) {
+                builder.append(areas.get(0).getAreaName());
+            }
+        }
+        builder.append(project.getAddressDetail());
+        return builder.toString();
+
     }
 
 }
