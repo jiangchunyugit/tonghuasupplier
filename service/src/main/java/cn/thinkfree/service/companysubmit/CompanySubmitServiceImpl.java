@@ -550,7 +550,7 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		boolean applyFlag = false;
 		//审核通过  运营审核通过生成合同编号
 		if(AuditStatus.AuditPass.shortVal().equals(pcAuditInfo.getAuditStatus())){
-			//判断公司类型是设计 或 装饰  或  设计装饰
+			//判断公司类型是设计 或 装饰  或  设计装饰  入驻公司如果是经销商，资质审批状态修改为待签约
 			CompanyInfo con = companyInfoMapper.findByCompanyId(companyId);
 			String roleLent []  = con.getRoleId().split(",");
 			if(roleLent.length > 1) {
@@ -565,7 +565,9 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 				}else{
 					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.AUDITING.code.toString(), date);
 				}
-			}else{
+			}else if(roleLent.length == 1 && CompanyConstants.RoleType.DR.code.equals(con.getRoleId())) {
+				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SIGNING.stringVal(), date);
+			}else {
 				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString(), date);
 			}
 			String contractNumber =ContractNum.getInstance().GenerateOrder(pcAuditInfo.getRoleId());
@@ -815,5 +817,30 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		map.put("msg", "资质变更操作失败！！！");
 		map.put("code", false);
 		return map;
+	}
+
+	@Override
+	public PageInfo<CompanyListVo> agencyList(CompanyListSEO companyListSEO) {
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+		List<String> relationMap = null;
+		if(userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null){
+			if(!UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
+				if(userVO != null){
+					relationMap = new ArrayList<>();
+					relationMap = userVO.getRelationMap();
+					if(relationMap != null && relationMap.size() > 0){
+						companyListSEO.setRelationMap(relationMap);
+					}
+				}
+			}
+		}
+
+		if(StringUtils.isNotBlank(companyListSEO.getParam())){
+			companyListSEO.setParam("%"+companyListSEO.getParam()+"%");
+		}
+		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
+		List<CompanyListVo> companyListVoList = companyInfoMapper.agencyList(companyListSEO);
+		return new PageInfo<>(companyListVoList);
 	}
 }

@@ -140,4 +140,11 @@ public interface CompanySubmitService {
      */
     Map<String, Object> updateCompanyInfo(CompanySubmitVo companySubmitVo);
 
+    /**
+     * 公司经销商查询list
+     * @param companyListSEO
+     * @return
+     */
+    PageInfo<CompanyListVo> agencyList(CompanyListSEO companyListSEO);
+
 }

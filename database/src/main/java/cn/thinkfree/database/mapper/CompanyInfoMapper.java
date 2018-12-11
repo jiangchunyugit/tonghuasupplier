@@ -139,4 +139,11 @@ public interface CompanyInfoMapper {
      */
     int updateByParam(Map<String, Object> map);
 
+    /**
+     * 公司经销商查询list
+     * @param companyListSEO
+     * @return
+     */
+    List<CompanyListVo> agencyList(CompanyListSEO companyListSEO);
+
 }

@@ -162,6 +162,17 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     }
 
     /**
+     * 公司经销商查询list
+     */
+    @RequestMapping(value = "/agencyList", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--列表--李阳")
+    public MyRespBundle<PageInfo<CompanyListVo>> agencyList(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+        PageInfo<CompanyListVo> pageInfo = companySubmitService.agencyList(companyListSEO);
+        return sendJsonData(success, "操作成功", pageInfo);
+    }
+
+    /**
      * 导出
      */
     @RequestMapping(value = "/downLoad", method = RequestMethod.GET)
