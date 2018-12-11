@@ -28,7 +28,7 @@ import java.util.Map;
 public class ConstructionOrderController extends AbsBaseController {
 
     @Autowired
-    ConstructionOrderOperate constructionOrderOperate;
+    private ConstructOrderService constructOrderService;
 
     @Autowired
     ConstrutionDistributionOrder construtionDistributionOrder;
@@ -57,7 +57,7 @@ public class ConstructionOrderController extends AbsBaseController {
             @RequestParam(required = false, defaultValue = "10")  int pageSize,
             @RequestParam(required = false) String cityName,
             @RequestParam(required = false, defaultValue = "1") int orderType){
-        return sendJsonData(ResultMessage.SUCCESS, constructionOrderOperate.getOrderList(pageNum,pageSize,cityName, orderType));
+        return sendJsonData(ResultMessage.SUCCESS, constructOrderService.getOrderList(pageNum,pageSize,cityName, orderType));
     }
 
     @ApiOperation("运营平台接口（获取施工订单统计/城市）---->孙宇专用")
@@ -65,7 +65,7 @@ public class ConstructionOrderController extends AbsBaseController {
     @RequestMapping(value = "getOperateNum", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<ConstructionOrderManageVo> getOperateNum(){
 
-        return constructionOrderOperate.getOrderNum();
+        return constructOrderService.getOrderNum();
     }
 
     @ApiOperation("运营平台接口（获取施工订单统计/城市(项目派单)）---->孙宇专用")
@@ -168,5 +168,16 @@ public class ConstructionOrderController extends AbsBaseController {
     public MyRespBundle<OfferProjectVo> getProject(
             @RequestParam @ApiParam(value = "项目编号",required = true) String projectNo){
         return otherService.getProject(projectNo);
+    }
+
+    @RequestMapping(value = "/projectApprovalList", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="施工订单统计")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
+            @ApiImplicitParam(name = "approvalType", value = "审批类型", required = true)
+    })
+    public MyRespBundle<List<String>> count(@RequestParam(name = "userId") String userId, @RequestParam(name = "userId") String approvalType){
+        return sendJsonData(ResultMessage.SUCCESS, constructOrderService.count(userId, approvalType));
     }
 }

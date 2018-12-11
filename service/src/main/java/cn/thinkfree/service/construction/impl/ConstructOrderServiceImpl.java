@@ -6,8 +6,10 @@ import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
+import cn.thinkfree.database.vo.ConstructCountVO;
+import cn.thinkfree.service.approvalflow.AfConfigService;
 import cn.thinkfree.service.construction.CommonService;
-import cn.thinkfree.service.construction.ConstructionOrderOperate;
+import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
@@ -20,7 +22,7 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
-public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
+public class ConstructOrderServiceImpl implements ConstructOrderService {
 
     @Autowired
     private OrderListCommonService orderListCommonService;
@@ -28,6 +30,8 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
     private ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     private CommonService commonService;
+    @Autowired
+    private AfConfigService configService;
 
     /**
      * 订单列表
@@ -78,5 +82,13 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         constructionOrderManageVo.setWaitSign(waitSign);
         constructionOrderManageVo.setWaitPay(waitPay);
         return RespData.success(constructionOrderManageVo);
+    }
+
+    @Override
+    public ConstructCountVO count(String userId, String approvalType) {
+        List<String> configNos = configService.getConfigNosByApprovalType(approvalType);
+        long count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        List a = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        return null;
     }
 }
