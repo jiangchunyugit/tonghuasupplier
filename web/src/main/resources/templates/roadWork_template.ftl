@@ -146,6 +146,14 @@
         乙方指定返施工款等其他相关款项的账户信息为：
     </section>
     <table>
+    <#if c22 == 0>
+    <tr>
+        <td>
+            <h4 class="inline-block">居然金融：</h4>
+            <p class="placeholder">${c07}</p>
+        </td>
+    </tr>
+    <#else>
         <tr>
             <td>
                 <h4 class="inline-block">户名：</h4>
@@ -164,6 +172,7 @@
                 <p class="placeholder">${c12}</p>
             </td>
         </tr>
+     </#if>
     </table>
     <h4>二、 甲方权利与义务</h4>
     <section class='indent'>

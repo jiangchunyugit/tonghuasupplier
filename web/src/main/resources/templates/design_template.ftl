@@ -99,6 +99,7 @@
     乙方指定返设计款、产品服务费、施工管理费等其他相关款项的账户信息为：
 </section>
 <table>
+    <#if  c22 == 1>
     <tr>
         <td>
             <h4 class="inline-block">户名：</h4>
@@ -117,6 +118,14 @@
             <p class="placeholder">${c07}</p>
         </td>
     </tr>
+    <#else>
+    <tr>
+        <td>
+            <h4 class="inline-block">居然金融：</h4>
+            <p class="placeholder">${c07}</p>
+        </td>
+    </tr>
+     </#if>
 </table>
 <h4>二、甲方义务</h4>
 <section class='indent'>
