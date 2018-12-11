@@ -220,6 +220,10 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
      */
     @Override
     public String generateCompanyId(String roleId) {
+        String[] str = roleId.split(",");
+        if(str.length > 1){
+            roleId = "DJ";
+        }
         String companyId = AccountHelper.createUserNo(roleId);
         if(ExistCompanyId(companyId)){
             companyId = generateCompanyId(roleId);
@@ -240,9 +244,16 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
+        Map<String, Object> map = new HashMap<>();
+
+        if(StringUtils.isBlank(pcApplyInfoSEO.getSiteCompanyId())){
+            map.put("code", false);
+            map.put("msg", "请选择门店!");
+            return map;
+        }
+
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
-        Map<String, Object> map = new HashMap<>();
         Date date = new Date();
         if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
             return map;
