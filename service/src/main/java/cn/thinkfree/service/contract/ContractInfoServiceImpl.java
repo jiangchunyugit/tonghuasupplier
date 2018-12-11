@@ -612,7 +612,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				root.put("startTime", DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd"));// 合同开始时间
 			}
 			if (root.get("c04") != null && !String.valueOf(root.get("c04")).equals("")) {
-				root.put("endTime", DateUtil.formateToDate(String.valueOf(root.get("c03")), "yyyy-MM-dd"));// 合同结束时间
+				root.put("endTime", DateUtil.formateToDate(String.valueOf(root.get("c04")), "yyyy-MM-dd"));// 合同结束时间
 			}
 
 			try {
