@@ -121,7 +121,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 
 			OrderContract contract = contractInfos.get(0);
 
-			CompanyInfo companyInfo = companyInfoMapper.selectByCompanyId(contract.getCompanyId());
+			CompanyInfo companyInfo = companyInfoMapper.findByCompanyId(contract.getCompanyId());
 
 			if (contract != null) {
 				// 初始化合同详情
@@ -271,7 +271,6 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			vo.setEndTime("");
 			//订单编号
 			vo.setFromOrderid(orderNumber);
-			//是否全额支付
 			vo.setIsEnd("1");
 			//合同类型 订单类型：设计1、施工2、合同3
 			vo.setType("1");
@@ -285,6 +284,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			vo.setStyleType(designerOrders.get(0) == null ? "" : designerOrders.get(0).getStyleType());
 			vo.setSort("");
 			vo.setTypeSubName("设计费总额");
+			vo.setCompanyAddrNo(companyInfo.getId()+"");
 			listVo.add(vo);
 		} else {
 			//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
@@ -317,13 +317,18 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					vo.setEndTime("");
 					//订单编号
 					vo.setFromOrderid(orderNumber);
+					vo.setFromContractId(contract.getContractNumber());
+
 					//是否全额支付
 					if (i == 0) {
 						vo.setIsEnd("1");
+						vo.setTypeSubName("首期");
 					} else if (i == jsonArray.size() - 1) {
 						vo.setIsEnd("2");
+						vo.setTypeSubName("尾期");
 					} else {
 						vo.setIsEnd("0");
+						vo.setTypeSubName("中期");
 					}
 					//合同类型 订单类型：设计1、施工2、合同3
 					vo.setType("1");
@@ -338,7 +343,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 
 					vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
 					//阶段名称
-					vo.setTypeSubName(String.valueOf(jsonMap.get("progressName")));
+
+					vo.setCompanyAddrNo(companyInfo.getId()+"");
 
 					printInfoMes("json vo 数据｛｝" + vo);
 					listVo.add(vo);
@@ -360,7 +366,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		List<ContractInfo> contractInfo = contractInfoMapper.selectByExample(contractInfoExample);
 		if (contractInfo.size() > 0) {
 			ContractInfo contract = contractInfo.get(0);
-        	CompanyInfo companyInfo = companyInfoMapper.selectByCompanyId(contract.getCompanyId());
+        	CompanyInfo companyInfo = companyInfoMapper.findByCompanyId(contract.getCompanyId());
         	//合同信息
         	ContractTermsExample contractTermsExample = new ContractTermsExample();
 			contractTermsExample.createCriteria()
@@ -450,7 +456,10 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  //合同结束时间
 			  vo.setEndTime(String.valueOf(resMap.get("c09")));
 			  //订单编号
-			  vo.setFromOrderid(contractNumber);
+				//订单编号
+		      vo.setFromOrderid("");
+				//合同编号
+		      vo.setFromContractId(contractNumber);
 			 
 			  //合同类型 订单类型：设计1、施工2、合同3
 			  vo.setType("8");
@@ -464,7 +473,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setStyleType("");
 			  
 			  vo.setSort("");
-		vo.setTypeSubName("保证金");
+		      vo.setTypeSubName("保证金");
 		     listVo.add(vo);
 	}
 
@@ -511,7 +520,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  vo.setTypeSub("7001");
 		  //是否全额支付 ：1全款，2分期
 
-		vo.setContractType("1");
+		  vo.setContractType("1");
 		  //业主名称
 		  vo.setConsumerName(companyInfo.getLegalName());//法人名称
 		  //合同开始时间 
@@ -519,7 +528,9 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  //合同结束时间
 		  vo.setEndTime(String.valueOf(resMap.get("c04")));
 		  //订单编号
-		  vo.setFromOrderid(contractNumber);
+		  vo.setFromOrderid("");
+          //合同编号
+		  vo.setFromContractId(contractNumber);
 		  //是否全额支付
 		  vo.setIsEnd("1");
 		  //合同类型 订单类型：设计1、施工2、合同3
@@ -534,7 +545,8 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		  vo.setStyleType("");
 		  
 		  vo.setSort("");
-		vo.setTypeSubName("保证金");
+		  vo.setCompanyAddrNo(companyInfo.getId()+"");
+		  vo.setTypeSubName("保证金");
 		  listVo.add(vo);
 	}
 	

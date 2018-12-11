@@ -1266,15 +1266,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case STATE_50:
                 btns.add("LFZL");
                 break;
-            case STATE_140:
+/*            case STATE_140:
             case STATE_160:
             case STATE_170:
             case STATE_190:
-            case STATE_200:
             case STATE_210:
             case STATE_220:
             case STATE_240:
-            case STATE_260:
+            case STATE_260:*/
             case STATE_150:
             case STATE_230:
                 btns.add("SJZL");

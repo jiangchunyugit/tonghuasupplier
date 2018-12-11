@@ -822,17 +822,19 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         JSONObject quoteResult = data.getJSONObject("quoteResult");
         String dataString = JSONObject.toJSONString(data);
-        String quoteResultString = JSONObject.toJSONString(quoteResult);
         //添加报价总表信息
         ProjectQuotation projectQuotation = JSONObject.parseObject(dataString, ProjectQuotation.class);
-        ProjectQuotation projectQuotation1 = JSONObject.parseObject(quoteResultString, ProjectQuotation.class);
-        projectQuotation.setConstructionTotalPrice(projectQuotation1.getConstructionTotalPrice());
-        projectQuotation.setExtraPrice(projectQuotation1.getExtraPrice());
-        projectQuotation.setHardDecorationPrice(projectQuotation1.getHardDecorationPrice());
-        projectQuotation.setMaterialTotalPrice(projectQuotation1.getMaterialTotalPrice());
-        projectQuotation.setSoftDecorationPrice(projectQuotation1.getSoftDecorationPrice());
-        projectQuotation.setTotalPrice(projectQuotation1.getTotalPrice());
-        projectQuotation.setUnitPrice(projectQuotation1.getUnitPrice());
+        if (quoteResult !=null){
+            String quoteResultString = JSONObject.toJSONString(quoteResult);
+            ProjectQuotation projectQuotation1 = JSONObject.parseObject(quoteResultString, ProjectQuotation.class);
+            projectQuotation.setConstructionTotalPrice(projectQuotation1.getConstructionTotalPrice());
+            projectQuotation.setExtraPrice(projectQuotation1.getExtraPrice());
+            projectQuotation.setHardDecorationPrice(projectQuotation1.getHardDecorationPrice());
+            projectQuotation.setMaterialTotalPrice(projectQuotation1.getMaterialTotalPrice());
+            projectQuotation.setSoftDecorationPrice(projectQuotation1.getSoftDecorationPrice());
+            projectQuotation.setTotalPrice(projectQuotation1.getTotalPrice());
+            projectQuotation.setUnitPrice(projectQuotation1.getUnitPrice());
+        }
         projectQuotation.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
         projectQuotation.setProjectNo(projectNo);
         int projectQuotationResult = projectQuotationMapper.insertSelective(projectQuotation);

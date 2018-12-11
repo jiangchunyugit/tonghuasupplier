@@ -15,9 +15,15 @@ import java.util.List;
 public interface RoleService {
     /**
      * 获取所有角色信息
-     * @return
+     * @return 所有角色信息
      */
     List<UserRoleSet> findAll();
+
+    /**
+     * 获取所有展示角色
+     * @return 所有展示角色
+     */
+    List<UserRoleSet> findAllShow();
 
     /**
      * 根据角色id查询角色

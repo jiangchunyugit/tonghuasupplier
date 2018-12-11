@@ -44,7 +44,7 @@ public class SyncOrderVO extends BaseModel {
      */
     private String endTime;
     /**
-     * 订单号：设计单号、施工单号、合同编号 等
+     * 订单号：设计单号、施工单号、等
      */
     private String fromOrderid;
     /**
@@ -88,6 +88,16 @@ public class SyncOrderVO extends BaseModel {
      */
     private  String sort;
 
+    public String getFromContractId() {
+        return fromContractId;
+    }
+
+    public void setFromContractId(String fromContractId) {
+        this.fromContractId = fromContractId;
+    }
+
+    private String fromContractId;
+
     public String getTypeSubName() {
         return typeSubName;
     }
@@ -96,10 +106,27 @@ public class SyncOrderVO extends BaseModel {
         this.typeSubName = typeSubName;
     }
 
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
+
     /**
      * 訂單階段名稱
      */
     private String typeSubName;
+
+    public String getCompanyAddrNo() {
+        return companyAddrNo;
+    }
+
+    public void setCompanyAddrNo(String companyAddrNo) {
+        this.companyAddrNo = companyAddrNo;
+    }
+
+    /**
+     * 公司主建
+     */
+    private String companyAddrNo;
 
     public SyncOrderVO() {
         actualAmount = "";
@@ -123,12 +150,13 @@ public class SyncOrderVO extends BaseModel {
         userId = "";
         sort = "";
         typeSubName = "";
+        companyAddrNo = "";
     }
 
     public SyncOrderVO(String actualAmount, String companyId, String companyName, String constructionStage, String consumerName,
                        String contractType, String designId, String designUserId, String endTime, String fromOrderid, String isEnd,
                        String projectAddr, String projectNo, String signedTime, String startTime, String styleType,
-                       String type, String typeSub, String userId, String sort, String typeSubName) {
+                       String type, String typeSub, String userId, String sort, String typeSubName,String companyAddrNo) {
         this.actualAmount = actualAmount;
         this.companyId = companyId;
         this.companyName = companyName;
@@ -150,6 +178,7 @@ public class SyncOrderVO extends BaseModel {
         this.userId = userId;
         this.sort = sort;
         this.typeSubName = typeSubName;
+        this.companyAddrNo  = companyAddrNo;
     }
 
     public String getActualAmount() {

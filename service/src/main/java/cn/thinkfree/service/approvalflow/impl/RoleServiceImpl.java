@@ -30,6 +30,13 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public List<UserRoleSet> findAllShow() {
+        UserRoleSetExample example = new UserRoleSetExample();
+        example.createCriteria().andIsShowEqualTo((short) 1);
+        return userRoleSetMapper.selectByExample(example);
+    }
+
+    @Override
     public UserRoleSet findById(String roleId) {
         UserRoleSetExample example = new UserRoleSetExample();
         example.createCriteria().andRoleCodeEqualTo(roleId);

@@ -50,6 +50,9 @@ public class FreemarkerUtils {
 		} else if (type.equals("3")) {//装饰业务方向
 			fltName = "constructionContract.ftl";
 		}
+		else if (type.equals("4")) {//经销商
+			fltName = "distributor.ftl";
+		}
 		//fltName = "template.ftl";
 
 //		InputStream classpath = FreemarkerUtils.class.getClassLoader().getResourceAsStream("templates/"+fltName);
