@@ -47,7 +47,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_40(40, "量房待支付", "设计师发起量房预约", new Integer[]{45, 42, 41}, true),
+    STATE_40(40, "量房待确认", "设计师发起量房预约", new Integer[]{45, 42, 41}, true),
     /**
      * 消费者	订单终止
      */
@@ -59,13 +59,13 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_45(45, "量房预约已确认", "业主确认了量房预约申请", new Integer[]{50, 46}, true),
+    STATE_45(45, "量房待支付", "业主确认了量房预约申请", new Integer[]{50, 46}, true),
 
     STATE_ORDER_END_46(46, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 消费者	支付量房费
      */
-    STATE_50(50, "量房待交.付", "业主支付量房费", new Integer[]{60, 51}, true),
+    STATE_50(50, "量房待交付", "业主支付量房费", new Integer[]{60, 51}, true),
     /**
      * 消费者	申请退款
      */
