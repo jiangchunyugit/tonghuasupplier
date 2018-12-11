@@ -6,6 +6,7 @@ import cn.thinkfree.database.model.AfSubRole;
 import cn.thinkfree.database.model.AfSubRoleExample;
 import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.approvalflow.AfSubRoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,9 +54,14 @@ public class AfSubRoleServiceImpl implements AfSubRoleService {
         List<UserRoleSet> roles = new ArrayList<>();
         if (subRoles != null) {
             for (AfSubRole subRole : subRoles) {
+                String subRoleId = subRole.getRoleId();
+                if (StringUtils.isBlank(subRoleId)) {
+                    LOGGER.error("角色编号为空！");
+                    throw new RuntimeException();
+                }
                 UserRoleSet role = null;
                 for (UserRoleSet record : allRoles) {
-                    if (record.getRoleCode().equals(subRole.getRoleId())) {
+                    if (record.getRoleCode().equals(subRoleId)) {
                         role = record;
                         break;
                     }
