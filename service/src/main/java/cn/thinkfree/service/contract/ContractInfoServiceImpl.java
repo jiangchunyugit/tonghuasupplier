@@ -8,6 +8,7 @@ import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.event.MarginContractEvent;
 import cn.thinkfree.database.event.sync.CreateOrder;
+import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -261,7 +262,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
      * @author lvqidong 公司入驻状态 0待激活1已激活2财务审核中3财务审核成功4财务审核失败5待交保证金 6入驻成功
      */
     @Override
-    //@Transactional
+    @Transactional
     public boolean auditContract( String contractNumber, String companyId, String auditStatus, String auditCase ) {
         Date date = new Date();
         /* 修改合同表 0草稿 1待审批 2 审批通过 3 审批拒绝 */
@@ -281,7 +282,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
             try {
-            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
+            	// TODO 合同数据与财务数据的纠葛
+            	eventService.publish(new FinishContract(contractNumber));
+//            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
 			} catch (Exception e) {
 				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
 			}
