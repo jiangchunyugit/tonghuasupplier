@@ -196,10 +196,10 @@ public class ExampleController extends AbsBaseController {
 //        } catch (Exception e) {
 //            System.out.println(e);
 //        }
-//    	   contractService.createOrderContract("11233333", "111111", "1");
+  	   contractService.createOrderContract("11233333", "111111", "1");
 //    	   contractService.createOrderContract("11233333", "11111122", "1");
 //    	 String url =  contractService.getPdfUrlByOrderNumber("111111");
-        contractService.createContractDoc("HT2018080710405900001");
+       /// contractService.createContractDoc("SJHT201811281050522650001");
         
     }
 
