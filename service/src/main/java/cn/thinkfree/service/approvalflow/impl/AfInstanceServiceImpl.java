@@ -90,10 +90,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
-//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-//            LOGGER.error("无法发起审批");
-//            throw new RuntimeException();
-//        }
+        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+            LOGGER.error("无法发起审批");
+            throw new RuntimeException();
+        }
         AfInstanceDetailVO instanceDetailVO = new AfInstanceDetailVO();
         Project project = projectService.findByProjectNo(projectNo);
         if (project == null) {
@@ -139,33 +139,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
-//            List<AfCheckItemVO> checkItems = getCheckApplicationCheckItems(projectNo, scheduleSort);
-            // TODO
-            List<AfCheckItemVO> checkItems = new ArrayList<>();
-            AfCheckItemVO checkItemVO = new AfCheckItemVO();
-            checkItemVO.setType(1);
-            checkItemVO.setName("阶段验收");
-            checkItems.add(checkItemVO);
-
-            checkItemVO = new AfCheckItemVO();
-            checkItemVO.setType(2);
-            checkItemVO.setName("避水验收");
-            checkItems.add(checkItemVO);
-
+            List<AfCheckItemVO> checkItems = getCheckApplicationCheckItems(projectNo, scheduleSort);
             instanceDetailVO.setCheckItems(checkItems);
         } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)){
-//            List<AfCheckItemVO> checkItems = getCheckReportCheckItems(projectNo, scheduleSort);
-            // TODO
-            List<AfCheckItemVO> checkItems = new ArrayList<>();
-            AfCheckItemVO checkItemVO = new AfCheckItemVO();
-            checkItemVO.setType(1);
-            checkItemVO.setName("阶段验收");
-            checkItems.add(checkItemVO);
-
-            checkItemVO = new AfCheckItemVO();
-            checkItemVO.setType(2);
-            checkItemVO.setName("避水验收");
-            checkItems.add(checkItemVO);
+            List<AfCheckItemVO> checkItems = getCheckReportCheckItems(projectNo, scheduleSort);
             instanceDetailVO.setCheckItems(checkItems);
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)){
             AfInstance instance = getRelevanceChangeOrderInstance(projectNo);
@@ -175,12 +152,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
             instanceDetailVO.setRelevancyDate(instance.getData());
         } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
-            int maxDelayDays = getMaxDelayDays(projectNo);
-            if (maxDelayDays <= 0) {
-                LOGGER.error("订单不存在延期, projectNo:{}", projectNo);
-                throw new RuntimeException();
-            }
-            instanceDetailVO.setMaxDelayDays(maxDelayDays);
+//            int maxDelayDays = getMaxDelayDays(projectNo);
+//            if (maxDelayDays <= 0) {
+//                LOGGER.error("订单不存在延期, projectNo:{}", projectNo);
+//                throw new RuntimeException();
+//            }
+//            instanceDetailVO.setMaxDelayDays(maxDelayDays);
         }
         String customerId = project.getOwnerId();
         AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
@@ -289,9 +266,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfInstance findByConfigNoAndProjectNoAndStatus(String configNo, String projectNo, Integer status) {
         PageHelper.startPage(1, 1);
         AfInstanceExample example = new AfInstanceExample();
-        // TODO status
-//        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
-        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo);
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
         example.setOrderByClause("create_time desc");
         List<AfInstance> instances = instanceMapper.selectByExample(example);
         return instances != null && instances.size() > 0 ? instances.get(0) : null;
@@ -352,10 +327,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark) {
-//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-//            LOGGER.error("无法发起审批");
-//            throw new RuntimeException();
-//        }
+        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+            LOGGER.error("无法发起审批");
+            throw new RuntimeException();
+        }
         List<UserRoleSet> allRoles = roleService.findAll();
         String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
         if (configSchemeNo == null) {
@@ -912,13 +887,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfInstanceVO> instanceVOs = new ArrayList<>();
         List<AfStartMenuVO> startMenus = new ArrayList<>();
 
-        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = null;
-//        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
-//        if (schedulingDetailsVOs == null || schedulingDetailsVOs.isEmpty()) {
-//            LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
-//            throw new RuntimeException();
-//        }
-//        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
+        List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
+        if (schedulingDetailsVOs == null || schedulingDetailsVOs.isEmpty()) {
+            LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
+        schedulingDetailsVOs.sort(Comparator.comparing(ProjectBigSchedulingDetailsVO::getBigSort));
         if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
             if (scheduleSort == null) {
                 LOGGER.error("没有传入相应的排期编号！");
@@ -1087,10 +1061,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         int result = 0;
         if (!projectCompleted(schedulingDetailsVOs, projectNo)) {
             if (startReportSuccess(projectNo)) {
-                int maxDelayDays = getMaxDelayDays(projectNo);
-                if (maxDelayDays > 0) {
+//                int maxDelayDays = getMaxDelayDays(projectNo);
+//                if (maxDelayDays > 0) {
                     result += 1;
-                }
+//                }
             }
         }
         return result;
@@ -1180,13 +1154,13 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo 项目编号
      */
     private void getChangeStartMenus(List<AfStartMenuVO> startMenus, List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String userId, String projectNo) {
-//        int result = verifyChangeOrderAndChangeComplete(schedulingDetailsVOs, projectNo, null);
-//        if (result == 1 || result == 3) {
+        int result = verifyChangeOrderAndChangeComplete(schedulingDetailsVOs, projectNo, null);
+        if (result == 1 || result == 3) {
             addStartMenu(startMenus, projectNo, AfConfigs.CHANGE_ORDER.configNo, userId);
-//        }
-//        if (result == 2 || result == 3) {
+        }
+        if (result == 2 || result == 3) {
             addStartMenu(startMenus, projectNo, AfConfigs.CHANGE_COMPLETE.configNo, userId);
-//        }
+        }
     }
 
     /**
