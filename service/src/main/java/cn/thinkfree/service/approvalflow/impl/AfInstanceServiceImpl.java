@@ -169,12 +169,18 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             instanceDetailVO.setCheckItems(checkItems);
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)){
             AfInstance instance = getRelevanceChangeOrderInstance(projectNo);
-
             if (instance == null) {
                 LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
                 throw new RuntimeException();
             }
             instanceDetailVO.setRelevancyDate(instance.getData());
+        } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            if (maxDelayDays <= 0) {
+                LOGGER.error("订单不存在延期, projectNo:{}", projectNo);
+                throw new RuntimeException();
+            }
+            instanceDetailVO.setMaxDelayDays(maxDelayDays);
         }
         String customerId = project.getOwnerId();
         AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
@@ -187,6 +193,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         instanceDetailVO.setAddress(project.getAddressDetail());
         return instanceDetailVO;
+    }
+
+    private int getMaxDelayDays(String projectNo) {
+
+        return 1;
     }
 
     /**
@@ -1076,7 +1087,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         int result = 0;
         if (!projectCompleted(schedulingDetailsVOs, projectNo)) {
             if (startReportSuccess(projectNo)) {
-                result += 1;
+                int maxDelayDays = getMaxDelayDays(projectNo);
+                if (maxDelayDays > 0) {
+                    result += 1;
+                }
             }
         }
         return result;
