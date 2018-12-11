@@ -52,7 +52,7 @@ public class AfConfigServiceImpl implements AfConfigService {
     public AfConfigListVO list(String schemeNo) {
         AfConfigListVO configListVO = new AfConfigListVO();
         List<AfConfigVO> configVOs = new ArrayList<>();
-        List<UserRoleSet> roles = roleService.findAll();
+        List<UserRoleSet> roles = roleService.findAllShow();
         List<AfConfig> configs = findAll();
 
         List<AfConfigScheme> configSchemes = configSchemeService.findBySchemeNo(schemeNo);

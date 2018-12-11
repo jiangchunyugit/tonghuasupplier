@@ -70,7 +70,7 @@
           
           
       </where>
-
+      order by id desc
   </select>
   
   <select id="selectContractBycontractNumber" parameterType="cn.thinkfree.database.vo.ContractVo" resultMap="contractInfoVo" >

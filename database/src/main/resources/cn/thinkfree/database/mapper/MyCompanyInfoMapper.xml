@@ -381,4 +381,64 @@
         </set>
         where company_id = #{companyId}
     </update>
+    <select id="agencyList" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
+        SELECT
+        info.company_id,
+        info.role_id,
+        role.role_name,
+        expand.comapny_nature AS comapny_nature,
+        info.company_name,
+        info.legal_name,
+        expand.contact_name,
+        expand.contact_phone,
+        info.deposit_money,
+        info.audit_status,
+        contract.brand_name,
+        province.province_name as provinceName,
+        city.city_name as cityName,
+        area.area_name AS areaName
+        FROM
+        company_info info
+        left join province province on info.province_code = province.province_code
+        left join city city on city.city_code = info.city_code
+        left join area area on area.area_code = info.area_code
+        LEFT JOIN company_info_expand expand ON info.company_id = expand.company_id
+        LEFT JOIN user_role_set role ON info.role_id = role.role_code
+        LEFT JOIN (
+        SELECT
+        company_id,
+        string_agg ( brand_name, ' ' ) brand_name
+        FROM
+        pc_agency_contract_terms
+        WHERE
+        contract_number IN ( SELECT contract_number FROM pc_agency_contract WHERE STATUS = 8 )
+        GROUP BY
+        company_id
+        ) contract ON info.company_id = contract.company_id
+        WHERE
+        info.company_classify = 2
+        <if test="relationMap != null">
+            and info.site_company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        </if>
+        <if test="siteCode != null and siteCode != ''">
+            AND info.site_company_id = #{siteCode}
+        </if>
+        <if test="companyId != null and companyId != ''">
+            AND info.company_id = #{companyId}
+        </if>
+        <if test="roleId != null and roleId != ''">
+            AND info.role_id = #{roleId}
+        </if>
+        <if test="param != null and param != ''">
+            AND info.company_name like #{param}
+        </if>
+        <if test="auditStatus != null and auditStatus != ''">
+            AND info.audit_status = #{auditStatus}
+        </if>
+        <if test="orderList == null">
+            order by info.update_time desc
+        </if>
+    </select>
 </mapper>

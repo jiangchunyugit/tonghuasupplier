@@ -473,7 +473,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			  vo.setStyleType("");
 			  
 			  vo.setSort("");
-		vo.setTypeSubName("保证金");
+		      vo.setTypeSubName("保证金");
 		     listVo.add(vo);
 	}
 

@@ -12,6 +12,22 @@ import java.util.Date;
 @ApiModel("公司列表返回数据")
 public class CompanyListVo extends CompanyInfo {
     /**
+     * 省
+     */
+    @ApiModelProperty(value = "省")
+    private String provinceName;
+    /**
+     * 市
+     */
+    @ApiModelProperty(value = "市")
+    private String cityName;
+
+    @ApiModelProperty(value = "市")
+    private String areaName;
+
+
+
+    /**
      * 公司性质
      */
     @ApiModelProperty(value = "公司性质")
@@ -86,6 +102,41 @@ public class CompanyListVo extends CompanyInfo {
 
     @ApiModelProperty(value = "角色id")
     private  String roleId;
+
+    @ApiModelProperty(value = "品牌")
+    private  String brandName;
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getAreaName() {
+        return areaName;
+    }
+
+    public void setAreaName(String areaName) {
+        this.areaName = areaName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
 
     @Override
     public String getRoleId() {
