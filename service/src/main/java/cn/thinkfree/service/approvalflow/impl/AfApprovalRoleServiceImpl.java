@@ -8,6 +8,7 @@ import cn.thinkfree.database.model.UserRoleSet;
 import cn.thinkfree.service.approvalflow.AfApprovalRoleService;
 import cn.thinkfree.service.approvalflow.AfConfigSchemeService;
 import cn.thinkfree.service.approvalflow.RoleService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,9 +82,14 @@ public class AfApprovalRoleServiceImpl implements AfApprovalRoleService {
         if (roles != null) {
             AfApprovalRole approvalRole;
             for (int index = 0; index < roles.size(); index++){
+                String approvalRoleId = roles.get(index).getRoleCode();
+                if (StringUtils.isBlank(approvalRoleId)) {
+                    LOGGER.error("审批角色信息为空");
+                    throw new RuntimeException();
+                }
                 approvalRole = new AfApprovalRole();
                 approvalRole.setConfigSchemeNo(configSchemeNo);
-                approvalRole.setRoleId(roles.get(index).getRoleCode());
+                approvalRole.setRoleId(approvalRoleId);
                 approvalRole.setSort(index);
                 insert(approvalRole);
             }

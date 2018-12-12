@@ -7,7 +7,7 @@ package cn.thinkfree.core.base;
  */
 public enum ErrorCode {
 
-    OK(1000, ""),
+    OK(1000, "操作成功"),
     FAIL(1001, "操作失败"),
     RPC_ERROR(1002, "远程调度失败"),
     USER_NOT_FOUND(1003, "用户不存在"),

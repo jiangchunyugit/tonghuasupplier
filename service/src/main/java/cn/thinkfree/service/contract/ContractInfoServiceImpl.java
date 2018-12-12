@@ -8,6 +8,7 @@ import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.event.MarginContractEvent;
 import cn.thinkfree.database.event.sync.CreateOrder;
+import cn.thinkfree.database.event.sync.FinishContract;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
@@ -281,7 +282,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			vo.setContractStatus( ContractStatus.AuditPass.shortVal() );
             printInfoMes("财务审核通过发生三方接口数据 contractNumber｛｝", contractNumber);
             try {
-            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
+            	// TODO 合同数据与财务数据的纠葛
+            	eventService.publish(new FinishContract(contractNumber));
+//            	eventService.publish(new MarginContractEvent(contractNumber,signedTime));
 			} catch (Exception e) {
 				 printErrorMes("财务审核通过发生三方接口数据 contractNumber｛｝", e.getMessage());
 			}
@@ -306,6 +309,43 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
         ContractInfo contractInfo = new ContractInfo();
         contractInfo.setContractStatus(vo.getContractStatus());
         contractInfo.setContractUrl(vo.getContractUrl());
+		contractInfo.setSignedTime(new Date());
+        //查询合同开始时间和结束时间
+		if("SJHT".equalsIgnoreCase(contractNumber.substring(0,4))){
+			ContractTermsExample contractTermsExample = new ContractTermsExample();
+			ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
+					.andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+			Function<Optional<ContractTerms>,String> eval = c-> c.isPresent() ? c.get().getContractValue() : "0";
+			BiFunction<Stream<ContractTerms>,String,Optional<ContractTerms>> filter =(list,code)-> list
+					.filter(c -> code.equalsIgnoreCase(c.getContractDictCode())).findFirst();
+			String startTime = "c03";
+			String endTime = "c04";
+			criteria.andContractDictCodeIn(Lists.newArrayList(startTime,endTime));
+			List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+			Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),startTime);
+			startTime = eval.apply(fullMoneyVO);
+			Optional<ContractTerms> fullMoneyV1 = filter.apply(contractTerms.stream(),endTime);
+			endTime = eval.apply(fullMoneyV1);
+			contractInfo.setStartTime(DateUtil.formateToDate(startTime,"yyyy-MM-dd"));
+			contractInfo.setEndTime(DateUtil.formateToDate(endTime,"yyyy-MM-dd"));
+		}else{
+			ContractTermsExample contractTermsExample = new ContractTermsExample();
+			ContractTermsExample.Criteria criteria = contractTermsExample.createCriteria()
+					.andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber);
+			Function<Optional<ContractTerms>,String> eval = c-> c.isPresent() ? c.get().getContractValue() : "0";
+			BiFunction<Stream<ContractTerms>,String,Optional<ContractTerms>> filter =(list,code)-> list
+					.filter(c -> code.equalsIgnoreCase(c.getContractDictCode())).findFirst();
+			String startTime = "c08";
+			String endTime = "c09";
+			criteria.andContractDictCodeIn(Lists.newArrayList(startTime,endTime));
+			List<ContractTerms> contractTerms = pcContractTermsMapper.selectByExample(contractTermsExample);
+			Optional<ContractTerms> fullMoneyVO = filter.apply(contractTerms.stream(),startTime);
+			startTime = eval.apply(fullMoneyVO);
+			Optional<ContractTerms> fullMoneyV1 = filter.apply(contractTerms.stream(),endTime);
+			endTime = eval.apply(fullMoneyV1);
+			contractInfo.setStartTime(DateUtil.formateToDate(startTime,"yyyy-MM-dd"));
+			contractInfo.setEndTime(DateUtil.formateToDate(endTime,"yyyy-MM-dd"));
+		}
         //获取合同信息 更新主表的合同开始时间和合同结束时间
         int flag = cxcontractInfoMapper.updateByExampleSelective( contractInfo, example );
         int flagT = companyInfoMapper.updateauditStatus( companyInfo );
@@ -602,7 +642,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	 *            公司编号
 	 * @param roleType
 	 *            公司类型
-	 * @param rmap
+	 * @param
 	 */
 	@Override
 	public Map<String, Object> balanceInfo( String contractNumber, String CompanyId, String roleType )

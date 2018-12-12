@@ -119,7 +119,7 @@ public interface DesignerService {
      * @param designerMoneyHigh 设计费高
      */
     void createDesigner(
-            String phone, String email, String province, String city, String area, String workingTime,
+            String userName, String phone, String email, int sex, String province, String city, String area, String workingTime,
             String masterStyle, String volumeRoomMoney, String designerMoneyLow, String designerMoneyHigh);
 
     /**

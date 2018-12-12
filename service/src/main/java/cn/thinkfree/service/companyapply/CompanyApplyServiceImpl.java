@@ -296,7 +296,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         //插入审批表
         String auditPersion = userVO == null ? "" : userVO.getName();
         String auditAccount = userVO == null ? "" : userVO.getUsername();
-        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, SysConstants.YesOrNo.YES.toString(), date,
+        PcAuditInfo record = new PcAuditInfo(CompanyConstants.AuditType.ENTRY.stringVal(), "", auditPersion, SysConstants.YesOrNo.YES.val.toString(), date,
                 companyId, "", "", date, auditAccount);
         int line = pcAuditInfoMapper.insertSelective(record);
 
@@ -468,6 +468,14 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     public boolean addApplyInfo(PcApplyInfoSEO pcApplyInfoSEO) {
         if(StringUtils.isBlank(pcApplyInfoSEO.getEmail())){
             return false;
+        }
+
+        boolean pcflag = pcUserInfoService.isEnable(pcApplyInfoSEO.getEmail());
+        if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getEmail())){
+            boolean email = companyApplyService.checkEmail(pcApplyInfoSEO.getEmail());
+            if(email || pcflag){
+                return false;
+            }
         }
 
         if(pcApplyInfoSEO != null && StringUtils.isNotBlank(pcApplyInfoSEO.getCompanyName())){
