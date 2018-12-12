@@ -279,7 +279,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
-        designerOrderDetailVo.setPlayTask(designDispatchService.showBtn(designerOrder.getOrderNo()));
+        designerOrderDetailVo.setPlayTask(designDispatchService.showBtn(designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         for (DesignStateEnum designStateEnum : allCancelState) {
             if (project.getStage().equals(designStateEnum.getState())) {

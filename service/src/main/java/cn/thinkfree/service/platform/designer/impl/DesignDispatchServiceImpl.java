@@ -1302,6 +1302,70 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return btns;
     }
 
+    /**
+     * @param designOrderNo 设计订单编号
+     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)",
+     * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
+     */
+    @Override
+    public List<String> showBtnByUserId(String projectNo,String designOrderNo,String userId) {
+        String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
+        OrderContractExample orderContractExample = new OrderContractExample();
+        OrderContractExample.Criteria criteria = orderContractExample.createCriteria();
+        criteria.andOrderNumberEqualTo(designOrderNo);
+        //合同类型 02设计合同, 03施工合同
+        criteria.andContractTypeEqualTo("02");
+        //审批状态：0：不通过 1：通过2：审核中
+        criteria.andAuditTypeEqualTo(new Short("1"));
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+        List<String> btns = new ArrayList<>();
+
+        if (designerId==null||!userId.equals(designerId)){
+            DesignerOrderExample orderExample = new DesignerOrderExample();
+            orderExample.createCriteria().andOrderNoEqualTo(designOrderNo).andStatusEqualTo(1);
+            List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+            if (designerOrders.isEmpty()) {
+                throw new RuntimeException("无效的订单编号");
+            }
+            DesignerOrder designerOrder = designerOrders.get(0);
+            DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
+
+            switch (stateEnum) {
+                case STATE_30:
+                    btns.add("LFYY");
+                case STATE_45:
+                    btns.add("LFFY");
+                    break;
+                case STATE_50:
+                    btns.add("LFZL");
+                    break;
+                case STATE_150:
+                case STATE_230:
+                    btns.add("SJZL");
+                    break;
+                case STATE_180:
+                case STATE_250:
+                    btns.add("SGZL");
+                    break;
+            }
+
+            if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
+                if (designerOrder.getPreviewState() == 2) {
+                    btns.add("YJD");
+                }
+            }
+            if (orderContracts.size() > 0) {
+                btns.add("CKHT");
+            }
+        }else {
+            if (orderContracts.size() > 0) {
+                btns.add("CKHT");
+            }
+        }
+        return btns;
+    }
+
+
     @Override
     public void updateProjectState(String projectNo, int state) {
         ProjectExample projectExample = new ProjectExample();
