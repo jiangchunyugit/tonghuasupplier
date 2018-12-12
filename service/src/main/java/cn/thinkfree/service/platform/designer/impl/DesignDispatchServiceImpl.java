@@ -1291,9 +1291,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //审批状态：0：不通过 1：通过2：审核中
         criteria.andAuditTypeEqualTo(new Short("1"));
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-        if (stateEnum != DesignStateEnum.STATE_270 && stateEnum != DesignStateEnum.STATE_210) {
-            return btns;
-        }
         if (designerOrder.getPreviewState() == 2) {
             btns.add("YJD");
         }
