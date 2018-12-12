@@ -4,6 +4,7 @@ import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.token.MyCustomUserDetailToken;
 import cn.thinkfree.core.utils.LogUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -44,12 +45,27 @@ public abstract class AbsMyCustomProvider implements AuthenticationProvider, Ini
             if(isNeedChecks()){
                 userDetailsChecker.check(user);
             }
+            checkCredentials(authentication.getCredentials(),user.getPassword());
+
+            System.out.println(authentication);
         } catch (UsernameNotFoundException e) {
+            throw new UsernameNotFoundException("无此用户");
+        }catch (BadCredentialsException e){
             throw new BadCredentialsException("坏的鉴权");
         }
         Assert.notNull(user,"用户信息异常");
         return convertUserDetail2Principal(authentication,user);
     }
+
+    protected  void checkCredentials(Object credentials, String password){
+        if(StringUtils.isBlank(password) || StringUtils.isBlank(credentials.toString())){
+            throw new BadCredentialsException("密码为空");
+        }
+        if(!passwordEncoder.encode(credentials.toString()).equals(password)){
+            throw new BadCredentialsException("密码错误");
+
+        }
+    };
 
     protected abstract boolean isNeedChecks();
 
