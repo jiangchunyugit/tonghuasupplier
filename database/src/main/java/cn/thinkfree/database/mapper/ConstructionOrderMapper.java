@@ -153,7 +153,7 @@ public interface ConstructionOrderMapper {
      * @param orderStatus 订单状态
      * @return 施工订单总数
      */
-    long countByApproval(String userId, List<String> configNos, int orderStatus);
+    int countByApproval(@Param("userId") String userId, @Param("configNos") List<String> configNos, @Param("orderStatus") int orderStatus);
 
     /**
      * 根据审批信息统计施工订单
@@ -162,5 +162,12 @@ public interface ConstructionOrderMapper {
      * @param orderStatus 订单状态
      * @return 施工订单信息
      */
-    List<ConstructionProjectVo> selectByApproval(String userId, List<String> configNos, int orderStatus);
+    List<ConstructionProjectVo> selectByApproval(@Param("userId") String userId, @Param("configNos") List<String> configNos, @Param("orderStatus") int orderStatus);
+
+    /**
+     * 用户名下的施工订单总数
+     * @param userId 用户编号
+     * @return 施工订单总数
+     */
+    int countByUserId(@Param("userId") String userId);
 }

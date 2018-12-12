@@ -2,7 +2,9 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.database.appvo.ConstructionProjectVo;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
@@ -86,9 +88,33 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
 
     @Override
     public ConstructCountVO count(String userId, String approvalType) {
-        List<String> configNos = configService.getConfigNosByApprovalType(approvalType);
-        long count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
-        List a = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
-        return null;
+        ConstructCountVO constructCountVO = new ConstructCountVO();
+
+        int total = constructionOrderMapper.countByUserId(userId);
+        constructCountVO.setTotal(total);
+
+        List<String> configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL);
+        int count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setCheckCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setChangeCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setProblemCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_DELAY_VERIFY);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setDelayCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(approvalType);
+        List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        for (ConstructionProjectVo constructionProjectVo : constructionProjectVos) {
+            constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionProjectVo.getStage()).getStateName(1));
+        }
+        constructCountVO.setProjects(constructionProjectVos);
+        return constructCountVO;
     }
 }
