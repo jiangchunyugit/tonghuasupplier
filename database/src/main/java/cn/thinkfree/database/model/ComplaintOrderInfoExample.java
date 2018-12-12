@@ -914,6 +914,76 @@ public class ComplaintOrderInfoExample {
             addCriterion("construction_order_no not between", value1, value2, "constructionOrderNo");
             return (Criteria) this;
         }
+
+        public Criteria andImglistIsNull() {
+            addCriterion("imgList is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistIsNotNull() {
+            addCriterion("imgList is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistEqualTo(String value) {
+            addCriterion("imgList =", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistNotEqualTo(String value) {
+            addCriterion("imgList <>", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistGreaterThan(String value) {
+            addCriterion("imgList >", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistGreaterThanOrEqualTo(String value) {
+            addCriterion("imgList >=", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistLessThan(String value) {
+            addCriterion("imgList <", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistLessThanOrEqualTo(String value) {
+            addCriterion("imgList <=", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistLike(String value) {
+            addCriterion("imgList like", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistNotLike(String value) {
+            addCriterion("imgList not like", value, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistIn(List<String> values) {
+            addCriterion("imgList in", values, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistNotIn(List<String> values) {
+            addCriterion("imgList not in", values, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistBetween(String value1, String value2) {
+            addCriterion("imgList between", value1, value2, "imglist");
+            return (Criteria) this;
+        }
+
+        public Criteria andImglistNotBetween(String value1, String value2) {
+            addCriterion("imgList not between", value1, value2, "imglist");
+            return (Criteria) this;
+        }
     }
 
     /**
