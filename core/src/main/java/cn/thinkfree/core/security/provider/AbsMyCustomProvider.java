@@ -46,8 +46,6 @@ public abstract class AbsMyCustomProvider implements AuthenticationProvider, Ini
                 userDetailsChecker.check(user);
             }
             checkCredentials(authentication.getCredentials(),user.getPassword());
-
-            System.out.println(authentication);
         } catch (UsernameNotFoundException e) {
             throw new UsernameNotFoundException("无此用户");
         }catch (BadCredentialsException e){
