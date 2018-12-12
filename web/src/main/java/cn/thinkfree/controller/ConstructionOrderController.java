@@ -176,9 +176,14 @@ public class ConstructionOrderController extends AbsBaseController {
     @ApiOperation(value="施工订单统计")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
-            @ApiImplicitParam(name = "approvalType", value = "审批类型", required = true)
+            @ApiImplicitParam(name = "approvalType", value = "审批类型", required = true),
+            @ApiImplicitParam(name = "pageNum", value = "页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页个数", required = true),
     })
-    public MyRespBundle<ConstructCountVO> count(@RequestParam(name = "userId") String userId, @RequestParam(name = "approvalType") String approvalType){
-        return sendJsonData(ResultMessage.SUCCESS, constructOrderService.count(userId, approvalType));
+    public MyRespBundle<ConstructCountVO> count(@RequestParam(name = "userId") String userId,
+                                                @RequestParam(name = "approvalType") String approvalType,
+                                                @RequestParam(name = "pageNum") Integer pageNum,
+                                                @RequestParam(name = "pageSize") Integer pageSize){
+        return sendJsonData(ResultMessage.SUCCESS, constructOrderService.count(userId, approvalType, pageNum, pageSize));
     }
 }

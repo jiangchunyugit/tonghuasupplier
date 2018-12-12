@@ -28,8 +28,10 @@ public interface ConstructOrderService {
      * 施工订单统计
      * @param userId 用户编号
      * @param approvalType 审批单类型
+     * @param pageNum 页码
+     * @param pageSize 每页个数
      * @return 施工订单统计
      */
-    ConstructCountVO count(String userId, String approvalType);
+    ConstructCountVO count(String userId, String approvalType, Integer pageNum, Integer pageSize);
 
 }

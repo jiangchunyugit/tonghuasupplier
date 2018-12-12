@@ -15,6 +15,8 @@ import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -87,7 +89,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     }
 
     @Override
-    public ConstructCountVO count(String userId, String approvalType) {
+    public ConstructCountVO count(String userId, String approvalType, Integer pageNum, Integer pageSize) {
         ConstructCountVO constructCountVO = new ConstructCountVO();
 
         int total = constructionOrderMapper.countByUserId(userId);
@@ -110,11 +112,14 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         constructCountVO.setDelayCount(count);
 
         configNos = configService.getConfigNosByApprovalType(approvalType);
+        PageHelper.startPage(pageNum, pageSize);
         List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        PageInfo<ConstructionProjectVo> pageInfo = new PageInfo<>(constructionProjectVos);
         for (ConstructionProjectVo constructionProjectVo : constructionProjectVos) {
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionProjectVo.getStage()).getStateName(1));
         }
-        constructCountVO.setProjects(constructionProjectVos);
+        constructCountVO.setPageInfo(pageInfo);
+
         return constructCountVO;
     }
 }

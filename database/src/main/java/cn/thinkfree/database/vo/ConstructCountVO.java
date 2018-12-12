@@ -1,11 +1,10 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.appvo.ConstructionProjectVo;
+import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * 施工订单统计
@@ -28,5 +27,5 @@ public class ConstructCountVO {
     @ApiModelProperty("施工变更总数")
     private Integer changeCount;
     @ApiModelProperty("项目列表")
-    private List<ConstructionProjectVo> projects;
+    private PageInfo<ConstructionProjectVo> pageInfo;
 }
