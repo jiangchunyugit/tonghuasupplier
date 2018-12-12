@@ -5,6 +5,7 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.ConstructCountVO;
 import cn.thinkfree.service.construction.*;
 import cn.thinkfree.service.construction.vo.*;
 import com.github.pagehelper.PageInfo;
@@ -177,7 +178,7 @@ public class ConstructionOrderController extends AbsBaseController {
             @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
             @ApiImplicitParam(name = "approvalType", value = "审批类型", required = true)
     })
-    public MyRespBundle<List<String>> count(@RequestParam(name = "userId") String userId, @RequestParam(name = "approvalType") String approvalType){
+    public MyRespBundle<ConstructCountVO> count(@RequestParam(name = "userId") String userId, @RequestParam(name = "approvalType") String approvalType){
         return sendJsonData(ResultMessage.SUCCESS, constructOrderService.count(userId, approvalType));
     }
 }
