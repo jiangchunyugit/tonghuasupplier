@@ -64,7 +64,7 @@
         </dependency>
     </dependencies>
 
-    <!--<build>
+<!--    <build>
     <plugins>
     &lt;!&ndash; 自动为entity生成swagger2文档&ndash;&gt;
     <plugin>
@@ -106,7 +106,7 @@
     <artifactId>database</artifactId>
     <version>1.0-SNAPSHOT</version>
     <scope>system</scope>
-    <systemPath>D:/lqd/wj_code_v4/lqd/database/target/database-1.0-SNAPSHOT.jar</systemPath>
+    <systemPath>D:/EASY_HOME/designer_service/database/target/database-1.0-SNAPSHOT.jar</systemPath>
     </dependency>
     </dependencies>
     </plugin>
