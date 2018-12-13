@@ -153,7 +153,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                     return RespData.success();
                 }
             } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_520.getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_510.getState())) {
                     return RespData.success();
                 }
             }
