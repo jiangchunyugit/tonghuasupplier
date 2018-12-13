@@ -1503,6 +1503,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle confirmeVolumeRoom(String projectNo, String userId) {
         if (projectNo == null || projectNo.trim().isEmpty()) {
             return RespData.error("projectNo 不可为空!");
@@ -1521,6 +1522,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = designerOrders.get(0);
         updateOrderState(projectNo, DesignStateEnum.STATE_45.getState(), userId, "");
         createPayOrderService.createVolumeRoomPay(projectNo, MathUtil.getYuan(designerOrder.getVolumeRoomMoney()));
+        if(designerOrder.getVolumeRoomMoney() != null && designerOrder.getVolumeRoomMoney() == 0){
+            paySuccess(designerOrder.getOrderNo());
+        }
         return RespData.success();
     }
 

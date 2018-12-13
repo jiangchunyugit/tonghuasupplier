@@ -202,7 +202,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         employeeMsg.setRoleCode(roleCode);
         employeeMsgMap.put(userId, employeeMsg);
         List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
-        if (userMsgVos != null || !userMsgVos.isEmpty()) {
+        if (userMsgVos != null && !userMsgVos.isEmpty()) {
             return userMsgVos.get(0);
         }
         return null;

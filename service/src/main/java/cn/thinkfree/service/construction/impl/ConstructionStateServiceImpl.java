@@ -110,26 +110,26 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             throw new RuntimeException("订单编号不能为空");
         }
         Integer stage = null;
-        List<ConstructionStateEnum> nextStateCode = new ArrayList<>();
+        int nextStateCode;
         switch (type) {
             case 1:
-                stage = ConstructionStateEnum.STATE_510.getState();
-                nextStateCode = ConstructionStateEnum.STATE_510.getNextStates();
+                stage = ConstructionStateEnum.STATE_500.getState();
+                nextStateCode = ConstructionStateEnum.STATE_510.getState();
                 break;
             case 2:
-                stage = ConstructionStateEnum.STATE_520.getState();
-                nextStateCode = ConstructionStateEnum.STATE_520.getNextStates();
+                stage = ConstructionStateEnum.STATE_510.getState();
+                nextStateCode = ConstructionStateEnum.STATE_520.getState();
                 break;
             case 5:
-                stage = ConstructionStateEnum.STATE_550.getState();
-                nextStateCode = ConstructionStateEnum.STATE_550.getNextStates();
+                stage = ConstructionStateEnum.STATE_540.getState();
+                nextStateCode = ConstructionStateEnum.STATE_550.getState();
                 break;
             default:
-                break;
+                throw new RuntimeException("无效的状态");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         if (stageCode.equals(stage)) {
-            commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState());
+            commonService.updateStateCodeByOrderNo(orderNo, nextStateCode);
         }else{
             throw new RuntimeException("操作失败-请稍后重试");
         }
@@ -145,20 +145,15 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         if (StringUtils.isBlank(String.valueOf(isPass))) {
             return RespData.error(ResultMessage.ERROR.code, "审核是否通过状态未知");
         }
-
-
-        Integer stage = ConstructionStateEnum.STATE_530.getState();
+        Integer stage = ConstructionStateEnum.STATE_520.getState();
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-
-        List<ConstructionStateEnum> nextStateCode = ConstructionStateEnum.STATE_530.getNextStates();
-
         if (stageCode.equals(stage)) {
             if (isPass == 1) {   //下一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_540.getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_530.getState())) {
                     return RespData.success();
                 }
             } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_520.getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_510.getState())) {
                     return RespData.success();
                 }
             }
