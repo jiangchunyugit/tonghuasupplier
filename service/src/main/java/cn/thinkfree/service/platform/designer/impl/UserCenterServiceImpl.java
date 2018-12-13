@@ -273,9 +273,6 @@ public class UserCenterServiceImpl implements UserCenterService {
             String consumerId = userObj.getString("consumerId");
             String staffId = userObj.getString("staffId");
             String registerTime = userObj.getString("registerTime");
-            if (StringUtils.isBlank(consumerId)) {
-                continue;
-            }
             UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
             msgVo.setStaffId(staffId);
             msgVo.setRegisterTime(registerTime);

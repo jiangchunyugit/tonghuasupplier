@@ -20,6 +20,10 @@ public class EmployeeMsgVo {
     private int bindCompanyState;
     @ApiModelProperty("实名认证状态，1未认证，2已认证，3实名认证审核中，4审核不通过")
     private int authState;
+    @ApiModelProperty("实名认证不通过的原因")
+    private String authReason;
+    @ApiModelProperty("绑定公司不通过的原因")
+    private String bindReason;
     @ApiModelProperty("用户手机号")
     private String phone;
     @ApiModelProperty("用户头像地址")
@@ -235,5 +239,21 @@ public class EmployeeMsgVo {
 
     public String getRegisterTime() {
         return registerTime;
+    }
+
+    public void setAuthReason(String authReason) {
+        this.authReason = authReason;
+    }
+
+    public String getAuthReason() {
+        return authReason;
+    }
+
+    public void setBindReason(String bindReason) {
+        this.bindReason = bindReason;
+    }
+
+    public String getBindReason() {
+        return bindReason;
     }
 }

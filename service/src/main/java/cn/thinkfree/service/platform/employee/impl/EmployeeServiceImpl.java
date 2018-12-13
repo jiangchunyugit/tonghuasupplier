@@ -1,10 +1,9 @@
 package cn.thinkfree.service.platform.employee.impl;
 
-import cn.thinkfree.database.mapper.CompanyInfoMapper;
-import cn.thinkfree.database.mapper.EmployeeApplyLogMapper;
-import cn.thinkfree.database.mapper.EmployeeMsgMapper;
-import cn.thinkfree.database.mapper.UserRoleSetMapper;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
@@ -39,9 +38,19 @@ public class EmployeeServiceImpl implements EmployeeService {
     private UserCenterService userCenterService;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private OptionLogMapper logMapper;
+    /**
+     * 实名认证审核的类型
+     */
+    private final static String optionAuthType = "SMRZSH";
 
     @Override
-    public void reviewEmployee(String userId, int authState) {
+    public void reviewEmployee(String userId, int authState, String reason) {
+        if(authState == 4 && StringUtils.isBlank(reason)){
+            reason = "证件信息有误";
+        }
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
@@ -52,6 +61,17 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMsg.setAuthState(authState);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, msgExample);
         logger.info("更新用户实名认证审核状态：res={}", res);
+        // 插入操作记录
+        OptionLog optionLog = new OptionLog();
+        optionLog.setRemark(reason);
+        if(userVO != null){
+            optionLog.setOptionUserName(userVO.getName());
+            optionLog.setOptionUserId(userVO.getUserID());
+        }
+        optionLog.setOptionType(optionAuthType);
+        optionLog.setLinkNo(userId);
+        optionLog.setOptionTime(new Date());
+        logMapper.insertSelective(optionLog);
     }
 
     @Override
@@ -404,6 +424,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Map<String,String> cityMap = basicsService.getCity();
         Map<String,String> areaMap = basicsService.getArea();
         EmployeeMsgVo msgVo = getEmployeeMsgVo(userRoleSet.getRoleName(),cardTypeMap,countryCodeMap,employeeMsg,userMsgVo, provinceMap, cityMap, areaMap);
+        msgVo.setAuthReason(getAuthReason(employeeMsg.getUserId()));
         return msgVo;
     }
 
@@ -609,6 +630,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public PageVo<List<EmployeeMsgVo>> queryAllEmployee(String phone, String name, String cardNo, int pageSize, int pageIndex) {
         List<UserMsgVo> msgVos = userCenterService.queryUserMsg(null,phone);
+        if(StringUtils.isNotBlank(phone) && (msgVos == null || msgVos.isEmpty())){
+            return PageVo.def(new ArrayList<>());
+        }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = msgExample.createCriteria();
         if(msgVos != null && msgVos.size() > 0){
@@ -712,7 +736,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         BasicsData cardType = cardTypeMap.get(employeeMsg.getCertificateType() + "");
         BasicsData countryCode = countryCodeMap.get(employeeMsg.getCountryCode());
-        msgVo.setRealName(employeeMsg.getRealName());
+        if(employeeMsg.getAuthState() != null && employeeMsg.getAuthState() == 2){
+            msgVo.setRealName(employeeMsg.getRealName());
+        }
         msgVo.setUserId(employeeMsg.getUserId());
         String companyId = employeeMsg.getCompanyId();
         if(StringUtils.isNotBlank(companyId)){
@@ -754,6 +780,22 @@ public class EmployeeServiceImpl implements EmployeeService {
             msgVo.setCountryCodeName(countryCode.getBasicsName());
         }
         return msgVo;
+    }
+
+    /**
+     * 根据userId获取实名认证审核不通过的原因
+     * @param userId
+     * @return
+     */
+    private String getAuthReason(String userId){
+        OptionLogExample logExample = new OptionLogExample();
+        logExample.createCriteria().andLinkNoEqualTo(userId);
+        logExample.setOrderByClause(" option_time desc limit 1");
+        List<OptionLog> optionLogs = logMapper.selectByExample(logExample);
+        if(optionLogs != null && !optionLogs.isEmpty()){
+            return optionLogs.get(0).getRemark();
+        }
+        return "";
     }
 
     private int getBindCompanyState(EmployeeMsg employeeMsg, int bindCompanyState) {
