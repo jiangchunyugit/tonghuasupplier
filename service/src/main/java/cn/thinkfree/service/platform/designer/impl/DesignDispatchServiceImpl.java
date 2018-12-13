@@ -1522,6 +1522,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = designerOrders.get(0);
         updateOrderState(projectNo, DesignStateEnum.STATE_45.getState(), userId, "");
         createPayOrderService.createVolumeRoomPay(projectNo, MathUtil.getYuan(designerOrder.getVolumeRoomMoney()));
+        if(designerOrder.getVolumeRoomMoney() != null && designerOrder.getVolumeRoomMoney() == 0){
+            paySuccess(designerOrder.getOrderNo());
+        }
         return RespData.success();
     }
 
