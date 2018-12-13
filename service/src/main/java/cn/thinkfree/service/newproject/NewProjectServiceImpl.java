@@ -82,6 +82,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     CityMapper cityMapper;
     @Autowired
     AreaMapper areaMapper;
+    @Autowired
+    private ProjectQuotationMapper projectQuotationMapper;
 
 
     /**
@@ -279,7 +281,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
-        designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(),designerOrder.getOrderNo(), userId));
+        designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         for (DesignStateEnum designStateEnum : allCancelState) {
             if (project.getStage().equals(designStateEnum.getState())) {
@@ -543,11 +545,22 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomData(CaseDataVo dataVo) {
-        if (dataVo.getUserId().isEmpty()) {
+        if (dataVo.getUserId() == null || dataVo.getUserId().trim().isEmpty()) {
             return RespData.error("请给userid赋值");
         }
         if (dataVo.getHsDesignId() == null || dataVo.getHsDesignId().trim().isEmpty()) {
             return RespData.error("hsDesignId 不可为空");
+        }
+        if (dataVo.getProjectNo() == null || dataVo.getProjectNo().trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空");
+        }
+        ProjectDataExample dataExample = new ProjectDataExample();
+        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+        dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
+        dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
+        List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
+        if (projectOldDatas.size() > 0) {
+            return RespData.error("请选择本项目的案例资料");
         }
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
