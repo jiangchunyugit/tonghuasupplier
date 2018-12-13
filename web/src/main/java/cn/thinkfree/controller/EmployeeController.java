@@ -43,9 +43,10 @@ public class EmployeeController extends AbsBaseController {
     @RequestMapping(value = "review", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle reviewDesigner(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "authState", required = false, value = "审核状态,2审核通过，4审核不通过") @RequestParam(name = "authState", required = false) int authState) {
+            @ApiParam(name = "authState", required = false, value = "审核状态,2审核通过，4审核不通过") @RequestParam(name = "authState", required = false) int authState,
+            @ApiParam(name = "reason", required = false, value = "审核不通过的原因") @RequestParam(name = "reason", required = false) String reason) {
         try {
-            employeeService.reviewEmployee(userId, authState);
+            employeeService.reviewEmployee(userId, authState, reason);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

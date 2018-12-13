@@ -19,7 +19,7 @@ public interface EmployeeService {
      * @param userId    用户ID
      * @param authState 审核状态1未认证，2已认证，3实名认证审核中，4审核不通过
      */
-    void reviewEmployee(String userId, int authState);
+    void reviewEmployee(String userId, int authState, String reason);
 
     /**
      * 处理员工申请
