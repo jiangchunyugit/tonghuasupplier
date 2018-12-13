@@ -41,6 +41,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private OptionLogMapper logMapper;
     /**
+     * 基础用户角色编码，不可修改
+     */
+    private final static List<String> baseRoleCodes = Arrays.asList("CD","CM","CS","CP","CC");
+    /**
+     * 基础用户角色编码，不可修改
+     */
+    private final static List<String> baseRoleNames = Arrays.asList("设计师","工长","管家","项目经理","业主");
+    /**
      * 实名认证审核的类型
      */
     private final static String optionAuthType = "SMRZSH";
@@ -309,6 +317,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void enableRole(String roleCode, int state) {
+        if(baseRoleCodes.contains(roleCode)){
+            throw new RuntimeException("该数据为基础数据，不可进行操作");
+        }
         UserRoleSetExample setExample = new UserRoleSetExample();
         setExample.createCriteria().andRoleCodeEqualTo(roleCode);
         UserRoleSet roleSet = new UserRoleSet();
@@ -320,6 +331,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void createRole(String roleName, String remark) {
         if (StringUtils.isBlank(roleName)) {
             throw new RuntimeException("角色名称不能为空");
+        }
+        if(baseRoleNames.contains(roleName)){
+            throw new RuntimeException("该角色名称与基础数据冲突，不可进行操作");
         }
         String roleCode = getCode();
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
@@ -343,6 +357,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void editRole(String roleCode, String roleName, String remark) {
+        if(baseRoleCodes.contains(roleCode)){
+            throw new RuntimeException("该角色编码与基础数据冲突，不可进行操作");
+        }
+        if(baseRoleNames.contains(roleName)){
+            throw new RuntimeException("该角色名称与基础数据冲突，不可进行操作");
+        }
         UserRoleSetExample roleSetExample = new UserRoleSetExample();
         roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
         List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
@@ -376,6 +396,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void delRole(String roleCode) {
+        if(baseRoleCodes.contains(roleCode)){
+            throw new RuntimeException("该角色编码为基础数据，不可删除");
+        }
         UserRoleSet userRoleSet = new UserRoleSet();
         userRoleSet.setIsDel(1);
         UserRoleSetExample setExample = new UserRoleSetExample();
@@ -789,7 +812,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     private String getAuthReason(String userId){
         OptionLogExample logExample = new OptionLogExample();
-        logExample.createCriteria().andLinkNoEqualTo(userId);
+        logExample.createCriteria().andLinkNoEqualTo(userId).andOptionTypeEqualTo(optionAuthType);
         logExample.setOrderByClause(" option_time desc limit 1");
         List<OptionLog> optionLogs = logMapper.selectByExample(logExample);
         if(optionLogs != null && !optionLogs.isEmpty()){
