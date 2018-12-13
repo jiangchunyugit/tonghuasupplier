@@ -715,7 +715,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         BasicsData cardType = cardTypeMap.get(employeeMsg.getCertificateType() + "");
         BasicsData countryCode = countryCodeMap.get(employeeMsg.getCountryCode());
-        msgVo.setRealName(employeeMsg.getRealName());
+        if(employeeMsg.getAuthState() != null && employeeMsg.getAuthState() == 2){
+            msgVo.setRealName(employeeMsg.getRealName());
+        }
         msgVo.setUserId(employeeMsg.getUserId());
         String companyId = employeeMsg.getCompanyId();
         if(StringUtils.isNotBlank(companyId)){
