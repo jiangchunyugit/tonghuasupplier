@@ -74,6 +74,24 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
             if (projectBigSchedulingVO.getSchemeNo() == null || projectBigSchedulingVO.getSchemeNo().isEmpty()) {
                 return RespData.error("请给" + projectBigSchedulingVO.getName() + "的schemo_no赋值");
             }
+            if (projectBigSchedulingVO.getIsNew() == null ) {
+                return RespData.error("请查看参数:isNew=" + projectBigSchedulingVO.getIsNew());
+            }
+            if (projectBigSchedulingVO.getRoomNum() == null ) {
+                return RespData.error("请查看参数:RoomNum=" + projectBigSchedulingVO.getRoomNum());
+            }
+            if (projectBigSchedulingVO.getSort() == null ) {
+                return RespData.error("请查看参数:sort=" + projectBigSchedulingVO.getSort());
+            }
+            if (projectBigSchedulingVO.getName() == null || projectBigSchedulingVO.getName().isEmpty()) {
+                return RespData.error("请查看参数:name=" + projectBigSchedulingVO.getName());
+            }
+            if (projectBigSchedulingVO.getSquareMetreStart() == null ) {
+                return RespData.error("请查看参数:SquareMetreStart=" + projectBigSchedulingVO.getSquareMetreStart());
+            }
+            if (projectBigSchedulingVO.getSquareMetreEnd() == null ) {
+                return RespData.error("请查看参数:SquareMetreEnd=" + projectBigSchedulingVO.getSquareMetreEnd());
+            }
             ProjectBigScheduling projectBigScheduling = new ProjectBigScheduling();
             projectBigScheduling.setSchemeNo(projectBigSchedulingVO.getSchemeNo());
             projectBigScheduling.setSort(projectBigSchedulingVO.getSort());

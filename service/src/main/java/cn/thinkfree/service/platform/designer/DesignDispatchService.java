@@ -276,6 +276,17 @@ public interface DesignDispatchService {
      */
     List<String> showBtn(String designOrderNo);
 
+    /**
+     * 获取button展示信息(区分人员)
+     *
+     * @return
+     * @Author jiang
+     * @Description
+     * @Date
+     * @Param
+     **/
+    List<String> showBtnByUserId(String projectNo, String designOrderNo, String userId);
+
 
     void updateProjectState(String projectNo, int state);
 

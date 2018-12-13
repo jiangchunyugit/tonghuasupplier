@@ -35,6 +35,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static cn.thinkfree.core.constants.DesignStateEnum.STATE_40;
+
 /**
  * @author xusonghui
  * 设计派单服务实现类
@@ -800,14 +802,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (userId == null || !userId.equals(designerUserId)) {
             throw new RuntimeException("无权操作");
         }
-        checkOrderState(designerOrder, DesignStateEnum.STATE_40);
+        checkOrderState(designerOrder, STATE_40);
         queryDesignerMsg(designerUserId);
         EmployeeMsg employeeMsg = queryEmployeeMsg(designerUserId);
         String optionUserName = employeeMsg.getRealName();
         //设置该设计订单所属公司
         DesignerOrder updateOrder = new DesignerOrder();
         //清空设计师ID
-        updateOrder.setOrderStage(DesignStateEnum.STATE_40.getState());
+        updateOrder.setOrderStage(STATE_40.getState());
         Date date = DateUtils.strToDate(volumeRoomDate, "yyyy-MM-dd");
         if (date.getTime() == 0) {
             throw new RuntimeException("无效的预约时间");
@@ -822,9 +824,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //记录操作日志
         String remark = "设计师【" + optionUserName + "】发起量房预约";
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
-        saveLog(DesignStateEnum.STATE_40.getState(), project);
+        saveLog(STATE_40.getState(), project);
 
-        updateProjectState(projectNo, DesignStateEnum.STATE_40.getState());
+        updateProjectState(projectNo, STATE_40.getState());
     }
 
     @Override
@@ -1291,17 +1293,86 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //审批状态：0：不通过 1：通过2：审核中
         criteria.andAuditTypeEqualTo(new Short("1"));
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-        if (stateEnum != DesignStateEnum.STATE_270 && stateEnum != DesignStateEnum.STATE_210) {
-            return btns;
-        }
-        if (designerOrder.getPreviewState() == 2) {
-            btns.add("YJD");
+        if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
+            if (designerOrder.getPreviewState() == 2) {
+                btns.add("YJD");
+            }
         }
         if (orderContracts.size() > 0) {
             btns.add("CKHT");
         }
         return btns;
     }
+
+    /**
+     * @param designOrderNo 设计订单编号
+     * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)",
+     * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
+     */
+    @Override
+    public List<String> showBtnByUserId(String projectNo, String designOrderNo, String userId) {
+        OrderUserExample orderUserExample = new OrderUserExample();
+        OrderUserExample.Criteria criteria1 = orderUserExample.createCriteria().andOrderNoEqualTo(designOrderNo).andRoleCodeEqualTo("CC");
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        OrderUser orderUser = orderUsers.get(0);
+        String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
+        OrderContractExample orderContractExample = new OrderContractExample();
+        OrderContractExample.Criteria criteria = orderContractExample.createCriteria();
+        criteria.andOrderNumberEqualTo(designOrderNo);
+        //合同类型 02设计合同, 03施工合同
+        criteria.andContractTypeEqualTo("02");
+        //审批状态：0：不通过 1：通过2：审核中
+        criteria.andAuditTypeEqualTo(new Short("1"));
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+        List<String> btns = new ArrayList<>();
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(designOrderNo).andStatusEqualTo(1);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if (designerOrders.isEmpty()) {
+            throw new RuntimeException("无效的订单编号");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
+        if (designerId != null && userId.equals(designerId)) {
+            switch (stateEnum) {
+                case STATE_30:
+                    btns.add("LFYY");
+                case STATE_45:
+                    btns.add("LFFY");
+                    break;
+                case STATE_50:
+                    btns.add("LFZL");
+                    break;
+                case STATE_150:
+                case STATE_230:
+                    btns.add("SJZL");
+                    break;
+                case STATE_180:
+                case STATE_250:
+                    btns.add("SGZL");
+                    break;
+            }
+
+            if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
+                if (designerOrder.getPreviewState() == 2) {
+                    btns.add("YJD");
+                }
+            }
+            if (orderContracts.size() > 0) {
+                btns.add("CKHT");
+            }
+        }
+
+        else if (orderUser.getUserId() != null && userId.equals(orderUser.getUserId())) {
+            if (orderContracts.size() > 0) {
+                btns.add("CKHT");
+            } else if (stateEnum == STATE_40) {
+                btns.add("LFYY");
+            }
+        }
+        return btns;
+    }
+
 
     @Override
     public void updateProjectState(String projectNo, int state) {
@@ -1634,18 +1705,19 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         for (Project project : projects) {
             String designerNo = orderNoMap.get(project.getProjectNo());
             project.setProvince(provinceMap.get(project.getProvince()));
-            if(project.getProvince() == null || project.getProvince().contains("null")){
+            if (project.getProvince() == null || project.getProvince().contains("null")) {
                 project.setProvince("");
             }
             project.setCity(cityMap.get(project.getCity()));
-            if(project.getCity() == null || project.getCity().contains("null")){
+            if (project.getCity() == null || project.getCity().contains("null")) {
                 project.setCity("");
             }
             project.setRegion(areaMap.get(project.getRegion()));
-            if(project.getRegion() == null || project.getRegion().contains("null")){
+            if (project.getRegion() == null || project.getRegion().contains("null")) {
                 project.setRegion("");
             }
-            projectMap.put(designerNo,project);        }
+            projectMap.put(designerNo, project);
+        }
         return projectMap;
     }
 }
