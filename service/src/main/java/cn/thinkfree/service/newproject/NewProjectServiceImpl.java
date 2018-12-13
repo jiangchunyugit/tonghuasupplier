@@ -226,7 +226,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             Integer count = 0;
             for (ConstructionProjectVo projectVo : list) {
                 if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
-                    //传让提供接口后把他放到逻辑与条件中
+                    //TODO 传让提供接口后把他放到逻辑与条件中
                     if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                         playProjects.add(projectVo);
                     }
@@ -362,7 +362,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 allProjects.add(projectVo);
                 result = true;
             } else if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && checkSort.equals(projectVo.getSort())) {
-                //暂未添加传让接口
+                //TODO 暂未添加传让接口  根据项目编号+sort 查询是否验收完成
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
@@ -370,7 +370,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 allProjects.add(projectVo);
                 result = true;
             } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
-                //暂未添加传让接口
+                //TODO 暂未添加传让接口
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
@@ -385,7 +385,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 allProjects.add(projectVo);
                 result = true;
             } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
-                //暂未添加传让接口
+                //TODO 暂未添加传让接口
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
@@ -393,7 +393,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 allProjects.add(projectVo);
                 result = true;
             } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort != null && checkComplete != null && checkSort.equals(projectVo.getSort())) {
-                //暂未添加传让接口
+                //TODO 暂未添加传让接口
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
