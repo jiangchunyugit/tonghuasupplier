@@ -1503,6 +1503,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @return
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle confirmeVolumeRoom(String projectNo, String userId) {
         if (projectNo == null || projectNo.trim().isEmpty()) {
             return RespData.error("projectNo 不可为空!");

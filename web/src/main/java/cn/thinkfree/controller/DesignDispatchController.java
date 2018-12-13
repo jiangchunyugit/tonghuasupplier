@@ -631,6 +631,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             return designDispatchService.confirmeVolumeRoom(projectNo, userId);
         } catch (Exception e) {
+            e.printStackTrace();
             return RespData.error(e.getMessage());
         }
     }
