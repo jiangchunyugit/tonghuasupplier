@@ -609,6 +609,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public PageVo<List<EmployeeMsgVo>> queryAllEmployee(String phone, String name, String cardNo, int pageSize, int pageIndex) {
         List<UserMsgVo> msgVos = userCenterService.queryUserMsg(null,phone);
+        if(StringUtils.isNotBlank(phone) && (msgVos == null || msgVos.isEmpty())){
+            return PageVo.def(new ArrayList<>());
+        }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = msgExample.createCriteria();
         if(msgVos != null && msgVos.size() > 0){
