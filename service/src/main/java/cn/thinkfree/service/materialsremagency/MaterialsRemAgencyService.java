@@ -15,5 +15,5 @@ public interface MaterialsRemAgencyService {
      * 获取经销商信息
      * @return
      */
-    List<MaterialsRemAgency> getMaterialsRemAgencys(String code);
+    List<MaterialsRemAgency> getMaterialsRemAgencys(String code,String name);
 }

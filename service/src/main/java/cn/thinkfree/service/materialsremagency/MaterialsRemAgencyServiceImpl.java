@@ -3,6 +3,7 @@ package cn.thinkfree.service.materialsremagency;
 import cn.thinkfree.database.mapper.MaterialsRemAgencyMapper;
 import cn.thinkfree.database.model.MaterialsRemAgency;
 import cn.thinkfree.database.model.MaterialsRemAgencyExample;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +21,24 @@ public class MaterialsRemAgencyServiceImpl implements MaterialsRemAgencyService{
     MaterialsRemAgencyMapper materialsRemAgencyMapper;
 
     @Override
-    public List<MaterialsRemAgency> getMaterialsRemAgencys(String code) {
+    public List<MaterialsRemAgency> getMaterialsRemAgencys(String code, String name) {
 
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append("%");
-        stringBuffer.append(code);
-        stringBuffer.append("%");
         MaterialsRemAgencyExample materialsRemAgencyExample = new MaterialsRemAgencyExample();
-        materialsRemAgencyExample.createCriteria().andCodeLike(stringBuffer.toString());
+        MaterialsRemAgencyExample.Criteria criteria = materialsRemAgencyExample.createCriteria();
+        if (StringUtils.isNotBlank(code)) {
+            StringBuffer stringBuffer = new StringBuffer();
+            stringBuffer.append("%");
+            stringBuffer.append(code);
+            stringBuffer.append("%");
+            criteria.andCodeLike(stringBuffer.toString());
+        }
+        if (StringUtils.isNotBlank(name)) {
+            StringBuffer stringBufferName = new StringBuffer();
+            stringBufferName.append("%");
+            stringBufferName.append(name);
+            stringBufferName.append("%");
+            criteria.andNameLike(stringBufferName.toString());
+        }
         return materialsRemAgencyMapper.selectByExample(materialsRemAgencyExample);
     }
 }

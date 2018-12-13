@@ -30,9 +30,9 @@ public class MaterialsRemAgencyController extends AbsBaseController{
     @GetMapping(value = "/materialsRemAgencyList")
     @MyRespBody
     @ApiOperation(value="经销商：经销商信息")
-    public MyRespBundle<List<MaterialsRemAgency>> materialsRemAgencyList(@ApiParam("经销商编码")@RequestParam(value = "code") String code){
+    public MyRespBundle<List<MaterialsRemAgency>> materialsRemAgencyList(@ApiParam("经销商编码")String code,@ApiParam("经销商名称")String name){
 
-        return sendJsonData(ResultMessage.SUCCESS, materialsRemAgencyService.getMaterialsRemAgencys(code));
+        return sendJsonData(ResultMessage.SUCCESS, materialsRemAgencyService.getMaterialsRemAgencys(code,name));
     }
 }
 
