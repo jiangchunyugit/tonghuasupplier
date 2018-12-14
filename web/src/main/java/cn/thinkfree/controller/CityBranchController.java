@@ -1,9 +1,12 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.SysLogAction;
+import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.model.City;
@@ -41,6 +44,7 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/saveCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：创建分站")
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PROJECT,desc = "创建城市分站")
     public MyRespBundle<String> saveCityBranch(@ApiParam("城市分站信息") CityBranchVO cityBranchVO){
         BeanValidator.validate(cityBranchVO, Severitys.Insert.class);
         if (cityBranchService.checkRepeat(cityBranchVO)) {
@@ -63,6 +67,7 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/updateCityBranch")
     @MyRespBody
     @ApiOperation(value="城市分站：编辑分站")
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PROJECT,desc = "编辑城市分站")
     public MyRespBundle<String> updateCityBranch(@ApiParam("城市分站信息") CityBranchVO cityBranchVO){
         BeanValidator.validate(cityBranchVO, Severitys.Update.class);
         if (cityBranchService.checkRepeat(cityBranchVO)) {
@@ -149,6 +154,7 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/cityBranchDelete")
     @MyRespBody
     @ApiOperation(value="城市分站：删除")
+    @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PROJECT,desc = "删除城市分站")
     public MyRespBundle<String> cityBranchDelete(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         CityBranch cityBranch = new CityBranch();
@@ -166,6 +172,7 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/cityBranchEnable")
     @MyRespBody
     @ApiOperation(value="城市分站：启用")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "启用城市分站")
     public MyRespBundle<String> cityBranchEnable(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         CityBranch cityBranch = new CityBranch();
@@ -183,6 +190,7 @@ public class CityBranchController extends AbsBaseController{
     @PostMapping(value = "/cityBranchDisable")
     @MyRespBody
     @ApiOperation(value="城市分站：禁用")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "禁用城市分站")
     public MyRespBundle<String> cityBranchDisable(@ApiParam("城市分站id")@RequestParam(value = "id") Integer id){
 
         CityBranch cityBranch = new CityBranch();
@@ -199,7 +207,7 @@ public class CityBranchController extends AbsBaseController{
      */
     @PostMapping(value = "/cityBranchRuZhuAdd")
     @MyRespBody
-    @ApiOperation(value="城市分站：城市分站")
+    @ApiOperation(value="城市分站：（数据权限）城市分站")
     public MyRespBundle<List<CityBranch>> cityBranchRuZhuAdd(@ApiParam("分公司编码")String branchCompanyCode){
 
         return sendJsonData(ResultMessage.SUCCESS,cityBranchService.selectByProCit(branchCompanyCode));

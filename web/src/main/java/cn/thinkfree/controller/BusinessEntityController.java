@@ -1,9 +1,12 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.SysLogAction;
+import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.model.BusinessEntity;
@@ -42,6 +45,7 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/saveBusinessEntity")
     @MyRespBody
     @ApiOperation(value="经营主体数据：创建主体")
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PROJECT,desc = "创建经营主体")
     public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntity businessEntity){
         BeanValidator.validate(businessEntity, Severitys.Insert.class);
         if (businessEntityService.checkRepeat(businessEntity)) {
@@ -59,6 +63,7 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/updateBusinessEntity")
     @MyRespBody
     @ApiOperation(value="经营主体数据：编辑主体")
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PROJECT,desc = "编辑经营主体")
     public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntity businessEntity){
         BeanValidator.validate(businessEntity, Severitys.Update.class);
         if (businessEntityService.checkRepeat(businessEntity)) {
@@ -88,6 +93,7 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/businessEntityStore")
     @MyRespBody
     @ApiOperation(value="经营主体数据：经营主体门店保存")
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PROJECT,desc = "经营主体选择门店")
     public MyRespBundle<String> businessEntityStore(@ApiParam("经营主体信息")BusinessEntityStoreVO businessEntityStoreVO){
         BeanValidator.validate(businessEntityStoreVO, Severitys.Insert.class);
         try {
@@ -157,6 +163,7 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/businessEntityDelete")
     @MyRespBody
     @ApiOperation(value="经营主体数据：删除")
+    @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PROJECT,desc = "删除经营主体")
     public MyRespBundle<String> businessEntityDelete(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BusinessEntity businessEntity = new BusinessEntity();
@@ -174,6 +181,7 @@ public class BusinessEntityController extends AbsBaseController{
     @PostMapping(value = "/businessEntityEnable")
     @MyRespBody
     @ApiOperation(value="经营主体数据：启用")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "启用经营主体")
     public MyRespBundle<String> businessEntityEnable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BusinessEntityVO businessEntity = new BusinessEntityVO();
@@ -191,6 +199,7 @@ public class BusinessEntityController extends AbsBaseController{
     @RequestMapping(value = "/businessEntityDisable", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="经营主体数据：禁用")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "禁用经营主体")
     public MyRespBundle<String> businessEntityDisable(@ApiParam("经营主体id")@RequestParam(value = "id") Integer id){
 
         BusinessEntityVO businessEntity = new BusinessEntityVO();
