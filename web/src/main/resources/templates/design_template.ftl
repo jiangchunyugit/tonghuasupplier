@@ -191,7 +191,7 @@
     2. 乙方应为客户开具《设计合同》等额发票，依法纳税。客户支付产生的手续费由乙方承担。
 </section>
 <section class='indent'>
-    3. 甲方向乙方支付客户采购产品实交款总额<p class="placeholderT">10%</p>的产品服务费，甲方分两次与乙方结算产品服务费款项。
+    3. 甲方向乙方支付客户采购产品实交款总额<p class="placeholderT">${c11}%</p>的产品服务费，甲方分两次与乙方结算产品服务费款项。
     <ul class="list">
         <ul class="list">
              <#list code05 as c>
@@ -201,7 +201,7 @@
     </ul>
 </section>
 <section class='indent'>
-    4. 甲方向乙方支付客户施工竣工结算额（不含管理费及税金）<p class="placeholderT">${c12}</p>的施工管理费，甲方分两次与乙方结算施工管理费款项。
+    4. 甲方向乙方支付客户施工竣工结算额（不含管理费及税金）<p class="placeholderT">${c12}%</p>的施工管理费，甲方分两次与乙方结算施工管理费款项。
 </section>
 <section class='indent'>
     4.1在客户《施工合同》首期款付款到账后的次月内向乙方支付施工合同折税后的合同额的<p class="placeholderT">${c12}%</p>
