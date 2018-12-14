@@ -113,12 +113,12 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         int nextStateCode;
         switch (type) {
             case 1:
-                stage = ConstructionStateEnum.STATE_500.getState();
-                nextStateCode = ConstructionStateEnum.STATE_510.getState();
-                break;
-            case 2:
                 stage = ConstructionStateEnum.STATE_510.getState();
                 nextStateCode = ConstructionStateEnum.STATE_520.getState();
+                break;
+            case 2:
+                stage = ConstructionStateEnum.STATE_520.getState();
+                nextStateCode = ConstructionStateEnum.STATE_530.getState();
                 break;
             case 5:
                 stage = ConstructionStateEnum.STATE_540.getState();
