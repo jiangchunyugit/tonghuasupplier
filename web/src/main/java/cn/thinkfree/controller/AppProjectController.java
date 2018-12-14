@@ -10,6 +10,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -66,7 +67,7 @@ public class AppProjectController {
             @RequestParam(name = "checkSort", required = false) @ApiParam(name = "checkSort", value = "验收阶段 sort值", required = false) Integer checkSort,
             @RequestParam(name = "checkComplete", required = false) @ApiParam(name = "checkComplete", value = "是否完成验收 1,是 2,否", required = false) Integer checkComplete,
             @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo) {
-        return newProjectService.getProjectByScreen(pageSize,pageNum,userId,delayBegin,delayEnd,schedulingSort,checkSort,checkComplete,projectNo);
+        return newProjectService.getProjectByScreen(pageSize, pageNum, userId, delayBegin, delayEnd, schedulingSort, checkSort, checkComplete, projectNo);
     }
 
 
@@ -138,10 +139,11 @@ public class AppProjectController {
     @RequestMapping(value = "confirmVolumeRoomDataUser", method = RequestMethod.POST)
     @ApiOperation(value = "C端确认资料")
     public MyRespBundle<String> confirmVolumeRoomDataUser(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
-            @RequestParam(name = "category") @ApiParam(name = "category", value = "项目编号") Integer category) {
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo,
+            @RequestParam(name = "result", required = false) @ApiParam(name = "result", value = "结果 1,同意  2,不同意", required = false) Integer result,
+            @RequestParam(name = "category", required = false) @ApiParam(name = "category", value = "项目编号", required = false) Integer category) {
         try {
-            return newProjectService.confirmVolumeRoomDataUser(projectNo, category);
+            return newProjectService.confirmVolumeRoomDataUser(projectNo, category,result);
         } catch (Exception e) {
             e.printStackTrace();
             return RespData.error(e.getMessage());

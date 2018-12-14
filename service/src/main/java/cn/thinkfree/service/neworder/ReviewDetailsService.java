@@ -90,21 +90,14 @@ public interface ReviewDetailsService {
      */
     MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason);
 
-//    /**
-//     * 获取上海报价信息(预交底)
-//     * @param projectNo
-//     * @param predatingTime
-//     * @param remark
-//     * @return
-//     */
-//    MyRespBundle getShangHaiPriceDetail(String projectNo, Date predatingTime, String remark);
-
     /**
-     * 获取上海报价信息
+     * 获取上海报价信息(预交底)
      * @param projectNo
+     * @param predatingTime
+     * @param remark
      * @return
      */
-    MyRespBundle getShangHaiPriceDetail(String projectNo);
+    MyRespBundle getShangHaiPriceDetail(String projectNo, Date predatingTime, String remark);
 
     /**
      * 设计师发起预交底详情页---->app使用
