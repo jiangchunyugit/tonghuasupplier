@@ -23,7 +23,7 @@
     </collection>
   </resultMap>
 
-  <resultMap id="cityBranchResultMap" type="cn.thinkfree.database.model.CityBranch">
+  <resultMap id="cityBranchResultMap" type="cn.thinkfree.database.model.CityBranch"  >
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="legal_name" jdbcType="VARCHAR" property="legalName" />
     <result column="legal_phone" jdbcType="VARCHAR" property="legalPhone" />
