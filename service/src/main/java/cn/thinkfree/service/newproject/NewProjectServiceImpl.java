@@ -343,6 +343,13 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("请检查入参:userId=" + userId);
         }
         List<ConstructionProjectVo> constructionProjectVos = getAllConstructionProject(userId);
+        if (constructionProjectVos.size()==0){
+            PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+            pageVo.setPageSize(pageSize);
+            pageVo.setPageIndex(pageNum);
+            pageVo.setTotal(0);
+            return RespData.success(pageVo);
+        }
         List<ConstructionProjectVo> playProjects = new ArrayList<>();
         List<ConstructionProjectVo> allProjects = new ArrayList<>();
         Integer count = 0;

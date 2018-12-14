@@ -42,7 +42,7 @@ public class AppProjectController {
             @RequestParam(name = "pageSize", required = false, defaultValue = "10") @ApiParam(name = "pageSize", required = false, value = "每页条数") int pageSize,
             @RequestParam(name = "pageNum", required = false, defaultValue = "1") @ApiParam(name = "pageNum", required = false, value = "第几页") int pageNum,
             @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
-            @RequestParam(name = "projectType", required = false) @ApiParam(name = "projectType", value = "项目分类 1,全部 2,待签约 3,待开工 4,施工中 5,已竣工 6,停工中 7,已关闭", required = false) Integer projectType,
+            @RequestParam(name = "projectType", required = false) @ApiParam(name = "projectType", value = "项目分类 1,全部 2,待签约 3,待开工 4,施工中 5,已竣工", required = false) Integer projectType,
             @RequestParam(name = "inputData", required = false) @ApiParam(name = "inputData", value = "筛选输入值", required = false) String inputData) {
         return newProjectService.getConstructionAllProject(pageSize, pageNum, userId, inputData, projectType);
     }
