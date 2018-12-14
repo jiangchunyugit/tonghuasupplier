@@ -24,6 +24,7 @@
     <result column="contract_type" jdbcType="INTEGER" property="contractType" />
     <result column="style_type" jdbcType="VARCHAR" property="styleType" />
     <result column="preview_state" jdbcType="INTEGER" property="previewState" />
+    <result column="complaint_state" jdbcType="INTEGER" property="complaintState" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -98,7 +99,7 @@
     -->
     id, company_id, project_no, create_time, appointment_time, order_no, order_stage, 
     volume_room_time, volume_room_money, user_id, remark, actual_pay_money, status, close_time, 
-    design_id, contract_type, style_type, preview_state
+    design_id, contract_type, style_type, preview_state, complaint_state
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.DesignerOrderExample" resultMap="BaseResultMap">
     <!--
@@ -156,15 +157,15 @@
       order_stage, volume_room_time, volume_room_money, 
       user_id, remark, actual_pay_money, 
       status, close_time, design_id, 
-      contract_type, style_type, preview_state
-      )
+      contract_type, style_type, preview_state, 
+      complaint_state)
     values (#{id,jdbcType=VARCHAR}, #{companyId,jdbcType=VARCHAR}, #{projectNo,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{appointmentTime,jdbcType=TIMESTAMP}, #{orderNo,jdbcType=VARCHAR}, 
       #{orderStage,jdbcType=INTEGER}, #{volumeRoomTime,jdbcType=TIMESTAMP}, #{volumeRoomMoney,jdbcType=BIGINT}, 
       #{userId,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{actualPayMoney,jdbcType=BIGINT}, 
       #{status,jdbcType=INTEGER}, #{closeTime,jdbcType=TIMESTAMP}, #{designId,jdbcType=VARCHAR}, 
-      #{contractType,jdbcType=INTEGER}, #{styleType,jdbcType=VARCHAR}, #{previewState,jdbcType=INTEGER}
-      )
+      #{contractType,jdbcType=INTEGER}, #{styleType,jdbcType=VARCHAR}, #{previewState,jdbcType=INTEGER}, 
+      #{complaintState,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.DesignerOrder">
     <!--
@@ -227,6 +228,9 @@
       <if test="previewState != null">
         preview_state,
       </if>
+      <if test="complaintState != null">
+        complaint_state,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -282,6 +286,9 @@
       </if>
       <if test="previewState != null">
         #{previewState,jdbcType=INTEGER},
+      </if>
+      <if test="complaintState != null">
+        #{complaintState,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -356,6 +363,9 @@
       <if test="record.previewState != null">
         preview_state = #{record.previewState,jdbcType=INTEGER},
       </if>
+      <if test="record.complaintState != null">
+        complaint_state = #{record.complaintState,jdbcType=INTEGER},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -384,7 +394,8 @@
       design_id = #{record.designId,jdbcType=VARCHAR},
       contract_type = #{record.contractType,jdbcType=INTEGER},
       style_type = #{record.styleType,jdbcType=VARCHAR},
-      preview_state = #{record.previewState,jdbcType=INTEGER}
+      preview_state = #{record.previewState,jdbcType=INTEGER},
+      complaint_state = #{record.complaintState,jdbcType=INTEGER}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -447,6 +458,9 @@
       <if test="previewState != null">
         preview_state = #{previewState,jdbcType=INTEGER},
       </if>
+      <if test="complaintState != null">
+        complaint_state = #{complaintState,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
@@ -472,7 +486,8 @@
       design_id = #{designId,jdbcType=VARCHAR},
       contract_type = #{contractType,jdbcType=INTEGER},
       style_type = #{styleType,jdbcType=VARCHAR},
-      preview_state = #{previewState,jdbcType=INTEGER}
+      preview_state = #{previewState,jdbcType=INTEGER},
+      complaint_state = #{complaintState,jdbcType=INTEGER}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 
