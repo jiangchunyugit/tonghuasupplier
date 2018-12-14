@@ -145,7 +145,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         if (StringUtils.isBlank(String.valueOf(isPass))) {
             return RespData.error(ResultMessage.ERROR.code, "审核是否通过状态未知");
         }
-        Integer stage = ConstructionStateEnum.STATE_520.getState();
+        Integer stage = ConstructionStateEnum.STATE_530.getState();
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         if (stageCode.equals(stage)) {
             if (isPass == 1) {   //下一步
@@ -153,7 +153,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                     return RespData.success();
                 }
             } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_510.getState())) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_520.getState())) {
                     return RespData.success();
                 }
             }
