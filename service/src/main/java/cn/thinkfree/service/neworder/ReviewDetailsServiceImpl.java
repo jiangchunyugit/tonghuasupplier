@@ -941,6 +941,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         orderCritera.andProjectNoEqualTo(projectNo);
         DesignerOrder designerOrder = new DesignerOrder();
         designerOrder.setPreviewState(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         int i = designerOrderMapper.updateByExampleSelective(designerOrder, orderExample);
         if (i == 0) {
             throw new RuntimeException("修改设计订单预交底状态失败!");
