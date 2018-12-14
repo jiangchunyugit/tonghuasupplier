@@ -62,17 +62,16 @@ public class DecorationOrderOperateImpl implements DecorationOrderOperate {
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_540.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnum.STATE_540.getState()) {
+            if (stage == ConstructionStateEnum.STATE_560.getState()) {
                 waitSign++;
             }
         }
 
         ConstructionOrderManageVo constructionOrderManageVo = new ConstructionOrderManageVo();
         constructionOrderManageVo.setCityList(commonService.getCityList());
-    //    constructionOrderManageVo.setOrderNum(list.size());
         constructionOrderManageVo.setWaitExamine(waitExamine);
         constructionOrderManageVo.setWaitSign(waitSign);
         return RespData.success(constructionOrderManageVo);

@@ -803,17 +803,18 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         if(list == null || list.size() == 0){
             return RespData.error("施工订单信息为空");
         }
-        /* 统计状态个数 */
-        int waitStart = 0;//待开工
-        int underConstruction = 0;//施工中
-        int completed = 0;//已完工
-        // 订单状态 统计
+        // 统计状态个数：待开工
+        int waitStart = 0;
+        // 统计状态个数：施工中
+        int underConstruction = 0;
+        // 统计状态个数：已完工
+        int completed = 0;
         for (ConstructionOrder constructionOrder : list) {
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_600.getState()) {
+            if (stage == ConstructionStateEnum.STATE_610.getState()) {
                 waitStart++;
             }
-            if (stage > ConstructionStateEnum.STATE_600.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+            if (stage > ConstructionStateEnum.STATE_610.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
                 underConstruction++;
             }
             if (stage == ConstructionStateEnum.STATE_700.getState()) {

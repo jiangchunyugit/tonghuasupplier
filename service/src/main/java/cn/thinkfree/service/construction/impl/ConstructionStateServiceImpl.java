@@ -8,10 +8,14 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.service.construction.CommonService;
-import cn.thinkfree.service.construction.ConstructionAndPayStateService;
-import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
+import cn.thinkfree.service.construction.*;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.project.ProjectService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +29,8 @@ import java.util.*;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class ConstructionStateServiceImpl implements ConstructionStateService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConstructionStateServiceImpl.class);
 
     @Autowired
     ConstructionOrderMapper constructionOrderMapper;
@@ -42,6 +48,16 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     ProjectBigSchedulingDetailsMapper detailsMapper;
     @Autowired
     BuildPayConfigMapper buildPayConfigMapper;
+    @Autowired
+    private BuildConfigService buildConfigService;
+    @Autowired
+    private ConstructOrderService constructOrderService;
+    @Autowired
+    private ConstructOrderPayService constructOrderPayService;
+    @Autowired
+    private NewSchedulingService schedulingService;
+    @Autowired
+    private ProjectService projectService;
 
 
     /**
@@ -90,9 +106,8 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        List<ConstructionStateEnum> nextStateCode = ConstructionStateEnum.STATE_500.getNextStates();
         if (stageCode.equals(ConstructionStateEnum.STATE_500.getState())) {
-            if (commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState())) {
+            if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_510.getState())) {
                 return RespData.success();
             }
         }
@@ -110,28 +125,34 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         if (StringUtils.isBlank(orderNo)) {
             throw new RuntimeException("订单编号不能为空");
         }
-        Integer stage = null;
-        List<ConstructionStateEnum> nextStateCode = new ArrayList<>();
+        ConstructionStateEnum constructionState;
+        ConstructionStateEnum nextConstructionState;
         switch (type) {
             case 1:
-                stage = ConstructionStateEnum.STATE_510.getState();
-                nextStateCode = ConstructionStateEnum.STATE_510.getNextStates();
+                constructionState = ConstructionStateEnum.STATE_510;
+                nextConstructionState = ConstructionStateEnum.STATE_530;
                 break;
             case 2:
-                stage = ConstructionStateEnum.STATE_520.getState();
-                nextStateCode = ConstructionStateEnum.STATE_520.getNextStates();
+                constructionState = ConstructionStateEnum.STATE_530;
+                nextConstructionState = ConstructionStateEnum.STATE_540;
+                break;
+            case 4:
+                constructionState = ConstructionStateEnum.STATE_550;
+                nextConstructionState = ConstructionStateEnum.STATE_560;
                 break;
             case 5:
-                stage = ConstructionStateEnum.STATE_550.getState();
-                nextStateCode = ConstructionStateEnum.STATE_550.getNextStates();
+                constructionState = ConstructionStateEnum.STATE_560;
+                nextConstructionState = ConstructionStateEnum.STATE_600;
                 break;
             default:
-                break;
+                LOGGER.error("错误的操作类型，orderNo:{}, type:{}", orderNo, type);
+                throw new RuntimeException("操作失败-请稍后重试");
         }
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (stageCode.equals(stage)) {
-            commonService.updateStateCodeByOrderNo(orderNo, nextStateCode.get(0).getState());
+        if (constructionState.getState() == stageCode) {
+            commonService.updateStateCodeByOrderNo(orderNo, nextConstructionState.getState());
         }else{
+            LOGGER.error("错误的订单状态，orderNo:{}, type:{}, state:{}", orderNo, type, stageCode);
             throw new RuntimeException("操作失败-请稍后重试");
         }
     }
@@ -143,23 +164,15 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     @Override
     public MyRespBundle<String> constructionStateOfExamine(String orderNo, int type, int isPass) {
 
-        if (StringUtils.isBlank(String.valueOf(isPass))) {
-            return RespData.error(ResultMessage.ERROR.code, "审核是否通过状态未知");
-        }
+        Integer stage = commonService.queryStateCodeByOrderNo(orderNo);
 
-
-        Integer stage = ConstructionStateEnum.STATE_530.getState();
-        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-
-        List<ConstructionStateEnum> nextStateCode = ConstructionStateEnum.STATE_530.getNextStates();
-
-        if (stageCode.equals(stage)) {
-            if (isPass == 1) {   //下一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_540.getState())) {
+        if (ConstructionStateEnum.STATE_540.getState() == stage) {
+            if (isPass == 1) {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_550.getState())) {
                     return RespData.success();
                 }
-            } else {  //上一步
-                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_520.getState())) {
+            } else {
+                if (commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_530.getState())) {
                     return RespData.success();
                 }
             }
@@ -172,21 +185,11 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
     /**
      * 装饰公司
-     * 4合同录入 （完成）
-     * TODO 不用了
-     */
-    @Override
-    public void contractState(String orderNo) {
-        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_540.getState());
-    }
-
-    /**
-     * 装饰公司
      * 5确认线下签约完成（自动创建工地项目）
      */
     @Override
     public void contractCompleteState(String orderNo) {
-        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_550.getState());
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_600.getState());
     }
 
     /**
@@ -194,7 +197,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
      */
     @Override
     public MyRespBundle<Boolean> firstPay(String orderNo) {
-        return RespData.success(commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_600.getState()));
+        return RespData.success(commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_610.getState()));
     }
 
 
@@ -246,17 +249,15 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         }
         // sort=0 支付首款
         if (sort == 0) {
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_600.getState());
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_610.getState());
         } else {
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_630.getState());
-
+            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_640.getState());
 
             Map<String, Integer> map = getPayScheduling(projectNo);
             if (map.get("paySort").equals(map.get("bigSort")) && sort.equals(map.get("paySort"))) {
                 //支付必须先回调再改状态
                 commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
             }
-
         }
 
         return RespData.success();
@@ -271,69 +272,81 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         if (!constructionAndPayStateService.isBeComplete(projectNo, sort)) {
             throw new RuntimeException("施工阶段状态变更异常");
         }
-
         if (StringUtils.isBlank(projectNo)) {
-            throw new RuntimeException("施工阶段状态变更异常");
+            LOGGER.error("项目编号为空");
+            throw new RuntimeException();
         }
-
-        ConstructionOrderPay constructionOrderPay = new ConstructionOrderPay();
-
-        //查询订单编号
-        ConstructionOrderExample example = new ConstructionOrderExample();
-        example.createCriteria().andProjectNoEqualTo(projectNo);
-        List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
-        if (list.isEmpty()) {
-            throw new RuntimeException("施工阶段状态变更异常");
+        //查询订单
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        if (constructionOrder == null) {
+            LOGGER.error("未查询的施工订单，projectNo:{}", projectNo);
+            throw new RuntimeException();
         }
-        String orderNo = list.get(0).getOrderNo();
-        String schedulingNo = list.get(0).getSchemeNo();
-
         //更新状态
-        ConstructionOrderPayExample examplePay = new ConstructionOrderPayExample();
-        examplePay.createCriteria().andOrderNoEqualTo(orderNo);
-        List<ConstructionOrderPay> listPay = constructionOrderPayMapper.selectByExample(examplePay);
-        if (listPay.isEmpty()) {
-            constructionOrderPay.setOrderNo(orderNo);
+        ConstructionOrderPay constructionOrderPay = constructOrderPayService.findByOrderNo(constructionOrder.getOrderNo());
+        if (constructionOrderPay == null) {
+            constructionOrderPay = new ConstructionOrderPay();
+            constructionOrderPay.setOrderNo(constructionOrder.getOrderNo());
             constructionOrderPay.setFeeName("开工报告");
             constructionOrderPay.setSort(sort.shortValue());
             constructionOrderPay.setIsEnd("construction");
-            constructionOrderPayMapper.insertSelective(constructionOrderPay);
-            commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_610.getState());
+            constructOrderPayService.insert(constructionOrderPay);
+            commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnum.STATE_620.getState());
         } else {
             if (sort == 0) {
                 constructionOrderPay.setFeeName("开工报告");
                 constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPay.setIsEnd("construction");
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_610.getState());
+                commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnum.STATE_620.getState());
             } else {
+
                 //查询当前施工阶段名称
-                ProjectBigSchedulingExample example2 = new ProjectBigSchedulingExample();
-                example2.createCriteria().andSchemeNoEqualTo(schedulingNo).andSortEqualTo(sort);
-                List<ProjectBigScheduling> schedulingList2 = projectBigSchedulingMapper.selectByExample(example2);
-                if (schedulingList2.isEmpty()) {
+                List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs = schedulingService.getScheduling(projectNo).getData();
+                if (schedulingDetailsVOs == null || schedulingDetailsVOs.isEmpty()) {
+                    LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
+                    throw new RuntimeException();
+                }
+
+                ProjectBigSchedulingDetailsVO currentProjectBigScheduling = null;
+                int maxSort = 0;
+                for (ProjectBigSchedulingDetailsVO projectBigSchedulingDetailsVO : schedulingDetailsVOs) {
+                    if (projectBigSchedulingDetailsVO.getBigSort().equals(sort)) {
+                        currentProjectBigScheduling = projectBigSchedulingDetailsVO;
+                    }
+                    if (projectBigSchedulingDetailsVO.getBigSort() > maxSort) {
+                        maxSort = projectBigSchedulingDetailsVO.getBigSort();
+                    }
+                }
+
+                if (currentProjectBigScheduling == null) {
                     throw new RuntimeException("施工阶段状态变更异常");
                 }
-                String schedulingName = schedulingList2.get(0).getName();
-
-                constructionOrderPay.setFeeName(schedulingName);
+                constructionOrderPay.setFeeName(currentProjectBigScheduling.getBigName());
                 constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPay.setIsEnd("construction");
-                commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_620.getState());
 
-                Map<String, Integer> map = getPayScheduling(projectNo);
-                if (!map.get("paySort").equals(map.get("bigSort")) && sort.equals(map.get("bigSort"))) {
+                BuildPayConfig buildPayConfig = buildConfigService.queryBySchemeNoAndScheduleSort(constructionOrder.getSchemeNo(), sort);
+                ConstructionStateEnum nextConstructState = null;
+                if (buildPayConfig != null) {
+                    nextConstructState = ConstructionStateEnum.STATE_630;
+                }
+                if (maxSort == sort) {
                     //完工即修改状态为订单完成
-                    commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
+                    nextConstructState = ConstructionStateEnum.STATE_650;
+                }
+                if (nextConstructState != null) {
+                    commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), nextConstructState.getState());
                 }
 
                 //支付阶段通知
-                constructionAndPayStateService.notifyPay(orderNo, sort);
+                constructionAndPayStateService.notifyPay(constructionOrder.getOrderNo(), sort);
             }
-            constructionOrderPayMapper.updateByExampleSelective(constructionOrderPay, examplePay);
+            constructOrderPayService.updateByOrderNo(constructionOrderPay, constructionOrder.getOrderNo());
         }
 
         return RespData.success();
     }
+
 
     /**
      * 根据项目编号获取支付尾期sort+排期尾期sort
@@ -406,7 +419,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         }
 
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (ConstructionStateEnum.STATE_600.getState() <= stageCode) {
+        if (stageCode >= ConstructionStateEnum.STATE_600.getState()) {
             return RespData.error(ResultMessage.ERROR.code, "当前状态不能取消订单");
         }
 
@@ -457,7 +470,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
      * 消费者
      * 取消订单
      * 支付未开工逆向
-     * &审核通过
+     * 审核通过
      */
     @Override
     public MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type) {
@@ -474,19 +487,8 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         return RespData.success();
     }
 
-
-    /**
-     * 订单完成
-     *
-     * @param orderNo
-     */
-    public void constructionComplete(String orderNo) {
-
-        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
-    }
-
     @Override
-    public List<OrderStatusDTO> getStates(int type, int currentStatus) {
+    public List<OrderStatusDTO> getStates(int type, Integer currentStatus) {
         List<OrderStatusDTO> orderStatusDTOs  = new ArrayList<>();
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
         String preStateName = "";
@@ -498,6 +500,12 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             if (stateName.equals(preStateName)){
                 continue;
             }
+            if (currentStatus > ConstructionStateEnum.STATE_700.getState()) {
+                break;
+            }
+            if (constructionState.getState() > ConstructionStateEnum.STATE_700.getState()) {
+                break;
+            }
             preStateName = stateName;
             OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
             orderStatusDTO.setStatus(constructionState.getState());
@@ -505,6 +513,16 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
             orderStatusDTOs.add(orderStatusDTO);
         }
+
+        if (currentStatus > ConstructionStateEnum.STATE_700.getState()) {
+            ConstructionStateEnum currentConstructState = ConstructionStateEnum.queryByState(currentStatus);
+            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+            orderStatusDTO.setStatus(currentConstructState.getState());
+            orderStatusDTO.setName(currentConstructState.getStateName(type));
+
+            orderStatusDTOs.add(orderStatusDTO);
+        }
+
         return orderStatusDTOs;
     }
 }

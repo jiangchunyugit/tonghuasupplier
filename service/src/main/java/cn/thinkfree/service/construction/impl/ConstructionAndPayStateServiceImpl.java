@@ -111,7 +111,7 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
         /* sort==0 开工报告 */
         if (sort == 0) {
             Integer stateCode = commonService.queryStateCodeByOrderNo(orderNo);
-            Integer stage = ConstructionStateEnum.STATE_600.getState();
+            Integer stage = ConstructionStateEnum.STATE_610.getState();
             if (stateCode.equals(stage)) {
                 return true;
             } else {
