@@ -792,22 +792,36 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					}
 				}
 			}
-
+            //查询公司
+			 CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(companyId);
+			if(companyInfo == null){
+				throw new RuntimeException("系统数据异常");
+			}
 			// 修改合同状态
 			ContractInfo record = new ContractInfo();
 			record.setContractStatus(ContractStatus.WaitAudit.shortVal());
 			record.setCompanyId(companyId);
-			if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))) {
-				Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
-				record.setStartTime(startTime);
-			} else {
-				return false;
-			}
-			if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))) {
-				Date endTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
-				record.setEndTime(endTime);
-			} else {
-				return false;
+			//根据公司状态
+			 if(companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.SJ.code)){
+				if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))) {
+					Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
+					record.setStartTime(startTime);
+				}
+				if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))) {
+				  Date endTime =
+					  DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
+				  record.setEndTime(endTime);
+				}
+			}else if(companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.BD.code)){
+				 if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c08"))) {
+					 Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c08"), "yyyy-mm-dd");
+					 record.setStartTime(startTime);
+				 }
+				 if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c09"))) {
+					 Date endTime =
+							 DateUtil.formateToDate(contractClausevo.getParamMap().get("c09"), "yyyy-mm-dd");
+					 record.setEndTime(endTime);
+				 }
 			}
 			record.setContractNumber(contractNumber);
 			ContractInfoExample example = new ContractInfoExample();
