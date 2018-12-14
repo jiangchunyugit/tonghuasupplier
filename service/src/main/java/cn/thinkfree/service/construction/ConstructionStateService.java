@@ -96,4 +96,13 @@ public interface ConstructionStateService {
      */
     MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type);
 
+    /**
+     * 判断订单状态划分
+     * @param state 订单状态
+     * @param complaintState 订单状态
+     * @param stateRange 订单状态分类 1,全部 2,待签约 3,待开工 4,施工中 5,已竣工
+     * @return 订单状态划分
+     */
+    boolean getConstructState(int state, int complaintState, int stateRange);
+
 }

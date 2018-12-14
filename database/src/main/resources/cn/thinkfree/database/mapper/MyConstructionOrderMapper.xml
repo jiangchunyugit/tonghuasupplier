@@ -184,7 +184,7 @@
             proj.stage stage
         FROM
             order_user ou
-        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage != #{orderStatus}
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage <![CDATA[ < ]]> #{orderStatus}
         RIGHT JOIN a_f_instance afi on afi.project_no = ou.project_no AND afi.config_no IN
         <foreach collection="configNos" item="configNo" open="(" separator="," close=")">
             #{configNo}

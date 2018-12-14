@@ -113,7 +113,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
 
         configNos = configService.getConfigNosByApprovalType(approvalType);
         PageHelper.startPage(pageNum, pageSize);
-        List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
         PageInfo<ConstructionProjectVo> pageInfo = new PageInfo<>(constructionProjectVos);
         for (ConstructionProjectVo constructionProjectVo : constructionProjectVos) {
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionProjectVo.getStage()).getStateName(1));
