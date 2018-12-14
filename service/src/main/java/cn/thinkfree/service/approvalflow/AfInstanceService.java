@@ -97,4 +97,12 @@ public interface AfInstanceService {
      * @return
      */
     int getScheduleEditable(String projectNo);
+
+    /**
+     * 获取项目阶段是否验收通过
+     * @param projectNo 项目编号
+     * @param scheduleSort 排期编号
+     * @return 是否验收通过
+     */
+    boolean getCheckSuccess(String projectNo, Integer scheduleSort);
 }

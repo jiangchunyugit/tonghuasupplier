@@ -1,11 +1,12 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.database.vo.ConstructCountVO;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import com.github.pagehelper.PageInfo;
 
-public interface ConstructionOrderOperate {
+public interface ConstructOrderService {
 
     /**
      * 施工订单列表统计
@@ -22,5 +23,15 @@ public interface ConstructionOrderOperate {
      * @return
      */
     PageInfo<ConstructionOrderListVo> getOrderList(int pageNum, int pageSize, String cityName, int orderType);
+
+    /**
+     * 施工订单统计
+     * @param userId 用户编号
+     * @param approvalType 审批单类型
+     * @param pageNum 页码
+     * @param pageSize 每页个数
+     * @return 施工订单统计
+     */
+    ConstructCountVO count(String userId, String approvalType, Integer pageNum, Integer pageSize);
 
 }

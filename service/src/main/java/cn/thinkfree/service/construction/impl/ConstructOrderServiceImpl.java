@@ -2,15 +2,21 @@ package cn.thinkfree.service.construction.impl;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.database.appvo.ConstructionProjectVo;
 import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
+import cn.thinkfree.database.vo.ConstructCountVO;
+import cn.thinkfree.service.approvalflow.AfConfigService;
 import cn.thinkfree.service.construction.CommonService;
-import cn.thinkfree.service.construction.ConstructionOrderOperate;
+import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +26,7 @@ import java.util.List;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
-public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
+public class ConstructOrderServiceImpl implements ConstructOrderService {
 
     @Autowired
     private OrderListCommonService orderListCommonService;
@@ -28,6 +34,8 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
     private ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     private CommonService commonService;
+    @Autowired
+    private AfConfigService configService;
 
     /**
      * 订单列表
@@ -78,5 +86,40 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         constructionOrderManageVo.setWaitSign(waitSign);
         constructionOrderManageVo.setWaitPay(waitPay);
         return RespData.success(constructionOrderManageVo);
+    }
+
+    @Override
+    public ConstructCountVO count(String userId, String approvalType, Integer pageNum, Integer pageSize) {
+        ConstructCountVO constructCountVO = new ConstructCountVO();
+
+        int total = constructionOrderMapper.countByUserId(userId);
+        constructCountVO.setTotal(total);
+
+        List<String> configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL);
+        int count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setCheckCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setChangeCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setProblemCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_DELAY_VERIFY);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        constructCountVO.setDelayCount(count);
+
+        configNos = configService.getConfigNosByApprovalType(approvalType);
+        PageHelper.startPage(pageNum, pageSize);
+        List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
+        PageInfo<ConstructionProjectVo> pageInfo = new PageInfo<>(constructionProjectVos);
+        for (ConstructionProjectVo constructionProjectVo : constructionProjectVos) {
+            constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionProjectVo.getStage()).getStateName(1));
+        }
+        constructCountVO.setPageInfo(pageInfo);
+
+        return constructCountVO;
     }
 }
