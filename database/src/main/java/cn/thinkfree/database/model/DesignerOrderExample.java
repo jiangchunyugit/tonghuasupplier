@@ -1354,6 +1354,66 @@ public class DesignerOrderExample {
             addCriterion("preview_state not between", value1, value2, "previewState");
             return (Criteria) this;
         }
+
+        public Criteria andComplaintStateIsNull() {
+            addCriterion("complaint_state is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateIsNotNull() {
+            addCriterion("complaint_state is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateEqualTo(Integer value) {
+            addCriterion("complaint_state =", value, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateNotEqualTo(Integer value) {
+            addCriterion("complaint_state <>", value, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateGreaterThan(Integer value) {
+            addCriterion("complaint_state >", value, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateGreaterThanOrEqualTo(Integer value) {
+            addCriterion("complaint_state >=", value, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateLessThan(Integer value) {
+            addCriterion("complaint_state <", value, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateLessThanOrEqualTo(Integer value) {
+            addCriterion("complaint_state <=", value, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateIn(List<Integer> values) {
+            addCriterion("complaint_state in", values, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateNotIn(List<Integer> values) {
+            addCriterion("complaint_state not in", values, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateBetween(Integer value1, Integer value2) {
+            addCriterion("complaint_state between", value1, value2, "complaintState");
+            return (Criteria) this;
+        }
+
+        public Criteria andComplaintStateNotBetween(Integer value1, Integer value2) {
+            addCriterion("complaint_state not between", value1, value2, "complaintState");
+            return (Criteria) this;
+        }
     }
 
     /**
