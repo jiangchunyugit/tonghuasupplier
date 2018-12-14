@@ -270,12 +270,13 @@ public class NewProjectServiceImpl implements NewProjectService {
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria msgCriteria = msgExample.createCriteria();
         msgCriteria.andUserIdEqualTo(userId);
+        msgCriteria.andEmployeeStateEqualTo(1);
         List list = new ArrayList();
         list.add(3);
-        msgCriteria.andEmployeeStateIn(list);
+        msgCriteria.andEmployeeApplyStateIn(list);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
-        if (employeeMsgs.size()==0){
-            return RespData.error("此用户当前状态无查看项目资格");
+        if (employeeMsgs.size() == 0) {
+            return RespData.error("此用户当前状态无查看项目资格(已离职或被解约)");
         }
         BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
         BuildSchemeCompanyRelExample.Criteria relCriteria = relExample.createCriteria();
@@ -283,11 +284,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         relCriteria.andDelStateEqualTo(2);
         relCriteria.andIsEableEqualTo(1);
         List<BuildSchemeCompanyRel> buildSchemeCompanyRels = companyRelMapper.selectByExample(relExample);
-        if (buildSchemeCompanyRels.size()==0){
+        if (buildSchemeCompanyRels.size() == 0) {
             return RespData.error("此公司尚无在用施工方案");
         }
         ProjectBigSchedulingExample bigSchedulingExample = new ProjectBigSchedulingExample();
-        bigSchedulingExample.setOrderByClause("big_sort asc");
+        bigSchedulingExample.setOrderByClause("sort asc");
         ProjectBigSchedulingExample.Criteria bigCriteria = bigSchedulingExample.createCriteria();
         bigCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         bigCriteria.andSchemeNoEqualTo(buildSchemeCompanyRels.get(0).getBuildSchemeNo());
@@ -1022,38 +1023,65 @@ public class NewProjectServiceImpl implements NewProjectService {
      *
      * @param projectNo
      * @param category
+     * @param result
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category) {
-        ProjectData projectData = new ProjectData();
-        projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
-        projectData.setConfirmTime(new Date());
-        ProjectDataExample example = new ProjectDataExample();
-        ProjectDataExample.Criteria criteria = example.createCriteria();
-        criteria.andCategoryEqualTo(category);
-        criteria.andProjectNoEqualTo(projectNo);
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExampleSelective(projectData, example);
-        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("确认失败");
+    public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category, Integer result) {
+        if (projectNo == null || projectNo.trim().isEmpty() || category == null) {
+            return RespData.error("请检查入参:projectNo=" + projectNo + ";category=" + category);
         }
-        String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
-        if (category == 1) {
-            designDispatchService.confirmedDeliveries(projectNo, ownerId);
-        } else if (category == 2) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
-            //1全款合同，2分期合同
-            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
-                stateEnum = DesignStateEnum.STATE_170;
+        if (result == null || (result != 1 && result != 2)) {
+            return RespData.error("请检查入参:result=" + result);
+        }
+        if (result == 1) {
+            ProjectData projectData = new ProjectData();
+            projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
+            projectData.setConfirmTime(new Date());
+            ProjectDataExample example = new ProjectDataExample();
+            ProjectDataExample.Criteria criteria = example.createCriteria();
+            criteria.andCategoryEqualTo(category);
+            criteria.andProjectNoEqualTo(projectNo);
+            criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            int i = projectDataMapper.updateByExampleSelective(projectData, example);
+            if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                return RespData.error("确认失败");
             }
-            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
-        } else if (category == 3) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
-            //1全款合同，2分期合同
-            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
-                stateEnum = DesignStateEnum.STATE_200;
+            String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
+            if (category == 1) {
+                designDispatchService.confirmedDeliveries(projectNo, ownerId);
+            } else if (category == 2) {
+                DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_170;
+                }
+                designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+            } else if (category == 3) {
+                DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_200;
+                }
+                designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+            }
+        } else {
+            DesignStateEnum stateEnum = null;
+            if (category == 1) {
+                stateEnum = DesignStateEnum.STATE_50;
+            } else if (category == 2) {
+                stateEnum = DesignStateEnum.STATE_230;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_150;
+                }
+            } else if (category == 3) {
+                stateEnum = DesignStateEnum.STATE_250;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_180;
+                }
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         }

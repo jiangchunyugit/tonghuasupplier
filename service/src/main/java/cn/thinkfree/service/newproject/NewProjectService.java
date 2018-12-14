@@ -120,9 +120,10 @@ public interface NewProjectService {
      *
      * @param projectNo
      * @param category
+     * @param result
      * @return
      */
-    MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category);
+    MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category, Integer result);
 
     /**
      * 更具设计师ID获取设计信息
@@ -145,6 +146,7 @@ public interface NewProjectService {
 
     /**
      * 获取施工端项目搜索项(进度阶段+验收阶段)
+     *
      * @param userId
      * @param projectNo
      * @return
@@ -153,6 +155,7 @@ public interface NewProjectService {
 
     /**
      * 施工端项目列表--筛选
+     *
      * @param pageSize
      * @param pageNum
      * @param userId
