@@ -226,8 +226,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             Integer count = 0;
             for (ConstructionProjectVo projectVo : list) {
                 if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
-                    //TODO 传让提供接口后把他放到逻辑与条件中
-                    if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize && constructionStateService.getConstructState(projectVo.getStage(), projectVo.getComplaintState(), projectType)) {
                         playProjects.add(projectVo);
                     }
                     allProjects.add(projectVo);
@@ -343,7 +342,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("请检查入参:userId=" + userId);
         }
         List<ConstructionProjectVo> constructionProjectVos = getAllConstructionProject(userId);
-        if (constructionProjectVos.size()==0){
+        if (constructionProjectVos.size() == 0) {
             PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
             pageVo.setPageSize(pageSize);
             pageVo.setPageIndex(pageNum);
@@ -355,6 +354,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         Integer count = 0;
         Boolean result = false;
         for (ConstructionProjectVo projectVo : constructionProjectVos) {
+            boolean checkResult = afInstanceService.getCheckSuccess(projectVo.getProjectNo(), projectVo.getSort());
             if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort == null && checkComplete == null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
@@ -369,7 +369,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 }
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && checkSort.equals(projectVo.getSort())) {
+            } else if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && checkSort.equals(projectVo.getSort()) && checkResult) {
                 //TODO 暂未添加传让接口  根据项目编号+sort 查询是否验收完成
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
@@ -377,8 +377,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 }
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
-                //TODO 暂未添加传让接口
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
@@ -392,16 +391,14 @@ public class NewProjectServiceImpl implements NewProjectService {
                 }
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
-                //TODO 暂未添加传让接口
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
                 }
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort != null && checkComplete != null && checkSort.equals(projectVo.getSort())) {
-                //TODO 暂未添加传让接口
+            } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort != null && checkComplete != null && checkSort.equals(projectVo.getSort()) && checkResult) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
                     count++;
