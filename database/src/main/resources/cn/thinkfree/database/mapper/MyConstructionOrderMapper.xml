@@ -89,7 +89,7 @@
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
         <if test="constructionContractVO.orderNo!=null and constructionContractVO.orderNo!=''">
-            and p.project_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
+            and dor.order_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
         </if>
         <if test="constructionContractVO.orderSource!=null and constructionContractVO.orderSource!=''">
             and p.order_source like CONCAT('%',#{constructionContractVO.orderSource},'%' )
@@ -136,7 +136,7 @@
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
         <if test="constructionContractVO.orderNo!=null and constructionContractVO.orderNo!=''">
-            and p.project_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
+            and dor.order_no like CONCAT('%',#{constructionContractVO.orderNo},'%' )
         </if>
         <if test="constructionContractVO.orderSource!=null and constructionContractVO.orderSource!=''">
             and p.order_source like CONCAT('%',#{constructionContractVO.orderSource},'%' )
