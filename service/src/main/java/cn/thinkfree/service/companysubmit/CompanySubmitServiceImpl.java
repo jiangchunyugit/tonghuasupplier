@@ -175,19 +175,20 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 
 		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
 		if(auditInfoVO == null){
-			auditInfoVO = new AuditInfoVO();
-			auditInfoVO.setCompanyAuditType(CompanyAuditStatus.AUDITING.stringVal());
-			auditInfoVO.setCompanyAuditName("资质审核中");
+//			auditInfoVO = new AuditInfoVO();
+//			auditInfoVO.setCompanyAuditType(CompanyAuditStatus.AUDITING.stringVal());
+//			auditInfoVO.setCompanyAuditName("资质审核中");
 			return auditInfoVO;
 		}
 
 		Integer auditType = StringUtils.isBlank(auditInfoVO.getCompanyAuditType()) ? CompanyAuditStatus.AUDITING.code : Integer.parseInt(auditInfoVO.getCompanyAuditType().trim());
 		//如果公司入驻状态是7：确认保证金  说明运营，财务审核完成审核，合同签约
-		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType().trim())){
-			auditInfoVO.setCompanyAuditName("签约完成");
-		}else {
-			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.getDesc(auditType));
-		}
+		auditInfoVO.setCompanyAuditName(CompanyAuditStatus.getDesc(auditType));
+//		if(CompanyAuditStatus.NOTPAYBAIL.code.toString().equals(auditInfoVO.getCompanyAuditType().trim())){
+//			auditInfoVO.setCompanyAuditName("签约完成");
+//		}else {
+//			auditInfoVO.setCompanyAuditName(CompanyAuditStatus.getDesc(auditType));
+//		}
 
 		return auditInfoVO;
 	}
