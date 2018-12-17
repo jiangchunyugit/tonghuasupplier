@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ConstructionOrderMapper">
 
-  <!--阶段详情展示-->
-  <select id="selectStageDetailsList" resultType="cn.thinkfree.database.vo.StageDetailsVO">
+    <!--阶段详情展示-->
+    <select id="selectStageDetailsList" resultType="cn.thinkfree.database.vo.StageDetailsVO">
             SELECT
             s.stage AS stage,
             s.create_time AS createTime
@@ -12,8 +12,8 @@
             WHERE c.project_no=#{projectNo} AND s.type =#{type}
   </select>
 
-  <!--根据项目编号查询订单信息-->
-  <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
+    <!--根据项目编号查询订单信息-->
+    <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
     SELECT
       order_stage as taskStage,
       order_no as orderNo,
@@ -83,8 +83,10 @@
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
+        LEFT JOIN project_quotation_check pqc ON pqc.project_no=dor.project_no
         WHERE
         dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status}
+        AND pqc.result = 1
         <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
@@ -110,7 +112,7 @@
             <if test='constructionContractVO.flag == "1" '>
                 and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
             </if>
-            <if test='constructionContractVO.flag == "0" ' >
+            <if test='constructionContractVO.flag == "0" '>
                 and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
             </if>
         </if>
@@ -157,7 +159,7 @@
             <if test='constructionContractVO.flag == "1" '>
                 and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
             </if>
-            <if test='constructionContractVO.flag == "0" ' >
+            <if test='constructionContractVO.flag == "0" '>
                 and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
             </if>
         </if>
