@@ -1,9 +1,7 @@
 package cn.thinkfree.service.construction.impl;
 
 
-import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -110,7 +108,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
         if(orderType == 1){
             criteria.andOrderStageIn(Arrays.asList(ConstructionStateEnum.STATE_500.getState(),ConstructionStateEnum.STATE_510.getState()));
         }else{
-            criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_520.getState());
+            criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_540.getState());
         }
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
         PageInfo<ConstructionOrder> orderPageInfo = new PageInfo<>(list);
@@ -186,6 +184,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             // 订单状态
             constructionOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 1));
             // 是否可以派单 （运营平台指派装饰公司）
+            // TODO 510
             if (constructionOrder.getOrderStage().equals(ConstructionStateEnum.STATE_500.getState())) {
                 constructionOrderListVo.setIsDistribution(1);
             } else {
@@ -474,6 +473,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             // 订单编号
             decorationOrderListVo.setOrderNo(constructionOrder.getOrderNo());
             // 派单给员工-是否可以
+            // TODO 520
             if (constructionOrder.getOrderStage().equals(ConstructionStateEnum.STATE_510.getState())) {
                 decorationOrderListVo.setIsCheck(1);
             } else {
