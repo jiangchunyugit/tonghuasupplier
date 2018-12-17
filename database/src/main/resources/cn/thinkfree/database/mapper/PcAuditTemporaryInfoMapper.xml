@@ -71,6 +71,8 @@
     <result column="taxpayer_registration_number" jdbcType="VARCHAR" property="taxpayerRegistrationNumber" />
     <result column="company_register_no" jdbcType="VARCHAR" property="companyRegisterNo" />
     <result column="organization_code_url" jdbcType="VARCHAR" property="organizationCodeUrl" />
+    <result column="work_card_valid_start_date" jdbcType="TIMESTAMP" property="workCardValidStartDate" />
+    <result column="work_card_valid_end_date" jdbcType="TIMESTAMP" property="workCardValidEndDate" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -153,7 +155,8 @@
     is_three_to_one, tax_code_photo_url, contact_name, contact_phone, is_taxpayer, comapny_nature, 
     change_status, change_date, account_province, account_city, account_district, account_name, 
     card_name, account_branch_name, account_number, license_url, account_area, account_type, 
-    taxpayer_registration_number, company_register_no, organization_code_url
+    taxpayer_registration_number, company_register_no, organization_code_url, work_card_valid_start_date, 
+    work_card_valid_end_date
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfoExample" resultMap="BaseResultMap">
     <!--
@@ -210,7 +213,8 @@
       card_name, account_branch_name, account_number, 
       license_url, account_area, account_type, 
       taxpayer_registration_number, company_register_no, 
-      organization_code_url)
+      organization_code_url, work_card_valid_start_date, 
+      work_card_valid_end_date)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -233,7 +237,8 @@
       #{cardName,jdbcType=VARCHAR}, #{accountBranchName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
       #{licenseUrl,jdbcType=VARCHAR}, #{accountArea,jdbcType=VARCHAR}, #{accountType,jdbcType=SMALLINT}, 
       #{taxpayerRegistrationNumber,jdbcType=VARCHAR}, #{companyRegisterNo,jdbcType=VARCHAR}, 
-      #{organizationCodeUrl,jdbcType=VARCHAR})
+      #{organizationCodeUrl,jdbcType=VARCHAR}, #{workCardValidStartDate,jdbcType=TIMESTAMP}, 
+      #{workCardValidEndDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfo">
     <!--
@@ -437,6 +442,12 @@
       <if test="organizationCodeUrl != null">
         organization_code_url,
       </if>
+      <if test="workCardValidStartDate != null">
+        work_card_valid_start_date,
+      </if>
+      <if test="workCardValidEndDate != null">
+        work_card_valid_end_date,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -633,6 +644,12 @@
       </if>
       <if test="organizationCodeUrl != null">
         #{organizationCodeUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="workCardValidStartDate != null">
+        #{workCardValidStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workCardValidEndDate != null">
+        #{workCardValidEndDate,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -848,6 +865,12 @@
       <if test="record.organizationCodeUrl != null">
         organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR},
       </if>
+      <if test="record.workCardValidStartDate != null">
+        work_card_valid_start_date = #{record.workCardValidStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.workCardValidEndDate != null">
+        work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -923,7 +946,9 @@
       account_type = #{record.accountType,jdbcType=SMALLINT},
       taxpayer_registration_number = #{record.taxpayerRegistrationNumber,jdbcType=VARCHAR},
       company_register_no = #{record.companyRegisterNo,jdbcType=VARCHAR},
-      organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR}
+      organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR},
+      work_card_valid_start_date = #{record.workCardValidStartDate,jdbcType=TIMESTAMP},
+      work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
