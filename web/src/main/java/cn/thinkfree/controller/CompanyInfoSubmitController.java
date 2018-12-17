@@ -118,8 +118,8 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @MyRespBody
     @ApiOperation(value="前端--运营后台--公司管理--资质变更--办理--公司详情--公司资质变更审批回显。注：申请列表的申请事项如果是资质变更，则使用此接口--李阳")
     public MyRespBundle<PcAuditTemporaryInfo> findCompanyTemporaryInfo(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId){
-        PcAuditTemporaryInfo pcAuditTemporaryInfo = companySubmitService.findCompanyTemporaryInfo(companyId);
-        return sendJsonData(success, "操作成功", pcAuditTemporaryInfo);
+        AuditTemporaryInfoVO auditTemporaryInfoVO = companySubmitService.findCompanyTemporaryInfo(companyId);
+        return sendJsonData(success, "操作成功", auditTemporaryInfoVO);
     }
 
 

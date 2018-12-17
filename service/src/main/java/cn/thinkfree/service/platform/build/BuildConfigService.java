@@ -144,6 +144,14 @@ public interface BuildConfigService {
     List<BuildPayConfig> queryPayScheme(String projectNo);
 
     /**
+     * 根据方案编号与排期编号查询支付方案
+     * @param schemeNo 方案编号
+     * @param scheduleSort 排期编号
+     * @return 支付方案
+     */
+    BuildPayConfig queryBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort);
+
+    /**
      * 装饰公司启用施工方案
      *
      * @param companyId      公司ID

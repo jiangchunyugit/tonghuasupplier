@@ -93,7 +93,7 @@ public interface CompanySubmitService {
      * @param companyId
      * @return
      */
-    PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId);
+    AuditTemporaryInfoVO findCompanyTemporaryInfo(String companyId);
 
     /**
      * 公司详情

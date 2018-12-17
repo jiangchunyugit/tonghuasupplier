@@ -1,9 +1,8 @@
 package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.model.ProjectBigScheduling;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
-import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 
 import java.util.List;
 
@@ -87,4 +86,12 @@ public interface NewSchedulingService {
      * @return
      */
     MyRespBundle<List<String>> getPcCheckStage(String orderNo,Integer type);
+
+    /**
+     * 根据方案编号与排期编号查询排期信息
+     * @param schemeNo 方案编号
+     * @param scheduleSort 排期编号
+     * @return 排期信息
+     */
+    ProjectBigScheduling findBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort);
 }

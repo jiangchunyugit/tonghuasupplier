@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfoExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.AuditTemporaryInfoVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface PcAuditTemporaryInfoMapper {
@@ -60,5 +62,5 @@ public interface PcAuditTemporaryInfoMapper {
      * @param companyId
      * @return
      */
-    PcAuditTemporaryInfo findCompanyTemporaryInfo(@Param("companyId")String companyId);
+    AuditTemporaryInfoVO findCompanyTemporaryInfo(@Param("companyId")String companyId);
 }
