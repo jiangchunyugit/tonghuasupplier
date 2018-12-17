@@ -600,6 +600,13 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrders.getOrderNo(), optionUserId, optionUserName, reason);
         saveLog(DesignStateEnum.STATE_CLOSE_PLATFORM.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_CLOSE_PLATFORM.getState());
+        //记录状态日志
+        ProjectStageLog projectStageLog = new ProjectStageLog();
+        projectStageLog.setProjectNo(projectNo);
+        projectStageLog.setStage(DesignStateEnum.STATE_CLOSE_PLATFORM.getState());
+        projectStageLog.setCreateTime(new Date());
+        stageLogMapper.insert(projectStageLog);
+
     }
 
     /**
