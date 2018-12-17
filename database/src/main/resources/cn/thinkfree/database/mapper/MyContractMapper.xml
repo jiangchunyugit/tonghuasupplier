@@ -45,7 +45,7 @@
           </if>
           
           <if test="companyInfo != null and companyInfo !='' ">
-            and (c.company_name  like CONCAT('%',#{companyInfo},'%')  or   c.company_id  like CONCAT('%',#{companyInfo},'%')    )
+            and (p.company_name  like CONCAT('%',#{companyInfo},'%')  or   c.company_id  like CONCAT('%',#{companyInfo},'%')    )
           </if>
           
           <if test="province != null and province !='' ">

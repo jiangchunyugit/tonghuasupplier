@@ -246,7 +246,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     public Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
         Map<String, Object> map = new HashMap<>();
 
-        if(StringUtils.isBlank(pcApplyInfoSEO.getSiteCompanyId())){
+        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole()) && StringUtils.isBlank(pcApplyInfoSEO.getSiteCompanyId())){
             map.put("code", false);
             map.put("msg", "请选择门店!");
             return map;

@@ -475,10 +475,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				CompanyInfo record  = new CompanyInfo();
 				record.setAuditStatus(CompanyAuditStatus.SUCCESSJOIN.stringVal());
 				record.setDepositMoney(Integer.valueOf(deposistMoney));
-				CompanyInfoExample companyInfoex = new CompanyInfoExample();
-				companyInfoex.createCriteria().andCompanyIdEqualTo( companyId );
+				CompanyInfoExample exampleOne = new CompanyInfoExample();
+				exampleOne.createCriteria().andCompanyIdEqualTo( companyId );
 				/* 确认已交保证金 */
-				companyInfoMapper.updateByExampleSelective(record ,companyInfoex );
+				companyInfoMapper.updateByExampleSelective(record ,exampleOne);
 				
 				resmap.put("falg", "true");
 				resmap.put("msg", "成功");
@@ -792,22 +792,36 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					}
 				}
 			}
-
+            //查询公司
+			 CompanySubmitVo companyInfo = companySubmitService.findCompanyInfo(companyId);
+			if(companyInfo == null){
+				throw new RuntimeException("系统数据异常");
+			}
 			// 修改合同状态
 			ContractInfo record = new ContractInfo();
 			record.setContractStatus(ContractStatus.WaitAudit.shortVal());
 			record.setCompanyId(companyId);
-			if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))) {
-				Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
-				record.setStartTime(startTime);
-			} else {
-				return false;
-			}
-			if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))) {
-				Date endTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
-				record.setEndTime(endTime);
-			} else {
-				return false;
+			//根据公司状态
+			 if(companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.SJ.code)){
+				if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c03"))) {
+					Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c03"), "yyyy-mm-dd");
+					record.setStartTime(startTime);
+				}
+				if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c04"))) {
+				  Date endTime =
+					  DateUtil.formateToDate(contractClausevo.getParamMap().get("c04"), "yyyy-mm-dd");
+				  record.setEndTime(endTime);
+				}
+			}else if(companyInfo.getCompanyInfo().getRoleId().equals(CompanyConstants.RoleType.BD.code)){
+				 if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c08"))) {
+					 Date startTime = DateUtil.formateToDate(contractClausevo.getParamMap().get("c08"), "yyyy-mm-dd");
+					 record.setStartTime(startTime);
+				 }
+				 if (StringUtils.isNotBlank(contractClausevo.getParamMap().get("c09"))) {
+					 Date endTime =
+							 DateUtil.formateToDate(contractClausevo.getParamMap().get("c09"), "yyyy-mm-dd");
+					 record.setEndTime(endTime);
+				 }
 			}
 			record.setContractNumber(contractNumber);
 			ContractInfoExample example = new ContractInfoExample();
@@ -1162,6 +1176,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	}
 
 
+
 	@Override
 	public List<ContractInfo> getEnterContractBycompanyId( String companyId )
 	{
@@ -1171,7 +1186,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			ContractInfoExample example = new ContractInfoExample();
 			list.addAll( cxcontractInfoMapper.selectByExample( example ) );
 		}
-		return(list);
+		return list;
 	}
 
 
@@ -1218,29 +1233,29 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 		if ("SJ".equals(roleId)) {
 			for (String key : costTypeMap.keySet()) {
-				if (key.toString().equals("01")) {// 平台服务
+				if (String.valueOf(key).equals("01")) {// 平台服务
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setCostValue(String.valueOf(dbmap.get("c08")));
 					resList.add(costVo0);
-				} else if (key.toString().equals("02")) {
+				} else if (String.valueOf(key).equals("02")) {
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setCostValue(String.valueOf(dbmap.get("c11")));
 					costVo0.setList(ma.get(key));
 					resList.add(costVo0);
-				} else if (key.toString().equals("03")) {
+				} else if (String.valueOf(key).equals("03")) {
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setCostValue(String.valueOf(dbmap.get("c12")));
 					resList.add(costVo0);
 					costVo0.setList(ma.get(key));
-				} else if (key.toString().equals("04")) {
+				} else if (String.valueOf(key).equals("04")) {
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setCostValue(String.valueOf(dbmap.get("c15")));
 					costVo0.setList(ma.get(key));
@@ -1250,26 +1265,26 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		} else if ("DB".equals(roleId)) {
 
 			for (String key : costTypeMap.keySet()) {
-				if (key.toString().equals("01")) {// 平台服务
+				if (String.valueOf(key).equals("01")) {// 平台服务
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setList(ma.get(key));
 					resList.add(costVo0);
-				} else if (key.toString().equals("02")) {
+				} else if (String.valueOf(key).equals("02")) {
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setCostValue(String.valueOf(dbmap.get("c11")));
 					resList.add(costVo0);
-				} else if (key.toString().equals("03")) {// 结算比例
+				} else if (String.valueOf(key).equals("03")) {// 结算比例
 					ContractCostVo costVo0 = new ContractCostVo();
-					costVo0.setCostCode(key.toString());
+					costVo0.setCostCode(String.valueOf(key));
 					costVo0.setCostName(costTypeMap.get(key));
 					costVo0.setCostValue(String.valueOf(dbmap.get("c12")));
 					resList.add(costVo0);
-					costVo0.setList(ma.get(key));
-				} else if (key.toString().equals("04")) {
+					//costVo0.setList(ma.get(key));
+				} else if (String.valueOf(key).equals("04")) {
 					ContractCostVo costVo0 = new ContractCostVo();
 					costVo0.setCostCode(key.toString());
 					costVo0.setCostName(costTypeMap.get(key));
@@ -1439,19 +1454,18 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				}
 				record.setSignTime(new Date());// 插入时间
 				printInfoMes("合同审批调用 生成订单orderNumber{}}", orderNumber);
-				List<SyncOrderVO> listvo = thirdPartDateService.getOrderContract(orderNumber);
-				//for (int i = 0; i < listvo.size(); i++) {
+				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNumber);
 				CreateOrder order = new CreateOrder();
-				order.setData(listvo);
+				order.setData(syncOrderVo);
 				eventService.publish(order);
-				//}
+
 			} else {// 拒绝 插入拒绝原因
 				// 查询合同编号
 				UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-				String auditPersion = userVO == null ? "" : userVO.getName();
+				String auditPersonal = userVO == null ? "" : userVO.getName();
 				String auditAccount = userVO == null ? "" : userVO.getUsername();
 				/* 添加审核记录表 */
-				PcAuditInfo te = new PcAuditInfo("2", "1", auditPersion, status, new Date(), list.get(0).getCompanyId(),
+				PcAuditInfo te = new PcAuditInfo("2", "1", auditPersonal, status, new Date(), list.get(0).getCompanyId(),
 						cause, list.get(0).getContractNumber(), new Date(), auditAccount);
 				pcAuditInfoMapper.insertSelective(te);
 
@@ -1475,10 +1489,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			throw new RuntimeException("无法找到此订单合同信息");
 		}
 		//查询不通过的
-		PcAuditInfoExample auexample =new PcAuditInfoExample();
-		auexample.createCriteria().andCompanyIdEqualTo(list.get(0).getCompanyId())
+		PcAuditInfoExample exampleOne =new PcAuditInfoExample();
+		exampleOne.createCriteria().andCompanyIdEqualTo(list.get(0).getCompanyId())
 		.andContractNumberEqualTo(list.get(0).getContractNumber()).andAuditStatusEqualTo("0");
-		List<PcAuditInfo> aulist = pcAuditInfoMapper.selectByExample(auexample);
-		return aulist;
+		List<PcAuditInfo> auditList = pcAuditInfoMapper.selectByExample(exampleOne);
+		return auditList;
 	}
 }
