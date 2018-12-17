@@ -243,7 +243,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetails> bigList = projectBigSchedulingDetailsMapper.selectByExample(example);
-        if (bigList.size()==0){
+        if (bigList.size() == 0) {
             return RespData.error("此项目下无排期信息");
         }
         List<ProjectBigSchedulingDetailsVO> playBigList = BaseToVoUtils.getListVo(bigList, ProjectBigSchedulingDetailsVO.class);
@@ -288,11 +288,11 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         bigCriteria.andProjectNoEqualTo(projectNo);
         bigCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectBigSchedulingDetails> projectBigSchedulingDetailsList = projectBigSchedulingDetailsMapper.selectByExample(bigExample);
-        if (projectBigSchedulingDetailsList.size()==0){
+        if (projectBigSchedulingDetailsList.size() == 0) {
             return RespData.error("此项目不存在有效排期");
         }
         String schemeNo = projectBigSchedulingDetailsList.get(0).getSchemeNo();
-        if (schemeNo==null||schemeNo.isEmpty()){
+        if (schemeNo == null || schemeNo.isEmpty()) {
             return RespData.error("此排期不存在方案编号");
         }
         //将原数据置为失效
@@ -344,7 +344,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
                 detailsCriteria.andBigSortEqualTo(schedulingDetails.getBigSort());
                 int nextResult = projectBigSchedulingDetailsMapper.updateByExampleSelective(nextBig, detailsExample);
                 if (nextResult == 0) {
-                    return "修改排期下个阶段开始时间失败!";
+                    throw new RuntimeException("修改排期下个阶段开始时间失败!");
                 }
                 break;
             }
@@ -356,20 +356,22 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         detailsCriteriaTwo.andBigSortEqualTo(bigSort);
         int i = projectBigSchedulingDetailsMapper.updateByExampleSelective(bigSchedulingDetails, detailsExampleTwo);
         if (i == 0) {
-            return "修改排期完成时间失败!";
+            throw new RuntimeException("修改排期完成时间失败!");
         }
+
+        ProjectScheduling projectScheduling = new ProjectScheduling();
+        ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
+        ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
+        schedulingCriteria.andProjectNoEqualTo(projectNo);
+        schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         if (System.currentTimeMillis() > bigSchedulingDetail.getPlanEndTime().getTime()) {
-            ProjectScheduling projectScheduling = new ProjectScheduling();
-            ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
-            ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
-            schedulingCriteria.andProjectNoEqualTo(projectNo);
-            schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
             //修改延期时间
             projectScheduling.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingDetail.getPlanEndTime(), new Date()));
-            int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
-            if (result == 0) {
-                return "修改延期时间失败!";
-            }
+        }
+        projectScheduling.setRate(bigSchedulingDetail.getBigSort() + 1);
+        int result = projectSchedulingMapper.updateByExampleSelective(projectScheduling, schedulingExample);
+        if (result == 0) {
+            throw new RuntimeException("修改延期时间失败!");
         }
         return "执行成功!!";
     }
@@ -433,20 +435,21 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
 
     /**
      * 获取项目总排期信息
+     *
      * @param projectNo
      * @return
      */
     @Override
     public MyRespBundle<ProjectScheduling> getProjectScheduling(String projectNo) {
-        if (projectNo==null||projectNo.trim().isEmpty()){
-            return RespData.error("请检查参数:projectNo="+projectNo);
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("请检查参数:projectNo=" + projectNo);
         }
         ProjectSchedulingExample example = new ProjectSchedulingExample();
         ProjectSchedulingExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(example);
-        if (projectSchedulings.size()==0){
+        if (projectSchedulings.size() == 0) {
             return RespData.error("项目不存在");
         }
         return RespData.success(projectSchedulings.get(0));
@@ -454,6 +457,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
 
     /**
      * 修改延期天数(延期单审批通过后调用)
+     *
      * @param projectNo
      * @param delay
      * @return
@@ -465,15 +469,15 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(example);
-        if (projectSchedulings.size()==0){
+        if (projectSchedulings.size() == 0) {
             return RespData.error("项目不存在");
         }
         ProjectScheduling projectScheduling = new ProjectScheduling();
-        if (projectSchedulings.get(0).getDelay()!=null){
-            projectScheduling.setDelay(projectSchedulings.get(0).getDelay()-delay);
+        if (projectSchedulings.get(0).getDelay() != null) {
+            projectScheduling.setDelay(projectSchedulings.get(0).getDelay() - delay);
         }
         int i = projectSchedulingMapper.updateByExampleSelective(projectScheduling, example);
-        if (i==0){
+        if (i == 0) {
             return RespData.error("修改失败");
         }
         return RespData.success();

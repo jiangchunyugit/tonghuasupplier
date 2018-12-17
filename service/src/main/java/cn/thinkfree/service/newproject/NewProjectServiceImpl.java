@@ -354,66 +354,64 @@ public class NewProjectServiceImpl implements NewProjectService {
         Integer count = 0;
         Boolean result = false;
         for (ConstructionProjectVo projectVo : constructionProjectVos) {
-            boolean checkResult = afInstanceService.getCheckSuccess(projectVo.getProjectNo(), projectVo.getSort());
-            if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort == null && checkComplete == null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd) {
+            boolean checkResult = false;
+            if (projectVo.getSort() != null) {
+                checkResult = afInstanceService.getCheckSuccess(projectVo.getProjectNo(), projectVo.getSort());
+//                System.out.println("projectNo=" + projectVo.getProjectNo() + ";sort=" + projectVo.getSort() + "; result=" + checkResult);
+            }
+            if (checkComplete != null && checkComplete == 2) {
+                if (checkResult) {
+                    checkResult = false;
+                } else {
+                    checkResult = true;
+                }
+            }
+            if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort == null && checkComplete == null && projectVo.getDelay() != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
-                    count++;
                 }
+                count++;
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort == null && checkComplete == null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort())) {
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && projectVo.getSort() != null && projectVo.getDelay() != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
-                    count++;
                 }
+                count++;
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && checkSort.equals(projectVo.getSort()) && checkResult) {
-                //TODO 暂未添加传让接口  根据项目编号+sort 查询是否验收完成
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && projectVo.getSort() != null && projectVo.getDelay() != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
-                    count++;
                 }
+                count++;
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete == null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
-                    count++;
                 }
+                count++;
                 allProjects.add(projectVo);
                 result = true;
-            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort == null && checkComplete == null && schedulingSort.equals(projectVo.getSort())) {
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && projectVo.getSort() != null && projectVo.getDelay() != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
-                    count++;
                 }
-                allProjects.add(projectVo);
-                result = true;
-            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
-                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
-                    playProjects.add(projectVo);
-                    count++;
-                }
-                allProjects.add(projectVo);
-                result = true;
-            } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort != null && checkComplete != null && checkSort.equals(projectVo.getSort()) && checkResult) {
-                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
-                    playProjects.add(projectVo);
-                    count++;
-                }
+                count++;
                 allProjects.add(projectVo);
                 result = true;
             } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort == null && checkComplete == null) {
                 if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
                     playProjects.add(projectVo);
-                    count++;
                 }
+                count++;
                 allProjects.add(projectVo);
                 result = true;
             }
-
+        }
+        if (playProjects.size() == 0) {
+            return RespData.success(new PageVo<>());
         }
         if (!result) {
             return RespData.error("请检查入参:userId=" + userId + ";delayBegin=" + delayBegin + ";delayEnd=" + delayEnd + ";=schedulingSort=" + schedulingSort + ";checkSort=" + checkSort + ";checkComplete=" + checkComplete);
