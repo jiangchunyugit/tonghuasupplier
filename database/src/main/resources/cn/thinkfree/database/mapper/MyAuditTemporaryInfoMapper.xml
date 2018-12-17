@@ -6,6 +6,9 @@
         <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
         <result column="city_name" jdbcType="VARCHAR" property="cityName" />
         <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+        <result column="register_province_name" jdbcType="VARCHAR" property="registerProvinceName" />
+        <result column="register_city_name" jdbcType="VARCHAR" property="registerCityName" />
+        <result column="register_area_name" jdbcType="VARCHAR" property="registerAreaName" />
     </resultMap>
 
     <sql id="My_Base_Column_List">
@@ -20,7 +23,8 @@
         b.change_status, b.change_date, b.account_province, b.account_city, b.account_district, b.account_name,
         b.card_name, b.account_branch_name, b.account_number, b.license_url, b.account_area, b.account_type,
         b.taxpayer_registration_number, b.company_register_no, b.organization_code_url,
-        province.province_name, city.city_name, area.area_name
+        province.province_name, city.city_name, area.area_name, registerProvince.province_name register_province_name,
+				registerCity.city_name register_city_name, registerArea.area_name register_area_name
     </sql>
     <select id="findCompanyTemporaryInfo" parameterType="java.lang.String" resultMap="MyBaseResultMap">
     SELECT
@@ -34,6 +38,9 @@
         left join province province on b.province_code = province.province_code
         left join city city on city.city_code = b.city_code
         left join area area on area.area_code = b.area_code
+        left join province registerProvince on b.register_province_code = registerProvince.province_code
+        left join city registerCity on registerCity.city_code = b.register_city_code
+        left join area registerArea on registerArea.area_code = b.register_area_code
     WHERE
         b.company_id = #{companyId}
 
