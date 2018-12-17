@@ -66,10 +66,10 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
             if (stage == ConstructionStateEnum.STATE_500.getState() || stage == ConstructionStateEnum.STATE_510.getState()) {
                 waitDistributionOrder++;//待派单
             }
-            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_530.getState()) {
                 waitReceipt++;//待接单
             }
-            if (stage > ConstructionStateEnum.STATE_520.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+            if (stage > ConstructionStateEnum.STATE_530.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
                 alreadyReceipt++;//已接单
             }
         }

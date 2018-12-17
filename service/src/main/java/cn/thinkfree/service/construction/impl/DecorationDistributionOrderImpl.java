@@ -72,10 +72,10 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_530.getState()) {
+            if (stage == ConstructionStateEnum.STATE_540.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnum.STATE_550.getState()) {
+            if (stage == ConstructionStateEnum.STATE_560.getState()) {
                 waitSign++;
             }
         }

@@ -3,16 +3,15 @@ package cn.thinkfree.service.newproject;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.BasicsDataParentEnum;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.DesignStateEnum;
-import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.core.constants.*;
+import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
+import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -28,6 +27,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,39 +43,41 @@ import java.util.*;
 @Service
 public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
-    OrderUserMapper orderUserMapper;
+    private OrderUserMapper orderUserMapper;
     @Autowired
-    ProjectMapper projectMapper;
+    private ProjectMapper projectMapper;
     @Autowired
-    NewOrderService newOrderService;
+    private NewOrderService newOrderService;
     @Autowired
-    ProjectDataMapper projectDataMapper;
+    private ProjectDataMapper projectDataMapper;
     @Autowired
-    DesignerOrderMapper designerOrderMapper;
+    private DesignerOrderMapper designerOrderMapper;
     @Autowired
-    ConstructionOrderMapper constructionOrderMapper;
+    private ConstructionOrderMapper constructionOrderMapper;
     @Autowired
-    EmployeeMsgMapper employeeMsgMapper;
+    private EmployeeMsgMapper employeeMsgMapper;
     @Autowired
-    OrderApplyRefundMapper orderApplyRefundMapper;
+    private OrderApplyRefundMapper orderApplyRefundMapper;
     @Autowired
-    NewOrderUserService newOrderUserService;
+    private NewOrderUserService newOrderUserService;
     @Autowired
-    ProjectStageLogMapper projectStageLogMapper;
+    private ProjectStageLogMapper projectStageLogMapper;
     @Autowired
-    DesignDispatchService designDispatchService;
+    private DesignDispatchService designDispatchService;
     @Autowired
-    CloudService cloudService;
+    private CloudService cloudService;
     @Autowired
-    ConstructionStateService constructionStateService;
+    private ConstructionStateService constructionStateService;
     @Autowired
-    ProjectUserService projectUserService;
+    private ProjectUserService projectUserService;
     @Autowired
-    UserCenterService userCenterService;
+    private UserCenterService userCenterService;
     @Autowired
-    BasicsDataMapper basicsDataMapper;
+    private BasicsDataMapper basicsDataMapper;
     @Autowired
-    AfInstanceService afInstanceService;
+    private AfInstanceService afInstanceService;
+    @Autowired
+    private ConstructOrderService constructOrderService;
     @Autowired
     ProvinceMapper provinceMapper;
     @Autowired
@@ -146,8 +148,8 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
                 projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-                projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
-                projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
+                projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
+                projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             } else {
                 projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
                 projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -228,8 +230,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProgressIsShow(true);
             //添加进度信息
             projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-            projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
-            projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(4));
+            projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
+            projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
         } else {
             projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
             projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
@@ -332,11 +334,12 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
-            List<Map<String, Object>> maps1 = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_CONSUMER.getValue());
-            for (Map<String, Object> map : maps1) {
+            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+            List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage());
+            for (OrderStatusDTO orderStatus : states) {
                 OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
-                orderTaskSortVo.setSort((Integer) map.get("key"));
-                orderTaskSortVo.setName(map.get("val").toString());
+                orderTaskSortVo.setSort(orderStatus.getStatus());
+                orderTaskSortVo.setName(orderStatus.getName());
                 orderTaskSortVoList1.add(orderTaskSortVo);
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
@@ -354,7 +357,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
             }
-            constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(projects.get(0).getPlanStartTime(), projects.get(0).getPlanEndTime()));
+            constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(project.getPlanStartTime(), project.getPlanEndTime()));
             //存放人员信息
             List<PersionVo> constructionPersionList = employeeMsgMapper.selectAllByUserId(designerOrder.getUserId());
             for (PersionVo persionVo1 : constructionPersionList) {
@@ -549,7 +552,7 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomData(CaseDataVo dataVo) {
-        if (dataVo.getUserId() == null || dataVo.getUserId().trim().isEmpty()) {
+        if (StringUtils.isBlank(dataVo.getUserId())) {
             return RespData.error("请给userid赋值");
         }
         if (dataVo.getHsDesignId() == null || dataVo.getHsDesignId().trim().isEmpty()) {

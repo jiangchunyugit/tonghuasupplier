@@ -60,13 +60,13 @@ public class ConstructionOrderOperateImpl implements ConstructionOrderOperate {
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_540.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnum.STATE_540.getState()) {
+            if (stage == ConstructionStateEnum.STATE_560.getState()) {
                 waitSign++;
             }
-            if ((stage >= ConstructionStateEnum.STATE_600.getState() && stage <= ConstructionStateEnum.STATE_690.getState())) {
+            if ((stage >= ConstructionStateEnum.STATE_610.getState() && stage <= ConstructionStateEnum.STATE_650.getState())) {
                 waitPay++;
             }
         }
