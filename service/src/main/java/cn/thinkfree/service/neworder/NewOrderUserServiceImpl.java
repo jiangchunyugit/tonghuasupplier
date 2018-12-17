@@ -21,6 +21,7 @@ import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.HttpUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -581,8 +582,8 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
             }
         }
         //模糊业主
-        if (designContractVO.getOwnerName() != null || designContractVO.getOwnerPhone() != null) {
-            if(designContractVO.getOwnerName() != null){
+        if (StringUtils.isNotBlank(designContractVO.getOwnerName())  || StringUtils.isNotBlank(designContractVO.getOwnerPhone())) {
+            if(StringUtils.isNotBlank(designContractVO.getOwnerName())){
                 for (int i = 0; i < voList.size(); i++) {
                     if (voList.get(i).getOwnerName().contains(designContractVO.getOwnerName())) {
                         newList.add(voList.get(i));

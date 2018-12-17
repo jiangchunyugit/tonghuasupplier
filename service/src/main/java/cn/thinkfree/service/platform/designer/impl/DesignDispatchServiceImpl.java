@@ -600,6 +600,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrders.getOrderNo(), optionUserId, optionUserName, reason);
         saveLog(DesignStateEnum.STATE_CLOSE_PLATFORM.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_CLOSE_PLATFORM.getState());
+
     }
 
     /**
