@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,7 +78,6 @@ public class NewProjectServiceImpl implements NewProjectService {
     private AfInstanceService afInstanceService;
     @Autowired
     private ConstructOrderService constructOrderService;
-    AfInstanceService afInstanceService;
     @Autowired
     ProvinceMapper provinceMapper;
     @Autowired
@@ -552,11 +552,22 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomData(CaseDataVo dataVo) {
-        if (dataVo.getUserId().isEmpty()) {
+        if (StringUtils.isBlank(dataVo.getUserId())) {
             return RespData.error("请给userid赋值");
         }
         if (dataVo.getHsDesignId() == null || dataVo.getHsDesignId().trim().isEmpty()) {
             return RespData.error("hsDesignId 不可为空");
+        }
+        if (dataVo.getProjectNo() == null || dataVo.getProjectNo().trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空");
+        }
+        ProjectDataExample dataExample = new ProjectDataExample();
+        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+        dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
+        dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
+        List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
+        if (projectOldDatas.size() > 0) {
+            return RespData.error("请选择本项目的案例资料");
         }
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
