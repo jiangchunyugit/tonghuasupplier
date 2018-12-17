@@ -4514,6 +4514,126 @@ public class PcAuditTemporaryInfoExample extends cn.thinkfree.core.model.Abstrac
             addCriterion("organization_code_url not between", value1, value2, "organizationCodeUrl");
             return (Criteria) this;
         }
+
+        public Criteria andWorkCardValidStartDateIsNull() {
+            addCriterion("work_card_valid_start_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateIsNotNull() {
+            addCriterion("work_card_valid_start_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date =", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateNotEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date <>", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateGreaterThan(Date value) {
+            addCriterion("work_card_valid_start_date >", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date >=", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateLessThan(Date value) {
+            addCriterion("work_card_valid_start_date <", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateLessThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date <=", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateIn(List<Date> values) {
+            addCriterion("work_card_valid_start_date in", values, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateNotIn(List<Date> values) {
+            addCriterion("work_card_valid_start_date not in", values, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_start_date between", value1, value2, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateNotBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_start_date not between", value1, value2, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateIsNull() {
+            addCriterion("work_card_valid_end_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateIsNotNull() {
+            addCriterion("work_card_valid_end_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date =", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateNotEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date <>", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateGreaterThan(Date value) {
+            addCriterion("work_card_valid_end_date >", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date >=", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateLessThan(Date value) {
+            addCriterion("work_card_valid_end_date <", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateLessThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date <=", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateIn(List<Date> values) {
+            addCriterion("work_card_valid_end_date in", values, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateNotIn(List<Date> values) {
+            addCriterion("work_card_valid_end_date not in", values, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_end_date between", value1, value2, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateNotBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_end_date not between", value1, value2, "workCardValidEndDate");
+            return (Criteria) this;
+        }
     }
 
     /**

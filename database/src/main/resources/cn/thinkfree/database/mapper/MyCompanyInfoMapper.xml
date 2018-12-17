@@ -32,7 +32,7 @@
         info.phone, info.business_photo_url, info.work_photo_url, info.deposit_money, info.lbs, info.is_delete, info.city_code,
         info.area_code, info.telephone, info.content, info.audit_status, info.lefal_card_up_url, info.lefal_card_down_url,
         info.work_card_from, info.work_card_indate, info.update_time, info.work_code, info.company_classify, info.site_company_id,
-        info.business_type, info.platform_type
+        info.business_type, info.platform_type, info.work_card_valid_start_date, info.work_card_valid_end_date
     </sql>
 
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
