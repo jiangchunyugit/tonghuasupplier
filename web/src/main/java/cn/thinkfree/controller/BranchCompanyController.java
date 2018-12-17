@@ -1,9 +1,12 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.SysLogAction;
+import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.constants.OneTrue;
 import cn.thinkfree.database.constants.UserEnabled;
 import cn.thinkfree.database.model.BranchCompany;
@@ -48,6 +51,7 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/saveBranchCompany", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="分公司站点：创建分站")
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PROJECT,desc = "添加省分站")
     public MyRespBundle<String> saveBranchCompany(@ApiParam("分公司信息") BranchCompanyVO branchCompanyVO){
         BeanValidator.validate(branchCompanyVO,Severitys.Insert.class);
         if (branchCompanyService.checkRepeat(branchCompanyVO)) {
@@ -65,6 +69,7 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/updateBranchCompany", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="分公司站点：编辑分站(id不可为空)")
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PROJECT,desc = "编辑省分站")
     public MyRespBundle<String> updateBranchCompany(@ApiParam("分公司信息")BranchCompanyVO branchCompanyVO){
         BeanValidator.validate(branchCompanyVO, Severitys.Update.class);
         if (branchCompanyService.checkRepeat(branchCompanyVO)) {
@@ -161,6 +166,7 @@ public class BranchCompanyController extends AbsBaseController{
     @PostMapping(value = "/branchCompanyDelete")
     @MyRespBody
     @ApiOperation(value="分公司站点：删除")
+    @MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_PROJECT,desc = "删除省分站")
     public MyRespBundle<String> branchCompanyDelete(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BranchCompany branchCompany = new BranchCompany();
@@ -178,6 +184,7 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/branchCompanyEnable", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="分公司站点：启用")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "启用省分站")
     public MyRespBundle<String> branchCompanyEnable(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BranchCompany branchCompany = new BranchCompany();
@@ -195,6 +202,7 @@ public class BranchCompanyController extends AbsBaseController{
     @RequestMapping(value = "/branchCompanyDisable", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="分公司站点：禁用")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "禁用省分站")
     public MyRespBundle<PageInfo<String>> branchCompanyDisable(@ApiParam("分公司id")@RequestParam(value = "id") Integer id){
 
         BranchCompany branchCompany = new BranchCompany();
@@ -216,7 +224,7 @@ public class BranchCompanyController extends AbsBaseController{
 
     @GetMapping(value = "/branchCompanyByIdList")
     @MyRespBody
-    @ApiOperation(value = "(权限)运营平台---站点信息")
+    @ApiOperation(value = "(数据权限)运营平台---站点信息")
     public MyRespBundle<List<BranchCompany>> branchCompanyByIdList() {
 
         return sendJsonData(ResultMessage.SUCCESS, branchCompanyService.getBranchCompanyByIdList());

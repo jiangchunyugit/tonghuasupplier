@@ -34,10 +34,11 @@
     <result column="city_branch_ebsid" jdbcType="INTEGER" property="cityBranchEbsid" />
     <result column="mail" jdbcType="VARCHAR" property="mail" />
     <result column="mark" jdbcType="VARCHAR" property="mark" />
-    <result column="branch_comp_ebsid" jdbcType="INTEGER" property="branchCompEbsid" />
-    <result column="branch_comp_id" jdbcType="INTEGER" property="branchCompId" />
-    <result column="province_code" jdbcType="SMALLINT" property="provinceCode" />
-    <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
+    <result column="branch_comp_ebsid" jdbcType="VARCHAR" property="branchCompEbsid" />
+    <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
+    <result column="province_code" jdbcType="VARCHAR" property="provinceCode" />
+    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+    <result column="city_branch_code" jdbcType="VARCHAR" property="cityBranchCode" />
   </resultMap>
 
   <resultMap id="ProvinceResultMap" type="cn.thinkfree.database.model.Province">
@@ -76,6 +77,9 @@
        is_del = 2
       <if test="branchCompanyName != null and branchCompanyName != ''">
         and company_name = #{branchCompanyName}
+      </if>
+      <if test="branchCompanyCode != null and branchCompanyCode != ''">
+        and branch_company_code = #{branchCompanyCode}
       </if>
       <if test="legalName != null and legalName != ''">
         and (legal_name like #{legalName} OR legal_phone like #{legalName})

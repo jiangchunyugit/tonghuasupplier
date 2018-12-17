@@ -90,15 +90,26 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         if(paramAgencyList != null  && paramAgencyList.size() > 0 ){
             try {
                 paramAgencyList.forEach(a ->{
-                    //生成合同编号
-                   String contractNumber =  this.getOrderContract();
-                    a.getAgencyContract().setContractNumber(contractNumber);
-                    a.getAgencyContractTerms().setContractNumber(contractNumber);
-                    a.getAgencyContract().setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
-                    a.getAgencyContract().setCreateTime(new Date());
-                    a.getAgencyContract().setUpdateTime(new Date());
-                    agencyContractMapper.insertSelective(a.getAgencyContract());
-                    agencyContractTermsMapper.insertSelective(a.getAgencyContractTerms());
+                    if(StringUtils.isEmpty(a.getAgencyContract().getContractNumber())){
+                        //生成合同编号
+                        String contractNumber =  this.getOrderContract();
+                        a.getAgencyContract().setContractNumber(contractNumber);
+                        a.getAgencyContractTerms().setContractNumber(contractNumber);
+                        a.getAgencyContract().setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
+                        a.getAgencyContract().setCreateTime(new Date());
+                        a.getAgencyContract().setUpdateTime(new Date());
+                        agencyContractMapper.insertSelective(a.getAgencyContract());
+                        agencyContractTermsMapper.insertSelective(a.getAgencyContractTerms());
+                    }else{
+                        a.getAgencyContract().setUpdateTime(new Date());
+                        AgencyContractExample example = new AgencyContractExample();
+                        example.createCriteria().andContractNumberEqualTo(a.getAgencyContract().getContractNumber());
+                        agencyContractMapper.updateByExampleSelective(a.getAgencyContract(),example);
+                        AgencyContractTermsExample example1 = new AgencyContractTermsExample();
+                        example1.createCriteria().andContractNumberEqualTo(a.getAgencyContract().getContractNumber());
+                        agencyContractTermsMapper.updateByExampleSelective(a.getAgencyContractTerms(),example1);
+                    }
+
                 });
             } catch (Exception e) {
                 e.printStackTrace();
@@ -210,9 +221,9 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
 
     /***
      * pdf 生成
-     * @param companyId
+     * @param
      * @param contractNumber
-     * @param status
+     * @param
      * @return
      */
     @Override

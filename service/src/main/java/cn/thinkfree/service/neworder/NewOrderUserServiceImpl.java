@@ -181,6 +181,10 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
 
         DesignerOrderExample example = new DesignerOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(example);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         return designerOrderMapper.updateByExampleSelective(DesignerOrder, example);
     }
 
@@ -261,6 +265,10 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
         DesignerOrder.setOrderStage(orderConfirmationVO.getOrderStage().intValue());
         DesignerOrderExample example = new DesignerOrderExample();
         example.createCriteria().andProjectNoEqualTo(orderConfirmationVO.getProjectNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(example);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         return designerOrderMapper.updateByExampleSelective(DesignerOrder, example);
     }
 

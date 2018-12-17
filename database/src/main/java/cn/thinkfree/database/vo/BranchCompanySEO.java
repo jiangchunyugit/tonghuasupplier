@@ -23,6 +23,17 @@ public class BranchCompanySEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("分公司名称")
     private String branchCompanyName;
 
+    @ApiModelProperty("分公司编号")
+    private String branchCompanyCode;
+
+    public String getBranchCompanyCode() {
+        return branchCompanyCode;
+    }
+
+    public void setBranchCompanyCode(String branchCompanyCode) {
+        this.branchCompanyCode = branchCompanyCode;
+    }
+
     public String getLegalName() {
         return legalName;
     }

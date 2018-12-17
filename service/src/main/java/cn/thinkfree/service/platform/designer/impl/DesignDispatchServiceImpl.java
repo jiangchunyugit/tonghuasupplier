@@ -24,6 +24,7 @@ import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.*;
 import com.github.pagehelper.PageHelper;
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -590,6 +591,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_CLOSE_PLATFORM.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrders.getOrderNo());
+        List<DesignerOrder> designerOrderList = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrderList.size() >0 && designerOrderList.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //记录操作日志
         saveOptionLog(designerOrders.getOrderNo(), optionUserId, optionUserName, reason);
@@ -619,6 +624,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //记录操作日志
         String remark = "指派订单给公司【" + companyId + "】";
@@ -671,6 +680,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_1.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //记录操作日志
         String remark = "公司编号为【" + companyId + "】的公司拒绝接单，拒绝原因：" + reason;
@@ -704,6 +717,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_20.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给设计师
         //记录操作日志
@@ -741,6 +758,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_10.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给设计师
         //记录操作日志
@@ -776,6 +797,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_30.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给设计师
         //记录操作日志
@@ -819,6 +844,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setVolumeRoomMoney(MathUtil.getFen(appointmentAmount));
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给业主
         //记录操作日志
@@ -896,6 +925,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(orderState);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给业主
         //记录操作日志
@@ -926,6 +959,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(orderState);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给业主
         //记录操作日志
@@ -954,6 +991,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(DesignStateEnum.STATE_70.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrders.getOrderNo());
+        List<DesignerOrder> designerOrderList = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrderList.size() >0 && designerOrderList.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给业主
         //记录操作日志
@@ -995,6 +1036,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(stateEnum.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给业主
         //记录操作日志
@@ -1063,6 +1108,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         updateOrder.setOrderStage(stateEnum.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() >0 && designerOrders.get(0).getComplaintState() == 2){
+            throw new RuntimeException("客诉处理中");
+        }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
         //TODO 需要发出通知给业主
         //记录操作日志
