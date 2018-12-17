@@ -82,6 +82,10 @@ public class NewProjectServiceImpl implements NewProjectService {
     CityMapper cityMapper;
     @Autowired
     AreaMapper areaMapper;
+    @Autowired
+    ProjectQuotationMapper projectQuotationMapper;
+    @Autowired
+    ProjectMessageMapper projectMessageMapper;
 
 
     /**
@@ -217,6 +221,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         Project project = projects.get(0);
         ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class, BaseToVoUtils.getProjectMap());
         projectVo.setAddress(getProjectAdress(projectNo));
+        //存放跑马灯消息
+        projectVo.setMessage(getMessage(project.getProjectNo(), project.getStage(), userId));
         //添加进度展示
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
@@ -279,7 +285,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
         designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
-        designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(),designerOrder.getOrderNo(), userId));
+        designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         for (DesignStateEnum designStateEnum : allCancelState) {
             if (project.getStage().equals(designStateEnum.getState())) {
@@ -543,11 +549,22 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> confirmVolumeRoomData(CaseDataVo dataVo) {
-        if (dataVo.getUserId().isEmpty()) {
+        if (dataVo.getUserId() == null || dataVo.getUserId().trim().isEmpty()) {
             return RespData.error("请给userid赋值");
         }
         if (dataVo.getHsDesignId() == null || dataVo.getHsDesignId().trim().isEmpty()) {
             return RespData.error("hsDesignId 不可为空");
+        }
+        if (dataVo.getProjectNo() == null || dataVo.getProjectNo().trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空");
+        }
+        ProjectDataExample dataExample = new ProjectDataExample();
+        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+        dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
+        dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
+        List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
+        if (projectOldDatas.size() > 0) {
+            return RespData.error("请选择本项目的案例资料");
         }
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
@@ -802,6 +819,44 @@ public class NewProjectServiceImpl implements NewProjectService {
         builder.append(project.getAddressDetail());
         return builder.toString();
 
+    }
+
+    /**
+     * 获取跑马灯信息
+     *
+     * @param projectNo
+     * @param orderStage
+     * @param userId
+     * @return
+     */
+    public String getMessage(String projectNo, Integer orderStage, String userId) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return "";
+        }
+        if (orderStage == null) {
+            return "";
+        }
+        if (userId == null || userId.trim().isEmpty()) {
+            return "";
+        }
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andUserIdEqualTo(userId);
+        userCriteria.andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() == 0) {
+            return "";
+        }
+        ProjectMessageExample example = new ProjectMessageExample();
+        ProjectMessageExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectStageEqualTo(orderStage);
+        criteria.andRoleCodeEqualTo(orderUsers.get(0).getRoleCode());
+        criteria.andIsSendEqualTo(1);
+        List<ProjectMessage> projectMessages = projectMessageMapper.selectByExample(example);
+        if (projectMessages.size() == 0) {
+            return "";
+        }
+        return projectMessages.get(0).getContent();
     }
 
 }
