@@ -512,6 +512,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
             EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
+            msgVo.setRealName(employeeMsg.getRealName());
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -568,6 +569,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
             EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
+            msgVo.setRealName(employeeMsg.getRealName());
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -691,6 +693,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
             EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
+            msgVo.setRealName(employeeMsg.getRealName());
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
@@ -738,6 +741,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
             String roleName = roleMap.get(employeeMsg.getRoleCode());
             EmployeeMsgVo msgVo = getEmployeeMsgVo(roleName, cardTypeMap, countryCodeMap, employeeMsg, userMsgVo, provinceMap, cityMap, areaMap);
+            msgVo.setRealName(employeeMsg.getRealName());
             employeeMsgVos.add(msgVo);
         }
         PageVo<List<EmployeeMsgVo>> pageVo = new PageVo<>();
