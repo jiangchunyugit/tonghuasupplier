@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.PcAuditTemporaryInfoMapper">
 
+    <resultMap id="MyBaseResultMap" type="cn.thinkfree.database.vo.AuditTemporaryInfoVO" extends="BaseResultMap">
+        <result column="province_name" jdbcType="VARCHAR" property="provinceName" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
+        <result column="area_name" jdbcType="VARCHAR" property="areaName" />
+    </resultMap>
+
     <sql id="My_Base_Column_List">
         b.id, b.company_id, b.company_name, b.role_id, b.province_code, b.address, b.legal_name, b.legal_phone,
         b.legal_id_card, b.business_code, b.organization_code, b.tax_code, b.is_check, b.create_time,
@@ -13,9 +19,10 @@
         b.is_three_to_one, b.tax_code_photo_url, b.contact_name, b.contact_phone, b.is_taxpayer, b.comapny_nature,
         b.change_status, b.change_date, b.account_province, b.account_city, b.account_district, b.account_name,
         b.card_name, b.account_branch_name, b.account_number, b.license_url, b.account_area, b.account_type,
-        b.taxpayer_registration_number, b.company_register_no, b.organization_code_url
+        b.taxpayer_registration_number, b.company_register_no, b.organization_code_url,
+        province.province_name, city.city_name, area.area_name
     </sql>
-    <select id="findCompanyTemporaryInfo" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="findCompanyTemporaryInfo" parameterType="java.lang.String" resultMap="MyBaseResultMap">
     SELECT
         <include refid="My_Base_Column_List" />
     FROM
@@ -24,6 +31,9 @@
         FROM pc_audit_temporary_info GROUP BY company_id ) d
         ON d.company_id = b.company_id
         AND b.change_date = d.change_date
+        left join province province on b.province_code = province.province_code
+        left join city city on city.city_code = b.city_code
+        left join area area on area.area_code = b.area_code
     WHERE
         b.company_id = #{companyId}
 

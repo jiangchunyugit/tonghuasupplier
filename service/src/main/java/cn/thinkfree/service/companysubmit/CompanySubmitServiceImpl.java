@@ -384,10 +384,10 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 	}
 
 	@Override
-	public PcAuditTemporaryInfo findCompanyTemporaryInfo(String companyId) {
-		PcAuditTemporaryInfo pcAuditTemporaryInfo = pcAuditTemporaryInfoMapper.findCompanyTemporaryInfo(companyId);
+	public AuditTemporaryInfoVO findCompanyTemporaryInfo(String companyId) {
+		AuditTemporaryInfoVO auditTemporaryInfoVO = pcAuditTemporaryInfoMapper.findCompanyTemporaryInfo(companyId);
 
-		return pcAuditTemporaryInfo;
+		return auditTemporaryInfoVO;
 	}
 
 	/**
@@ -401,8 +401,6 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
 		List<String> relationMap = null;
-//		relationMap.add("10000000");
-//		companyListSEO.setRelationMap(relationMap);
 		if(userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null){
 			if(!UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
 				if(userVO != null){
