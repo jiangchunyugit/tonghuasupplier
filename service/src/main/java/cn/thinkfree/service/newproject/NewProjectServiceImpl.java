@@ -135,14 +135,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<ProjectVo> projectVoList = new ArrayList<>();
         for (Project project : projects) {
             ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
-            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
-                projectVo.setAgreeButto(true);
-                projectVo.setRefuseButton(true);
-            } else {
-                projectVo.setAgreeButto(false);
-                projectVo.setRefuseButton(false);
-            }
-            projectVo.setAddress(getProjectAdress(project.getProjectNo()));
             //添加业主信息
             PersionVo owner = new PersionVo();
             try {
@@ -153,7 +145,18 @@ public class NewProjectServiceImpl implements NewProjectService {
                 e.printStackTrace();
                 log.info("调取人员信息失败!");
             }
+
+            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
+                projectVo.setAgreeButto(true);
+                projectVo.setRefuseButton(true);
+                owner.setPhone(null);
+            } else {
+                projectVo.setAgreeButto(false);
+                projectVo.setRefuseButton(false);
+            }
             projectVo.setOwner(owner);
+            projectVo.setAddress(getProjectAdress(project.getProjectNo()));
+
             //添加进度展示
             if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
@@ -1152,6 +1155,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @param projectNo
      * @return
      */
+    @Override
     public String getProjectAdress(String projectNo) {
         StringBuilder builder = new StringBuilder();
         ProjectExample example = new ProjectExample();

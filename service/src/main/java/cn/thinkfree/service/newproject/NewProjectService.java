@@ -154,6 +154,14 @@ public interface NewProjectService {
     MyRespBundle<ProjectScreenVo> getProjectScreen(String userId, String projectNo);
 
     /**
+     * 根据项目编号获取地址信息
+     *
+     * @param projectNo
+     * @return
+     */
+    String getProjectAdress(String projectNo);
+
+    /**
      * 施工端项目列表--筛选
      *
      * @param pageSize
