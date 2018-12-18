@@ -22,13 +22,14 @@ public interface EmployeeService {
     void reviewEmployee(String userId, int authState, String reason);
 
     /**
-     * 处理员工申请
+     * 发起员工申请
      *
      * @param userId             用户ID
      * @param employeeApplyState 员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
      * @param companyId          公司ID
+     * @param reason             解约原因
      */
-    void employeeApply(String userId, int employeeApplyState, String companyId);
+    void employeeApply(String userId, int employeeApplyState, String companyId, String reason);
 
     /**
      * 处理申请

@@ -33,6 +33,8 @@ public class EmployeeApplyVo {
     private String certificatePhotoUrl3;
     @ApiModelProperty("员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
     private Integer employeeApplyState;
+    @ApiModelProperty("解约原因")
+    private String reason;
 
     public Integer getEmployeeApplyState() {
         return employeeApplyState;
@@ -136,5 +138,13 @@ public class EmployeeApplyVo {
 
     public void setCertificatePhotoUrl3(String certificatePhotoUrl3) {
         this.certificatePhotoUrl3 = certificatePhotoUrl3;
+    }
+
+    public void setReason(String reason) {
+        this.reason = reason;
+    }
+
+    public String getReason() {
+        return reason;
     }
 }

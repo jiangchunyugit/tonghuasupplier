@@ -83,7 +83,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public void employeeApply(String userId, int employeeApplyState, String companyId) {
+    public void employeeApply(String userId, int employeeApplyState, String companyId, String reason) {
         if (employeeApplyState != 1 && employeeApplyState != 4) {
             throw new RuntimeException("申请状态异常");
         }
@@ -93,7 +93,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         checkCompanyExit(companyId);
         if (employeeApplyState == 4) {
-            dissolutionApply(userId, employeeApplyState, companyId);
+            dissolutionApply(userId, employeeApplyState, companyId, reason);
         } else if (employeeApplyState == 1) {
             EmployeeMsg employeeMsg = checkEmployeeMsg(userId);
             if(employeeMsg.getAuthState() != 2){
@@ -140,7 +140,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeMsg;
     }
 
-    private void dissolutionApply(String userId, int employeeApplyState, String companyId) {
+    private void dissolutionApply(String userId, int employeeApplyState, String companyId, String reason) {
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -157,6 +157,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         applyLog.setDealState(2);
         applyLog.setUserId(userId);
         applyLog.setCompanyId(companyId);
+        applyLog.setRemark(reason);
         res = applyLogMapper.insertSelective(applyLog);
         logger.info("保存用户申请记录：res={}", res);
     }
@@ -635,6 +636,7 @@ public class EmployeeServiceImpl implements EmployeeService {
             applyVo.setDealState(applyLog.getDealState());
             applyVo.setDealUserName(applyLog.getDealUserId());
             applyVo.setUserId(applyLog.getUserId());
+            applyVo.setReason(applyLog.getRemark());
             applyVos.add(applyVo);
         }
         PageVo<List<EmployeeApplyVo>> pageVo = new PageVo<>();

@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.thinkfree.database.model.FundsCompanyCash;
+import cn.thinkfree.database.model.OrderContract;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
@@ -227,4 +228,9 @@ public interface ContractService {
      * 
      */
     List<PcAuditInfo> getAuditInfoList(String orderNumber);
+
+    /**
+     *  根据订单编号查询订单合同
+     */
+    cn.thinkfree.database.pcvo.ContractVo   getOrderContractByOrderNo(String orderNumber);
 }

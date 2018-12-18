@@ -246,7 +246,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> delBasisConstruction(String id) {
         ProjectQuotationRoomsConstruct construct = projectQuotationRoomsConstructMapper.selectByPrimaryKey(id);
         if (construct == null) {
@@ -254,12 +253,17 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         construct.setStatus(2);
         projectQuotationRoomsConstructMapper.updateByPrimaryKeySelective(construct);
-        updateRoom(construct.getProjectNo());
+        try{
+            updateRoom(construct.getProjectNo());
+        }catch (Exception e){
+            construct.setStatus(1);
+            projectQuotationRoomsConstructMapper.updateByPrimaryKeySelective(construct);
+            return RespData.error("删除失败");
+        }
         return RespData.success();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> delHardQuote(String id) {
         ProjectQuotationRoomsHardDecoration hardDecoration = projectQuotationRoomsHardConstructMapper.selectByPrimaryKey(id);
         if (hardDecoration == null) {
@@ -267,12 +271,17 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         hardDecoration.setStatus(2);
         projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(hardDecoration);
-        updateRoom(hardDecoration.getProjectNo());
+        try{
+            updateRoom(hardDecoration.getProjectNo());
+        }catch (Exception e){
+            hardDecoration.setStatus(1);
+            projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(hardDecoration);
+            return RespData.error("删除失败");
+        }
         return RespData.success();
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public MyRespBundle<String> delSoftQuote(String id) {
         ProjectQuotationRoomsSoftDecoration softDecoration = projectQuotationRoomsSoftConstructMapper.selectByPrimaryKey(id);
         if (softDecoration == null) {
@@ -280,7 +289,13 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         softDecoration.setStatus(2);
         projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(softDecoration);
-        updateRoom(softDecoration.getProjectNo());
+        try{
+            updateRoom(softDecoration.getProjectNo());
+        }catch (Exception e){
+            softDecoration.setStatus(1);
+            projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(softDecoration);
+            return RespData.error("删除失败");
+        }
         return RespData.success();
     }
 
@@ -411,6 +426,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
      *
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Boolean updateRoom(String projectNo) {
         ProjectQuotationRoomsExample roomsExample = new ProjectQuotationRoomsExample();
         roomsExample.createCriteria().andProjectNoEqualTo(projectNo);
