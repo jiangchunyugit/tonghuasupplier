@@ -3,7 +3,7 @@ package cn.thinkfree.controller;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.service.platform.order.OrderStateService;
+import cn.thinkfree.service.platform.order.OrderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class OrderStateController extends AbsBaseController {
 
     @Autowired
-    private OrderStateService orderStateService;
+    private OrderService orderStateService;
 
     @ApiOperation("查询所有订单状态")
     @ResponseBody
