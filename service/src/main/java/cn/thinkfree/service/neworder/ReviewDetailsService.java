@@ -3,10 +3,7 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
-import cn.thinkfree.database.vo.BasisConstructionVO;
-import cn.thinkfree.database.vo.HardQuoteVO;
-import cn.thinkfree.database.vo.PredatingVo;
-import cn.thinkfree.database.vo.SoftQuoteVO;
+import cn.thinkfree.database.vo.*;
 
 import java.util.Date;
 import java.util.List;
@@ -91,7 +88,7 @@ public interface ReviewDetailsService {
     MyRespBundle<String> reviewOffer(String projectNo, int result, String refuseReason);
 
     /**
-     * 获取上海报价信息(预交底)
+     * 获取上海报价信息(转施工)
      * @param projectNo
      * @param predatingTime
      * @param remark
@@ -105,5 +102,19 @@ public interface ReviewDetailsService {
      */
     MyRespBundle<PredatingVo> queryPredatingDetails(String projectNo);
 
+    /**
+     * remark
+     * @param projectNo
+     * @param predatingTime
+     * @param remark
+     * @return
+     */
+    MyRespBundle projectPredating(String projectNo, Date predatingTime, String remark);
 
+    /**
+     * 设计信息
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<DesignVo> getDesignDetail(String projectNo);
 }

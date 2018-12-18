@@ -3,22 +3,25 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.RoleFunctionEnum;
+import cn.thinkfree.database.appvo.OrderPlayVo;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.pcvo.ProjectQuotationCheckVo;
 import cn.thinkfree.database.pcvo.QuotationVo;
-import cn.thinkfree.database.vo.BasisConstructionVO;
-import cn.thinkfree.database.vo.HardQuoteVO;
-import cn.thinkfree.database.vo.PredatingVo;
-import cn.thinkfree.database.vo.SoftQuoteVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.newproject.NewProjectService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import cn.thinkfree.service.utils.DateUtil;
+import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.MathUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -74,6 +77,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     ProjectUserService projectUserService;
     @Autowired
     EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    NewProjectService newProjectService;
+
 
     /**
      * 获取精准报价
@@ -637,29 +643,19 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     }
 
     /**
-     * 获取上海报价信息(预交底)
+     * 获取上海报价信息(转施工)
      *
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public MyRespBundle getShangHaiPriceDetail(String projectNo, Date predatingTime, String remark) {
-        ProjectPredating projectPredating = new ProjectPredating();
-        projectPredating.setUuid(UUID.randomUUID().toString().replaceAll("-", ""));
-        projectPredating.setPredatingTime(predatingTime);
-        projectPredating.setRemark(remark);
-        projectPredating.setProjectNo(projectNo);
-        int result1 = projectPredatingMapper.insertSelective(projectPredating);
-        if (result1 == 0) {
-            return RespData.error("预交底失败(记录预交底信息失败)");
-        }
         ProjectDataExample dataExample = new ProjectDataExample();
         ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
         dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         dataCriteria.andProjectNoEqualTo(projectNo);
         List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
         if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
-
             throw new RuntimeException("此项目尚未提交设计案例");
         }
         DesignerOrderExample orderExample = new DesignerOrderExample();
@@ -676,7 +672,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         String designId = projectDatas.get(0).getHsDesignid();
         String result = cloudService.getShangHaiPriceDetail(designId);
         if (result.trim().isEmpty()) {
-
             throw new RuntimeException("获取上海报价信息失败!");
         }
         JSONObject jsonObject = JSON.parseObject(result);
@@ -707,7 +702,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         projectQuotation.setProjectNo(projectNo);
         int projectQuotationResult = projectQuotationMapper.insertSelective(projectQuotation);
         if (projectQuotationResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
-
             throw new RuntimeException("插入报价总表信息失败!");
         }
         JSONArray rooms = data.getJSONArray("rooms");
@@ -772,7 +766,6 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                     softDecoration.setProjectNo(projectNo);
                     int softResult = projectQuotationRoomsSoftConstructMapper.insertSelective(softDecoration);
                     if (softResult != ProjectDataStatus.INSERT_SUCCESS.getValue()) {
-
                         throw new RuntimeException("插入软装报价信息表失败!");
                     }
                 }
@@ -784,12 +777,146 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             designDispatchService.createConstructionOrder(projectNo);
         } catch (Exception e) {
             e.printStackTrace();
-
             throw new RuntimeException("创建施工订单失败!");
         }
         return RespData.success();
     }
 
+    /**
+     * 预交底
+     *
+     * @param projectNo
+     * @param predatingTime
+     * @param remark
+     * @return
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public MyRespBundle projectPredating(String projectNo, Date predatingTime, String remark) {
+        ProjectPredating projectPredating = new ProjectPredating();
+        projectPredating.setUuid(UUID.randomUUID().toString().replaceAll("-", ""));
+        projectPredating.setPredatingTime(predatingTime);
+        projectPredating.setRemark(remark);
+        projectPredating.setProjectNo(projectNo);
+        int result1 = projectPredatingMapper.insertSelective(projectPredating);
+        if (result1 == 0) {
+            return RespData.error("预交底失败(记录预交底信息失败)");
+        }
+        return RespData.success();
+    }
+
+    /**
+     * 设计信息
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<DesignVo> getDesignDetail(String projectNo) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空!");
+        }
+        DesignVo designVo = new DesignVo();
+        //组合订单信息
+        ProjectDetailVO projectDetailVO = new ProjectDetailVO();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return RespData.error("项目不存在!!");
+        }
+        Project project = projects.get(0);
+        //添加业主信息
+        PersionVo owner = new PersionVo();
+        try {
+            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+            owner.setPhone(userName1.get("phone").toString());
+            owner.setName(userName1.get("nickName").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("调取人员信息失败!");
+        }
+        projectDetailVO.setOwnerName(owner.getName());
+        projectDetailVO.setOwnerPhone(owner.getPhone());
+        //装修地址
+        String projectAdress = newProjectService.getProjectAdress(projectNo);
+        projectDetailVO.setAdress(projectAdress.replaceAll(project.getAddressDetail(), ""));
+        projectDetailVO.setAdressDetails(projectAdress);
+        //房屋类型
+        projectDetailVO.setPropertyType(project.getHouseType() == 1 ? "新房" : "旧房");
+        //建筑面积
+        projectDetailVO.setArea(project.getArea());
+        //常住人口
+        projectDetailVO.setPermanentResidents(project.getPeopleNo());
+        //户型
+        projectDetailVO.setHouseType(project.getHouseRoom() + "室" + project.getHouseToilet() + "厅");
+        //装修预算
+        projectDetailVO.setDecorationBudget(project.getDecorationBudget());
+        //装修风格
+        projectDetailVO.setStyle(project.getStyle());
+        //计划装修开始时间
+        projectDetailVO.setPlanStartTime(DateUtil.getStringDate(project.getPlanStartTime(),"yyyy-MM-dd-HH-mm-ss"));
+        //计划装修结束时间
+        projectDetailVO.setPlanEndTime(DateUtil.getStringDate(project.getPlanEndTime(),"yyyy-MM-dd-HH-mm-ss"));
+        //订单来源
+        switch (project.getOrderSource()) {
+            case 1:
+                projectDetailVO.setOrderSource("天猫");
+                break;
+            case 2:
+                projectDetailVO.setOrderSource("平台创建");
+                break;
+            case 3:
+                projectDetailVO.setOrderSource("设计公司创建");
+                break;
+            default:
+                projectDetailVO.setOrderSource("其他");
+                break;
+        }
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(projectNo);
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+        String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
+        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+        //订单编号
+        projectDetailVO.setDesignOrderNo(designerOrder.getOrderNo());
+        //承揽公司
+        projectDetailVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
+        //设计师
+        if (persionVo != null) {
+            projectDetailVO.setDesignerName(persionVo.getName());
+        }
+        designVo.setProjectDetailVO(projectDetailVO);
+        //组合量房信息
+        VolumeReservationDetailsVO volumeReservationDetailsVO = new VolumeReservationDetailsVO();
+        if (designerOrder.getVolumeRoomTime() != null) {
+            volumeReservationDetailsVO.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
+        }
+        if (designerOrder.getVolumeRoomMoney() != null) {
+            volumeReservationDetailsVO.setAppointmentAmount(MathUtil.getYuan(designerOrder.getVolumeRoomMoney()));
+        }
+        designVo.setVolumeReservationDetailsVO(volumeReservationDetailsVO);
+        //组合预交底信息
+        PredatingVo predatingVo = new PredatingVo();
+        ProjectPredatingExample projectPredatingExample = new ProjectPredatingExample();
+        ProjectPredatingExample.Criteria predatingCriteria = projectPredatingExample.createCriteria();
+        predatingCriteria.andProjectNoEqualTo(projectNo);
+        List<ProjectPredating> projectPredatings = projectPredatingMapper.selectByExample(projectPredatingExample);
+        if (projectPredatings.size() > 0) {
+            predatingVo.setPredatingTime(projectPredatings.get(0).getPredatingTime().getTime());
+            predatingVo.setRemark(projectPredatings.get(0).getRemark());
+        }
+        designVo.setPredatingVo(predatingVo);
+        return RespData.success(designVo);
+    }
 
     /**
      * 修改项目状态
