@@ -7,7 +7,9 @@ import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.AfUserDTO;
 import cn.thinkfree.database.vo.CompanyInfoVo;
+import cn.thinkfree.database.vo.DesignContractToVo;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.constants.ProjectDataStatus;
@@ -24,7 +26,6 @@ import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.*;
 import com.github.pagehelper.PageHelper;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static cn.thinkfree.core.constants.DesignStateEnum.STATE_40;
@@ -1717,6 +1719,71 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setPageIndex(pageIndex);
         pageVo.setPageSize(pageSize);
         return pageVo;
+    }
+
+    @Override
+    public DesignContractToVo getDesigneContractInfo(String orderNo) {
+        DesignContractToVo resVo = new DesignContractToVo();
+        //查询订单信息
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+        if(designerOrders.size() > 0 && designerOrders.get(0) != null ){
+            ProjectExample projectExample = new ProjectExample();
+            projectExample.createCriteria().andProjectNoEqualTo(designerOrders.get(0).getProjectNo());
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+            //查询业主
+            AfUserDTO customerInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), projects.get(0).getOwnerId(), Role.CC.id);
+            //业主姓名
+            resVo.setOwnerName(customerInfo.getUsername());
+            //业主手机号码
+            resVo.setOwnerTel(customerInfo.getPhone());
+
+            //设计师相关信息
+            if(designerOrders.get(0).getUserId() != null){
+                AfUserDTO customerInfoOne = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), designerOrders.get(0).getUserId(), Role.CD.id);
+
+                resVo.setDesignerTel(customerInfoOne.getPhone());
+            }
+             //设计师名称
+            String designerId = projectUserService.queryUserIdOne(projects.get(0).getProjectNo(), RoleFunctionEnum.DESIGN_POWER);
+            EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
+            if (employeeMsg != null) {
+                resVo.setDesignerName(employeeMsg.getRealName());
+
+            }
+            Map<String,String> provinceMap = basicsService.getProvince();
+            Map<String,String> cityMap = basicsService.getCity();
+            Map<String,String> areaMap = basicsService.getArea();
+            //省
+            resVo.setProvince(provinceMap.get(projects.get(0).getProvince())==null?"":provinceMap.get(projects.get(0).getProvince()));
+            //市
+            resVo.setCity(cityMap.get(projects.get(0).getCity())==null?"":cityMap.get(projects.get(0).getCity()));
+            //区
+            resVo.setRegion(areaMap.get(projects.get(0).getArea())==null?"":provinceMap.get(projects.get(0).getArea()));
+            //地址详情
+            resVo.setAddressDetail(projects.get(0).getAddressDetail());
+            //建筑面积
+            resVo.setArea(String.valueOf(projects.get(0).getArea()));
+            //设计费金额
+
+            BigDecimal a;
+            BigDecimal b;
+            a = new BigDecimal(designerOrders.get(0).getVolumeRoomMoney());
+            b = new BigDecimal(1000);
+            resVo.setVolumeRoomMoney(designerOrders.get(0).getVolumeRoomMoney()==null?"0":(String.valueOf(a.divide(b, 2, RoundingMode.HALF_UP))));
+            //合同类型
+            resVo.setContractType(String.valueOf(designerOrders.get(0).getContractType()));
+            //
+            CompanyInfoExample example = new CompanyInfoExample();
+            example.createCriteria().andCompanyIdEqualTo(designerOrders.get(0).getCompanyId());
+            List<CompanyInfo> list =  companyInfoMapper.selectByExample(example);
+            //设计公司名称
+            resVo.setDesignName(list.get(0)==null?"":list.get(0).getCompanyName());
+          //  resVo.setProjectName(projects.get(0)!=null?""projects.get(0).getp);
+        }
+
+        return resVo;
     }
 
     private Map<String, UserMsgVo> getOwnerMsg(List<String> designOrders) {

@@ -19,6 +19,7 @@ public class SessionUserDetailsUtil {
 
 	/**
 	 * 得到当前session中的用户，如果没有返回null
+	 *
 	 * 
 	 * @return UserDetails
 	 */
