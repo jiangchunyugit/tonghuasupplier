@@ -5,10 +5,12 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.newproject.NewProjectService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,41 @@ public class AppProjectController {
         MyRespBundle<PageInfo<ProjectVo>> page = newProjectService.getAllProject(appProjectSEO);
         return page;
     }
+
+    @RequestMapping(value = "getConstructionAllProject", method = RequestMethod.POST)
+    @ApiOperation(value = "项目列表--施工端")
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") @ApiParam(name = "pageSize", required = false, value = "每页条数") int pageSize,
+            @RequestParam(name = "pageNum", required = false, defaultValue = "1") @ApiParam(name = "pageNum", required = false, value = "第几页") int pageNum,
+            @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "projectType", required = false) @ApiParam(name = "projectType", value = "项目分类 1,全部 2,待签约 3,待开工 4,施工中 5,已竣工", required = false) Integer projectType,
+            @RequestParam(name = "inputData", required = false) @ApiParam(name = "inputData", value = "筛选输入值", required = false) String inputData) {
+        return newProjectService.getConstructionAllProject(pageSize, pageNum, userId, inputData, projectType);
+    }
+
+    @ApiOperation(value = "获取施工端项目搜索项(进度阶段+验收阶段)")
+    @RequestMapping(value = "getProjectScreen", method = {RequestMethod.GET, RequestMethod.POST})
+    public MyRespBundle<ProjectScreenVo> getProjectScreen(
+            @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo) {
+        return newProjectService.getProjectScreen(userId, projectNo);
+    }
+
+    @ApiOperation("施工端项目列表--筛选")
+    @RequestMapping(value = "getProjectByScreen", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(
+            @RequestParam(name = "pageSize", required = false, defaultValue = "10") @ApiParam(name = "pageSize", required = false, value = "每页条数") int pageSize,
+            @RequestParam(name = "pageNum", required = false, defaultValue = "1") @ApiParam(name = "pageNum", required = false, value = "第几页") int pageNum,
+            @RequestParam(name = "userId", required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(name = "delayBegin", required = false) @ApiParam(name = "delayBegin", value = "逾期天数 开始天数", required = false) Integer delayBegin,
+            @RequestParam(name = "delayEnd", required = false) @ApiParam(name = "delayEnd", value = "逾期天数 结束天数", required = false) Integer delayEnd,
+            @RequestParam(name = "schedulingSort", required = false) @ApiParam(name = "schedulingSort", value = "进度阶段 sort值", required = false) Integer schedulingSort,
+            @RequestParam(name = "checkSort", required = false) @ApiParam(name = "checkSort", value = "验收阶段 sort值", required = false) Integer checkSort,
+            @RequestParam(name = "checkComplete", required = false) @ApiParam(name = "checkComplete", value = "是否完成验收 1,是 2,否", required = false) Integer checkComplete,
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo) {
+        return newProjectService.getProjectByScreen(pageSize, pageNum, userId, delayBegin, delayEnd, schedulingSort, checkSort, checkComplete, projectNo);
+    }
+
 
     @RequestMapping(value = "getProjectNum", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目个数")
@@ -102,10 +139,11 @@ public class AppProjectController {
     @RequestMapping(value = "confirmVolumeRoomDataUser", method = RequestMethod.POST)
     @ApiOperation(value = "C端确认资料")
     public MyRespBundle<String> confirmVolumeRoomDataUser(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
-            @RequestParam(name = "category") @ApiParam(name = "category", value = "项目编号") Integer category) {
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo,
+            @RequestParam(name = "result", required = false) @ApiParam(name = "result", value = "结果 1,同意  2,不同意", required = false) Integer result,
+            @RequestParam(name = "category", required = false) @ApiParam(name = "category", value = "项目编号", required = false) Integer category) {
         try {
-            return newProjectService.confirmVolumeRoomDataUser(projectNo, category);
+            return newProjectService.confirmVolumeRoomDataUser(projectNo, category,result);
         } catch (Exception e) {
             e.printStackTrace();
             return RespData.error(e.getMessage());

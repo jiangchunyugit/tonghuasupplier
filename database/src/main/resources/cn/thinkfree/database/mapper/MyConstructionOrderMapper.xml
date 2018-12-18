@@ -167,4 +167,51 @@
         </if>
     </select>
 
+    <select id="countByApproval" resultType="int">
+        select count(1) from (SELECT
+            DISTINCT ou.project_no projectNo
+        FROM
+            order_user ou
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage != #{orderStatus}
+        RIGHT JOIN a_f_instance afi on afi.project_no = ou.project_no AND afi.config_no IN
+        <foreach collection="configNos" item="configNo" open="(" separator="," close=")">
+            #{configNo}
+        </foreach>
+        WHERE ou.user_id = #{userId})
+    </select>
+
+    <select id="selectByApproval" resultType="cn.thinkfree.database.appvo.ConstructionProjectVo">
+        SELECT
+            DISTINCT ou.project_no projectNo,
+            ou.order_no orderNo,
+            proj.create_time appointmentTime,
+            CONCAT(prov.province_name, ci.city_name, ar.area_name, proj.address_detail) address,
+            bd.basics_name as type,
+            proj.stage stage
+        FROM
+            order_user ou
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage <![CDATA[ < ]]> #{orderStatus}
+        RIGHT JOIN a_f_instance afi on afi.project_no = ou.project_no AND afi.config_no IN
+        <foreach collection="configNos" item="configNo" open="(" separator="," close=")">
+            #{configNo}
+        </foreach>
+        LEFT JOIN project proj ON proj.project_no = ou.project_no
+        LEFT JOIN province prov ON prov.province_code = proj.province
+        LEFT JOIN city ci ON ci.city_code = proj.city
+        LEFT JOIN area ar ON ar.area_code = proj.area
+        LEFT JOIN basics_data bd ON bd.basics_code = proj.style
+        WHERE ou.user_id = #{userId}
+    </select>
+
+    <select id="countByUserId" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            order_user ou
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no
+        WHERE ou.user_id = #{userId}
+    </select>
+
+
+
 </mapper>

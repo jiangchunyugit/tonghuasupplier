@@ -5,6 +5,8 @@ import cn.thinkfree.database.vo.AfConfigEditVO;
 import cn.thinkfree.database.vo.AfConfigListVO;
 import cn.thinkfree.database.vo.AfConfigVO;
 
+import java.util.List;
+
 /**
  * 审批流配置服务层
  *
@@ -40,4 +42,11 @@ public interface AfConfigService {
      * @return 审批流配置
      */
     AfConfig findByNo(String configNo);
+
+    /**
+     * 根据审批类型获取审批配置编号
+     * @param approvalType 审批类型
+     * @return 审批配置编号
+     */
+    List<String> getConfigNosByApprovalType(String approvalType);
 }

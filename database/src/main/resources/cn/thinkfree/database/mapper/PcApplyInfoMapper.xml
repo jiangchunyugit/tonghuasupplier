@@ -21,6 +21,7 @@
     <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
     <result column="transact_type" jdbcType="SMALLINT" property="transactType" />
     <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="dealer_company_id" jdbcType="VARCHAR" property="dealerCompanyId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -95,7 +96,7 @@
     -->
     id, company_id, apply_type, apply_date, apply_thing_type, company_role, company_name, 
     city_code, area_code, province_code, contact_name, contact_phone, is_delete, transact_type, 
-    email
+    email, dealer_company_id
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PcApplyInfoExample" resultMap="BaseResultMap">
     <!--
@@ -152,14 +153,14 @@
       apply_date, apply_thing_type, company_role, 
       company_name, city_code, area_code, 
       province_code, contact_name, contact_phone, 
-      is_delete, transact_type, email
-      )
+      is_delete, transact_type, email, 
+      dealer_company_id)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{applyType,jdbcType=SMALLINT}, 
       #{applyDate,jdbcType=TIMESTAMP}, #{applyThingType,jdbcType=SMALLINT}, #{companyRole,jdbcType=VARCHAR}, 
       #{companyName,jdbcType=VARCHAR}, #{cityCode,jdbcType=SMALLINT}, #{areaCode,jdbcType=INTEGER}, 
       #{provinceCode,jdbcType=SMALLINT}, #{contactName,jdbcType=VARCHAR}, #{contactPhone,jdbcType=VARCHAR}, 
-      #{isDelete,jdbcType=SMALLINT}, #{transactType,jdbcType=SMALLINT}, #{email,jdbcType=VARCHAR}
-      )
+      #{isDelete,jdbcType=SMALLINT}, #{transactType,jdbcType=SMALLINT}, #{email,jdbcType=VARCHAR}, 
+      #{dealerCompanyId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PcApplyInfo">
     <!--
@@ -213,6 +214,9 @@
       <if test="email != null">
         email,
       </if>
+      <if test="dealerCompanyId != null">
+        dealer_company_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -259,6 +263,9 @@
       </if>
       <if test="email != null">
         #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="dealerCompanyId != null">
+        #{dealerCompanyId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -324,6 +331,9 @@
       <if test="record.email != null">
         email = #{record.email,jdbcType=VARCHAR},
       </if>
+      <if test="record.dealerCompanyId != null">
+        dealer_company_id = #{record.dealerCompanyId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -349,7 +359,8 @@
       contact_phone = #{record.contactPhone,jdbcType=VARCHAR},
       is_delete = #{record.isDelete,jdbcType=SMALLINT},
       transact_type = #{record.transactType,jdbcType=SMALLINT},
-      email = #{record.email,jdbcType=VARCHAR}
+      email = #{record.email,jdbcType=VARCHAR},
+      dealer_company_id = #{record.dealerCompanyId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -403,6 +414,9 @@
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
       </if>
+      <if test="dealerCompanyId != null">
+        dealer_company_id = #{dealerCompanyId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -425,7 +439,8 @@
       contact_phone = #{contactPhone,jdbcType=VARCHAR},
       is_delete = #{isDelete,jdbcType=SMALLINT},
       transact_type = #{transactType,jdbcType=SMALLINT},
-      email = #{email,jdbcType=VARCHAR}
+      email = #{email,jdbcType=VARCHAR},
+      dealer_company_id = #{dealerCompanyId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

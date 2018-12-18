@@ -1154,6 +1154,76 @@ public class PcApplyInfoExample extends cn.thinkfree.core.model.AbstractDataAuth
             addCriterion("email not between", value1, value2, "email");
             return (Criteria) this;
         }
+
+        public Criteria andDealerCompanyIdIsNull() {
+            addCriterion("dealer_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIsNotNull() {
+            addCriterion("dealer_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdEqualTo(String value) {
+            addCriterion("dealer_company_id =", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotEqualTo(String value) {
+            addCriterion("dealer_company_id <>", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdGreaterThan(String value) {
+            addCriterion("dealer_company_id >", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("dealer_company_id >=", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLessThan(String value) {
+            addCriterion("dealer_company_id <", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("dealer_company_id <=", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLike(String value) {
+            addCriterion("dealer_company_id like", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotLike(String value) {
+            addCriterion("dealer_company_id not like", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIn(List<String> values) {
+            addCriterion("dealer_company_id in", values, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotIn(List<String> values) {
+            addCriterion("dealer_company_id not in", values, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdBetween(String value1, String value2) {
+            addCriterion("dealer_company_id between", value1, value2, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("dealer_company_id not between", value1, value2, "dealerCompanyId");
+            return (Criteria) this;
+        }
     }
 
     /**

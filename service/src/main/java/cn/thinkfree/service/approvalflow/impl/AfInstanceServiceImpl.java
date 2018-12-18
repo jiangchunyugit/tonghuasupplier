@@ -23,6 +23,7 @@ import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1022,11 +1023,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param configNo 审批流配置编号
      * @param projectNo 项目编号
      * @param scheduleSort 排期编号
+     * @param status 实例状态
      * @return 审批实例
      */
-    private List<AfInstance> findByConfigNoAndProjectNoAndScheduleSort(String configNo, String projectNo, Integer scheduleSort) {
+    private List<AfInstance> findByConfigNoAndProjectNoAndScheduleSortAndStatus(String configNo, String projectNo, Integer scheduleSort, int status) {
         AfInstanceExample example = new AfInstanceExample();
-        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort);
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andStatusEqualTo(status);
         return instanceMapper.selectByExample(example);
     }
 
@@ -1158,5 +1160,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else {
             return 0;
         }
+    }
+
+    @Override
+    public boolean getCheckSuccess(String projectNo, Integer scheduleSort) {
+
+        List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+        if (instances != null) {
+            for (AfInstance instance : instances) {
+                AfCheckItemVO checkItemVO = JSONUtil.json2Bean(instance.getData(), AfCheckItemVO.class);
+                if (checkItemVO != null && checkItemVO.getType() != null && checkItemVO.getType() == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

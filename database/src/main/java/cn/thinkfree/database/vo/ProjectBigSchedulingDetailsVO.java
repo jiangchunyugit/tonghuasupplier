@@ -38,7 +38,7 @@ public class ProjectBigSchedulingDetailsVO implements Comparable<ProjectBigSched
     /**
      *   自定义大排期名字
      */
-    @ApiModelProperty(value = "自定义大排期名字")
+    @ApiModelProperty(value = "验收阶段名称")
     private String renameBig;
     /**
      *   计划开始时间
