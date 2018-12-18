@@ -4,6 +4,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
+import cn.thinkfree.database.vo.DesignContractToVo;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.platform.vo.*;
 
@@ -327,4 +328,12 @@ public interface DesignDispatchService {
     PageVo<List<ContractListItemVo>> designContract(
             String contractNo, String projectNo, String orderSource, String provinceCode, String cityCode, String areaCode,
             String contractState, String signTimeS, String signTimeE, String ownerMsg, int pageSize, int pageIndex);
+
+
+    /**
+     * 根据 设计订单编号查询 设计合同信息
+     *
+     * @author  lqd
+     */
+    DesignContractToVo getDesigneContractInfo(String orderNo);
 }
