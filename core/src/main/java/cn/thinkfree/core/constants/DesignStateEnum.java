@@ -85,7 +85,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传量房资料
      */
-    STATE_60(60, "量房待确认", "设计师上传量房资料", new Integer[]{70}, true),
+    STATE_60(60, "量房待确认", "设计师上传量房资料", new Integer[]{50,70}, true),
     /**
      * 消费者	确认量房交付物
      */
@@ -132,7 +132,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传3D效果图
      */
-    STATE_160(160, "3D待确认", "设计师上传了3D效果图", new Integer[]{170, 161}, true),
+    STATE_160(160, "3D待确认", "设计师上传了3D效果图", new Integer[]{170, 161,150}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -181,7 +181,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传施工图
      */
-    STATE_190(190, "施工图待确认", "设计师上传了施工图", new Integer[]{200, 191}, true),
+    STATE_190(190, "施工图待确认", "设计师上传了施工图", new Integer[]{200, 191,180}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -239,7 +239,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传3D效果图
      */
-    STATE_240(240, "3D待确认", "设计师上传了3D效果图", new Integer[]{250, 241}, true),
+    STATE_240(240, "3D待确认", "设计师上传了3D效果图", new Integer[]{250, 241,230}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -263,7 +263,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传施工图
      */
-    STATE_260(260, "施工图待确认", "设计师上传了施工图", new Integer[]{270}, true),
+    STATE_260(260, "施工图待确认", "设计师上传了施工图", new Integer[]{270,250}, true),
     /**
      * 消费者	确认交付物	交易完成
      */

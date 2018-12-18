@@ -186,36 +186,18 @@ public class ReviewDetailsController extends AbsBaseController {
         }
     }
 
-//    @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
-//    @ApiOperation("获取上海报价信息(预交底)")
-//    public MyRespBundle getShangHaiPriceDetail(
-//            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo,
-//            @RequestParam(name = "predatingTime") @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd",required = true) Date predatingTime,
-//            @RequestParam(name = "remark") @ApiParam(name = "remark", value = "备注",required = true) String remark) {
-//        try {
-//            return reviewDetailsService.getShangHaiPriceDetail(projectNo,predatingTime,remark);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return RespData.error(e.getMessage());
-//        }
-//    }
-
     @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
-    @ApiOperation("获取上海报价信息")
+    @ApiOperation("获取上海报价信息(预交底)")
     public MyRespBundle getShangHaiPriceDetail(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
-        try{
-            reviewDetailsService.getShangHaiPriceDetail(projectNo);
-        }catch (Exception e){
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo,
+            @RequestParam(name = "predatingTime") @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd",required = true) Date predatingTime,
+            @RequestParam(name = "remark") @ApiParam(name = "remark", value = "备注",required = true) String remark) {
+        try {
+            return reviewDetailsService.getShangHaiPriceDetail(projectNo,predatingTime,remark);
+        } catch (Exception e) {
             e.printStackTrace();
-            return sendFailMessage(e.getMessage());
+            return RespData.error(e.getMessage());
         }
-        return sendSuccessMessage(null);
     }
-
-
-
-
-
 
 }

@@ -8,8 +8,10 @@ import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
+import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionStateService;
@@ -18,6 +20,7 @@ import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
+import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
@@ -88,6 +91,14 @@ public class NewProjectServiceImpl implements NewProjectService {
     ProjectQuotationMapper projectQuotationMapper;
     @Autowired
     ProjectMessageMapper projectMessageMapper;
+    @Autowired
+    ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
+    @Autowired
+    ProjectSchedulingMapper projectSchedulingMapper;
+    @Autowired
+    private BuildSchemeCompanyRelMapper companyRelMapper;
+    @Autowired
+    ProjectBigSchedulingMapper projectBigSchedulingMapper;
 
 
     /**
@@ -182,6 +193,324 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
         }
         return RespData.success(pageInfo);
+    }
+
+    /**
+     * C/B-项目列表--施工端
+     *
+     * @param pageSize
+     * @param pageNum
+     * @param userId
+     * @param inputData
+     * @return
+     */
+    @Override
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(int pageSize, int pageNum, String userId, String inputData, Integer projectType) {
+        if (userId == null || userId.trim().isEmpty() || projectType == null || projectType == 0) {
+            return RespData.error("参数userId 和 projectType 不可为空");
+        }
+        List<ConstructionProjectVo> constructionProjectVos = getAllConstructionProject(userId);
+        PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageNum);
+        Map<String, Object> playMap = getPlayList(constructionProjectVos, pageSize, pageNum, inputData, projectType);
+        List<ConstructionProjectVo> playProjects = (List<ConstructionProjectVo>) playMap.get("data");
+        pageVo.setData(playProjects);
+        pageVo.setTotal((Integer) playMap.get("total"));
+        return RespData.success(pageVo);
+    }
+
+    /**
+     * 施工端项目列表项目筛选
+     *
+     * @param list
+     * @param pageSize
+     * @param pageNum
+     * @param inputData
+     * @param projectType
+     * @return
+     */
+    public Map<String, Object> getPlayList(List<ConstructionProjectVo> list, int pageSize, int pageNum, String inputData, Integer projectType) {
+        Map<String, Object> map = new HashMap<>();
+        if (inputData != null && !inputData.trim().isEmpty()) {
+            List<ConstructionProjectVo> playProjects = new ArrayList<>();
+            List<ConstructionProjectVo> allProjects = new ArrayList<>();
+            Integer count = 0;
+            for (ConstructionProjectVo projectVo : list) {
+                if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
+                    if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize && constructionStateService.getConstructState(projectVo.getStage(), projectVo.getComplaintState(), projectType)) {
+                        playProjects.add(projectVo);
+                    }
+                    allProjects.add(projectVo);
+                    count++;
+                }
+            }
+            map.put("data", playProjects);
+            map.put("total", allProjects.size());
+        } else {
+            List<ConstructionProjectVo> playProjects = new ArrayList<>();
+            List<ConstructionProjectVo> allProjects = new ArrayList<>();
+            Integer count = 0;
+            for (ConstructionProjectVo projectVo : list) {
+                //传让提供接口后把他放到逻辑与条件中
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                allProjects.add(projectVo);
+                count++;
+            }
+            map.put("data", playProjects);
+            map.put("total", allProjects.size());
+        }
+        return map;
+    }
+
+    /**
+     * 获取施工端项目搜索项(进度阶段+验收阶段)
+     *
+     * @param userId
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<ProjectScreenVo> getProjectScreen(String userId, String projectNo) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return RespData.error("请上传参数:userId=" + userId);
+        }
+        ProjectScreenVo projectScreenVo = new ProjectScreenVo();
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria msgCriteria = msgExample.createCriteria();
+        msgCriteria.andUserIdEqualTo(userId);
+        msgCriteria.andEmployeeStateEqualTo(1);
+        List list = new ArrayList();
+        list.add(3);
+        msgCriteria.andEmployeeApplyStateIn(list);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if (employeeMsgs.size() == 0) {
+            return RespData.error("此用户当前状态无查看项目资格(已离职或被解约)");
+        }
+        BuildSchemeCompanyRelExample relExample = new BuildSchemeCompanyRelExample();
+        BuildSchemeCompanyRelExample.Criteria relCriteria = relExample.createCriteria();
+        relCriteria.andCompanyIdEqualTo(employeeMsgs.get(0).getCompanyId());
+        relCriteria.andDelStateEqualTo(2);
+        relCriteria.andIsEableEqualTo(1);
+        List<BuildSchemeCompanyRel> buildSchemeCompanyRels = companyRelMapper.selectByExample(relExample);
+        if (buildSchemeCompanyRels.size() == 0) {
+            return RespData.error("此公司尚无在用施工方案");
+        }
+        ProjectBigSchedulingExample bigSchedulingExample = new ProjectBigSchedulingExample();
+        bigSchedulingExample.setOrderByClause("sort asc");
+        ProjectBigSchedulingExample.Criteria bigCriteria = bigSchedulingExample.createCriteria();
+        bigCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        bigCriteria.andSchemeNoEqualTo(buildSchemeCompanyRels.get(0).getBuildSchemeNo());
+        List<ProjectBigScheduling> bigList = projectBigSchedulingMapper.selectByExample(bigSchedulingExample);
+        bigCriteria.andIsNeedCheckEqualTo(Scheduling.CHECK_YES.getValue());
+        List<ProjectBigScheduling> checkBigList = projectBigSchedulingMapper.selectByExample(bigSchedulingExample);
+        if (bigList.size() == 0) {
+            return RespData.error("此项目下无排期信息");
+        }
+        List<ProjectBigSchedulingDetailsVO> playBigList = new ArrayList<>();
+        for (ProjectBigScheduling details : bigList) {
+            ProjectBigSchedulingDetailsVO detailsVO = new ProjectBigSchedulingDetailsVO();
+            detailsVO.setBigSort(details.getSort());
+            detailsVO.setBigName(details.getName());
+            playBigList.add(detailsVO);
+        }
+        List<ProjectBigSchedulingDetailsVO> playCheckList = new ArrayList<>();
+        for (ProjectBigScheduling details : checkBigList) {
+            ProjectBigSchedulingDetailsVO detailsVO = new ProjectBigSchedulingDetailsVO();
+            detailsVO.setBigSort(details.getSort());
+            detailsVO.setRenameBig(details.getName());
+            playCheckList.add(detailsVO);
+        }
+        Collections.sort(playBigList);
+        Collections.sort(playCheckList);
+        projectScreenVo.setCheckList(playCheckList);
+        projectScreenVo.setSchedulingList(playBigList);
+        return RespData.success(projectScreenVo);
+    }
+
+    /**
+     * 施工端项目列表--筛选
+     *
+     * @param pageSize       每页条数
+     * @param pageNum        页码
+     * @param userId         用户id
+     * @param delayBegin     延期开始时间
+     * @param delayEnd       延期结束时间
+     * @param schedulingSort 进度阶段sort值
+     * @param checkSort      验收阶段sort值
+     * @param checkComplete  验收是否完成
+     * @param projectNo      项目编号
+     * @return
+     */
+    @Override
+    public MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(
+            int pageSize, int pageNum, String userId,
+            Integer delayBegin, Integer delayEnd,
+            Integer schedulingSort, Integer checkSort,
+            Integer checkComplete, String projectNo) {
+        if (userId == null || userId.trim().isEmpty()) {
+            return RespData.error("请检查入参:userId=" + userId);
+        }
+        List<ConstructionProjectVo> constructionProjectVos = getAllConstructionProject(userId);
+        if (constructionProjectVos.size() == 0) {
+            PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+            pageVo.setPageSize(pageSize);
+            pageVo.setPageIndex(pageNum);
+            pageVo.setTotal(0);
+            return RespData.success(pageVo);
+        }
+        List<ConstructionProjectVo> playProjects = new ArrayList<>();
+        List<ConstructionProjectVo> allProjects = new ArrayList<>();
+        Integer count = 0;
+        Boolean result = false;
+        for (ConstructionProjectVo projectVo : constructionProjectVos) {
+            boolean checkResult = false;
+            if (projectVo.getSort() != null) {
+                checkResult = afInstanceService.getCheckSuccess(projectVo.getProjectNo(), projectVo.getSort());
+//                System.out.println("projectNo=" + projectVo.getProjectNo() + ";sort=" + projectVo.getSort() + "; result=" + checkResult);
+            }
+            if (checkComplete != null && checkComplete == 2) {
+                if (checkResult) {
+                    checkResult = false;
+                } else {
+                    checkResult = true;
+                }
+            }
+            if (delayBegin != null && delayEnd != null && schedulingSort == null && checkSort == null && checkComplete == null && projectVo.getDelay() != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                count++;
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && projectVo.getSort() != null && projectVo.getDelay() != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                count++;
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin != null && delayEnd != null && schedulingSort != null && checkSort != null && checkComplete != null && projectVo.getSort() != null && projectVo.getDelay() != null && delayBegin <= projectVo.getDelay() && projectVo.getDelay() <= delayEnd && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                count++;
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete == null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort())) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                count++;
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort != null && checkSort != null && checkComplete != null && projectVo.getSort() != null && projectVo.getDelay() != null && schedulingSort.equals(projectVo.getSort()) && checkSort.equals(projectVo.getSort()) && checkResult) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                count++;
+                allProjects.add(projectVo);
+                result = true;
+            } else if (delayBegin == null && delayEnd == null && schedulingSort == null && checkSort == null && checkComplete == null) {
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                    playProjects.add(projectVo);
+                }
+                count++;
+                allProjects.add(projectVo);
+                result = true;
+            }
+        }
+        if (playProjects.size() == 0) {
+            return RespData.success(new PageVo<>());
+        }
+        if (!result) {
+            return RespData.error("请检查入参:userId=" + userId + ";delayBegin=" + delayBegin + ";delayEnd=" + delayEnd + ";=schedulingSort=" + schedulingSort + ";checkSort=" + checkSort + ";checkComplete=" + checkComplete);
+        }
+        PageVo<List<ConstructionProjectVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageNum);
+        pageVo.setData(playProjects);
+        pageVo.setTotal(allProjects.size());
+        return RespData.success(pageVo);
+    }
+
+    /**
+     * 获取施工端所有项目
+     *
+     * @return
+     */
+    public List<ConstructionProjectVo> getAllConstructionProject(String userId) {
+        List<ConstructionProjectVo> constructionProjectVos = new ArrayList<>();
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andUserIdEqualTo(userId);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() == 0) {
+            return constructionProjectVos;
+        }
+        List<String> list = new ArrayList<>();
+        for (OrderUser orderUser : orderUsers) {
+            list.add(orderUser.getProjectNo());
+        }
+        ConstructionOrderExample orderExample = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria orderCriteria = orderExample.createCriteria();
+        orderCriteria.andProjectNoIn(list);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(orderExample);
+        if (constructionOrders.size() == 0) {
+            return constructionProjectVos;
+        }
+        for (ConstructionOrder constructionOrder : constructionOrders) {
+            ConstructionProjectVo constructionProjectVo = new ConstructionProjectVo();
+            constructionProjectVo.setProjectNo(constructionOrder.getProjectNo());
+            constructionProjectVo.setOrderNo(constructionOrder.getOrderNo());
+            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm;ss"));
+            constructionProjectVo.setType(constructionOrder.getType());
+            constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
+            constructionProjectVo.setStage(constructionOrder.getOrderStage());
+            //装修地址
+            ProjectExample projectExample = new ProjectExample();
+            ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
+            projectCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+            projectCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+            if (projects.size() != 0) {
+                constructionProjectVo.setAddress(projects.get(0).getAddressDetail());
+                //业主信息
+                Map user = new HashMap();
+                try {
+                    user = newOrderUserService.getUserName(projects.get(0).getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    log.info("调取人员信息失败!");
+                }
+                constructionProjectVo.setOwner(user.get("nickName") == null ? "" : user.get("nickName").toString());
+                constructionProjectVo.setPhone(user.get("phone") == null ? "" : user.get("phone").toString());
+            }
+            //3d图片地址
+//            ProjectDataExample dataExample = new ProjectDataExample();
+//            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+//            dataCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+//            dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//            dataCriteria.andTypeEqualTo(ProjectDataStatus.DESIGN_DATA.getValue());
+//            List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
+//            if (projectDatas.size() != 0) {
+//                constructionProjectVo.setThirdUrl(projectDatas.get(0).getPhotoPanoramaUrl());
+//            }
+            //延期天数
+            ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
+            ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
+            schedulingCriteria.andProjectNoEqualTo(constructionOrder.getProjectNo());
+            schedulingCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+            List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
+            if (projectSchedulings.size() > 0) {
+                constructionProjectVo.setDelay(projectSchedulings.get(0).getDelay());
+                constructionProjectVo.setSort(projectSchedulings.get(0).getRate());
+            }
+            constructionProjectVos.add(constructionProjectVo);
+        }
+        return constructionProjectVos;
     }
 
     /**
@@ -286,7 +615,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             orderTaskSortVoList.add(orderTaskSortVo);
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
-        designerOrderDetailVo.setTaskStage(projects.get(0).getStage());
+        designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());//
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         for (DesignStateEnum designStateEnum : allCancelState) {
@@ -343,7 +672,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 orderTaskSortVoList1.add(orderTaskSortVo);
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
-            constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
+//            constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
             Boolean aBoolean = constructionStateService.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
             constructionOrderDetailVo.setCancle(aBoolean);
             //存放订单类型
@@ -394,6 +723,13 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("项目不存在!!");
         }
         Project project = projects.get(0);
+        //添加进度展示
+        if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
+            //添加进度信息
+            projectTitleVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(3));
+        } else {
+            projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
+        }
         projectTitleVo.setProjectStartTime(project.getPlanStartTime());
         projectTitleVo.setProjectEndTime(project.getPlanEndTime());
         projectTitleVo.setAddress(getProjectAdress(projectNo));
@@ -716,38 +1052,76 @@ public class NewProjectServiceImpl implements NewProjectService {
      *
      * @param projectNo
      * @param category
+     * @param result
      * @return
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category) {
-        ProjectData projectData = new ProjectData();
-        projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
-        projectData.setConfirmTime(new Date());
-        ProjectDataExample example = new ProjectDataExample();
-        ProjectDataExample.Criteria criteria = example.createCriteria();
-        criteria.andCategoryEqualTo(category);
-        criteria.andProjectNoEqualTo(projectNo);
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        int i = projectDataMapper.updateByExampleSelective(projectData, example);
-        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("确认失败");
+    public MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category, Integer result) {
+        if (projectNo == null || projectNo.trim().isEmpty() || category == null) {
+            return RespData.error("请检查入参:projectNo=" + projectNo + ";category=" + category);
         }
-        String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
-        if (category == 1) {
-            designDispatchService.confirmedDeliveries(projectNo, ownerId);
-        } else if (category == 2) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
-            //1全款合同，2分期合同
-            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
-                stateEnum = DesignStateEnum.STATE_170;
+        if (result == null || (result != 1 && result != 2)) {
+            return RespData.error("请检查入参:result=" + result);
+        }
+        if (result == 1) {
+            ProjectData projectData = new ProjectData();
+            projectData.setIsConfirm(ProjectDataStatus.CONFIRM.getValue());
+            projectData.setConfirmTime(new Date());
+            ProjectDataExample example = new ProjectDataExample();
+            ProjectDataExample.Criteria criteria = example.createCriteria();
+            criteria.andCategoryEqualTo(category);
+            criteria.andProjectNoEqualTo(projectNo);
+            criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            int i = projectDataMapper.updateByExampleSelective(projectData, example);
+            if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                return RespData.error("确认失败");
             }
-            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
-        } else if (category == 3) {
-            DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
-            //1全款合同，2分期合同
-            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
-                stateEnum = DesignStateEnum.STATE_200;
+            String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
+            if (category == 1) {
+                designDispatchService.confirmedDeliveries(projectNo, ownerId);
+            } else if (category == 2) {
+                DesignStateEnum stateEnum = DesignStateEnum.STATE_250;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_170;
+                }
+                designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+            } else if (category == 3) {
+                DesignStateEnum stateEnum = DesignStateEnum.STATE_270;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_200;
+                }
+                designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+            }
+        } else {
+            DesignStateEnum stateEnum = null;
+            if (category == 1) {
+                stateEnum = DesignStateEnum.STATE_50;
+            } else if (category == 2) {
+                stateEnum = DesignStateEnum.STATE_230;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_150;
+                }
+            } else if (category == 3) {
+                stateEnum = DesignStateEnum.STATE_250;
+                //1全款合同，2分期合同
+                if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                    stateEnum = DesignStateEnum.STATE_180;
+                }
+            }
+            ProjectData data = new ProjectData();
+            data.setStatus(2);
+            ProjectDataExample dataExample = new ProjectDataExample();
+            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+            dataCriteria.andProjectNoEqualTo(projectNo);
+            dataCriteria.andStatusEqualTo(1);
+            dataCriteria.andTypeEqualTo(category);
+            int i = projectDataMapper.updateByExampleSelective(data, dataExample);
+            if (i==0){
+                throw new RuntimeException("拒绝失败");
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         }

@@ -35,10 +35,10 @@ public class DesignerDataController {
             @RequestParam(value = "city", required = false) @ApiParam(name = "city", value = "城市编码", required = false) String city,
             @RequestParam(value = "area", required = false) @ApiParam(name = "area", value = "地区编码", required = false) String area,
             @RequestParam(value = "years", required = false) @ApiParam(name = "years", value = "从业年限", required = false) Integer years,
-            @RequestParam(value = "volumeRoomMoney", required = false) @ApiParam(name = "volumeRoomMoney", value = "", required = false) String volumeRoomMoney,
+            @RequestParam(value = "volumeRoomMoney", required = false) @ApiParam(name = "volumeRoomMoney", value = "量房费", required = false) String volumeRoomMoney,
             @RequestParam(value = "moneyLow", required = false) @ApiParam(name = "moneyLow", value = "设计费用最低(单位：元/m2)", required = false) String moneyLow,
             @RequestParam(value = "moneyHigh", required = false) @ApiParam(name = "moneyHigh", value = "设计费用最高(单位：元/m2)", required = false) String moneyHigh,
-            @RequestParam(value = "styleCode", required = false) @ApiParam(name = "styleCode", value = "风格编码", required = false) List<String> styleCodes,
+            @RequestParam(value = "styleCodes", required = false) @ApiParam(name = "styleCodes", value = "风格编码", required = false) List<String> styleCodes,
             @RequestParam(value = "personalProfile", required = false) @ApiParam(name = "personalProfile", value = "个人简介", required = false) String personalProfile,
             @RequestParam(value = "certificatePrize", required = false) @ApiParam(name = "certificatePrize", value = "证书与奖项", required = false) String certificatePrize,
             @RequestParam(value = "sex", required = false) @ApiParam(name = "sex", value = "性别 1男，2女", required = false) Integer sex) {

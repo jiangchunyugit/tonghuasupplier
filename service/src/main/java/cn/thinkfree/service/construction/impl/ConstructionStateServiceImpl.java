@@ -485,7 +485,15 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
         return RespData.success();
     }
+	/**
+     * 订单完成
+     *
+     * @param orderNo
+     */
+    public void constructionComplete(String orderNo) {
 
+        commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
+    }
     @Override
     public List<OrderStatusDTO> getStates(int type, Integer currentStatus) {
         List<OrderStatusDTO> orderStatusDTOs  = new ArrayList<>();
@@ -524,4 +532,45 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
         return orderStatusDTOs;
     }
-}
+    @Override
+    public boolean getConstructState(int state, int complaintState, int stateRange) {
+
+
+        switch (complaintState) {
+            // 未投诉
+            case 1:
+                break;
+            // 处理中
+            case 2:
+                break;
+            // 关闭
+            case 3:
+                return stateRange == 1 || stateRange == 6;
+            // 已取消
+            case 4:
+                break;
+                default:
+        }
+
+        switch (stateRange) {
+            // 全部
+            case 1:
+                return true;
+            // 待签约
+            case 2:
+                return state >= 500 && state < 600;
+            // 待开工
+            case 3:
+                return state == 610;
+            // 施工中
+            case 4:
+                return state == 630 || state == 650;
+            // 已竣工
+            case 5:
+                return state == 700;
+            default:
+                break;
+        }
+
+        return false;
+    }}

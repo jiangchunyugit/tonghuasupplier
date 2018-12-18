@@ -1,5 +1,7 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.constants.AfConfigs;
+import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfConfigMapper;
 import cn.thinkfree.database.model.AfConfig;
@@ -184,5 +186,29 @@ public class AfConfigServiceImpl implements AfConfigService {
             LOGGER.error("审批流种类配置不全");
             throw new RuntimeException();
         }
+    }
+
+    @Override
+    public List<String> getConfigNosByApprovalType(String approvalType) {
+        List<String> configNos = new ArrayList<>();
+        if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
+            configNos.add(AfConfigs.START_APPLICATION.configNo);
+            configNos.add(AfConfigs.START_REPORT.configNo);
+            configNos.add(AfConfigs.CHECK_APPLICATION.configNo);
+            configNos.add(AfConfigs.CHECK_REPORT.configNo);
+            configNos.add(AfConfigs.COMPLETE_APPLICATION.configNo);
+        } else if (AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE.equals(approvalType)) {
+            configNos.add(AfConfigs.CHANGE_COMPLETE.configNo);
+            configNos.add(AfConfigs.CHANGE_ORDER.configNo);
+        } else if (AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION.equals(approvalType)) {
+            configNos.add(AfConfigs.PROBLEM_RECTIFICATION.configNo);
+            configNos.add(AfConfigs.RECTIFICATION_COMPLETE.configNo);
+        } else if (AfConstants.APPROVAL_TYPE_DELAY_VERIFY.equals(approvalType)) {
+            configNos.add(AfConfigs.DELAY_ORDER.configNo);
+        } else {
+            LOGGER.error("错误的审批类型，approvalType:{}", approvalType);
+            throw new RuntimeException();
+        }
+        return configNos;
     }
 }

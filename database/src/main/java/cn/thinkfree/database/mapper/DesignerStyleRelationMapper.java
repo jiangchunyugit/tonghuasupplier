@@ -2,7 +2,9 @@ package cn.thinkfree.database.mapper;
 
 import cn.thinkfree.database.model.DesignerStyleRelation;
 import cn.thinkfree.database.model.DesignerStyleRelationExample;
+
 import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface DesignerStyleRelationMapper {
@@ -61,4 +63,6 @@ public interface DesignerStyleRelationMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") DesignerStyleRelation record, @Param("example") DesignerStyleRelationExample example);
+
+    List<String> selectByUserId(@Param("userId") String userId);
 }

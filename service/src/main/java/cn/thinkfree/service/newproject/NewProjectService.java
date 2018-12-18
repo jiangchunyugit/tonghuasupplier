@@ -5,6 +5,7 @@ import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.model.OrderApplyRefund;
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.pcvo.PcProjectDetailVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
@@ -119,9 +120,10 @@ public interface NewProjectService {
      *
      * @param projectNo
      * @param category
+     * @param result
      * @return
      */
-    MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category);
+    MyRespBundle<String> confirmVolumeRoomDataUser(String projectNo, Integer category, Integer result);
 
     /**
      * 更具设计师ID获取设计信息
@@ -130,4 +132,40 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId);
+
+    /**
+     * C/B-项目列表--施工端
+     *
+     * @param pageSize
+     * @param pageNum
+     * @param userId
+     * @param inputData
+     * @return
+     */
+    MyRespBundle<PageVo<List<ConstructionProjectVo>>> getConstructionAllProject(int pageSize, int pageNum, String userId, String inputData, Integer projectType);
+
+    /**
+     * 获取施工端项目搜索项(进度阶段+验收阶段)
+     *
+     * @param userId
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<ProjectScreenVo> getProjectScreen(String userId, String projectNo);
+
+    /**
+     * 施工端项目列表--筛选
+     *
+     * @param pageSize
+     * @param pageNum
+     * @param userId
+     * @param delayBegin
+     * @param delayEnd
+     * @param schedulingSort
+     * @param checkSort
+     * @param checkComplete
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(int pageSize, int pageNum, String userId, Integer delayBegin, Integer delayEnd, Integer schedulingSort, Integer checkSort, Integer checkComplete, String projectNo);
 }
