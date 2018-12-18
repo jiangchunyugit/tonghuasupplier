@@ -384,6 +384,15 @@ public class BuildConfigServiceImpl implements BuildConfigService {
         configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(Arrays.asList(2,3));
         return payConfigMapper.selectByExample(configExample);
     }
+
+    @Override
+    public BuildPayConfig queryBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort) {
+        BuildPayConfigExample configExample = new BuildPayConfigExample();
+        configExample.createCriteria().andSchemeNoEqualTo(schemeNo).andDeleteStateIn(Arrays.asList(2,3)).andStageCodeEqualTo(scheduleSort.toString());
+        List<BuildPayConfig> buildPayConfigs = payConfigMapper.selectByExample(configExample);
+        return buildPayConfigs != null && buildPayConfigs.size() > 0 ? buildPayConfigs.get(0) : null;
+    }
+
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public void companyEnableScheme(String companyId, String schemeNo, String optionUserId, String optionUserName) {

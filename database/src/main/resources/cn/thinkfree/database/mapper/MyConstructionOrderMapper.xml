@@ -132,8 +132,10 @@
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
+        LEFT JOIN project_quotation_check pqc ON pqc.project_no=dor.project_no
         WHERE
         dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status}
+        AND pqc.result = 1
         <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>

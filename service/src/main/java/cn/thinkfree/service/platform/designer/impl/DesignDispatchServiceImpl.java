@@ -563,7 +563,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             String companyId = designerOrders.getCompanyId();
             constructionOrder.setCompanyId(companyId);
             constructionOrder.setSchemeNo(buildConfigService.getSchemeNoByCompanyId(companyId));
-            constructionOrder.setOrderStage(ConstructionStateEnum.STATE_520.getState());
+            constructionOrder.setOrderStage(ConstructionStateEnum.STATE_510.getState());
         }
         constructionOrderMapper.insertSelective(constructionOrder);
         updateProjectState(projectNo, constructionOrder.getOrderStage());
@@ -600,6 +600,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrders.getOrderNo(), optionUserId, optionUserName, reason);
         saveLog(DesignStateEnum.STATE_CLOSE_PLATFORM.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_CLOSE_PLATFORM.getState());
+
     }
 
     /**

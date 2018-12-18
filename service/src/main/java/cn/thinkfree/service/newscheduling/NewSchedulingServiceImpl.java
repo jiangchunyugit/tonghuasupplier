@@ -430,4 +430,12 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         }
         return RespData.success(stageList);
     }
+
+    @Override
+    public ProjectBigScheduling findBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort) {
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        example.createCriteria().andSchemeNoEqualTo(schemeNo).andSortEqualTo(scheduleSort);
+        List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example);
+        return projectBigSchedulings != null && projectBigSchedulings.size() > 0 ? projectBigSchedulings.get(0) : null;
+    }
 }
