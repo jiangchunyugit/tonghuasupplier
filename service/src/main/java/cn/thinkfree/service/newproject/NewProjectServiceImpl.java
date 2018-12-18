@@ -1085,6 +1085,17 @@ public class NewProjectServiceImpl implements NewProjectService {
                     stateEnum = DesignStateEnum.STATE_180;
                 }
             }
+            ProjectData data = new ProjectData();
+            data.setStatus(2);
+            ProjectDataExample dataExample = new ProjectDataExample();
+            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+            dataCriteria.andProjectNoEqualTo(projectNo);
+            dataCriteria.andStatusEqualTo(1);
+            dataCriteria.andTypeEqualTo(category);
+            int i = projectDataMapper.updateByExampleSelective(data, dataExample);
+            if (i==0){
+                throw new RuntimeException("拒绝失败");
+            }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
         }
         return RespData.success();
