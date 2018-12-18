@@ -1,5 +1,6 @@
 package cn.thinkfree.service.approvalflow.impl;
 
+import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.core.constants.Role;
@@ -81,10 +82,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
-        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-            LOGGER.error("无法发起审批");
-            throw new RuntimeException();
-        }
+//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+//            LOGGER.error("无法发起审批");
+//            throw new RuntimeException();
+//        }
         AfInstanceDetailVO instanceDetailVO = new AfInstanceDetailVO();
         Project project = projectService.findByProjectNo(projectNo);
         if (project == null) {
@@ -128,6 +129,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
             approvalLogVOs.add(approvalLogVO);
         }
+        if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            instanceDetailVO.setMaxDelayDays(maxDelayDays);
+        }
         String customerId = project.getOwnerId();
         AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
         AfConfig config = configService.findByNo(configNo);
@@ -139,6 +144,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instanceDetailVO.setApprovalLogs(approvalLogVOs);
         instanceDetailVO.setAddress(project.getAddressDetail());
         return instanceDetailVO;
+    }
+
+    private int getMaxDelayDays(String projectNo) {
+//        ProjectScheduling projectScheduling = schedulingService.getProjectScheduling(projectNo).getData();
+//        if (projectScheduling == null) {
+//            LOGGER.error("未查询到排期信息，projectNo:{}", projectNo);
+//            throw new RuntimeException();
+//        }
+//        Integer delay = projectScheduling.getDelay();
+//        return delay != null ? delay : 0;
+        return 5;
     }
 
     private AfUserDTO getUserInfo(String userId, String roleId) {
@@ -162,10 +178,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
     @Override
     public void submitStart(String projectNo, String userId, String configNo, Integer scheduleSort, String data, String remark) {
-        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
-            LOGGER.error("无法发起审批");
-            throw new RuntimeException();
-        }
+//        if (!verifyStartApproval(projectNo, configNo, scheduleSort)) {
+//            LOGGER.error("无法发起审批");
+//            throw new RuntimeException();
+//        }
         List<UserRoleSet> allRoles = roleService.findAll();
         String configSchemeNo = configSchemeService.findByProjectNoAndConfigNoAndUserId(projectNo, configNo, userId);
         if (configSchemeNo == null) {
@@ -182,6 +198,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (orderUsers == null || orderUsers.isEmpty()) {
             LOGGER.error("未获取到项目用户信息，projectNo:{}", projectNo);
             throw new RuntimeException();
+        }
+
+        if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            int delayDays = getDelayDays(data);
+            if (delayDays > maxDelayDays) {
+                LOGGER.error("传入的延期天数大于实际延期天数，projectNo:{}, maxDelayDays:{}, delayDays:{}", projectNo, maxDelayDays, delayDays);
+                throw new RuntimeException();
+            }
         }
 
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
@@ -239,6 +264,16 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         insert(instance);
         approvalLogService.create(approvalLogs);
+    }
+
+    private int getDelayDays(String data){
+        Map map = JSONUtil.json2Bean(data, Map.class);
+        Object delayDays = map.get("delay");
+        if (delayDays != null) {
+            return Integer.parseInt(delayDays.toString());
+        }
+        LOGGER.error("未传入延期天数，data:{}", data);
+        throw new RuntimeException();
     }
 
     private boolean verifyStartApproval(String projectNo, String configNo, Integer scheduleSort) {
@@ -530,6 +565,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
             // TODO 发送变更金额
 //            sendChangeMoney(instance.getProjectNo(), instance.getData(), instance.getRemark());
+        } else if (AfConfigs.DELAY_ORDER.configNo.equals(instance.getConfigNo())) {
+            int delayDays = getDelayDays(instance.getData());
+            schedulingService.editProjectDelay(instance.getProjectNo(), delayDays);
         }
 
         createPdf(instance);
@@ -752,7 +790,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         int result = 0;
         if (!projectCompleted(schedulingDetailsVOs, projectNo)) {
             if (startReportSuccess(projectNo)) {
-                result += 1;
+                int maxDelayDays = getMaxDelayDays(projectNo);
+                if (maxDelayDays > 0) {
+                    result += 1;
+                }
             }
         }
         return result;
@@ -967,10 +1008,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param projectNo 项目编号
      */
     private void getDelayStartMenus(List<AfStartMenuVO> startMenus, List<ProjectBigSchedulingDetailsVO> schedulingDetailsVOs, String userId, String projectNo){
-        int result = verifyDelay(schedulingDetailsVOs, projectNo, null);
-        if (result == 1) {
+//        int result = verifyDelay(schedulingDetailsVOs, projectNo, null);
+//        if (result == 1) {
             addStartMenu(startMenus, projectNo, AfConfigs.DELAY_ORDER.configNo, userId);
-        }
+//        }
     }
 
     /**

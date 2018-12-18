@@ -45,4 +45,6 @@ public class AfInstanceDetailVO {
     private String remark;
     @ApiModelProperty("拒绝原因")
     private String refusalReason;
+    @ApiModelProperty("最大延期天数")
+    private Integer maxDelayDays;
 }
