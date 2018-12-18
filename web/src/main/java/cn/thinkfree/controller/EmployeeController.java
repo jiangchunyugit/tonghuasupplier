@@ -79,9 +79,10 @@ public class EmployeeController extends AbsBaseController {
     public MyRespBundle apply(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态1入驻待审核，4解约待审核") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "reason", required = false, value = "解约原因") @RequestParam(name = "reason", required = false) String reason) {
         try {
-            employeeService.employeeApply(userId, employeeApplyState, companyId);
+            employeeService.employeeApply(userId, employeeApplyState, companyId, reason);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
