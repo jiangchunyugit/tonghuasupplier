@@ -1206,6 +1206,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 return DesignStateEnum.STATE_ORDER_END_31;
             case STATE_40:
                 return DesignStateEnum.STATE_ORDER_END_41;
+            case STATE_45:
+                return DesignStateEnum.STATE_ORDER_END_46;
             default:
                 throw new RuntimeException("无效的订单状态值");
         }

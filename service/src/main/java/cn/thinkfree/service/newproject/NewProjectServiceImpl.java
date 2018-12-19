@@ -640,13 +640,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());//
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
-        for (DesignStateEnum designStateEnum : allCancelState) {
-            if (project.getStage().equals(designStateEnum.getState())) {
-                designerOrderDetailVo.setCancle(true);
-            } else {
-                designerOrderDetailVo.setCancle(false);
-            }
-        }
+        designerOrderDetailVo.setCancle(allCancelState.contains(DesignStateEnum.queryByState(designerOrder.getOrderStage())));
         //存放订单类型
         designerOrderDetailVo.setOrderType(ProjectDataStatus.EFFECT_STATUS.getValue());
         //存放展示信息
