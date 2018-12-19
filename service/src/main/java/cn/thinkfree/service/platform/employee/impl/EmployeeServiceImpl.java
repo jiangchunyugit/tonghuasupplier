@@ -1,5 +1,7 @@
 package cn.thinkfree.service.platform.employee.impl;
 
+import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
@@ -17,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -39,7 +42,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private BasicsService basicsService;
     @Autowired
+    private OrderUserMapper orderUserMapper;
+    @Autowired
     private OptionLogMapper logMapper;
+    @Autowired
+    private ProjectMapper projectMapper;
+    @Autowired
+    private DesignerOrderMapper designerOrderMapper;
+    @Autowired
+    private ConstructionOrderMapper constructionOrderMapper;
+
     /**
      * 基础用户角色编码，不可修改
      */
@@ -868,5 +880,114 @@ public class EmployeeServiceImpl implements EmployeeService {
             return new CompanyInfo();
         }
         return companyInfos.get(0);
+    }
+
+    @Override
+    public EmployeeAndProjectMsgVo queryRelationProject(String userId) {
+        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(userId);
+        if(employeeMsg == null){
+            throw new RuntimeException("无效的用户ID");
+        }
+        EmployeeAndProjectMsgVo msgVo = new EmployeeAndProjectMsgVo();
+        msgVo.setRealName(employeeMsg.getRealName());
+        msgVo.setUserId(userId);
+        String roleCode = employeeMsg.getRoleCode();
+        UserRoleSetExample setExample = new UserRoleSetExample();
+        setExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        List<UserRoleSet> userRoleSets = roleSetMapper.selectByExample(setExample);
+        if(userRoleSets.isEmpty()){
+           throw new RuntimeException("无效的用户角色");
+        }
+        msgVo.setRoleName(userRoleSets.get(0).getRoleName());
+        msgVo.setRoleCode(roleCode);
+        List<String> projectNos = getProjectNos(userId);
+        if(projectNos.isEmpty()){
+            msgVo.setSumCount(0);
+            msgVo.setProjects(new ArrayList<>());
+            return msgVo;
+        }
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoIn(projectNos);
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        List<ProjectSummaryMsgVo> projectSummaryMsgVos = new ArrayList<>();
+        for(Project project : projects){
+            ProjectSummaryMsgVo summaryMsgVo = new ProjectSummaryMsgVo();
+            summaryMsgVo.setProjectNo(project.getProjectNo());
+            summaryMsgVo.setAddress(project.getAddressDetail());
+            if(project.getCreateTime() != null){
+                summaryMsgVo.setCreateTime(project.getCreateTime().getTime());
+            }
+            projectSummaryMsgVos.add(summaryMsgVo);
+        }
+        msgVo.setSumCount(projects.size());
+        msgVo.setProjects(projectSummaryMsgVos);
+        return msgVo;
+    }
+
+    private List<String> getProjectNos(String userId) {
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andUserIdEqualTo(userId).andIsTransferEqualTo(Short.parseShort("0"));
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        return ReflectUtils.getList(orderUsers,"projectNo");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void removeEmployee(String employeeId, String dealExplain, String dealUserId, String roleCode, String companyId) {
+        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(employeeId);
+        if(employeeMsg == null){
+            throw new RuntimeException("该员工不存在");
+        }
+        boolean isRemove = checkOrderState(employeeId, roleCode);
+        if(!isRemove){
+            throw new RuntimeException("该用户有未结束的订单，不可进行该操作");
+        }
+        employeeMsg.setEmployeeApplyState(6);
+        employeeMsg.setEmployeeState(2);
+        employeeMsg.setRoleCode("");
+        employeeMsg.setCompanyId("");
+        employeeMsgMapper.updateByPrimaryKeySelective(employeeMsg);
+
+        EmployeeApplyLog employeeApplyLog = new EmployeeApplyLog();
+        employeeApplyLog.setDealExplain(dealExplain);
+        employeeApplyLog.setDealTime(new Date());
+        employeeApplyLog.setDealState(1);
+        employeeApplyLog.setDealUserId(dealUserId);
+        employeeApplyLog.setCompanyId(companyId);
+        employeeApplyLog.setRemark("办理员工离职");
+        applyLogMapper.insertSelective(employeeApplyLog);
+    }
+
+    private boolean checkOrderState(String employeeId, String roleCode) {
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andUserIdEqualTo(employeeId).andRoleCodeEqualTo(roleCode)
+                .andIsTransferEqualTo(Short.parseShort("0"));
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        if(orderUsers.isEmpty()){
+            return true;
+        }
+        List<String> orderNos = ReflectUtils.getList(orderUsers,"orderNo");
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        designerOrderExample.createCriteria().andOrderNoIn(orderNos);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        for(DesignerOrder designerOrder : designerOrders){
+            if(designerOrder.getOrderStage() == DesignStateEnum.STATE_270.getState() ||
+               designerOrder.getOrderStage() == DesignStateEnum.STATE_210.getState() ||
+               designerOrder.getComplaintState() == 3){
+            }else{
+                return false;
+            }
+        }
+        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        constructionOrderExample.createCriteria().andOrderNoIn(orderNos);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        for(ConstructionOrder constructionOrder : constructionOrders){
+            if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_700.getState() ||
+               constructionOrder.getComplaintState() == 3){
+            }else{
+                return false;
+            }
+        }
+        return true;
     }
 }

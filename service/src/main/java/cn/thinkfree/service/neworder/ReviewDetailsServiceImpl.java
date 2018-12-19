@@ -17,6 +17,7 @@ import cn.thinkfree.service.newproject.NewProjectService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
+import cn.thinkfree.service.platform.order.OrderService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
@@ -79,7 +80,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     EmployeeMsgMapper employeeMsgMapper;
     @Autowired
     NewProjectService newProjectService;
-
+    @Autowired
+    OrderService orderService;
 
     /**
      * 获取精准报价
@@ -787,7 +789,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 }
             }
         }
-        updateProjectStage(projectNo);
+
         //创建施工订单
         try {
             designDispatchService.createConstructionOrder(projectNo);
@@ -818,6 +820,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (result1 == 0) {
             return RespData.error("预交底失败(记录预交底信息失败)");
         }
+        String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
+        orderService.sendPredatingMsg(projectNo,designerId,DateUtil.getStringDate(predatingTime,"yyyy-MM-dd HH:mm:ss"),remark);
+        updateProjectStage(projectNo);
         return RespData.success();
     }
 

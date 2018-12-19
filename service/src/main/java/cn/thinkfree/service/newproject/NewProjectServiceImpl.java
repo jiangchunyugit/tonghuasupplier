@@ -26,6 +26,7 @@ import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -109,6 +110,16 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(AppProjectSEO appProjectSEO) {
+        if (appProjectSEO.getUserId() == null || appProjectSEO.getUserId().trim().isEmpty()) {
+            return RespData.error("请检查userId=" + appProjectSEO.getUserId());
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria msgCriteria = msgExample.createCriteria();
+        msgCriteria.andUserIdEqualTo(appProjectSEO.getUserId());
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if (employeeMsgs.size() == 0 || employeeMsgs.get(0).getEmployeeState() == 2) {
+            return RespData.success(new PageInfo<>());
+        }
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
@@ -161,7 +172,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
-                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                    projectVo.setConstructionProgress(100);
+                } else {
+                    projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                }
                 projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
                 projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             } else {
@@ -561,7 +576,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
-            projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                projectVo.setConstructionProgress(100);
+            } else {
+                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            }
             projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
         } else {
@@ -747,7 +766,11 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
             }
             //添加进度展示
-            projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                projectTitleVo.setConstructionProgress(100);
+            } else {
+                projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            }
         }
         int confirm;
         try {
@@ -919,6 +942,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("请选择资料类型");
         }
         for (UrlDetailVo urlDetailVo : dataVo.getDataList()) {
+            if (dataVo.getCategory() == 3) {
+                break;
+            }
             ProjectData projectData = new ProjectData();
             projectData.setFileType(ProjectDataStatus.FILE_PNG.getValue());
             projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
@@ -947,6 +973,57 @@ public class NewProjectServiceImpl implements NewProjectService {
             int i = projectDataMapper.insertSelective(projectData);
             if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
                 return RespData.error("确认失败!");
+            }
+        }
+        if (dataVo.getCategory() == 3) {
+            String result = cloudService.getShangHaiPriceDetail(dataVo.getHsDesignId());
+            if (result.trim().isEmpty()) {
+                throw new RuntimeException("获取上海报价信息失败!");
+            }
+            JSONObject jsonObject = JSON.parseObject(result);
+            JSONObject data = jsonObject.getJSONObject("data");
+            Integer code = jsonObject.getJSONObject("status").getInteger("code");
+            if (code != 0) {
+                throw new RuntimeException(jsonObject.getJSONObject("status").getString("message"));
+            }
+            if (data == null) {
+                throw new RuntimeException(jsonObject.getJSONObject("status").getString("message"));
+            }
+            String quoteId = data.getString("quoteId");
+            String baseUrl = "https://aly-uat-api.homestyler.com/quote-system/api/v1/quote/" + quoteId + "/export?exportCode=";
+            ProjectData projectData = new ProjectData();
+            projectData.setFileType(ProjectDataStatus.FILE_PNG.getValue());
+            projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
+            projectData.setType(dataVo.getType());
+            projectData.setCategory(dataVo.getType());
+            projectData.setProjectNo(dataVo.getProjectNo());
+            projectData.setCaseId(dataVo.getCaseId());
+            projectData.setHsDesignid(dataVo.getHsDesignId());
+            projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+            for (int i = 1; i <= 5; i++) {
+                switch (i) {
+                    case 1:
+                        projectData.setFileName("全屋报价");
+                        projectData.setUrl(baseUrl + i);
+                        break;
+                    case 2:
+                        projectData.setFileName("施工报价");
+                        projectData.setUrl(baseUrl + i);
+                        break;
+                    case 3:
+                        projectData.setFileName("材料报价");
+                        projectData.setUrl(baseUrl + i);
+                        break;
+                    case 4:
+                        projectData.setFileName("硬装报价");
+                        projectData.setUrl(baseUrl + i);
+                        break;
+                    default:
+                        projectData.setFileName("软装报价");
+                        projectData.setUrl(baseUrl + i);
+                        break;
+                }
+
             }
         }
         if (dataVo.getType().equals(ProjectDataStatus.VOLUME_DATA.getValue())) {
@@ -1123,7 +1200,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             dataCriteria.andStatusEqualTo(1);
             dataCriteria.andTypeEqualTo(category);
             int i = projectDataMapper.updateByExampleSelective(data, dataExample);
-            if (i==0){
+            if (i == 0) {
                 throw new RuntimeException("拒绝失败");
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");

@@ -13,6 +13,7 @@ import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.constants.UserStatus;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.neworder.ReviewDetailsService;
@@ -69,6 +70,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     ProjectQuotationCheckMapper projectQuotationCheckMapper;
     @Autowired
     FundsOrderFeeMapper fundsOrderFeeMapper;
+    @Autowired
+    ContractService contractService;
+
     /**
      * PC获取项目详情接口--项目阶段
      *
@@ -137,7 +141,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         DesignerOrder designerOrder = designerOrders.get(0);
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
-        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState())||designerOrder.getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
+        if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrder.getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
             designerOrderVo.setComplete(true);
         } else {
             designerOrderVo.setComplete(false);
@@ -182,7 +186,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         criteria.andProjectNoEqualTo(projectNo);
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectQuotation> projectQuotations = projectQuotationMapper.selectByExample(projectQuotationExample);
-        if(projectQuotations.size() == 0){
+        if (projectQuotations.size() == 0) {
             return RespData.error("无此项目信息");
         }
         if (projectQuotations.size() == 1) {
@@ -204,7 +208,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
             FundsOrderFeeExample.Criteria criteria3 = fundsOrderFeeExample.createCriteria();
             criteria3.andProjectNoEqualTo(projectNo);
             List<FundsOrderFee> fundsOrderFees = fundsOrderFeeMapper.selectByExample(fundsOrderFeeExample);
-            if(fundsOrderFees.size() == 1){
+            if (fundsOrderFees.size() == 1) {
                 FundsOrderFee fundsOrderFee = fundsOrderFees.get(0);
                 offerVo.setChangeFee(fundsOrderFee.getFeeAmount());
             }
@@ -245,8 +249,18 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
      */
     @Override
     public MyRespBundle<ContractVo> getPcProjectContract(String projectNo) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("前检查参数projectNo=" + projectNo);
+        }
         //组合合同信息
-        ContractVo contractVo = new ContractVo("HGSD6893", new Date(), "生效");
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        if (constructionOrders.size() == 0) {
+            return RespData.error("暂无此项目");
+        }
+        ContractVo contractVo = contractService.getOrderContractByOrderNo(constructionOrders.get(0).getOrderNo());
         return RespData.success(contractVo);
     }
 

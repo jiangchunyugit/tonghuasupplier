@@ -189,15 +189,15 @@ public class ReviewDetailsController extends AbsBaseController {
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo,
             @RequestParam(name = "predatingTime") @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd", required = true) Date predatingTime,
             @RequestParam(name = "remark") @ApiParam(name = "remark", value = "备注", required = true) String remark) {
-        return reviewDetailsService.projectPredating(projectNo,predatingTime,remark);
+        return reviewDetailsService.projectPredating(projectNo, predatingTime, remark);
     }
 
     @RequestMapping(value = "getShangHaiPriceDetail", method = {RequestMethod.POST, RequestMethod.GET})
     @ApiOperation("获取上海报价信息(转施工)")
     public MyRespBundle getShangHaiPriceDetail(
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo,
-            @RequestParam(name = "predatingTime") @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd", required = true) Date predatingTime,
-            @RequestParam(name = "remark") @ApiParam(name = "remark", value = "备注", required = true) String remark) {
+            @RequestParam(name = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo,
+            @RequestParam(name = "predatingTime", required = false) @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd", required = false) Date predatingTime,
+            @RequestParam(name = "remark", required = false) @ApiParam(name = "remark", value = "备注", required = false) String remark) {
         try {
             return reviewDetailsService.getShangHaiPriceDetail(projectNo, predatingTime, remark);
         } catch (Exception e) {
@@ -206,11 +206,11 @@ public class ReviewDetailsController extends AbsBaseController {
         }
     }
 
-    @RequestMapping(value = "getDesignDetail",method = {RequestMethod.GET,RequestMethod.POST})
+    @RequestMapping(value = "getDesignDetail", method = {RequestMethod.GET, RequestMethod.POST})
     @ApiOperation("设计信息")
     public MyRespBundle<DesignVo> getDesignDetail(
-            @RequestParam(name = "userId",required = false) @ApiParam(value = "用户ID", name = "userId", required = false) String userId,
-            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo){
+            @RequestParam(name = "userId", required = false) @ApiParam(value = "用户ID", name = "userId", required = false) String userId,
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo) {
         return reviewDetailsService.getDesignDetail(projectNo);
     }
 
