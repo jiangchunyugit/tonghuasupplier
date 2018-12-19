@@ -1506,10 +1506,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		example.createCriteria().andOrderNumberEqualTo(orderNumber);
 		// 查询合同
 		List<OrderContract> list = orderContractMapper.selectByExample(example);
-		OrderContract orderVo = list.get(0);
-		vo.setContractTime(orderVo.getSignTime());
-		vo.setContractNo(orderVo.getContractNumber());
-		vo.setContractStatus(orderVo.getAuditType());
+		if(list != null && list.size()>0){
+			OrderContract orderVo = list.get(0);
+			vo.setContractTime(orderVo.getSignTime());
+			vo.setContractNo(orderVo.getContractNumber());
+			vo.setContractStatus(orderVo.getAuditType());
+		}
 		return  vo ;
 	}
 }
