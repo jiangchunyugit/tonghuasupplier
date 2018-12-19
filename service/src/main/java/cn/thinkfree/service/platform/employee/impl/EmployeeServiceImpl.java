@@ -210,12 +210,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("公司信息异常");
         }
         checkCompanyExit(companyId);
-        UserRoleSetExample roleSetExample = new UserRoleSetExample();
-        roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
-        List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
-        if (roleSets.isEmpty()) {
-            throw new RuntimeException("无效的角色编码");
-        }
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -227,6 +221,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeMsg.setCompanyId("");
             employeeMsg.setRoleCode("");
         } else {
+            UserRoleSetExample roleSetExample = new UserRoleSetExample();
+            roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
+            List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+            if (roleSets.isEmpty()) {
+                throw new RuntimeException("无效的角色编码");
+            }
             employeeState = 1;
             employeeMsg.setCompanyId(companyId);
             employeeMsg.setRoleCode(roleCode);
@@ -998,5 +998,53 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         }
         return true;
+    }
+
+    @Override
+    public List<CompanyStaffVo> companyStaff(String searchKey, String roleCode, String companyId) {
+        List<String> staffIds = new ArrayList<>();
+        if(StringUtils.isNotBlank(searchKey)){
+            List<UserMsgVo> msgVos = userCenterService.queryUserMsg(searchKey);
+            staffIds.addAll(ReflectUtils.getList(msgVos,"staffId"));
+            EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+            employeeMsgExample.createCriteria().andRealNameLike("%" + searchKey + "%");
+            List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+            staffIds.addAll(ReflectUtils.getList(employeeMsgs,"userId"));
+            if(staffIds.isEmpty()){
+                return new ArrayList<>();
+            }
+        }
+        EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = employeeMsgExample.createCriteria();
+        if(StringUtils.isNotBlank(roleCode)){
+            criteria.andRoleCodeEqualTo(roleCode);
+        }
+        if(!staffIds.isEmpty()){
+            criteria.andUserIdIn(staffIds);
+        }
+        if(StringUtils.isNotBlank(companyId)){
+            criteria.andCompanyIdEqualTo(companyId);
+        }
+        employeeMsgExample.setOrderByClause(" user_id desc limit 20");
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+        if(employeeMsgs.isEmpty()){
+            return new ArrayList<>();
+        }
+        staffIds = ReflectUtils.getList(employeeMsgs,"userId");
+        List<UserMsgVo> msgVos = userCenterService.queryUsers(staffIds);
+        Map<String,UserMsgVo> msgVoMap = ReflectUtils.listToMap(msgVos,"staffId");
+        List<CompanyStaffVo> staffVos = new ArrayList<>();
+        for(EmployeeMsg employeeMsg : employeeMsgs){
+            UserMsgVo userMsgVo = msgVoMap.get(employeeMsg.getUserId());
+            CompanyStaffVo staffVo = new CompanyStaffVo();
+            staffVo.setRealName(employeeMsg.getRealName());
+            staffVo.setRoleCode(employeeMsg.getRoleCode());
+            staffVo.setUserId(employeeMsg.getUserId());
+            if(userMsgVo != null){
+                staffVo.setPhone(userMsgVo.getUserPhone());
+            }
+            staffVos.add(staffVo);
+        }
+        return staffVos;
     }
 }

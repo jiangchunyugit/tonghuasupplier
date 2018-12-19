@@ -343,5 +343,20 @@ public class EmployeeController extends AbsBaseController {
             return sendFailMessage(e.getMessage());
         }
     }
+    @ApiOperation("根据公司ID查询员工信息")
+    @MyRespBody
+    @RequestMapping(value = "companyStaff", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<CompanyStaffVo>> companyStaff(
+            @ApiParam(name = "companyId", value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "roleCode", value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "searchKey", value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey){
+        try {
+            List<CompanyStaffVo> companyStaffVos = employeeService.companyStaff(searchKey, roleCode, companyId);
+            return sendJsonData(ResultMessage.SUCCESS,companyStaffVos);
+        } catch (Exception e) {
+            logger.error("e:", e);
+            return sendFailMessage(e.getMessage());
+        }
+    }
 
 }
