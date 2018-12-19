@@ -1078,6 +1078,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = queryDesignerOrderByOrderNo(orderNo);
         Project project = queryProjectByNo(designerOrder.getProjectNo());
         DesignStateEnum designStateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
+        LOGGER.info("订单编号：{}，订单状态：{}", orderNo, designStateEnum.getState());
         //设置该设计订单所属公司
         DesignerOrder updateOrder = new DesignerOrder();
         DesignStateEnum stateEnum = null;
