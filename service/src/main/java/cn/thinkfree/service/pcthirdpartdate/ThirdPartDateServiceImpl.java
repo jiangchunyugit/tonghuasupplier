@@ -61,11 +61,14 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	@Autowired
 	OrderUserMapper  orderUserMapper;
 
+	@Autowired
+	private ConstructionOrderMapper constructionOrderMapper;
 
 
 
 
-    @Override
+
+	@Override
     public MarginContractVO getMarginContract(String contractNumber,String signedTime) {
 
 
@@ -139,16 +142,26 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 				}
 				// 判断当前合同类型 02设计合同_to_c 03施工合同_to_c
 				if (contract.getContractType().equals("02")) {
+
+					DesignerOrderExample exampleOne = new DesignerOrderExample();
+					exampleOne.createCriteria().andOrderNoEqualTo(orderNumber);
+					List<DesignerOrder>  projectList = designerOrderMapper.selectByExample(exampleOne);
+
 					OrderUserExample example = new OrderUserExample();
-					example.createCriteria().andOrderNoEqualTo(orderNumber).andRoleCodeEqualTo("CC");
+					example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CC");
 					List<OrderUser> list = orderUserMapper.selectByExample(example);
 					// 设计合同数据拼接
 					designData(orderNumber, listVo, contract, companyInfo, resMap,list);
 
 				} else {
 					// 施工订单
+
+					ConstructionOrderExample exampleOne = new ConstructionOrderExample();
+					exampleOne.createCriteria().andOrderNoEqualTo(orderNumber);
+					List<ConstructionOrder>  projectList = constructionOrderMapper.selectByExample(exampleOne);
 					OrderUserExample example = new OrderUserExample();
-					example.createCriteria().andOrderNoEqualTo(orderNumber).andRoleCodeEqualTo("CC");
+					example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CC");
+
 					List<OrderUser> list = orderUserMapper.selectByExample(example);
 					roadWorkData(orderNumber, listVo, contract, companyInfo, resMap,list);
 				}

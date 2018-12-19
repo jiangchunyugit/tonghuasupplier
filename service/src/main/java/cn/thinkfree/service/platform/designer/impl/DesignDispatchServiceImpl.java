@@ -1165,7 +1165,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         DesignStateEnum stateEnum = null;
         try {
-            stateEnum(DesignStateEnum.queryByState(designerOrder.getOrderStage()));
+            stateEnum = stateEnum(DesignStateEnum.queryByState(designerOrder.getOrderStage()));
             checkOrderState(designerOrder, stateEnum);
         } catch (Exception e) {
             throw new RuntimeException("当前订单不可取消，如有疑问，请联系客服");
@@ -1206,6 +1206,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 return DesignStateEnum.STATE_ORDER_END_31;
             case STATE_40:
                 return DesignStateEnum.STATE_ORDER_END_41;
+            case STATE_45:
+                return DesignStateEnum.STATE_ORDER_END_46;
             default:
                 throw new RuntimeException("无效的订单状态值");
         }
