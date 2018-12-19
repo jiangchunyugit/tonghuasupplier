@@ -255,9 +255,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         construct.setStatus(2);
         projectQuotationRoomsConstructMapper.updateByPrimaryKeySelective(construct);
-        try{
+        try {
             updateRoom(construct.getProjectNo());
-        }catch (Exception e){
+        } catch (Exception e) {
             construct.setStatus(1);
             projectQuotationRoomsConstructMapper.updateByPrimaryKeySelective(construct);
             return RespData.error("删除失败");
@@ -273,9 +273,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         hardDecoration.setStatus(2);
         projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(hardDecoration);
-        try{
+        try {
             updateRoom(hardDecoration.getProjectNo());
-        }catch (Exception e){
+        } catch (Exception e) {
             hardDecoration.setStatus(1);
             projectQuotationRoomsHardConstructMapper.updateByPrimaryKeySelective(hardDecoration);
             return RespData.error("删除失败");
@@ -291,9 +291,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         }
         softDecoration.setStatus(2);
         projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(softDecoration);
-        try{
+        try {
             updateRoom(softDecoration.getProjectNo());
-        }catch (Exception e){
+        } catch (Exception e) {
             softDecoration.setStatus(1);
             projectQuotationRoomsSoftConstructMapper.updateByPrimaryKeySelective(softDecoration);
             return RespData.error("删除失败");
@@ -436,11 +436,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (quotationRooms.isEmpty()) {
             return false;
         }
-        for(ProjectQuotationRooms quotationRooms1 : quotationRooms){
-            ProjectQuotationRooms rooms = quotationRooms.get(0);
-            BigDecimal sumCons = getSumCons(projectNo);
-            BigDecimal sumSoft = getSumSoft(projectNo);
-            BigDecimal sumHard = getSumHard(projectNo);
+        for (ProjectQuotationRooms rooms : quotationRooms) {
+            BigDecimal sumCons = getSumCons(projectNo, rooms.getRoomType());
+            BigDecimal sumSoft = getSumSoft(projectNo, rooms.getRoomType());
+            BigDecimal sumHard = getSumHard(projectNo, rooms.getRoomType());
             rooms.setConstructsPrice(sumCons);
             rooms.setSoftMaterialPrice(sumSoft);
             rooms.setHardMaterialPrice(sumHard);
@@ -450,9 +449,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         return true;
     }
 
-    private BigDecimal getSumCons(String projectNo) {
+    private BigDecimal getSumCons(String projectNo, String roomType) {
         ProjectQuotationRoomsConstructExample constructExample = new ProjectQuotationRoomsConstructExample();
-        constructExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        constructExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1).andRoomTypeEqualTo(roomType);
         List<ProjectQuotationRoomsConstruct> roomsConstructs = projectQuotationRoomsConstructMapper.selectByExample(constructExample);
         BigDecimal sumCons = BigDecimal.ZERO;
         for (ProjectQuotationRoomsConstruct roomsConstruct : roomsConstructs) {
@@ -464,9 +463,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         return sumCons;
     }
 
-    private BigDecimal getSumSoft(String projectNo) {
+    private BigDecimal getSumSoft(String projectNo, String roomType) {
         ProjectQuotationRoomsSoftDecorationExample decorationExample = new ProjectQuotationRoomsSoftDecorationExample();
-        decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1).andRoomTypeEqualTo(roomType);
         List<ProjectQuotationRoomsSoftDecoration> roomsConstructs = projectQuotationRoomsSoftConstructMapper.selectByExample(decorationExample);
         BigDecimal sumCons = BigDecimal.ZERO;
         for (ProjectQuotationRoomsSoftDecoration roomsConstruct : roomsConstructs) {
@@ -478,9 +477,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         return sumCons;
     }
 
-    private BigDecimal getSumHard(String projectNo) {
+    private BigDecimal getSumHard(String projectNo, String roomType) {
         ProjectQuotationRoomsHardDecorationExample decorationExample = new ProjectQuotationRoomsHardDecorationExample();
-        decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1);
+        decorationExample.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(1).andRoomTypeEqualTo(roomType);
         List<ProjectQuotationRoomsHardDecoration> roomsConstructs = projectQuotationRoomsHardConstructMapper.selectByExample(decorationExample);
         BigDecimal sumCons = BigDecimal.ZERO;
         for (ProjectQuotationRoomsHardDecoration roomsConstruct : roomsConstructs) {
@@ -823,7 +822,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             return RespData.error("预交底失败(记录预交底信息失败)");
         }
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        orderService.sendPredatingMsg(projectNo,designerId,DateUtil.getStringDate(predatingTime,"yyyy-MM-dd HH:mm:ss"),remark);
+        orderService.sendPredatingMsg(projectNo, designerId, DateUtil.getStringDate(predatingTime, "yyyy-MM-dd HH:mm:ss"), remark);
         updateProjectStage(projectNo);
         return RespData.success();
     }
@@ -879,9 +878,9 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         //装修风格
         projectDetailVO.setStyle(project.getStyle());
         //计划装修开始时间
-        projectDetailVO.setPlanStartTime(DateUtil.getStringDate(project.getPlanStartTime(),"yyyy-MM-dd-HH-mm-ss"));
+        projectDetailVO.setPlanStartTime(DateUtil.getStringDate(project.getPlanStartTime(), "yyyy-MM-dd-HH-mm-ss"));
         //计划装修结束时间
-        projectDetailVO.setPlanEndTime(DateUtil.getStringDate(project.getPlanEndTime(),"yyyy-MM-dd-HH-mm-ss"));
+        projectDetailVO.setPlanEndTime(DateUtil.getStringDate(project.getPlanEndTime(), "yyyy-MM-dd-HH-mm-ss"));
         //订单来源
         switch (project.getOrderSource()) {
             case 1:

@@ -199,7 +199,7 @@
         LEFT JOIN province prov ON prov.province_code = proj.province
         LEFT JOIN city ci ON ci.city_code = proj.city
         LEFT JOIN area ar ON ar.area_code = proj.area
-        LEFT JOIN basics_data bd ON bd.basics_code = proj.style
+        LEFT JOIN basics_data bd ON bd.basics_code = proj.style and bd.basics_group = 'DESIGN_STYLE'
         WHERE ou.user_id = #{userId}
     </select>
 
