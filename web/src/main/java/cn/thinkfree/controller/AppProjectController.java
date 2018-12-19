@@ -132,7 +132,7 @@ public class AppProjectController {
             return newProjectService.confirmVolumeRoomData(dataVo);
         } catch (Exception e) {
             e.printStackTrace();
-            return RespData.error("此阶段无法提交资料信息!");
+            return RespData.error(e.getMessage());
         }
     }
 
@@ -143,7 +143,7 @@ public class AppProjectController {
             @RequestParam(name = "result", required = false) @ApiParam(name = "result", value = "结果 1,同意  2,不同意", required = false) Integer result,
             @RequestParam(name = "category", required = false) @ApiParam(name = "category", value = "项目编号", required = false) Integer category) {
         try {
-            return newProjectService.confirmVolumeRoomDataUser(projectNo, category,result);
+            return newProjectService.confirmVolumeRoomDataUser(projectNo, category, result);
         } catch (Exception e) {
             e.printStackTrace();
             return RespData.error(e.getMessage());
