@@ -110,6 +110,7 @@
         <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
         <!--<table tableName="rebate_node" domainObjectName="RebateNode"/>-->
         <!--<table tableName="scheme_schedule_rebate_node" domainObjectName="SchemeScheduleRebateNode"/>-->
+        <!--<table tableName="funds_settle_accounts_node_log" domainObjectName="FundsSettleAccountsNodeLog"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
