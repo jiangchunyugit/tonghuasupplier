@@ -10,13 +10,13 @@ package cn.thinkfree.core.constants;
 public class RebateNodeConstants {
 
     /**
-     * 节点类型：施工订单节点
-     */
-    public static final int node_type_construct = 1;
-    /**
      * 节点类型：设计订单节点
      */
-    public static final int node_type_design = 2;
+    public static final int node_type_design = 1;
+    /**
+     * 节点类型：施工订单节点
+     */
+    public static final int node_type_construct = 2;
     /**
      * 节点类型：经销商
      */

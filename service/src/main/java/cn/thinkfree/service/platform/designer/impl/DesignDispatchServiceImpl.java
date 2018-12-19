@@ -23,6 +23,7 @@ import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
+import cn.thinkfree.service.platform.order.OrderService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.*;
 import com.github.pagehelper.PageHelper;
@@ -92,6 +93,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private RoleFunctionService roleFunctionService;
     @Autowired
     private ContractTermsMapper contractTermsMapper;
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -136,10 +139,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
         if (orderTpye == 1) {
-            orderExampleCriteria.andOrderStageLessThanOrEqualTo(DesignStateEnum.STATE_30.getState());
+            orderExampleCriteria.andOrderStageLessThan(DesignStateEnum.STATE_30.getState());
         }
         if (orderTpye == 2) {
-            orderExampleCriteria.andOrderStageGreaterThan(DesignStateEnum.STATE_30.getState());
+            orderExampleCriteria.andOrderStageGreaterThanOrEqualTo(DesignStateEnum.STATE_30.getState());
         }
         if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
@@ -637,6 +640,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_10.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_10.getState());
+        orderService.sendPlatformDispatch(companyId, projectNo, "设计订单");
     }
 
     @Override
@@ -725,12 +729,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             throw new RuntimeException("客诉处理中");
         }
         designerOrderMapper.updateByExampleSelective(updateOrder, orderExample);
-        //TODO 需要发出通知给设计师
         //记录操作日志
         String remark = "公司编号为【" + companyId + "】的公司指派设计师";
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_20.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_20.getState());
+        orderService.sendCompanyDispatch(designerUserId, projectNo);
     }
 
     /**
@@ -772,6 +776,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_10.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_10.getState());
+        orderService.sendDesignerNoReceipt(designerOrder.getCompanyId(), projectNo, optionUserName);
     }
 
     /**
@@ -811,6 +816,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_30.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_30.getState());
+        String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
+        orderService.sendDesignerReceipt(ownerId, projectNo);
     }
 
     /**
