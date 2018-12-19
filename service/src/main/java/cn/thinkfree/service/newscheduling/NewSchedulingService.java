@@ -83,7 +83,6 @@ public interface NewSchedulingService {
 
     /**
      * 提供PC合同处获取验收阶段
-     *
      * @param orderNo
      * @param type
      * @return

@@ -2,7 +2,6 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
-import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.exception.CommonException;
 import cn.thinkfree.core.utils.JSONUtil;
@@ -152,12 +151,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
             instanceDetailVO.setRelevancyDate(instance.getData());
         } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
-//            int maxDelayDays = getMaxDelayDays(projectNo);
-//            if (maxDelayDays <= 0) {
-//                LOGGER.error("订单不存在延期, projectNo:{}", projectNo);
-//                throw new RuntimeException();
-//            }
-//            instanceDetailVO.setMaxDelayDays(maxDelayDays);
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            instanceDetailVO.setMaxDelayDays(maxDelayDays);
         }
         String customerId = project.getOwnerId();
         AfUserDTO customerInfo = getUserInfo(customerId, Role.CC.id);
@@ -173,8 +168,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     private int getMaxDelayDays(String projectNo) {
+        ProjectScheduling projectScheduling = schedulingService.getProjectScheduling(projectNo).getData();
+        if (projectScheduling == null) {
+            LOGGER.error("未查询到排期信息，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
+        Integer delay = projectScheduling.getDelay();
+        return delay != null ? delay : 0;
 
-        return 1;
     }
 
     /**
@@ -349,6 +350,15 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
 
+        if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            int delayDays = getDelayDays(data);
+            if (delayDays > maxDelayDays) {
+                LOGGER.error("传入的延期天数大于实际延期天数，projectNo:{}, maxDelayDays:{}, delayDays:{}", projectNo, maxDelayDays, delayDays);
+                throw new RuntimeException();
+            }
+        }
+
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
         if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)) {
             // 变更单校验变更数据
@@ -416,6 +426,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         insert(instance);
         approvalLogService.create(approvalLogs);
     }
+
+    private int getDelayDays(String data){
+        Map map = JSONUtil.json2Bean(data, Map.class);
+        Object delayDays = map.get("delay");
+        if (delayDays != null) {
+            return Integer.parseInt(delayDays.toString());
+        }
+        LOGGER.error("未传入延期天数，data:{}", data);
+        throw new RuntimeException();
+    }
+
 
     private void verifyChangeOrderData(String data) {
         AfChangeOrderVO changeOrderVO = JSONUtil.json2Bean(data, AfChangeOrderVO.class);
@@ -796,6 +817,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             constructionStateService.constructionPlan(instance.getProjectNo(), instance.getScheduleSort());
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
             sendChangeMoney(instance.getProjectNo(), instance.getData());
+        } else if (AfConfigs.DELAY_ORDER.configNo.equals(instance.getConfigNo())) {
+            int delayDays = getDelayDays(instance.getData());
+            schedulingService.editProjectDelay(instance.getProjectNo(), delayDays);
         }
 
         createPdf(instance);
@@ -1060,10 +1084,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         int result = 0;
         if (!projectCompleted(schedulingDetailsVOs, projectNo)) {
             if (startReportSuccess(projectNo)) {
-//                int maxDelayDays = getMaxDelayDays(projectNo);
-//                if (maxDelayDays > 0) {
+                int maxDelayDays = getMaxDelayDays(projectNo);
+                if (maxDelayDays > 0) {
                     result += 1;
-//                }
+                }
             }
         }
         return result;

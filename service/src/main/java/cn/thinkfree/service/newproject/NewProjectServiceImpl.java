@@ -61,7 +61,9 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
     private EmployeeMsgMapper employeeMsgMapper;
     @Autowired
-    private OrderApplyRefundMapper orderApplyRefundMapper;
+    ProjectDataMapper projectDataMapper;
+    @Autowired
+    OrderApplyRefundMapper orderApplyRefundMapper;
     @Autowired
     private NewOrderUserService newOrderUserService;
     @Autowired

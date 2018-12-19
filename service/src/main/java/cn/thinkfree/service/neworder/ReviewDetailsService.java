@@ -94,7 +94,8 @@ public interface ReviewDetailsService {
      * @param remark
      * @return
      */
- 	MyRespBundle getShangHaiPriceDetail(String projectNo, Date predatingTime, String remark);
+    MyRespBundle getShangHaiPriceDetail(String projectNo);
+
     /**
      * 设计师发起预交底详情页---->app使用
      * @param projectNo
