@@ -68,6 +68,8 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
 
     @Autowired
     ProjectQuotationMapper projectQuotationMapper;
+    @Autowired
+    private OrderContractMapper orderContractMapper;
 
     /**
      * 用户中心地址接口
@@ -313,6 +315,16 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
                     }
                 }
             }
+
+            OrderContractExample orderContractExample = new OrderContractExample();
+            orderContractExample.createCriteria().andOrderNumberEqualTo(constructionOrder.getOrderNo());
+            List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+            if (orderContracts == null || orderContracts.isEmpty()) {
+                throw new RuntimeException("未查询到合同信息");
+            }
+
+            constructionOrderListVo.setContractNo(orderContracts.get(0).getContractNumber());
+
 
             // 订单编号 & 项目编号
             constructionOrderListVo.setOrderNo(constructionOrder.getOrderNo());
