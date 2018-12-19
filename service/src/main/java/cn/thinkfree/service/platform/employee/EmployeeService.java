@@ -196,4 +196,13 @@ public interface EmployeeService {
      * @param companyId   公司ID
      */
     void removeEmployee(String employeeId, String dealExplain, String dealUserId, String roleCode, String companyId);
+
+    /**
+     * 根据公司ID查询员工信息
+     * @param searchKey 模糊搜索信息
+     * @param roleCode 角色编码
+     * @param companyId 公司ID
+     * @return
+     */
+    List<CompanyStaffVo> companyStaff(String searchKey, String roleCode, String companyId);
 }
