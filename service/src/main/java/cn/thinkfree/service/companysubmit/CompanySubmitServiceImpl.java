@@ -294,19 +294,19 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 				throw new RuntimeException("审批失败");
 			}
 			//3：审批通过，临时表数据更新到公司表
-			int companyLine = updateTempTOCompanyInfo(companyId, date, pcAuditTemporaryInfo);
+			int companyLine = updateTempTOCompanyInfo(companyId, date, pcAuditTemporaryInfo.get(0));
 			if(companyLine <= 0){
 				throw new RuntimeException("审批失败");
 			}
 
 			//4:审批通过，临时表数据更新到公司拓展表
-			int companyExpandLine = updateTempTOCompanyInfoExpand(companyId, date, pcAuditTemporaryInfo);
+			int companyExpandLine = updateTempTOCompanyInfoExpand(companyId, date, pcAuditTemporaryInfo.get(0));
 			if(companyExpandLine <= 0){
 				throw new RuntimeException("审批失败");
 			}
 
 			//5:审批通过，临时表数据更新到公司银行账户表
-			int financialLine = updateTempTOCompanyFinancial(companyId, date, pcAuditTemporaryInfo);
+			int financialLine = updateTempTOCompanyFinancial(companyId, date, pcAuditTemporaryInfo.get(0));
 			if(financialLine <= 0){
 				throw new RuntimeException("审批失败");
 			}
@@ -351,7 +351,7 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		return pcAuditInfoMapper.insertSelective(record);
 	}
 
-	private int updateTempTOCompanyFinancial(String companyId, Date date, List<PcAuditTemporaryInfo> pcAuditTemporaryInfo) {
+	private int updateTempTOCompanyFinancial(String companyId, Date date, PcAuditTemporaryInfo pcAuditTemporaryInfo) {
 		PcCompanyFinancial pcCompanyFinancial = new PcCompanyFinancial();
 		PcCompanyFinancialExample pcCompanyFinancialExample = new PcCompanyFinancialExample();
 		pcCompanyFinancialExample.createCriteria().andCompanyIdEqualTo(companyId);
@@ -361,7 +361,7 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		return pcCompanyFinancialMapper.updateByExampleSelective(pcCompanyFinancial, pcCompanyFinancialExample);
 	}
 
-	private int updateTempTOCompanyInfoExpand(String companyId, Date date, List<PcAuditTemporaryInfo> pcAuditTemporaryInfo) {
+	private int updateTempTOCompanyInfoExpand(String companyId, Date date, PcAuditTemporaryInfo pcAuditTemporaryInfo) {
 		CompanyInfoExpand companyInfoExpand = new CompanyInfoExpand();
 		CompanyInfoExpandExample companyInfoExpandExample = new CompanyInfoExpandExample();
 		companyInfoExpandExample.createCriteria().andCompanyIdEqualTo(companyId);
@@ -371,7 +371,7 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		return companyInfoExpandMapper.updateByExampleSelective(companyInfoExpand, companyInfoExpandExample);
 	}
 
-	private int updateTempTOCompanyInfo(String companyId, Date date, List<PcAuditTemporaryInfo> pcAuditTemporaryInfo) {
+	private int updateTempTOCompanyInfo(String companyId, Date date, PcAuditTemporaryInfo pcAuditTemporaryInfo) {
 		CompanyInfo companyInfo = new CompanyInfo();
 
 		SpringBeanUtil.copy(pcAuditTemporaryInfo, companyInfo);

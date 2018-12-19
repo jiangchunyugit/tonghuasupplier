@@ -68,13 +68,13 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_540.getState()) {
+            if (stage == ConstructionStateEnum.STATE_530.getState()) {
                 waitExamine++;
             }
-            if (stage == ConstructionStateEnum.STATE_560.getState()) {
+            if (stage == ConstructionStateEnum.STATE_540.getState()) {
                 waitSign++;
             }
-            if ((stage >= ConstructionStateEnum.STATE_610.getState() && stage <= ConstructionStateEnum.STATE_650.getState())) {
+            if ((stage >= ConstructionStateEnum.STATE_600.getState() && stage <= ConstructionStateEnum.STATE_700.getState())) {
                 waitPay++;
             }
         }

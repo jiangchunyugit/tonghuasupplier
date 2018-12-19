@@ -151,7 +151,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         if (constructionState.getState() == stageCode) {
             commonService.updateStateCodeByOrderNo(orderNo, nextConstructionState.getState());
-        }else{
+        } else {
             LOGGER.error("错误的订单状态，orderNo:{}, type:{}, state:{}", orderNo, type, stageCode);
             throw new RuntimeException("操作失败-请稍后重试");
         }
@@ -207,7 +207,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     @Override
     public MyRespBundle<String> customerPay(String orderNo, String feeName, Integer sort, String isComplete) {
 
-        if (sort == -1){
+        if (sort == -1) {
             firstPay(orderNo);
         }
 
@@ -485,7 +485,8 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
         return RespData.success();
     }
-	/**
+
+    /**
      * 订单完成
      *
      * @param orderNo
@@ -494,9 +495,10 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_700.getState());
     }
+
     @Override
     public List<OrderStatusDTO> getStates(int type, Integer currentStatus) {
-        List<OrderStatusDTO> orderStatusDTOs  = new ArrayList<>();
+        List<OrderStatusDTO> orderStatusDTOs = new ArrayList<>();
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
         String preStateName = "";
         for (ConstructionStateEnum constructionState : stateEnums) {
@@ -504,7 +506,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             if (StringUtils.isBlank(stateName)) {
                 continue;
             }
-            if (stateName.equals(preStateName)){
+            if (stateName.equals(preStateName)) {
                 continue;
             }
             if (currentStatus > ConstructionStateEnum.STATE_700.getState()) {
@@ -532,9 +534,9 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
         return orderStatusDTOs;
     }
+
     @Override
     public boolean getConstructState(int state, int complaintState, int stateRange) {
-
 
         switch (complaintState) {
             // 未投诉
@@ -549,7 +551,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             // 已取消
             case 4:
                 break;
-                default:
+            default:
         }
 
         switch (stateRange) {
@@ -573,4 +575,5 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         }
 
         return false;
-    }}
+    }
+}
