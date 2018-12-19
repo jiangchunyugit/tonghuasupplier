@@ -15,6 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AppProjectSEO extends AbsPageSearchCriteria {
-    @ApiModelProperty(name = "userId",value = "用户编号,默认先写123456")
+    @ApiModelProperty(name = "userId",value = "用户编号")
     private String userId;
+    @ApiModelProperty(name = "whichEnd",value = "app类型  1,消费端 2,设计端 3,施工端")
+    private Integer whichEnd ;
 }
