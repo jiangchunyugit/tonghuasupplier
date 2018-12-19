@@ -397,6 +397,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             designDispatchService.paySuccess(orderNo);
         } catch (Exception e) {
+            e.printStackTrace();
             return sendFailMessage(e.getMessage());
         }
         return sendSuccessMessage(null);
