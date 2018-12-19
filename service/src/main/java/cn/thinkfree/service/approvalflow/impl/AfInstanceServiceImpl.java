@@ -2,6 +2,7 @@ package cn.thinkfree.service.approvalflow.impl;
 
 import cn.thinkfree.core.constants.AfConfigs;
 import cn.thinkfree.core.constants.AfConstants;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.Role;
 import cn.thinkfree.core.exception.CommonException;
 import cn.thinkfree.core.utils.JSONUtil;
@@ -24,7 +25,6 @@ import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

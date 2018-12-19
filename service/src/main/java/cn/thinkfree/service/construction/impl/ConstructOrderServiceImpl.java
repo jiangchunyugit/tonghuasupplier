@@ -68,13 +68,13 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         for (ConstructionOrder constructionOrder : list) {
             // 订单状态 统计
             int stage = constructionOrder.getOrderStage();
-            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_530.getState()) {
                 waitExamine++;
             }
             if (stage == ConstructionStateEnum.STATE_540.getState()) {
                 waitSign++;
             }
-            if ((stage >= ConstructionStateEnum.STATE_600.getState() && stage <= ConstructionStateEnum.STATE_690.getState())) {
+            if ((stage >= ConstructionStateEnum.STATE_600.getState() && stage <= ConstructionStateEnum.STATE_700.getState())) {
                 waitPay++;
             }
         }
@@ -121,5 +121,13 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         constructCountVO.setPageInfo(pageInfo);
 
         return constructCountVO;
+    }
+
+    @Override
+    public ConstructionOrder findByProjectNo(String projectNo) {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        return constructionOrders != null && constructionOrders.size() > 0 ? constructionOrders.get(0) : null;
     }
 }
