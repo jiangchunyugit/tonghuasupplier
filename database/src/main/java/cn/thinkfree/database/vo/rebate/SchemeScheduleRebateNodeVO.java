@@ -18,6 +18,9 @@ import java.util.List;
 @ApiModel("排期与返款节点编号关系")
 @Data
 public class SchemeScheduleRebateNodeVO {
+
+    @ApiModelProperty("创建用户")
+    private String createUserId;
     @ApiModelProperty("方案编号")
     private String schemeNo;
     @ApiModelProperty("返款节点编号")

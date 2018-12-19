@@ -47,7 +47,6 @@ public class SchemeScheduleRebateNodeServiceImpl implements SchemeScheduleRebate
         return schemeScheduleRebateNodeVO;
     }
 
-
     private List<SchemeScheduleRebateNode> findBySchemeNo(String schemeNo) {
         SchemeScheduleRebateNodeExample example = new SchemeScheduleRebateNodeExample();
         example.createCriteria().andSchemeNoEqualTo(schemeNo).andUsableEqualTo(1);
@@ -55,7 +54,7 @@ public class SchemeScheduleRebateNodeServiceImpl implements SchemeScheduleRebate
     }
 
     @Override
-    public void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO, String userId) {
+    public void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO) {
         String schemeNo = schemeScheduleRebateNodeVO.getSchemeNo();
         deleteBySchemeNo(schemeNo);
 
@@ -66,7 +65,7 @@ public class SchemeScheduleRebateNodeServiceImpl implements SchemeScheduleRebate
             schemeScheduleRebateNode.setSchemeNo(schemeNo);
             schemeScheduleRebateNode.setId(null);
             schemeScheduleRebateNode.setUsable(1);
-            schemeScheduleRebateNode.setCreateUserId(userId);
+            schemeScheduleRebateNode.setCreateUserId(schemeScheduleRebateNodeVO.getCreateUserId());
             schemeScheduleRebateNode.setCreateTime(createTime);
             insert(schemeScheduleRebateNode);
         }
@@ -84,5 +83,13 @@ public class SchemeScheduleRebateNodeServiceImpl implements SchemeScheduleRebate
         schemeScheduleRebateNode.setUsable(0);
 
         schemeScheduleRebateNodeMapper.updateByExampleSelective(schemeScheduleRebateNode, example);
+    }
+
+    @Override
+    public SchemeScheduleRebateNode findBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort) {
+        SchemeScheduleRebateNodeExample example = new SchemeScheduleRebateNodeExample();
+        example.createCriteria().andSchemeNoEqualTo(schemeNo).andScheduleSortEqualTo(scheduleSort).andUsableEqualTo(1);
+        List<SchemeScheduleRebateNode> schemeScheduleRebateNodes = schemeScheduleRebateNodeMapper.selectByExample(example);
+        return schemeScheduleRebateNodes != null && schemeScheduleRebateNodes.size() > 0 ? schemeScheduleRebateNodes.get(0) : null;
     }
 }

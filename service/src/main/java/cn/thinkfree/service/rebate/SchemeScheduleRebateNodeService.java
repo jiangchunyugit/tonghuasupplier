@@ -1,5 +1,6 @@
 package cn.thinkfree.service.rebate;
 
+import cn.thinkfree.database.model.SchemeScheduleRebateNode;
 import cn.thinkfree.database.vo.rebate.SchemeScheduleRebateNodeVO;
 
 /**
@@ -21,7 +22,14 @@ public interface SchemeScheduleRebateNodeService {
     /**
      * 修改排期与返款节点对应关系
      * @param schemeScheduleRebateNodeVO 排期与返款节点对应关系
-     * @param userId 用户编号
      */
-    void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO, String userId);
+    void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO);
+
+    /**
+     * 根据方案编号查询排期与返款节点对应关系
+     * @param schemeNo 方案编号
+     * @param scheduleSort 排期编号
+     * @return 排期与返款节点对应关系
+     */
+    SchemeScheduleRebateNode findBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort);
 }
