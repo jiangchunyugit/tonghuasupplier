@@ -55,7 +55,7 @@ public class SchemeScheduleRebateNodeServiceImpl implements SchemeScheduleRebate
     }
 
     @Override
-    public void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO, String userId) {
+    public void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO) {
         String schemeNo = schemeScheduleRebateNodeVO.getSchemeNo();
         deleteBySchemeNo(schemeNo);
 
@@ -66,7 +66,7 @@ public class SchemeScheduleRebateNodeServiceImpl implements SchemeScheduleRebate
             schemeScheduleRebateNode.setSchemeNo(schemeNo);
             schemeScheduleRebateNode.setId(null);
             schemeScheduleRebateNode.setUsable(1);
-            schemeScheduleRebateNode.setCreateUserId(userId);
+            schemeScheduleRebateNode.setCreateUserId(schemeScheduleRebateNodeVO.getCreateUserId());
             schemeScheduleRebateNode.setCreateTime(createTime);
             insert(schemeScheduleRebateNode);
         }

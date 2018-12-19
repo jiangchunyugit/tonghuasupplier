@@ -21,7 +21,6 @@ public interface SchemeScheduleRebateNodeService {
     /**
      * 修改排期与返款节点对应关系
      * @param schemeScheduleRebateNodeVO 排期与返款节点对应关系
-     * @param userId 用户编号
      */
-    void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO, String userId);
+    void edit(SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO);
 }
