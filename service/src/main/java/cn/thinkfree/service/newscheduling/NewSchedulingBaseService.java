@@ -71,4 +71,12 @@ public interface NewSchedulingBaseService {
      * @return
      */
     MyRespBundle<String> deleteBigScheduling(String schemeNo, Integer sort);
+
+    /**
+     * 根据方案编号与排期编号获取排期信息
+     * @param schemeNo 方案编号
+     * @param sort 排期编号
+     * @return 排期详细
+     */
+    ProjectBigScheduling findBySchemeNoAndSort(String schemeNo, Integer sort);
 }

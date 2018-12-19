@@ -45,4 +45,10 @@ public class AfInstanceDetailVO {
     private String remark;
     @ApiModelProperty("拒绝原因")
     private String refusalReason;
+    @ApiModelProperty("验收项集合")
+    private List<AfCheckItemVO> checkItems;
+    @ApiModelProperty("关联实例数据")
+    private String relevancyDate;
+    @ApiModelProperty("最大延期天数")
+    private Integer maxDelayDays;
 }
