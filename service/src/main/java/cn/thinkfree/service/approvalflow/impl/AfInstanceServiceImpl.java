@@ -304,7 +304,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (projectBigScheduling.getIsWaterTest() == 1) {
             checkItemVO = new AfCheckItemVO();
             checkItemVO.setType(2);
-            checkItemVO.setName("避水验收");
+            checkItemVO.setName("逼水验收");
             checkItems.add(checkItemVO);
         }
         return checkItems;
