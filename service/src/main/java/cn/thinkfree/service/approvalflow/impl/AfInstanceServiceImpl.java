@@ -1344,20 +1344,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     }
 
     /**
-     * 根据审批流配置编号、项目编号、排期编号查询审批实例
-     * @param configNo 审批流配置编号
-     * @param projectNo 项目编号
-     * @param scheduleSort 排期编号
-     * @param status 实例状态
-     * @return 审批实例
-     */
-    private List<AfInstance> findByConfigNoAndProjectNoAndScheduleSortAndStatus(String configNo, String projectNo, Integer scheduleSort, int status) {
-        AfInstanceExample example = new AfInstanceExample();
-        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andStatusEqualTo(status);
-        return instanceMapper.selectByExample(example);
-    }
-
-    /**
      * 获取审批流实例
      * @param instanceVOs 审批流实例
      * @param configNo 审批流配置编号
