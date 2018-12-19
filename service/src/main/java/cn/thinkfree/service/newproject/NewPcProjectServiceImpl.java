@@ -137,7 +137,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
         if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("查无此设计订单");
+            return RespData.success(null);
         }
         DesignerOrder designerOrder = designerOrders.get(0);
         PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
@@ -187,7 +187,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         List<ProjectQuotation> projectQuotations = projectQuotationMapper.selectByExample(projectQuotationExample);
         if (projectQuotations.size() == 0) {
-            return RespData.error("无此项目信息");
+            return RespData.success(null);
         }
         if (projectQuotations.size() == 1) {
             ProjectQuotation projectQuotation = projectQuotations.get(0);
@@ -258,7 +258,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         criteria.andProjectNoEqualTo(projectNo);
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
         if (constructionOrders.size() == 0) {
-            return RespData.error("暂无此项目");
+            return RespData.success(null);
         }
         ContractVo contractVo = contractService.getOrderContractByOrderNo(constructionOrders.get(0).getOrderNo());
         return RespData.success(contractVo);
