@@ -4,6 +4,7 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.ConstructionStateService;
@@ -13,6 +14,8 @@ import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.construction.vo.DecorationOrderCommonVo;
 import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.construction.vo.appointWorkerListVo;
+import cn.thinkfree.service.platform.employee.ProjectUserService;
+import cn.thinkfree.service.platform.order.OrderService;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +42,10 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
     EmployeeMsgMapper employeeMsgMapper;
     @Autowired
     OrderUserMapper orderUserMapper;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private ProjectUserService projectUserService;
 
 
     /**
@@ -48,7 +55,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
      */
     @Override
     public PageInfo<DecorationOrderListVo> getOrderList(String companyNo, int pageNum, int pageSize, String projectNo, String appointmentTime,
-                                                              String addressDetail, String owner, String phone, String orderStage) {
+                                                        String addressDetail, String owner, String phone, String orderStage) {
         PageInfo<DecorationOrderListVo> pageInfo = orderListCommonService.getDecorationOrderList(companyNo, pageNum, pageSize, projectNo, appointmentTime,
                 addressDetail, owner, phone, orderStage);
         return pageInfo;
@@ -165,12 +172,12 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
      * @return
      */
     @Override
-    public void appointWorker(List<Map<String,String>> workerInfo) {
+    public void appointWorker(List<Map<String, String>> workerInfo) {
 
         Set<String> setOrderNo = new LinkedHashSet<>();
         Set<String> setProjectNO = new LinkedHashSet<>();
 
-        for (Map<String,String> map1 : workerInfo) {
+        for (Map<String, String> map1 : workerInfo) {
             if (StringUtils.isBlank(map1.get("orderNo"))) {
                 throw new RuntimeException("订单编号不能为空");
             }
@@ -187,14 +194,13 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
             setProjectNO.add(map1.get("projectNo"));
         }
 
-        if (setOrderNo.size() != 1 && setProjectNO.size() != 1){
+        if (setOrderNo.size() != 1 && setProjectNO.size() != 1) {
             throw new RuntimeException("出现不同订单编号或项目编号");
         }
 
         // 改变订单状态
         constructionStateService.constructionState(workerInfo.get(0).get("orderNo"), 1);
-
-        for (Map<String,String> map : workerInfo) {
+        for (Map<String, String> map : workerInfo) {
 
             OrderUserExample example = new OrderUserExample();
             example.createCriteria().andUserIdEqualTo(map.get("workerNo")).andOrderNoEqualTo(map.get("orderNo"));
@@ -216,6 +222,12 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
             }
 
         }
+        for (Map<String, String> map : workerInfo) {
+            orderService.sendEmployeeReceipt(map.get("workerNo"), map.get("projectNo"));
+        }
+        String projectNo = workerInfo.get(0).get("projectNo");
+        String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
+        orderService.sendOwnerConsDispatch(ownerId, projectNo);
     }
 
 }

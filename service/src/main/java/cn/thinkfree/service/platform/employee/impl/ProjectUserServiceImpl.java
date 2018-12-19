@@ -7,8 +7,11 @@ import cn.thinkfree.database.model.OrderUserExample;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.utils.ReflectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -70,6 +73,7 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         orderUser.setUserId(userId);
         orderUser.setRoleCode(roleCode);
         orderUser.setOrderNo(orderNo);
+        orderUser.setUpdateTime(new Date());
         orderUserMapper.insertSelective(orderUser);
     }
 
@@ -83,5 +87,47 @@ public class ProjectUserServiceImpl implements ProjectUserService {
             throw new RuntimeException("关联关系不存在");
         }
         orderUserMapper.deleteByExample(userExample);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void transferEmployee(String transferUserId, String beTransferUserId, String projectNo, String roleCode) {
+        if(StringUtils.isBlank(transferUserId)){
+            throw new RuntimeException("移交人ID不能为空");
+        }
+        if(StringUtils.isBlank(beTransferUserId)){
+            throw new RuntimeException("被移交人ID不能为空");
+        }
+        if(StringUtils.isBlank(projectNo)){
+            throw new RuntimeException("项目编号不能为空");
+        }
+        if(StringUtils.isBlank(roleCode)){
+            throw new RuntimeException("角色编码不能为空");
+        }
+        if(transferUserId.equals(beTransferUserId)){
+            throw new RuntimeException("被移交人和移交人重复");
+        }
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andUserIdEqualTo(transferUserId).andRoleCodeEqualTo(roleCode)
+                .andIsTransferEqualTo(Short.parseShort("0")).andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        if(orderUsers.isEmpty()){
+            throw new RuntimeException("没有查询到移交人和该项目的关系");
+        }
+        String orderNo = orderUsers.get(0).getOrderNo();
+        OrderUser orderUser = new OrderUser();
+        orderUser.setTransferTime(new Date());
+        orderUser.setIsTransfer(Short.parseShort("1"));
+        orderUser.setTransferUserId(beTransferUserId);
+        orderUser.setUpdateTime(new Date());
+        orderUserMapper.updateByExampleSelective(orderUser,orderUserExample);
+        orderUser = new OrderUser();
+        orderUser.setCreateTime(new Date());
+        orderUser.setProjectNo(projectNo);
+        orderUser.setUserId(beTransferUserId);
+        orderUser.setRoleCode(roleCode);
+        orderUser.setOrderNo(orderNo);
+        orderUser.setUpdateTime(new Date());
+        orderUserMapper.insertSelective(orderUser);
     }
 }

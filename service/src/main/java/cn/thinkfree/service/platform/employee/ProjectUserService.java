@@ -36,6 +36,7 @@ public interface ProjectUserService {
      * @return
      */
     String queryUserIdOne(String projectNo, RoleFunctionEnum functionEnum);
+
     /**
      * 根据项目编号和权限查询该项目对应权限的人的ID
      *
@@ -64,4 +65,14 @@ public interface ProjectUserService {
      * @param functionEnum 权限枚举
      */
     void delUserRel(String orderNo, String projectNo, String userId, RoleFunctionEnum functionEnum);
+
+    /**
+     * 项目移交接口
+     *
+     * @param transferUserId   移交人ID
+     * @param beTransferUserId 被移交人ID
+     * @param projectNo        项目编号
+     * @param roleCode         角色编码
+     */
+    void transferEmployee(String transferUserId, String beTransferUserId, String projectNo, String roleCode);
 }
