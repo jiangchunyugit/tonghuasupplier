@@ -923,8 +923,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getProjectNo() == null || dataVo.getProjectNo().trim().isEmpty()) {
             return RespData.error("projectNo 不可为空");
         }
-        if (dataVo.getCategory() == null) {
-            return RespData.error("category=" + dataVo.getCategory());
+        if (dataVo.getType() == null) {
+            return RespData.error("type=" + dataVo.getType());
         }
         ProjectDataExample dataExample = new ProjectDataExample();
         ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
@@ -945,7 +945,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("请选择资料类型");
         }
         for (UrlDetailVo urlDetailVo : dataVo.getDataList()) {
-            if (dataVo.getCategory() == 3) {
+            if (dataVo.getType() == 3) {
                 break;
             }
             ProjectData projectData = new ProjectData();
@@ -978,7 +978,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 throw new RuntimeException("确认失败!");
             }
         }
-        if (dataVo.getCategory() == 3) {
+        if (dataVo.getType() == 3) {
             String result = cloudService.getShangHaiPriceDetail(dataVo.getHsDesignId());
             if (result.trim().isEmpty()) {
                 throw new RuntimeException("获取上海报价信息失败!");
