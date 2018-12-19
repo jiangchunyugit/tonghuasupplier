@@ -108,6 +108,7 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
+        <!--<table tableName="rebate_node" domainObjectName="RebateNode"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->

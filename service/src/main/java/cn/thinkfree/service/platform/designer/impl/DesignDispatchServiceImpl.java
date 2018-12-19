@@ -1305,7 +1305,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     /**
      * @param designOrderNo 设计订单编号
      * @return ["LFYY(量房预约),LFFY(提醒支付量房费用)","LFZL(提交量房资料)",
-     * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)"]
+     * "SJZL(提交设计资料)","SGZL(提交施工资料)","CKHT(查看合同)","YJD(预交底)","ZSG(转施工)"]
      */
     @Override
     public List<String> showBtn(String designOrderNo) {
@@ -1352,6 +1352,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //审批状态：0：不通过 1：通过2：审核中
         criteria.andAuditTypeEqualTo(new Short("1"));
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+
         if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
             if (designerOrder.getPreviewState() == 2) {
                 btns.add("YJD");
@@ -1411,10 +1412,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                     btns.add("SGZL");
                     break;
             }
-
+            //判断是否存在施工订单
+            ConstructionOrderExample constructionExample = new ConstructionOrderExample();
+            ConstructionOrderExample.Criteria constructionCriteria = constructionExample.createCriteria();
+            constructionCriteria.andProjectNoEqualTo(designerOrder.getProjectNo());
+            List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionExample);
             if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
-                if (designerOrder.getPreviewState() == 2) {
+                if (designerOrder.getPreviewState() == 2 && constructionOrders.size() > 0) {
                     btns.add("YJD");
+                } else if (designerOrder.getPreviewState() == 2 && constructionOrders.size() == 0) {
+                    btns.add("ZSG");
                 }
             }
             if (orderContracts.size() > 0) {

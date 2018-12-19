@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.Param.SettlementRuleParam;
+import cn.thinkfree.database.model.RebateNode;
 import cn.thinkfree.database.model.SettlementRuleInfo;
 import cn.thinkfree.database.model.SystemPermission;
 import cn.thinkfree.database.utils.BeanValidator;
@@ -12,6 +13,7 @@ import cn.thinkfree.database.vo.Severitys;
 import cn.thinkfree.database.vo.settle.SettlementRuleContractVO;
 import cn.thinkfree.database.vo.settle.SettlementRuleSEO;
 import cn.thinkfree.database.vo.settle.SettlementRuleVO;
+import cn.thinkfree.service.approvalflow.RebateNodeService;
 import cn.thinkfree.service.settle.rule.SettlementRuleService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
@@ -36,6 +38,9 @@ public class SettlementRuleController extends AbsBaseController {
 
     @Autowired
     SettlementRuleService settlementRuleService;
+
+    @Autowired
+    RebateNodeService rebateNodeService;
 
     /**
      * 分页查询
@@ -231,4 +236,23 @@ public class SettlementRuleController extends AbsBaseController {
         }
         return sendJsonData(ResultMessage.ERROR,result);
     }
+
+    /**
+     * 通过费用类型查询返回返款节点
+     * @return
+     */
+    @ApiOperation(value = "通过费用类型查询返回返款节点", notes = "通过费用类型查询返回返款节点")
+    @PostMapping("/getRefundList")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
+    public MyRespBundle<String> getRefundList(@ApiParam("费用类型（1设计  2 施工）")@RequestParam Integer type){
+
+            List<RebateNode>   result= rebateNodeService.findByType(type);
+
+          return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+
+
+
 }

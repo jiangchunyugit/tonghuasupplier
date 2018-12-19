@@ -109,6 +109,16 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(AppProjectSEO appProjectSEO) {
+        if (appProjectSEO.getUserId() == null || appProjectSEO.getUserId().trim().isEmpty()) {
+            return RespData.error("请检查userId=" + appProjectSEO.getUserId());
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria msgCriteria = msgExample.createCriteria();
+        msgCriteria.andUserIdEqualTo(appProjectSEO.getUserId());
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if (employeeMsgs.size() == 0 || employeeMsgs.get(0).getEmployeeState() == 2) {
+            return RespData.success(new PageInfo<>());
+        }
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
@@ -135,14 +145,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<ProjectVo> projectVoList = new ArrayList<>();
         for (Project project : projects) {
             ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
-            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
-                projectVo.setAgreeButto(true);
-                projectVo.setRefuseButton(true);
-            } else {
-                projectVo.setAgreeButto(false);
-                projectVo.setRefuseButton(false);
-            }
-            projectVo.setAddress(getProjectAdress(project.getProjectNo()));
             //添加业主信息
             PersionVo owner = new PersionVo();
             try {
@@ -153,12 +155,27 @@ public class NewProjectServiceImpl implements NewProjectService {
                 e.printStackTrace();
                 log.info("调取人员信息失败!");
             }
+
+            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
+                projectVo.setAgreeButto(true);
+                projectVo.setRefuseButton(true);
+                owner.setPhone(null);
+            } else {
+                projectVo.setAgreeButto(false);
+                projectVo.setRefuseButton(false);
+            }
             projectVo.setOwner(owner);
+            projectVo.setAddress(getProjectAdress(project.getProjectNo()));
+
             //添加进度展示
             if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
-                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                    projectVo.setConstructionProgress(100);
+                } else {
+                    projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                }
                 projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
                 projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             } else {
@@ -558,7 +575,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
-            projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                projectVo.setConstructionProgress(100);
+            } else {
+                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            }
             projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
         } else {
@@ -744,7 +765,11 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
             }
             //添加进度展示
-            projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                projectTitleVo.setConstructionProgress(100);
+            } else {
+                projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            }
         }
         int confirm;
         try {
@@ -1120,7 +1145,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             dataCriteria.andStatusEqualTo(1);
             dataCriteria.andTypeEqualTo(category);
             int i = projectDataMapper.updateByExampleSelective(data, dataExample);
-            if (i==0){
+            if (i == 0) {
                 throw new RuntimeException("拒绝失败");
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
@@ -1152,6 +1177,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @param projectNo
      * @return
      */
+    @Override
     public String getProjectAdress(String projectNo) {
         StringBuilder builder = new StringBuilder();
         ProjectExample example = new ProjectExample();
