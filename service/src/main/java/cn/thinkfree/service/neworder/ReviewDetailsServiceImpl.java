@@ -436,15 +436,17 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (quotationRooms.isEmpty()) {
             return false;
         }
-        ProjectQuotationRooms rooms = quotationRooms.get(0);
-        BigDecimal sumCons = getSumCons(projectNo);
-        BigDecimal sumSoft = getSumSoft(projectNo);
-        BigDecimal sumHard = getSumHard(projectNo);
-        rooms.setConstructsPrice(sumCons);
-        rooms.setSoftMaterialPrice(sumSoft);
-        rooms.setHardMaterialPrice(sumHard);
-        rooms.setTotalPrice(sumCons.add(sumHard).add(sumSoft));
-        projectQuotationRoomsMapper.updateByPrimaryKeySelective(rooms);
+        for(ProjectQuotationRooms quotationRooms1 : quotationRooms){
+            ProjectQuotationRooms rooms = quotationRooms.get(0);
+            BigDecimal sumCons = getSumCons(projectNo);
+            BigDecimal sumSoft = getSumSoft(projectNo);
+            BigDecimal sumHard = getSumHard(projectNo);
+            rooms.setConstructsPrice(sumCons);
+            rooms.setSoftMaterialPrice(sumSoft);
+            rooms.setHardMaterialPrice(sumHard);
+            rooms.setTotalPrice(sumCons.add(sumHard).add(sumSoft));
+            projectQuotationRoomsMapper.updateByPrimaryKeySelective(rooms);
+        }
         return true;
     }
 

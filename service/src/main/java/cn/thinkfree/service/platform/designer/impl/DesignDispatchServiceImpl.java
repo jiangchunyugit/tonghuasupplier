@@ -1165,7 +1165,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         DesignStateEnum stateEnum = null;
         try {
-            stateEnum(DesignStateEnum.queryByState(designerOrder.getOrderStage()));
+            stateEnum = stateEnum(DesignStateEnum.queryByState(designerOrder.getOrderStage()));
             checkOrderState(designerOrder, stateEnum);
         } catch (Exception e) {
             throw new RuntimeException("当前订单不可取消，如有疑问，请联系客服");
