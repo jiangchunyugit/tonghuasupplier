@@ -353,15 +353,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
 
-        if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
-            int maxDelayDays = getMaxDelayDays(projectNo);
-            int delayDays = getDelayDays(data);
-            if (delayDays > maxDelayDays) {
-                LOGGER.error("传入的延期天数大于实际延期天数，projectNo:{}, maxDelayDays:{}, delayDays:{}", projectNo, maxDelayDays, delayDays);
-                throw new RuntimeException();
-            }
-        }
-
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
         if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)) {
             // 变更单校验变更数据
@@ -373,6 +364,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 throw new RuntimeException();
             }
             instanceRelevancyService.create(instance.getInstanceNo(), instanceNo, instance.getData());
+        } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            int delayDays = getDelayDays(data);
+            if (delayDays > maxDelayDays) {
+                LOGGER.error("传入的延期天数大于实际延期天数，projectNo:{}, maxDelayDays:{}, delayDays:{}", projectNo, maxDelayDays, delayDays);
+                throw new RuntimeException();
+            }
+        } else if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
+            verifyCheckData(data);
+        } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)) {
+            verifyCheckData(data);
         }
         for (int index = 0; index < approvalRoles.size(); index++) {
             UserRoleSet role = approvalRoles.get(index);
@@ -428,6 +430,22 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         insert(instance);
         approvalLogService.create(approvalLogs);
+    }
+
+    private void verifyCheckData(String data) {
+        Map map = JSONUtil.json2Bean(data, Map.class);
+        Object typeObj = map.get("type");
+        if (typeObj == null) {
+            LOGGER.error("验收未传入type，data:{}", data);
+            throw new RuntimeException();
+        }
+
+        int type = Integer.parseInt(typeObj.toString());
+        if (type != 1 && type != 2) {
+            LOGGER.error("错误的type值，type:{}", type);
+            throw new RuntimeException();
+        }
+
     }
 
     private int getDelayDays(String data){
