@@ -109,6 +109,16 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public MyRespBundle<PageInfo<ProjectVo>> getAllProject(AppProjectSEO appProjectSEO) {
+        if (appProjectSEO.getUserId() == null || appProjectSEO.getUserId().trim().isEmpty()) {
+            return RespData.error("请检查userId=" + appProjectSEO.getUserId());
+        }
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria msgCriteria = msgExample.createCriteria();
+        msgCriteria.andUserIdEqualTo(appProjectSEO.getUserId());
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        if (employeeMsgs.size() == 0 || employeeMsgs.get(0).getEmployeeState() == 2) {
+            return RespData.success(new PageInfo<>());
+        }
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
         criteria1.andUserIdEqualTo(appProjectSEO.getUserId());
