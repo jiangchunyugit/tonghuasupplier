@@ -42,10 +42,6 @@ public class SchemeScheduleRebateNodeController extends AbsBaseController {
     @RequestMapping(value = "/edit", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="前端-修改排期返款节点关联")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "schemeScheduleRebateNodeVO", value = "方案编号", required = true),
-            @ApiImplicitParam(name = "schemeNo", value = "方案编号", required = true)
-    })
     public MyRespBundle edit(@RequestBody SchemeScheduleRebateNodeVO schemeScheduleRebateNodeVO){
         schemeScheduleRebateNodeService.edit(schemeScheduleRebateNodeVO);
         return sendSuccessMessage(ResultMessage.SUCCESS.message);
