@@ -22,6 +22,7 @@ import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.project.ProjectService;
+import cn.thinkfree.service.rebate.FundsSettleAccountsNodeLogService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
@@ -86,6 +87,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private NewSchedulingBaseService schedulingBaseService;
     @Autowired
     private AfInstanceRelevanceService instanceRelevancyService;
+    @Autowired
+    private FundsSettleAccountsNodeLogService fundsSettleAccountsNodeLogService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -815,6 +818,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else if (AfConfigs.COMPLETE_APPLICATION.configNo.equals(instance.getConfigNo())) {
             schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
             constructionStateService.constructionPlan(instance.getProjectNo(), instance.getScheduleSort());
+            fundsSettleAccountsNodeLogService.create(instance.getProjectNo(), instance.getScheduleSort());
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
             sendChangeMoney(instance.getProjectNo(), instance.getData());
         } else if (AfConfigs.DELAY_ORDER.configNo.equals(instance.getConfigNo())) {

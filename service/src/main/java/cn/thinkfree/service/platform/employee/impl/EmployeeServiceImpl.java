@@ -461,6 +461,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         Map<String,String> areaMap = basicsService.getArea();
         EmployeeMsgVo msgVo = getEmployeeMsgVo(userRoleSet.getRoleName(),cardTypeMap,countryCodeMap,employeeMsg,userMsgVo, provinceMap, cityMap, areaMap);
         msgVo.setAuthReason(getAuthReason(employeeMsg.getUserId()));
+        List<String> projectNos = getProjectNos(userId);
+        if(projectNos.isEmpty()){
+            msgVo.setSumCount(0);
+        }else{
+            ProjectExample projectExample = new ProjectExample();
+            projectExample.createCriteria().andProjectNoIn(projectNos);
+            List<Project> projects = projectMapper.selectByExample(projectExample);
+            msgVo.setSumCount(projects.size());
+        }
         return msgVo;
     }
 
