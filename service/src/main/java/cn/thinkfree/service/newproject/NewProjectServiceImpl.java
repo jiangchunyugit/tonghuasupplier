@@ -271,7 +271,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             Integer count = 0;
             for (ConstructionProjectVo projectVo : list) {
                 //传让提供接口后把他放到逻辑与条件中
-                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize) {
+                boolean result = constructionStateService.getConstructState(projectVo.getStage(), projectVo.getComplaintState(), projectType);
+                if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize && result) {
                     playProjects.add(projectVo);
                 }
                 allProjects.add(projectVo);
@@ -487,6 +488,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             constructionProjectVo.setType(constructionOrder.getType());
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
             constructionProjectVo.setStage(constructionOrder.getOrderStage());
+            constructionProjectVo.setComplaintState(constructionOrder.getComplaintState());
             //装修地址
             ProjectExample projectExample = new ProjectExample();
             ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
