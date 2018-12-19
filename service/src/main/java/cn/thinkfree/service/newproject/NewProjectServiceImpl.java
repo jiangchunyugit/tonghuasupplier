@@ -923,6 +923,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getProjectNo() == null || dataVo.getProjectNo().trim().isEmpty()) {
             return RespData.error("projectNo 不可为空");
         }
+        if (dataVo.getCategory() == null) {
+            return RespData.error("category=" + dataVo.getCategory());
+        }
         ProjectDataExample dataExample = new ProjectDataExample();
         ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
         dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
