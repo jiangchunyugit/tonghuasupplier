@@ -95,6 +95,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private ContractTermsMapper contractTermsMapper;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    ProvinceMapper provinceMapper;
+    @Autowired
+    CityMapper cityMapper;
+    @Autowired
+    AreaMapper areaMapper;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -407,7 +413,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrderVo.setOwnerName(ownerMsg.getUserName());
             DesignerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
-        DesignerOrderVo.setAddress(project.getAddressDetail());
+        DesignerOrderVo.setAddress(getProjectAdress(project.getProjectNo()));
         try {
             BasicsData basicsData = basicsService.queryDataOne(BasicsDataParentEnum.PROJECT_SOURCE.getCode(), project.getOrderSource() + "");
             String sourceName = null;
@@ -451,6 +457,57 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             DesignerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
         }
         return DesignerOrderVo;
+    }
+    /**
+     * 根据项目编号获取地址信息
+     *
+     * @param projectNo
+     * @return
+     */
+    public String getProjectAdress(String projectNo) {
+        StringBuilder builder = new StringBuilder();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return "";
+        }
+        Project project = projects.get(0);
+        //查询省份
+        if (project.getProvince() != null && !project.getProvince().trim().isEmpty()) {
+            ProvinceExample provinceExample = new ProvinceExample();
+            ProvinceExample.Criteria provinceCriteria = provinceExample.createCriteria();
+            provinceCriteria.andProvinceCodeEqualTo(project.getProvince());
+            List<Province> provinces = provinceMapper.selectByExample(provinceExample);
+            if (provinces.size() > 0) {
+                builder.append(provinces.get(0).getProvinceName());
+            }
+        }
+        //查询城市
+        if (project.getCity() != null && !project.getCity().trim().isEmpty()) {
+            CityExample ciytExample = new CityExample();
+            CityExample.Criteria cityCriteria = ciytExample.createCriteria();
+            cityCriteria.andCityCodeEqualTo(project.getCity());
+            List<City> cities = cityMapper.selectByExample(ciytExample);
+            if (cities.size() > 0) {
+                builder.append(cities.get(0).getCityName());
+            }
+        }
+        //查询区域
+        if (project.getRegion() != null && !project.getRegion().trim().isEmpty()) {
+            AreaExample areaExample = new AreaExample();
+            AreaExample.Criteria areaCriteria = areaExample.createCriteria();
+            areaCriteria.andAreaCodeEqualTo(project.getRegion());
+            List<Area> areas = areaMapper.selectByExample(areaExample);
+            if (areas.size() > 0) {
+                builder.append(areas.get(0).getAreaName());
+            }
+        }
+        builder.append(project.getAddressDetail());
+        return builder.toString();
+
     }
 
     /**
