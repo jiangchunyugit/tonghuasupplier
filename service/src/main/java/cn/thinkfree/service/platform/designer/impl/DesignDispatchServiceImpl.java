@@ -1345,16 +1345,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //审批状态：0：不通过 1：通过2：审核中
         criteria.andAuditTypeEqualTo(new Short("1"));
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-        //判断是否存在施工订单
-        ConstructionOrderExample constructionExample = new ConstructionOrderExample();
-        ConstructionOrderExample.Criteria constructionCriteria = constructionExample.createCriteria();
-        constructionCriteria.andProjectNoEqualTo(designerOrder.getProjectNo());
-        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionExample);
+
         if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
-            if (designerOrder.getPreviewState() == 2 && constructionOrders.size() > 0) {
+            if (designerOrder.getPreviewState() == 2) {
                 btns.add("YJD");
-            } else if (designerOrder.getPreviewState() == 2 && constructionOrders.size() == 0) {
-                btns.add("ZSG");
             }
         }
         if (orderContracts.size() > 0) {
@@ -1411,10 +1405,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                     btns.add("SGZL");
                     break;
             }
-
+            //判断是否存在施工订单
+            ConstructionOrderExample constructionExample = new ConstructionOrderExample();
+            ConstructionOrderExample.Criteria constructionCriteria = constructionExample.createCriteria();
+            constructionCriteria.andProjectNoEqualTo(designerOrder.getProjectNo());
+            List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionExample);
             if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
-                if (designerOrder.getPreviewState() == 2) {
+                if (designerOrder.getPreviewState() == 2 && constructionOrders.size() > 0) {
                     btns.add("YJD");
+                } else if (designerOrder.getPreviewState() == 2 && constructionOrders.size() == 0) {
+                    btns.add("ZSG");
                 }
             }
             if (orderContracts.size() > 0) {
@@ -1733,7 +1733,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderExample orderExample = new DesignerOrderExample();
         orderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
-        if(designerOrders.size() > 0 && designerOrders.get(0) != null ){
+        if (designerOrders.size() > 0 && designerOrders.get(0) != null) {
             ProjectExample projectExample = new ProjectExample();
             projectExample.createCriteria().andProjectNoEqualTo(designerOrders.get(0).getProjectNo());
             List<Project> projects = projectMapper.selectByExample(projectExample);
@@ -1745,27 +1745,27 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             resVo.setOwnerTel(customerInfo.getPhone());
 
             //设计师相关信息
-            if(designerOrders.get(0).getUserId() != null){
+            if (designerOrders.get(0).getUserId() != null) {
                 AfUserDTO customerInfoOne = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), designerOrders.get(0).getUserId(), Role.CD.id);
 
                 resVo.setDesignerTel(customerInfoOne.getPhone());
             }
-             //设计师名称
+            //设计师名称
             String designerId = projectUserService.queryUserIdOne(projects.get(0).getProjectNo(), RoleFunctionEnum.DESIGN_POWER);
             EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
             if (employeeMsg != null) {
                 resVo.setDesignerName(employeeMsg.getRealName());
 
             }
-            Map<String,String> provinceMap = basicsService.getProvince();
-            Map<String,String> cityMap = basicsService.getCity();
-            Map<String,String> areaMap = basicsService.getArea();
+            Map<String, String> provinceMap = basicsService.getProvince();
+            Map<String, String> cityMap = basicsService.getCity();
+            Map<String, String> areaMap = basicsService.getArea();
             //省
-            resVo.setProvince(provinceMap.get(projects.get(0).getProvince())==null?"":provinceMap.get(projects.get(0).getProvince()));
+            resVo.setProvince(provinceMap.get(projects.get(0).getProvince()) == null ? "" : provinceMap.get(projects.get(0).getProvince()));
             //市
-            resVo.setCity(cityMap.get(projects.get(0).getCity())==null?"":cityMap.get(projects.get(0).getCity()));
+            resVo.setCity(cityMap.get(projects.get(0).getCity()) == null ? "" : cityMap.get(projects.get(0).getCity()));
             //区
-            resVo.setRegion(areaMap.get(projects.get(0).getArea())==null?"":provinceMap.get(projects.get(0).getArea()));
+            resVo.setRegion(areaMap.get(projects.get(0).getArea()) == null ? "" : provinceMap.get(projects.get(0).getArea()));
             //地址详情
             resVo.setAddressDetail(projects.get(0).getAddressDetail());
             //建筑面积
@@ -1776,16 +1776,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             BigDecimal b;
             a = new BigDecimal(designerOrders.get(0).getVolumeRoomMoney());
             b = new BigDecimal(1000);
-            resVo.setVolumeRoomMoney(designerOrders.get(0).getVolumeRoomMoney()==null?"0":(String.valueOf(a.divide(b, 2, RoundingMode.HALF_UP))));
+            resVo.setVolumeRoomMoney(designerOrders.get(0).getVolumeRoomMoney() == null ? "0" : (String.valueOf(a.divide(b, 2, RoundingMode.HALF_UP))));
             //合同类型
             resVo.setContractType(String.valueOf(designerOrders.get(0).getContractType()));
             //
             CompanyInfoExample example = new CompanyInfoExample();
             example.createCriteria().andCompanyIdEqualTo(designerOrders.get(0).getCompanyId());
-            List<CompanyInfo> list =  companyInfoMapper.selectByExample(example);
+            List<CompanyInfo> list = companyInfoMapper.selectByExample(example);
             //设计公司名称
-            resVo.setDesignName(list.get(0)==null?"":list.get(0).getCompanyName());
-          //  resVo.setProjectName(projects.get(0)!=null?""projects.get(0).getp);
+            resVo.setDesignName(list.get(0) == null ? "" : list.get(0).getCompanyName());
+            //  resVo.setProjectName(projects.get(0)!=null?""projects.get(0).getp);
         }
 
         return resVo;
