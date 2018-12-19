@@ -245,9 +245,9 @@ public class SettlementRuleController extends AbsBaseController {
     @PostMapping("/getRefundList")
     @MyRespBody
     //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
-    public MyRespBundle<String> getRefundList(@ApiParam("费用类型（1设计  2 施工）")@RequestParam Integer type){
+    public MyRespBundle<String> getRefundList(@ApiParam("费用类型code ")@RequestParam String type){
 
-            List<RebateNode>   result= rebateNodeService.findByType(type);
+            List<RebateNode>   result= settlementRuleService.getCostNamesForRebateNode(type);
 
           return sendJsonData(ResultMessage.SUCCESS,result);
     }

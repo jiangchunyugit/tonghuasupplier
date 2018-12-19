@@ -3,6 +3,7 @@ package cn.thinkfree.service.settle.rule;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.DateUtils;
@@ -44,6 +45,16 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Autowired
     PcAuditInfoMapper pcAuditInfoMapper;
+
+    @Autowired
+    private RebateNodeMapper rebateNodeMapper;
+
+    @Autowired
+    private CostRebateNodeMapper costRebateNodeMapper;
+
+
+
+
 
     @Override
     public PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO (SettlementRuleSEO rule) {
@@ -395,6 +406,25 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         }
         return false;
     }
+
+    @Override
+    public List<RebateNode> getCostNamesForRebateNode(String costType) {
+
+        //查询结算规则映射表
+        CostRebateNodeExample costExample = new CostRebateNodeExample();
+        costExample.createCriteria().andCostCodeEqualTo(costType);
+        List<CostRebateNode> list =  costRebateNodeMapper.selectByExample(costExample);
+        List<Integer> codesInteger = new ArrayList<>();
+        for ( CostRebateNode node:list) {
+            codesInteger.add(Integer.valueOf(node.getRebateNodeCode()));
+        }
+        RebateNodeExample example = new RebateNodeExample();
+        example.createCriteria().andCodeIn(codesInteger);
+
+        return rebateNodeMapper.selectByExample(example);
+    }
+
+
 
     @Override
     public boolean applicationInvalid(String ruleNumber) {
