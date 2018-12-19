@@ -109,6 +109,7 @@
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
         <!--<table tableName="rebate_node" domainObjectName="RebateNode"/>-->
+        <!--<table tableName="scheme_schedule_rebate_node" domainObjectName="SchemeScheduleRebateNode"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
