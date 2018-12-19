@@ -161,7 +161,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
                 //添加进度信息
-                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                    projectVo.setConstructionProgress(100);
+                } else {
+                    projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                }
                 projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
                 projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             } else {
@@ -561,7 +565,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             projectVo.setProgressIsShow(true);
             //添加进度信息
-            projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                projectVo.setConstructionProgress(100);
+            } else {
+                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            }
             projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
         } else {
@@ -747,7 +755,11 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
             }
             //添加进度展示
-            projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                projectTitleVo.setConstructionProgress(100);
+            } else {
+                projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+            }
         }
         int confirm;
         try {
@@ -1123,7 +1135,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             dataCriteria.andStatusEqualTo(1);
             dataCriteria.andTypeEqualTo(category);
             int i = projectDataMapper.updateByExampleSelective(data, dataExample);
-            if (i==0){
+            if (i == 0) {
                 throw new RuntimeException("拒绝失败");
             }
             designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
