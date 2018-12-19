@@ -210,12 +210,6 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("公司信息异常");
         }
         checkCompanyExit(companyId);
-        UserRoleSetExample roleSetExample = new UserRoleSetExample();
-        roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
-        List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
-        if (roleSets.isEmpty()) {
-            throw new RuntimeException("无效的角色编码");
-        }
         //1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         employeeMsgExample.createCriteria().andUserIdEqualTo(userId);
@@ -227,6 +221,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             employeeMsg.setCompanyId("");
             employeeMsg.setRoleCode("");
         } else {
+            UserRoleSetExample roleSetExample = new UserRoleSetExample();
+            roleSetExample.createCriteria().andRoleCodeEqualTo(roleCode);
+            List<UserRoleSet> roleSets = roleSetMapper.selectByExample(roleSetExample);
+            if (roleSets.isEmpty()) {
+                throw new RuntimeException("无效的角色编码");
+            }
             employeeState = 1;
             employeeMsg.setCompanyId(companyId);
             employeeMsg.setRoleCode(roleCode);
