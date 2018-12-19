@@ -972,7 +972,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             int i = projectDataMapper.insertSelective(projectData);
             if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
-                return RespData.error("确认失败!");
+                throw new RuntimeException("确认失败!");
             }
         }
         if (dataVo.getCategory() == 3) {
@@ -1023,7 +1023,10 @@ public class NewProjectServiceImpl implements NewProjectService {
                         projectData.setUrl(baseUrl + i);
                         break;
                 }
-
+                int a = projectDataMapper.insertSelective(projectData);
+                if (a == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                    throw new RuntimeException("确认失败!");
+                }
             }
         }
         if (dataVo.getType().equals(ProjectDataStatus.VOLUME_DATA.getValue())) {
