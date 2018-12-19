@@ -413,6 +413,9 @@ public enum DesignStateEnum {
     private static void getData(Map<Integer, DesignStateEnum> enumMap, List<Integer> states, DesignStateEnum stateEnum, List<Map<String, Object>> mapList, boolean stateType) {
         Integer[] stateInt = stateEnum.nextStates;
         for (Integer integer : stateInt) {
+            if(integer < stateEnum.getState()){
+                continue;
+            }
             DesignStateEnum stateEnum1 = enumMap.get(integer);
             if (stateType == stateEnum1.stateType) {
                 addList(mapList, states, stateEnum);

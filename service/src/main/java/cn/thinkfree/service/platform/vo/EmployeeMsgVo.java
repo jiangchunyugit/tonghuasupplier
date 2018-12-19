@@ -56,6 +56,8 @@ public class EmployeeMsgVo {
     private String workTime;
     @ApiModelProperty("注册时间")
     private String registerTime;
+    @ApiModelProperty("总项目个数")
+    private int sumCount;
 
     public void setAuthState(int authState) {
         this.authState = authState;
@@ -255,5 +257,13 @@ public class EmployeeMsgVo {
 
     public String getBindReason() {
         return bindReason;
+    }
+
+    public void setSumCount(int sumCount) {
+        this.sumCount = sumCount;
+    }
+
+    public int getSumCount() {
+        return sumCount;
     }
 }
