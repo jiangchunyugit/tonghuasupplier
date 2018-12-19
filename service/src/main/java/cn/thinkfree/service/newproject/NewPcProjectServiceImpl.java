@@ -306,6 +306,10 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     @Override
     public MyRespBundle<SettlementVo> getPcProjectSettlement(String projectNo) {
         //组合结算信息
+        //获取支付模块结算信息
+
+
+
         SettlementVo settlementVo = new SettlementVo("20000.00", "20000.00", "20000.00", "20000.00", "4000.00", "4000.00", "4000.00", "首付款", "0", "0");
         return RespData.success(settlementVo);
     }
