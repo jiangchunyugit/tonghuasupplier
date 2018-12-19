@@ -261,7 +261,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         if (projectBigSchedulingVO.getIsNeedCheck() != null) {
             projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
         }
-        if (projectBigSchedulingVO.getRename() != null && !projectBigSchedulingVO.getRename().trim().isEmpty()) {
+        if (projectBigSchedulingVO.getRename() != null && !projectBigSchedulingVO.getRename().isEmpty()) {
             projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
         }
         if (projectBigSchedulingVO.getIsWaterTest() != null) {
