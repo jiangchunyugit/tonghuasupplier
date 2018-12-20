@@ -622,7 +622,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 				if(url!= null){//上传完删除文件
 					File bin = new File(filePath);
-					bin.delete();
+					if(bin.exists()){
+					    bin.delete();
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1494,5 +1496,22 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		.andContractNumberEqualTo(list.get(0).getContractNumber()).andAuditStatusEqualTo("0");
 		List<PcAuditInfo> auditList = pcAuditInfoMapper.selectByExample(exampleOne);
 		return auditList;
+	}
+
+	@Override
+	public cn.thinkfree.database.pcvo.ContractVo getOrderContractByOrderNo(String orderNumber) {
+		cn.thinkfree.database.pcvo.ContractVo  vo = new cn.thinkfree.database.pcvo.ContractVo();
+
+		OrderContractExample example = new OrderContractExample();
+		example.createCriteria().andOrderNumberEqualTo(orderNumber);
+		// 查询合同
+		List<OrderContract> list = orderContractMapper.selectByExample(example);
+		if(list != null && list.size()>0){
+			OrderContract orderVo = list.get(0);
+			vo.setContractTime(orderVo.getSignTime());
+			vo.setContractNo(orderVo.getContractNumber());
+			vo.setContractStatus(orderVo.getAuditType());
+		}
+		return  vo ;
 	}
 }

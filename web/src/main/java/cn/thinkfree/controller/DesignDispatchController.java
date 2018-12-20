@@ -397,6 +397,7 @@ public class DesignDispatchController extends AbsBaseController {
         try {
             designDispatchService.paySuccess(orderNo);
         } catch (Exception e) {
+            e.printStackTrace();
             return sendFailMessage(e.getMessage());
         }
         return sendSuccessMessage(null);
@@ -598,7 +599,7 @@ public class DesignDispatchController extends AbsBaseController {
         return sendSuccessMessage(null);
     }
 
-    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\"]")
+    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\",\"ZSG(转施工)\"]")
     @MyRespBody
     @RequestMapping(value = "showBtn", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<String>> showBtn(

@@ -41,6 +41,13 @@
     <result column="site_company_id" jdbcType="VARCHAR" property="siteCompanyId" />
     <result column="business_type" jdbcType="SMALLINT" property="businessType" />
     <result column="platform_type" jdbcType="SMALLINT" property="platformType" />
+    <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
+    <result column="city_branch_code" jdbcType="VARCHAR" property="cityBranchCode" />
+    <result column="cf" jdbcType="VARCHAR" property="cf" />
+    <result column="tf" jdbcType="VARCHAR" property="tf" />
+    <result column="work_card_valid_start_date" jdbcType="TIMESTAMP" property="workCardValidStartDate" />
+    <result column="work_card_valid_end_date" jdbcType="TIMESTAMP" property="workCardValidEndDate" />
+    <result column="dealer_company_id" jdbcType="VARCHAR" property="dealerCompanyId" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -118,7 +125,8 @@
     phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code, 
     area_code, telephone, content, audit_status, lefal_card_up_url, lefal_card_down_url, 
     work_card_from, work_card_indate, update_time, work_code, company_classify, site_company_id, 
-    business_type, platform_type
+    business_type, platform_type, branch_company_code, city_branch_code, cf, tf, work_card_valid_start_date, 
+    work_card_valid_end_date, dealer_company_id
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.CompanyInfoExample" resultMap="BaseResultMap">
     <!--
@@ -182,7 +190,10 @@
       audit_status, lefal_card_up_url, lefal_card_down_url, 
       work_card_from, work_card_indate, update_time, 
       work_code, company_classify, site_company_id, 
-      business_type, platform_type)
+      business_type, platform_type, branch_company_code, 
+      city_branch_code, cf, tf, 
+      work_card_valid_start_date, work_card_valid_end_date, 
+      dealer_company_id)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -194,7 +205,10 @@
       #{auditStatus,jdbcType=VARCHAR}, #{lefalCardUpUrl,jdbcType=VARCHAR}, #{lefalCardDownUrl,jdbcType=VARCHAR}, 
       #{workCardFrom,jdbcType=VARCHAR}, #{workCardIndate,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{workCode,jdbcType=VARCHAR}, #{companyClassify,jdbcType=SMALLINT}, #{siteCompanyId,jdbcType=VARCHAR}, 
-      #{businessType,jdbcType=SMALLINT}, #{platformType,jdbcType=SMALLINT})
+      #{businessType,jdbcType=SMALLINT}, #{platformType,jdbcType=SMALLINT}, #{branchCompanyCode,jdbcType=VARCHAR}, 
+      #{cityBranchCode,jdbcType=VARCHAR}, #{cf,jdbcType=VARCHAR}, #{tf,jdbcType=VARCHAR}, 
+      #{workCardValidStartDate,jdbcType=TIMESTAMP}, #{workCardValidEndDate,jdbcType=TIMESTAMP}, 
+      #{dealerCompanyId,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.CompanyInfo">
     <!--
@@ -308,6 +322,27 @@
       <if test="platformType != null">
         platform_type,
       </if>
+      <if test="branchCompanyCode != null">
+        branch_company_code,
+      </if>
+      <if test="cityBranchCode != null">
+        city_branch_code,
+      </if>
+      <if test="cf != null">
+        cf,
+      </if>
+      <if test="tf != null">
+        tf,
+      </if>
+      <if test="workCardValidStartDate != null">
+        work_card_valid_start_date,
+      </if>
+      <if test="workCardValidEndDate != null">
+        work_card_valid_end_date,
+      </if>
+      <if test="dealerCompanyId != null">
+        dealer_company_id,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -414,6 +449,27 @@
       </if>
       <if test="platformType != null">
         #{platformType,jdbcType=SMALLINT},
+      </if>
+      <if test="branchCompanyCode != null">
+        #{branchCompanyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityBranchCode != null">
+        #{cityBranchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cf != null">
+        #{cf,jdbcType=VARCHAR},
+      </if>
+      <if test="tf != null">
+        #{tf,jdbcType=VARCHAR},
+      </if>
+      <if test="workCardValidStartDate != null">
+        #{workCardValidStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workCardValidEndDate != null">
+        #{workCardValidEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealerCompanyId != null">
+        #{dealerCompanyId,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -539,6 +595,27 @@
       <if test="record.platformType != null">
         platform_type = #{record.platformType,jdbcType=SMALLINT},
       </if>
+      <if test="record.branchCompanyCode != null">
+        branch_company_code = #{record.branchCompanyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cityBranchCode != null">
+        city_branch_code = #{record.cityBranchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cf != null">
+        cf = #{record.cf,jdbcType=VARCHAR},
+      </if>
+      <if test="record.tf != null">
+        tf = #{record.tf,jdbcType=VARCHAR},
+      </if>
+      <if test="record.workCardValidStartDate != null">
+        work_card_valid_start_date = #{record.workCardValidStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.workCardValidEndDate != null">
+        work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.dealerCompanyId != null">
+        dealer_company_id = #{record.dealerCompanyId,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -584,7 +661,14 @@
       company_classify = #{record.companyClassify,jdbcType=SMALLINT},
       site_company_id = #{record.siteCompanyId,jdbcType=VARCHAR},
       business_type = #{record.businessType,jdbcType=SMALLINT},
-      platform_type = #{record.platformType,jdbcType=SMALLINT}
+      platform_type = #{record.platformType,jdbcType=SMALLINT},
+      branch_company_code = #{record.branchCompanyCode,jdbcType=VARCHAR},
+      city_branch_code = #{record.cityBranchCode,jdbcType=VARCHAR},
+      cf = #{record.cf,jdbcType=VARCHAR},
+      tf = #{record.tf,jdbcType=VARCHAR},
+      work_card_valid_start_date = #{record.workCardValidStartDate,jdbcType=TIMESTAMP},
+      work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP},
+      dealer_company_id = #{record.dealerCompanyId,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -698,6 +782,27 @@
       <if test="platformType != null">
         platform_type = #{platformType,jdbcType=SMALLINT},
       </if>
+      <if test="branchCompanyCode != null">
+        branch_company_code = #{branchCompanyCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityBranchCode != null">
+        city_branch_code = #{cityBranchCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cf != null">
+        cf = #{cf,jdbcType=VARCHAR},
+      </if>
+      <if test="tf != null">
+        tf = #{tf,jdbcType=VARCHAR},
+      </if>
+      <if test="workCardValidStartDate != null">
+        work_card_valid_start_date = #{workCardValidStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="workCardValidEndDate != null">
+        work_card_valid_end_date = #{workCardValidEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealerCompanyId != null">
+        dealer_company_id = #{dealerCompanyId,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -740,7 +845,14 @@
       company_classify = #{companyClassify,jdbcType=SMALLINT},
       site_company_id = #{siteCompanyId,jdbcType=VARCHAR},
       business_type = #{businessType,jdbcType=SMALLINT},
-      platform_type = #{platformType,jdbcType=SMALLINT}
+      platform_type = #{platformType,jdbcType=SMALLINT},
+      branch_company_code = #{branchCompanyCode,jdbcType=VARCHAR},
+      city_branch_code = #{cityBranchCode,jdbcType=VARCHAR},
+      cf = #{cf,jdbcType=VARCHAR},
+      tf = #{tf,jdbcType=VARCHAR},
+      work_card_valid_start_date = #{workCardValidStartDate,jdbcType=TIMESTAMP},
+      work_card_valid_end_date = #{workCardValidEndDate,jdbcType=TIMESTAMP},
+      dealer_company_id = #{dealerCompanyId,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

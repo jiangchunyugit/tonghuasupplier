@@ -1,7 +1,6 @@
 package cn.thinkfree.service.construction.vo;
 
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -80,6 +79,8 @@ public class ConstructionOrderListVo {
 
     @ApiModelProperty("0查看1指派")
     private Integer isDistribution;
+    @ApiModelProperty("合同编号")
+    private String contractNo;
 
 
 }

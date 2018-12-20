@@ -3,6 +3,7 @@ package cn.thinkfree.service.settle.rule;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.DateUtils;
@@ -44,6 +45,16 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Autowired
     PcAuditInfoMapper pcAuditInfoMapper;
+
+    @Autowired
+    private RebateNodeMapper rebateNodeMapper;
+
+    @Autowired
+    private CostRebateNodeMapper costRebateNodeMapper;
+
+
+
+
 
     @Override
     public PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO (SettlementRuleSEO rule) {
@@ -203,15 +214,15 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         map.put("03", "施工平台管理服务费");
         map.put("04", "设计平台管理服务费");
         map.put("05", "产品服务费");
-        map.put("06", "租金");
-        map.put("07", "物业费");
-        map.put("08", "其他收费");
+        /* map.put("06", "租金");*/
+        /* map.put("07", "物业费");*/
+        /* map.put("08", "其他收费");*/
         map.put("09", "材料推荐服务费");
         map.put("10", "施工服务费");
-        map.put("11", "先行赔付款");
-        map.put("12", "客户赔偿款");
+        /*    map.put("11", "先行赔付款");*/
+        /*    map.put("12", "客户赔偿款");*/
         map.put("13", "合同保证金");
-        map.put("14", "入驻费");
+        /*  map.put("14", "入驻费");*/
         return map;
     }
 
@@ -222,15 +233,15 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         map.put("03", "施工平台管理服务费");
         map.put("04", "设计平台管理服务费");
         map.put("05", "产品服务费");
-        map.put("06", "租金");
-        map.put("07", "物业费");
-        map.put("08", "其他收费");
+        /* map.put("06", "租金");*/
+        /* map.put("07", "物业费");*/
+        /* map.put("08", "其他收费");*/
         map.put("09", "材料推荐服务费");
         map.put("10", "施工服务费");
-        map.put("11", "先行赔付款");
-        map.put("12", "客户赔偿款");
+        /*    map.put("11", "先行赔付款");*/
+        /*    map.put("12", "客户赔偿款");*/
         map.put("13", "合同保证金");
-        map.put("14", "入驻费");
+        /*  map.put("14", "入驻费");*/
         return map;
     }
 
@@ -320,7 +331,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
             // 待审核，申请作废，审批
             if (settlementRuleInfo.getStatus().equals(SettlementStatus.CANDecline.getCode())) {
                 if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
-                 recordT.setStatus(SettlementStatus.AuditCAN.getCode());
+                    recordT.setStatus(SettlementStatus.AuditCAN.getCode());
                     // 作废标签
                     recordT.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
                 } else {
@@ -395,6 +406,30 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         }
         return false;
     }
+
+    @Override
+    public List<RebateNode> getCostNamesForRebateNode(String costType) {
+
+        //查询结算规则映射表
+        CostRebateNodeExample costExample = new CostRebateNodeExample();
+        costExample.createCriteria().andCostCodeEqualTo(costType);
+        List<CostRebateNode> list =  costRebateNodeMapper.selectByExample(costExample);
+        List<Integer> codesInteger = new ArrayList<>();
+        for ( CostRebateNode node:list) {
+            codesInteger.add(Integer.valueOf(node.getRebateNodeCode()));
+        }
+        if(codesInteger.size()> 0 ){
+            RebateNodeExample example = new RebateNodeExample();
+            example.createCriteria().andCodeIn(codesInteger);
+            return rebateNodeMapper.selectByExample(example);
+
+        }else{
+            return  new ArrayList<>(1);
+        }
+
+    }
+
+
 
     @Override
     public boolean applicationInvalid(String ruleNumber) {
@@ -512,7 +547,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         if(SettlementRuleStatus.LastDaySettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
             method.append(SettlementRuleStatus.getDesc(settlementRuleInfo.getCycleType()));
 
-        // 自然月周期
+            // 自然月周期
         }else if (SettlementRuleStatus.NaturalMonthSettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
 
             billCycleResult.setCycleTime(settlementRuleInfo.getCycleStime()+"--"+settlementRuleInfo.getCycleStime());

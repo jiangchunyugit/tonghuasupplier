@@ -261,7 +261,7 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         if (projectBigSchedulingVO.getIsNeedCheck() != null) {
             projectBigScheduling.setIsNeedCheck(projectBigSchedulingVO.getIsNeedCheck());
         }
-        if (projectBigSchedulingVO.getRename() != null && !projectBigSchedulingVO.getRename().trim().isEmpty()) {
+        if (projectBigSchedulingVO.getRename() != null && !projectBigSchedulingVO.getRename().isEmpty()) {
             projectBigScheduling.setRename(projectBigSchedulingVO.getRename());
         }
         if (projectBigSchedulingVO.getIsWaterTest() != null) {
@@ -327,5 +327,13 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
             }
         }
         return RespData.success();
+    }
+
+    @Override
+    public ProjectBigScheduling findBySchemeNoAndSort(String schemeNo, Integer sort) {
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        example.createCriteria().andSchemeNoEqualTo(schemeNo).andSortEqualTo(sort);
+        List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example);
+        return projectBigSchedulings != null && projectBigSchedulings.size() > 0 ? projectBigSchedulings.get(0) : null;
     }
 }

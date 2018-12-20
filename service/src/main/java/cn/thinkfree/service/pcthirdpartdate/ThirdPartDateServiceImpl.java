@@ -58,10 +58,17 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
     @Autowired
 	ContractTermsChildMapper contractTermsChildMapper;
 
+	@Autowired
+	OrderUserMapper  orderUserMapper;
+
+	@Autowired
+	private ConstructionOrderMapper constructionOrderMapper;
 
 
 
-    @Override
+
+
+	@Override
     public MarginContractVO getMarginContract(String contractNumber,String signedTime) {
 
 
@@ -135,12 +142,28 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 				}
 				// 判断当前合同类型 02设计合同_to_c 03施工合同_to_c
 				if (contract.getContractType().equals("02")) {
+
+					DesignerOrderExample exampleOne = new DesignerOrderExample();
+					exampleOne.createCriteria().andOrderNoEqualTo(orderNumber);
+					List<DesignerOrder>  projectList = designerOrderMapper.selectByExample(exampleOne);
+
+					OrderUserExample example = new OrderUserExample();
+					example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CC");
+					List<OrderUser> list = orderUserMapper.selectByExample(example);
 					// 设计合同数据拼接
-					designData(orderNumber, listVo, contract, companyInfo, resMap);
+					designData(orderNumber, listVo, contract, companyInfo, resMap,list);
 
 				} else {
 					// 施工订单
-					roadWorkData(orderNumber, listVo, contract, companyInfo, resMap);
+
+					ConstructionOrderExample exampleOne = new ConstructionOrderExample();
+					exampleOne.createCriteria().andOrderNoEqualTo(orderNumber);
+					List<ConstructionOrder>  projectList = constructionOrderMapper.selectByExample(exampleOne);
+					OrderUserExample example = new OrderUserExample();
+					example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CC");
+
+					List<OrderUser> list = orderUserMapper.selectByExample(example);
+					roadWorkData(orderNumber, listVo, contract, companyInfo, resMap,list);
 				}
 			}
 
@@ -164,7 +187,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
     * @param resMap
     */
 	private void roadWorkData(String orderNumber, List<SyncOrderVO> listVo, OrderContract contract,
-			CompanyInfo companyInfo, Map<String, String> resMap) {
+			CompanyInfo companyInfo, Map<String, String> resMap,List<OrderUser> list) {
 		ConstructionOrderExample example = new ConstructionOrderExample();
 		  example.createCriteria().andOrderNoEqualTo(orderNumber);
 		  List<ConstructionOrder> conorder =  construtionOrderMapper.selectByExample(example);
@@ -219,6 +242,9 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  vo.setSort(jsonMap.get("stageCode"));
 					  //阶段名称
 					  vo.setTypeSubName(jsonMap.get("progressName"));
+
+					  vo.setUserId(list.get(0)==null?"":list.get(0).getUserId());
+
 		              listVo.add(vo);
 				  }
 		 
@@ -241,7 +267,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 	 * @param resMap
 	 */
 	private void designData(String orderNumber, List<SyncOrderVO> listVo, OrderContract contract,
-							CompanyInfo companyInfo, Map<String, String> resMap) {
+							CompanyInfo companyInfo, Map<String, String> resMap,List<OrderUser> list) {
 		//查询设计订单项目信息
 		DesignerOrderExample example = new DesignerOrderExample();
 		example.createCriteria().andOrderNoEqualTo(orderNumber);
@@ -285,6 +311,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			vo.setSort("");
 			vo.setTypeSubName("设计费总额");
 			vo.setCompanyAddrNo(companyInfo.getId()+"");
+			vo.setUserId(list.get(0).getUserId());
 			listVo.add(vo);
 		} else {
 			//分期 根据分期json循环数据  [{'sortNumber':'0','name':'设计3d方案','ratio': '30','costValue': '200000'},{'sortNumber': '1','name':'设计3d方案2','ratio': '40','costValue': '2222222222'}]
@@ -345,7 +372,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					//阶段名称
 
 					vo.setCompanyAddrNo(companyInfo.getId()+"");
-
+					vo.setUserId(list.get(0).getUserId());
 					printInfoMes("json vo 数据｛｝" + vo);
 					listVo.add(vo);
 				}

@@ -11,7 +11,12 @@ public enum Role {
     /**
      * 业主
      */
-    CC("CC", "业主");
+    CC("CC", "业主"),
+
+    /**
+     * 设计师
+     */
+    CD("CD", "业主");
 
     public final String id;
     public final String name;

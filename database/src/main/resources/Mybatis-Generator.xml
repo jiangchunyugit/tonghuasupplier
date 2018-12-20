@@ -108,6 +108,9 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
+        <!--<table tableName="rebate_node" domainObjectName="RebateNode"/>-->
+        <!--<table tableName="scheme_schedule_rebate_node" domainObjectName="SchemeScheduleRebateNode"/>-->
+        <!--<table tableName="funds_settle_accounts_node_log" domainObjectName="FundsSettleAccountsNodeLog"/>-->
         <!--Scheduling start-->
         <!--<table tableName="project" domainObjectName="Project"/>-->
         <!--<table tableName="designer_msg" domainObjectName="DesignerMsg"/>-->
@@ -140,6 +143,7 @@
         <!--<table tableName="a_f_config_scheme" domainObjectName="AfConfigScheme"/>-->
         <!--<table tableName="a_f_instance" domainObjectName="AfInstance"/>-->
         <!--<table tableName="a_f_instance_pdf_url" domainObjectName="AfInstancePdfUrl"/>-->
+        <!--<table tableName="a_f_instance_relevance" domainObjectName="AfInstanceRelevance"/>-->
         <!--<table tableName="a_f_approval_log" domainObjectName="AfApprovalLog"/>-->
         <!--<table tableName="a_f_approval_role" domainObjectName="AfApprovalRole"/>-->
         <!--<table tableName="a_f_sub_role" domainObjectName="AfSubRole"/>-->

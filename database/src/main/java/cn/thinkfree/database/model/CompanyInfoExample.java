@@ -2514,6 +2514,476 @@ public class CompanyInfoExample extends cn.thinkfree.core.model.AbstractDataAuth
             addCriterion("platform_type not between", value1, value2, "platformType");
             return (Criteria) this;
         }
+
+        public Criteria andBranchCompanyCodeIsNull() {
+            addCriterion("branch_company_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeIsNotNull() {
+            addCriterion("branch_company_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeEqualTo(String value) {
+            addCriterion("branch_company_code =", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeNotEqualTo(String value) {
+            addCriterion("branch_company_code <>", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeGreaterThan(String value) {
+            addCriterion("branch_company_code >", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("branch_company_code >=", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeLessThan(String value) {
+            addCriterion("branch_company_code <", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeLessThanOrEqualTo(String value) {
+            addCriterion("branch_company_code <=", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeLike(String value) {
+            addCriterion("branch_company_code like", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeNotLike(String value) {
+            addCriterion("branch_company_code not like", value, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeIn(List<String> values) {
+            addCriterion("branch_company_code in", values, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeNotIn(List<String> values) {
+            addCriterion("branch_company_code not in", values, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeBetween(String value1, String value2) {
+            addCriterion("branch_company_code between", value1, value2, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andBranchCompanyCodeNotBetween(String value1, String value2) {
+            addCriterion("branch_company_code not between", value1, value2, "branchCompanyCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeIsNull() {
+            addCriterion("city_branch_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeIsNotNull() {
+            addCriterion("city_branch_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeEqualTo(String value) {
+            addCriterion("city_branch_code =", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeNotEqualTo(String value) {
+            addCriterion("city_branch_code <>", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeGreaterThan(String value) {
+            addCriterion("city_branch_code >", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("city_branch_code >=", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeLessThan(String value) {
+            addCriterion("city_branch_code <", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeLessThanOrEqualTo(String value) {
+            addCriterion("city_branch_code <=", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeLike(String value) {
+            addCriterion("city_branch_code like", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeNotLike(String value) {
+            addCriterion("city_branch_code not like", value, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeIn(List<String> values) {
+            addCriterion("city_branch_code in", values, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeNotIn(List<String> values) {
+            addCriterion("city_branch_code not in", values, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeBetween(String value1, String value2) {
+            addCriterion("city_branch_code between", value1, value2, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCityBranchCodeNotBetween(String value1, String value2) {
+            addCriterion("city_branch_code not between", value1, value2, "cityBranchCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfIsNull() {
+            addCriterion("cf is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfIsNotNull() {
+            addCriterion("cf is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfEqualTo(String value) {
+            addCriterion("cf =", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotEqualTo(String value) {
+            addCriterion("cf <>", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfGreaterThan(String value) {
+            addCriterion("cf >", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfGreaterThanOrEqualTo(String value) {
+            addCriterion("cf >=", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfLessThan(String value) {
+            addCriterion("cf <", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfLessThanOrEqualTo(String value) {
+            addCriterion("cf <=", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfLike(String value) {
+            addCriterion("cf like", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotLike(String value) {
+            addCriterion("cf not like", value, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfIn(List<String> values) {
+            addCriterion("cf in", values, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotIn(List<String> values) {
+            addCriterion("cf not in", values, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfBetween(String value1, String value2) {
+            addCriterion("cf between", value1, value2, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andCfNotBetween(String value1, String value2) {
+            addCriterion("cf not between", value1, value2, "cf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfIsNull() {
+            addCriterion("tf is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfIsNotNull() {
+            addCriterion("tf is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfEqualTo(String value) {
+            addCriterion("tf =", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfNotEqualTo(String value) {
+            addCriterion("tf <>", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfGreaterThan(String value) {
+            addCriterion("tf >", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfGreaterThanOrEqualTo(String value) {
+            addCriterion("tf >=", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfLessThan(String value) {
+            addCriterion("tf <", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfLessThanOrEqualTo(String value) {
+            addCriterion("tf <=", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfLike(String value) {
+            addCriterion("tf like", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfNotLike(String value) {
+            addCriterion("tf not like", value, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfIn(List<String> values) {
+            addCriterion("tf in", values, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfNotIn(List<String> values) {
+            addCriterion("tf not in", values, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfBetween(String value1, String value2) {
+            addCriterion("tf between", value1, value2, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andTfNotBetween(String value1, String value2) {
+            addCriterion("tf not between", value1, value2, "tf");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateIsNull() {
+            addCriterion("work_card_valid_start_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateIsNotNull() {
+            addCriterion("work_card_valid_start_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date =", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateNotEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date <>", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateGreaterThan(Date value) {
+            addCriterion("work_card_valid_start_date >", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date >=", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateLessThan(Date value) {
+            addCriterion("work_card_valid_start_date <", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateLessThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_start_date <=", value, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateIn(List<Date> values) {
+            addCriterion("work_card_valid_start_date in", values, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateNotIn(List<Date> values) {
+            addCriterion("work_card_valid_start_date not in", values, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_start_date between", value1, value2, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidStartDateNotBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_start_date not between", value1, value2, "workCardValidStartDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateIsNull() {
+            addCriterion("work_card_valid_end_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateIsNotNull() {
+            addCriterion("work_card_valid_end_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date =", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateNotEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date <>", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateGreaterThan(Date value) {
+            addCriterion("work_card_valid_end_date >", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateGreaterThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date >=", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateLessThan(Date value) {
+            addCriterion("work_card_valid_end_date <", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateLessThanOrEqualTo(Date value) {
+            addCriterion("work_card_valid_end_date <=", value, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateIn(List<Date> values) {
+            addCriterion("work_card_valid_end_date in", values, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateNotIn(List<Date> values) {
+            addCriterion("work_card_valid_end_date not in", values, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_end_date between", value1, value2, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andWorkCardValidEndDateNotBetween(Date value1, Date value2) {
+            addCriterion("work_card_valid_end_date not between", value1, value2, "workCardValidEndDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIsNull() {
+            addCriterion("dealer_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIsNotNull() {
+            addCriterion("dealer_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdEqualTo(String value) {
+            addCriterion("dealer_company_id =", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotEqualTo(String value) {
+            addCriterion("dealer_company_id <>", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdGreaterThan(String value) {
+            addCriterion("dealer_company_id >", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("dealer_company_id >=", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLessThan(String value) {
+            addCriterion("dealer_company_id <", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("dealer_company_id <=", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLike(String value) {
+            addCriterion("dealer_company_id like", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotLike(String value) {
+            addCriterion("dealer_company_id not like", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIn(List<String> values) {
+            addCriterion("dealer_company_id in", values, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotIn(List<String> values) {
+            addCriterion("dealer_company_id not in", values, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdBetween(String value1, String value2) {
+            addCriterion("dealer_company_id between", value1, value2, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("dealer_company_id not between", value1, value2, "dealerCompanyId");
+            return (Criteria) this;
+        }
     }
 
     /**

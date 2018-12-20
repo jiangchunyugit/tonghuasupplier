@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.thinkfree.database.mapper.ConstructionOrderMapper">
 
-  <!--阶段详情展示-->
-  <select id="selectStageDetailsList" resultType="cn.thinkfree.database.vo.StageDetailsVO">
+    <!--阶段详情展示-->
+    <select id="selectStageDetailsList" resultType="cn.thinkfree.database.vo.StageDetailsVO">
             SELECT
             s.stage AS stage,
             s.create_time AS createTime
@@ -12,8 +12,8 @@
             WHERE c.project_no=#{projectNo} AND s.type =#{type}
   </select>
 
-  <!--根据项目编号查询订单信息-->
-  <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
+    <!--根据项目编号查询订单信息-->
+    <select id="selectByProjectNo" resultType="cn.thinkfree.database.appvo.ProjectOrderDetailVo">
     SELECT
       order_stage as taskStage,
       order_no as orderNo,
@@ -83,8 +83,10 @@
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
+        LEFT JOIN project_quotation_check pqc ON pqc.project_no=dor.project_no
         WHERE
         dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status}
+        AND pqc.result = 1
         <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
@@ -110,7 +112,7 @@
             <if test='constructionContractVO.flag == "1" '>
                 and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
             </if>
-            <if test='constructionContractVO.flag == "0" ' >
+            <if test='constructionContractVO.flag == "0" '>
                 and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
             </if>
         </if>
@@ -130,8 +132,10 @@
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
+        LEFT JOIN project_quotation_check pqc ON pqc.project_no=dor.project_no
         WHERE
         dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status}
+        AND pqc.result = 1
         <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
         </if>
@@ -157,10 +161,57 @@
             <if test='constructionContractVO.flag == "1" '>
                 and po.audit_type = '1' and po.sign_time <![CDATA[>]]> now()
             </if>
-            <if test='constructionContractVO.flag == "0" ' >
+            <if test='constructionContractVO.flag == "0" '>
                 and ( po.audit_type = '0' or po.sign_time <![CDATA[ < ]]> now() )
             </if>
         </if>
     </select>
+
+    <select id="countByApproval" resultType="int">
+        select count(1) from (SELECT
+            DISTINCT ou.project_no projectNo
+        FROM
+            order_user ou
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage != #{orderStatus}
+        RIGHT JOIN a_f_instance afi on afi.project_no = ou.project_no AND afi.config_no IN
+        <foreach collection="configNos" item="configNo" open="(" separator="," close=")">
+            #{configNo}
+        </foreach>
+        WHERE ou.user_id = #{userId})
+    </select>
+
+    <select id="selectByApproval" resultType="cn.thinkfree.database.appvo.ConstructionProjectVo">
+        SELECT
+            DISTINCT ou.project_no projectNo,
+            ou.order_no orderNo,
+            proj.create_time appointmentTime,
+            CONCAT(prov.province_name, ci.city_name, ar.area_name, proj.address_detail) address,
+            bd.basics_name as type,
+            proj.stage stage
+        FROM
+            order_user ou
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage <![CDATA[ < ]]> #{orderStatus}
+        RIGHT JOIN a_f_instance afi on afi.project_no = ou.project_no AND afi.config_no IN
+        <foreach collection="configNos" item="configNo" open="(" separator="," close=")">
+            #{configNo}
+        </foreach>
+        LEFT JOIN project proj ON proj.project_no = ou.project_no
+        LEFT JOIN province prov ON prov.province_code = proj.province
+        LEFT JOIN city ci ON ci.city_code = proj.city
+        LEFT JOIN area ar ON ar.area_code = proj.area
+        LEFT JOIN basics_data bd ON bd.basics_code = proj.style and bd.basics_group = 'DESIGN_STYLE'
+        WHERE ou.user_id = #{userId}
+    </select>
+
+    <select id="countByUserId" resultType="int">
+        SELECT
+            count(1)
+        FROM
+            order_user ou
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no
+        WHERE ou.user_id = #{userId}
+    </select>
+
+
 
 </mapper>

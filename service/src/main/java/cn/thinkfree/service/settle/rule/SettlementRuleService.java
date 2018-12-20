@@ -1,5 +1,6 @@
 package cn.thinkfree.service.settle.rule;
 
+import cn.thinkfree.database.model.RebateNode;
 import cn.thinkfree.database.model.SettlementRuleInfo;
 import cn.thinkfree.database.vo.settle.SettlementRuleContractVO;
 import cn.thinkfree.database.vo.settle.SettlementRuleSEO;
@@ -102,4 +103,11 @@ public interface SettlementRuleService {
      * @return
      */
     boolean updateSettlementRule(SettlementRuleVO settlementRuleVO);
+
+
+    /**
+     * 查询结算规则结算节点
+     *
+     */
+    List<RebateNode> getCostNamesForRebateNode(String costType);
 }

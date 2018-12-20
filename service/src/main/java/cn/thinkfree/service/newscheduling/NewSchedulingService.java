@@ -1,9 +1,10 @@
 package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
+import cn.thinkfree.database.model.Project;
+import cn.thinkfree.database.model.ProjectBigScheduling;
+import cn.thinkfree.database.model.ProjectBigSchedulingDetails;import cn.thinkfree.database.model.ProjectScheduling;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
-import cn.thinkfree.database.vo.ProjectBigSchedulingVO;
 
 import java.util.List;
 
@@ -86,5 +87,29 @@ public interface NewSchedulingService {
      * @param type
      * @return
      */
-    MyRespBundle<List<String>> getPcCheckStage(String orderNo,Integer type);
+    MyRespBundle<List<String>> getPcCheckStage(String orderNo, Integer type);
+
+    /**
+     * 获取项目总排期信息
+     *
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<ProjectScheduling> getProjectScheduling(String projectNo);
+
+    /**
+     * 修改延期天数(延期单审批通过后调用)
+     * @param projectNo
+     * @param delay
+     * @return
+     */
+    MyRespBundle editProjectDelay(String projectNo,Integer delay);
+
+    /**
+     * 根据方案编号与排期编号查询排期信息
+     * @param schemeNo 方案编号
+     * @param scheduleSort 排期编号
+     * @return 排期信息
+     */
+    ProjectBigScheduling findBySchemeNoAndScheduleSort(String schemeNo, Integer scheduleSort);
 }

@@ -16,6 +16,7 @@ import cn.thinkfree.service.construction.vo.ConstructionOrderDistributionNumVo;
 import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
+import cn.thinkfree.service.platform.order.OrderService;
 import cn.thinkfree.service.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
     private BuildSchemeCompanyRelMapper relMapper;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private OrderService orderService;
 
 
     /**
@@ -66,10 +69,10 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
             if (stage == ConstructionStateEnum.STATE_500.getState() || stage == ConstructionStateEnum.STATE_510.getState()) {
                 waitDistributionOrder++;//待派单
             }
-            if (stage == ConstructionStateEnum.STATE_520.getState()) {
+            if (stage == ConstructionStateEnum.STATE_530.getState()) {
                 waitReceipt++;//待接单
             }
-            if (stage > ConstructionStateEnum.STATE_520.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
+            if (stage > ConstructionStateEnum.STATE_530.getState() && stage < ConstructionStateEnum.STATE_700.getState()) {
                 alreadyReceipt++;//已接单
             }
         }
@@ -158,11 +161,14 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         // 绑定装饰公司
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder,example);
         if (isUpdate == 1) {
+            List<ConstructionOrder> orders = constructionOrderMapper.selectByExample(example);
+            if(!orders.isEmpty()){
+                orderService.sendPlatformDispatch(companyId, orders.get(0).getProjectNo(), "施工订单");
+            }
             return RespData.success();
         } else {
             return RespData.error(ResultMessage.ERROR.code, "派单失败,请稍后重试");
         }
-
     }
 
 }

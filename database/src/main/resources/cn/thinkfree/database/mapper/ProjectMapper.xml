@@ -643,8 +643,8 @@
       FROM
           project P
       LEFT JOIN project_scheduling ps ON P .project_no = ps.project_no
-      LEFT JOIN project_base_big_scheduling pb ON pb.sort = ps.rate
       LEFT JOIN construction_order co ON co.project_no = P .project_no
+      LEFT JOIN project_base_big_scheduling pb ON pb.scheme_no=co.scheme_no AND pb.sort = ps.rate
       WHERE
           P .project_no = #{projectNo}
           AND P .status =#{status}

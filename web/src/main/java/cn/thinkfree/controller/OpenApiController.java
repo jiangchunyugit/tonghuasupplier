@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.CompanyInfo;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.SystemMessage;
+import cn.thinkfree.database.vo.DesignContractToVo;
 import cn.thinkfree.database.vo.EnterCompanyOrganizationVO;
 import cn.thinkfree.database.vo.ProjectQuotationVO;
 import cn.thinkfree.database.vo.SelectItem;
@@ -14,12 +15,11 @@ import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.company.CompanyInfoService;
 import cn.thinkfree.service.contract.ContractService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.sysMsg.SystemMessageService;
 import cn.thinkfree.service.user.UserService;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +57,9 @@ public class OpenApiController extends AbsBaseController {
 
     @Autowired
     ContractService contractService;
+
+    @Autowired
+    DesignDispatchService designDispatchService;
 
     @ApiOperation(value = "APP模糊查询公司列表",notes = "默认30条数据")
     @PostMapping("/companyInfo")
@@ -205,6 +208,24 @@ public class OpenApiController extends AbsBaseController {
 
         return sendJsonData(ResultMessage.SUCCESS,list);
     }
+
+
+    /***
+     * 设计师录入合同的带出的数据
+     *
+     */
+
+
+    @PostMapping("/getDesignContractInfo")
+    @ApiOperation(value = "for江宁哥---通过订单编号查询初始合同信息--吕启栋",notes = "通过用户id获取运营平台组织架构")
+    @MyRespBody
+    public MyRespBundle<DesignContractToVo> getDesignContractInfo(@ApiParam("orderNo")@RequestParam String orderNo){
+
+        DesignContractToVo resInfo = designDispatchService.getDesigneContractInfo(orderNo);
+
+        return sendJsonData(ResultMessage.SUCCESS,resInfo);
+    }
+
 
 
 }

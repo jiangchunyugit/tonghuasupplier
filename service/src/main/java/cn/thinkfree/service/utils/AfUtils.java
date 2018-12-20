@@ -2,6 +2,7 @@ package cn.thinkfree.service.utils;
 
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.vo.AfExportPdfVO;
+import cn.thinkfree.database.vo.AfResponseMsg;
 import cn.thinkfree.database.vo.AfUserDTO;
 import cn.thinkfree.service.config.PdfConfig;
 import com.itextpdf.html2pdf.ConverterProperties;
@@ -249,17 +250,17 @@ public class AfUtils {
         }
     }
 
-    public static void sendChangeMoney(String url, String orderNo, String money, String remark) {
-        Map<String, String> requestMap = new HashMap<>(2);
-        requestMap.put("contractId", orderNo);
-        requestMap.put("feeAmount", money);
-        requestMap.put("feeName", "变更单");
-        requestMap.put("remark", remark);
-        LOGGER.info("获取用户信息，requestMap：{}", JSONUtil.bean2JsonStr(requestMap));
-        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(url, requestMap);
-        LOGGER.info("获取用户信息， httpRespMsg：{}", JSONUtil.bean2JsonStr(httpRespMsg));
-        Map responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), Map.class);
-        LOGGER.info("获取用户信息， responseMap：{}", JSONUtil.bean2JsonStr(responseMap));
+    public static int postJson(String url, String data) {
+        LOGGER.info("sendData：{}", JSONUtil.bean2JsonStr(data));
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.postJson(url, data);
+        LOGGER.info("httpRespMsg：{}", JSONUtil.bean2JsonStr(httpRespMsg));
+        if (httpRespMsg.getResponseCode() != 200) {
+            LOGGER.error("http请求失败，url:{}, data:{}", url, data);
+            throw new RuntimeException();
+        }
+        LOGGER.info("responseMap：{}", httpRespMsg.getContent());
+        AfResponseMsg responseMap = JSONUtil.json2Bean(httpRespMsg.getContent(), AfResponseMsg.class);
+        return responseMap.getCode();
     }
 
     public static String uploadFile(String fileDir, String fileName, String uploadUrl) {

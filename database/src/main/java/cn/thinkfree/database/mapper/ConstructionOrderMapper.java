@@ -1,16 +1,17 @@
 package cn.thinkfree.database.mapper;
 
+import cn.thinkfree.database.appvo.ConstructionProjectVo;
 import cn.thinkfree.database.appvo.OrderPlayVo;
 import cn.thinkfree.database.appvo.ProjectOrderDetailVo;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
-import java.util.List;
-
 import cn.thinkfree.database.pcvo.ConstructionOrderVO;
 import cn.thinkfree.database.vo.ConstructionContractVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import cn.thinkfree.database.vo.StageDetailsVO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface ConstructionOrderMapper {
     /**
@@ -144,4 +145,29 @@ public interface ConstructionOrderMapper {
     List<ConstructionContractVO> selectConstructionContractByPage(@Param("constructionContractVO") ConstructionContractVO constructionContractVO, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     Integer selectconstructionContractVOCount(@Param("constructionContractVO") ConstructionContractVO constructionContractVO);
+
+    /**
+     * 根据审批信息统计施工订单
+     * @param userId 用户编号
+     * @param configNos 审批表类型
+     * @param orderStatus 订单状态
+     * @return 施工订单总数
+     */
+    int countByApproval(@Param("userId") String userId, @Param("configNos") List<String> configNos, @Param("orderStatus") int orderStatus);
+
+    /**
+     * 根据审批信息统计施工订单
+     * @param userId 用户编号
+     * @param configNos 审批表类型
+     * @param orderStatus 订单状态
+     * @return 施工订单信息
+     */
+    List<ConstructionProjectVo> selectByApproval(@Param("userId") String userId, @Param("configNos") List<String> configNos, @Param("orderStatus") int orderStatus);
+
+    /**
+     * 用户名下的施工订单总数
+     * @param userId 用户编号
+     * @return 施工订单总数
+     */
+    int countByUserId(@Param("userId") String userId);
 }

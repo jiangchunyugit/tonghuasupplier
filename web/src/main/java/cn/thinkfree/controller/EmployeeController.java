@@ -8,10 +8,7 @@ import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.model.EmployeeMsg;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
-import cn.thinkfree.service.platform.vo.EmployeeApplyVo;
-import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
-import cn.thinkfree.service.platform.vo.PageVo;
-import cn.thinkfree.service.platform.vo.RoleVo;
+import cn.thinkfree.service.platform.vo.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -79,9 +76,10 @@ public class EmployeeController extends AbsBaseController {
     public MyRespBundle apply(
             @ApiParam(name = "userId", required = false, value = "员工ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "employeeApplyState", required = false, value = "员工申请状态1入驻待审核，4解约待审核") @RequestParam(name = "employeeApplyState", required = false) int employeeApplyState,
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "reason", required = false, value = "解约原因") @RequestParam(name = "reason", required = false) String reason) {
         try {
-            employeeService.employeeApply(userId, employeeApplyState, companyId);
+            employeeService.employeeApply(userId, employeeApplyState, companyId, reason);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -308,6 +306,53 @@ public class EmployeeController extends AbsBaseController {
         try {
             PageVo<List<EmployeeMsgVo>> pageVo = employeeService.queryAllEmployee(phone, name, cardNo, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
+        } catch (Exception e) {
+            logger.error("e:", e);
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("查询员工和项目的关联关系")
+    @MyRespBody
+    @RequestMapping(value = "queryRelationProject", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<EmployeeAndProjectMsgVo> queryRelationProject(
+            @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId){
+        try {
+            EmployeeAndProjectMsgVo msgVo = employeeService.queryRelationProject(userId);
+            return sendJsonData(ResultMessage.SUCCESS, msgVo);
+        } catch (Exception e) {
+            logger.error("e:", e);
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("移除员工")
+    @MyRespBody
+    @RequestMapping(value = "removeEmployee", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<String> removeEmployee(
+            @ApiParam(name = "employeeId", value = "员工ID") @RequestParam(name = "employeeId", required = false) String employeeId,
+            @ApiParam(name = "dealExplain", required = false, value = "处理结果") @RequestParam(name = "dealExplain", required = false) String dealExplain,
+            @ApiParam(name = "dealUserId", required = false, value = "处理人ID") @RequestParam(name = "dealUserId", required = false) String dealUserId,
+            @ApiParam(name = "roleCode", required = false, value = "该员工所属角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId){
+        try {
+            employeeService.removeEmployee(employeeId, dealExplain, dealUserId, roleCode, companyId);
+            return sendSuccessMessage(null);
+        } catch (Exception e) {
+            logger.error("e:", e);
+            return sendFailMessage(e.getMessage());
+        }
+    }
+    @ApiOperation("根据公司ID查询员工信息")
+    @MyRespBody
+    @RequestMapping(value = "companyStaff", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<CompanyStaffVo>> companyStaff(
+            @ApiParam(name = "companyId", value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId,
+            @ApiParam(name = "roleCode", value = "角色编码") @RequestParam(name = "roleCode", required = false) String roleCode,
+            @ApiParam(name = "searchKey", value = "搜索关键字") @RequestParam(name = "searchKey", required = false) String searchKey){
+        try {
+            List<CompanyStaffVo> companyStaffVos = employeeService.companyStaff(searchKey, roleCode, companyId);
+            return sendJsonData(ResultMessage.SUCCESS,companyStaffVos);
         } catch (Exception e) {
             logger.error("e:", e);
             return sendFailMessage(e.getMessage());

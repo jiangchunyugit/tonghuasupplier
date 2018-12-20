@@ -1,10 +1,7 @@
 package cn.thinkfree.service.platform.employee;
 
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.service.platform.vo.EmployeeApplyVo;
-import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
-import cn.thinkfree.service.platform.vo.PageVo;
-import cn.thinkfree.service.platform.vo.RoleVo;
+import cn.thinkfree.service.platform.vo.*;
 
 import java.util.List;
 
@@ -22,13 +19,14 @@ public interface EmployeeService {
     void reviewEmployee(String userId, int authState, String reason);
 
     /**
-     * 处理员工申请
+     * 发起员工申请
      *
      * @param userId             用户ID
      * @param employeeApplyState 员工申请状态，1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约
      * @param companyId          公司ID
+     * @param reason             解约原因
      */
-    void employeeApply(String userId, int employeeApplyState, String companyId);
+    void employeeApply(String userId, int employeeApplyState, String companyId, String reason);
 
     /**
      * 处理申请
@@ -179,4 +177,32 @@ public interface EmployeeService {
      * @return
      */
     PageVo<List<EmployeeMsgVo>> queryAllEmployee(String phone, String name, String cardNo, int pageSize, int pageIndex);
+
+    /**
+     * 根据UserId查询该用户关联的项目信息
+     *
+     * @param userId
+     * @return
+     */
+    EmployeeAndProjectMsgVo queryRelationProject(String userId);
+
+    /**
+     * 移除员工
+     *
+     * @param employeeId  员工ID
+     * @param dealExplain 处理结果
+     * @param dealUserId  处理人ID
+     * @param roleCode    角色编码
+     * @param companyId   公司ID
+     */
+    void removeEmployee(String employeeId, String dealExplain, String dealUserId, String roleCode, String companyId);
+
+    /**
+     * 根据公司ID查询员工信息
+     * @param searchKey 模糊搜索信息
+     * @param roleCode 角色编码
+     * @param companyId 公司ID
+     * @return
+     */
+    List<CompanyStaffVo> companyStaff(String searchKey, String roleCode, String companyId);
 }
