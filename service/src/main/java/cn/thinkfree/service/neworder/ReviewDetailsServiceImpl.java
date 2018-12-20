@@ -18,6 +18,7 @@ import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.order.OrderService;
+import cn.thinkfree.service.project.ProjectStageLogService;
 import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
@@ -82,6 +83,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     NewProjectService newProjectService;
     @Autowired
     OrderService orderService;
+    @Autowired
+    ProjectStageLogService projectStageLogService;
 
     /**
      * 获取精准报价
@@ -982,6 +985,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         if (i == 0) {
             throw new RuntimeException("修改设计订单预交底状态失败!");
         }
+        //记录状态更改
+        projectStageLogService.create(projectNo,ProjectDataStatus.BASE_STATUS.getValue());
     }
 
 }
