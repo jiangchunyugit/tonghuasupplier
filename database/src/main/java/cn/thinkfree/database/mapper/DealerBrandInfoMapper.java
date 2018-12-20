@@ -3,6 +3,10 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.DealerBrandInfo;
 import cn.thinkfree.database.model.DealerBrandInfoExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.AuditBrandInfoVO;
+import cn.thinkfree.database.vo.BrandDetailVO;
+import cn.thinkfree.database.vo.BrandItemsVO;
 import org.apache.ibatis.annotations.Param;
 
 public interface DealerBrandInfoMapper {
@@ -61,4 +65,19 @@ public interface DealerBrandInfoMapper {
      * @mbg.generated
      */
     int updateByExample(@Param("record") DealerBrandInfo record, @Param("example") DealerBrandInfoExample example);
+
+    /**
+     * 经销商品牌审核回显
+     * @param brandDetailVO
+     * @return
+     */
+    List<AuditBrandInfoVO> showBrandDetail(BrandDetailVO brandDetailVO);
+
+    /**
+     * 经销商品牌审核回显品牌品类条目
+     * @param companyId
+     * @param agencyCode
+     * @return
+     */
+    List<BrandItemsVO> showBrandItems(@Param("companyId") String companyId, @Param("agencyCode") String agencyCode);
 }
