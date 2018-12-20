@@ -918,15 +918,16 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         DesignerOrder designerOrder = designerOrders.get(0);
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+        List<PersionVo> persionVos = employeeMsgMapper.selectByUserId(designerId);
         //订单编号
         projectDetailVO.setDesignOrderNo(designerOrder.getOrderNo());
         //承揽公司
         projectDetailVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
         //设计师
-        if (persionVo != null) {
-            projectDetailVO.setDesignerName(persionVo.getName());
+        if (persionVos.size() > 0 && persionVos.get(0) != null) {
+            projectDetailVO.setDesignerName(persionVos.get(0).getName());
         }
+
         designVo.setProjectDetailVO(projectDetailVO);
         //组合量房信息
         VolumeReservationDetailsVO volumeReservationDetailsVO = new VolumeReservationDetailsVO();

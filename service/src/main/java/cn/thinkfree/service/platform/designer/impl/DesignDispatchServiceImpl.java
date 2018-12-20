@@ -479,7 +479,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         return designerOrderVo;
     }
-
+    
     /**
      * 查询设计风格
      *
@@ -1611,9 +1611,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrder designerOrder = designerOrders.get(0);
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
-        if (persionVo != null) {
-            volumeReservationDetailsVO.setDesignerName(persionVo.getName());
+        List<PersionVo> persionVos = employeeMsgMapper.selectByUserId(designerId);
+        if (persionVos.size() > 0 && persionVos.get(0) != null) {
+            volumeReservationDetailsVO.setDesignerName(persionVos.get(0).getName());
         }
         volumeReservationDetailsVO.setDesignOrderNo(designerOrder.getOrderNo());
         //订单来源
