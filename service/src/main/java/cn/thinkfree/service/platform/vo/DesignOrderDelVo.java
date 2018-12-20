@@ -17,27 +17,32 @@ public class DesignOrderDelVo extends DesignerOrderVo {
     private String communityName;
     @ApiModelProperty("常住人口")
     private String peopleNo;
-    @ApiModelProperty("量房时间")
-    private String volumeRoomDate;
-    @ApiModelProperty("合同名称")
-    private String contractName;
-    @ApiModelProperty("合同查看地址")
-    private String contractUrl;
 
     public DesignOrderDelVo(DesignerOrderVo designerOrderVo, int state,
-                            String stageName, String reminder, String communityName, String peopleNo, String volumeRoomDate, String contractName, String contractUrl) {
-        super(designerOrderVo.getProjectNo(), designerOrderVo.getDesignOrderNo(), designerOrderVo.getOwnerName(), designerOrderVo.getOwnerPhone(), designerOrderVo.getAddress(),
-                designerOrderVo.getOrderSource(), designerOrderVo.getCreateTime(), designerOrderVo.getStyleName(), designerOrderVo.getBudget(), designerOrderVo.getArea(),
-                designerOrderVo.getCompanyName(), designerOrderVo.getCompanyState(), designerOrderVo.getDesignerName(), designerOrderVo.getOrderStateName(),
-                designerOrderVo.getOptionUserName(), designerOrderVo.getOptionTime(), designerOrderVo.getOrderState(), designerOrderVo.getProjectMoney());
+                            String stageName, String reminder, String communityName, String peopleNo) {
+        super(designerOrderVo.getProjectNo(),
+                designerOrderVo.getDesignOrderNo(),
+                designerOrderVo.getOwnerName(),
+                designerOrderVo.getOwnerPhone(),
+                designerOrderVo.getAddress(),
+                designerOrderVo.getOrderSource(),
+                designerOrderVo.getCreateTime(),
+                designerOrderVo.getStyleName(),
+                designerOrderVo.getBudget(),
+                designerOrderVo.getArea(),
+                designerOrderVo.getCompanyName(),
+                designerOrderVo.getCompanyState(),
+                designerOrderVo.getDesignerName(),
+                designerOrderVo.getOrderStateName(),
+                designerOrderVo.getOptionUserName(),
+                designerOrderVo.getOptionTime(),
+                designerOrderVo.getOrderState(),
+                designerOrderVo.getProjectMoney());
         this.state = state;
         this.stageName = stageName;
         this.reminder = reminder;
         this.communityName = communityName;
         this.peopleNo = peopleNo;
-        this.volumeRoomDate = volumeRoomDate;
-        this.contractName = contractName;
-        this.contractUrl = contractUrl;
     }
 
     public int getState() {
@@ -78,29 +83,5 @@ public class DesignOrderDelVo extends DesignerOrderVo {
 
     public void setPeopleNo(String peopleNo) {
         this.peopleNo = peopleNo;
-    }
-
-    public String getVolumeRoomDate() {
-        return volumeRoomDate;
-    }
-
-    public void setVolumeRoomDate(String volumeRoomDate) {
-        this.volumeRoomDate = volumeRoomDate;
-    }
-
-    public String getContractName() {
-        return contractName;
-    }
-
-    public void setContractName(String contractName) {
-        this.contractName = contractName;
-    }
-
-    public String getContractUrl() {
-        return contractUrl;
-    }
-
-    public void setContractUrl(String contractUrl) {
-        this.contractUrl = contractUrl;
     }
 }

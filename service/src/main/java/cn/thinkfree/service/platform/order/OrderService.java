@@ -14,11 +14,4 @@ public interface OrderService {
      * @return
      */
     List<Map<String, Object>> allState();
-
-    /**
-     * 查询设计订单详情
-     * @param orderNo
-     * @return
-     */
-    Object getDesignDetail(String orderNo);
 }

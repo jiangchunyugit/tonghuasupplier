@@ -54,19 +54,4 @@ public class OrderController extends AbsBaseController {
             return sendFailMessage(e.getMessage());
         }
     }
-
-    @ApiOperation("根据设计订单编号查询设计订单详情")
-    @ResponseBody
-    @RequestMapping(value = "getDesignDetail", method = {RequestMethod.GET, RequestMethod.POST})
-    public MyRespBundle<Object> getDesignDetail(
-            @ApiParam(name = "orderNo", value = "设计订单编号") @RequestParam(name = "orderNo", required = false) String orderNo){
-        try{
-            Object object = orderService.getDesignDetail(orderNo);
-            return sendJsonData(ResultMessage.SUCCESS, object);
-        }catch (Exception e){
-            e.printStackTrace();
-            return sendFailMessage(e.getMessage());
-        }
-
-    }
 }

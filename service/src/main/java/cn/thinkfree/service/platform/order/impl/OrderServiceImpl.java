@@ -32,8 +32,6 @@ import java.util.Map;
 public class OrderServiceImpl implements OrderService {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private DesignerOrderMapper designerOrderMapper;
 
     @Override
     public List<Map<String, Object>> allState() {
@@ -53,18 +51,5 @@ public class OrderServiceImpl implements OrderService {
             maps.add(state);
         }
         return maps;
-    }
-
-    @Override
-    public Object getDesignDetail(String orderNo) {
-        DesignerOrderExample orderExample = new DesignerOrderExample();
-        orderExample.createCriteria().andOrderNoEqualTo(orderNo);
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
-        if(designerOrders.isEmpty()){
-            throw new RuntimeException("没有查询到订单信息");
-        }
-        List<Map<String,Object>> stateMaps = DesignStateEnum.allState(0);
-
-        return null;
     }
 }

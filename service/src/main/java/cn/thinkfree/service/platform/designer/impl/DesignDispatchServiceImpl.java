@@ -102,6 +102,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     CityMapper cityMapper;
     @Autowired
     AreaMapper areaMapper;
+    @Autowired
+    private FundsOrderMapper fundsOrderMapper;
+    @Autowired
+    private FundsFlowMapper fundsFlowMapper;
+    @Autowired
+    private ProjectDataMapper projectDataMapper;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -405,110 +411,73 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private DesignerOrderVo getDesignerOrderVo(
             CompanyInfo companyInfo, int stateType, Map<String, DesignerStyleConfigVo> designerStyleConfigMap, DesignerOrder DesignerOrder,
             Project project, Map<String, UserMsgVo> msgVoMap) {
-        DesignerOrderVo DesignerOrderVo = new DesignerOrderVo();
-        DesignerOrderVo.setProjectNo(project.getProjectNo());
-        DesignerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
+        DesignerOrderVo designerOrderVo = new DesignerOrderVo();
+        designerOrderVo.setProjectNo(project.getProjectNo());
+        designerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
         String ownerId = projectUserService.queryUserIdOne(project.getProjectNo(), RoleFunctionEnum.OWNER_POWER);
         UserMsgVo ownerMsg = msgVoMap.get(ownerId);
         if (ownerMsg != null) {
-            DesignerOrderVo.setOwnerName(ownerMsg.getUserName());
-            DesignerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
+            designerOrderVo.setOwnerName(ownerMsg.getUserName());
+            designerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
-        DesignerOrderVo.setAddress(getProjectAdress(project.getProjectNo()));
+        designerOrderVo.setAddress(project.getAddressDetail());
+        if(StringUtils.isNotBlank(project.getProvince())){
+            Map<String,String> province = basicsService.getProvince(project.getProvince());
+            designerOrderVo.setProvinceName(province.get(project.getProvince()));
+        }
+        if(StringUtils.isNotBlank(project.getCity())){
+            Map<String,String> city = basicsService.getCity(project.getCity());
+            designerOrderVo.setCityName(city.get(project.getCity()));
+        }
+        if(StringUtils.isNotBlank(project.getRegion())){
+            Map<String,String> area = basicsService.getArea(project.getRegion());
+            designerOrderVo.setRegionName(area.get(project.getRegion()));
+        }
         try {
             BasicsData basicsData = basicsService.queryDataOne(BasicsDataParentEnum.PROJECT_SOURCE.getCode(), project.getOrderSource() + "");
             String sourceName = null;
             if (basicsData != null) {
                 sourceName = basicsData.getBasicsName();
             }
-            DesignerOrderVo.setOrderSource(sourceName);
+            designerOrderVo.setOrderSource(sourceName);
         } catch (Exception e) {
-            DesignerOrderVo.setOrderSource("未知");
+            designerOrderVo.setOrderSource("未知");
         }
-        DesignerOrderVo.setCreateTime(DateUtils.dateToStr(project.getCreateTime()));
+        if(project.getCreateTime() != null){
+            designerOrderVo.setCreateTime(project.getCreateTime().getTime() + "");
+        }
         DesignerStyleConfigVo designerStyleConfig = designerStyleConfigMap.get(DesignerOrder.getStyleType());
         if (designerStyleConfig != null) {
-            DesignerOrderVo.setStyleName(designerStyleConfig.getStyleName());
+            designerOrderVo.setStyleName(designerStyleConfig.getStyleName());
         }
-        DesignerOrderVo.setBudget(project.getDecorationBudget() + "");
-        DesignerOrderVo.setArea(project.getArea() + "");
+        designerOrderVo.setBudget(project.getDecorationBudget() + "");
+        designerOrderVo.setArea(project.getArea() + "");
         if (companyInfo != null) {
-            DesignerOrderVo.setCompanyName(companyInfo.getCompanyName());
-            DesignerOrderVo.setCompanyState(companyInfo.getAuditStatus());
+            designerOrderVo.setCompanyName(companyInfo.getCompanyName());
+            designerOrderVo.setCompanyState(companyInfo.getAuditStatus());
         }
         String designerId = projectUserService.queryUserIdOne(project.getProjectNo(), RoleFunctionEnum.DESIGN_POWER);
         EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
         if (employeeMsg != null) {
-            DesignerOrderVo.setDesignerName(employeeMsg.getRealName());
+            designerOrderVo.setDesignerName(employeeMsg.getRealName());
         }
         try {
-            DesignerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
+            designerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
         } catch (Exception e) {
-            DesignerOrderVo.setOrderStateName("未知");
+            designerOrderVo.setOrderStateName("未知");
         }
-        DesignerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
-        DesignerOrderVo.setProjectMoney(project.getDecorationBudget() + "");
+        designerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
+        designerOrderVo.setProjectMoney(project.getDecorationBudget() + "");
         OptionLogExample logExample = new OptionLogExample();
         logExample.createCriteria().andLinkNoEqualTo(DesignerOrder.getOrderNo()).andOptionTypeEqualTo("DO");
         logExample.setOrderByClause(" option_time desc limit 1");
         List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
         if (!optionLogs.isEmpty()) {
             OptionLog optionLog = optionLogs.get(0);
-            DesignerOrderVo.setOptionUserName(optionLog.getOptionUserName());
-            DesignerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
+            designerOrderVo.setOptionUserName(optionLog.getOptionUserName());
+            designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
         }
-        return DesignerOrderVo;
-    }
-    /**
-     * 根据项目编号获取地址信息
-     *
-     * @param projectNo
-     * @return
-     */
-    public String getProjectAdress(String projectNo) {
-        StringBuilder builder = new StringBuilder();
-        ProjectExample example = new ProjectExample();
-        ProjectExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andProjectNoEqualTo(projectNo);
-        List<Project> projects = projectMapper.selectByExample(example);
-        if (projects.size() == 0) {
-            return "";
-        }
-        Project project = projects.get(0);
-        //查询省份
-        if (project.getProvince() != null && !project.getProvince().trim().isEmpty()) {
-            ProvinceExample provinceExample = new ProvinceExample();
-            ProvinceExample.Criteria provinceCriteria = provinceExample.createCriteria();
-            provinceCriteria.andProvinceCodeEqualTo(project.getProvince());
-            List<Province> provinces = provinceMapper.selectByExample(provinceExample);
-            if (provinces.size() > 0) {
-                builder.append(provinces.get(0).getProvinceName());
-            }
-        }
-        //查询城市
-        if (project.getCity() != null && !project.getCity().trim().isEmpty()) {
-            CityExample ciytExample = new CityExample();
-            CityExample.Criteria cityCriteria = ciytExample.createCriteria();
-            cityCriteria.andCityCodeEqualTo(project.getCity());
-            List<City> cities = cityMapper.selectByExample(ciytExample);
-            if (cities.size() > 0) {
-                builder.append(cities.get(0).getCityName());
-            }
-        }
-        //查询区域
-        if (project.getRegion() != null && !project.getRegion().trim().isEmpty()) {
-            AreaExample areaExample = new AreaExample();
-            AreaExample.Criteria areaCriteria = areaExample.createCriteria();
-            areaCriteria.andAreaCodeEqualTo(project.getRegion());
-            List<Area> areas = areaMapper.selectByExample(areaExample);
-            if (areas.size() > 0) {
-                builder.append(areas.get(0).getAreaName());
-            }
-        }
-        builder.append(project.getAddressDetail());
-        return builder.toString();
-
+        return designerOrderVo;
     }
 
     /**
@@ -702,10 +671,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     @Override
-    public DesignOrderDelVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType) {
+    public PcDesignOrderMsgVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType) {
+        PcDesignOrderMsgVo pcDesignOrderMsgVo = new PcDesignOrderMsgVo();
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         Project project = queryProjectByNo(projectNo);
+        List<Map<String,Object>> stateMaps = DesignStateEnum.allState(designerOrder.getOrderStage());
+        pcDesignOrderMsgVo.setStateMaps(stateMaps);
+        pcDesignOrderMsgVo.setOrderState(designerOrder.getOrderStage());
+        pcDesignOrderMsgVo.setContractName("居然设计家设计合同");
+        pcDesignOrderMsgVo.setContractUrl("合同地址");
         List<String> userIds = new ArrayList<>();
         userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER));
         userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER));
@@ -714,9 +689,62 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
         DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(designerOrderVo, 1, stateEnum.getStateName(stateType),
-                "我也不知道这是啥", "小区名称", designerOrder.getProjectNo(),
-                DateUtils.dateToStr(designerOrder.getVolumeRoomTime(), "yyyy-MM-dd"), "这是合同名称", "这是合同地址");
-        return designOrderDelVo;
+                "", "小区名称", designerOrder.getProjectNo());
+        pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
+        pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
+        pcDesignOrderMsgVo.setVolumeRoomMoney((designerOrder.getVolumeRoomMoney() / 100) + "");
+        List<DesignOrderPayMsgVo> payMsgVos = getPayMsgVos(designerOrder.getOrderNo());
+        pcDesignOrderMsgVo.setPayMsgVos(payMsgVos);
+        pcDesignOrderMsgVo.setDataVolume(getProjectData(designerOrder.getProjectNo(),1));
+        pcDesignOrderMsgVo.setData3D(getProjectData(designerOrder.getProjectNo(),2));
+        pcDesignOrderMsgVo.setDataCons(getProjectData(designerOrder.getProjectNo(),3));
+        return pcDesignOrderMsgVo;
+    }
+
+    private List<ProjectData> getProjectData(String projectNo, int dataType){
+        ProjectDataExample dataExample = new ProjectDataExample();
+        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType);
+        return projectDataMapper.selectByExample(dataExample);
+    }
+
+    /**
+     * 查询支付信息
+     * @param orderNo
+     * @return
+     */
+    private List<DesignOrderPayMsgVo> getPayMsgVos(String orderNo) {
+        FundsOrderExample fundsOrderExample = new FundsOrderExample();
+        fundsOrderExample.createCriteria().andFromOrderidEqualTo(orderNo);
+        fundsOrderExample.setOrderByClause(" sort,update_time asc ");
+        List<FundsOrder> fundsOrders = fundsOrderMapper.selectByExample(fundsOrderExample);
+        if(fundsOrders == null || fundsOrders.isEmpty()){
+            return new ArrayList<>();
+        }
+        List<String> orderIds = ReflectUtils.getList(fundsOrders,"orderNo");
+        FundsFlowExample fundsFlowExample = new FundsFlowExample();
+        fundsFlowExample.createCriteria().andOrderIdIn(orderIds);
+        List<FundsFlow> fundsFlows = fundsFlowMapper.selectByExample(fundsFlowExample);
+        Map<String, FundsFlow> fundsFlowMap = ReflectUtils.listToMap(fundsFlows,"orderId");
+        List<DesignOrderPayMsgVo> payMsgVos = new ArrayList<>();
+        for(FundsOrder fundsOrder : fundsOrders){
+            DesignOrderPayMsgVo payMsgVo = new DesignOrderPayMsgVo();
+            payMsgVo.setTypeSubName(fundsOrder.getTypeSubName());
+            payMsgVo.setDiscountMoney(fundsOrder.getCouponAmount());
+            payMsgVo.setReceivableMoney(fundsOrder.getActualAmount());
+            FundsFlow fundsFlow = fundsFlowMap.get(fundsOrder.getOrderNo());
+            if(fundsFlow != null){
+                payMsgVo.setAcceptedMoney(fundsFlow.getActualAmount());
+                if(fundsFlow.getTraceSuccessTime() != null){
+                    payMsgVo.setPayTime(fundsFlow.getTraceSuccessTime());
+                }
+                payMsgVo.setState(1);
+            }else{
+                payMsgVo.setState(2);
+            }
+            payMsgVo.setSerialNumber(fundsOrder.getOrderNo());
+            payMsgVos.add(payMsgVo);
+        }
+        return payMsgVos;
     }
 
     /**
