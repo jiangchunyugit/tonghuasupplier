@@ -24,6 +24,7 @@ import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.order.OrderService;
+import cn.thinkfree.service.platform.order.SendOrderNoticeService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.*;
 import com.github.pagehelper.PageHelper;
@@ -94,7 +95,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Autowired
     private ContractTermsMapper contractTermsMapper;
     @Autowired
-    private OrderService orderService;
+    private SendOrderNoticeService orderNoticeService;
     @Autowired
     ProvinceMapper provinceMapper;
     @Autowired
@@ -697,7 +698,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_10.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_10.getState());
-        orderService.sendPlatformDispatch(companyId, projectNo, "设计订单");
+        orderNoticeService.sendPlatformDispatch(companyId, projectNo, "设计订单");
     }
 
     @Override
@@ -791,7 +792,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), optionUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_20.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_20.getState());
-        orderService.sendCompanyDispatch(designerUserId, projectNo);
+        orderNoticeService.sendCompanyDispatch(designerUserId, projectNo);
     }
 
     /**
@@ -833,7 +834,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), designerUserId, optionUserName, remark);
         saveLog(DesignStateEnum.STATE_10.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_10.getState());
-        orderService.sendDesignerNoReceipt(designerOrder.getCompanyId(), projectNo, optionUserName);
+        orderNoticeService.sendDesignerNoReceipt(designerOrder.getCompanyId(), projectNo, optionUserName);
     }
 
     /**
@@ -874,7 +875,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveLog(DesignStateEnum.STATE_30.getState(), project);
         updateProjectState(projectNo, DesignStateEnum.STATE_30.getState());
         String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
-        orderService.sendDesignerReceipt(ownerId, projectNo);
+        orderNoticeService.sendDesignerReceipt(ownerId, projectNo);
     }
 
     /**

@@ -27,7 +27,7 @@ import java.util.Map;
 public class OrderController extends AbsBaseController {
 
     @Autowired
-    private OrderService orderStateService;
+    private OrderService orderService;
     @Autowired
     private ProjectUserService projectUserService;
 
@@ -35,7 +35,7 @@ public class OrderController extends AbsBaseController {
     @ResponseBody
     @RequestMapping(value = "allState", method = {RequestMethod.GET})
     public MyRespBundle<List<Map<String, Object>>> allState() {
-        return sendJsonData(ResultMessage.SUCCESS, orderStateService.allState());
+        return sendJsonData(ResultMessage.SUCCESS, orderService.allState());
     }
 
     @ApiOperation("项目移交")
@@ -53,5 +53,20 @@ public class OrderController extends AbsBaseController {
             e.printStackTrace();
             return sendFailMessage(e.getMessage());
         }
+    }
+
+    @ApiOperation("根据设计订单编号查询设计订单详情")
+    @ResponseBody
+    @RequestMapping(value = "getDesignDetail", method = {RequestMethod.GET, RequestMethod.POST})
+    public MyRespBundle<Object> getDesignDetail(
+            @ApiParam(name = "orderNo", value = "设计订单编号") @RequestParam(name = "orderNo", required = false) String orderNo){
+        try{
+            Object object = orderService.getDesignDetail(orderNo);
+            return sendJsonData(ResultMessage.SUCCESS, object);
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+
     }
 }
