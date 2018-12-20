@@ -11,6 +11,9 @@ import java.util.Date;
  */
 @ApiModel("公司列表返回数据")
 public class CompanyListVo extends CompanyInfo {
+
+    @ApiModelProperty(value = "审核中的品牌数量")
+    private String brandCount;
     /**
      * 省
      */
@@ -24,8 +27,6 @@ public class CompanyListVo extends CompanyInfo {
 
     @ApiModelProperty(value = "市")
     private String areaName;
-
-
 
     /**
      * 公司性质
@@ -106,6 +107,30 @@ public class CompanyListVo extends CompanyInfo {
     @ApiModelProperty(value = "品牌")
     private  String brandName;
 
+    public String getBrandCount() {
+        return brandCount;
+    }
+
+    public void setBrandCount(String brandCount) {
+        this.brandCount = brandCount;
+    }
+
+    public String getSiteProvinceCode() {
+        return siteProvinceCode;
+    }
+
+    public void setSiteProvinceCode(String siteProvinceCode) {
+        this.siteProvinceCode = siteProvinceCode;
+    }
+
+    public String getSiteCityCode() {
+        return siteCityCode;
+    }
+
+    public void setSiteCityCode(String siteCityCode) {
+        this.siteCityCode = siteCityCode;
+    }
+
     public String getProvinceName() {
         return provinceName;
     }
@@ -164,13 +189,6 @@ public class CompanyListVo extends CompanyInfo {
         this.comapnyNature = comapnyNature;
     }
 
-    public String getSiteProvinceCode() {
-        return siteProvinceCode;
-    }
-
-    public void setSiteProvinceCode(String siteProvinceCode) {
-        this.siteProvinceCode = siteProvinceCode;
-    }
 
     public String getSiteProvinceName() {
         return siteProvinceName;
@@ -178,14 +196,6 @@ public class CompanyListVo extends CompanyInfo {
 
     public void setSiteProvinceName(String siteProvinceName) {
         this.siteProvinceName = siteProvinceName;
-    }
-
-    public String getSiteCityCode() {
-        return siteCityCode;
-    }
-
-    public void setSiteCityCode(String siteCityCode) {
-        this.siteCityCode = siteCityCode;
     }
 
     public String getSiteCityName() {
@@ -264,9 +274,7 @@ public class CompanyListVo extends CompanyInfo {
     public String toString() {
         return "CompanyListVo{" +
                 "comapnyNature=" + comapnyNature +
-                ", siteProvinceCode=" + siteProvinceCode +
                 ", siteProvinceName='" + siteProvinceName + '\'' +
-                ", siteCityCode=" + siteCityCode +
                 ", siteCityName='" + siteCityName + '\'' +
                 ", siteCode=" + siteCode +
                 ", siteName='" + siteName + '\'' +
