@@ -563,10 +563,10 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 return state >= 500 && state < 600;
             // 待开工
             case 3:
-                return state == 610;
+                return state >= 600 && state <= 610;
             // 施工中
             case 4:
-                return state == 630 || state == 650;
+                return state >= 620 && state <= 650;
             // 已竣工
             case 5:
                 return state == 700;

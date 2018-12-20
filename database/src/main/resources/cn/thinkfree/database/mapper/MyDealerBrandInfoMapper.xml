@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.DealerBrandInfoMapper">
+  <resultMap id="AuditBrandInfoVO" type="cn.thinkfree.database.vo.AuditBrandInfoVO" extends="BaseResultMap">
+    <result column="audit_type" jdbcType="INTEGER" property="auditType" />
+    <result column="audit_level" jdbcType="VARCHAR" property="auditLevel" />
+    <result column="audit_persion" jdbcType="VARCHAR" property="auditPersion" />
+    <result column="at_status" jdbcType="VARCHAR" property="atStatus" />
+    <result column="audit_time" jdbcType="TIMESTAMP" property="auditTime" />
+    <result column="audit_case" jdbcType="VARCHAR" property="auditCase" />
+    <result column="audit_account" jdbcType="VARCHAR" property="auditAccount" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+  </resultMap>
+  <resultMap id="BrandItemsVO" type="cn.thinkfree.database.vo.BrandItemsVO" extends="BaseResultMap">
+    <result column="count" jdbcType="VARCHAR" property="count" />
+  </resultMap>
+  <sql id="My_Base_Column_List">
+    brand.id, brand.dealer_brand_name, brand.dealer_category_name, brand.brand_authorization_card_url,
+    brand.brand_authorization_card_validity,
+    brand.is_valid, brand.company_id, brand.audit_status, brand.sbbm, brand.spfldm_2, brand.dealer_company_id,
+    info.company_name,
+	audit.audit_type,
+	audit.audit_persion,
+	audit.audit_status at_status,
+	audit.audit_time,
+	audit.audit_case,
+	audit.audit_account,
+	audit.audit_level
+  </sql>
+  <select id="showBrandDetail" parameterType="cn.thinkfree.database.vo.BrandDetailVO" resultMap="AuditBrandInfoVO">
+    SELECT
+    <include refid="My_Base_Column_List" />
+    FROM
+    pc_dealer_brand_info brand
+    LEFT JOIN company_info info ON brand.company_id = info.company_id
+    AND brand.agency_code = info.dealer_company_id
+    LEFT JOIN pc_audit_info audit ON brand.company_id = audit.company_id
+    AND audit.contract_number = brand.id
+    WHERE
+    brand.is_valid = 1
+    AND info.audit_status = 8
+    <if test="companyId != null and companyId != ''">
+      and brand.company_id = #{companyId}
+    </if>
+    <if test="agencyCode != null and agencyCode != ''">
+      and brand.agency_code = #{agencyCode}
+    </if>
+    <if test="categoryNo != null and categoryNo != ''">
+      and brand.category_no = #{categoryNo}
+    </if>
+    <if test="brandNo != null and brandNo != ''">
+      and brand.brand_no = #{brandNo}
+    </if>
+    ORDER BY
+    brand.update_time DESC
+  </select>
+
+  <select id="showBrandItems" resultMap="BrandItemsVO">
+    SELECT
+    agency_code,
+    company_id,
+    brand_no,
+    category_no,
+    brand_name,
+    category_name,
+    sum( CASE WHEN audit_status = 0 THEN 1 ELSE 0 END ) AS count
+    FROM
+    pc_dealer_brand_info
+    WHERE
+    AND is_valid = 1
+    <if test="companyId != null and companyId != ''">
+      and brand.company_id = #{companyId}
+    </if>
+    <if test="agencyCode != null and agencyCode != ''">
+      and brand.agency_code = #{agencyCode}
+    </if>
+    GROUP BY
+    brand_no,
+    category_no,
+    agency_code,
+    company_id,
+    brand_name,
+    category_name
+  </select>
+</mapper>
