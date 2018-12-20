@@ -18,7 +18,7 @@ public interface NewPcProjectService {
      * @param projectNo
      * @return
      */
-    MyRespBundle<List<OrderTaskSortVo>> getPcProjectTask(String projectNo);
+    MyRespBundle<OrderAllTaskVo> getPcProjectTask(String projectNo);
 
     /**
      * PC获取项目详情接口--施工订单
