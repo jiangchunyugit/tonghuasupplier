@@ -126,6 +126,13 @@ public interface CompanyInfoMapper {
     List<CompanyListVo> list(CompanyListSEO companyListSEO);
 
     /**
+     * 经销商公司列表查询
+     * @param companyListSEO
+     * @return
+     */
+    List<CompanyListVo> dealerList(CompanyListSEO companyListSEO);
+
+    /**
      * 下载公司列表
      * @param companyListSEO
      * @return

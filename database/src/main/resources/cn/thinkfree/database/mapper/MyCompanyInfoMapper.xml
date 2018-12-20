@@ -10,9 +10,7 @@
 
     <resultMap id="CompanyListVo" type="cn.thinkfree.database.vo.CompanyListVo" extends="BaseResultMap">
         <result column="comapny_nature" jdbcType="SMALLINT" property="comapnyNature" />
-        <result column="site_province_code" jdbcType="SMALLINT" property="siteProvinceCode" />
         <result column="site_province_name" jdbcType="VARCHAR" property="siteProvinceName" />
-        <result column="site_city_code" jdbcType="SMALLINT" property="siteCityCode" />
         <result column="site_city_name" jdbcType="VARCHAR" property="siteCityName" />
         <result column="site_code" jdbcType="SMALLINT" property="siteCode" />
         <result column="site_name" jdbcType="VARCHAR" property="siteName" />
@@ -24,6 +22,8 @@
         <result column="contract_number" jdbcType="VARCHAR" property="contractNumber" />
         <result column="role_name" jdbcType="VARCHAR" property="roleName" />
         <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+        <result column="brand_name" javaType="VARCHAR" property="brandName"/>
+        <result column="brand_count" javaType="VARCHAR" property="brandCount"/>
     </resultMap>
 
     <sql id="Base_Column_List_VO">
@@ -32,7 +32,7 @@
         info.phone, info.business_photo_url, info.work_photo_url, info.deposit_money, info.lbs, info.is_delete, info.city_code,
         info.area_code, info.telephone, info.content, info.audit_status, info.lefal_card_up_url, info.lefal_card_down_url,
         info.work_card_from, info.work_card_indate, info.update_time, info.work_code, info.company_classify, info.site_company_id,
-        info.business_type, info.platform_type, info.work_card_valid_start_date, info.work_card_valid_end_date
+        info.business_type, info.platform_type, info.work_card_valid_start_date, info.work_card_valid_end_date, info.dealer_company_id
     </sql>
 
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
@@ -195,6 +195,54 @@
 	where t.company_id
 	= #{companyId}
 </select>
+
+<select id="dealerList" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultMap="CompanyListVo">
+      SELECT
+            <include refid="Base_Column_List_VO" />,province.province_name, city.city_name,
+            branch.company_name siteProvinceName,
+            cityBranch.city_branch_name siteCityName, brand.brand_name, orderIndex.count brand_count
+    FROM
+        company_info info
+        LEFT JOIN province province ON info.province_code = province.province_code
+        LEFT JOIN city city ON info.city_code = city.city_code
+        left join pc_branch_company branch on info.branch_company_code = branch.branch_company_code
+        left join pc_city_branch cityBranch on info.city_branch_code = cityBranch.city_branch_code
+        left join (select company_id, agency_code, count(id)
+                    from pc_dealer_brand_info where audit_status = 0
+                    group by company_id, agency_code) orderIndex on info.company_id = orderIndex.company_id
+        LEFT JOIN ( SELECT company_id, agency_code, string_agg ( brand_name, '、' ) brand_name FROM pc_dealer_brand_info
+            WHERE audit_status = 3 GROUP BY company_id, agency_code ) brand ON info.company_id = brand.company_id
+        AND info.dealer_company_id = brand.agency_code
+    <where>
+        and info.company_classify = 2
+        <if test="branchCompanyCode != null and branchCompanyCode != ''">
+            AND info.branch_company_code = #{branchCompanyCode}
+        </if>
+        <if test="cityBranchCode != null and cityBranchCode != ''">
+            AND info.city_branch_code = #{cityBranchCode}
+        </if>
+        <if test="dealerCompanyId != null and dealerCompanyId != ''">
+            AND info.dealer_company_id = #{dealerCompanyId}
+        </if>
+        <if test="param != null and param != ''">
+            AND info.company_name like #{param}
+        </if>
+        <if test="auditStatus != null and auditStatus != ''">
+            AND info.audit_status = #{auditStatus}
+        </if>
+        <if test="provinceCode != null and provinceCode != ''">
+            AND info.province_code = #{provinceCode}
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+            AND info.city_code = #{cityCode}
+        </if>
+    </where>
+    order by orderIndex.count, info.update_time
+
+
+
+</select>
+
 <select id="list" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultType="cn.thinkfree.database.vo.CompanyListVo">
     SELECT
     info.company_id,
