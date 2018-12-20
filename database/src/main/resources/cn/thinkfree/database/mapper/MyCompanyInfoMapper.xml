@@ -22,8 +22,8 @@
         <result column="contract_number" jdbcType="VARCHAR" property="contractNumber" />
         <result column="role_name" jdbcType="VARCHAR" property="roleName" />
         <result column="role_id" jdbcType="VARCHAR" property="roleId" />
-        <result column="brand_name" javaType="VARCHAR" property="brandName"/>
-        <result column="brand_count" javaType="VARCHAR" property="brandCount"/>
+        <result column="brand_name" jdbcType="VARCHAR" property="brandName"/>
+        <result column="brand_count" jdbcType="VARCHAR" property="brandCount"/>
     </resultMap>
 
     <sql id="Base_Column_List_VO">
