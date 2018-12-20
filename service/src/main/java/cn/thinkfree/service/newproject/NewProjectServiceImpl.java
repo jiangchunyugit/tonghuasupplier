@@ -999,6 +999,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setCaseId(dataVo.getCaseId());
             projectData.setHsDesignid(dataVo.getHsDesignId());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+            projectData.setUploadTime(new Date());
             for (int i = 1; i <= 5; i++) {
                 switch (i) {
                     case 1:
