@@ -1,6 +1,7 @@
 package cn.thinkfree.core.security.filter;
 
 import cn.thinkfree.core.security.filter.util.SecurityUrlTrustHolder;
+import cn.thinkfree.core.security.utils.UrlUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
@@ -42,7 +43,7 @@ import java.util.Iterator;
 			throws AccessDeniedException, InsufficientAuthenticationException {
 
 		// 跳过白名单
-		if(SecurityUrlTrustHolder.isTrust(((FilterInvocation)object).getRequestUrl()) || configAttributes == null){
+		if(SecurityUrlTrustHolder.isTrust(UrlUtils.getRealURL((FilterInvocation)object)) || configAttributes == null){
 			return;
 		}
 		setAllowIfAllAbstainDecisions(false);
@@ -52,10 +53,7 @@ import java.util.Iterator;
 		while(ite.hasNext()){
 			ConfigAttribute ca = ite.next();
 			needRole = ca.getAttribute();
-//			Optional<? extends GrantedAuthority> hasRole = authentication.getAuthorities()
-//					.stream()
-//					.filter(r -> r.getAuthority().equals(ca.getAttribute())).findFirst();
-//			setAllowIfAllAbstainDecisions(hasRole.isPresent());
+
 			for(GrantedAuthority role:authentication.getAuthorities()){
 				if(StringUtils.equals(role.getAuthority(),needRole) ){
 					setAllowIfAllAbstainDecisions(true);
