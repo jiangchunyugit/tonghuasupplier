@@ -679,8 +679,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<Map<String,Object>> stateMaps = DesignStateEnum.allState(designerOrder.getOrderStage());
         pcDesignOrderMsgVo.setStateMaps(stateMaps);
         pcDesignOrderMsgVo.setOrderState(designerOrder.getOrderStage());
-        pcDesignOrderMsgVo.setContractName("居然设计家设计合同");
-        pcDesignOrderMsgVo.setContractUrl("合同地址");
+        String contractUrl = getContractUrl(designerOrder.getOrderNo());
+        if(contractUrl != null){
+            pcDesignOrderMsgVo.setContractName("居然设计家设计合同");
+            pcDesignOrderMsgVo.setContractUrl(contractUrl);
+        }
         List<String> userIds = new ArrayList<>();
         userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER));
         userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER));
@@ -688,8 +691,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
-        DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(designerOrderVo, 1, stateEnum.getStateName(stateType),
+        DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(1, stateEnum.getStateName(stateType),
                 "", "小区名称", designerOrder.getProjectNo());
+        designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
         pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
         pcDesignOrderMsgVo.setVolumeRoomMoney((designerOrder.getVolumeRoomMoney() / 100) + "");
@@ -705,6 +709,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         ProjectDataExample dataExample = new ProjectDataExample();
         dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType);
         return projectDataMapper.selectByExample(dataExample);
+    }
+
+    private String getContractUrl(String orderNo){
+        OrderContractExample contractExample = new OrderContractExample();
+        contractExample.createCriteria().andOrderNumberEqualTo(orderNo).andAuditTypeEqualTo(Short.parseShort("1"));
+        List<OrderContract> contracts = orderContractMapper.selectByExample(contractExample);
+        if(contracts.isEmpty()){
+            return null;
+        }
+        return contracts.get(0).getConractUrlPdf();
     }
 
     /**

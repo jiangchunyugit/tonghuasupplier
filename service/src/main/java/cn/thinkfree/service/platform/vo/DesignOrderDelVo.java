@@ -45,6 +45,14 @@ public class DesignOrderDelVo extends DesignerOrderVo {
         this.peopleNo = peopleNo;
     }
 
+    public DesignOrderDelVo(int state, String stageName, String reminder, String communityName, String peopleNo) {
+        this.state = state;
+        this.stageName = stageName;
+        this.reminder = reminder;
+        this.communityName = communityName;
+        this.peopleNo = peopleNo;
+    }
+
     public int getState() {
         return state;
     }
