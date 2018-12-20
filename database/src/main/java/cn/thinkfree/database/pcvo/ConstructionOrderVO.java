@@ -16,13 +16,15 @@ public class ConstructionOrderVO {
     @ApiModelProperty(value = "关闭时间")
     private Date closeTime;
     @ApiModelProperty(value = "订单状态")
-    private Integer orderStage;
+    private String orderStage;
     @ApiModelProperty(value = "订单来源")
     private String orderSource;
     @ApiModelProperty(value = "用户id")
     private String ownerId;
     @ApiModelProperty(value = "业主")
     private String ownerName;
+    @ApiModelProperty(value = "业主电话")
+    private String ownerPhone;
     @ApiModelProperty(value = "项目地址")
     private String addressDetail;
     @ApiModelProperty(value = "房屋类型")
