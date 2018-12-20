@@ -1579,11 +1579,20 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case 1:
                 volumeReservationDetailsVO.setOrderSource("天猫");
                 break;
-            case 2:
-                volumeReservationDetailsVO.setOrderSource("平台创建");
+            case 10:
+                volumeReservationDetailsVO.setOrderSource("线下导入");
                 break;
-            case 3:
+            case 20:
+                volumeReservationDetailsVO.setOrderSource("运营平台创建");
+                break;
+            case 30:
+                volumeReservationDetailsVO.setOrderSource("运营平台导入");
+                break;
+            case 40:
                 volumeReservationDetailsVO.setOrderSource("设计公司创建");
+                break;
+            case 50:
+                volumeReservationDetailsVO.setOrderSource("设计公司导入");
                 break;
             default:
                 volumeReservationDetailsVO.setOrderSource("其他");

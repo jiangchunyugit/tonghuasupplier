@@ -115,7 +115,18 @@ public class CompanyConstants{
         /**
          * 6:创建账号(录入）
          */
-        ENTRY(6, "创建账号(录入）");
+        ENTRY(6, "创建账号(录入）"),
+
+        /**
+         * 7经销商合同
+         */
+        DEALERCONTRACT(7, "7经销商合同"),
+
+        /**
+         * 8经销商品牌
+         */
+        BRANDAUDIT(8, "经销商品牌）");
+
 
         public final Integer code;
         public final String mes;

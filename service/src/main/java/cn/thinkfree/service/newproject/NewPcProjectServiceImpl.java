@@ -2,6 +2,8 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
+import cn.thinkfree.core.constants.ConstructOrderConstants;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.appvo.OrderTaskSortVo;
@@ -72,6 +74,8 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     FundsOrderFeeMapper fundsOrderFeeMapper;
     @Autowired
     ContractService contractService;
+    @Autowired
+    BasicsDataMapper basicsDataMapper;
 
     /**
      * PC获取项目详情接口--项目阶段
@@ -118,6 +122,63 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     public MyRespBundle<ConstructionOrderVO> getPcProjectConstructionOrder(String projectNo) {
         //组合施工订单信息
         ConstructionOrderVO constructionOrderVO = constructionOrderMapper.selectConstructionOrderVo(projectNo);
+        //添加业主信息
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return RespData.error("项目不存在!!");
+        }
+        Project project = projects.get(0);
+        PersionVo owner = new PersionVo();
+        try {
+            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+            owner.setPhone(userName1.get("phone").toString());
+            owner.setName(userName1.get("nickName").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("调取人员信息失败!");
+        }
+        constructionOrderVO.setOwnerName(owner.getName());
+        constructionOrderVO.setOwnerPhone(owner.getPhone());
+        BasicsDataExample basicsDataExample = new BasicsDataExample();
+        BasicsDataExample.Criteria dataCriteria = basicsDataExample.createCriteria();
+        dataCriteria.andBasicsCodeEqualTo(constructionOrderVO.getStyle());
+        dataCriteria.andBasicsGroupEqualTo(BasicsDataParentEnum.DESIGN_STYLE.getCode());
+        List<BasicsData> basicsData = basicsDataMapper.selectByExample(basicsDataExample);
+        if (basicsData.size() == 0) {
+            constructionOrderVO.setStyle("");
+        } else {
+            constructionOrderVO.setStyle(basicsData.get(0).getBasicsName());
+        }
+        //订单来源
+        switch (project.getOrderSource()) {
+            case 1:
+                constructionOrderVO.setOrderSource("天猫");
+                break;
+            case 10:
+                constructionOrderVO.setOrderSource("线下导入");
+                break;
+            case 20:
+                constructionOrderVO.setOrderSource("运营平台创建");
+                break;
+            case 30:
+                constructionOrderVO.setOrderSource("运营平台导入");
+                break;
+            case 40:
+                constructionOrderVO.setOrderSource("设计公司创建");
+                break;
+            case 50:
+                constructionOrderVO.setOrderSource("设计公司导入");
+                break;
+            default:
+                constructionOrderVO.setOrderSource("其他");
+                break;
+        }
+        //订单阶段
+        constructionOrderVO.setOrderStage(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
+
         return RespData.success(constructionOrderVO);
     }
 
@@ -140,14 +201,21 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
             return RespData.success(null);
         }
         DesignerOrder designerOrder = designerOrders.get(0);
-        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerOrder.getUserId());
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andRoleCodeEqualTo("CD");
+        userCriteria.andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() > 0) {
+            PersionVo persionVo = employeeMsgMapper.selectByUserId(orderUsers.get(0).getUserId());
+            if (persionVo != null) {
+                designerOrderVo.setDesigner(persionVo.getName());
+            }
+        }
         if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrder.getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
             designerOrderVo.setComplete(true);
         } else {
             designerOrderVo.setComplete(false);
-        }
-        if (persionVo != null) {
-            designerOrderVo.setDesigner(persionVo.getName());
         }
         designerOrderVo.setProgrammeOneName("美丽家园");
         designerOrderVo.setProgrammeOneUrl("https://rs.homestyler.com/floorplan/render/images/2018-6-27/f5f15d55-f431-4e2b-9cef-1280e7e89d62/7ecbaa27_0545_4b66_8142_62a5454ecf54.jpg");
@@ -294,6 +362,38 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 schedulingVo.setQualityInspector(userVo.getRealName());
             }
         }
+        BasicsDataExample basicsDataExample = new BasicsDataExample();
+        BasicsDataExample.Criteria dataCriteria = basicsDataExample.createCriteria();
+        dataCriteria.andBasicsCodeEqualTo(schedulingVo.getStyle());
+        dataCriteria.andBasicsGroupEqualTo(BasicsDataParentEnum.DESIGN_STYLE.getCode());
+        List<BasicsData> basicsData = basicsDataMapper.selectByExample(basicsDataExample);
+        if (basicsData.size() == 0) {
+            schedulingVo.setStyle("");
+        } else {
+            schedulingVo.setStyle(basicsData.get(0).getBasicsName());
+        }
+        //验收结果
+        ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        ProjectQuotationCheckExample.Criteria checkCriteria = checkExample.createCriteria();
+        checkCriteria.andProjectNoEqualTo(projectNo);
+        checkCriteria.andStatusEqualTo(1);
+        List<ProjectQuotationCheck> projectQuotationChecks = projectQuotationCheckMapper.selectByExample(checkExample);
+        if (projectQuotationChecks.size() > 0) {
+            switch (projectQuotationChecks.get(0).getCheckStatus()) {
+                case 1:
+                    schedulingVo.setCheckResult("审核中");
+                    break;
+                case 2:
+                    schedulingVo.setCheckResult("审核失败");
+                    break;
+                default:
+                    schedulingVo.setCheckResult("审核通过");
+                    break;
+            }
+
+        }
+
+
         return RespData.success(schedulingVo);
     }
 
@@ -307,7 +407,6 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     public MyRespBundle<SettlementVo> getPcProjectSettlement(String projectNo) {
         //组合结算信息
         //获取支付模块结算信息
-
 
 
         SettlementVo settlementVo = new SettlementVo("20000.00", "20000.00", "20000.00", "20000.00", "4000.00", "4000.00", "4000.00", "首付款", "0", "0");

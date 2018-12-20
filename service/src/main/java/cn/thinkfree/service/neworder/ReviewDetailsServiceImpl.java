@@ -887,11 +887,20 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             case 1:
                 projectDetailVO.setOrderSource("天猫");
                 break;
-            case 2:
-                projectDetailVO.setOrderSource("平台创建");
+            case 10:
+                projectDetailVO.setOrderSource("线下导入");
                 break;
-            case 3:
+            case 20:
+                projectDetailVO.setOrderSource("运营平台创建");
+                break;
+            case 30:
+                projectDetailVO.setOrderSource("运营平台导入");
+                break;
+            case 40:
                 projectDetailVO.setOrderSource("设计公司创建");
+                break;
+            case 50:
+                projectDetailVO.setOrderSource("设计公司导入");
                 break;
             default:
                 projectDetailVO.setOrderSource("其他");
