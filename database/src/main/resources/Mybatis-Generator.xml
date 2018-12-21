@@ -108,6 +108,7 @@
         <!--<table tableName="consumer_set" domainObjectName="ConsumerSet"/>-->
         <!--<table tableName="pre_project_document" domainObjectName="ProjectDocument"/>-->
         <!--<table tableName="funds_order" domainObjectName="FundsOrder"/>-->
+        <!--<table tableName="funds_flow" domainObjectName="FundsFlow"/>-->
         <!--<table tableName="rebate_node" domainObjectName="RebateNode"/>-->
         <!--<table tableName="scheme_schedule_rebate_node" domainObjectName="SchemeScheduleRebateNode"/>-->
         <!--<table tableName="funds_settle_accounts_node_log" domainObjectName="FundsSettleAccountsNodeLog"/>-->

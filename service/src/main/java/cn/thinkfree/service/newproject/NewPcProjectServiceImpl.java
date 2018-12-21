@@ -6,6 +6,7 @@ import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.ConstructOrderConstants;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
+import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.appvo.OrderTaskSortVo;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.appvo.UserVo;
@@ -15,6 +16,8 @@ import cn.thinkfree.database.pcvo.*;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.constants.UserStatus;
+import cn.thinkfree.service.construction.ConstructOrderService;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
@@ -76,6 +79,10 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
     ContractService contractService;
     @Autowired
     BasicsDataMapper basicsDataMapper;
+    @Autowired
+    ConstructOrderService constructOrderService;
+    @Autowired
+    ConstructionStateService constructionStateService;
 
     /**
      * PC获取项目详情接口--项目阶段
@@ -84,32 +91,27 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<List<OrderTaskSortVo>> getPcProjectTask(String projectNo) {
+    public MyRespBundle<OrderAllTaskVo> getPcProjectTask(String projectNo) {
+        OrderAllTaskVo orderAllTaskVo = new OrderAllTaskVo();
         //获取项目阶段信息,所有的阶段时间都以开始时间展示为主,展示所有的PC项目阶段
         List<OrderTaskSortVo> allOrderTask = new ArrayList<>();
-        List<Map<String, Object>> designMaps = DesignStateEnum.allStates(ProjectDataStatus.PLAY_PLATFORM.getValue());
-        List<Map<String, Object>> constructioMaps = ConstructionStateEnum.allStates(ProjectDataStatus.PLAY_PLATFORM.getValue());
-        for (Map<String, Object> map : constructioMaps) {
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage());
+        for (OrderStatusDTO orderStatus : states) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
-            orderTaskSortVo.setSort((Integer) map.get("key"));
-            orderTaskSortVo.setName(map.get("val").toString());
+            orderTaskSortVo.setSort(orderStatus.getStatus());
+            orderTaskSortVo.setName(orderStatus.getName());
             allOrderTask.add(orderTaskSortVo);
         }
-        for (Map<String, Object> map : designMaps) {
-            OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
-            orderTaskSortVo.setName(map.get("val").toString());
-            orderTaskSortVo.setSort((Integer) map.get("key"));
-            allOrderTask.add(orderTaskSortVo);
+        orderAllTaskVo.setAllOrderTask(allOrderTask);
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() > 0) {
+            orderAllTaskVo.setCurrentSort(projects.get(0).getStage());
         }
-        List<OrderTaskSortVo> orderTaskSortVoList = projectStageLogMapper.selectByProjectNo(projectNo);
-        for (OrderTaskSortVo taskSortVo : orderTaskSortVoList) {
-            for (OrderTaskSortVo taskSortVo1 : allOrderTask) {
-                if (taskSortVo.getSort().equals(taskSortVo1.getSort())) {
-                    taskSortVo1.setBeginTime(taskSortVo.getBeginTime());
-                }
-            }
-        }
-        return RespData.success(allOrderTask);
+        return RespData.success(orderAllTaskVo);
     }
 
     /**
@@ -207,9 +209,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         userCriteria.andProjectNoEqualTo(projectNo);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
         if (orderUsers.size() > 0) {
-            PersionVo persionVo = employeeMsgMapper.selectByUserId(orderUsers.get(0).getUserId());
-            if (persionVo != null) {
-                designerOrderVo.setDesigner(persionVo.getName());
+            List<PersionVo> persionVos = employeeMsgMapper.selectByUserId(orderUsers.get(0).getUserId());
+            if (persionVos.size() > 0 && persionVos.get(0) != null) {
+                designerOrderVo.setDesigner(persionVos.get(0).getName());
             }
         }
         if (designerOrder.getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrder.getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {

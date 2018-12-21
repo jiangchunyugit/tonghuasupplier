@@ -122,7 +122,11 @@ public class ReflectUtils {
 		}
 		List<T> ts = new ArrayList<>();
 		for (Object obj : list) {
-			ts.add((T) getVal(obj, key));
+			Object o = getVal(obj, key);
+			if(o == null){
+				continue;
+			}
+			ts.add((T) o);
 		}
 		return ts;
 	}

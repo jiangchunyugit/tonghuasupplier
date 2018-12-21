@@ -33,11 +33,22 @@
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="project_addr" jdbcType="VARCHAR" property="projectAddr" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
-    <result column="type_sub" jdbcType="SMALLINT" property="typeSub" />
     <result column="has_paid" jdbcType="SMALLINT" property="hasPaid" />
     <result column="has_invoice" jdbcType="SMALLINT" property="hasInvoice" />
     <result column="is_end" jdbcType="SMALLINT" property="isEnd" />
     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
+    <result column="type_sub" jdbcType="SMALLINT" property="typeSub" />
+    <result column="has_refund" jdbcType="VARCHAR" property="hasRefund" />
+    <result column="from_contract_id" jdbcType="VARCHAR" property="fromContractId" />
+    <result column="sort" jdbcType="INTEGER" property="sort" />
+    <result column="payable" jdbcType="VARCHAR" property="payable" />
+    <result column="split_type" jdbcType="INTEGER" property="splitType" />
+    <result column="root_order_no" jdbcType="VARCHAR" property="rootOrderNo" />
+    <result column="type_sub_name" jdbcType="VARCHAR" property="typeSubName" />
+    <result column="company_addr_no" jdbcType="VARCHAR" property="companyAddrNo" />
+    <result column="refund_amount" jdbcType="VARCHAR" property="refundAmount" />
+    <result column="refund_launch_time" jdbcType="VARCHAR" property="refundLaunchTime" />
+    <result column="refund_serial_num" jdbcType="VARCHAR" property="refundSerialNum" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -113,8 +124,10 @@
     id, type, from_orderid, actual_amount, integral, integral_amount, coupon, coupon_amount, 
     order_status, update_time, company_id, project_no, order_stage, design_user_id, total_amount, 
     design_id, contract_type, style_type, construction_stage, signed_time, start_time, 
-    end_time, paid_amount, consumer_name, user_id, project_addr, company_name, type_sub, 
-    has_paid, has_invoice, is_end, order_no
+    end_time, paid_amount, consumer_name, user_id, project_addr, company_name, has_paid, 
+    has_invoice, is_end, order_no, type_sub, has_refund, from_contract_id, sort, payable, 
+    split_type, root_order_no, type_sub_name, company_addr_no, refund_amount, refund_launch_time, 
+    refund_serial_num
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.FundsOrderExample" resultMap="BaseResultMap">
     <!--
@@ -176,8 +189,12 @@
       construction_stage, signed_time, start_time, 
       end_time, paid_amount, consumer_name, 
       user_id, project_addr, company_name, 
-      type_sub, has_paid, has_invoice, 
-      is_end, order_no)
+      has_paid, has_invoice, is_end, 
+      order_no, type_sub, has_refund, 
+      from_contract_id, sort, payable, 
+      split_type, root_order_no, type_sub_name, 
+      company_addr_no, refund_amount, refund_launch_time, 
+      refund_serial_num)
     values (#{id,jdbcType=BIGINT}, #{type,jdbcType=SMALLINT}, #{fromOrderid,jdbcType=VARCHAR}, 
       #{actualAmount,jdbcType=VARCHAR}, #{integral,jdbcType=VARCHAR}, #{integralAmount,jdbcType=VARCHAR}, 
       #{coupon,jdbcType=VARCHAR}, #{couponAmount,jdbcType=VARCHAR}, #{orderStatus,jdbcType=VARCHAR}, 
@@ -187,8 +204,12 @@
       #{constructionStage,jdbcType=VARCHAR}, #{signedTime,jdbcType=VARCHAR}, #{startTime,jdbcType=VARCHAR}, 
       #{endTime,jdbcType=VARCHAR}, #{paidAmount,jdbcType=VARCHAR}, #{consumerName,jdbcType=VARCHAR}, 
       #{userId,jdbcType=VARCHAR}, #{projectAddr,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
-      #{typeSub,jdbcType=SMALLINT}, #{hasPaid,jdbcType=SMALLINT}, #{hasInvoice,jdbcType=SMALLINT}, 
-      #{isEnd,jdbcType=SMALLINT}, #{orderNo,jdbcType=VARCHAR})
+      #{hasPaid,jdbcType=SMALLINT}, #{hasInvoice,jdbcType=SMALLINT}, #{isEnd,jdbcType=SMALLINT}, 
+      #{orderNo,jdbcType=VARCHAR}, #{typeSub,jdbcType=SMALLINT}, #{hasRefund,jdbcType=VARCHAR}, 
+      #{fromContractId,jdbcType=VARCHAR}, #{sort,jdbcType=INTEGER}, #{payable,jdbcType=VARCHAR}, 
+      #{splitType,jdbcType=INTEGER}, #{rootOrderNo,jdbcType=VARCHAR}, #{typeSubName,jdbcType=VARCHAR}, 
+      #{companyAddrNo,jdbcType=VARCHAR}, #{refundAmount,jdbcType=VARCHAR}, #{refundLaunchTime,jdbcType=VARCHAR}, 
+      #{refundSerialNum,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.FundsOrder">
     <!--
@@ -278,9 +299,6 @@
       <if test="companyName != null">
         company_name,
       </if>
-      <if test="typeSub != null">
-        type_sub,
-      </if>
       <if test="hasPaid != null">
         has_paid,
       </if>
@@ -292,6 +310,42 @@
       </if>
       <if test="orderNo != null">
         order_no,
+      </if>
+      <if test="typeSub != null">
+        type_sub,
+      </if>
+      <if test="hasRefund != null">
+        has_refund,
+      </if>
+      <if test="fromContractId != null">
+        from_contract_id,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="payable != null">
+        payable,
+      </if>
+      <if test="splitType != null">
+        split_type,
+      </if>
+      <if test="rootOrderNo != null">
+        root_order_no,
+      </if>
+      <if test="typeSubName != null">
+        type_sub_name,
+      </if>
+      <if test="companyAddrNo != null">
+        company_addr_no,
+      </if>
+      <if test="refundAmount != null">
+        refund_amount,
+      </if>
+      <if test="refundLaunchTime != null">
+        refund_launch_time,
+      </if>
+      <if test="refundSerialNum != null">
+        refund_serial_num,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -376,9 +430,6 @@
       <if test="companyName != null">
         #{companyName,jdbcType=VARCHAR},
       </if>
-      <if test="typeSub != null">
-        #{typeSub,jdbcType=SMALLINT},
-      </if>
       <if test="hasPaid != null">
         #{hasPaid,jdbcType=SMALLINT},
       </if>
@@ -390,6 +441,42 @@
       </if>
       <if test="orderNo != null">
         #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeSub != null">
+        #{typeSub,jdbcType=SMALLINT},
+      </if>
+      <if test="hasRefund != null">
+        #{hasRefund,jdbcType=VARCHAR},
+      </if>
+      <if test="fromContractId != null">
+        #{fromContractId,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="payable != null">
+        #{payable,jdbcType=VARCHAR},
+      </if>
+      <if test="splitType != null">
+        #{splitType,jdbcType=INTEGER},
+      </if>
+      <if test="rootOrderNo != null">
+        #{rootOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeSubName != null">
+        #{typeSubName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddrNo != null">
+        #{companyAddrNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundAmount != null">
+        #{refundAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="refundLaunchTime != null">
+        #{refundLaunchTime,jdbcType=VARCHAR},
+      </if>
+      <if test="refundSerialNum != null">
+        #{refundSerialNum,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -491,9 +578,6 @@
       <if test="record.companyName != null">
         company_name = #{record.companyName,jdbcType=VARCHAR},
       </if>
-      <if test="record.typeSub != null">
-        type_sub = #{record.typeSub,jdbcType=SMALLINT},
-      </if>
       <if test="record.hasPaid != null">
         has_paid = #{record.hasPaid,jdbcType=SMALLINT},
       </if>
@@ -505,6 +589,42 @@
       </if>
       <if test="record.orderNo != null">
         order_no = #{record.orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.typeSub != null">
+        type_sub = #{record.typeSub,jdbcType=SMALLINT},
+      </if>
+      <if test="record.hasRefund != null">
+        has_refund = #{record.hasRefund,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fromContractId != null">
+        from_contract_id = #{record.fromContractId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sort != null">
+        sort = #{record.sort,jdbcType=INTEGER},
+      </if>
+      <if test="record.payable != null">
+        payable = #{record.payable,jdbcType=VARCHAR},
+      </if>
+      <if test="record.splitType != null">
+        split_type = #{record.splitType,jdbcType=INTEGER},
+      </if>
+      <if test="record.rootOrderNo != null">
+        root_order_no = #{record.rootOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.typeSubName != null">
+        type_sub_name = #{record.typeSubName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyAddrNo != null">
+        company_addr_no = #{record.companyAddrNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refundAmount != null">
+        refund_amount = #{record.refundAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refundLaunchTime != null">
+        refund_launch_time = #{record.refundLaunchTime,jdbcType=VARCHAR},
+      </if>
+      <if test="record.refundSerialNum != null">
+        refund_serial_num = #{record.refundSerialNum,jdbcType=VARCHAR},
       </if>
     </set>
     <if test="_parameter != null">
@@ -544,11 +664,22 @@
       user_id = #{record.userId,jdbcType=VARCHAR},
       project_addr = #{record.projectAddr,jdbcType=VARCHAR},
       company_name = #{record.companyName,jdbcType=VARCHAR},
-      type_sub = #{record.typeSub,jdbcType=SMALLINT},
       has_paid = #{record.hasPaid,jdbcType=SMALLINT},
       has_invoice = #{record.hasInvoice,jdbcType=SMALLINT},
       is_end = #{record.isEnd,jdbcType=SMALLINT},
-      order_no = #{record.orderNo,jdbcType=VARCHAR}
+      order_no = #{record.orderNo,jdbcType=VARCHAR},
+      type_sub = #{record.typeSub,jdbcType=SMALLINT},
+      has_refund = #{record.hasRefund,jdbcType=VARCHAR},
+      from_contract_id = #{record.fromContractId,jdbcType=VARCHAR},
+      sort = #{record.sort,jdbcType=INTEGER},
+      payable = #{record.payable,jdbcType=VARCHAR},
+      split_type = #{record.splitType,jdbcType=INTEGER},
+      root_order_no = #{record.rootOrderNo,jdbcType=VARCHAR},
+      type_sub_name = #{record.typeSubName,jdbcType=VARCHAR},
+      company_addr_no = #{record.companyAddrNo,jdbcType=VARCHAR},
+      refund_amount = #{record.refundAmount,jdbcType=VARCHAR},
+      refund_launch_time = #{record.refundLaunchTime,jdbcType=VARCHAR},
+      refund_serial_num = #{record.refundSerialNum,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -638,9 +769,6 @@
       <if test="companyName != null">
         company_name = #{companyName,jdbcType=VARCHAR},
       </if>
-      <if test="typeSub != null">
-        type_sub = #{typeSub,jdbcType=SMALLINT},
-      </if>
       <if test="hasPaid != null">
         has_paid = #{hasPaid,jdbcType=SMALLINT},
       </if>
@@ -652,6 +780,42 @@
       </if>
       <if test="orderNo != null">
         order_no = #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeSub != null">
+        type_sub = #{typeSub,jdbcType=SMALLINT},
+      </if>
+      <if test="hasRefund != null">
+        has_refund = #{hasRefund,jdbcType=VARCHAR},
+      </if>
+      <if test="fromContractId != null">
+        from_contract_id = #{fromContractId,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=INTEGER},
+      </if>
+      <if test="payable != null">
+        payable = #{payable,jdbcType=VARCHAR},
+      </if>
+      <if test="splitType != null">
+        split_type = #{splitType,jdbcType=INTEGER},
+      </if>
+      <if test="rootOrderNo != null">
+        root_order_no = #{rootOrderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="typeSubName != null">
+        type_sub_name = #{typeSubName,jdbcType=VARCHAR},
+      </if>
+      <if test="companyAddrNo != null">
+        company_addr_no = #{companyAddrNo,jdbcType=VARCHAR},
+      </if>
+      <if test="refundAmount != null">
+        refund_amount = #{refundAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="refundLaunchTime != null">
+        refund_launch_time = #{refundLaunchTime,jdbcType=VARCHAR},
+      </if>
+      <if test="refundSerialNum != null">
+        refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -688,11 +852,22 @@
       user_id = #{userId,jdbcType=VARCHAR},
       project_addr = #{projectAddr,jdbcType=VARCHAR},
       company_name = #{companyName,jdbcType=VARCHAR},
-      type_sub = #{typeSub,jdbcType=SMALLINT},
       has_paid = #{hasPaid,jdbcType=SMALLINT},
       has_invoice = #{hasInvoice,jdbcType=SMALLINT},
       is_end = #{isEnd,jdbcType=SMALLINT},
-      order_no = #{orderNo,jdbcType=VARCHAR}
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      type_sub = #{typeSub,jdbcType=SMALLINT},
+      has_refund = #{hasRefund,jdbcType=VARCHAR},
+      from_contract_id = #{fromContractId,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=INTEGER},
+      payable = #{payable,jdbcType=VARCHAR},
+      split_type = #{splitType,jdbcType=INTEGER},
+      root_order_no = #{rootOrderNo,jdbcType=VARCHAR},
+      type_sub_name = #{typeSubName,jdbcType=VARCHAR},
+      company_addr_no = #{companyAddrNo,jdbcType=VARCHAR},
+      refund_amount = #{refundAmount,jdbcType=VARCHAR},
+      refund_launch_time = #{refundLaunchTime,jdbcType=VARCHAR},
+      refund_serial_num = #{refundSerialNum,jdbcType=VARCHAR}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>
