@@ -1,8 +1,8 @@
 package cn.thinkfree.database.event;
 
-import cn.thinkfree.core.model.AbsMyEvent;
+import cn.thinkfree.core.event.AbsBaseEvent;
 
-public class ProjectUpOnline  extends AbsMyEvent {
+public class ProjectUpOnline  extends AbsBaseEvent {
 
     private String source;
     /**

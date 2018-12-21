@@ -1,9 +1,11 @@
 package cn.thinkfree.core.security.filter;
 
+import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.security.dao.SecurityResourceDao;
 import cn.thinkfree.core.security.filter.util.SecurityUrlTrustHolder;
 import cn.thinkfree.core.security.model.SecurityResource;
 import cn.thinkfree.core.security.utils.UrlUtils;
+import cn.thinkfree.core.utils.LogUtil;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -22,15 +24,13 @@ import java.util.stream.Collectors;
  */
  public class SecurityInvocationSecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
+ 	 private MyLogger logger = LogUtil.getLogger(SecurityInvocationSecurityMetadataSource.class);
 	 private boolean rejectPublicInvocations = false;
 	 private boolean hotDeployment = false;
-
-
 	 /**
 	  * 数据库支持
 	  */
 	 SecurityResourceDao securityResourceDao;
-
 	 /**
 	  * 缓存所有资源
 	  */
@@ -56,16 +56,17 @@ import java.util.stream.Collectors;
 			 return null;
 		 }
 
-//		 Collection<String> codes = resources.get(url);
 		 Collection<String> codes = resources.get(new ResourceKey(url,method));
+		 if(codes.isEmpty()){
+		 	logger.warn("匿名资源:{}",object);
+//		 	throw new IllegalArgumentException("Secure object invocation " + object +
+//						 " was denied as public invocations are not allowed via this interceptor. ");
+		 }
 		 if(codes.size() == 1){
-//			String permissionCode = resources.get(url);
 			 String permissionCode = codes.iterator().next();
-			 //		if( resourceId == null) {
 			 if(StringUtils.isBlank(permissionCode)){
 				 return null;
-//				 throw new IllegalArgumentException("Secure object invocation " + object +
-//						 " was denied as public invocations are not allowed via this interceptor. ");
+
 			 }
 			 return buildPermissionByCode(permissionCode);
 		 }else{
@@ -92,22 +93,7 @@ import java.util.stream.Collectors;
 				 .collect(Collectors.toList());
 	 }
 
-	 /**
-	  * @TODO 开发阶段 关闭权限验证
-	  */
-	 private Collection<ConfigAttribute> getPermissionByResourceId(Integer resourceId) {
-		 List<String>  roles = null;//securityResourceDao.selectPermissionsByResourceID(resourceId);
 
-		 Collection<ConfigAttribute> atts = null;
-//		atts = Lists.newArrayList(new SecurityConfig(prefix+"USER"));
-		 if(!roles.isEmpty()) {
-			 atts = new ArrayList<>();
-			 for (String role : roles) {
-				 atts.add(new SecurityConfig(role));
-			 }
-		 }
-		 return atts == null ? Lists.newArrayList(new SecurityConfig("ROLE_ANONYMOUSLY")) :atts ;
-	 }
 
 	 /**
 	  * 加载所有资源
@@ -117,7 +103,6 @@ import java.util.stream.Collectors;
 		 if(allResource != null) {
 			 resources.clear();
 			 for (SecurityResource dto : allResource) {
-//				 resources.put(dto.getResource(),dto.getRoleCode());
 				 resources.put(new ResourceKey(dto.getResource(),dto.getAccessMode()),dto.getRoleCode());
 			 }
 		 }
@@ -145,7 +130,10 @@ import java.util.stream.Collectors;
 		 this.rejectPublicInvocations = rejectPublicInvocations;
 	 }
 
-	 public class ResourceKey{
+	/**
+	 * 资源主键
+	 */
+	public class ResourceKey{
 
 	 	String url;
 	 	String method;

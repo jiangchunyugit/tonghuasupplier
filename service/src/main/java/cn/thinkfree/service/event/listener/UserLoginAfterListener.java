@@ -1,25 +1,28 @@
-package cn.thinkfree.service.event;
+package cn.thinkfree.service.event.listener;
 
-import cn.thinkfree.core.event.MyEventBus;
 import cn.thinkfree.core.event.model.UserLoginAfter;
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.model.UserLoginLog;
 import cn.thinkfree.service.user.UserService;
 import com.google.common.eventbus.Subscribe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.util.Date;
 
+/**
+ * 用户登录后
+ */
 @Component
-public class MyEventListener {
+public class UserLoginAfterListener   extends AbsLogPrinter {
 
     @Autowired
     UserService userService;
 
-
-    @Subscribe
+    @EventListener
+    @Async
     public void userLoginAfter(UserLoginAfter userLoginAfter) {
         UserLoginLog userLoginLog = new UserLoginLog();
         userLoginLog.setIp(userLoginAfter.getIp());
@@ -29,15 +32,4 @@ public class MyEventListener {
         userLoginLog.setUserId(userLoginAfter.getSource());
         userService.userLoginAfter(userLoginLog);
     }
-
-
-    @PostConstruct
-    public void init(){
-        MyEventBus.getInstance().register(this);
-    }
-    
-   
-
-
-
 }

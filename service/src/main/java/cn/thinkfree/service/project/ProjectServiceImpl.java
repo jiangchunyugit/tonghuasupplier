@@ -1,7 +1,6 @@
 package cn.thinkfree.service.project;
 
 import cn.thinkfree.core.constants.SysConstants;
-import cn.thinkfree.core.event.MyEventBus;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.RandomNumUtils;
@@ -219,7 +218,7 @@ public class ProjectServiceImpl extends AbsLogPrinter implements ProjectService 
         preProjectGuide.setStatus(ProjectStatus.StopTheWork.shortVal());
         preProjectGuideMapper.updateByExampleSelective(preProjectGuide,preProjectGuideExample);
 
-        MyEventBus.getInstance().publicEvent(new ProjectStopEvent(projectNo));
+//        MyEventBus.getInstance().publicEvent(new ProjectStopEvent(projectNo));
         return "操作成功";
     }
 

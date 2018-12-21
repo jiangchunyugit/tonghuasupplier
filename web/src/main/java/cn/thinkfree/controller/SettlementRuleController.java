@@ -4,7 +4,7 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.Param.SettlementRuleParam;
+import cn.thinkfree.database.param.SettlementRuleParam;
 import cn.thinkfree.database.model.RebateNode;
 import cn.thinkfree.database.model.SettlementRuleInfo;
 import cn.thinkfree.database.model.SystemPermission;
