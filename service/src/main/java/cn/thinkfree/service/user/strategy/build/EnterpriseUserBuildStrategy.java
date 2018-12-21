@@ -76,7 +76,7 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
         List<CompanyUserRole> companyUserRoles = companyUserRoleMapper.selectByExample(companyUserRoleExample);
 
         if(companyUserRoles.isEmpty() ){
-            userVO.setResources(Collections.emptyList());
+            userVO.setResources(defaultUserRole());
             return;
         }
 
@@ -84,13 +84,14 @@ public class EnterpriseUserBuildStrategy  implements UserBuildStrategy {
         roleResourceExample.createCriteria().andRoleIdIn(companyUserRoles.stream().map(c->Integer.valueOf(c.getRoleId())).collect(toList()));
         List<CompanyRoleResource> companyRoleResources = companyRoleResourceMapper.selectByExample(roleResourceExample);
         if(companyRoleResources.isEmpty() ){
-            userVO.setResources(Collections.emptyList());
+            userVO.setResources(defaultUserRole());
             return;
         }
         SystemResourceExample systemResourceExample = new SystemResourceExample();
         systemResourceExample.createCriteria().andPlatformEqualTo(SysConstants.PlatformType.Enterprise.code)
                 .andIdIn(companyRoleResources.stream().map(CompanyRoleResource::getResourceId).collect(toList()));
         List<SystemResource> systemResources = systemResourceMapper.selectByExample(systemResourceExample);
+        systemResources.addAll(defaultUserRole());
         userVO.setResources(systemResources);
 
     }

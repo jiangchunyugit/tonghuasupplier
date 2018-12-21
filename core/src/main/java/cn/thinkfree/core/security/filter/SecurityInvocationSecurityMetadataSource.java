@@ -3,6 +3,7 @@ package cn.thinkfree.core.security.filter;
 import cn.thinkfree.core.security.dao.SecurityResourceDao;
 import cn.thinkfree.core.security.filter.util.SecurityUrlTrustHolder;
 import cn.thinkfree.core.security.model.SecurityResource;
+import cn.thinkfree.core.security.utils.UrlUtils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -24,7 +25,6 @@ import java.util.stream.Collectors;
 	 private boolean rejectPublicInvocations = false;
 	 private boolean hotDeployment = false;
 
-	 private static String prefix="ROLE_";
 
 	 /**
 	  * 数据库支持
@@ -34,11 +34,10 @@ import java.util.stream.Collectors;
 	 /**
 	  * 缓存所有资源
 	  */
-	 private static Multimap<String, String> resources = ArrayListMultimap.create();
+	 private static Multimap<ResourceKey, String> resources = ArrayListMultimap.create();
 	 public SecurityInvocationSecurityMetadataSource(SecurityResourceDao securityResourceDao) {
 		 this.securityResourceDao = securityResourceDao;
 		 loadSecurityMetadataSource();
-
 	 }
 
 
@@ -51,21 +50,14 @@ import java.util.stream.Collectors;
 	  */
 	 @Override
 	 public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-		 String url = ((FilterInvocation)object).getRequestUrl();
-		 url = url.replaceAll("/\\d{1,}","/{id}");
- 		if(StringUtils.isNotBlank(url)&& url.indexOf("?") > 0){
- 			url = url.substring(0,url.indexOf("?"));
-		}
-		 if(SecurityUrlTrustHolder.isTrust(url)|| resources.isEmpty()){
+		 String url = UrlUtils.getRealURL((FilterInvocation) object);
+		 String method = UrlUtils.getRequestMethod((FilterInvocation) object);
+		 if(SecurityUrlTrustHolder.isTrust(UrlUtils.getRealURL((FilterInvocation) object))|| resources.isEmpty()){
 			 return null;
 		 }
 
-// 		Integer resourceId = resources.get(url);
-// 		if(resourceId == null && hotDeployment){
-// 			loadSecurityMetadataSource();
-// 			resourceId = resources.get(url);
-//		}
-		 Collection<String> codes = resources.get(url);
+//		 Collection<String> codes = resources.get(url);
+		 Collection<String> codes = resources.get(new ResourceKey(url,method));
 		 if(codes.size() == 1){
 //			String permissionCode = resources.get(url);
 			 String permissionCode = codes.iterator().next();
@@ -125,7 +117,8 @@ import java.util.stream.Collectors;
 		 if(allResource != null) {
 			 resources.clear();
 			 for (SecurityResource dto : allResource) {
-				 resources.put(dto.getResouce(),dto.getRoleCode());
+//				 resources.put(dto.getResource(),dto.getRoleCode());
+				 resources.put(new ResourceKey(dto.getResource(),dto.getAccessMode()),dto.getRoleCode());
 			 }
 		 }
 	 }
@@ -152,6 +145,42 @@ import java.util.stream.Collectors;
 		 this.rejectPublicInvocations = rejectPublicInvocations;
 	 }
 
+	 public class ResourceKey{
+
+	 	String url;
+	 	String method;
+
+		 public ResourceKey(String url, String method) {
+			 this.url = url;
+			 this.method = method;
+		 }
+
+		 @Override
+		 public boolean equals(Object o) {
+			 if (this == o) return true;
+			 if (o == null || getClass() != o.getClass()) return false;
+
+			 ResourceKey that = (ResourceKey) o;
+
+			 if (url != null ? !url.equals(that.url) : that.url != null) return false;
+			 return method != null ? method.equals(that.method) : that.method == null;
+		 }
+
+		 @Override
+		 public int hashCode() {
+			 int result = url != null ? url.hashCode() : 0;
+			 result = 31 * result + (method != null ? method.hashCode() : 0);
+			 return result;
+		 }
+
+		 @Override
+		 public String toString() {
+			 return "ResourceKey{" +
+					 "url='" + url + '\'' +
+					 ", method='" + method + '\'' +
+					 '}';
+		 }
+	 }
 
 
 

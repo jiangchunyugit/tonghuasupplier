@@ -338,7 +338,7 @@ public class SystemResource extends SecurityResource {
         this.requestMethod = requestMethod == null ? null : requestMethod.trim();
     }
     @Override
-    public String getResouce() {
+    public String getResource() {
         return this.url;
     }
 
@@ -350,5 +350,10 @@ public class SystemResource extends SecurityResource {
     @Override
     public String getAuthority() {
         return this.code;
+    }
+
+    @Override
+    public String getAccessMode() {
+        return this.requestMethod;
     }
 }
