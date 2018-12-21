@@ -780,7 +780,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<OrderPlayVo> orderPlayVos = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         if (orderPlayVos.size() != 0) {
             OrderPlayVo orderPlayVo = orderPlayVos.get(0);
-
             Integer totalMoney = 0;
             ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             OrderContractExample contractExample = new OrderContractExample();
@@ -789,9 +788,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             contractCriteria.andAuditTypeEqualTo("2");
             List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
             if (orderContracts.size() > 0) {
+                projectTitleVo.setContractStartTime(orderContracts.get(0).getStartTime());
+                projectTitleVo.setContractEndTime(orderContracts.get(0).getEndTime());
                 ContractTermsExample termsExample = new ContractTermsExample();
                 ContractTermsExample.Criteria termsCriteria = termsExample.createCriteria();
-                termsCriteria.andContractNumberNotEqualTo(orderContracts.get(0).getContractNumber());
+                termsCriteria.andContractNumberEqualTo(orderContracts.get(0).getContractNumber());
                 termsCriteria.andContractDictCodeEqualTo("c17");
                 List<ContractTerms> contractTerms = contractTermsMapper.selectByExample(termsExample);
                 if (contractTerms.size() > 0) {

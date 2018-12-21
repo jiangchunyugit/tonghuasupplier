@@ -1,6 +1,7 @@
 package cn.thinkfree.service.construction.impl;
 
 
+import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
@@ -190,6 +191,11 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     @Override
     public void contractCompleteState(String orderNo) {
         commonService.updateStateCodeByOrderNo(orderNo, ConstructionStateEnum.STATE_600.getState());
+        //生成排期信息
+        MyRespBundle scheduling = schedulingService.createScheduling(orderNo);
+        if (!scheduling.getCode().equals(ErrorCode.OK.getCode())) {
+            throw new RuntimeException("不能进行该操作");
+        }
     }
 
     /**
