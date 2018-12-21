@@ -87,7 +87,7 @@
         pr.province_name AS orderAddress,
         po.contract_number AS contractNo,
         po.sign_time AS signingTime,
-        po.audit_type AS auditType
+        po.audit_type AS auditType,
         po.start_time AS startSign,
         po.end_time AS endSign
         FROM
