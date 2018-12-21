@@ -183,6 +183,14 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         return constructionOrders != null && constructionOrders.size() > 0 ? constructionOrders.get(0) : null;
     }
 
+    @Override
+    public ConstructionOrder findByOrderNo(String orderNo) {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        example.createCriteria().andOrderNoEqualTo(orderNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        return constructionOrders != null && constructionOrders.size() > 0 ? constructionOrders.get(0) : null;
+    }
+
     private String getOrderType(String type) {
         BasicsData basicsData = basicsService.queryDataOne(BasicsDataParentEnum.DESIGN_STYLE.getCode(), type);
         if (basicsData == null) {
@@ -333,10 +341,11 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         return consumerDetailVO;
     }
 
-    private OrderDetailVO getOrderDetail(String projectNo, String orderNo, String orderType) {
+    private OrderDetailVO getOrderDetail(String projectNo, String orderNo, String style) {
         OrderDetailVO orderDetailVO = new OrderDetailVO();
         orderDetailVO.setProjectNo(projectNo);
         orderDetailVO.setOrderNo(orderNo);
+        String orderType = getOrderType(style);
         orderDetailVO.setOrderType(orderType);
         return orderDetailVO;
     }

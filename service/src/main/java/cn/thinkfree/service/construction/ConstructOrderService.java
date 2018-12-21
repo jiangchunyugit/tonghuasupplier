@@ -45,6 +45,13 @@ public interface ConstructOrderService {
      */
     ConstructionOrder findByProjectNo(String projectNo);
 
+    /**
+     * 根据订单编号查询施工订单
+     * @param orderNo
+     * @return
+     */
+    ConstructionOrder findByOrderNo(String orderNo);
+
  	/**
      * 查询施工订单详情
      * @param projectNo 项目编号
