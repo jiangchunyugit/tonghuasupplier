@@ -75,7 +75,6 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         OrderContractExample contractExample = new OrderContractExample();
         OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
         contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-        contractCriteria.andAuditTypeEqualTo("1");
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
         if (orderContracts.size() == 0) {
             return RespData.error("合同暂无信息");
