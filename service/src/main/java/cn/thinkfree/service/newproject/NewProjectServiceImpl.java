@@ -17,6 +17,7 @@ import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
@@ -26,6 +27,7 @@ import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
+import cn.thinkfree.service.utils.ReflectUtils;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
@@ -104,6 +106,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     OrderContractMapper orderContractMapper;
     @Autowired
     ContractTermsMapper contractTermsMapper;
+    @Autowired
+    private BasicsService basicsService;
 
 
     /**
@@ -1282,15 +1286,73 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId) {
+    public PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int pageIndex, int pageSize) {
         if (designerId == null || designerId.trim().isEmpty()) {
-            return RespData.error("设计师Id不可为空");
+            return PageVo.def(new ArrayList<>());
         }
-        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue());
+        List<String> projectNos = null;
+        if(StringUtils.isNotBlank(ownerMsg)){
+            List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(ownerMsg);
+            if(userMsgVos == null || userMsgVos.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
+            List<String> ownerIds = ReflectUtils.getList(userMsgVos,"consumerId");
+            if(ownerIds == null || ownerIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
+            OrderUserExample orderUserExample = new OrderUserExample();
+            orderUserExample.createCriteria().andUserIdIn(ownerIds).andRoleCodeEqualTo("CC");
+            List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+            projectNos = ReflectUtils.getList(orderUsers,"projectNo");
+        }
+        if(StringUtils.isNotBlank(projectNo)){
+            if(projectNos == null){
+                projectNos = new ArrayList<>();
+            }
+            projectNos.add(projectNo);
+        }
+        long total = designerOrderMapper.countByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos);
+        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, pageIndex - 1, pageSize);
+        if(designOrderVos == null || designOrderVos.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        Map<String,String> provinceMap = basicsService.getProvince(ReflectUtils.getList(designOrderVos,"province").toArray(new String[]{}));
+        Map<String,String> cityMap = basicsService.getCity(ReflectUtils.getList(designOrderVos,"city").toArray(new String[]{}));
+        Map<String,String> areaMap = basicsService.getArea(ReflectUtils.getList(designOrderVos,"region").toArray(new String[]{}));
+        projectNos = ReflectUtils.getList(designOrderVos,"projectNo");
+        Map<String, UserMsgVo> userMsgVoMap = getStringUserMsgVoMap(projectNos);
         for (DesignOrderVo designOrderVo : designOrderVos) {
             designOrderVo.setProjectStage(DesignStateEnum.queryByState(designOrderVo.getStage()).getStateName(3));
+            designOrderVo.setProvinceName(provinceMap.get(designOrderVo.getProvince()));
+            designOrderVo.setCityName(cityMap.get(designOrderVo.getCity()));
+            designOrderVo.setAreaName(areaMap.get(designOrderVo.getRegion()));
+            UserMsgVo userMsgVo = userMsgVoMap.get(designOrderVo.getProjectNo());
+            if(userMsgVo != null){
+                designOrderVo.setOwnerId(userMsgVo.getConsumerId());
+                designOrderVo.setOwnerName(userMsgVo.getUserName());
+                designOrderVo.setOwnerPhone(userMsgVo.getUserPhone());
+            }
         }
-        return RespData.success(designOrderVos);
+        PageVo<List<DesignOrderVo>> pageVo = PageVo.def(designOrderVos);
+        pageVo.setTotal(total);
+        pageVo.setPageIndex(pageIndex);
+        pageVo.setPageSize(pageSize);
+        return pageVo;
+    }
+
+    private Map<String, UserMsgVo> getStringUserMsgVoMap(List<String> projectNos) {
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoIn(projectNos).andRoleCodeEqualTo("CC");
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        List<String> ownerIds = ReflectUtils.getList(orderUsers,"userId");
+        List<UserMsgVo> userMsgVos = userCenterService.queryUsers(ownerIds);
+        Map<String, UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos,"consumerId");
+        Map<String, UserMsgVo> proAndUserMsgMap = new HashMap<>();
+        for(OrderUser orderUser : orderUsers){
+            UserMsgVo userMsgVo = userMsgVoMap.get(orderUser.getUserId());
+            proAndUserMsgMap.put(orderUser.getProjectNo(), userMsgVo);
+        }
+        return proAndUserMsgMap;
     }
 
     /**

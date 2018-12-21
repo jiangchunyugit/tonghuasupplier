@@ -130,5 +130,7 @@ public interface DesignerOrderMapper {
     Integer selectContractCount(@Param("designContractVO") DesignContractVO designContractVO);
 
 
-    List<DesignOrderVo> selectByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status);
+    List<DesignOrderVo> selectByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status, @Param("projectNos") List<String> projectNos,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+
+    long countByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status, @Param("projectNos") List<String> projectNos);
 }
