@@ -5,8 +5,10 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.*;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.ConstructionProjectVo;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.AfUserDTO;import cn.thinkfree.database.vo.ConstructCountVO;
+import cn.thinkfree.database.vo.AfUserDTO;
+import cn.thinkfree.database.vo.ConstructCountVO;
 import cn.thinkfree.database.vo.construct.*;
 import cn.thinkfree.service.approvalflow.AfConfigService;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
@@ -17,19 +19,30 @@ import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConsListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.basics.BasicsService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
+import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
+import cn.thinkfree.service.project.AddressService;
+import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
-import cn.thinkfree.service.utils.HttpUtils;import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;import com.sun.org.apache.regexp.internal.RE;
-import org.apache.commons.lang3.StringUtils;import com.github.pagehelper.PageInfo;
+import cn.thinkfree.service.utils.HttpUtils;
+import cn.thinkfree.service.utils.ReflectUtils;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
@@ -45,8 +58,6 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     private CommonService commonService;
     @Autowired
     private AfConfigService configService;
-	@Autowired
-    private BasicsService basicsService;
     @Autowired
     private NewOrderUserService orderUserService;
     @Autowired
@@ -60,7 +71,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     @Autowired
     private NewSchedulingBaseService schedulingBaseService;
     @Autowired
-    private AfInstanceService instanceService;	@Autowired
+    private AfInstanceService instanceService;
+    @Autowired
     private UserCenterService userCenterService;
     @Autowired
     private OrderContractMapper orderContractMapper;
