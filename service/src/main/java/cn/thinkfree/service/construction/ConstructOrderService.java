@@ -59,6 +59,7 @@ public interface ConstructOrderService {
      */
     ConstructOrderDetailVO detail(String projectNo);	/**
      * 获取施工订单列表
+     * @param orderType
      * @param projectNo
      * @param companyName
      * @param provinceCode
@@ -75,6 +76,6 @@ public interface ConstructOrderService {
      * @param pageSize
      * @return
      */
-    PageVo<List<ConsListVo>> getConsList(
+    PageVo<List<ConsListVo>> getConsList(int orderType,
             String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
             String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize);}
