@@ -1538,6 +1538,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setOrderNumber(orderNo);
 		record.setStatus(status);
 		record.setCause(cause);
+		record.setCreateDt(new Date());
 		int  falg = auditContractOwnerMapper.insertSelective(record);
 		if(falg > 0){
 			return true;
