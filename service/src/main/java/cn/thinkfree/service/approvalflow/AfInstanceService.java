@@ -105,4 +105,11 @@ public interface AfInstanceService {
      * @return 是否验收通过
      */
     boolean getCheckSuccess(String projectNo, Integer scheduleSort);
+
+    /**
+     * 获取延期天数
+     * @param projectNo 项目编号
+     * @return 延期天数
+     */
+    int getDelayDaysByProjectNo(String projectNo);
 }

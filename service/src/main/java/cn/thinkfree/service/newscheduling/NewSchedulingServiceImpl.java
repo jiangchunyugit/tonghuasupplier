@@ -2,7 +2,6 @@ package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.AfConstants;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
@@ -12,12 +11,15 @@ import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
+import cn.thinkfree.service.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import cn.thinkfree.service.utils.DateUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 正常排期操作
@@ -73,7 +75,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         OrderContractExample contractExample = new OrderContractExample();
         OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
         contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-        contractCriteria.andAuditTypeEqualTo("2");
+        contractCriteria.andAuditTypeEqualTo("1");
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
         if (orderContracts.size() == 0) {
             return RespData.error("合同暂无信息");

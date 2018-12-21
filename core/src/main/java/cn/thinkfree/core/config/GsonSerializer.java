@@ -30,9 +30,7 @@ public class GsonSerializer<T> implements RedisSerializer<T>  {
         if(o == null){
             return null;
         }
-        System.out.println(o);
-        System.out.println(gson);
-        System.out.println(gson.toJson(o));
+
         return gson.toJson(o).getBytes( Charset.forName("UTF-8"));
     }
 
