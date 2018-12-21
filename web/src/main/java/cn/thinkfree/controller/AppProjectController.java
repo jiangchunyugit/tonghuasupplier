@@ -177,7 +177,7 @@ public class AppProjectController {
             @RequestParam(value = "ownerMsg", required = false) @ApiParam(name = "ownerMsg", value = "业主信息，手机号/姓名") String ownerMsg,
             @RequestParam(value = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
             @RequestParam(value = "pageIndex",required = false, defaultValue = "1") @ApiParam(name = "pageIndex", value = "第几页") int pageIndex,
-            @RequestParam(value = "pageSize",required = false, defaultValue = "10") @ApiParam(name = "pageSize", value = "每页多少条")int pageSize) {
+            @RequestParam(value = "pageSize",required = false, defaultValue = "50") @ApiParam(name = "pageSize", value = "每页多少条")int pageSize) {
         try{
             return RespData.success(newProjectService.getDesignOrderData(designerId, ownerMsg, projectNo, pageIndex, pageSize));
         }catch (Exception e){
