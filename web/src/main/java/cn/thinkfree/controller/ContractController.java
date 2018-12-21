@@ -213,7 +213,7 @@ public class ContractController extends AbsBaseController{
 
         }else{
 
-            return sendJsonData(ResultMessage.ERROR,"录入合同信息必填");
+            return sendJsonData(ResultMessage.ERROR,"开始时间和结束时间必填");
         }
 
 

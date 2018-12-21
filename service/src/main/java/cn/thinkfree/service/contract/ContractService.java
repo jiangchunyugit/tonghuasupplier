@@ -235,4 +235,11 @@ public interface ContractService {
      *  根据订单编号查询订单合同
      */
     cn.thinkfree.database.pcvo.ContractVo   getOrderContractByOrderNo(String orderNumber);
+
+
+    /**
+     * 业主审批合同
+     *
+     */
+    boolean  insertOrderContractToOwner(String orderNo,String cause,String status);
 }
