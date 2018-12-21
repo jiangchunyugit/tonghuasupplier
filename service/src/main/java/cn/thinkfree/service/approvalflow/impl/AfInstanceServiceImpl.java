@@ -454,7 +454,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
 
-        int type = Integer.parseInt(typeObj.toString());
+        int type = Double.valueOf(typeObj.toString()).intValue();
         if (type != 1 && type != 2) {
             LOGGER.error("错误的type值，type:{}", type);
             throw new RuntimeException();
