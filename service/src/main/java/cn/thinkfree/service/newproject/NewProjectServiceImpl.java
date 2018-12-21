@@ -732,7 +732,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
 
 
-
 //            String totalMoney = "";
 //            OrderContractExample contractExample = new OrderContractExample();
 //            OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
@@ -751,6 +750,8 @@ public class NewProjectServiceImpl implements NewProjectService {
 //            }
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
+                constructionOrderPlayVo.setCost(totalMoney);
+            }else {
                 constructionOrderPlayVo.setCost(totalMoney);
             }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(project.getPlanStartTime(), project.getPlanEndTime()));
@@ -990,20 +991,64 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getType() == null) {
             return RespData.error("type=" + dataVo.getType());
         }
+
+        EmployeeMsgExample example = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(dataVo.getUserId());
+        criteria.andEmployeeStateEqualTo(1);
+        criteria.andRoleCodeEqualTo("CD");
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(example);
+        if (employeeMsgs.size() == 0) {
+            return RespData.error("查无此设计师!");
+        }
+
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andRoleCodeEqualTo("CD");
+        userCriteria.andProjectNoEqualTo(dataVo.getProjectNo());
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() == 0 || orderUsers.size() > 1) {
+            return RespData.error("您不符合接单条件/设计师身份有误，请核实后再操作！");
+        }
+
         ProjectDataExample dataExample = new ProjectDataExample();
         ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
         dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
         dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
         List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
         if (projectOldDatas.size() > 0) {
-            return RespData.error("请选择本项目的案例资料");
+            return RespData.error("该案例已使用，请创作新的设计案例为消费者提供交付");
         }
-        EmployeeMsgExample example = new EmployeeMsgExample();
-        EmployeeMsgExample.Criteria criteria = example.createCriteria();
-        criteria.andUserIdEqualTo(dataVo.getUserId());
-        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(example);
-        if (employeeMsgs.size() == 0) {
-            return RespData.error("查无此设计师!");
+        if (orderUsers.get(0).getTransferUserId() == null || orderUsers.get(0).getTransferUserId().isEmpty()) {
+            //未更换过设计师
+            if (dataVo.getType() == 2 || dataVo.getType() == 3) {
+                ProjectDataExample oneDataExample = new ProjectDataExample();
+                ProjectDataExample.Criteria oneDataCriteria = oneDataExample.createCriteria();
+                oneDataCriteria.andProjectNoEqualTo(dataVo.getProjectNo());
+                oneDataCriteria.andTypeEqualTo(1);
+                List<ProjectData> projectDataList = projectDataMapper.selectByExample(oneDataExample);
+                if (projectDataList.size() == 0) {
+                    return RespData.error("此项目尚未上传量房资料");
+                }
+                if (!dataVo.getHsDesignId().equals(projectDataList.get(0).getHsDesignid())) {
+                    return RespData.error("请选择本项目案例");
+                }
+            }
+        } else {
+            //已更换过设计师
+            if (dataVo.getType() == 3) {
+                ProjectDataExample oneDataExample = new ProjectDataExample();
+                ProjectDataExample.Criteria oneDataCriteria = oneDataExample.createCriteria();
+                oneDataCriteria.andProjectNoEqualTo(dataVo.getProjectNo());
+                oneDataCriteria.andTypeEqualTo(2);
+                List<ProjectData> projectDataList = projectDataMapper.selectByExample(oneDataExample);
+                if (projectDataList.size() == 0) {
+                    return RespData.error("此项目尚未上传量房资料");
+                }
+                if (!dataVo.getHsDesignId().equals(projectDataList.get(0).getHsDesignid())) {
+                    return RespData.error("请选择本项目案例");
+                }
+            }
         }
         if (dataVo.getType() == null) {
             return RespData.error("请选择资料类型");
