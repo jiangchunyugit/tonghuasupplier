@@ -162,7 +162,7 @@ public interface ConstructionOrderMapper {
      * @param orderStatus 订单状态
      * @return 施工订单信息
      */
-    List<ConstructionProjectVo> selectByApproval(@Param("userId") String userId, @Param("configNos") List<String> configNos, @Param("orderStatus") int orderStatus);
+    List<ConstructionProjectVo> selectByApproval(@Param("userId") String userId, @Param("configNos") List<String> configNos, @Param("orderStatus") int orderStatus, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     /**
      * 用户名下的施工订单总数

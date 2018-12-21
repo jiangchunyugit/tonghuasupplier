@@ -27,7 +27,7 @@ public class PcProjectController {
 
     @RequestMapping(value = "getPcProjectTask", method = RequestMethod.POST)
     @ApiOperation(value = "PC获取项目详情接口--项目阶段")
-    public MyRespBundle<List<OrderTaskSortVo>> getPcProjectTask(
+    public MyRespBundle<OrderAllTaskVo> getPcProjectTask(
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号",required = true) String projectNo) {
         return newProjectService.getPcProjectTask(projectNo);
     }

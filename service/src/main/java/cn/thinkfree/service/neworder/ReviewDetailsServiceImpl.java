@@ -18,8 +18,7 @@ import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.order.OrderService;
-import cn.thinkfree.service.project.ProjectStageLogService;
-import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.platform.order.SendOrderNoticeService;import cn.thinkfree.service.project.ProjectStageLogService;import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.DateUtils;
@@ -82,7 +81,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     @Autowired
     NewProjectService newProjectService;
     @Autowired
-    OrderService orderService;
+    SendOrderNoticeService orderNoticeService;
     @Autowired
     ProjectStageLogService projectStageLogService;
 
@@ -825,7 +824,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             return RespData.error("预交底失败(记录预交底信息失败)");
         }
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        orderService.sendPredatingMsg(projectNo, designerId, DateUtil.getStringDate(predatingTime, "yyyy-MM-dd HH:mm:ss"), remark);
+        orderNoticeService.sendPredatingMsg(projectNo, designerId, DateUtil.getStringDate(predatingTime, "yyyy-MM-dd HH:mm:ss"), remark);
         updateProjectStage(projectNo);
         return RespData.success();
     }
@@ -919,15 +918,16 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         DesignerOrder designerOrder = designerOrders.get(0);
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
-        PersionVo persionVo = employeeMsgMapper.selectByUserId(designerId);
+        List<PersionVo> persionVos = employeeMsgMapper.selectByUserId(designerId);
         //订单编号
         projectDetailVO.setDesignOrderNo(designerOrder.getOrderNo());
         //承揽公司
         projectDetailVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
         //设计师
-        if (persionVo != null) {
-            projectDetailVO.setDesignerName(persionVo.getName());
+        if (persionVos.size() > 0 && persionVos.get(0) != null) {
+            projectDetailVO.setDesignerName(persionVos.get(0).getName());
         }
+
         designVo.setProjectDetailVO(projectDetailVO);
         //组合量房信息
         VolumeReservationDetailsVO volumeReservationDetailsVO = new VolumeReservationDetailsVO();

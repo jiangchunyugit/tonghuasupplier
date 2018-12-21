@@ -174,7 +174,7 @@
             DISTINCT ou.project_no projectNo
         FROM
             order_user ou
-        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage != #{orderStatus}
+        RIGHT JOIN construction_order co ON co.order_no = ou.order_no AND co.order_stage <![CDATA[ < ]]> #{orderStatus}
         RIGHT JOIN a_f_instance afi on afi.project_no = ou.project_no AND afi.config_no IN
         <foreach collection="configNos" item="configNo" open="(" separator="," close=")">
             #{configNo}
@@ -203,6 +203,7 @@
         LEFT JOIN area ar ON ar.area_code = proj.area
         LEFT JOIN basics_data bd ON bd.basics_code = proj.style and bd.basics_group = 'DESIGN_STYLE'
         WHERE ou.user_id = #{userId}
+        limit #{pageSize} offset #{pageNum}
     </select>
 
     <select id="countByUserId" resultType="int">

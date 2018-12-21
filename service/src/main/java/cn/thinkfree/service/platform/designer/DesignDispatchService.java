@@ -78,7 +78,7 @@ public interface DesignDispatchService {
      * @param stateType
      * @return
      */
-    DesignOrderDelVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
+    PcDesignOrderMsgVo queryDesignerOrderVoByProjectNo(String projectNo, int stateType);
 
     /**
      * 设计公司拒绝接单

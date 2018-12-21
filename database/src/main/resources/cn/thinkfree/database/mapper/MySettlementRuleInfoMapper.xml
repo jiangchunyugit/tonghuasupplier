@@ -15,6 +15,7 @@
     <result column="scale_describe" jdbcType="VARCHAR" property="scaleDescribe" />
     <result column="scale_value" jdbcType="VARCHAR" property="scaleValue" />
     <result column="rule_code" jdbcType="VARCHAR" property="ruleCode" />
+    <result column="sort" jdbcType="VARCHAR" property="sort" />
   </resultMap>
 
   <select id="selectBycontract" resultMap="RuleWithMethodBaseResultMap" parameterType="cn.thinkfree.database.model.SettlementRuleInfo">

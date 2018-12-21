@@ -11,6 +11,7 @@ import cn.thinkfree.database.vo.DesignContractToVo;
 import cn.thinkfree.database.vo.EnterCompanyOrganizationVO;
 import cn.thinkfree.database.vo.ProjectQuotationVO;
 import cn.thinkfree.database.vo.SelectItem;
+import cn.thinkfree.database.vo.contract.ContractParam;
 import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.cache.RedisService;
 import cn.thinkfree.service.company.CompanyInfoService;
@@ -160,11 +161,13 @@ public class OpenApiController extends AbsBaseController {
      *
      */
 
-    @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入)",consumes = "application/json")
+    @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入 for 江宁哥 新增 （合同总金额—c21） " +
+            "（设计合同开始时间—c22）（设计合同开始时间—c22）（设计合同结束时间—c23）（合同类型 0新增1修改—c24）)" +
+            "",consumes = "application/json")
     @PostMapping("/insertDesignOrderContract/{orderNumber}")
     @MyRespBody
     public MyRespBundle<Map<String,Object> > insertDesignOrderContract(@PathVariable("orderNumber") String orderNumber,
-                                                          @ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
+                                                          @ApiParam("合同条款key和value值")@RequestBody Map<String, String> paramMap){
 
     	Map<String,Object>  map  = contractService.insertDesignOrderContract(orderNumber, paramMap);
 
