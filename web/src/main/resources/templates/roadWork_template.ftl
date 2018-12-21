@@ -43,7 +43,8 @@
             width: 130px !important;
         }
         .smalltextput{
-            min-width: 60px !important;
+            min-width: 30px !important;
+            align-items: center;
         }
         .placeholder {
             margin: 0;
@@ -118,9 +119,9 @@
     <div class="indent">企业法人：<div class="textput smalltextput">${c03}</div> </div>
     <div class="indent">劳务分包资质证书号码：<div class="textput smalltextput">${c04}</div> </div>
     <div class="indent">发证机关：<div class="textput smalltextput">${c05}</div> </div>
-    <div class="indent">资质专业及等级：<div class="textput smalltextput">${c06}</div> </div>
+    <div class="indent">资质专业及等级：<div class="textput smalltextput"><img src="${c06}"  alt="无" /></div> </div>
     <div class="indent">复审时间：<div class="textput smalltextput">${c07}</div> </div>
-    <div class="indent">有效期：<div class="textput smalltextput"></div> </div>
+    <div class="indent">有效期：<div class="textput smalltextput">${c26}至${c27}</div> </div>
 </section>
 <section class="indent">
     1.2 <span style="margin-right:2em;">乙方对合作资格的特别承诺：</span>
@@ -130,8 +131,13 @@
 <section class="indent">
     1.3 <span style="margin-right:2em;">合同期限及返款账户信息：</span>
     <div class="indent">
-        合作期限自<div class="textput smalltextput">${startTime?string('yyyy年MM月dd日')}</div>至
-        <div class="textput smalltextput">${endTime?string('yyyy年MM月dd日')}</div>。在经营过程中，乙方应本着诚信原则为甲方客户提供服务。乙方指定返施工款等其他相关款项的账户信息为：
+        合作期限自
+        <div class="textput smalltextput">${startTime?string('yyyy')}</div>年<div class="textput smalltextput">${startTime?string("MM")}</div>月
+        <div class="textput smalltextput">${startTime?string("dd")}</div>日
+        至<div class="textput smalltextput">${endTime?string("yyyy")}</div>年<div class="textput smalltextput">${endTime?string("MM")}</div>月
+        <div class="textput smalltextput">${endTime?string("dd")}</div>日
+
+        。在经营过程中，乙方应本着诚信原则为甲方客户提供服务。乙方指定返施工款等其他相关款项的账户信息为：
     </div>
        <#if c22 == 0>
        <div class="indent">
