@@ -93,14 +93,14 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
 
         List<SystemRole> userRoles = systemRoleMapper.selectEffectiveRoleByUserID(userID);
         if(userRoles.isEmpty()){
-            userVO.setResources(Collections.EMPTY_LIST);
+            userVO.setResources(defaultUserRole());
             return;
         }
         List<SystemPermission>  rolePermissions = systemPermissionMapper.selectEffectivePermission(userRoles.stream()
                                                                                             .map(SystemRole::getId)
                                                                                             .collect(Collectors.toList()));
         if(rolePermissions.isEmpty()){
-            userVO.setResources(Collections.EMPTY_LIST);
+            userVO.setResources(defaultUserRole());
             return;
         }
 
@@ -109,7 +109,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
                 .andPermissionIdIn(rolePermissions.stream().map(SystemPermission::getId).collect(Collectors.toList()));
         List<SystemPermissionResource> permissionResources = systemPermissionResourceMapper.selectByExample(permissionResourceCondition);
         if(permissionResources.isEmpty()){
-            userVO.setResources(Collections.EMPTY_LIST);
+            userVO.setResources(defaultUserRole());
             return;
         }
 
@@ -117,6 +117,7 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         resourceCondition.createCriteria().andPlatformEqualTo(SysConstants.PlatformType.Platform.code)
                 .andIdIn(permissionResources.stream().map(SystemPermissionResource::getResourceId).collect(Collectors.toList()));
         List<SystemResource> resources = systemResourceMapper.selectByExample(resourceCondition);
+        resources.addAll(defaultUserRole());
         userVO.setResources(resources);
     }
 

@@ -1,5 +1,6 @@
 package cn.thinkfree.service.contract;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.thinkfree.database.model.FundsCompanyCash;
 import cn.thinkfree.database.model.OrderContract;
+import cn.thinkfree.database.vo.contract.ContractParam;
 import com.github.pagehelper.PageInfo;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
@@ -128,7 +130,7 @@ public interface ContractService {
        * @param  companyId , orderNumber, type (02设计合同 03装饰合同)
        * @return String 合同编号
        */
-      String createOrderContract(String companyId,String orderNumber,String type);
+      String createOrderContract(String companyId, String orderNumber, Date startDt, Date endDt, String type );
       
       /**
        * 审核 业务合同 
@@ -165,7 +167,7 @@ public interface ContractService {
        * @param  orderNumber 
        * @param  orderNumber 
        */
-      Map<String,Object> insertDesignOrderContract(String orderNumber,Map<String,String> paramMap);
+      Map<String,Object> insertDesignOrderContract(String orderNumber,Map<String, String>   paramMap);
       
       
       
@@ -173,7 +175,7 @@ public interface ContractService {
        * 新增施工合同
        * @param  orderNumber 
        */
-      boolean insertRoadWorkOrderContract(String orderNumber,String companyId,Map<String,String> paramMap);
+      boolean insertRoadWorkOrderContract(String orderNumber,String companyId, Map<String, String>  paramMap);
       
       /**
        * 根据公司编号查询公司合同

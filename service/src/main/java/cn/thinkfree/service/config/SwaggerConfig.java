@@ -1,6 +1,7 @@
 package cn.thinkfree.service.config;
 
 import cn.hutool.core.util.CharUtil;
+import cn.thinkfree.service.config.swagger.MyParameterMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,7 @@ import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import springfox.documentation.swagger2.mappers.ParameterMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +30,17 @@ public class SwaggerConfig {
 
     @Value("${custom.config.openSwagger}")
     Boolean  swaggerEnable;
+
+
+    @Bean
+    public ParameterMapper parameterMapper(){
+        return new MyParameterMapper();
+    }
+
+
     @Bean
     public Docket createRestApi() {
-
+//        AbstractSerializableParameter
         //添加head参数start
         ParameterBuilder tokenPar = new ParameterBuilder();
         List<Parameter> pars = new ArrayList<>();

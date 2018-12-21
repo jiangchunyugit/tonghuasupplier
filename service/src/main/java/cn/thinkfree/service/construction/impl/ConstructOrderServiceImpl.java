@@ -119,25 +119,27 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         constructCountVO.setTotal(total);
 
         List<String> configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL);
-        int count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        int count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
         constructCountVO.setCheckCount(count);
 
         configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE);
-        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
         constructCountVO.setChangeCount(count);
 
         configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION);
-        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
         constructCountVO.setProblemCount(count);
 
         configNos = configService.getConfigNosByApprovalType(AfConstants.APPROVAL_TYPE_DELAY_VERIFY);
-        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_730.getState());
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
         constructCountVO.setDelayCount(count);
 
         configNos = configService.getConfigNosByApprovalType(approvalType);
-        PageHelper.startPage(pageNum, pageSize);
-        List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
+        List<ConstructionProjectVo> constructionProjectVos = constructionOrderMapper.selectByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState(), (pageNum - 1) * pageSize, pageSize);
         PageInfo<ConstructionProjectVo> pageInfo = new PageInfo<>(constructionProjectVos);
+        count = constructionOrderMapper.countByApproval(userId, configNos, ConstructionStateEnum.STATE_700.getState());
+        pageInfo.setTotal(count);
+        pageInfo.setPages((count % pageSize == 0) ? (count / pageSize) : (count / pageSize + 1));
         for (ConstructionProjectVo constructionProjectVo : constructionProjectVos) {
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionProjectVo.getStage()).getStateName(1));
         }

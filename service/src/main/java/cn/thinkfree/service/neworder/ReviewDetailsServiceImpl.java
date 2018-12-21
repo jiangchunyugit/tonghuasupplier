@@ -598,10 +598,10 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
                 return RespData.error(stringMyRespBundle.getMsg());
             }
             //生成排期信息
-            MyRespBundle scheduling = schedulingService.createScheduling(constructionOrders.get(0).getOrderNo());
-            if (!scheduling.getCode().equals(ErrorCode.OK.getCode())) {
-                throw new RuntimeException("不能进行该操作");
-            }
+//            MyRespBundle scheduling = schedulingService.createScheduling(constructionOrders.get(0).getOrderNo());
+//            if (!scheduling.getCode().equals(ErrorCode.OK.getCode())) {
+//                throw new RuntimeException("不能进行该操作");
+//            }
         } else if (result == 2) {
             MyRespBundle<String> stringMyRespBundle = constructionStateService.constructionStateOfExamine(constructionOrders.get(0).getOrderNo(), 3, 0);
             if (!stringMyRespBundle.getCode().equals(ErrorCode.OK.getCode())) {

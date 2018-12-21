@@ -8,6 +8,7 @@ import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.ContractSEO;
 import cn.thinkfree.database.vo.ContractVo;
 import cn.thinkfree.database.vo.contract.ContractDetailsVo;
+import cn.thinkfree.database.vo.contract.ContractParam;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.contracttemplate.ContractTemplateService;
 import com.github.pagehelper.PageInfo;
@@ -203,11 +204,19 @@ public class ContractController extends AbsBaseController{
     @MyRespBody
     public MyRespBundle<String> insertRoadWorkOrderContract(@PathVariable("orderNumber") String orderNumber,
     		@PathVariable("companyId") String companyId,
-    		@ApiParam("合同条款key和value值")@RequestBody Map<String,String> paramMap){
+    		@ApiParam("合同条款key和value值")@RequestBody  Map<String, String> paramMap ){
+        if(paramMap != null &&  paramMap.size() > 0){
 
-        boolean flag  = contractService.insertRoadWorkOrderContract(orderNumber, companyId, paramMap);
+            boolean flag  = contractService.insertRoadWorkOrderContract(orderNumber, companyId, paramMap);
 
-    	return sendJsonData(ResultMessage.SUCCESS,flag);
+            return sendJsonData(ResultMessage.SUCCESS,flag);
+
+        }else{
+
+            return sendJsonData(ResultMessage.ERROR,"录入合同信息必填");
+        }
+
+
     }
     
     /**
