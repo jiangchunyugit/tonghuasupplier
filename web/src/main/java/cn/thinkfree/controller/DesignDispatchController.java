@@ -191,7 +191,7 @@ public class DesignDispatchController extends AbsBaseController {
     @ApiOperation("根据项目编号查询设计订单详情---->王玲组")
     @MyRespBody
     @RequestMapping(value = "designDel", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<DesignOrderDelVo> queryDesignDel(
+    public MyRespBundle<PcDesignOrderMsgVo> queryDesignDel(
             @ApiParam(name = "projectNo", required = false, value = "订单编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType) {
         try {

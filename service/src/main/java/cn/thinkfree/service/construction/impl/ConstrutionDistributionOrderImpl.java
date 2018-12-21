@@ -17,6 +17,7 @@ import cn.thinkfree.service.construction.vo.DistributionOrderCityVo;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.platform.order.OrderService;
+import cn.thinkfree.service.platform.order.SendOrderNoticeService;
 import cn.thinkfree.service.utils.ReflectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
     @Autowired
     private BasicsService basicsService;
     @Autowired
-    private OrderService orderService;
+    private SendOrderNoticeService orderNoticeService;
 
 
     /**
@@ -163,7 +164,7 @@ public class ConstrutionDistributionOrderImpl implements ConstrutionDistribution
         if (isUpdate == 1) {
             List<ConstructionOrder> orders = constructionOrderMapper.selectByExample(example);
             if(!orders.isEmpty()){
-                orderService.sendPlatformDispatch(companyId, orders.get(0).getProjectNo(), "施工订单");
+                orderNoticeService.sendPlatformDispatch(companyId, orders.get(0).getProjectNo(), "施工订单");
             }
             return RespData.success();
         } else {

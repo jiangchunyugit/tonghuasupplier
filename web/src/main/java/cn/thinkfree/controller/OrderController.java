@@ -27,7 +27,7 @@ import java.util.Map;
 public class OrderController extends AbsBaseController {
 
     @Autowired
-    private OrderService orderStateService;
+    private OrderService orderService;
     @Autowired
     private ProjectUserService projectUserService;
 
@@ -35,7 +35,7 @@ public class OrderController extends AbsBaseController {
     @ResponseBody
     @RequestMapping(value = "allState", method = {RequestMethod.GET})
     public MyRespBundle<List<Map<String, Object>>> allState() {
-        return sendJsonData(ResultMessage.SUCCESS, orderStateService.allState());
+        return sendJsonData(ResultMessage.SUCCESS, orderService.allState());
     }
 
     @ApiOperation("项目移交")

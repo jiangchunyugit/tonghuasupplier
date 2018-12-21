@@ -100,7 +100,7 @@ public interface EmployeeMsgMapper {
      * @param userId
      * @return
      */
-    PersionVo selectByUserId(@Param("userId") String userId);
+    List<PersionVo> selectByUserId(@Param("userId") String userId);
 
     List<PersionVo> selectAllByUserId(@Param("userId") String userId);
 

@@ -16,6 +16,7 @@ import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
 import cn.thinkfree.service.construction.vo.appointWorkerListVo;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.order.OrderService;
+import cn.thinkfree.service.platform.order.SendOrderNoticeService;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,7 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
     @Autowired
     OrderUserMapper orderUserMapper;
     @Autowired
-    private OrderService orderService;
+    private SendOrderNoticeService orderNoticeService;
     @Autowired
     private ProjectUserService projectUserService;
 
@@ -223,11 +224,11 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
 
         }
         for (Map<String, String> map : workerInfo) {
-            orderService.sendEmployeeReceipt(map.get("workerNo"), map.get("projectNo"));
+            orderNoticeService.sendEmployeeReceipt(map.get("workerNo"), map.get("projectNo"));
         }
         String projectNo = workerInfo.get(0).get("projectNo");
         String ownerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER);
-        orderService.sendOwnerConsDispatch(ownerId, projectNo);
+        orderNoticeService.sendOwnerConsDispatch(ownerId, projectNo);
     }
 
 }
