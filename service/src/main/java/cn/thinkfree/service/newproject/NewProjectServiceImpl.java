@@ -747,6 +747,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
                 constructionOrderPlayVo.setCost(totalMoney);
+            }else {
+                constructionOrderPlayVo.setCost(totalMoney);
             }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(project.getPlanStartTime(), project.getPlanEndTime()));
             //存放人员信息
