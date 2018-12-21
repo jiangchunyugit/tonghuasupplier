@@ -603,6 +603,76 @@ public class FundsSettleAccountsNodeLogExample {
             addCriterion("company_id not between", value1, value2, "companyId");
             return (Criteria) this;
         }
+
+        public Criteria andDesignerCompanyIdIsNull() {
+            addCriterion("designer_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdIsNotNull() {
+            addCriterion("designer_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdEqualTo(String value) {
+            addCriterion("designer_company_id =", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdNotEqualTo(String value) {
+            addCriterion("designer_company_id <>", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdGreaterThan(String value) {
+            addCriterion("designer_company_id >", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("designer_company_id >=", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdLessThan(String value) {
+            addCriterion("designer_company_id <", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("designer_company_id <=", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdLike(String value) {
+            addCriterion("designer_company_id like", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdNotLike(String value) {
+            addCriterion("designer_company_id not like", value, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdIn(List<String> values) {
+            addCriterion("designer_company_id in", values, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdNotIn(List<String> values) {
+            addCriterion("designer_company_id not in", values, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdBetween(String value1, String value2) {
+            addCriterion("designer_company_id between", value1, value2, "designerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDesignerCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("designer_company_id not between", value1, value2, "designerCompanyId");
+            return (Criteria) this;
+        }
     }
 
     /**
