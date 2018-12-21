@@ -1,4 +1,4 @@
-package cn.thinkfree.service.index;
+package cn.thinkfree.service.system;
 
 import cn.thinkfree.core.security.model.SecurityResource;
 import cn.thinkfree.database.mapper.SystemResourceMapper;

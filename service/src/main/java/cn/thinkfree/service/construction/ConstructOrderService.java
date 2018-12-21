@@ -3,10 +3,12 @@ package cn.thinkfree.service.construction;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.vo.ConstructCountVO;
-import cn.thinkfree.database.vo.construct.ConstructOrderDetailVO;
-import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
+import cn.thinkfree.database.vo.construct.ConstructOrderDetailVO;import cn.thinkfree.service.construction.vo.ConsListVo;import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
+
+import java.util.List;
 
 public interface ConstructOrderService {
 
@@ -43,11 +45,29 @@ public interface ConstructOrderService {
      */
     ConstructionOrder findByProjectNo(String projectNo);
 
-    /**
+ 	/**
      * 查询施工订单详情
      * @param projectNo 项目编号
      * @return 施工订单详情
      */
-    ConstructOrderDetailVO detail(String projectNo);
-
-}
+    ConstructOrderDetailVO detail(String projectNo);	/**
+     * 获取施工订单列表
+     * @param projectNo
+     * @param companyName
+     * @param provinceCode
+     * @param cityCode
+     * @param areaCode
+     * @param createTimeS
+     * @param createTimeE
+     * @param againTimeS
+     * @param againTimeE
+     * @param address
+     * @param ownerName
+     * @param ownerPhone
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    PageVo<List<ConsListVo>> getConsList(
+            String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
+            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize);}

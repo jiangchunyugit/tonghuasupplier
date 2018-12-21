@@ -1,8 +1,7 @@
 package cn.thinkfree.database.event;
 
 import cn.thinkfree.core.event.AbsBaseEvent;
-import cn.thinkfree.core.event.BaseEvent;
-import cn.thinkfree.core.model.AbsMyEvent;
+ 
 
 /**
  * @author jiangchunyu(后台)

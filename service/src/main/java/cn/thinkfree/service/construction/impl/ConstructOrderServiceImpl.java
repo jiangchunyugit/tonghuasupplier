@@ -5,7 +5,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.*;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.ConstructionProjectVo;
-import cn.thinkfree.database.mapper.ConstructionOrderMapper;
+import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.AfUserDTO;
 import cn.thinkfree.database.vo.ConstructCountVO;
@@ -16,18 +16,25 @@ import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.OrderListCommonService;
+import cn.thinkfree.service.construction.vo.ConsListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderManageVo;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.basics.BasicsService;
+import cn.thinkfree.service.platform.designer.UserCenterService;
+import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.project.AddressService;
 import cn.thinkfree.service.project.ProjectService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import cn.thinkfree.service.utils.ReflectUtils;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +42,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional(rollbackFor = RuntimeException.class)
@@ -54,8 +59,6 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     @Autowired
     private AfConfigService configService;
     @Autowired
-    private BasicsService basicsService;
-    @Autowired
     private NewOrderUserService orderUserService;
     @Autowired
     private AddressService addressService;
@@ -69,7 +72,20 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     private NewSchedulingBaseService schedulingBaseService;
     @Autowired
     private AfInstanceService instanceService;
-
+    @Autowired
+    private UserCenterService userCenterService;
+    @Autowired
+    private OrderContractMapper orderContractMapper;
+    @Autowired
+    private CompanyInfoMapper companyInfoMapper;
+    @Autowired
+    private ProjectMapper projectMapper;
+    @Autowired
+    private OrderUserMapper orderUserMapper;
+    @Autowired
+    private EmployeeMsgMapper employeeMsgMapper;
+    @Autowired
+    private BasicsService basicsService;
     /**
      * 订单列表
      *
@@ -87,6 +103,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
 
     /**
      * 施工订单列表统计
+     *
      * @return
      */
 
@@ -323,4 +340,262 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         orderDetailVO.setOrderType(orderType);
         return orderDetailVO;
     }
-}
+    @Override
+    public PageVo<List<ConsListVo>> getConsList(
+            String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
+            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize) {
+        List<String> userProjectNos = searchOwner(ownerName, ownerPhone);
+        if(userProjectNos != null && userProjectNos.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> orderNos = searchContract(againTimeS, againTimeE);
+        if(orderNos != null && orderNos.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> companyIds = searchCompany(companyName);
+        if(companyIds != null && companyIds.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        List<String> projectNos = searchProject(projectNo, provinceCode, cityCode, areaCode, createTimeS, createTimeE, address);
+        if(projectNos != null && projectNos.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = constructionOrderExample.createCriteria();
+        if(userProjectNos != null && !userProjectNos.isEmpty()){
+            criteria.andProjectNoIn(userProjectNos);
+        }
+        if(projectNos != null && !projectNos.isEmpty()){
+            criteria.andProjectNoIn(projectNos);
+        }
+        if(orderNos != null && !orderNos.isEmpty()){
+            criteria.andOrderNoIn(orderNos);
+        }
+        if(companyIds != null && !companyIds.isEmpty()){
+            criteria.andCompanyIdIn(companyIds);
+        }
+        long total = constructionOrderMapper.countByExample(constructionOrderExample);
+        PageHelper.startPage(pageNum, pageSize);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        if(constructionOrders.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        projectNos = ReflectUtils.getList(constructionOrders,"projectNo");
+        companyIds = ReflectUtils.getList(constructionOrders,"companyId");
+        orderNos = ReflectUtils.getList(constructionOrders,"orderNo");
+        OrderContractExample orderContractExample = new OrderContractExample();
+        orderContractExample.createCriteria().andOrderNumberIn(orderNos);
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+        Map<String,OrderContract> orderContractMap = ReflectUtils.listToMap(orderContracts,"orderNumber");
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdIn(companyIds);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        Map<String,CompanyInfo> companyInfoMap = ReflectUtils.listToMap(companyInfos,"companyId");
+        Map<String, String[]> userMsgMap = getStaffBy(projectNos);
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoIn(projectNos);
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        Map<String,String> provinceMap = basicsService.getProvince(ReflectUtils.getList(projects,"province").toArray(new String[]{}));
+        Map<String,String> cityMap = basicsService.getCity(ReflectUtils.getList(projects,"city").toArray(new String[]{}));
+        Map<String,String> areaMap = basicsService.getArea(ReflectUtils.getList(projects,"region").toArray(new String[]{}));
+        Map<String,Project> projectMap = ReflectUtils.listToMap(projects, "projectNo");
+        List<ConsListVo> consListVos = new ArrayList<>();
+        for(ConstructionOrder constructionOrder : constructionOrders){
+            Project project = projectMap.get(constructionOrder.getProjectNo());
+            ConsListVo consListVo = new ConsListVo();
+            if(project != null){
+                consListVo.setAddress(project.getAddressDetail());
+                consListVo.setAreaName(areaMap.get(project.getRegion()));
+                consListVo.setCityName(cityMap.get(project.getCity()));
+                if(project.getCreateTime() != null){
+                    consListVo.setCreateTime(project.getCreateTime().getTime() + "");
+                }
+                consListVo.setProjectNo(project.getProjectNo());
+                consListVo.setProvinceName(provinceMap.get(project.getProvince()));
+                consListVo.setStateName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(1));
+            }
+            String[] userMsg = userMsgMap.get("CD-" + constructionOrder.getProjectNo());
+            if(userMsg != null){
+                consListVo.setCdName(userMsg[0]);
+            }
+            userMsg = userMsgMap.get("CM-" + constructionOrder.getProjectNo());
+            if(userMsg != null){
+                consListVo.setCmName(userMsg[0]);
+            }
+            userMsg = userMsgMap.get("CS-" + constructionOrder.getProjectNo());
+            if(userMsg != null){
+                consListVo.setCsName(userMsg[0]);
+            }
+            userMsg = userMsgMap.get("CP-" + constructionOrder.getProjectNo());
+            if(userMsg != null){
+                consListVo.setCpName(userMsg[0]);
+            }
+            userMsg = userMsgMap.get("CC-" + constructionOrder.getProjectNo());
+            if(userMsg != null){
+                consListVo.setOwnerName(userMsg[0]);
+                consListVo.setOwnerPhone(userMsg[1]);
+                consListVo.setOwnerId(userMsg[2]);
+            }
+            consListVo.setOrderNo(constructionOrder.getOrderNo());
+            CompanyInfo companyInfo = companyInfoMap.get(constructionOrder.getCompanyId());
+            if(companyInfo != null){
+                consListVo.setCompanyName(companyInfo.getCompanyName());
+            }
+            OrderContract orderContract = orderContractMap.get(constructionOrder.getOrderNo());
+            if(orderContract != null && orderContract.getSignTime() != null){
+                consListVo.setSignTime(orderContract.getSignTime().getTime() + "");
+            }
+            consListVos.add(consListVo);
+        }
+        PageVo<List<ConsListVo>> pageVo = PageVo.def(consListVos);
+        pageVo.setPageSize(pageSize);
+        pageVo.setPageIndex(pageNum);
+        pageVo.setTotal(total);
+        return pageVo;
+    }
+
+    /**
+     * 获取该项目下的所有员工
+     * @param projectNos
+     * @return
+     */
+    private Map<String, String[]> getStaffBy(List<String> projectNos){
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andProjectNoIn(projectNos).andIsTransferEqualTo(Short.parseShort("0"));
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        if(orderUsers.isEmpty()){
+            return new HashMap<>();
+        }
+        List<String> userIds = ReflectUtils.getList(orderUsers,"userId");
+        List<UserMsgVo> userMsgVos = userCenterService.queryUsers(userIds);
+        Map<String,UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos,"consumerId");
+        EmployeeMsgExample msgExample = new EmployeeMsgExample();
+        msgExample.createCriteria().andUserIdIn(userIds);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
+        Map<String,String> employeeNameMap = ReflectUtils.listToMap(employeeMsgs,"userId","realName");
+        Map<String, String[]> userNameMap = new HashMap<>();
+        for(OrderUser orderUser : orderUsers){
+            String userId = orderUser.getUserId();
+            String roleCode = orderUser.getRoleCode();
+            String projectNo = orderUser.getProjectNo();
+            String employeeName = employeeNameMap.get(userId);
+            if(StringUtils.isNotBlank(employeeName)){
+                userNameMap.put(roleCode + "-" + projectNo, new String[]{employeeName,"", orderUser.getUserId()});
+                continue;
+            }
+            UserMsgVo userMsgVo = userMsgVoMap.get(userId);
+            if(userMsgVo == null){
+                continue;
+            }
+            userNameMap.put(roleCode + "-" + projectNo, new String[]{userMsgVo.getUserName(),userMsgVo.getUserPhone(), orderUser.getUserId()});
+        }
+        return userNameMap;
+    }
+
+    /**
+     * 搜索业主
+     * @param ownerName
+     * @param ownerPhone
+     * @return
+     */
+    private List<String> searchOwner(String ownerName, String ownerPhone){
+        if(StringUtils.isBlank(ownerName) && StringUtils.isBlank(ownerPhone)){
+            return null;
+        }
+        List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(ownerName, ownerPhone);
+        if(userMsgVos == null || userMsgVos.isEmpty()){
+            return new ArrayList<>();
+        }
+        List<String> userIds = (ReflectUtils.getList(userMsgVos, "consumerId"));
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andUserIdIn(userIds).andRoleCodeEqualTo("CC");
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        return (ReflectUtils.getList(orderUsers, "projectNo"));
+    }
+
+    /**
+     * 搜索合同
+     * @param againTimeS
+     * @param againTimeE
+     * @return
+     */
+    private List<String> searchContract(String againTimeS, String againTimeE) {
+        if(StringUtils.isBlank(againTimeS) && StringUtils.isBlank(againTimeE)){
+            return null;
+        }
+        OrderContractExample orderContractExample = new OrderContractExample();
+        OrderContractExample.Criteria criteria = orderContractExample.createCriteria();
+        if (StringUtils.isNotBlank(againTimeS)) {
+            criteria.andSignTimeGreaterThanOrEqualTo(DateUtil.formateToDate(againTimeS, DateUtil.FORMAT_YYMMDD));
+        }
+        if (StringUtils.isNotBlank(againTimeE)) {
+            criteria.andSignTimeLessThan(DateUtil.formateToDate(againTimeS, DateUtil.FORMAT_YYMMDD));
+        }
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+        return ReflectUtils.getList(orderContracts, "orderNumber");
+    }
+
+    /**
+     * 搜索公司
+     * @param companyName
+     * @return
+     */
+    private List<String> searchCompany(String companyName) {
+        if (StringUtils.isBlank(companyName)) {
+            return null;
+        }
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyNameLike("%" + companyName + "%");
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        return ReflectUtils.getList(companyInfos, "companyId");
+    }
+
+    /**
+     * 搜索项目
+     * @param projectNo
+     * @param provinceCode
+     * @param cityCode
+     * @param areaCode
+     * @param createTimeS
+     * @param createTimeE
+     * @param address
+     * @return
+     */
+    private List<String> searchProject(String projectNo, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE, String address) {
+        ProjectExample projectExample = new ProjectExample();
+        ProjectExample.Criteria criteria = projectExample.createCriteria();
+        boolean isWhere = false;
+        if (StringUtils.isNotBlank(projectNo)) {
+            criteria.andProjectNoLike("%" + projectNo + "%");
+            isWhere = true;
+        }
+        if (StringUtils.isNotBlank(provinceCode)) {
+            criteria.andProvinceEqualTo(provinceCode);
+            isWhere = true;
+        }
+        if (StringUtils.isNotBlank(cityCode)) {
+            criteria.andCityEqualTo(cityCode);
+            isWhere = true;
+        }
+        if (StringUtils.isNotBlank(areaCode)) {
+            criteria.andRegionEqualTo(areaCode);
+            isWhere = true;
+        }
+        if (StringUtils.isNotBlank(address)) {
+            criteria.andAddressDetailLike("%" + address + "%");
+            isWhere = true;
+        }
+        if (StringUtils.isNotBlank(createTimeS)) {
+            criteria.andCreateTimeGreaterThanOrEqualTo(DateUtil.formateToDate(createTimeS, DateUtil.FORMAT_YYMMDD));
+            isWhere = true;
+        }
+        if (StringUtils.isNotBlank(createTimeE)) {
+            criteria.andCreateTimeLessThanOrEqualTo(DateUtil.formateToDate(createTimeE, DateUtil.FORMAT_YYMMDD));
+            isWhere = true;
+        }
+        if (!isWhere) {
+            return null;
+        }
+        List<Project> projects = projectMapper.selectByExample(projectExample);
+        return ReflectUtils.getList(projects, "projectNo");
+    }}

@@ -1,4 +1,4 @@
-package cn.thinkfree.database.Param;
+package cn.thinkfree.database.param;
 
 import io.swagger.annotations.ApiParam;
 

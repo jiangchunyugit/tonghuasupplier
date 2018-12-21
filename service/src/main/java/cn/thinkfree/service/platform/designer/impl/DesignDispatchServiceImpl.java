@@ -108,6 +108,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private FundsFlowMapper fundsFlowMapper;
     @Autowired
     private ProjectDataMapper projectDataMapper;
+    @Autowired
+    private FundsSettleAccountsNodeLogMapper fundsSettleAccountsNodeLogMapper;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -1116,6 +1118,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void paySuccess(String orderNo) {
         //设计师接单
         DesignerOrder designerOrder = queryDesignerOrderByOrderNo(orderNo);
@@ -1131,15 +1134,19 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 break;
             case STATE_140:
                 stateEnum = DesignStateEnum.STATE_150;
+                saveFundsSettleAccountsNodeLog(designerOrder, "6");
                 break;
             case STATE_170:
                 stateEnum = DesignStateEnum.STATE_180;
+                saveFundsSettleAccountsNodeLog(designerOrder, "7");
                 break;
             case STATE_200:
                 stateEnum = DesignStateEnum.STATE_210;
+                saveFundsSettleAccountsNodeLog(designerOrder, "8");
                 break;
             case STATE_220:
                 stateEnum = DesignStateEnum.STATE_230;
+                saveFundsSettleAccountsNodeLog(designerOrder, "6");
                 break;
             default:
                 throw new RuntimeException("无效的状态");
@@ -1157,10 +1164,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String remark = stateEnum.getLogText();
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", remark);
         saveLog(stateEnum.getState(), project);
-        //订单交易完成
-//        if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
-//            createConstructionOrder(project.getProjectNo());
-//        }
         updateProjectState(project.getProjectNo(), stateEnum.getState());
     }
 
@@ -1964,5 +1967,20 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             projectMap.put(designerNo, project);
         }
         return projectMap;
+    }
+
+    /**
+     *
+     * @param designerOrder
+     * @param nodeNo
+     */
+    private void saveFundsSettleAccountsNodeLog(DesignerOrder designerOrder, String nodeNo){
+        FundsSettleAccountsNodeLog nodeLog = new FundsSettleAccountsNodeLog();
+        nodeLog.setCompanyId(designerOrder.getCompanyId());
+        nodeLog.setCompletionDate(DateUtil.formartDate(new Date(),DateUtil.FORMAT_YYMMDD));
+        nodeLog.setNodeNo(nodeNo);
+        nodeLog.setOrderNo(designerOrder.getOrderNo());
+        nodeLog.setProjectNo(designerOrder.getProjectNo());
+        fundsSettleAccountsNodeLogMapper.insertSelective(nodeLog);
     }
 }

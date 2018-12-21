@@ -2,7 +2,7 @@ package cn.thinkfree.core.security.filter;
 
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.event.MyEventBus;
+import cn.thinkfree.core.event.EventGenerator;
 import cn.thinkfree.core.event.model.UserLoginAfter;
 import cn.thinkfree.core.security.filter.util.SecurityRequestUtil;
 import cn.thinkfree.core.security.model.SecurityUser;
@@ -32,8 +32,6 @@ public class SecuritySuccessAuthHandler
         extends SimpleUrlAuthenticationSuccessHandler {
 
 
-
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private boolean forwardToDestination = false;
 
     @Autowired
@@ -42,18 +40,15 @@ public class SecuritySuccessAuthHandler
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
 
+    @Autowired
+    EventGenerator eventGenerator;
+
     @Value("${custom.userService.useCache}")
     Boolean useCache;
 
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws ServletException, IOException {
-        super.onAuthenticationSuccess(request, response, authentication);
-
-
-    }
 
     protected void handle(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
+            throws IOException {
 
         String targetUrl = determineTargetUrl(request, response);
         if (response.isCommitted()) {
@@ -62,8 +57,8 @@ public class SecuritySuccessAuthHandler
         }
         SecurityUser user = (SecurityUser) authentication.getPrincipal();
 
-        MyEventBus.getInstance().publicEvent(
-                new UserLoginAfter(user.getUsername(),user.getPhone(),SecurityRequestUtil.getRequestIp(request)));
+        eventGenerator.publish(new UserLoginAfter(user.getUsername(),user.getPhone(),SecurityRequestUtil.getRequestIp(request)));
+
         cacheUserVO(user);
         Map<String, Object> result = new HashMap<String, Object>();
         Map<String,Object> userModel = new HashMap<>();

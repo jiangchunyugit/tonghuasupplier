@@ -9,16 +9,10 @@ import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.core.utils.SpringContextHolder;
 import cn.thinkfree.core.utils.WebFileUtil;
-import cn.thinkfree.database.event.SendValidateCode;
-import cn.thinkfree.database.event.account.AccountCreate;
-import cn.thinkfree.database.event.account.ResetPassWord;
-import cn.thinkfree.database.event.sync.CompanyJoin;
 import cn.thinkfree.database.event.sync.FinishContract;
-import cn.thinkfree.database.model.ContractInfo;
 import cn.thinkfree.database.vo.PcUserInfoVo;
 import cn.thinkfree.service.contract.AgencyService;
 import cn.thinkfree.service.contract.ContractService;
-import cn.thinkfree.service.event.CustomListenerServie;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
 import cn.thinkfree.service.user.UserService;
@@ -57,8 +51,6 @@ public class ExampleController extends AbsBaseController {
     EventService eventService;
 
 
-   @Autowired
-   CustomListenerServie customListenerServie;
 
 
    
@@ -121,25 +113,7 @@ public class ExampleController extends AbsBaseController {
 	
 	@Autowired
     private ApplicationContext applicationContext;
-    /**
-     * 测试创建合同
-     * @return
-     */
-    @MyRespBody
-    @GetMapping("/createContract")
-    public String createContract(){
-    	try {
-    		ContractInfo s = new ContractInfo();
-        	s.setContractStatus("1");
-        	//applicationContext.publishEvent(new AuditEvent(s));
-        	customListenerServie.publish(s);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-    	//contractService.createContractDoc("HT2018080710405900001");
-    
-        return "成功";
-    }
+
     @ExceptionHandler(value=Exception.class)
     @RequestMapping("export")
     public void export(HttpServletResponse response) throws Exception{
