@@ -43,8 +43,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
     ConstructionOrderMapper constructionOrderMapper;
     @Autowired
     private AfInstanceService instanceService;
-
-
+    @Autowired
+    OrderContractMapper orderContractMapper;
 
 
     /**
@@ -71,6 +71,19 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.error("此施工订单无关联的项目");
         }
         String projectNo = constructionOrder.getProjectNo();
+        //获取合同开始结束时间
+        OrderContractExample contractExample = new OrderContractExample();
+        OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
+        contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
+        contractCriteria.andAuditTypeEqualTo("1");
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
+        if (orderContracts.size() == 0) {
+            return RespData.error("合同暂无信息");
+//            throw new RuntimeException("合同暂无信息");
+        }
+        if (orderContracts.get(0).getStartTime() == null || orderContracts.get(0).getEndTime() == null) {
+            return RespData.error("合同没有开始/结束时间");
+        }
         //获取项目信息
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
@@ -81,10 +94,9 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.error("项目不存在");
         }
         Project project = projects.get(0);
-        if (project.getHouseType() == null || project.getHouseRoom() == null || project.getArea() == null || project.getPlanStartTime() == null || project.getPlanEndTime() == null) {
-            return RespData.error("请检查参数:project.houseType=" + project.getHouseType() + ";project.houseRoom=" + project.getHouseRoom() + ";project.area=" + project.getArea() + ";project.planStartTime=" + project.getPlanStartTime() + ";project.planEndTime=" + project.getPlanEndTime());
+        if (project.getHouseType() == null || project.getHouseRoom() == null || project.getArea() == null || orderContracts.get(0).getStartTime() == null || orderContracts.get(0).getEndTime() == null) {
+            return RespData.error("请检查参数:project.houseType=" + project.getHouseType() + ";project.houseRoom=" + project.getHouseRoom() + ";project.area=" + project.getArea() + ";orderContracts.getStartTime()=" + orderContracts.get(0).getStartTime() + ";orderContract.getEndTime()=" + orderContracts.get(0).getEndTime());
         }
-
         //获取排期基础数据
         if (constructionOrder.getSchemeNo() == null || constructionOrder.getSchemeNo().isEmpty()) {
             return RespData.error("施工订单的schemeNo 字段值为null/空字符串");
@@ -102,7 +114,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         if (projectBigSchedulings.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
             return RespData.error("此方案尚未添加施工阶段信息!");
         }
-        Date bigStartTime = project.getPlanStartTime();
+        Date bigStartTime = orderContracts.get(0).getStartTime();
         Collections.sort(projectBigSchedulings);
         //生成总排期信息
         ProjectScheduling projectScheduling = new ProjectScheduling();
@@ -113,8 +125,8 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         projectScheduling.setStatus(Scheduling.BASE_STATUS.getValue());
         projectScheduling.setRate(projectBigSchedulings.get(0).getSort());
         projectScheduling.setProjectNo(projectNo);
-        projectScheduling.setStartTime(project.getPlanStartTime());
-        projectScheduling.setEndTime(project.getPlanEndTime());
+        projectScheduling.setStartTime(orderContracts.get(0).getStartTime());
+        projectScheduling.setEndTime(orderContracts.get(0).getEndTime());
         projectScheduling.setCompanyId(constructionOrder.getCompanyId());
         int bigResult = projectSchedulingMapper.insertSelective(projectScheduling);
         if (bigResult != Scheduling.INSERT_SUCCESS.getValue()) {
@@ -150,12 +162,12 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             details.setSchemeNo(bigScheduling.getSchemeNo());
             details.setPlanStartTime(bigStartTime);
             Date planEndTime = DateUtil.getDate(bigStartTime, bigScheduling.getWorkload());
-            if (project.getPlanEndTime().getTime() < planEndTime.getTime()) {
-                details.setPlanEndTime(project.getPlanEndTime());
-                bigStartTime = project.getPlanEndTime();
+            if (orderContracts.get(0).getEndTime().getTime() < planEndTime.getTime()) {
+                details.setPlanEndTime(orderContracts.get(0).getEndTime());
+                bigStartTime = orderContracts.get(0).getEndTime();
             } else {
                 if (i == projectBigSchedulings.size() - 1) {
-                    details.setPlanEndTime(project.getPlanEndTime());
+                    details.setPlanEndTime(orderContracts.get(0).getEndTime());
                 } else {
                     details.setPlanEndTime(planEndTime);
                     bigStartTime = planEndTime;
@@ -443,7 +455,9 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         example.createCriteria().andSchemeNoEqualTo(schemeNo).andSortEqualTo(scheduleSort);
         List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example);
         return projectBigSchedulings != null && projectBigSchedulings.size() > 0 ? projectBigSchedulings.get(0) : null;
-    }  /**
+    }
+
+    /**
      * 获取项目总排期信息
      *
      * @param projectNo
@@ -491,4 +505,5 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.error("修改失败");
         }
         return RespData.success();
-    }}
+    }
+}

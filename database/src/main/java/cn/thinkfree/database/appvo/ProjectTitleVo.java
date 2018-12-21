@@ -26,7 +26,7 @@ public class ProjectTitleVo {
     @ApiModelProperty(name = "taskNum", value = "任务数")
     private Integer taskNum;
     @ApiModelProperty(name = "cost", value = "费用")
-    private Integer cost;
+    private String cost;
     @ApiModelProperty(name = "schedule", value = "工期")
     private Integer schedule;
     @ApiModelProperty(name = "delay", value = "延迟天数")
@@ -37,6 +37,10 @@ public class ProjectTitleVo {
     private Date projectStartTime;
     @ApiModelProperty(value = "项目结束时间")
     private Date projectEndTime;
+    @ApiModelProperty(value = "合同开始时间")
+    private Date contractStartTime;
+    @ApiModelProperty(value = "合同结束时间")
+    private Date contractEndTime;
     @ApiModelProperty(value = "甘特图url")
     private String ganttChartUrl;
     @ApiModelProperty(value = "B端项目阶段名称")

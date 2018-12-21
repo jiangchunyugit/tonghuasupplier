@@ -6,6 +6,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.vo.ConstructCountVO;
+import cn.thinkfree.database.vo.construct.ConstructOrderDetailVO;
 import cn.thinkfree.service.construction.*;
 import cn.thinkfree.service.construction.vo.*;
 import com.github.pagehelper.PageInfo;
@@ -192,5 +193,15 @@ public class ConstructionOrderController extends AbsBaseController {
                                                 @RequestParam(name = "pageNum") Integer pageNum,
                                                 @RequestParam(name = "pageSize") Integer pageSize){
         return sendJsonData(ResultMessage.SUCCESS, constructOrderService.count(userId, approvalType, pageNum, pageSize));
+    }
+
+    @RequestMapping(value = "/detail", method = {RequestMethod.POST, RequestMethod.GET})
+    @MyRespBody
+    @ApiOperation(value="施工订单详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectNo", value = "项目编号编号", required = true)
+    })
+    public MyRespBundle<ConstructOrderDetailVO> detail(@RequestParam(name = "projectNo") String projectNo){
+        return sendJsonData(ResultMessage.SUCCESS, constructOrderService.detail(projectNo));
     }
 }

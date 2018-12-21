@@ -11,6 +11,7 @@ import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
+import cn.thinkfree.database.vo.construct.DelayDetailVO;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
@@ -26,6 +27,7 @@ import cn.thinkfree.service.rebate.FundsSettleAccountsNodeLogService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +35,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sun.applet.Main;
 
+import javax.sound.midi.Soundbank;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -264,16 +268,24 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @return 变更单实例
      */
     private AfInstance getRelevanceChangeOrderInstance(String projectNo) {
-        return findByConfigNoAndProjectNoAndStatus(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+        return findOneByConfigNoAndProjectNoAndStatusOrderCreateTimeDesc(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
     }
 
-    private AfInstance findByConfigNoAndProjectNoAndStatus(String configNo, String projectNo, Integer status) {
+    private AfInstance findOneByConfigNoAndProjectNoAndStatusOrderCreateTimeDesc(String configNo, String projectNo, Integer status) {
         PageHelper.startPage(1, 1);
         AfInstanceExample example = new AfInstanceExample();
         example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
         example.setOrderByClause("create_time desc");
         List<AfInstance> instances = instanceMapper.selectByExample(example);
         return instances != null && instances.size() > 0 ? instances.get(0) : null;
+    }
+
+    private List<AfInstance> findByConfigNoAndProjectNoAndStatus(String configNo, String projectNo, Integer status) {
+        PageHelper.startPage(1, 1);
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
+        example.setOrderByClause("create_time desc");
+        return instanceMapper.selectByExample(example);
     }
 
     private List<AfCheckItemVO> getCheckItems(String projectNo, Integer scheduleSort) {
@@ -358,7 +370,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // 变更单校验变更数据
             verifyChangeOrderData(data);
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)) {
-            AfInstance instance = findByConfigNoAndProjectNoAndStatus(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+            AfInstance instance = findOneByConfigNoAndProjectNoAndStatusOrderCreateTimeDesc(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
             if (instance == null) {
                 LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
                 throw new RuntimeException();
@@ -452,12 +464,11 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         Map map = JSONUtil.json2Bean(data, Map.class);
         Object delayDays = map.get("delay");
         if (delayDays != null) {
-            return Integer.parseInt(delayDays.toString());
+            return Double.valueOf(delayDays.toString()).intValue();
         }
         LOGGER.error("未传入延期天数，data:{}", data);
         throw new RuntimeException();
     }
-
 
     private void verifyChangeOrderData(String data) {
         AfChangeOrderVO changeOrderVO = JSONUtil.json2Bean(data, AfChangeOrderVO.class);
@@ -1532,5 +1543,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         }
         return false;
+    }
+
+    @Override
+    public int getDelayDaysByProjectNo(String projectNo) {
+        int delayDays = 0;
+        List<AfInstance> instances = findByConfigNoAndProjectNoAndStatus(AfConfigs.DELAY_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+        if (instances != null) {
+            for (AfInstance instance : instances) {
+                delayDays += getDelayDays(instance.getData());
+            }
+        }
+        return delayDays;
     }
 }

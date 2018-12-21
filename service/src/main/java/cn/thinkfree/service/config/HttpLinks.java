@@ -27,4 +27,8 @@ public class HttpLinks {
      * 发送审批消息
      */
     private String messageSave;
+    /**
+     * 项目支付信息
+     */
+    private String projectPayInfo;
 }
