@@ -79,4 +79,11 @@ public interface NewSchedulingBaseService {
      * @return 排期详细
      */
     ProjectBigScheduling findBySchemeNoAndSort(String schemeNo, Integer sort);
+
+    /**
+     * 根据方案编号获取排期信息
+     * @param schemeNo 方案编号
+     * @return 排期详细
+     */
+    List<ProjectBigScheduling> findBySchemeNoOrderBySortAsc(String schemeNo);
 }

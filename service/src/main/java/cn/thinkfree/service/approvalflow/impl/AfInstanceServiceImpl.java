@@ -11,9 +11,10 @@ import cn.thinkfree.core.utils.UniqueCodeGenerator;
 import cn.thinkfree.database.mapper.AfInstanceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
-import cn.thinkfree.database.vo.construct.DelayDetailVO;
 import cn.thinkfree.service.approvalflow.*;
 import cn.thinkfree.service.config.HttpLinks;
+import cn.thinkfree.service.construction.ConstructOrderPayService;
+import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.neworder.NewOrderService;
@@ -27,7 +28,6 @@ import cn.thinkfree.service.rebate.FundsSettleAccountsNodeLogService;
 import cn.thinkfree.service.utils.AfUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,9 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.applet.Main;
 
-import javax.sound.midi.Soundbank;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -93,6 +91,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private AfInstanceRelevanceService instanceRelevancyService;
     @Autowired
     private FundsSettleAccountsNodeLogService fundsSettleAccountsNodeLogService;
+    @Autowired
+    private ConstructOrderService constructOrderService;
+    @Autowired
+    private ConstructOrderPayService constructOrderPayService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -1555,5 +1557,112 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
         }
         return delayDays;
+    }
+
+    @Override
+    public List<AfCheckResultVO> checkList(String projectNo) {
+        List<AfCheckResultVO> checkResultVOs = new ArrayList<>();
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        if (constructionOrder == null) {
+            LOGGER.error("未查询到施工订单，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
+        String schemeNo = constructionOrder.getSchemeNo();
+        if (StringUtils.isBlank(schemeNo)) {
+            LOGGER.error("未配置方案，projectNo:{}", projectNo);
+            throw new RuntimeException();
+        }
+        List<ProjectBigScheduling> projectBigSchedulings = schedulingBaseService.findBySchemeNoOrderBySortAsc(schemeNo);
+        if (projectBigSchedulings == null || projectBigSchedulings.isEmpty()) {
+            LOGGER.error("未查询到排期信息，schemeNo:{}", schemeNo);
+            throw new RuntimeException();
+        }
+
+        for (ProjectBigScheduling projectBigScheduling : projectBigSchedulings) {
+            if (projectBigScheduling.getIsNeedCheck() == 1) {
+                List<AfInstance> instances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, projectBigScheduling.getSort(), AfConstants.APPROVAL_STATUS_SUCCESS);
+                if (instances != null && instances.size() > 0 ) {
+                    for (AfInstance instance : instances) {
+                        AfCheckResultVO checkResultVO = null;
+                        if (projectBigScheduling.getIsWaterTest() == 1) {
+                            AfCheckItemVO checkItem = getCheckItem(instance.getData());
+                            if (checkItem.getType() == 2) {
+                                checkResultVO = new AfCheckResultVO();
+                                checkResultVO.setCheckName("闭水验收");
+                            }
+                        }
+                        if (checkResultVO == null) {
+                            checkResultVO = new AfCheckResultVO();
+                            checkResultVO.setCheckName(projectBigScheduling.getRename());
+                        }
+                        checkResultVO.setIsCheck(1);
+                        checkResultVO.setCheckResult(1);
+                        checkResultVO.setCheckTime(instance.getCreateTime());
+                        checkResultVO.setInstanceNo(instance.getInstanceNo());
+                        int isPay = constructOrderPayService.isPay(constructionOrder.getOrderNo(), projectBigScheduling.getSort());
+                        checkResultVO.setPayResult(isPay);
+                        checkResultVOs.add(checkResultVO);
+                    }
+                } else {
+                    instances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, projectBigScheduling.getSort(), AfConstants.APPROVAL_STATUS_FAIL);
+                    if (instances != null && instances.size() > 0) {
+                        instances.sort(Comparator.comparing(AfInstance::getCreateTime).reversed());
+                        AfCheckResultVO closedWaterTestCheckResultVO = null;
+                        AfCheckResultVO checkResultVO = null;
+                        for (AfInstance instance : instances) {
+                            if (projectBigScheduling.getIsWaterTest() == 1 && closedWaterTestCheckResultVO == null) {
+                                AfCheckItemVO checkItem = getCheckItem(instance.getData());
+                                if (checkItem.getType() == 2) {
+                                    closedWaterTestCheckResultVO = new AfCheckResultVO();
+                                    closedWaterTestCheckResultVO.setCheckName("闭水验收");
+                                    closedWaterTestCheckResultVO.setIsCheck(1);
+                                    closedWaterTestCheckResultVO.setCheckResult(0);
+                                    closedWaterTestCheckResultVO.setCheckTime(instance.getCreateTime());
+                                    closedWaterTestCheckResultVO.setInstanceNo(instance.getInstanceNo());
+                                    int isPay = constructOrderPayService.isPay(constructionOrder.getOrderNo(), projectBigScheduling.getSort());
+                                    closedWaterTestCheckResultVO.setPayResult(isPay);
+
+                                    checkResultVOs.add(closedWaterTestCheckResultVO);
+                                }
+                            }
+
+                            if (checkResultVO == null && closedWaterTestCheckResultVO == null) {
+                                checkResultVO = new AfCheckResultVO();
+                                checkResultVO.setCheckName(projectBigScheduling.getRename());
+                                checkResultVO.setIsCheck(1);
+                                checkResultVO.setCheckResult(0);
+                                checkResultVO.setCheckTime(instance.getCreateTime());
+                                checkResultVO.setInstanceNo(instance.getInstanceNo());
+                                int isPay = constructOrderPayService.isPay(constructionOrder.getOrderNo(), projectBigScheduling.getSort());
+                                checkResultVO.setPayResult(isPay);
+
+                                checkResultVOs.add(checkResultVO);
+                            }
+                        }
+                    } else {
+                        if (projectBigScheduling.getIsWaterTest() == 1) {
+                            AfCheckResultVO closedWaterTestCheckResultVO = new AfCheckResultVO();
+                            closedWaterTestCheckResultVO.setCheckName("闭水验收");
+                            closedWaterTestCheckResultVO.setIsCheck(0);
+                            int isPay = constructOrderPayService.isPay(constructionOrder.getOrderNo(), projectBigScheduling.getSort());
+                            closedWaterTestCheckResultVO.setPayResult(isPay);
+
+                            checkResultVOs.add(closedWaterTestCheckResultVO);
+                        }
+
+                        AfCheckResultVO checkResultVO = new AfCheckResultVO();
+                        checkResultVO.setCheckName(projectBigScheduling.getRename());
+                        checkResultVO.setIsCheck(0);
+
+                        int isPay = constructOrderPayService.isPay(constructionOrder.getOrderNo(), projectBigScheduling.getSort());
+                        checkResultVO.setPayResult(isPay);
+
+                        checkResultVOs.add(checkResultVO);
+                    }
+                }
+            }
+        }
+
+        return checkResultVOs;
     }
 }
