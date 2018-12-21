@@ -23,7 +23,7 @@ public class OrderPlayVo {
     @ApiModelProperty(name = "taskNum",value = "任务数")
     private Integer taskNum;
     @ApiModelProperty(name = "cost",value = "费用")
-    private Integer cost;
+    private String cost;
     @ApiModelProperty(name = "schedule",value = "工期")
     private Integer schedule;
     @ApiModelProperty(name = "delay",value = "延迟天数")

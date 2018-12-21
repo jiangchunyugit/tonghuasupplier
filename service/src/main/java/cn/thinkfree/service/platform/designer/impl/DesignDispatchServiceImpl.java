@@ -713,7 +713,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     private String getContractUrl(String orderNo){
         OrderContractExample contractExample = new OrderContractExample();
-        contractExample.createCriteria().andOrderNumberEqualTo(orderNo).andAuditTypeEqualTo(Short.parseShort("1"));
+        contractExample.createCriteria().andOrderNumberEqualTo(orderNo).andAuditTypeEqualTo(("1"));
         List<OrderContract> contracts = orderContractMapper.selectByExample(contractExample);
         if(contracts.isEmpty()){
             return null;
@@ -1453,7 +1453,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //合同类型 02设计合同, 03施工合同
         criteria.andContractTypeEqualTo("02");
         //审批状态：0：不通过 1：通过2：审核中
-        criteria.andAuditTypeEqualTo(new Short("1"));
+        criteria.andAuditTypeEqualTo("1");
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
 
         if (stateEnum == DesignStateEnum.STATE_270 || stateEnum == DesignStateEnum.STATE_210) {
@@ -1485,7 +1485,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         //合同类型 02设计合同, 03施工合同
         criteria.andContractTypeEqualTo("02");
         //审批状态：0：不通过 1：通过2：审核中
-        criteria.andAuditTypeEqualTo(new Short("1"));
+        criteria.andAuditTypeEqualTo("1");
         List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
         List<String> btns = new ArrayList<>();
         DesignerOrderExample orderExample = new DesignerOrderExample();
@@ -1772,7 +1772,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             contractCriteria.andContractNumberLike("%" + contractNo + "%");
         }
         if (StringUtils.isNotBlank(contractState)) {
-            contractCriteria.andAuditTypeEqualTo(Short.parseShort(contractState));
+            contractCriteria.andAuditTypeEqualTo(contractState);
         }
         if (StringUtils.isNotBlank(signTimeS)) {
             contractCriteria.andSignTimeGreaterThanOrEqualTo(DateUtil.formateToDate(signTimeS, "yyyy-MM-dd"));

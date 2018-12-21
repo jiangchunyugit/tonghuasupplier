@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>居然设计家设计公司平台入驻合作合同模板</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>设计家平台入驻协议</title>
     <style>
         body {
             font-family: SimSun;
@@ -18,7 +18,33 @@
         .inline-block {
             display: inline-block;
         }
-
+        .textput {
+            margin: 0;
+            padding: 0 10px;
+            min-height: 20px;
+            line-height: 20px;
+            border:none;
+            border-bottom: 1px solid #000;
+            outline:none;
+            font-size: 16px;
+            display: inline-block;
+        }
+        div.textput{
+            margin-bottom: -7px;
+            margin-right: 3px;
+        }
+        .defaultwidth{
+            width: 380px;
+        }
+        .mintextput{
+            width: 200px !important;
+        }
+        .smintextput{
+            width: 130px !important;
+        }
+        .smalltextput{
+            min-width: 60px !important;
+        }
         .placeholder {
             margin: 0;
             display: inline-block;
@@ -48,8 +74,11 @@
             text-align: center;
         }
 
-        .indent {
+        .indent{
             text-indent: 2em;
+        }
+        div.indent{
+            text-indent: 4em;
         }
 
         .list {
@@ -63,240 +92,300 @@
 </head>
 
 <body>
-<h1 class="text-algin">“居然设计家”平台入驻合作合同（2018版）</h1>
+<h1 class="text-algin">“居然设计家”平台入驻合作合同（2019版）</h1>
 <div>
-    <h4 class="inline-block">甲方： </h4>
-    <p class="placeholder">${c01}</p>
-    <h4 class="inline-block">（以下简称甲方）</h4>
+    <h4 class="inline-block">甲方: </h4>
+    <input name="firstParty" class="textput defaultwidth" type="text" value="${c01}">
 </div>
 <div>
-    <h4 class="inline-block">乙方： </h4>
-    <p class="placeholder">${c02}</p>
-    <h4 class="inline-block">（以下简称乙方）</h4>
+    <h4 class="inline-block">乙方：</h4>
+    <input name="secondParty" class="textput defaultwidth" type="text" value="${c02}">
 </div>
-<section class='indent'>
-    “居然设计家”（以下简称平台）是居然之家打造的融线上线下为一体的空间设计平台和家装智能服务平台，其使命是以互联网、大数据和云计算为手段，改善家居消费者的服务体验、提升家居行业运行效率，从而让家居服务变得快乐简单。
+<section class="indent">
+    “居然设计家”平台（以下简称平台）是由居然之家打造的融线上线下为一体的智能设计和家装管理平台。包括设计云平台、家具材料采购平台、商品销售平台、施工管理平台、物流配送平台和智能家居服务平台六大部分。其宗旨是以互联网、大数据、云计算以及人工智能的技术应用为手段，改善家居消费者的服务体验、提升家居行业运行效率，从而让家居服务变得快乐简单， 并以此为基础构建以家居为中心的家庭消费生态圈。
 </section>
-<section class='indent'>
-    通过平台，设计师不但可以免费使用在线设计工具，节省施工图、预算的制作成本，还可以享受平台的厂商资源，大大提升工作效率和经济效益。
+<section class="indent">
+    通过平台，设计师可以使用在线设计工具，节省施工图、预算的制作成本，还可以享受平台的厂商资源，大大提升工作效率和经济效益。
 </section>
-<section class='indent'>
+<section class="indent">
     甲乙双方同意建立业务合作伙伴关系。经甲乙双方协商一致，根据《中华人民共和国合同法》及有关法律、法规的规定，签订本协议。
 </section>
 <h4>一、合作约定</h4>
-<section class='indent'>
-    甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。
+<section class="indent">
+    甲方向乙方（<input type="checkbox" name="designStudio">设计工作室<input type="checkbox">设计师）提供线上设计云平台、材料采购平台、施工管理平台及对外的宣传和推广。乙方可使用3D云设计（Homestyler）软件进行方案制作，向甲方客户提供家居全案设计、产品推荐购买服务、施工服务。甲方按本合同约定向乙方返设计费，收取平台服务管理费，并向乙方支付材料推荐服务费、施工服务费。
 </section>
-<section class='indent'>
-    甲方向乙方提供线上设计云平台、材料采购平台和施工管理平台。乙方可免费使用3D云设计软件进行方案制作，向客户推荐家具材料和施工服务，甲方为乙方开通平台管理员账号用于日常管理与业务量统计，乙方为工作室可自行关联所属设计师账号。甲方按本合同约定向乙方返设计款、产品服务费并支付施工管理费。乙方向甲方客户提供家居全案设计、产品推荐购买服务、施工配合服务，由甲方负责乙方在平台上对外的形象包装和宣传。合作期限自
-    <p class="placeholderT">${startTime?string('yyyy')}</p>年<p class="placeholderT">${startTime?string('MM')}</p>月<p
-        class="placeholderT">${startTime?string('dd')}</p>日
-    至<p class="placeholderT">${endTime?string('yyyy')}</p>年 <p class="placeholderT">${endTime?string('MM')}</p>月<p
-        class="placeholderT">${endTime?string('dd')}</p>日。
+<section class="indent">
+    合作期限自<div class="textput smalltextput">${startTime?string('yyyy')}</div>年<div class="textput smalltextput">${startTime?string('MM')}</div>月<div class="textput smalltextput">${startTime?string('dd')}</div>日
+    至<div class="textput smalltextput">${endTime?string('yyyy')}</div>年<div class="textput smalltextput">${endTime?string('MM')}</div>月<div class="textput smalltextput">${endTime?string('dd')}</div>日。
     乙方在经营过程中，应认同并遵守《居然设计家设计行业公约》（附件1）；乙方应本着诚信原则为甲方客户提供服务。
 </section>
-<section class='indent'>
-    乙方指定返设计款、产品服务费、施工管理费等其他相关款项的账户信息为：
-</section>
-<table>
+<section class="indent">
+    乙方指定返设计费、产品服务费、施工管理费等其他相关款项的账户信息为：
     <#if  c22 == 1>
-    <tr>
-        <td>
-            <h4 class="inline-block">户名：</h4>
-            <p class="placeholder">${c05}</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <h4 class="inline-block">开户行：</h4>
-            <p class="placeholder">${c06}</p>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <h4 class="inline-block">账号：</h4>
-            <p class="placeholder">${c07}</p>
-        </td>
-    </tr>
+    <div class="indent">
+        户名： <input name="secondParty" class="textput defaultwidth" type="text" value="${c05}">
+    </div>
+    <div class="indent">
+        开户行： <input name="secondParty" class="textput defaultwidth" type="text" value="${c06}">
+    </div>
+    <div class="indent">
+        账号：  <input name="secondParty" class="textput defaultwidth" type="text" value="${c07}">
+    </div>
     <#else>
-    <tr>
-        <td>
-            <h4 class="inline-block">居然金融：</h4>
-            <p class="placeholder">${c07}</p>
-        </td>
-    </tr>
+    <div class="indent">
+        开户行： <input name="secondParty" class="textput defaultwidth" type="text" value="居然金融">
+    </div>
+    <div class="indent">
+        账号：  <input name="secondParty" class="textput defaultwidth" type="text" value="${c07}">
+    </div>
+    </#if>
+</section>
+<h4>二、甲方的权利与义务</h4>
+<section class='indent'>
+    1．甲方负责平台的管理及运营，为乙方提供平台的整体推广及培训，配备专业人员对接设计、材料、施工等业务并辅助乙方解决平台使用中的各类问题。
+</section>
+<section class="indent">
+    2．甲方为乙方提供强大的技术支持，维护安全、有序的线上经营环境，保障乙方合法权益。甲方为乙方开通平台管理员账号支持客户订单数据查询、业务流量查询、作品案例管理等功能。
+</section>
+<section class="indent">
+    3．甲方根据乙方的设计风格、设计费用等标准对设计项目订单进行统一派单，甲方有权在乙方设计交付物质量差、接单反响慢、出现投诉、挑单、拒单、售后配合差等情况下对乙方进行停单处理，并有权要求重新安排项目负责人承接，所产生的一切费用由乙方承担。
+</section>
+<section class="indent">
+    4．甲方为乙方提供材料采购平台，提供丰富的材料品牌库，满足乙方设计使用，并按时与乙方进行返款结算，保障乙方材料推荐的权益。
+</section>
+<section class="indent">
+    5.甲方向乙方提供施工落地服务，在施工过程中提供施工管理工具，便于工地管理及服务。
+</section>
+<section class="indent">
+    6.甲方为乙方提供宣传及学习机会，包含但不限于设计家官网、自媒体、甲方主办或参与的比赛、设计论坛、品牌活动、游学等。帮助乙方提高知名度，获取更多客户资源。
+</section>
+<section class="indent">
+    7.甲方有权在乙方违反法律法规、违反设计行业准则、违反甲方规定、出现重大投诉事故等情况下解除与乙方的合作关系。
+</section>
+
+<h4>三、乙方的权利与义务</h4>
+<section class="indent">
+    1.乙方承接甲方平台业务需进行实名认证，设计费标准根据平台运营规则进行设定，并由甲方在平台上进行公示。乙方承接甲方客户委托的设计项目，须使用甲方制式《“居然设计家”室内装饰设计合同》（以下简称《设计合同》），推荐材料购买，需使用甲方制式《“居然设计家”家具建材销售合同》（以下简称《销售合同》），承接工程项目，须使用甲方制式《“居然设计家”施工合同》（以下简称《施工合同》），甲方平台统一代收各项费用。
+</section>
+<section class="indent">
+    2．乙方必须使用居然设计家提供的设计云平台、材料采购平台、施工管理平台并按照甲方制定的流程为客户提供设计、选材、施工等服务。乙方须积极向客户推荐居然设计家合作品牌产品，引导消费者以及施工单位使用设计家施工管理工具。
+</section>
+<section class="indent">
+    3.乙方在平台的合同期内总产值应不低于<div class="textput smalltextput">${c09}</div>万元。
+</section>
+<section class="indent">
+    4.乙方对客户提供材料采购服务必须优先选择甲方已经签约的品牌，并于甲方线下市场门店成交，不得进行场外交易。
+</section>
+<section class="indent">
+    5.乙方所提供的设计服务必须符合国家相关规定及标准，乙方应遵守并执行甲方的施工管理规定和相关业务流程。若乙方选择甲方的施工服务，则甲方指派施工单位对预算及施工图纸进行审核，审核不通过的，乙方有义务配合施工单位对预算及施工图纸进行修改。若乙方不选择甲方提供的施工服务，乙方自行承担施工责任。
+</section>
+<section class="indent">
+    6.乙方需提供甲方为其宣传推广的相关资料，包含但不限于个人肖像、作品及设计档案等，并积极参加甲方组织的各类宣传活动为居然设计家平台代言。合同期内活动场次不低于<div class="textput smalltextput">${c10}</div>次。
+</section>
+<section class="indent">
+    7.乙方保证在合作期内，保持良好个人形象和社会形象，不做任何侵犯甲方权益及损害甲方名誉的行为。
+</section>
+<h4>四、入驻保证金</h4>
+<section class="indent">
+
+    1.乙方通过线上账号提交资质并在平台审核通过后的5日内，乙方应按
+    <div class="textput smalltextput">
+     <#if (code13?size == 1)>
+         1.1
+     <#else>
+         1.2
      </#if>
-</table>
-<h4>二、甲方义务</h4>
-<section class='indent'>
-    1. 甲方负责平台的管理及运营，为乙方提供在平台的整体推广，3D云设计软件及后台操作培训，设计、材料、施工等业务的对接；维护安全、有序的线上经营环境，保障乙方合法权益。
+    </div>方式向甲方支付入驻保证金：
+
+<#list code13 as c>
+    <#if (code13?size = 1)>
+    <div class="indent">
+        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>万的入驻保证金；
+    </div>
+    </#if>
+</#list>
+<#if ( code13?size > 1)>
+    <div class="indent">
+        1.2资质审核通过后，在共计<div class="textput smalltextput">${c15}</div>万的入驻保证金里缴纳
+      <#--  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
+        剩余部分从接到的每一个平台项目里扣除项目总金额的
+        <div class="textput smalltextput">${code13.[0].costValue}</div>
+        %充作保证金，-->
+
+        <#list code13 as c>
+        <div class="indent">  1.2.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+             <#if c.cType == 1 >
+                    元
+             <#else>
+            %
+             </#if>
+            ${(c.costName?split("@")[1]) }。</div>
+        </#list>
+        直到剩余保证金补足为止。
+    </div>
+        </#if>
 </section>
-<section class='indent'>
-    2.
-    甲方利用自身媒体优势对活跃度高的乙方优先进行包装推广，将乙方每月使用3D云设计软件生成的基于真实户型的优秀全屋整套设计方案在平台优先展示，帮助其获取更多客户点击及咨询量，提升知名度和美誉度。甲方推广宣传渠道包括且不限于室内外广告、平面广告、杂志、报刊等平面媒体，以及网页、微信、微博、网络等其他新媒体形式。
+<section class="indent">
+    2.在合同期间内，若出现由于乙方责任造成的业主投诉，根据实际情况甲方有权从入驻保证金中扣除相应的投诉处理款项，入驻保证金不足以抵扣时，就剩余部分甲方有权予以追偿，同时乙方应于收到甲方扣保证金通知后的3日内将入驻保证金补齐，每逾期一天应向甲方缴纳未交付款项的3‰的滞纳金，超过30天未补齐的，甲方有权解除合同并要求乙方承担违约责任。
 </section>
-<section class='indent'>
-    3. 甲方为乙方提供强大的技术支持，及时更新维护设计云平台及材料采购平台，保障线上商品的正常销售，实现线上线下一体化。
+<section class="indent">
+    3.本合同到期时，如双方不再续约，乙方完成设计平台所有设计、施工项目后向甲方申请退还保证金，甲方在确认乙方无退款、投诉纠纷的情况下3个月后将入驻保证金无息退还给乙方。如乙方未能将设计项目服务完成并给甲方造成了损失，则甲方有权在扣除相应金额后，将入驻保证金的余额退还乙方。
 </section>
-<section class='indent'>
-    4. 甲方为乙方搭建居然设计家施工平台，配合乙方完成设计服务后的施工建设工作。
+
+<h4>五、返款及结算</h4>
+<section class="indent">
+    1.设计费
 </section>
-<section class='indent'>
-    5. 甲方为乙方提供管理员账号，支持客户订单数据查询、业务流量查询、作品案例管理等功能。
+<section class="indent">
+    <div class="indent">1.1甲方在对应《设计合同》收到客户支付相应设计费后分两次与乙方结算设计费款项，分别为：</div>
+     <#list code01 as c>
+        <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+             <#if c.cType == 1 >
+                    元
+             <#else>
+            %
+             </#if>
+            ${(c.costName?split("@")[1]) }。</div>
+     </#list>
+    <#--<div class="indent">1.1.1所有设计阶段完成后，平台与乙方结算设计费总额的 <div class="textput smalltextput">70</div> %。</div>
+    <div class="indent">1.1.2设计转入施工，且施工结束后，平台与乙方结算设计费总额的 <div class="textput smalltextput">30</div> %。</div>
+    <div class="indent"> 1.2 由乙方发起设计服务费的对账，再由平台返还给乙方。乙方应为客户开具《设计合同》等额发票，依法纳税。客户支付产生的手续费由乙方承担。</div>-->
 </section>
-<section class='indent'>
-    6. 甲方可向平台的乙方客户提供金融贷款服务、资金监管服务。
+<section class="indent">
+    2.设计平台服务管理费
+    <div class="indent">2.1甲方收取乙方与甲方客户签订的《设计合同》实收金额的<div class="textput smalltextput">${c08}</div>%作为平台服务管理费，设计合同结束后一次性扣除。</div>
+    <div class="indent"> 2.2如甲方客户发生设计订单退款，则以平台退款记录为准退还平台服务管理费。</div>
 </section>
-<section class='indent'>
-    7. 甲方为平台的客户提供含“先行赔付”在内的居然之家所有服务承诺。
+<section class="indent">
+    3.材料推荐服务费
+    <div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>
+    <#list code09 as c>
+              <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+        <#if c.cType == 1 >
+                    元
+        <#else>
+            %
+        </#if>
+             ${(c.costName?split("@")[1]) }。</div>
+    </#list>
+<#--    <div class="indent">3.1.1甲方在客户与商家签订正式订单并付款（全额或首期款）后向乙方支付材料推荐服务费总额 <div class="textput smalltextput">30</div> %的首款。</div>
+    <div class="indent">3.1.2甲方在商家为客户配送产品完成且客户确认验收的60天后向乙方支付材料推荐服务费总额 <div class="textput smalltextput">30</div> %的尾款。</div>-->
+    <div class="indent">3.1.3如甲方客户发生材料订单退款，乙方应将该笔订单所得材料推荐服务费退还给甲方。如乙方5个工作日内不予退还，则甲方有权从下笔订单中扣除应退还材料推荐服务费。</div>
 </section>
-<section class='indent'>
-    8. 甲方收取乙方与甲方客户签订的《设计合同》总额的 <p class="placeholderT">${c08}% </p> 作为平台服务管理费。
-</section>
-<h4>三、乙方义务</h4>
-<section class='indent'>
-    1. 乙方必须使用居然设计家提供的设计云平台，材料采购平台，施工管理平台为客户提供设计、选材、施工等服务。乙方与甲方所派客户必须在“居然设计家”创客中心内进行首谈。
-</section>
-<section class='indent'>
-    2. 乙方承接甲方平台设计业务需进行实名认证，乙方设计费收费标准自行确定，甲方在平台上对客户进行公示，乙方需按照平台上传规则提交至少4套完整的原创设计作品。
-</section>
-<section class='indent'>
-    3. 乙方承接甲方客户委托的设计项目，须使用甲方制式《“居然设计家”室内装饰设计合同》（以下简称《设计合同》），承接工程项目，须使用甲方制式《“居然设计家”施工合同》（以下简称《施工合同》）甲方平台统一收取各项费用。
-</section>
-<section class='indent'>
-    4. 乙方所提供的设计服务必须符合国家相关规定及标准，并必须使用3D云设计软件作为设计工具为客户提供方案设计，并通过甲方施工管理平台的图纸审核。
-</section>
-<section class='indent'>
-    5. 乙方设计师应遵守并执行甲方的施工管理规定和相关业务流程。
-</section>
-<section class='indent'>
-    6. 严禁乙方与甲方客户进行场外交易，否则视同乙方违约并终止合同。
-</section>
-<section class='indent'>
-    7. 乙方应向客户积极推荐居然设计家合作品牌产品，凡签订《设计合同》的客户，乙方应保证客户在平台购买的主材及家具配饰单平米造价不低于<p class="placeholderT">${c09}</p>元/平米。
-</section>
-<section class='indent'>
-    8. 乙方须依照《设计合同》约定内容配合<p class="placeholderT">${c10}</p>次以上现场施工服务。
-</section>
-<h4>四、结算办法</h4>
-<section class='indent'>
-    1. 甲方在对应《设计合同》收到客户支付相应设计费后分三次与乙方结算设计费款项，分别为：
-    <ul class="list">
-             <#list code01 as c>
-                 <li>${c.costName}  ${c.costValue}%；</li>
-             </#list>
-    </ul>
-</section>
-<section class='indent'>
-    2. 乙方应为客户开具《设计合同》等额发票，依法纳税。客户支付产生的手续费由乙方承担。
-</section>
-<section class='indent'>
-    3. 甲方向乙方支付客户采购产品实交款总额<p class="placeholderT">${c11}%</p>的产品服务费，甲方分两次与乙方结算产品服务费款项。
-    <ul class="list">
-        <ul class="list">
-             <#list code05 as c>
-                 <li>${c.costName}  ${c.costValue}%；</li>
-             </#list>
-        </ul>
-    </ul>
-</section>
-<section class='indent'>
-    4. 甲方向乙方支付客户施工竣工结算额（不含管理费及税金）<p class="placeholderT">${c12}%</p>的施工管理费，甲方分两次与乙方结算施工管理费款项。
-</section>
-<section class='indent'>
-    4.1在客户《施工合同》首期款付款到账后的次月内向乙方支付施工合同折税后的合同额的<p class="placeholderT">${c12}%</p>
-</section>
-<section class='indent'>
-    5. 4.2在施工项目完成后且客户结清尾款后的次月内，甲方根据客户满意度评分标准向乙方支付至多施工竣工结算额（不含管理费及税金）的<p class="placeholderT">${c12}%</p>
-    作为施工管理费。如因结算产生竣工合同金额变更，甲方按最终竣工结算额为基数，调整向乙方的支付金额。竣工结算的施工管理服务费具体支付规则如下：
-    <ul class="list">
-             <#list code10 as c>
-                 <li>${c.costName}  ${c.costValue}%；</li>
-             </#list>
-    </ul>
-</section>
-<section class='indent'>
-    6. 甲方在支付乙方产品服务费、施工管理费同时乙方应根据法律为甲方开具税率为6%的增值税专用发票，如无法提供定额税点发票则甲方有权扣除差额部分税点作为对甲方税点损失的补偿。
-</section>
-<section class='indent'>
-    7. 保证金金额 <p class="placeholderT">${c15}</p>元
-    <ul class="list">
-             <#list code13 as c>
-                 <li>${c.costName}  ${c.costValue}
-                 <#if c.cType == 0>
+<section class="indent">
+    4.施工服务费
+    <div class="indent">
+        4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput"></div>%作为施工服务费，甲方分两次与乙方结算施工服务费。
+    </div>
+    <#list code10 as c>
+                <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+                <#if c.cType == 1 >
+                            元
+                <#else>
                     %
-                 </#if>
-                    <#if c.cType == 1>
-                        元
-                    </#if>
-                     ;
-                 </li>
-             </#list>
-    </ul>
+                </#if>
+                 ${(c.costName?split("@")[1]) }。</div>
+    </#list>
+ <#--
+    <div class="indent">
+        4.1.1施工订单开工后，甲方向乙方支付施工服务费总额<div class="textput smalltextput"></div>%的首款。
+    </div>
+    <div class="indent">
+        4.1.2施工竣工验收结束后，甲方向乙方支付施工服务费总额<div class="textput smalltextput"></div>%的尾款。
+    </div>-->
+    <div class="indent">
+        4.1.3施工过程中合同解约，因设计师设计原因造成解约的，设计师的全部施工服务费不予支付，与设计方无关的解约，施工服务费按实际发生费用支付。
+    </div>
 </section>
-<section class='indent'>
-    8. 上述所有付款，甲乙双方于每月20至25日之间结算上月度款项。
+<section class="indent">
+    5.甲方在支付乙方设计服务费、材料推荐服务费、施工服务费同时乙方应根据法律为甲方开具税率为 6% 的增值税专用发票，如无法提供定额税点发票则甲方有权扣除差额部分税点作为对甲方税点损失的补偿。个人设计师依据《中华人民共和国个人所得税法(2018年修正本)》由甲方代扣代缴个人所得税的，剩余部分按协议约定返还。
 </section>
-<h4>五、违约责任</h4>
-<section class='indent'>
-    1. 乙方不得私下向甲方客户散布或推荐其他产品渠道来源。乙方不应有私自收取供应商回扣的行为，一经发现则视同乙方违约，甲方将终止合同，并追偿由此给客户及甲方带来的损失。
+<section class="indent">
+    6.上述所有付款，甲乙双方于每月20至25日之间结算上月度款项。
 </section>
-<section class='indent'>
-    2. 乙方不应侵犯他人的知识产权，抄袭、剽窃他人知识产权成果，如出现任何法律纠纷，并由此所引发的一切问题由乙方自行承担。
+<h4>六、违约责任</h4>
+<section class="indent">
+    1.乙方不得私下向甲方客户散布或推荐其他产品渠道来源。乙方不应有私自收取供应商回扣的行为，一经发现则视同乙方违约，甲方将终止合同，并追偿由此给客户及甲方带来的损失。
 </section>
-<section class='indent'>
-    3.
-    对于客户投诉，甲方先行接受处理，乙方应服从甲方的处理意见，对于拒不配合解决的，甲方有权扣押乙方款项或使用乙方已付“履约保证金”解决客诉。情节严重者，可视同乙方违约，甲方有权解除合同终止合作，对于造成甲方损失的并追究相应法律责任。
+<section class="indent">
+    2.乙方不应侵犯他人的知识产权，抄袭、剽窃他人知识产权成果，如出现任何法律纠纷，并由此所引发的一切问题由乙方自行承担。
 </section>
-<section class='indent'>
-    4. 乙方未履行乙方义务的视同乙方违约，甲方将终止合同，并追偿由此给客户及甲方带来的损失。
+<section class="indent">
+    3.乙方若未按本合同第三条第3款规定达到本合同期内总产值，则甲方有权酌情依据实际情况提升平台服务管理费。
 </section>
-<h4>六、其他</h4>
-<section class='indent'>
-    1. 甲乙双方均有保密义务，对双方合作协议、合作过程中涉及到的信息不得向第三方泄露。合同终止或提前解除不影响保密约束义务的持续有效。
+<section class="indent">
+    4.乙方若未按本合同第三条第7款规定达到所约定要求，则甲方有权解除合同终止合作，并对乙方所造成甲方的损失追究相应法律责任。
 </section>
-<section class='indent'>
-    2. 本协议适用中华人民共和国法律。双方就合作中出现的问题如不能达成一致意见，可提交甲方住所地人民法院解决。
+<section class="indent">
+    5.对于客户投诉，甲方先行接受处理，乙方应服从甲方的处理意见，对于拒不配合解决的，甲方有权扣押乙方款项或使用乙方已付“入驻保证金”解决客诉。情节严重者，可视同乙方违约，甲方有权解除合同终止合作。严禁乙方与甲方客户进行场外交易，否则视同乙方违约，甲方有权终止合同并追究乙方的相应法律责任。
 </section>
-<section class='indent'>
-    3. 对本协议的所有修正、更改或补充均应以书面形式作为本协议的附件或补充协议。本协议的附件及补充协议作为本协议不可分割的一部分，与本协议具有同等法律效力。
+<section class="indent">
+    6.乙方未履行乙方义务的视同乙方违约，甲方将终止合同，并追偿由此给客户及甲方带来的损失。
 </section>
-<section class='indent'>
-    4. 本协议一式三份，甲方两份，乙方一份。本协议生效日期 <p class="placeholderT">${signedTime?string('yyyy')}</p>年<p
-        class="placeholderT">${signedTime?string('MM')}</p>月
-    <p class="placeholderT">${signedTime?string('dd')}</p>日。
+<section class="indent">
+    7.甲方因故意或重大过失导致商户利益受损时，甲方对乙方的违约或赔偿责任以乙方直接的实际损失为计算依据。
 </section>
-<div>
-    <span>甲方（盖章）/法人代表签字：</span>
-    <span style="margin-left: 20%">乙方（盖章）/签字：</span>
+<h4>七、免责条款</h4>
+<section class="indent">
+    1.鉴于平台部分服务依托于网络的特殊性，甲方在有正当理由的情况下可以随时调整或终止部分服务，并对乙方因此产生的损失甲方不承担责任。甲方会尽可能事前通知乙方，以便乙方做好相关业务调整等，以保护乙方的合法权益。正当理由包括如下事由：
+    <div class="indent">1.1常规维护，即甲方为向用户提供更加完善的服务所进行的定期或不定期地对服务平台或相关设备进行检修、维护、升级等措施； </div>
+    <div class="indent">1.2不可抗力，包括但不限于自然灾害、政府行为、政策颁布调整、法律法规颁布调整、罢工、动乱；</div>
+    <div class="indent">1.3基础运营商过错，包括但不限于电信部门技术调整、电信/电力线路被他人破坏、电信/电力部门对电信网络/电力资源进行安装、改造、维护；</div>
+    <div class="indent">1.4网络安全事故，如计算机病毒、木马或其他恶意程序、黑客攻击的破坏；</div>
+    <div class="indent">1.5其他非甲方过错、甲方无法控制或合理预见的情形。</div>
+</section>
+<section class="indent">
+    2.其他因乙方自身的原因导致的任何损失或责任，由乙方自行负责，甲方不承担责任。
+</section>
+<section class="indent">
+    3.甲方对于与本合同有关或由本合同引起的任何间接的、惩罚性的、特殊的、派生的损失（包括业务损失、收益损失、利润损失、使用数据或其他经济利益的损失），均不承担任何赔偿责任。
+</section>
+<h4>七、免责条款</h4>
+<section class="indent">
+    1.甲乙双方均有保密义务，对双方合作协议、合作过程中涉及到的信息不得向第三方泄露。合同终止或提前解除不影响保密约束义务的持续有效。
+</section>
+<section class="indent">
+    2.本协议适用中华人民共和国法律。双方就合作中出现的问题如不能达成一致意见，可提交甲方住所地人民法院解决。
+</section>
+<section class="indent">
+    3.对本协议的所有修正、更改或补充均应以书面形式作为本协议的附件或补充协议。本协议的附件及补充协议作为本协议不可分割的一部分，与本协议具有同等法律效力。
+</section>
+<section class="indent">
+    4.本协议一式三份，甲方两份，乙方一份。
+</section>
+<section class="indent">
+    本协议生效日期<div class="textput smalltextput">${signedTime?string('yyyy')}</div>年
+    <div class="textput smalltextput">${signedTime?string('MM')}</div>月
+    <div class="textput smalltextput">${signedTime?string('dd')}</div>日。
+</section>
+
+<div class="footer">
+    <h4 style="display:inline-block">甲方（盖章）：</h4>
+    <h4 style="margin-left: 28%;display:inline-block">乙方（盖章）：</h4>
 </div>
-<div>
-    <span><p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日</span>
-    <span style="margin-left: 20%"><p class="placeholderK"></p>年<p class="placeholderK"></p>月<p
-            class="placeholderK"></p>日</span>
+<div class="footer">
+    <h4 style="display:inline-block">签约代理人（签字）：</h4>
+    <h4 style="margin-left: 25.5%;display:inline-block">签约代理人（签字）：</h4>
 </div>
-<h4 class="text-algin">居然设计家设计行业公约</h4>
-<section class='indent text-algin'>
-    关注民生 以提高公众生活质量为出发点，打造高品质的生活环境；
-</section>
-<section class='indent text-algin'>
-    助推行业 以推动行业发展为己任，提升公众对设计的认识和理解；
-</section>
-<section class='indent text-algin'>
-    保护生态 以绿色环保为原则，杜绝设计施工中私搭乱建和环境污染；
-</section>
-<section class='indent text-algin'>
-    珍视操守 以设计师职业道德为基准，避免恶性竞争和不公平交易；
-</section>
-<section class='indent text-algin'>
-    恪守诚信 以诚信服务为宗旨，严格履行合同，保障客户正当权益；
-</section>
-<section class='indent text-algin'>
-    合理收益 以实现合理收益为方向，杜绝设计施工中的不正当收益；
-</section>
-<section class='indent text-algin'>
-    提升自我 以自身素质提高为目标，注重学习积累，不断提高自我。
-</section>
+<div class="footer">
+    <h4 style="display:inline-block">联系电话：</h4>
+    <h4 style="margin-left: 30%;display:inline-block">联系电话：</h4>
+</div>
+<div class="footer">
+    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
+    <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+</div>
+<p>附件1:</p>
+<div class="text-algin">居然设计家设计行业公约</div>
+<div class="text-algin">
+    <p>关注民生 以提高公众生活质量为出发点，打造高品质的生活环境；</p>
+    <p>助推行业 以推动行业发展为己任，提升公众对设计的认识和理解；</p>
+    <p>保护生态 以绿色环保为原则，杜绝设计施工中私搭乱建和环境污染；</p>
+    <p>珍视操守 以设计师职业道德为基准，避免恶性竞争和不公平交易；</p>
+    <p>恪守诚信 以诚信服务为宗旨，严格履行合同，保障客户正当权益</p>
+    <p>合理收益 以实现合理收益为方向，杜绝设计施工中的不正当收益；</p>
+    <p>提升自我 以自身素质提高为目标，注重学习积累，不断提高自我。</p>
+</div>
 </body>
 
 </html>

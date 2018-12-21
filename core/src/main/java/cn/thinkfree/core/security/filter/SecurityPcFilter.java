@@ -42,16 +42,6 @@ import java.time.Instant;
 		String url = httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), "");
 
 		logger.info("拦截请求：" + url);
-		//	 判断登陆状态：如果未登陆则要求登陆
-//		if(!SessionUserDetailsUtil.isLogined()) {
-//			if (SecurityRequestUtil.isAjax(httpRequest)) {
-////				httpResponse.getOutputStream().print("<script >alert('认证失效,重新登录!');window.location.href='/'</script>");
-//			} else {
-//				httpResponse.sendRedirect(httpRequest.getContextPath() + SecurityConstants.LOGIN_PAGE);
-//			}
-//			logger.info("未登陆用户，From IP:" + SecurityRequestUtil.getRequestIp(httpRequest) + "访问 ：URI" + url);
-//			return;
-//    	}
 
 		//	 过资源(URL)白名单：如果为公共页面，直接执行
 //		if(SecurityMetadataSourceTrustListHolder.isTrustSecurityMetadataSource(url)){
@@ -78,17 +68,11 @@ import java.time.Instant;
 			HttpServletResponse httpResponse = fi.getResponse();
 			String url = httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), "");
 			logger.info("用户 " + SessionUserDetailsUtil.getLoginUserName() + "，From IP:" + SecurityRequestUtil.getRequestIp(httpRequest) + "。尝试访问未授权(或者) URI:" + url);
-//			if (SecurityRequestUtil.isAjax(httpRequest)) {
-				MyRespBundle<String> myRespBundle = buildErrorResp();
-				httpResponse.setHeader("Content-Type","application/json; charset=utf-8");
-				httpResponse.setStatus(HttpServletResponse.SC_OK);
-				httpResponse.getWriter().write(new Gson().toJson(myRespBundle));
-//			} else {
-//				httpResponse.setStatus(HttpServletResponse.SC_NOT_ACCEPTABLE);
-//				RequestDispatcher dispatcher = httpRequest.getRequestDispatcher(SecurityConstants.NOT_ACCEPTABLE);
-//				dispatcher.forward(httpRequest, httpResponse);
-//			}
 
+			MyRespBundle<String> myRespBundle = buildErrorResp();
+			httpResponse.setHeader("Content-Type","application/json; charset=utf-8");
+			httpResponse.setStatus(HttpServletResponse.SC_OK);
+			httpResponse.getWriter().write(new Gson().toJson(myRespBundle));
 			return;
 		}
 		

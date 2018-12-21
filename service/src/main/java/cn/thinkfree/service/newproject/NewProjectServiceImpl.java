@@ -709,25 +709,45 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             OrderPlayVo constructionOrderPlayVo = constructionOrderPlays.get(0);
             //查询合同费用
-            Integer totalMoney = 0;
+
+            String totalMoney = "";
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-            contractCriteria.andAuditTypeEqualTo((short) 2);
+            contractCriteria.andAuditTypeEqualTo("1");
             List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
             if (orderContracts.size() > 0) {
                 ContractTermsExample termsExample = new ContractTermsExample();
                 ContractTermsExample.Criteria termsCriteria = termsExample.createCriteria();
-                termsCriteria.andContractNumberNotEqualTo(orderContracts.get(0).getContractNumber());
+                termsCriteria.andContractNumberEqualTo(orderContracts.get(0).getContractNumber());
                 termsCriteria.andContractDictCodeEqualTo("c17");
                 List<ContractTerms> contractTerms = contractTermsMapper.selectByExample(termsExample);
                 if (contractTerms.size() > 0) {
-                    totalMoney = Integer.valueOf(contractTerms.get(0).getContractValue());
+                    totalMoney = contractTerms.get(0).getContractValue();
                 }
             }
-            constructionOrderPlayVo.setCost(totalMoney);
+
+
+
+//            String totalMoney = "";
+//            OrderContractExample contractExample = new OrderContractExample();
+//            OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
+//            contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
+//            contractCriteria.andAuditTypeEqualTo( "1");
+//            List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
+//            if (orderContracts.size() > 0) {
+//                ContractTermsExample termsExample = new ContractTermsExample();
+//                ContractTermsExample.Criteria termsCriteria = termsExample.createCriteria();
+//                termsCriteria.andContractNumberNotEqualTo(orderContracts.get(0).getContractNumber());
+//                termsCriteria.andContractDictCodeEqualTo("c17");
+//                List<ContractTerms> contractTerms = contractTermsMapper.selectByExample(termsExample);
+//                if (contractTerms.size() > 0) {
+//                    totalMoney = contractTerms.get(0).getContractValue();
+//                }
+//            }
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
+                constructionOrderPlayVo.setCost(totalMoney);
             }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(project.getPlanStartTime(), project.getPlanEndTime()));
             //存放人员信息
@@ -780,26 +800,26 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<OrderPlayVo> orderPlayVos = constructionOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         if (orderPlayVos.size() != 0) {
             OrderPlayVo orderPlayVo = orderPlayVos.get(0);
-
-            Integer totalMoney = 0;
+            String totalMoney = "";
             ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-            contractCriteria.andAuditTypeEqualTo((short) 2);
+            contractCriteria.andAuditTypeEqualTo("1");
             List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
             if (orderContracts.size() > 0) {
+                projectTitleVo.setContractStartTime(orderContracts.get(0).getStartTime());
+                projectTitleVo.setContractEndTime(orderContracts.get(0).getEndTime());
                 ContractTermsExample termsExample = new ContractTermsExample();
                 ContractTermsExample.Criteria termsCriteria = termsExample.createCriteria();
-                termsCriteria.andContractNumberNotEqualTo(orderContracts.get(0).getContractNumber());
+                termsCriteria.andContractNumberEqualTo(orderContracts.get(0).getContractNumber());
                 termsCriteria.andContractDictCodeEqualTo("c17");
                 List<ContractTerms> contractTerms = contractTermsMapper.selectByExample(termsExample);
                 if (contractTerms.size() > 0) {
-                    totalMoney = Integer.valueOf(contractTerms.get(0).getContractValue());
+                    totalMoney = contractTerms.get(0).getContractValue();
                 }
             }
             if (orderPlayVo != null) {
-                projectTitleVo.setCost(orderPlayVo.getCost());
                 projectTitleVo.setDelay(orderPlayVo.getDelay());
                 projectTitleVo.setSchedule(DateUtil.differentHoursByMillisecond(project.getPlanStartTime(), project.getPlanEndTime()));
                 projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
