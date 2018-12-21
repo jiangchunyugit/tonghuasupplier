@@ -1332,6 +1332,9 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int pageIndex, int pageSize) {
+        if(pageIndex <= 0){
+            pageIndex = 1;
+        }
         if (designerId == null || designerId.trim().isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
