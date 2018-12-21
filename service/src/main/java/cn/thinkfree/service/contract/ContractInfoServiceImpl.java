@@ -941,9 +941,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		OrderContractExample example = new OrderContractExample();
 		example.createCriteria().andOrderNumberEqualTo(orderNumber);
 		orderContractMapper.deleteByExample(example);
-
 		orderContractMapper.insertSelective( record );
-		//newSchedulingService.createScheduling(orderNumber);
 		return(contractNumber);
 	}
 
