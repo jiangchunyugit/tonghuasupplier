@@ -26,6 +26,7 @@ import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.order.OrderService;
 import cn.thinkfree.service.platform.order.SendOrderNoticeService;
 import cn.thinkfree.service.platform.vo.*;
+import cn.thinkfree.service.project.ProjectStageLogService;
 import cn.thinkfree.service.utils.*;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -110,6 +111,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private ProjectDataMapper projectDataMapper;
     @Autowired
     private FundsSettleAccountsNodeLogMapper fundsSettleAccountsNodeLogMapper;
+    @Autowired
+    private ProjectStageLogService projectStageLogService;
 
     /**
      * 查询设计订单，主表为design_order,附表为project
@@ -601,6 +604,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         constructionOrderMapper.insertSelective(constructionOrder);
         updateProjectState(projectNo, constructionOrder.getOrderStage());
+        projectStageLogService.create(projectNo, constructionOrder.getOrderStage());
     }
 
     /**

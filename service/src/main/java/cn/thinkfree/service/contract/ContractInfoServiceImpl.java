@@ -1165,9 +1165,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	{
 		try {
 			//合同开始时间
-			Date startDt = paramMap.get("")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c19")),"yyyy-MM-dd HH:mm:ss");
+			Date startDt = paramMap.get("c19")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c19")),"yyyy-MM-dd HH:mm:ss");
 			//合同结束时间
-			Date endDt = paramMap.get("")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c20")),"yyyy-MM-dd HH:mm:ss");
+			Date endDt = paramMap.get("c20")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c20")),"yyyy-MM-dd HH:mm:ss");
 			/* 插入合同主表 */
 			String contractNumber = createOrderContract(companyId, orderNumber,startDt,endDt, "03");
 			/* 插入合同iterm 详情 */

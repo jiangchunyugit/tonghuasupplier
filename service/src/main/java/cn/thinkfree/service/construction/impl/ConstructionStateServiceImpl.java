@@ -14,6 +14,7 @@ import cn.thinkfree.service.construction.*;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.project.ProjectService;
+import cn.thinkfree.service.project.ProjectStageLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +60,8 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     private NewSchedulingService schedulingService;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private ProjectStageLogService projectStageLogService;
 
 
     /**
@@ -435,6 +438,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         constructionOrder.setRemark(cancelReason);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
         if (isUpdate == 1) {
+            projectStageLogService.create(list.get(0).getProjectNo(), constructionOrder.getOrderStage());
             return RespData.success();
         } else {
             return RespData.error(ResultMessage.ERROR.code, "取消订单失败-请稍后重试");
