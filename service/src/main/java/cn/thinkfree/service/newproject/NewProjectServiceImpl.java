@@ -713,7 +713,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-            contractCriteria.andAuditTypeEqualTo((short) 2);
+            contractCriteria.andAuditTypeEqualTo( "2");
             List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
             if (orderContracts.size() > 0) {
                 ContractTermsExample termsExample = new ContractTermsExample();
@@ -786,7 +786,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-            contractCriteria.andAuditTypeEqualTo((short) 2);
+            contractCriteria.andAuditTypeEqualTo("2");
             List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
             if (orderContracts.size() > 0) {
                 ContractTermsExample termsExample = new ContractTermsExample();

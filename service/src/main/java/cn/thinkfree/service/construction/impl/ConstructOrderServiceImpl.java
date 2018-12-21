@@ -9,8 +9,6 @@ import cn.thinkfree.database.mapper.ConstructionOrderMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
 import cn.thinkfree.database.model.ConstructionOrderExample;
 import cn.thinkfree.database.vo.ConstructCountVO;
-import cn.thinkfree.database.vo.construct.ConstructOrderListVO;
-import cn.thinkfree.database.vo.construct.ConstructOrderVO;
 import cn.thinkfree.service.approvalflow.AfConfigService;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructOrderService;
