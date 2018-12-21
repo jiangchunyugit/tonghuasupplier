@@ -229,6 +229,20 @@ public class OpenApiController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,resInfo);
     }
 
+    /**
+     * 业主同意或者不同意合同
+     *
+     */
+    @PostMapping("/auditOrderContractToOwner")
+    @ApiOperation(value = "for A---通过订单编号查询初始合同信息--吕启栋",notes = "通过用户id获取运营平台组织架构")
+    @MyRespBody
+    public MyRespBundle<String> auditOrderContractToOwner(@ApiParam("orderNo")@RequestParam String orderNo,
+                                                          @ApiParam("cause")@RequestParam String cause,@ApiParam("status")@RequestParam String status){
+       // DesignContractToVo resInfo = designDispatchService.getDesigneContractInfo(orderNo);
+        boolean flag = contractService.insertOrderContractToOwner( orderNo, cause, status);
+        return sendJsonData(ResultMessage.SUCCESS,flag);
+    }
+
 
 
 }
