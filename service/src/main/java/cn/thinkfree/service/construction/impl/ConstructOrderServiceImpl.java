@@ -24,6 +24,8 @@ import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
+import cn.thinkfree.service.platform.employee.EmployeeService;
+import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.project.AddressService;
@@ -86,6 +88,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     private EmployeeMsgMapper employeeMsgMapper;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private EmployeeService employeeService;
     /**
      * 订单列表
      *
@@ -267,7 +271,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         for (OrderUser orderUser : orderUsers) {
             switch (orderUser.getRoleCode()) {
                 case "CP":
-                    AfUserDTO userInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), orderUser.getUserId(), orderUser.getRoleCode());
+                    AfUserDTO userInfo = getUserInfo(orderUser.getUserId(), orderUser.getRoleCode());
                     if (userInfo == null) {
                         LOGGER.error("未查询到项目经理信息，userId:{}", orderUser.getUserId());
                         throw new RuntimeException();
@@ -275,7 +279,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
                     serviceStaffsVO.setProjectManager(userInfo.getUsername());
                     break;
                 case "CM":
-                    userInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), orderUser.getUserId(), orderUser.getRoleCode());
+                    userInfo = getUserInfo(orderUser.getUserId(), orderUser.getRoleCode());
                     if (userInfo == null) {
                         LOGGER.error("未查询到工长信息，userId:{}", orderUser.getUserId());
                         throw new RuntimeException();
@@ -283,7 +287,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
                     serviceStaffsVO.setForeman(userInfo.getUsername());
                     break;
                 case "CS":
-                    userInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), orderUser.getUserId(), orderUser.getRoleCode());
+                    userInfo = getUserInfo(orderUser.getUserId(), orderUser.getRoleCode());
                     if (userInfo == null) {
                         LOGGER.error("未查询到管家信息，userId:{}", orderUser.getUserId());
                         throw new RuntimeException();
@@ -291,7 +295,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
                     serviceStaffsVO.setSteward(userInfo.getUsername());
                     break;
                 case "CD":
-                    userInfo = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), orderUser.getUserId(), orderUser.getRoleCode());
+                    userInfo = getUserInfo(orderUser.getUserId(), orderUser.getRoleCode());
                     if (userInfo == null) {
                         LOGGER.error("未查询到设计师信息，userId:{}", orderUser.getUserId());
                         throw new RuntimeException();
@@ -306,10 +310,29 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         return serviceStaffsVO;
     }
 
+    private AfUserDTO getUserInfo(String userId, String roleId) {
+        AfUserDTO userDTO;
+        if (Role.CC.id.equals(roleId)) {
+            userDTO = AfUtils.getUserInfo(httpLinks.getUserCenterGetUserMsg(), userId, roleId);
+        } else {
+            userDTO = new AfUserDTO();
+            EmployeeMsgVo employeeMsg = employeeService.employeeMsgById(userId);
+            if (employeeMsg == null) {
+                LOGGER.error("未查询到用户信息：userId:{}", userId);
+                throw new RuntimeException();
+            }
+            userDTO.setHeadPortrait(employeeMsg.getIconUrl());
+            userDTO.setUsername(employeeMsg.getRealName());
+            userDTO.setUserId(userId);
+            userDTO.setPhone(employeeMsg.getPhone());
+        }
+        return userDTO;
+    }
+
     private ConstructDetailVO getConstructDetail(ProjectScheduling projectScheduling, String schemeNo) {
         ConstructDetailVO constructDetailVO = new ConstructDetailVO();
-        constructDetailVO.setStartDate(projectScheduling.getStartTime());
-        constructDetailVO.setCompleteDate(projectScheduling.getEndTime());
+        constructDetailVO.setStartDate(projectScheduling.getStartTime().getTime());
+        constructDetailVO.setCompleteDate(projectScheduling.getEndTime().getTime());
         constructDetailVO.setDelayDays(projectScheduling.getDelay());
         constructDetailVO.setLimitDays(DateUtil.differentDaysByMillisecond(projectScheduling.getStartTime(), projectScheduling.getEndTime()));
 

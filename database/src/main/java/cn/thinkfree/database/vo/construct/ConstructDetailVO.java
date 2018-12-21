@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
-
 /**
  * 施工信息
  *
@@ -17,9 +15,9 @@ import java.util.Date;
 @Data
 public class ConstructDetailVO {
     @ApiModelProperty("开工日期")
-    private Date startDate;
+    private Long startDate;
     @ApiModelProperty("竣工日期")
-    private Date completeDate;
+    private Long completeDate;
     @ApiModelProperty("工期")
     private Integer limitDays;
     @ApiModelProperty("施工进度")
