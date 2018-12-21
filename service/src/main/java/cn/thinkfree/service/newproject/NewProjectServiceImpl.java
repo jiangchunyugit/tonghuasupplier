@@ -709,25 +709,45 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             OrderPlayVo constructionOrderPlayVo = constructionOrderPlays.get(0);
             //查询合同费用
+
             String totalMoney = "";
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
-            contractCriteria.andAuditTypeEqualTo( "1");
+            contractCriteria.andAuditTypeEqualTo("1");
             List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
             if (orderContracts.size() > 0) {
                 ContractTermsExample termsExample = new ContractTermsExample();
                 ContractTermsExample.Criteria termsCriteria = termsExample.createCriteria();
-                termsCriteria.andContractNumberNotEqualTo(orderContracts.get(0).getContractNumber());
+                termsCriteria.andContractNumberEqualTo(orderContracts.get(0).getContractNumber());
                 termsCriteria.andContractDictCodeEqualTo("c17");
                 List<ContractTerms> contractTerms = contractTermsMapper.selectByExample(termsExample);
                 if (contractTerms.size() > 0) {
                     totalMoney = contractTerms.get(0).getContractValue();
                 }
             }
-            constructionOrderPlayVo.setCost(totalMoney);
+
+
+
+//            String totalMoney = "";
+//            OrderContractExample contractExample = new OrderContractExample();
+//            OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
+//            contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
+//            contractCriteria.andAuditTypeEqualTo( "1");
+//            List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
+//            if (orderContracts.size() > 0) {
+//                ContractTermsExample termsExample = new ContractTermsExample();
+//                ContractTermsExample.Criteria termsCriteria = termsExample.createCriteria();
+//                termsCriteria.andContractNumberNotEqualTo(orderContracts.get(0).getContractNumber());
+//                termsCriteria.andContractDictCodeEqualTo("c17");
+//                List<ContractTerms> contractTerms = contractTermsMapper.selectByExample(termsExample);
+//                if (contractTerms.size() > 0) {
+//                    totalMoney = contractTerms.get(0).getContractValue();
+//                }
+//            }
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
+                constructionOrderPlayVo.setCost(totalMoney);
             }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(project.getPlanStartTime(), project.getPlanEndTime()));
             //存放人员信息
