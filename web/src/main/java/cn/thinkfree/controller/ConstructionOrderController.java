@@ -6,16 +6,15 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.vo.ConstructCountVO;
+import cn.thinkfree.database.vo.construct.ConstructOrderDetailVO;
 import cn.thinkfree.service.construction.*;
 import cn.thinkfree.service.construction.vo.*;
+import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -60,6 +59,35 @@ public class ConstructionOrderController extends AbsBaseController {
             @RequestParam(required = false, defaultValue = "1") int orderType){
         return sendJsonData(ResultMessage.SUCCESS, constructOrderService.getOrderList(pageNum,pageSize,cityName, orderType));
     }
+
+
+    @ApiOperation("获取施工订单列表")
+    @ResponseBody
+    @RequestMapping(value = "consList",method = {RequestMethod.POST,RequestMethod.GET})
+    public MyRespBundle<PageVo<List<ConsListVo>>> getConsList(
+            @ApiParam(name = "projectNo", value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "companyName", value = "公司名称") @RequestParam(name = "companyName", required = false) String companyName,
+            @ApiParam(name = "provinceCode", value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
+            @ApiParam(name = "cityCode", value = "城市名称") @RequestParam(name = "cityCode", required = false) String cityCode,
+            @ApiParam(name = "areaCode", value = "区域名称") @RequestParam(name = "areaCode", required = false) String areaCode,
+            @ApiParam(name = "createTimeS", value = "创建时间开始，yyyy-MM-dd") @RequestParam(name = "createTimeS", required = false) String createTimeS,
+            @ApiParam(name = "createTimeE", value = "创建时间结束，yyyy-MM-dd") @RequestParam(name = "createTimeE", required = false) String createTimeE,
+            @ApiParam(name = "againTimeS", value = "签约时间开始，yyyy-MM-dd") @RequestParam(name = "againTimeS", required = false) String againTimeS,
+            @ApiParam(name = "againTimeE", value = "签约时间结束，yyyy-MM-dd") @RequestParam(name = "againTimeE", required = false) String againTimeE,
+            @ApiParam(name = "address", value = "项目地址") @RequestParam(name = "address", required = false) String address,
+            @ApiParam(name = "ownerName", value = "业主姓名") @RequestParam(name = "ownerName", required = false) String ownerName,
+            @ApiParam(name = "ownerPhone", value = "业主手机号") @RequestParam(name = "ownerPhone", required = false) String ownerPhone,
+            @ApiParam(name = "pageNum", value = "第几页") @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum,
+            @ApiParam(name = "pageSize", value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize){
+        try{
+            return sendJsonData(ResultMessage.SUCCESS,constructOrderService.getConsList(projectNo, companyName, provinceCode, cityCode, areaCode, createTimeS,
+                    createTimeE, againTimeS, againTimeE, address, ownerName, ownerPhone, pageNum, pageSize));
+        }catch (Exception e){
+            e.printStackTrace();
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
 
     @ApiOperation("运营平台接口（获取施工订单统计/城市）---->孙宇专用")
     @MyRespBody
@@ -192,5 +220,15 @@ public class ConstructionOrderController extends AbsBaseController {
                                                 @RequestParam(name = "pageNum") Integer pageNum,
                                                 @RequestParam(name = "pageSize") Integer pageSize){
         return sendJsonData(ResultMessage.SUCCESS, constructOrderService.count(userId, approvalType, pageNum, pageSize));
+    }
+
+    @RequestMapping(value = "/detail", method = {RequestMethod.POST, RequestMethod.GET})
+    @MyRespBody
+    @ApiOperation(value="施工订单详情")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "projectNo", value = "项目编号编号", required = true)
+    })
+    public MyRespBundle<ConstructOrderDetailVO> detail(@RequestParam(name = "projectNo") String projectNo){
+        return sendJsonData(ResultMessage.SUCCESS, constructOrderService.detail(projectNo));
     }
 }

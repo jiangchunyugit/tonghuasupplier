@@ -95,12 +95,9 @@ public class RemoteSyncListener extends AbsLogPrinter {
 
     }
 
-
-
-
-    @EventListener
-    public void system(ApplicationEvent applicationEvent){
-        System.out.println(applicationEvent);
-    }
+//    @EventListener
+//    public void system(ApplicationEvent applicationEvent){
+//        System.out.println(applicationEvent);
+//    }
 
 }

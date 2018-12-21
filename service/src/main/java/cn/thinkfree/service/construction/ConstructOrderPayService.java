@@ -30,4 +30,12 @@ public interface ConstructOrderPayService {
      * @param constructionOrderPay 施工订单支付信息
      */
     void insert(ConstructionOrderPay constructionOrderPay);
+
+    /**
+     * 是否已经支付
+     * @param orderNo 项目编号
+     * @param scheduleSort 排期编号
+     * @return 支付情况
+     */
+    int isPay(String orderNo, Integer scheduleSort);
 }

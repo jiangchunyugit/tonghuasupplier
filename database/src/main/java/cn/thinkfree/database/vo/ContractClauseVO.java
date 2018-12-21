@@ -1,11 +1,10 @@
 package cn.thinkfree.database.vo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.thinkfree.database.Param.SettlementRatioParam;
+import cn.thinkfree.database.param.SettlementRatioParam;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 

@@ -1,5 +1,6 @@
 package cn.thinkfree.service.approvalflow;
 
+import cn.thinkfree.database.vo.AfCheckResultVO;
 import cn.thinkfree.database.vo.AfInstanceDetailVO;
 import cn.thinkfree.database.vo.AfInstanceListVO;
 
@@ -105,4 +106,18 @@ public interface AfInstanceService {
      * @return 是否验收通过
      */
     boolean getCheckSuccess(String projectNo, Integer scheduleSort);
+
+    /**
+     * 获取延期天数
+     * @param projectNo 项目编号
+     * @return 延期天数
+     */
+    int getDelayDaysByProjectNo(String projectNo);
+
+    /**
+     * 验收结果列表
+     * @param projectNo 项目编号
+     * @return 验收结果列表
+     */
+    List<AfCheckResultVO> checkList(String projectNo);
 }

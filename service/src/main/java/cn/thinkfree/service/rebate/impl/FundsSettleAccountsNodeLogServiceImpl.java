@@ -1,10 +1,13 @@
 package cn.thinkfree.service.rebate.impl;
 
+import cn.thinkfree.database.mapper.DesignerOrderMapper;
 import cn.thinkfree.database.mapper.FundsSettleAccountsNodeLogMapper;
 import cn.thinkfree.database.model.ConstructionOrder;
+import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.FundsSettleAccountsNodeLog;
 import cn.thinkfree.database.model.SchemeScheduleRebateNode;
 import cn.thinkfree.service.construction.ConstructOrderService;
+import cn.thinkfree.service.designer.service.DesignerOrderService;
 import cn.thinkfree.service.rebate.FundsSettleAccountsNodeLogService;
 import cn.thinkfree.service.rebate.SchemeScheduleRebateNodeService;
 import cn.thinkfree.service.utils.DateUtil;
@@ -31,12 +34,15 @@ public class FundsSettleAccountsNodeLogServiceImpl implements FundsSettleAccount
     private SchemeScheduleRebateNodeService schemeScheduleRebateNodeService;
     @Autowired
     private ConstructOrderService constructOrderService;
+    @Autowired
+    private DesignerOrderService designerOrderService;
 
 
     @Override
     public void create(String projectNo, Integer scheduleSort) {
 
         ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        DesignerOrder designerOrder = designerOrderService.findByProjectNo(projectNo);
 
         SchemeScheduleRebateNode schemeScheduleRebateNode = schemeScheduleRebateNodeService.findBySchemeNoAndScheduleSort(constructionOrder.getSchemeNo(), scheduleSort);
         if (schemeScheduleRebateNode != null) {
@@ -48,6 +54,7 @@ public class FundsSettleAccountsNodeLogServiceImpl implements FundsSettleAccount
             fundsSettleAccountsNodeLog.setCompletionDate(date);
 
             fundsSettleAccountsNodeLog.setCompanyId(constructionOrder.getCompanyId());
+            fundsSettleAccountsNodeLog.setDesignerCompanyId(designerOrder.getCompanyId());
             fundsSettleAccountsNodeLog.setProjectNo(projectNo);
             fundsSettleAccountsNodeLog.setOrderNo(constructionOrder.getOrderNo());
 

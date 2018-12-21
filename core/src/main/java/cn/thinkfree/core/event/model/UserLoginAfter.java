@@ -1,9 +1,9 @@
 package cn.thinkfree.core.event.model;
 
 
-import cn.thinkfree.core.model.AbsMyEvent;
+import cn.thinkfree.core.event.AbsBaseEvent;
 
-public class UserLoginAfter extends AbsMyEvent {
+public class UserLoginAfter extends AbsBaseEvent {
 
     private String source;
 
