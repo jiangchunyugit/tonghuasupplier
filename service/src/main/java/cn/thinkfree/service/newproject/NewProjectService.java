@@ -131,7 +131,7 @@ public interface NewProjectService {
      * @param designerId
      * @return
      */
-    MyRespBundle<List<DesignOrderVo>> getDesignOrderData(String designerId);
+    PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int pageIndex, int pageSize);
 
     /**
      * C/B-项目列表--施工端

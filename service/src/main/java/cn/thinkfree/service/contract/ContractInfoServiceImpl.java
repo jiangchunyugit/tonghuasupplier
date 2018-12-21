@@ -134,6 +134,11 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
 	BusinessEntityService businessEntityService;
 
+	@Autowired
+	AuditContractOwnerMapper auditContractOwnerMapper;
+
+
+
 
 
 
@@ -1080,16 +1085,24 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			return resMap;
 		}
 		//修改
-       if(String.valueOf(paramMap.get("c24")).equals("0")){
-			OrderContractExample expo = new OrderContractExample();
-			expo.createCriteria().andOrderNumberEqualTo(orderNumber);
-			//插入订单合同是否录入
-			List<OrderContract> list = orderContractMapper.selectByExample(expo);
-			if(list.size() > 0){
-				resMap.put("code", "false");
-				resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
-				return resMap;
-			}
+		//查询审
+		AuditContractOwnerExample exampleTo = new AuditContractOwnerExample();
+		exampleTo.createCriteria().andOrderNumberEqualTo(orderNumber).andStatusEqualTo("1");
+		List<AuditContractOwner> owerList = auditContractOwnerMapper.selectByExample(exampleTo);
+		if(owerList!=null && owerList.size() >0 ){
+			resMap.put("code", "false");
+			resMap.put("msg", "该合同业主已经同意，不能修改");
+			return resMap;
+		}
+
+		OrderContractExample expo = new OrderContractExample();
+		expo.createCriteria().andOrderNumberEqualTo(orderNumber);
+		//插入订单合同是否录入
+		List<OrderContract> list = orderContractMapper.selectByExample(expo);
+		if(list.size() > 0){
+			resMap.put("code", "false");
+			resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
+			return resMap;
 		}
 		try {
 			String companyId = orderList.get(0).getCompanyId();
@@ -1165,9 +1178,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	{
 		try {
 			//合同开始时间
-			Date startDt = paramMap.get("")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c19")),"yyyy-MM-dd HH:mm:ss");
+			Date startDt = DateUtil.formateToDate(String.valueOf(paramMap.get("c19")),"yyyy-MM-dd HH:mm:ss");
 			//合同结束时间
-			Date endDt = paramMap.get("")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c20")),"yyyy-MM-dd HH:mm:ss");
+			Date endDt = DateUtil.formateToDate(String.valueOf(paramMap.get("c20")),"yyyy-MM-dd HH:mm:ss");
 			/* 插入合同主表 */
 			String contractNumber = createOrderContract(companyId, orderNumber,startDt,endDt, "03");
 			/* 插入合同iterm 详情 */
@@ -1517,5 +1530,19 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			vo.setContractStatus(orderVo.getAuditType());
 		}
 		return  vo ;
+	}
+
+	@Override
+	public boolean insertOrderContractToOwner(String orderNo, String cause, String status) {
+		AuditContractOwner record = new AuditContractOwner();
+		record.setOrderNumber(orderNo);
+		record.setStatus(status);
+		record.setCause(cause);
+		record.setCreateDt(new Date());
+		int  falg = auditContractOwnerMapper.insertSelective(record);
+		if(falg > 0){
+			return true;
+		}
+		return false;
 	}
 }

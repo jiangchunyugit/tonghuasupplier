@@ -496,14 +496,49 @@
         oo.project_no projectNo,
         oo.order_stage stage,
         oo.order_no designerOrderNo,
-        P .create_time projectCreateTime
+        P .create_time projectCreateTime,
+        P .province,
+        P .city,
+        P .region,
+        oo.company_id,
+        P .address_detail address,
+        ComMsg.company_name
     FROM
         order_user ou
     LEFT JOIN designer_order oo ON ou.project_no = oo.project_no
     LEFT JOIN project P ON oo.project_no = P .project_no
+    LEFT JOIN company_info ComMsg ON oo.company_id = ComMsg.company_id
     WHERE
         ou.role_code = 'CD'
     AND ou.user_id =#{designerId}
     AND oo.status =#{status}
+    <if test="projectNos != null">
+      AND p.project_no in
+      <foreach collection="projectNos" item="projectNo" open="(" close=")" >
+        #{projectNo}
+      </foreach>
+    </if>
+    <if test="pageSize != null">
+      limit #{pageSize} offset #{pageNum}
+    </if>
+  </select>
+  <select id="countByDesignerId" resultType="java.lang.Long">
+    SELECT
+    count(*)
+    FROM
+    order_user ou
+    LEFT JOIN designer_order oo ON ou.project_no = oo.project_no
+    LEFT JOIN project P ON oo.project_no = P .project_no
+    LEFT JOIN company_info ComMsg ON oo.company_id = ComMsg.company_id
+    WHERE
+    ou.role_code = 'CD'
+    AND ou.user_id =#{designerId}
+    AND oo.status =#{status}
+    <if test="projectNos != null">
+      AND p.project_no in
+      <foreach collection="projectNos" item="projectNo" open="(" close=")" >
+        #{projectNo}
+      </foreach>
+    </if>
   </select>
 </mapper>
