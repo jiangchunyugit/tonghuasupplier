@@ -546,6 +546,8 @@
         project_big_scheduling_details
         WHERE
         project_no = #{projectNo} AND status = #{status}
+        ORDER BY
+        big_sort ASC
     </select>
 
     <!--分页查询施工计划-->

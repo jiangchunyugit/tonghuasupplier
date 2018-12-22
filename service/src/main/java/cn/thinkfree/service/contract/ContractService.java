@@ -242,4 +242,9 @@ public interface ContractService {
      *
      */
     boolean  insertOrderContractToOwner(String orderNo,String cause,String status);
+
+    /**
+     * 根据订单编号查询设计合同信息
+     */
+    Map<String,String> getDesignerContractInfo(String contractNo);
 }
