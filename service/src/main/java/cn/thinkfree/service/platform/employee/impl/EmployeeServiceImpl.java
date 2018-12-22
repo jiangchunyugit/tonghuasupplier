@@ -620,6 +620,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             if(!employeeMsgs.isEmpty()){
                 userIds.addAll(ReflectUtils.getList(employeeMsgs,"userId"));
             }
+            if(userIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
             criteria.andUserIdIn(userIds);
         }
         long total = applyLogMapper.countByExample(applyLogExample);
