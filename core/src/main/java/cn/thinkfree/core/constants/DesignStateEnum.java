@@ -112,7 +112,7 @@ public enum DesignStateEnum {
    /**
     *消费者 同意
     **/
-   STATE_142(142, "合同同意", "合同同意", new Integer[]{}, true),
+   STATE_142(142, "合同同意", "合同同意", new Integer[]{150}, true),
     /**
      * 消费者	支付订单首款
      */
@@ -223,7 +223,7 @@ public enum DesignStateEnum {
     /**
      * 业主同意
      **/
-    STATE_222(222, "合同同意", "合同同意", new Integer[]{}, true),
+    STATE_222(222, "合同同意", "合同同意", new Integer[]{230}, true),
     /**
      * 消费者	支付订单款项（全款）
      */
@@ -338,7 +338,6 @@ public enum DesignStateEnum {
                 return null;
         }
     }
-
     public static List<Map<String, Object>> allState(int state) {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
