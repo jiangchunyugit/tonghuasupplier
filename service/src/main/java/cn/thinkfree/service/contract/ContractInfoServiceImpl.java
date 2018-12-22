@@ -1095,7 +1095,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			return resMap;
 		}
 
-		OrderContractExample expo = new OrderContractExample();
+		/*OrderContractExample expo = new OrderContractExample();
 		expo.createCriteria().andOrderNumberEqualTo(orderNumber);
 		//插入订单合同是否录入
 		List<OrderContract> list = orderContractMapper.selectByExample(expo);
@@ -1103,7 +1103,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			resMap.put("code", "false");
 			resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
 			return resMap;
-		}
+		}*/
 		try {
 			String companyId = orderList.get(0).getCompanyId();
 			/* 插入合同主表 */
@@ -1541,6 +1541,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		record.setCreateDt(new Date());
 		int  falg = auditContractOwnerMapper.insertSelective(record);
 		if(falg > 0){
+			//不同意通知设计师傅
+			if(status.equals("0")){
+
+			}
 			return true;
 		}
 		return false;
