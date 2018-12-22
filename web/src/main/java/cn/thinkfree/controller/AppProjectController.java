@@ -176,11 +176,11 @@ public class AppProjectController {
             @RequestParam("designerId") @ApiParam(name = "designerId", value = "设计师ID") String designerId,
             @RequestParam(value = "ownerMsg", required = false) @ApiParam(name = "ownerMsg", value = "业主信息，手机号/姓名") String ownerMsg,
             @RequestParam(value = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
-            @RequestParam(value = "state", required = false) @ApiParam(name = "state", value = "订单状态", defaultValue = "-1") int state,
+            @RequestParam(value = "states", required = false) @ApiParam(name = "states", value = "订单状态") List<Integer> states,
             @RequestParam(value = "pageIndex",required = false, defaultValue = "1") @ApiParam(name = "pageIndex", value = "第几页") int pageIndex,
             @RequestParam(value = "pageSize",required = false, defaultValue = "50") @ApiParam(name = "pageSize", value = "每页多少条")int pageSize) {
         try{
-            return RespData.success(newProjectService.getDesignOrderData(designerId, ownerMsg, projectNo, state, pageIndex, pageSize));
+            return RespData.success(newProjectService.getDesignOrderData(designerId, ownerMsg, projectNo, states, pageIndex, pageSize));
         }catch (Exception e){
             e.printStackTrace();
             return RespData.error(e.getMessage());

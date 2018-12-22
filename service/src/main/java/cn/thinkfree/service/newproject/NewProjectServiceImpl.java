@@ -1336,7 +1336,7 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int state, int pageIndex, int pageSize) {
+    public PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, List<Integer> states, int pageIndex, int pageSize) {
         if(pageIndex <= 0){
             pageIndex = 1;
         }
@@ -1364,8 +1364,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectNos.add(projectNo);
         }
-        long total = designerOrderMapper.countByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, state);
-        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, state, pageIndex - 1, pageSize);
+        if(states != null && states.isEmpty()){
+            states = null;
+        }
+        long total = designerOrderMapper.countByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, states);
+        List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, states, pageIndex - 1, pageSize);
         if(designOrderVos == null || designOrderVos.isEmpty()){
             return PageVo.def(new ArrayList<>());
         }
