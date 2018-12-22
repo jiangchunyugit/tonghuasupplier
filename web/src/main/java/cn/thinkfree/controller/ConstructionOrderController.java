@@ -65,6 +65,7 @@ public class ConstructionOrderController extends AbsBaseController {
     @ResponseBody
     @RequestMapping(value = "consList",method = {RequestMethod.POST,RequestMethod.GET})
     public MyRespBundle<PageVo<List<ConsListVo>>> getConsList(
+            @ApiParam(name = "orderType", value = "列表类型，1派单列表，2订单列表") @RequestParam(required = false, defaultValue = "2") int orderType,
             @ApiParam(name = "projectNo", value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
             @ApiParam(name = "companyName", value = "公司名称") @RequestParam(name = "companyName", required = false) String companyName,
             @ApiParam(name = "provinceCode", value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
@@ -77,11 +78,11 @@ public class ConstructionOrderController extends AbsBaseController {
             @ApiParam(name = "address", value = "项目地址") @RequestParam(name = "address", required = false) String address,
             @ApiParam(name = "ownerName", value = "业主姓名") @RequestParam(name = "ownerName", required = false) String ownerName,
             @ApiParam(name = "ownerPhone", value = "业主手机号") @RequestParam(name = "ownerPhone", required = false) String ownerPhone,
-            @ApiParam(name = "pageNum", value = "第几页") @RequestParam(name = "pageNum", required = false, defaultValue = "1") int pageNum,
+            @ApiParam(name = "pageIndex", value = "第几页") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
             @ApiParam(name = "pageSize", value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize){
         try{
-            return sendJsonData(ResultMessage.SUCCESS,constructOrderService.getConsList(projectNo, companyName, provinceCode, cityCode, areaCode, createTimeS,
-                    createTimeE, againTimeS, againTimeE, address, ownerName, ownerPhone, pageNum, pageSize));
+            return sendJsonData(ResultMessage.SUCCESS,constructOrderService.getConsList(orderType, projectNo, companyName, provinceCode, cityCode, areaCode, createTimeS,
+                    createTimeE, againTimeS, againTimeE, address, ownerName, ownerPhone, pageIndex, pageSize));
         }catch (Exception e){
             e.printStackTrace();
             return sendFailMessage(e.getMessage());
