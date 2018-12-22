@@ -338,10 +338,6 @@ public enum DesignStateEnum {
                 return null;
         }
     }
-//
-public static void main(String[] args) {
-    allState(222);
-}
     public static List<Map<String, Object>> allState(int state) {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
