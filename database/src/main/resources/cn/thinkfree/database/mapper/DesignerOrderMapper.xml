@@ -518,8 +518,8 @@
     AND ou.user_id =#{designerId}
     AND oo.status =#{status}
     <if test="projectNos != null">
-      AND p.project_no in
-      <foreach collection="projectNos" item="projectNo" open="(" close=")" >
+      AND P.project_no in
+      <foreach collection="projectNos" item="projectNo" open="(" close=")" separator=",">
         #{projectNo}
       </foreach>
     </if>
@@ -540,8 +540,8 @@
     AND ou.user_id =#{designerId}
     AND oo.status =#{status}
     <if test="projectNos != null">
-      AND p.project_no in
-      <foreach collection="projectNos" item="projectNo" open="(" close=")" >
+      AND P.project_no in
+      <foreach collection="projectNos" item="projectNo" open="(" close=")" separator=",">
         #{projectNo}
       </foreach>
     </if>
