@@ -701,8 +701,12 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 "", "小区名称", designerOrder.getProjectNo());
         designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
-        pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
-        pcDesignOrderMsgVo.setVolumeRoomMoney((designerOrder.getVolumeRoomMoney() / 100) + "");
+        if(designerOrder.getVolumeRoomTime() != null){
+            pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
+        }
+        if(designerOrder.getVolumeRoomMoney() != null){
+            pcDesignOrderMsgVo.setVolumeRoomMoney((designerOrder.getVolumeRoomMoney() / 100) + "");
+        }
         List<DesignOrderPayMsgVo> payMsgVos = getPayMsgVos(designerOrder.getOrderNo());
         pcDesignOrderMsgVo.setPayMsgVos(payMsgVos);
         pcDesignOrderMsgVo.setDataVolume(getProjectData(designerOrder.getProjectNo(), 1));
