@@ -102,6 +102,7 @@ public interface ConstructionStateService {
      * 根据类型获取订单状态类型列表
      * @param type 1：获取平台状态；2：获取装饰公司状态；3：获取施工人员状态；4：获取消费者状态
      * @param currentStatus 当前订单状态值
+     * @param schemeNo 施工方案编号
      * @return 订单状态信息
      */
-    List<OrderStatusDTO> getStates(int type, Integer currentStatus);}
+    List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo);}

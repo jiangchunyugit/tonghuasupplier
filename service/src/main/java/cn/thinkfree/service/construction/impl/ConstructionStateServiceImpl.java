@@ -49,7 +49,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     @Autowired
     ProjectBigSchedulingDetailsMapper detailsMapper;
     @Autowired
-    BuildPayConfigMapper buildPayConfigMapper;
+    private BuildPayConfigService buildPayConfigService;
     @Autowired
     private BuildConfigService buildConfigService;
     @Autowired
@@ -62,6 +62,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     private ProjectService projectService;
     @Autowired
     private ProjectStageLogService projectStageLogService;
+
 
 
     /**
@@ -384,11 +385,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         map.put("bigSort", bigSort);
 
         //获取支付方案
-        BuildPayConfigExample configExample = new BuildPayConfigExample();
-        BuildPayConfigExample.Criteria criteria = configExample.createCriteria();
-        criteria.andSchemeNoEqualTo(projectBigSchedulingDetailsList.get(0).getSchemeNo());
-        criteria.andDeleteStateIn(Arrays.asList(2, 3));
-        List<BuildPayConfig> buildPayConfigList = buildPayConfigMapper.selectByExample(configExample);
+        List<BuildPayConfig> buildPayConfigList = buildPayConfigService.findBySchemeNo(projectBigSchedulingDetailsList.get(0).getSchemeNo());
         if (buildPayConfigList.size() == 0) {
             throw new RuntimeException("支付方案不存在");
         }
@@ -507,7 +504,16 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     }
 
     @Override
-    public List<OrderStatusDTO> getStates(int type, Integer currentStatus) {
+    public List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo) {
+
+        List<ConstructionStateEnum> removeStates = null;
+        List<BuildPayConfig> buildPayConfigs = buildPayConfigService.findBySchemeNo(schemeNo);
+        if (buildPayConfigs != null && buildPayConfigs.size() <= 2) {
+            removeStates = new ArrayList<>(2);
+            removeStates.add(ConstructionStateEnum.STATE_630);
+            removeStates.add(ConstructionStateEnum.STATE_640);
+        }
+
         List<OrderStatusDTO> orderStatusDTOs = new ArrayList<>();
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
         String preStateName = "";
@@ -523,6 +529,9 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 break;
             }
             if (constructionState.getState() > ConstructionStateEnum.STATE_700.getState()) {
+                break;
+            }
+            if (removeStates != null && removeStates.contains(constructionState)) {
                 break;
             }
             preStateName = stateName;
