@@ -426,16 +426,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
         designerOrderVo.setAddress(project.getAddressDetail());
-        if(StringUtils.isNotBlank(project.getProvince())){
-            Map<String,String> province = basicsService.getProvince(project.getProvince());
+        if (StringUtils.isNotBlank(project.getProvince())) {
+            Map<String, String> province = basicsService.getProvince(project.getProvince());
             designerOrderVo.setProvinceName(province.get(project.getProvince()));
         }
-        if(StringUtils.isNotBlank(project.getCity())){
-            Map<String,String> city = basicsService.getCity(project.getCity());
+        if (StringUtils.isNotBlank(project.getCity())) {
+            Map<String, String> city = basicsService.getCity(project.getCity());
             designerOrderVo.setCityName(city.get(project.getCity()));
         }
-        if(StringUtils.isNotBlank(project.getRegion())){
-            Map<String,String> area = basicsService.getArea(project.getRegion());
+        if (StringUtils.isNotBlank(project.getRegion())) {
+            Map<String, String> area = basicsService.getArea(project.getRegion());
             designerOrderVo.setRegionName(area.get(project.getRegion()));
         }
         try {
@@ -448,7 +448,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         } catch (Exception e) {
             designerOrderVo.setOrderSource("未知");
         }
-        if(project.getCreateTime() != null){
+        if (project.getCreateTime() != null) {
             designerOrderVo.setCreateTime(project.getCreateTime().getTime() + "");
         }
         DesignerStyleConfigVo designerStyleConfig = designerStyleConfigMap.get(DesignerOrder.getStyleType());
@@ -484,7 +484,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         return designerOrderVo;
     }
-    
+
     /**
      * 查询设计风格
      *
@@ -682,11 +682,11 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
         DesignerOrder designerOrder = queryDesignerOrder(projectNo);
         Project project = queryProjectByNo(projectNo);
-        List<Map<String,Object>> stateMaps = DesignStateEnum.allState(designerOrder.getOrderStage());
+        List<Map<String, Object>> stateMaps = DesignStateEnum.allState(designerOrder.getOrderStage());
         pcDesignOrderMsgVo.setStateMaps(stateMaps);
         pcDesignOrderMsgVo.setOrderState(designerOrder.getOrderStage());
         String contractUrl = getContractUrl(designerOrder.getOrderNo());
-        if(contractUrl != null){
+        if (contractUrl != null) {
             pcDesignOrderMsgVo.setContractName("居然设计家设计合同");
             pcDesignOrderMsgVo.setContractUrl(contractUrl);
         }
@@ -705,23 +705,23 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pcDesignOrderMsgVo.setVolumeRoomMoney((designerOrder.getVolumeRoomMoney() / 100) + "");
         List<DesignOrderPayMsgVo> payMsgVos = getPayMsgVos(designerOrder.getOrderNo());
         pcDesignOrderMsgVo.setPayMsgVos(payMsgVos);
-        pcDesignOrderMsgVo.setDataVolume(getProjectData(designerOrder.getProjectNo(),1));
-        pcDesignOrderMsgVo.setData3D(getProjectData(designerOrder.getProjectNo(),2));
-        pcDesignOrderMsgVo.setDataCons(getProjectData(designerOrder.getProjectNo(),3));
+        pcDesignOrderMsgVo.setDataVolume(getProjectData(designerOrder.getProjectNo(), 1));
+        pcDesignOrderMsgVo.setData3D(getProjectData(designerOrder.getProjectNo(), 2));
+        pcDesignOrderMsgVo.setDataCons(getProjectData(designerOrder.getProjectNo(), 3));
         return pcDesignOrderMsgVo;
     }
 
-    private List<ProjectData> getProjectData(String projectNo, int dataType){
+    private List<ProjectData> getProjectData(String projectNo, int dataType) {
         ProjectDataExample dataExample = new ProjectDataExample();
         dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType);
         return projectDataMapper.selectByExample(dataExample);
     }
 
-    private String getContractUrl(String orderNo){
+    private String getContractUrl(String orderNo) {
         OrderContractExample contractExample = new OrderContractExample();
         contractExample.createCriteria().andOrderNumberEqualTo(orderNo).andAuditTypeEqualTo(("1"));
         List<OrderContract> contracts = orderContractMapper.selectByExample(contractExample);
-        if(contracts.isEmpty()){
+        if (contracts.isEmpty()) {
             return null;
         }
         return contracts.get(0).getConractUrlPdf();
@@ -729,6 +729,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     /**
      * 查询支付信息
+     *
      * @param orderNo
      * @return
      */
@@ -737,28 +738,28 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         fundsOrderExample.createCriteria().andFromOrderidEqualTo(orderNo);
         fundsOrderExample.setOrderByClause(" sort,update_time asc ");
         List<FundsOrder> fundsOrders = fundsOrderMapper.selectByExample(fundsOrderExample);
-        if(fundsOrders == null || fundsOrders.isEmpty()){
+        if (fundsOrders == null || fundsOrders.isEmpty()) {
             return new ArrayList<>();
         }
-        List<String> orderIds = ReflectUtils.getList(fundsOrders,"orderNo");
+        List<String> orderIds = ReflectUtils.getList(fundsOrders, "orderNo");
         FundsFlowExample fundsFlowExample = new FundsFlowExample();
         fundsFlowExample.createCriteria().andOrderIdIn(orderIds);
         List<FundsFlow> fundsFlows = fundsFlowMapper.selectByExample(fundsFlowExample);
-        Map<String, FundsFlow> fundsFlowMap = ReflectUtils.listToMap(fundsFlows,"orderId");
+        Map<String, FundsFlow> fundsFlowMap = ReflectUtils.listToMap(fundsFlows, "orderId");
         List<DesignOrderPayMsgVo> payMsgVos = new ArrayList<>();
-        for(FundsOrder fundsOrder : fundsOrders){
+        for (FundsOrder fundsOrder : fundsOrders) {
             DesignOrderPayMsgVo payMsgVo = new DesignOrderPayMsgVo();
             payMsgVo.setTypeSubName(fundsOrder.getTypeSubName());
             payMsgVo.setDiscountMoney(fundsOrder.getCouponAmount());
             payMsgVo.setReceivableMoney(fundsOrder.getActualAmount());
             FundsFlow fundsFlow = fundsFlowMap.get(fundsOrder.getOrderNo());
-            if(fundsFlow != null){
+            if (fundsFlow != null) {
                 payMsgVo.setAcceptedMoney(fundsFlow.getActualAmount());
-                if(fundsFlow.getTraceSuccessTime() != null){
+                if (fundsFlow.getTraceSuccessTime() != null) {
                     payMsgVo.setPayTime(fundsFlow.getTraceSuccessTime());
                 }
                 payMsgVo.setState(1);
-            }else{
+            } else {
                 payMsgVo.setState(2);
             }
             payMsgVo.setSerialNumber(fundsOrder.getOrderNo());
@@ -1974,17 +1975,52 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     }
 
     /**
-     *
      * @param designerOrder
      * @param nodeNo
      */
-    private void saveFundsSettleAccountsNodeLog(DesignerOrder designerOrder, String nodeNo){
+    private void saveFundsSettleAccountsNodeLog(DesignerOrder designerOrder, String nodeNo) {
         FundsSettleAccountsNodeLog nodeLog = new FundsSettleAccountsNodeLog();
         nodeLog.setCompanyId(designerOrder.getCompanyId());
-        nodeLog.setCompletionDate(DateUtil.formartDate(new Date(),DateUtil.FORMAT_YYMMDD));
+        nodeLog.setCompletionDate(DateUtil.formartDate(new Date(), DateUtil.FORMAT_YYMMDD));
         nodeLog.setNodeNo(nodeNo);
         nodeLog.setOrderNo(designerOrder.getOrderNo());
         nodeLog.setProjectNo(designerOrder.getProjectNo());
         fundsSettleAccountsNodeLogMapper.insertSelective(nodeLog);
     }
+
+    /**
+     * @return
+     * @Author jiang
+     * @Description
+     * @Date
+     * @Param orderNo 设计订单编号
+     * @Param 合同类型，1全款合同，2分期款合同
+     **/
+    @Override
+    public void agreeContractApproval(String orderNo, int contractType) {
+        if (contractType != 1 && contractType != 2) {
+            throw new RuntimeException("必须声明合同类型");
+        }
+        DesignStateEnum stateEnum = DesignStateEnum.STATE_142;
+        if (contractType == 2) {
+            stateEnum = DesignStateEnum.STATE_222;
+        }
+        DesignerOrder designerOrder = queryDesignerOrderByOrderNo(orderNo);
+        Project project = queryProjectByNo(designerOrder.getProjectNo());
+//        if (!designerOrder.getCompanyId().equals(companyId)) {
+//            throw new RuntimeException("无权操作");
+//        }
+        DesignerOrder updateOrder = new DesignerOrder();
+        updateOrder.setId(designerOrder.getId());
+        updateOrder.setContractType(contractType);
+        updateOrder.setOrderStage(stateEnum.getState());
+        designerOrderMapper.updateByPrimaryKeySelective(updateOrder);
+        //记录操作日志
+        saveOptionLog(designerOrder.getOrderNo(), "system", "system", "合同审核通过");
+        saveLog(stateEnum.getState(), project);
+        updateProjectState(project.getProjectNo(), stateEnum.getState());
+ /*       // 支付阶段通知
+        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);*/
+    }
+
 }
