@@ -260,6 +260,7 @@ public class DateUtil {
         try {
             return fmt.parse(timeStr);
         } catch (ParseException e) {
+            e.printStackTrace();
         }
         return null;
     }
