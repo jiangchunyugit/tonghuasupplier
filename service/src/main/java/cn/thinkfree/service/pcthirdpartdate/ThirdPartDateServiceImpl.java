@@ -489,7 +489,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		      vo.setFromContractId(contractNumber);
 			 
 			  //合同类型 订单类型：设计1、施工2、合同3
-			  vo.setType("8");
+			  vo.setType("9");//
 			  //项目地址
 			  vo.setProjectAddr("");
 			  //项目编号
