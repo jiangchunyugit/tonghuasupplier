@@ -844,7 +844,12 @@ public class NewProjectServiceImpl implements NewProjectService {
             e.printStackTrace();
             return RespData.error("获取排期编辑状态失败");
         }
-        projectTitleVo.setIsConfirm(confirm);
+        ProjectSchedulingExample schedulingExample = new ProjectSchedulingExample();
+        ProjectSchedulingExample.Criteria schedulingCriteria = schedulingExample.createCriteria();
+        schedulingCriteria.andStatusEqualTo(1);
+        schedulingCriteria.andProjectNoEqualTo(projectNo);
+        List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
+        projectTitleVo.setIsConfirm(projectSchedulings.get(0).getIsConfirm());
         projectTitleVo.setGanttChartUrl("https://www.baidu.com");
         return RespData.success(projectTitleVo);
     }
