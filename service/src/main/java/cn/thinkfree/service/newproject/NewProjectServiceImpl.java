@@ -849,7 +849,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         schedulingCriteria.andStatusEqualTo(1);
         schedulingCriteria.andProjectNoEqualTo(projectNo);
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
-        projectTitleVo.setIsConfirm(projectSchedulings.get(0).getIsConfirm());
+        if(!projectSchedulings.isEmpty()){
+            projectTitleVo.setIsConfirm(projectSchedulings.get(0).getIsConfirm());
+        }
         projectTitleVo.setGanttChartUrl("https://www.baidu.com");
         return RespData.success(projectTitleVo);
     }
