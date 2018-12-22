@@ -507,7 +507,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     public List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo) {
 
         List<ConstructionStateEnum> removeStates = null;
-        if (StringUtils.isBlank(schemeNo)) {
+        if (StringUtils.isNotBlank(schemeNo)) {
             List<BuildPayConfig> buildPayConfigs = buildPayConfigService.findBySchemeNo(schemeNo);
             if (buildPayConfigs != null && buildPayConfigs.size() <= 2) {
                 removeStates = new ArrayList<>(2);

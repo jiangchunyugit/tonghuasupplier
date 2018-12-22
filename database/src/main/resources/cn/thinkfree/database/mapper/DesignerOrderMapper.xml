@@ -517,6 +517,12 @@
         ou.role_code = 'CD'
     AND ou.user_id =#{designerId}
     AND oo.status =#{status}
+    <if test="states != null">
+      AND oo.order_stage IN
+      <foreach collection="states" item="state" open="(" close=")" separator=",">
+        #{state}
+      </foreach>
+    </if>
     <if test="projectNos != null">
       AND P.project_no in
       <foreach collection="projectNos" item="projectNo" open="(" close=")" separator=",">
@@ -539,6 +545,12 @@
     ou.role_code = 'CD'
     AND ou.user_id =#{designerId}
     AND oo.status =#{status}
+    <if test="states != null">
+      AND oo.order_stage IN
+      <foreach collection="states" item="state" open="(" close=")" separator=",">
+        #{state}
+      </foreach>
+    </if>
     <if test="projectNos != null">
       AND P.project_no in
       <foreach collection="projectNos" item="projectNo" open="(" close=")" separator=",">
