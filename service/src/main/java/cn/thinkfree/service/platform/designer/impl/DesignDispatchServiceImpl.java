@@ -1162,7 +1162,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         updateOrder.setOrderStage(stateEnum.getState());
         DesignerOrderExample orderExample = new DesignerOrderExample();
-        orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());
+        orderExample.createCriteria().andOrderNoEqualTo(designerOrder.getOrderNo());0
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
         if (designerOrders.size() > 0 && designerOrders.get(0).getComplaintState() == 2) {
             throw new RuntimeException("客诉处理中");
@@ -2013,7 +2013,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignStateEnum stateEnum = DesignStateEnum.STATE_222;
         if(type == 2){
             stateEnum = DesignStateEnum.STATE_70;
-        } else if (contractType == 1) {
+        } else if (contractType == 2) {
             stateEnum = DesignStateEnum.STATE_142;
         } else {
             stateEnum = DesignStateEnum.STATE_222;
