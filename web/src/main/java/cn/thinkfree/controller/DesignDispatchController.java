@@ -658,17 +658,4 @@ public class DesignDispatchController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, itemVo);
     }
 
-    @ApiOperation("业主同意合同审批")
-    @MyRespBody
-    @RequestMapping(value = "agreeContractApproval", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle agreeContractApproval(
-            @ApiParam(name = "orderNo", required = false, value = "设计订单编号") @RequestParam(name = "orderNo", required = false) String orderNo,
-            @ApiParam(name = "contractType", required = false, value = "合同类型，1全款合同，2分期款合同") @RequestParam(name = "contractType", required = false, defaultValue = "-1") int contractType) {
-        try {
-            designDispatchService.agreeContractApproval(orderNo, contractType);
-        } catch (Exception e) {
-            return sendFailMessage(e.getMessage());
-        }
-        return sendSuccessMessage(null);
-    }
 }
