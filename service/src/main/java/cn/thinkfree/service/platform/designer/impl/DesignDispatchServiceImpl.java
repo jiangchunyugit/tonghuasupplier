@@ -1985,6 +1985,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         nodeLog.setNodeNo(nodeNo);
         nodeLog.setOrderNo(designerOrder.getOrderNo());
         nodeLog.setProjectNo(designerOrder.getProjectNo());
+        nodeLog.setDesignerCompanyId(designerOrder.getCompanyId());
         fundsSettleAccountsNodeLogMapper.insertSelective(nodeLog);
     }
 
