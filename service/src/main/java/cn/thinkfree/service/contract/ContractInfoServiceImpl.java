@@ -1596,7 +1596,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
 					type = 2;
 				}
-				designDispatchService.agreeContractApproval(orderNo, type);
+				designDispatchService.contractApproval(orderNo, 1, type);
 			}
 			return true;
 		}
