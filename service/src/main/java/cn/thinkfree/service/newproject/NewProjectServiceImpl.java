@@ -662,7 +662,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
         if (designerId != null && !designerId.equals(userId)) {
             List<PersionVo> persionVos = employeeMsgMapper.selectByUserId(designerId);
-            PersionVo persionVo = new PersionVo();
+            PersionVo persionVo = persionVos.get(0);
             try {
                 UserMsgVo userMsgVo = userCenterService.queryUser(designerId);
                 if (persionVos.size() > 0 && persionVos.get(0) != null) {
