@@ -1569,7 +1569,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				exampleOne.createCriteria().andOrderNoEqualTo(orderNo);
 				List<DesignerOrder>  projectList = designerOrderMapper.selectByExample(exampleOne);
 				OrderUserExample example = new OrderUserExample();
-				example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CC");
+				example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CD");
 				List<OrderUser> list = orderUserMapper.selectByExample(example);
 				//designerOrderMapper.selectByExample()
 				String projectNo = projectList.size()>0?projectList.get(0).getProjectNo():"";
