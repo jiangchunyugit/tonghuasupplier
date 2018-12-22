@@ -620,6 +620,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             if(!employeeMsgs.isEmpty()){
                 userIds.addAll(ReflectUtils.getList(employeeMsgs,"userId"));
             }
+            if(userIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
             criteria.andUserIdIn(userIds);
         }
         long total = applyLogMapper.countByExample(applyLogExample);
@@ -736,11 +739,11 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("角色编码不能为空");
         }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+        msgExample.createCriteria();
         if (StringUtils.isNotBlank(searchKey)) {
-            msgExample.or().andUserIdLike("%" + searchKey + "%");
-            msgExample.or().andRealNameLike("%" + searchKey + "%");
-            msgExample.or().andCertificateLike("%" + searchKey + "%");
+            msgExample.or().andUserIdLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andRealNameLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andCertificateLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
         }
         long total = employeeMsgMapper.countByExample(msgExample);
         PageHelper.startPage(pageIndex, pageSize);

@@ -375,7 +375,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     @Override
     public PageVo<List<ConsListVo>> getConsList(int orderType,
             String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
-            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize) {
+            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, String companyId, int pageNum, int pageSize) {
         List<String> userProjectNos = searchOwner(ownerName, ownerPhone);
         if(userProjectNos != null && userProjectNos.isEmpty()){
             return PageVo.def(new ArrayList<>());
@@ -411,6 +411,9 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         }else{
             criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_540.getState());
         }
+        if(StringUtils.isNotBlank(companyId)){
+            criteria.andCompanyIdEqualTo(companyId);
+        }
         long total = constructionOrderMapper.countByExample(constructionOrderExample);
         PageHelper.startPage(pageNum, pageSize);
         List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
@@ -420,14 +423,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         projectNos = ReflectUtils.getList(constructionOrders,"projectNo");
         companyIds = ReflectUtils.getList(constructionOrders,"companyId");
         orderNos = ReflectUtils.getList(constructionOrders,"orderNo");
-        OrderContractExample orderContractExample = new OrderContractExample();
-        orderContractExample.createCriteria().andOrderNumberIn(orderNos);
-        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-        Map<String,OrderContract> orderContractMap = ReflectUtils.listToMap(orderContracts,"orderNumber");
-        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdIn(companyIds);
-        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
-        Map<String,CompanyInfo> companyInfoMap = ReflectUtils.listToMap(companyInfos,"companyId");
+        Map<String, OrderContract> orderContractMap = getStringOrderContractMap(orderNos);
+        Map<String, CompanyInfo> companyInfoMap = getStringCompanyInfoMap(companyIds);
         Map<String, String[]> userMsgMap = getStaffBy(projectNos);
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoIn(projectNos);
@@ -489,6 +486,26 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         pageVo.setPageIndex(pageNum);
         pageVo.setTotal(total);
         return pageVo;
+    }
+
+    private Map<String, OrderContract> getStringOrderContractMap(List<String> orderNos) {
+        if(orderNos == null || orderNos.isEmpty()){
+            return new HashMap<>();
+        }
+        OrderContractExample orderContractExample = new OrderContractExample();
+        orderContractExample.createCriteria().andOrderNumberIn(orderNos);
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+        return ReflectUtils.listToMap(orderContracts,"orderNumber");
+    }
+
+    private Map<String, CompanyInfo> getStringCompanyInfoMap(List<String> companyIds) {
+        if(companyIds == null || companyIds.isEmpty()){
+            return new HashMap<>();
+        }
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdIn(companyIds);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        return ReflectUtils.listToMap(companyInfos,"companyId");
     }
 
     /**

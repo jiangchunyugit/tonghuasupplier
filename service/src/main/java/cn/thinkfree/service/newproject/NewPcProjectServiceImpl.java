@@ -262,17 +262,17 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         if (projectQuotations.size() == 1) {
             ProjectQuotation projectQuotation = projectQuotations.get(0);
             //面积
-            offerVo.setArea(projectQuotation.getInnerArea().toString());
+            offerVo.setArea(projectQuotation.getInnerArea() != null ? projectQuotation.getInnerArea().toString() : "");
             //平米单价
-            offerVo.setUnitPrice(projectQuotation.getUnitPrice().toString());
+            offerVo.setUnitPrice(projectQuotation.getUnitPrice() != null ? projectQuotation.getUnitPrice().toString() : "");
             //总价
-            offerVo.setTotalPrice(projectQuotation.getTotalPrice().toString());
+            offerVo.setTotalPrice(projectQuotation.getTotalPrice() != null ? projectQuotation.getTotalPrice().toString() : "");
             //基础施工保价
-            offerVo.setBasePrice(projectQuotation.getConstructionTotalPrice().toString());
+            offerVo.setBasePrice(projectQuotation.getConstructionTotalPrice() != null ? projectQuotation.getConstructionTotalPrice().toString() : "");
             //软装保价
-            offerVo.setMainMaterialFee(projectQuotation.getSoftDecorationPrice().toString());
+            offerVo.setMainMaterialFee(projectQuotation.getSoftDecorationPrice() != null ? projectQuotation.getSoftDecorationPrice().toString() : "");
             //硬装保价
-            offerVo.setOtherFee(projectQuotation.getHardDecorationPrice().toString());
+            offerVo.setOtherFee(projectQuotation.getHardDecorationPrice() != null ? projectQuotation.getHardDecorationPrice().toString() : "");
             //变更保价
             FundsOrderFeeExample fundsOrderFeeExample = new FundsOrderFeeExample();
             FundsOrderFeeExample.Criteria criteria3 = fundsOrderFeeExample.createCriteria();

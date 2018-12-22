@@ -234,15 +234,29 @@ public class OpenApiController extends AbsBaseController {
      *
      */
     @PostMapping("/auditOrderContractToOwner")
-    @ApiOperation(value = "for A---通过订单编号查询初始合同信息--吕启栋",notes = "通过用户id获取运营平台组织架构")
+    @ApiOperation(value = "for App---业主确认设计合同--吕启栋",notes = "通过用户id获取运营平台组织架构")
     @MyRespBody
     public MyRespBundle<String> auditOrderContractToOwner(@ApiParam("orderNo")@RequestParam String orderNo,
                                                           @ApiParam("cause")@RequestParam String cause,@ApiParam("status")@RequestParam String status){
-       // DesignContractToVo resInfo = designDispatchService.getDesigneContractInfo(orderNo);
         boolean flag = contractService.insertOrderContractToOwner( orderNo, cause, status);
         return sendJsonData(ResultMessage.SUCCESS,flag);
     }
 
 
+    /**
+     * 根据合同编号查询 之前的合同信息
+     */
+    @PostMapping("/getDesignerContractInfo")
+    @ApiOperation(value = "for江宁哥---通过订单编号查询之前录入的合同--吕启栋",notes = "通过用户id获取运营平台组织架构")
+    @MyRespBody
+    public MyRespBundle<Map<String,String>> getDesignerContractInfo(@ApiParam("contractNo")@RequestParam String contractNo){
+        Map<String,String> map = contractService.getDesignerContractInfo(contractNo);
+        if( map!= null && map.size() > 0 ){
+            return sendJsonData(ResultMessage.SUCCESS,map);
+        }else{
+            return sendJsonData(ResultMessage.ERROR,"该订单合同不存在");
+        }
+
+    }
 
 }

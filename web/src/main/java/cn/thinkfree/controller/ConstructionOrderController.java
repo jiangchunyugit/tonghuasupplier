@@ -78,11 +78,12 @@ public class ConstructionOrderController extends AbsBaseController {
             @ApiParam(name = "address", value = "项目地址") @RequestParam(name = "address", required = false) String address,
             @ApiParam(name = "ownerName", value = "业主姓名") @RequestParam(name = "ownerName", required = false) String ownerName,
             @ApiParam(name = "ownerPhone", value = "业主手机号") @RequestParam(name = "ownerPhone", required = false) String ownerPhone,
+            @ApiParam(name = "companyId", value = "装饰公司ID") @RequestParam(name = "companyId", required = false) String companyId,
             @ApiParam(name = "pageIndex", value = "第几页") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
             @ApiParam(name = "pageSize", value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize){
         try{
             return sendJsonData(ResultMessage.SUCCESS,constructOrderService.getConsList(orderType, projectNo, companyName, provinceCode, cityCode, areaCode, createTimeS,
-                    createTimeE, againTimeS, againTimeE, address, ownerName, ownerPhone, pageIndex, pageSize));
+                    createTimeE, againTimeS, againTimeE, address, ownerName, ownerPhone, companyId, pageIndex, pageSize));
         }catch (Exception e){
             e.printStackTrace();
             return sendFailMessage(e.getMessage());

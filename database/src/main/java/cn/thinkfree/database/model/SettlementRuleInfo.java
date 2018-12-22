@@ -140,7 +140,7 @@ public class SettlementRuleInfo extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="checkingTime对账日期/开始时间")
-    private Date checkingTime;
+    private String checkingTime;
 
     /**
      * Database Column Remarks:
@@ -498,7 +498,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    public Date getCheckingTime() {
+    public String getCheckingTime() {
         return checkingTime;
     }
 
@@ -510,7 +510,7 @@ public class SettlementRuleInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    public void setCheckingTime(Date checkingTime) {
+    public void setCheckingTime(String checkingTime) {
         this.checkingTime = checkingTime;
     }
 
