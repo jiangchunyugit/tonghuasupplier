@@ -2006,9 +2006,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (contractType != 1 && contractType != 2) {
             throw new RuntimeException("必须声明合同类型");
         }
-        DesignStateEnum stateEnum = DesignStateEnum.STATE_142;
+        DesignStateEnum stateEnum = DesignStateEnum.STATE_222;
         if (contractType == 2) {
-            stateEnum = DesignStateEnum.STATE_222;
+            stateEnum = DesignStateEnum.STATE_142;
         }
         DesignerOrder designerOrder = queryDesignerOrderByOrderNo(orderNo);
         Project project = queryProjectByNo(designerOrder.getProjectNo());
