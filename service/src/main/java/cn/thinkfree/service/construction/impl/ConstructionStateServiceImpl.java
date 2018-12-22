@@ -534,7 +534,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 break;
             }
             if (removeStates != null && removeStates.contains(constructionState)) {
-                break;
+                continue;
             }
             preStateName = stateName;
             OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
