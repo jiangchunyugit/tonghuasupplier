@@ -2000,13 +2000,17 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @Date
      * @Param orderNo 设计订单编号
      * @Param 合同类型，1全款合同，2分期款合同
+     * 类型:1同意 2不同意
      **/
     @Override
-    public void agreeContractApproval(String orderNo, int contractType) {
+    public void agreeContractApproval(String orderNo,Integer type, int contractType) {
         if (contractType != 1 && contractType != 2) {
             throw new RuntimeException("必须声明合同类型");
         }
         DesignStateEnum stateEnum = DesignStateEnum.STATE_222;
+        if(type == 2){
+            stateEnum = DesignStateEnum.STATE_70;
+        }
         if (contractType == 2) {
             stateEnum = DesignStateEnum.STATE_142;
         }

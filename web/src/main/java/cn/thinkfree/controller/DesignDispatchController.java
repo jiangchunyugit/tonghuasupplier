@@ -663,9 +663,10 @@ public class DesignDispatchController extends AbsBaseController {
     @RequestMapping(value = "agreeContractApproval", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle agreeContractApproval(
             @ApiParam(name = "orderNo", required = false, value = "设计订单编号") @RequestParam(name = "orderNo", required = false) String orderNo,
+            @ApiParam(name = "type", required = false, value = "类型:1同意 2不同意") @RequestParam(name = "orderNo", required = false) Integer type,
             @ApiParam(name = "contractType", required = false, value = "合同类型，1全款合同，2分期款合同") @RequestParam(name = "contractType", required = false, defaultValue = "-1") int contractType) {
         try {
-            designDispatchService.agreeContractApproval(orderNo, contractType);
+            designDispatchService.agreeContractApproval(orderNo,type, contractType);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

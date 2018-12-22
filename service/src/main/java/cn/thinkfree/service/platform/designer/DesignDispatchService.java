@@ -344,5 +344,5 @@ public interface DesignDispatchService {
      * @Param 合同类型
      * @return
      **/
-    void agreeContractApproval(String orderNo, int contractType);
+    void agreeContractApproval(String orderNo,Integer type ,int contractType);
 }
