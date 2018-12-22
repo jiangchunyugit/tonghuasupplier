@@ -1574,30 +1574,34 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				//designerOrderMapper.selectByExample()
 				String projectNo = projectList.size()>0?projectList.get(0).getProjectNo():"";
 				String subUserId =list.size()>0?list.get(0).getUserId():"";
-				String content ="业主不同意合同，请重新编辑合同";
+				String content ="业主不同意项目编号"+projectNo+"的设计合同，请您重新编辑";
 				printInfoMes("设计合同业主不同意发送消息projectNo:{},subUserId{}",projectNo,content);
 				this.sendMessage(projectNo,"",subUserId,content);
-			}else{
-				//查询是否全款 1全款合同，2分期款合同
-				// 查询合同是全款换是分期
-				OrderContractExample example = new OrderContractExample();
-				example.createCriteria().andOrderNumberEqualTo(orderNo);
-				// 查询合同
-				List<OrderContract> list = orderContractMapper.selectByExample(example);
-				ContractTermsExample example1 = new ContractTermsExample();
-				example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
-				List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
-				Map<String, String> chMap = new HashMap<>();
-				for (int i = 0; i < childListr.size(); i++) {
-					chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
-				}
-				// 1全款合同，2分期合同
-				int type = 1;
-				if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
-					type = 2;
-				}
-				designDispatchService.contractApproval(orderNo, 1, type);
 			}
+			//查询是否全款 1全款合同，2分期款合同
+			// 查询合同是全款换是分期
+			OrderContractExample example = new OrderContractExample();
+			example.createCriteria().andOrderNumberEqualTo(orderNo);
+			// 查询合同
+			List<OrderContract> list = orderContractMapper.selectByExample(example);
+			ContractTermsExample example1 = new ContractTermsExample();
+			example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
+			List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+			Map<String, String> chMap = new HashMap<>();
+			for (int i = 0; i < childListr.size(); i++) {
+				chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+			}
+			// 1全款合同，2分期合同
+			int type = 1;
+			if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
+				type = 2;
+			}
+			//1 同意 2不同意
+			int contractType  =  1;
+			if(status.equals("0")){
+				contractType = 2;
+			}
+			designDispatchService.contractApproval(orderNo,type,contractType);
 			return true;
 		}
 		return false;
