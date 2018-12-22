@@ -1141,7 +1141,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             case STATE_45:
                 stateEnum = DesignStateEnum.STATE_50;
                 break;
-            case STATE_140:
+            case STATE_142:
                 stateEnum = DesignStateEnum.STATE_150;
                 saveFundsSettleAccountsNodeLog(designerOrder, "6");
                 break;
@@ -1153,7 +1153,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 stateEnum = DesignStateEnum.STATE_210;
                 saveFundsSettleAccountsNodeLog(designerOrder, "8");
                 break;
-            case STATE_220:
+            case STATE_222:
                 stateEnum = DesignStateEnum.STATE_230;
                 saveFundsSettleAccountsNodeLog(designerOrder, "6");
                 break;
