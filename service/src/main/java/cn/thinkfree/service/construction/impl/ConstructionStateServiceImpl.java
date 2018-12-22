@@ -505,15 +505,15 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
 
     @Override
     public List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo) {
+
         List<ConstructionStateEnum> removeStates = null;
-        List<BuildPayConfig> buildPayConfigs = null;
-        if(StringUtils.isNotBlank(schemeNo)){
-            buildPayConfigs = buildPayConfigService.findBySchemeNo(schemeNo);
-        }
-        if (buildPayConfigs != null && buildPayConfigs.size() <= 2) {
-            removeStates = new ArrayList<>(2);
-            removeStates.add(ConstructionStateEnum.STATE_630);
-            removeStates.add(ConstructionStateEnum.STATE_640);
+        if (StringUtils.isNotBlank(schemeNo)) {
+            List<BuildPayConfig> buildPayConfigs = buildPayConfigService.findBySchemeNo(schemeNo);
+            if (buildPayConfigs != null && buildPayConfigs.size() <= 2) {
+                removeStates = new ArrayList<>(2);
+                removeStates.add(ConstructionStateEnum.STATE_630);
+                removeStates.add(ConstructionStateEnum.STATE_640);
+            }
         }
 
         List<OrderStatusDTO> orderStatusDTOs = new ArrayList<>();
