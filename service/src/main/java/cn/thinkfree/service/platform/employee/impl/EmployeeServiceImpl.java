@@ -739,11 +739,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("角色编码不能为空");
         }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria();
         if (StringUtils.isNotBlank(searchKey)) {
             msgExample.or().andUserIdLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
             msgExample.or().andRealNameLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
             msgExample.or().andCertificateLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+        }else{
+            msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
         }
         long total = employeeMsgMapper.countByExample(msgExample);
         PageHelper.startPage(pageIndex, pageSize);
