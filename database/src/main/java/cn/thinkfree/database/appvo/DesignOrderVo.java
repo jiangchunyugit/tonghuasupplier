@@ -48,4 +48,12 @@ public class DesignOrderVo {
     private String companyName;
     @ApiModelProperty("所属公司ID")
     private String companyId;
+    @ApiModelProperty("合同编号")
+    private String contractNumber;
+    @ApiModelProperty("合同状态审批状态：0：不通过 1：通过2：审核中")
+    private int auditAype;
+    @ApiModelProperty("合同PDF地址")
+    private String conractUrlPdf;
+    @ApiModelProperty("合同签订时间")
+    private Date signTime;
 }
