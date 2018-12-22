@@ -375,7 +375,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     @Override
     public PageVo<List<ConsListVo>> getConsList(int orderType,
             String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
-            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize) {
+            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, String companyId, int pageNum, int pageSize) {
         List<String> userProjectNos = searchOwner(ownerName, ownerPhone);
         if(userProjectNos != null && userProjectNos.isEmpty()){
             return PageVo.def(new ArrayList<>());
@@ -410,6 +410,9 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
             criteria.andOrderStageIn(Arrays.asList(ConstructionStateEnum.STATE_500.getState(),ConstructionStateEnum.STATE_510.getState()));
         }else{
             criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_540.getState());
+        }
+        if(StringUtils.isNotBlank(companyId)){
+            criteria.andCompanyIdEqualTo(companyId);
         }
         long total = constructionOrderMapper.countByExample(constructionOrderExample);
         PageHelper.startPage(pageNum, pageSize);

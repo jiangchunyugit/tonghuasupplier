@@ -78,4 +78,4 @@ public interface ConstructOrderService {
      */
     PageVo<List<ConsListVo>> getConsList(int orderType,
             String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
-            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize);}
+            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, String companyId, int pageNum, int pageSize);}
