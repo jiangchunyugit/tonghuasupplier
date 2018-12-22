@@ -850,7 +850,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             schedulingService.completeBigScheduling(instance.getProjectNo(), instance.getScheduleSort());
             constructionStateService.constructionPlan(instance.getProjectNo(), instance.getScheduleSort());
             fundsSettleAccountsNodeLogService.create(instance.getProjectNo(), instance.getScheduleSort());
-        } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(instance.getConfigNo())) {
+        } else if (AfConfigs.CHANGE_ORDER.configNo.equals(instance.getConfigNo())) {
             sendChangeMoney(instance.getProjectNo(), instance.getData());
         } else if (AfConfigs.DELAY_ORDER.configNo.equals(instance.getConfigNo())) {
             int delayDays = getDelayDays(instance.getData());
