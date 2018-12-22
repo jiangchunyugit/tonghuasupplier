@@ -131,7 +131,7 @@ public interface NewProjectService {
      * @param designerId
      * @return
      */
-    PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int pageIndex, int pageSize);
+    PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int state, int pageIndex, int pageSize);
 
     /**
      * C/B-项目列表--施工端
