@@ -541,7 +541,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
         BillCycleResult billCycleResult = new BillCycleResult();
         StringBuilder method = new StringBuilder();
-        billCycleResult.setCheckTime(settlementRuleInfo.getCheckingTime()!=null?DateUtils.dateToDateTime(settlementRuleInfo.getCheckingTime()):null);
+        billCycleResult.setCheckTime(settlementRuleInfo.getCheckingTime());
 
         // 自然月最后一天
         if(SettlementRuleStatus.LastDaySettlement.getCode().equals(settlementRuleInfo.getCycleType())) {
