@@ -1601,7 +1601,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			if(status.equals("0")){
 				contractType = 2;
 			}
-			designDispatchService.contractApproval(orderNo,type,contractType);
+			designDispatchService.contractApproval(orderNo,contractType,type);
 			return true;
 		}
 		return false;
