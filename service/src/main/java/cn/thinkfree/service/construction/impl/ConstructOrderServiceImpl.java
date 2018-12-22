@@ -337,11 +337,11 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         constructDetailVO.setLimitDays(DateUtil.differentDaysByMillisecond(projectScheduling.getStartTime(), projectScheduling.getEndTime()));
 
         ProjectBigScheduling projectBigScheduling = schedulingBaseService.findBySchemeNoAndSort(schemeNo, projectScheduling.getRate());
-        if (projectBigScheduling == null) {
-            LOGGER.error("未查询到排期信息，schemeNo:{}, sort:{}", schemeNo, projectScheduling.getRate());
-            throw new RuntimeException();
+        if (projectBigScheduling != null) {
+            constructDetailVO.setConstructProgress(projectBigScheduling.getName());
+//            LOGGER.error("未查询到排期信息，schemeNo:{}, sort:{}", schemeNo, projectScheduling.getRate());
+//            throw new RuntimeException();
         }
-        constructDetailVO.setConstructProgress(projectBigScheduling.getName());
         return constructDetailVO;
     }
 
