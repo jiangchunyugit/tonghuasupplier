@@ -693,7 +693,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
             ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
-            List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage());
+            List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getSchemeNo());
             for (OrderStatusDTO orderStatus : states) {
                 OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
                 orderTaskSortVo.setSort(orderStatus.getStatus());
