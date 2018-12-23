@@ -654,6 +654,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProjectOrder(2);
             projectVo.setProjectData(2);
             projectVo.setProjectInvoice(2);
+            projectVo.setStage(DesignStateEnum.STATE_261.getState());
+        } else if (designerOrder.getComplaintState() == 3) {
+            projectVo.setStage(DesignStateEnum.STATE_262.getState());
         }
         ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
         if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
@@ -662,6 +665,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProjectOrder(2);
             projectVo.setProjectData(2);
             projectVo.setProjectInvoice(2);
+            projectVo.setStage(ConstructionStateEnum.STATE_715.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 3) {
+            projectVo.setStage(ConstructionStateEnum.STATE_730.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 5) {
+            projectVo.setStage(ConstructionStateEnum.STATE_710.getState());
         }
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
