@@ -673,7 +673,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             orderTaskSortVoList.add(orderTaskSortVo);
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
-        designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());//
+        designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         designerOrderDetailVo.setCancle(allCancelState.contains(DesignStateEnum.queryByState(designerOrder.getOrderStage())));
@@ -721,7 +721,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             //存放客服信息
             constructionOrderDetailVo.setComplaintState(constructionOrder.getComplaintState());
-            List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getSchemeNo());
+            List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getComplaintState(), constructionOrder.getSchemeNo());
             for (OrderStatusDTO orderStatus : states) {
                 OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
                 orderTaskSortVo.setSort(orderStatus.getStatus());
