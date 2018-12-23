@@ -4,6 +4,7 @@ package cn.thinkfree.service.construction.impl;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ComplaintStateEnum;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.model.OrderStatusDTO;
@@ -504,7 +505,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     }
 
     @Override
-    public List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo) {
+    public List<OrderStatusDTO> getStates(int type, Integer currentStatus, Integer complaintStatus, String schemeNo) {
 
         List<ConstructionStateEnum> removeStates = null;
         if (StringUtils.isNotBlank(schemeNo)) {
@@ -536,24 +537,41 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             if (removeStates != null && removeStates.contains(constructionState)) {
                 continue;
             }
+            OrderStatusDTO orderStatusDTO;
+            if (currentStatus > constructionState.getState() && complaintStatus != null) {
+                if (complaintStatus == ComplaintStateEnum.STATE_2.getState()) {
+                    orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_715, type);
+                    orderStatusDTOs.add(orderStatusDTO);
+                    return orderStatusDTOs;
+                } else if (complaintStatus == ComplaintStateEnum.STATE_3.getState()) {
+                    orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_715, type);
+                    orderStatusDTOs.add(orderStatusDTO);
+                    orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_730, type);
+                    orderStatusDTOs.add(orderStatusDTO);
+                    return orderStatusDTOs;
+                }
+            }
             preStateName = stateName;
-            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
-            orderStatusDTO.setStatus(constructionState.getState());
-            orderStatusDTO.setName(stateName);
+            orderStatusDTO = createOrderStatusDTO(constructionState, type);
 
             orderStatusDTOs.add(orderStatusDTO);
         }
 
         if (currentStatus > ConstructionStateEnum.STATE_700.getState()) {
             ConstructionStateEnum currentConstructState = ConstructionStateEnum.queryByState(currentStatus);
-            OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
-            orderStatusDTO.setStatus(currentConstructState.getState());
-            orderStatusDTO.setName(currentConstructState.getStateName(type));
+            OrderStatusDTO orderStatusDTO = createOrderStatusDTO(currentConstructState, type);
 
             orderStatusDTOs.add(orderStatusDTO);
         }
 
         return orderStatusDTOs;
+    }
+
+    private OrderStatusDTO createOrderStatusDTO(ConstructionStateEnum constructionState, int type) {
+        OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
+        orderStatusDTO.setStatus(constructionState.getState());
+        orderStatusDTO.setName(constructionState.getStateName(type));
+        return orderStatusDTO;
     }
 
     @Override

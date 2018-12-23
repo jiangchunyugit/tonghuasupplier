@@ -96,7 +96,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         //获取项目阶段信息,所有的阶段时间都以开始时间展示为主,展示所有的PC项目阶段
         List<OrderTaskSortVo> allOrderTask = new ArrayList<>();
         ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
-        List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getSchemeNo());
+        List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getComplaintState(), constructionOrder.getSchemeNo());
         for (OrderStatusDTO orderStatus : states) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort(orderStatus.getStatus());
@@ -376,6 +376,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         //验收结果
         ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        checkExample.setOrderByClause("submit_time DESC");
         ProjectQuotationCheckExample.Criteria checkCriteria = checkExample.createCriteria();
         checkCriteria.andProjectNoEqualTo(projectNo);
         checkCriteria.andStatusEqualTo(1);
