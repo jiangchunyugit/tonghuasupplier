@@ -1,11 +1,11 @@
 package cn.thinkfree.service.materialsrembrand;
 
+import cn.thinkfree.database.mapper.DealerBrandInfoMapper;
 import cn.thinkfree.database.mapper.MaterialsRemBrandMapper;
 import cn.thinkfree.database.mapper.MaterialsRemBrandSecondMapper;
-import cn.thinkfree.database.model.MaterialsRemBrand;
-import cn.thinkfree.database.model.MaterialsRemBrandExample;
-import cn.thinkfree.database.model.MaterialsRemBrandSecond;
-import cn.thinkfree.database.model.MaterialsRemBrandSecondExample;
+import cn.thinkfree.database.model.*;
+import cn.thinkfree.service.constants.BrandConstants;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,10 +24,21 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
 
     @Autowired
     MaterialsRemBrandSecondMapper materialsRemBrandSecondMapper;
+
+    @Autowired
+    DealerBrandInfoMapper dealerBrandInfoMapper;
     @Override
-    public List<MaterialsRemBrand> getMaterialsRemBrands() {
+    public List<MaterialsRemBrand> getMaterialsRemBrands(String sbmc) {
 
         MaterialsRemBrandExample materialsRemBrandExample = new MaterialsRemBrandExample();
+        MaterialsRemBrandExample.Criteria criteria = materialsRemBrandExample.createCriteria();
+        if (StringUtils.isNotBlank(sbmc)) {
+            StringBuffer stringBufferSbmc = new StringBuffer();
+            stringBufferSbmc.append("%");
+            stringBufferSbmc.append(sbmc);
+            stringBufferSbmc.append("%");
+            criteria.andSbmcLike(stringBufferSbmc.toString());
+        }
         return materialsRemBrandMapper.selectByExample(materialsRemBrandExample);
     }
 
@@ -38,4 +49,24 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
         materialsRemBrandSecondExample.createCriteria().andSbbmEqualTo(sbbm);
         return materialsRemBrandSecondMapper.selectByExample(materialsRemBrandSecondExample);
     }
+
+    @Override
+    public List<DealerBrandInfo> getDealerBrandList(String companyId) {
+
+//        return dealerBrandInfoMapper.selectByContract(companyId);
+        return null;
+    }
+
+    @Override
+    public List<DealerBrandInfo> getDealerBrandSecondList(String companyId, String brandNo) {
+
+        DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
+        DealerBrandInfoExample.Criteria criteria = dealerBrandInfoExample.createCriteria();
+
+        criteria.andCompanyIdEqualTo(companyId);
+        criteria.andAuditStatusEqualTo(BrandConstants.AuditStatus.AUDITSUCCESS.code);
+        criteria.andBrandNoEqualTo(brandNo);
+
+        return dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
+        }
 }
