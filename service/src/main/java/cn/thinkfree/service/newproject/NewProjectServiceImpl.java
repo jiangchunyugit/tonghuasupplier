@@ -167,7 +167,6 @@ public class NewProjectServiceImpl implements NewProjectService {
                 e.printStackTrace();
                 log.info("调取人员信息失败!");
             }
-
             if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
                 projectVo.setAgreeButto(true);
                 projectVo.setRefuseButton(true);
@@ -178,7 +177,6 @@ public class NewProjectServiceImpl implements NewProjectService {
             }
             projectVo.setOwner(owner);
             projectVo.setAddress(getProjectAdress(project.getProjectNo()));
-
             //添加进度展示
             if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
                 projectVo.setProgressIsShow(true);
@@ -210,6 +208,32 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProjectOrder(Integer.parseInt(operationVo.getProjectOrder()) > 0 ? 1 : 0);
             projectVo.setProjectData(Integer.parseInt(operationVo.getProjectData()) > 0 ? 1 : 0);
             projectVo.setProjectInvoice(Integer.parseInt(operationVo.getInvoice()) > 0 ? 1 : 0);
+            //添加客诉判断
+            DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+            DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+            designCriteria.andProjectNoEqualTo(project.getProjectNo());
+            designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+            List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+            if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                return RespData.error("查无此设计订单");
+            }
+            DesignerOrder designerOrder = designerOrders.get(0);
+            projectVo.setComplaintState(designerOrder.getComplaintState());
+            if (designerOrder.getComplaintState() == 2) {
+                projectVo.setComplaintState(designerOrder.getComplaintState());
+                projectVo.setProjectDynamic(2);
+                projectVo.setProjectOrder(2);
+                projectVo.setProjectData(2);
+                projectVo.setProjectInvoice(2);
+            }
+            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+            if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+                projectVo.setComplaintState(constructionOrder.getComplaintState());
+                projectVo.setProjectDynamic(2);
+                projectVo.setProjectOrder(2);
+                projectVo.setProjectData(2);
+                projectVo.setProjectInvoice(2);
+            }
             projectVo.setStageNameColor("#50ABD2");
             projectVoList.add(projectVo);
         }
@@ -616,6 +640,40 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()) > 0 ? 1 : 0);
         projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()) > 0 ? 1 : 0);
         projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()) > 0 ? 1 : 0);
+        //添加客诉判断
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(project.getProjectNo());
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        projectVo.setComplaintState(designerOrder.getComplaintState());
+        if (designerOrder.getComplaintState() == 2) {
+            projectVo.setComplaintState(designerOrder.getComplaintState());
+            projectVo.setProjectDynamic(2);
+            projectVo.setProjectOrder(2);
+            projectVo.setProjectData(2);
+            projectVo.setProjectInvoice(2);
+            projectVo.setStage(DesignStateEnum.STATE_261.getState());
+        } else if (designerOrder.getComplaintState() == 3) {
+            projectVo.setStage(DesignStateEnum.STATE_262.getState());
+        }
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+        if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+            projectVo.setComplaintState(constructionOrder.getComplaintState());
+            projectVo.setProjectDynamic(2);
+            projectVo.setProjectOrder(2);
+            projectVo.setProjectData(2);
+            projectVo.setProjectInvoice(2);
+            projectVo.setStage(ConstructionStateEnum.STATE_715.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 3) {
+            projectVo.setStage(ConstructionStateEnum.STATE_730.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 5) {
+            projectVo.setStage(ConstructionStateEnum.STATE_710.getState());
+        }
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
@@ -630,21 +688,21 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setOwner(owner);
 
         //组合设计订单
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
-        designCriteria.andProjectNoEqualTo(projectNo);
-        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("查无此设计订单");
-        }
-        DesignerOrder designerOrder = designerOrders.get(0);
+//        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+//        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+//        designCriteria.andProjectNoEqualTo(projectNo);
+//        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+//        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+//            return RespData.error("查无此设计订单");
+//        }
+//        DesignerOrder designerOrder = designerOrders.get(0);
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放客服信息
         designerOrderDetailVo.setComplaintState(designerOrder.getComplaintState());
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
-        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage());
+        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage(), designerOrder.getComplaintState());
         for (Map<String, Object> map : maps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setName(map.get("val").toString());
@@ -697,7 +755,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
-            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+//            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             //存放客服信息
             constructionOrderDetailVo.setComplaintState(constructionOrder.getComplaintState());
             List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getComplaintState(), constructionOrder.getSchemeNo());
@@ -758,7 +816,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             if (constructionOrderPlayVo == null) {
                 constructionOrderPlayVo = new OrderPlayVo();
                 constructionOrderPlayVo.setCost(totalMoney);
-            }else {
+            } else {
                 constructionOrderPlayVo.setCost(totalMoney);
             }
             constructionOrderPlayVo.setSchedule(DateUtil.daysCalculate(project.getPlanStartTime(), project.getPlanEndTime()));
@@ -805,6 +863,36 @@ public class NewProjectServiceImpl implements NewProjectService {
         } else {
             projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
         }
+
+        //添加客诉判断
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(project.getProjectNo());
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        projectTitleVo.setComplaintState(designerOrder.getComplaintState());
+        if (designerOrder.getComplaintState() == 2) {
+            projectTitleVo.setComplaintState(designerOrder.getComplaintState());
+        }
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+        if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+            projectTitleVo.setComplaintState(constructionOrder.getComplaintState());
+        }
+        //添加业主信息
+        PersionVo owner = new PersionVo();
+        try {
+            Map userName1 = newOrderUserService.getUserName(project.getOwnerId(), ProjectDataStatus.OWNER.getDescription());
+            owner.setPhone(userName1.get("phone").toString());
+            owner.setName(userName1.get("nickName").toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error("调取人员信息失败!");
+        }
+        projectTitleVo.setOwner(owner);
         projectTitleVo.setProjectStartTime(project.getPlanStartTime());
         projectTitleVo.setProjectEndTime(project.getPlanEndTime());
         projectTitleVo.setAddress(getProjectAdress(projectNo));
@@ -813,7 +901,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderPlayVos.size() != 0) {
             OrderPlayVo orderPlayVo = orderPlayVos.get(0);
             String totalMoney = "";
-            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+//            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
@@ -856,7 +944,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         schedulingCriteria.andStatusEqualTo(1);
         schedulingCriteria.andProjectNoEqualTo(projectNo);
         List<ProjectScheduling> projectSchedulings = projectSchedulingMapper.selectByExample(schedulingExample);
-        if(!projectSchedulings.isEmpty()){
+        if (!projectSchedulings.isEmpty()) {
             projectTitleVo.setIsConfirm(projectSchedulings.get(0).getIsConfirm());
         }
         projectTitleVo.setGanttChartUrl("https://www.baidu.com");
@@ -1082,9 +1170,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
             if (dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
-                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
-                    return RespData.error("3D全景度为空");
-                }
+//                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
+//                    return RespData.error("3D全景度为空");
+//                }
                 projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
             } else {
                 if (urlDetailVo.getImgUrl() == null || urlDetailVo.getImgUrl().trim().isEmpty()) {
@@ -1350,45 +1438,45 @@ public class NewProjectServiceImpl implements NewProjectService {
      */
     @Override
     public PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, List<Integer> states, int pageIndex, int pageSize) {
-        if(pageIndex <= 0){
+        if (pageIndex <= 0) {
             pageIndex = 1;
         }
         if (designerId == null || designerId.trim().isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
         List<String> projectNos = null;
-        if(StringUtils.isNotBlank(ownerMsg)){
+        if (StringUtils.isNotBlank(ownerMsg)) {
             List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(ownerMsg);
-            if(userMsgVos == null || userMsgVos.isEmpty()){
+            if (userMsgVos == null || userMsgVos.isEmpty()) {
                 return PageVo.def(new ArrayList<>());
             }
-            List<String> ownerIds = ReflectUtils.getList(userMsgVos,"consumerId");
-            if(ownerIds == null || ownerIds.isEmpty()){
+            List<String> ownerIds = ReflectUtils.getList(userMsgVos, "consumerId");
+            if (ownerIds == null || ownerIds.isEmpty()) {
                 return PageVo.def(new ArrayList<>());
             }
             OrderUserExample orderUserExample = new OrderUserExample();
             orderUserExample.createCriteria().andUserIdIn(ownerIds).andRoleCodeEqualTo("CC");
             List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
-            projectNos = ReflectUtils.getList(orderUsers,"projectNo");
+            projectNos = ReflectUtils.getList(orderUsers, "projectNo");
         }
-        if(StringUtils.isNotBlank(projectNo)){
-            if(projectNos == null){
+        if (StringUtils.isNotBlank(projectNo)) {
+            if (projectNos == null) {
                 projectNos = new ArrayList<>();
             }
             projectNos.add(projectNo);
         }
-        if(states != null && states.isEmpty()){
+        if (states != null && states.isEmpty()) {
             states = null;
         }
         long total = designerOrderMapper.countByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, states);
         List<DesignOrderVo> designOrderVos = designerOrderMapper.selectByDesignerId(designerId, ProjectDataStatus.BASE_STATUS.getValue(), projectNos, states, pageIndex - 1, pageSize);
-        if(designOrderVos == null || designOrderVos.isEmpty()){
+        if (designOrderVos == null || designOrderVos.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
-        Map<String,String> provinceMap = basicsService.getProvince(ReflectUtils.getList(designOrderVos,"province").toArray(new String[]{}));
-        Map<String,String> cityMap = basicsService.getCity(ReflectUtils.getList(designOrderVos,"city").toArray(new String[]{}));
-        Map<String,String> areaMap = basicsService.getArea(ReflectUtils.getList(designOrderVos,"region").toArray(new String[]{}));
-        projectNos = ReflectUtils.getList(designOrderVos,"projectNo");
+        Map<String, String> provinceMap = basicsService.getProvince(ReflectUtils.getList(designOrderVos, "province").toArray(new String[]{}));
+        Map<String, String> cityMap = basicsService.getCity(ReflectUtils.getList(designOrderVos, "city").toArray(new String[]{}));
+        Map<String, String> areaMap = basicsService.getArea(ReflectUtils.getList(designOrderVos, "region").toArray(new String[]{}));
+        projectNos = ReflectUtils.getList(designOrderVos, "projectNo");
         Map<String, UserMsgVo> userMsgVoMap = getStringUserMsgVoMap(projectNos);
         for (DesignOrderVo designOrderVo : designOrderVos) {
             designOrderVo.setProjectStage(DesignStateEnum.queryByState(designOrderVo.getStage()).getStateName(3));
@@ -1396,7 +1484,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             designOrderVo.setCityName(cityMap.get(designOrderVo.getCity()));
             designOrderVo.setAreaName(areaMap.get(designOrderVo.getRegion()));
             UserMsgVo userMsgVo = userMsgVoMap.get(designOrderVo.getProjectNo());
-            if(userMsgVo != null){
+            if (userMsgVo != null) {
                 designOrderVo.setOwnerId(userMsgVo.getConsumerId());
                 designOrderVo.setOwnerName(userMsgVo.getUserName());
                 designOrderVo.setOwnerPhone(userMsgVo.getUserPhone());
@@ -1413,11 +1501,11 @@ public class NewProjectServiceImpl implements NewProjectService {
         OrderUserExample orderUserExample = new OrderUserExample();
         orderUserExample.createCriteria().andProjectNoIn(projectNos).andRoleCodeEqualTo("CC");
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
-        List<String> ownerIds = ReflectUtils.getList(orderUsers,"userId");
+        List<String> ownerIds = ReflectUtils.getList(orderUsers, "userId");
         List<UserMsgVo> userMsgVos = userCenterService.queryUsers(ownerIds);
-        Map<String, UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos,"consumerId");
+        Map<String, UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos, "consumerId");
         Map<String, UserMsgVo> proAndUserMsgMap = new HashMap<>();
-        for(OrderUser orderUser : orderUsers){
+        for (OrderUser orderUser : orderUsers) {
             UserMsgVo userMsgVo = userMsgVoMap.get(orderUser.getUserId());
             proAndUserMsgMap.put(orderUser.getProjectNo(), userMsgVo);
         }

@@ -273,6 +273,15 @@ public enum DesignStateEnum {
      */
     STATE_260(260, "施工图待确认", "设计师上传了施工图", new Integer[]{270,250}, true),
     /**
+     * 客诉处理
+     */
+    STATE_261(261, "客诉处理中", "客诉处理中", "客诉处理中", "客诉处理中", "客诉处理中", new Integer[]{}, true),
+    /**
+     * 订单关闭
+     */
+    STATE_262(262, "订单关闭", "订单关闭", "订单关闭", "订单关闭", "订单关闭", new Integer[]{}, true),
+
+    /**
      * 消费者	确认交付物	交易完成
      */
     STATE_270(270, "交易完成", "业主确认了交付物", new Integer[]{}, true);
@@ -347,6 +356,57 @@ public enum DesignStateEnum {
             enumMap.put(stateEnum.state, stateEnum);
             if (stateEnum.stateType && stateEnum.state <= state) {
                 addList(mapList, states, stateEnum);
+            }
+        }
+        DesignStateEnum stateEnum = enumMap.get(state);
+        if (!stateEnum.stateType) {
+            stateEnum = falseState(enumMap, state);
+        }
+        getData(enumMap, states, stateEnum, mapList, stateEnum.stateType);
+        List<Map<String, Object>> removeData = new ArrayList<>();
+        int lastState = -1;
+        int endState = -1;
+        int startState = -1;
+        for (int i = (mapList.size() - 1); i >= 0; i--) {
+            Map<String, Object> map = mapList.get(i);
+            int integer = (int) map.get("key");
+            if (lastState < 0) {
+                lastState = integer;
+                continue;
+            }
+            DesignStateEnum stateEnum1 = enumMap.get(integer);
+            if (!Arrays.asList(stateEnum1.nextStates).contains(lastState)) {
+                endState = lastState;
+            }
+            if (endState > 0 && Arrays.asList(stateEnum1.nextStates).contains(endState)) {
+                startState = integer;
+            }
+            if (endState > 0 && startState < 0) {
+                removeData.add(map);
+            }
+            lastState = integer;
+        }
+        mapList.removeAll(removeData);
+        return mapList;
+    }
+
+    public static List<Map<String, Object>> allState(int state, int complaintState) {
+        ConstructionStateEnum[] constructionState = ConstructionStateEnum.values();
+        DesignStateEnum[] stateEnums = DesignStateEnum.values();
+        Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        List<Integer> states = new ArrayList<>();
+        for (DesignStateEnum stateEnum : stateEnums) {
+            enumMap.put(stateEnum.state, stateEnum);
+            if (stateEnum.stateType && stateEnum.state <= state) {
+                addList(mapList, states, stateEnum);
+            } else if (complaintState == ComplaintStateEnum.STATE_2.getState()) {
+                addList(mapList, states, STATE_261);
+                return mapList;
+            } else if ( complaintState == ComplaintStateEnum.STATE_3.getState()) {
+                addList(mapList, states, STATE_261);
+                addList(mapList, states, STATE_262);
+                return mapList;
             }
         }
         DesignStateEnum stateEnum = enumMap.get(state);
