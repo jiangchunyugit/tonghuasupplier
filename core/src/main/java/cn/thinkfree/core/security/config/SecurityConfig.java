@@ -8,7 +8,6 @@ import cn.thinkfree.core.security.dao.SecurityUserDao;
 import cn.thinkfree.core.security.exception.MySecurityException;
 import cn.thinkfree.core.security.filter.*;
 import cn.thinkfree.core.security.filter.util.SecurityConstants;
-
 import cn.thinkfree.core.security.provider.MyCustomProvider;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
@@ -28,7 +27,6 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-
 
 import javax.servlet.Filter;
 import javax.servlet.ServletException;
@@ -55,6 +53,7 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
     @Autowired
     SecuritySuccessAuthHandler securitySuccessAuthHandler;
+
 
     @Override
     public void configure(WebSecurity web){

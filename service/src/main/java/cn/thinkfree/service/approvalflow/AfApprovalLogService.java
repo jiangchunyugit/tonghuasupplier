@@ -41,23 +41,23 @@ public interface AfApprovalLogService {
     void updateByPrimaryKey(AfApprovalLog approvalLog);
 
     /**
-     * 根据审批流配置编号、项目编号、用户编号查询审批流日志信息
+     * 根据审批流配置编号、项目编号、角色编号查询审批流日志信息
      * @param configNo 审批流日志
      * @param projectNo 项目编号
-     * @param userId 用户编号
+     * @param roleId 角色编号
      * @return 审批流日志
      */
-    List<AfApprovalLog> findByConfigNoAndProjectNoAndUserId(String configNo, String projectNo, String userId);
+    List<AfApprovalLog> findByConfigNoAndProjectNoAndRoleId(String configNo, String projectNo, String roleId);
 
     /**
      * 根据审批流配置编号、项目编号、用户编号查询审批流日志信息
      * @param configNo 审批流日志
      * @param projectNo 项目编号
      * @param scheduleSort 排期编号
-     * @param userId 用户编号
+     * @param roleId 角色编号
      * @return 审批流日志
      */
-    List<AfApprovalLog> findByConfigNoAndProjectNoAndScheduleSortAndUserId(String configNo, String projectNo, Integer scheduleSort, String userId);
+    List<AfApprovalLog> findByConfigNoAndProjectNoAndScheduleSortAndRoleId(String configNo, String projectNo, Integer scheduleSort, String roleId);
 
     /**
      * 创建审批日志

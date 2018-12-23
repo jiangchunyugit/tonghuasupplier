@@ -60,7 +60,7 @@ public class IndexServiceImpl implements IndexService  {
             return Collections.emptyList();
         }
 
-        List<String> resourceCode = userVO.getResources().stream().map(SystemResource::getCode).collect(Collectors.toList());
+        List<String> resourceCode = userVO.getResources().stream().map(SystemResource::getCode).distinct().collect(Collectors.toList());
         if(resourceCode.isEmpty()){
             return Collections.EMPTY_LIST;
         }

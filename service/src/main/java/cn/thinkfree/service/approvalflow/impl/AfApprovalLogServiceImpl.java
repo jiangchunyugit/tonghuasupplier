@@ -55,16 +55,16 @@ public class AfApprovalLogServiceImpl implements AfApprovalLogService {
     }
 
     @Override
-    public List<AfApprovalLog> findByConfigNoAndProjectNoAndUserId(String configNo, String projectNo, String userId) {
+    public List<AfApprovalLog> findByConfigNoAndProjectNoAndRoleId(String configNo, String projectNo, String roleId) {
         AfApprovalLogExample example = new AfApprovalLogExample();
-        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andUserIdEqualTo(userId);
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andRoleIdEqualTo(roleId);
         return approvalLogMapper.selectByExample(example);
     }
 
     @Override
-    public List<AfApprovalLog> findByConfigNoAndProjectNoAndScheduleSortAndUserId(String configNo, String projectNo, Integer scheduleSort, String userId) {
+    public List<AfApprovalLog> findByConfigNoAndProjectNoAndScheduleSortAndRoleId(String configNo, String projectNo, Integer scheduleSort, String roleId) {
         AfApprovalLogExample example = new AfApprovalLogExample();
-        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andUserIdEqualTo(userId);
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andRoleIdEqualTo(roleId);
         return approvalLogMapper.selectByExample(example);
     }
 

@@ -397,7 +397,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 if (role.getRoleCode().equals(orderUser.getRoleCode())) {
                     approvalLog = new AfApprovalLog();
                     approvalLog.setRoleId(role.getRoleCode());
-                    approvalLog.setUserId(orderUser.getUserId());
                     approvalLog.setInstanceNo(instanceNo);
                     approvalLog.setApprovalNo(UniqueCodeGenerator.AF_APPROVAL_LOG.getCode());
                     approvalLog.setIsApproval(0);
@@ -415,6 +414,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             approvalLogs.add(approvalLog);
         }
         AfApprovalLog approvalLog = approvalLogs.get(0);
+        approvalLog.setUserId(userId);
         approvalLog.setRemark(remark);
         approvalLog.setApprovalTime(new Date());
         approvalLog.setIsApproval(1);
@@ -436,7 +436,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         if (approvalLogs.size() > 1) {
             instance.setCurrentApprovalLogNo(approvalLogs.get(1).getApprovalNo());
             instance.setStatus(AfConstants.APPROVAL_STATUS_START);
-            sendMessageToNext(projectNo, userId, approvalLogs.get(1).getUserId());
+            String nextUserId = orderUserService.findUserIdByProjectNoAndRoleId(instance.getProjectNo(), approvalRoles.get(1).getRoleCode());
+            if (StringUtils.isBlank(nextUserId)) {
+                LOGGER.error("未在项目中查询到相应角色的用户，projectNo:{}, roleId:{}", instance.getProjectNo(), approvalRoles.get(1).getRoleCode());
+                throw new RuntimeException();
+            }
+            sendMessageToNext(projectNo, userId, nextUserId);
         } else {
             instance.setStatus(AfConstants.APPROVAL_STATUS_SUCCESS);
             executeSuccessAction(instance);
@@ -625,6 +630,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         String customerId = project.getOwnerId();
         AfUserDTO customer = getUserInfo(customerId, Role.CC.id);
         List<UserRoleSet> roles = roleService.findAll();
+        List<OrderUser> orderUsers = orderUserService.findByProjectNo(instance.getProjectNo());
 
         List<AfApprovalLogVO> approvalLogVOs = new ArrayList<>();
         List<AfApprovalLog> approvalLogs = approvalLogService.findByInstanceNo(instanceNo);
@@ -636,7 +642,17 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         Date approvalTime = null;
         for (AfApprovalLog approvalLog : approvalLogs) {
             AfApprovalLogVO approvalLogVO = new AfApprovalLogVO();
-            approvalLogVO.setUserId(approvalLog.getUserId());
+
+            String approvalUserId = approvalLog.getUserId();
+            if (StringUtils.isBlank(approvalUserId)) {
+                for (OrderUser orderUser : orderUsers) {
+                    if (orderUser.getRoleCode().equals(approvalLog.getRoleId())) {
+                        approvalUserId = orderUser.getUserId();
+                        break;
+                    }
+                }
+            }
+            approvalLogVO.setUserId(approvalUserId);
             approvalLogVO.setRoleId(approvalLog.getRoleId());
             for (UserRoleSet record : roles) {
                 if (record.getRoleCode().equals(approvalLogVO.getRoleId())) {
@@ -644,7 +660,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     break;
                 }
             }
-            AfUserDTO userDTO = getUserInfo(approvalLog.getUserId(), approvalLog.getRoleId());
+            AfUserDTO userDTO = getUserInfo(approvalUserId, approvalLog.getRoleId());
             approvalLogVO.setUserName(userDTO.getUsername());
             approvalLogVO.setHeadPortrait(userDTO.getHeadPortrait());
 
@@ -667,7 +683,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                     wait++;
                 }
             }
-            if (approvalLog.getApprovalNo().equals(instance.getCurrentApprovalLogNo()) && approvalLog.getUserId().equals(userId)) {
+            if (approvalLog.getApprovalNo().equals(instance.getCurrentApprovalLogNo()) && approvalUserId.equals(userId)) {
                 instanceDetailVO.setIsShowButton(true);
             }
             approvalLogVOs.add(approvalLogVO);
@@ -743,6 +759,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
 
+        approvalLog.setUserId(userId);
         approvalLog.setRemark(remark);
         approvalLog.setIsApproval(1);
         approvalLog.setApprovalTime(new Date());
@@ -759,7 +776,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 instanceStatus = AfConstants.APPROVAL_STATUS_SUCCESS;
             } else {
                 instance.setCurrentApprovalLogNo(nextApprovalLog.getApprovalNo());
-                sendMessageToNext(instance.getProjectNo(), userId, nextApprovalLog.getUserId());
+                String nextUserId = orderUserService.findUserIdByProjectNoAndRoleId(instance.getProjectNo(), nextApprovalLog.getRoleId());
+                if (StringUtils.isBlank(nextUserId)) {
+                    LOGGER.error("未在项目中查询到相应角色的用户，projectNo:{}, roleId:{}", instance.getProjectNo(), nextApprovalLog.getRoleId());
+                    throw new RuntimeException();
+                }
+                sendMessageToNext(instance.getProjectNo(), userId, nextUserId);
                 instanceStatus = AfConstants.APPROVAL_STATUS_START;
             }
         } else {
@@ -953,6 +975,12 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             throw new RuntimeException();
         }
         projectBigSchedulings.sort(Comparator.comparing(ProjectBigScheduling::getSort));
+
+        String roleId = orderUserService.findRoleIdByProjectNoAndUserId(projectNo, userId);
+        if (StringUtils.isBlank(roleId)) {
+            LOGGER.error("未查询到当前用户在项目中的角色信息，projectNo:{}, userId:{}", projectNo, userId);
+            throw new RuntimeException();
+        }
         if (AfConstants.APPROVAL_TYPE_SCHEDULE_APPROVAL.equals(approvalType)) {
             if (scheduleSort == null) {
                 LOGGER.error("没有传入相应的排期编号！");
@@ -961,37 +989,37 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             // 进度验收
             if (scheduleSort == 0) {
                 // 开工准备:开工申请
-                getInstances(instanceVOs, AfConfigs.START_APPLICATION.configNo, userId, projectNo);
+                getInstances(instanceVOs, AfConfigs.START_APPLICATION.configNo, roleId, projectNo);
                 // 开工准备:开工报告
-                getInstances(instanceVOs, AfConfigs.START_REPORT.configNo, userId, projectNo);
+                getInstances(instanceVOs, AfConfigs.START_REPORT.configNo, roleId, projectNo);
                 // 获取开工准备阶段发起菜单
                 getStartStartMenus(startMenus, projectBigSchedulings, projectNo, userId);
             } else {
                 // 验收申请
-                getInstances(instanceVOs, AfConfigs.CHECK_APPLICATION.configNo, userId, projectNo, scheduleSort);
+                getInstances(instanceVOs, AfConfigs.CHECK_APPLICATION.configNo, roleId, projectNo, scheduleSort);
                 // 验收报告
-                getInstances(instanceVOs, AfConfigs.CHECK_REPORT.configNo, userId, projectNo, scheduleSort);
+                getInstances(instanceVOs, AfConfigs.CHECK_REPORT.configNo, roleId, projectNo, scheduleSort);
                 // 完工审批
-                getInstances(instanceVOs, AfConfigs.COMPLETE_APPLICATION.configNo, userId, projectNo, scheduleSort);
+                getInstances(instanceVOs, AfConfigs.COMPLETE_APPLICATION.configNo, roleId, projectNo, scheduleSort);
                             // 获取验收、完工申请发起菜单
                 getCheckAndCompleteStartMenus(startMenus, userId, projectNo, projectBigSchedulings, scheduleSort);
             }
 
         } else if (AfConstants.APPROVAL_TYPE_PROBLEM_RECTIFICATION.equals(approvalType)) {
             // 问题整改：问题整改
-            getInstances(instanceVOs, AfConfigs.PROBLEM_RECTIFICATION.configNo, userId, projectNo);
+            getInstances(instanceVOs, AfConfigs.PROBLEM_RECTIFICATION.configNo, roleId, projectNo);
             // 问题整改：整改完成
-            getInstances(instanceVOs, AfConfigs.RECTIFICATION_COMPLETE.configNo, userId, projectNo);
+            getInstances(instanceVOs, AfConfigs.RECTIFICATION_COMPLETE.configNo, roleId, projectNo);
             getProblemStartMenus(startMenus, projectBigSchedulings, userId, projectNo);
         } else if (AfConstants.APPROVAL_TYPE_CONSTRUCTION_CHANGE.equals(approvalType)) {
             // 施工变更：变更单
-            getInstances(instanceVOs, AfConfigs.CHANGE_ORDER.configNo, userId, projectNo);
+            getInstances(instanceVOs, AfConfigs.CHANGE_ORDER.configNo, roleId, projectNo);
             // 施工变更：变更完成
-            getInstances(instanceVOs, AfConfigs.CHANGE_COMPLETE.configNo, userId, projectNo);
+            getInstances(instanceVOs, AfConfigs.CHANGE_COMPLETE.configNo, roleId, projectNo);
             getChangeStartMenus(startMenus, projectBigSchedulings, userId, projectNo);
         } else if (AfConstants.APPROVAL_TYPE_DELAY_VERIFY.equals(approvalType)) {
             // 延期确认
-            getInstances(instanceVOs, AfConfigs.DELAY_ORDER.configNo, userId, projectNo);
+            getInstances(instanceVOs, AfConfigs.DELAY_ORDER.configNo, roleId, projectNo);
             getDelayStartMenus(startMenus, projectBigSchedulings, userId, projectNo);
         }
 
@@ -1411,25 +1439,25 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * 获取审批流实例
      * @param instanceVOs 审批流实例
      * @param configNo 审批流配置编号
-     * @param userId 用户编号
+     * @param roleId 角色编号
      * @param projectNo 项目编号
      */
-    private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String userId, String projectNo) {
-        List<AfApprovalLog> approvalLogs = approvalLogService.findByConfigNoAndProjectNoAndUserId(configNo, projectNo, userId);
-        getInstances(instanceVOs, approvalLogs, configNo, userId);
+    private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String roleId, String projectNo) {
+        List<AfApprovalLog> approvalLogs = approvalLogService.findByConfigNoAndProjectNoAndRoleId(configNo, projectNo, roleId);
+        getInstances(instanceVOs, approvalLogs, configNo, roleId);
     }
 
     /**
      * 获取审批流实例
      * @param instanceVOs 审批流实例
      * @param configNo 审批流配置编号
-     * @param userId 用户编号
+     * @param roleId 角色编号
      * @param projectNo 项目编号
      * @param scheduleSort 排期编号
      */
-    private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String userId, String projectNo, Integer scheduleSort) {
-        List<AfApprovalLog> approvalLogs = approvalLogService.findByConfigNoAndProjectNoAndScheduleSortAndUserId(configNo, projectNo, scheduleSort, userId);
-        getInstances(instanceVOs, approvalLogs, configNo, userId);
+    private void getInstances( List<AfInstanceVO> instanceVOs, String configNo, String roleId, String projectNo, Integer scheduleSort) {
+        List<AfApprovalLog> approvalLogs = approvalLogService.findByConfigNoAndProjectNoAndScheduleSortAndRoleId(configNo, projectNo, scheduleSort, roleId);
+        getInstances(instanceVOs, approvalLogs, configNo, roleId);
     }
 
     /**
@@ -1437,9 +1465,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
      * @param instanceVOs 审批流实例
      * @param approvalLogs 审批记录
      * @param configNo 审批流配置编号
-     * @param userId 用户编号
+     * @param roleId 角色编号
      */
-    private void getInstances( List<AfInstanceVO> instanceVOs, List<AfApprovalLog> approvalLogs, String configNo, String userId) {
+    private void getInstances( List<AfInstanceVO> instanceVOs, List<AfApprovalLog> approvalLogs, String configNo, String roleId) {
         AfConfig config = configService.findByNo(configNo);
         if (config == null) {
             LOGGER.error("未查询到审批流配置信息，configNo:{}", configNo);
@@ -1461,7 +1489,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 }
                 if (instance.getStatus() == 1) {
                     AfApprovalLog currentApprovalLog = approvalLogService.findByNo(instance.getCurrentApprovalLogNo());
-                    if (currentApprovalLog.getUserId().equals(userId)) {
+                    if (currentApprovalLog.getRoleId().equals(roleId)) {
                         // 待审批用户与当前用户相同
                         instanceVO.setIsShowButton(true);
                     }

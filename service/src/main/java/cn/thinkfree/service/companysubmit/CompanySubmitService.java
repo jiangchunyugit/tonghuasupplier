@@ -1,15 +1,11 @@
 package cn.thinkfree.service.companysubmit;
 
-import java.util.List;
-import java.util.Map;
-
 import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
-import org.apache.catalina.User;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author ying007
