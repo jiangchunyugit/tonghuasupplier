@@ -559,15 +559,21 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("角色编码不能为空");
         }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria();
         if(StringUtils.isBlank(companyId)){
             throw new RuntimeException("公司ID不能为空");
         }
-        criteria.andCompanyIdEqualTo(companyId);
         if (StringUtils.isNotBlank(searchKey)) {
-            msgExample.or().andUserIdLike("%" + searchKey + "%");
-            msgExample.or().andRealNameLike("%" + searchKey + "%");
-            msgExample.or().andCertificateLike("%" + searchKey + "%");
+            msgExample.or().andUserIdLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andRealNameLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andCertificateLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(searchKey);
+            List<String> userIds = ReflectUtils.getList(userMsgVos,"staffId");
+            if(userIds != null && !userIds.isEmpty()){
+                msgExample.or().andUserIdIn(userIds).andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            }
+        }else{
+            criteria.andCompanyIdEqualTo(companyId);
         }
         long total = employeeMsgMapper.countByExample(msgExample);
         PageHelper.startPage(pageIndex, pageSize);
@@ -619,6 +625,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
             if(!employeeMsgs.isEmpty()){
                 userIds.addAll(ReflectUtils.getList(employeeMsgs,"userId"));
+            }
+            if(userIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
             }
             criteria.andUserIdIn(userIds);
         }
@@ -736,11 +745,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("角色编码不能为空");
         }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
         if (StringUtils.isNotBlank(searchKey)) {
-            msgExample.or().andUserIdLike("%" + searchKey + "%");
-            msgExample.or().andRealNameLike("%" + searchKey + "%");
-            msgExample.or().andCertificateLike("%" + searchKey + "%");
+            msgExample.or().andUserIdLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andRealNameLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andCertificateLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+        }else{
+            msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
         }
         long total = employeeMsgMapper.countByExample(msgExample);
         PageHelper.startPage(pageIndex, pageSize);

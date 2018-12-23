@@ -44,4 +44,17 @@ public class ConstructOrderPayServiceImpl implements ConstructOrderPayService {
     public void insert(ConstructionOrderPay constructionOrderPay) {
         constructionOrderPayMapper.insertSelective(constructionOrderPay);
     }
+
+    @Override
+    public int isPay(String orderNo, Integer scheduleSort) {
+        ConstructionOrderPay constructionOrderPay = findByOrderNo(orderNo);
+        if (constructionOrderPay != null) {
+            if (constructionOrderPay.getSort() > scheduleSort) {
+                return 1;
+            } else if (scheduleSort.equals(constructionOrderPay.getSort().intValue()) && "pay".equals(constructionOrderPay.getIsEnd())){
+                return 1;
+            }
+        }
+        return 0;
+    }
 }

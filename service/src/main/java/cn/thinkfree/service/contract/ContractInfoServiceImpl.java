@@ -4,6 +4,7 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
 import cn.thinkfree.database.constants.SyncOrderEnum;
 import cn.thinkfree.database.event.MarginContractEvent;
@@ -21,10 +22,12 @@ import cn.thinkfree.service.branchcompany.BranchCompanyService;
 import cn.thinkfree.service.businessentity.BusinessEntityService;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.companysubmit.CompanySubmitService;
+import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.constants.*;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.pcthirdpartdate.ThirdPartDateService;
+import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.utils.*;
 import com.alibaba.fastjson.JSONArray;
@@ -100,6 +103,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Autowired
 	EventService eventService;
 
+	@Autowired
+	private HttpLinks httpLinks;
+
 	//@Autowired
 	//NewSchedulingService newSchedulingService;
 
@@ -133,6 +139,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 	@Autowired
 	BusinessEntityService businessEntityService;
+
+	@Autowired
+	AuditContractOwnerMapper auditContractOwnerMapper;
+
+
+
+
 
 
 
@@ -1080,17 +1093,25 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			return resMap;
 		}
 		//修改
-       if(String.valueOf(paramMap.get("c24")).equals("0")){
-			OrderContractExample expo = new OrderContractExample();
-			expo.createCriteria().andOrderNumberEqualTo(orderNumber);
-			//插入订单合同是否录入
-			List<OrderContract> list = orderContractMapper.selectByExample(expo);
-			if(list.size() > 0){
-				resMap.put("code", "false");
-				resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
-				return resMap;
-			}
+		//查询审
+		AuditContractOwnerExample exampleTo = new AuditContractOwnerExample();
+		exampleTo.createCriteria().andOrderNumberEqualTo(orderNumber).andStatusEqualTo("1");
+		List<AuditContractOwner> owerList = auditContractOwnerMapper.selectByExample(exampleTo);
+		if(owerList!=null && owerList.size() >0 ){
+			resMap.put("code", "false");
+			resMap.put("msg", "该合同业主已经同意，不能修改");
+			return resMap;
 		}
+
+		/*OrderContractExample expo = new OrderContractExample();
+		expo.createCriteria().andOrderNumberEqualTo(orderNumber);
+		//插入订单合同是否录入
+		List<OrderContract> list = orderContractMapper.selectByExample(expo);
+		if(list.size() > 0){
+			resMap.put("code", "false");
+			resMap.put("msg", "该合同已被其他设计师录入，无法重复录入");
+			return resMap;
+		}*/
 		try {
 			String companyId = orderList.get(0).getCompanyId();
 			/* 插入合同主表 */
@@ -1165,9 +1186,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	{
 		try {
 			//合同开始时间
-			Date startDt = paramMap.get("")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c19")),"yyyy-MM-dd HH:mm:ss");
+			Date startDt = DateUtil.formateToDate(String.valueOf(paramMap.get("c19")),"yyyy-MM-dd");
 			//合同结束时间
-			Date endDt = paramMap.get("")==null?new Date():DateUtil.formateToDate(String.valueOf(paramMap.get("c20")),"yyyy-MM-dd HH:mm:ss");
+			Date endDt = DateUtil.formateToDate(String.valueOf(paramMap.get("c20")),"yyyy-MM-dd");
+			if(startDt == null || endDt == null){
+				throw new RuntimeException("开始时间和结束时间必须不能为空！");
+			}
 			/* 插入合同主表 */
 			String contractNumber = createOrderContract(companyId, orderNumber,startDt,endDt, "03");
 			/* 插入合同iterm 详情 */
@@ -1517,5 +1541,106 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			vo.setContractStatus(orderVo.getAuditType());
 		}
 		return  vo ;
+	}
+
+	@Autowired
+	OrderUserMapper orderUserMapper;
+
+	@Override
+	@Transactional
+	public boolean insertOrderContractToOwner(String orderNo, String cause, String status) {
+		AuditContractOwner record = new AuditContractOwner();
+		record.setOrderNumber(orderNo);
+		record.setStatus(status);
+		record.setCause(cause);
+		record.setCreateDt(new Date());
+		int  falg = auditContractOwnerMapper.insertSelective(record);
+		if(falg > 0){
+			//不同意通知设计师傅
+			if(status.equals("0")){
+				//修改设计合同订单状态为未审核
+				OrderContract recordTwo = new OrderContract();
+				recordTwo.setAuditType("2");//审核未通过
+				OrderContractExample exampleTwo = new OrderContractExample();
+				exampleTwo.createCriteria().andOrderNumberEqualTo(orderNo);
+				orderContractMapper.updateByExampleSelective(recordTwo,exampleTwo);
+				//查询项目编号和 设计设
+				DesignerOrderExample exampleOne = new DesignerOrderExample();
+				exampleOne.createCriteria().andOrderNoEqualTo(orderNo);
+				List<DesignerOrder>  projectList = designerOrderMapper.selectByExample(exampleOne);
+				OrderUserExample example = new OrderUserExample();
+				example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CD");
+				List<OrderUser> list = orderUserMapper.selectByExample(example);
+				//designerOrderMapper.selectByExample()
+				String projectNo = projectList.size()>0?projectList.get(0).getProjectNo():"";
+				String subUserId =list.size()>0?list.get(0).getUserId():"";
+				String content ="业主不同意项目编号"+projectNo+"的设计合同，请您重新编辑";
+				printInfoMes("设计合同业主不同意发送消息projectNo:{},subUserId{}",projectNo,content);
+				this.sendMessage(projectNo,"",subUserId,content);
+			}
+			//查询是否全款 1全款合同，2分期款合同
+			// 查询合同是全款换是分期
+			OrderContractExample example = new OrderContractExample();
+			example.createCriteria().andOrderNumberEqualTo(orderNo);
+			// 查询合同
+			List<OrderContract> list = orderContractMapper.selectByExample(example);
+			ContractTermsExample example1 = new ContractTermsExample();
+			example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
+			List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+			Map<String, String> chMap = new HashMap<>();
+			for (int i = 0; i < childListr.size(); i++) {
+				chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+			}
+			// 1全款合同，2分期合同
+			int type = 1;
+			if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
+				type = 2;
+			}
+			//1 同意 2不同意
+			int contractType  =  1;
+			if(status.equals("0")){
+				contractType = 2;
+			}
+			designDispatchService.contractApproval(orderNo,contractType,type);
+			return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public Map<String, String> getDesignerContractInfo(String contractNo) {
+		ContractTermsExample example1 = new ContractTermsExample();
+		example1.createCriteria().andContractNumberEqualTo(contractNo);
+		List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+		Map<String, String> chMap = new HashMap<>();
+		for (int i = 0; i < childListr.size(); i++) {
+			chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+		}
+		return chMap;
+	}
+
+	/**
+	 * @return
+	 * @Author jiang
+	 * @Description 提醒业主支付量房费
+	 * @Date
+	 * @Param
+	 **/
+	private void sendMessage(String projectNo, String sendUserId, String subUserId, String content) {
+		Map<String, String> requestMsg = new HashMap<>();
+		requestMsg.put("projectNo", projectNo);
+		requestMsg.put("userNo", "[\"" + subUserId + "\"]");
+		requestMsg.put("senderId", sendUserId);
+		requestMsg.put("content", content);
+		requestMsg.put("dynamicId", "0");
+		requestMsg.put("type", "5");
+		printInfoMes("发送消息：requestMsg：{}", requestMsg);
+		try {
+			HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
+			printInfoMes("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
+		} catch (Exception e) {
+			printInfoMes("发送消息出错", e);
+		}
 	}
 }

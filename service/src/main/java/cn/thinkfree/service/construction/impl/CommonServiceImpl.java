@@ -5,6 +5,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.vo.ConstructionCityVo;
+import cn.thinkfree.service.project.ProjectStageLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,8 @@ public class CommonServiceImpl implements CommonService {
     ProjectMapper projectMapper;
     @Autowired
     ProjectBigSchedulingMapper projectBigSchedulingMapper;
+    @Autowired
+    private ProjectStageLogService projectStageLogService;
 
     /**
      * 查询 当前状态值 By projectNo
@@ -98,6 +101,7 @@ public class CommonServiceImpl implements CommonService {
         //同步到project表中
         int isUpdateProject = updateToProject(list.get(0).getProjectNo(), stateCode);
         if (isUpdate == 1 && isUpdateProject == 1) {
+            projectStageLogService.create(list.get(0).getProjectNo(), stateCode);
             return true;
         } else {
             return false;

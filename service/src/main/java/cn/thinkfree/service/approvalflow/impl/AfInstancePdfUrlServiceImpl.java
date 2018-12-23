@@ -66,7 +66,7 @@ public class AfInstancePdfUrlServiceImpl implements AfInstancePdfUrlService {
         exportPdfVO.setRemark(instance.getRemark());
         exportPdfVO.setProjectNo(instance.getProjectNo());
         exportPdfVO.setInstanceNo(instance.getInstanceNo());
-        exportPdfVO.setCreateTime(DateUtil.formartDate(instance.getCreateTime(), DateUtil.FORMAT));
+        exportPdfVO.setCreateTime(DateUtil.formartDate(instance.getCreateTime(), DateUtil.FORMAT_YYMMDD_HHmmss));
         exportPdfVO.setConfigNo(instance.getConfigNo());
 
         Project project = projectService.findByProjectNo(instance.getProjectNo());

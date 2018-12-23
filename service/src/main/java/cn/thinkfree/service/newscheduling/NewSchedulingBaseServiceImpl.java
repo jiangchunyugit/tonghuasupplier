@@ -336,4 +336,12 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         List<ProjectBigScheduling> projectBigSchedulings = projectBigSchedulingMapper.selectByExample(example);
         return projectBigSchedulings != null && projectBigSchedulings.size() > 0 ? projectBigSchedulings.get(0) : null;
     }
+
+    @Override
+    public List<ProjectBigScheduling> findBySchemeNoOrderBySortAsc(String schemeNo) {
+        ProjectBigSchedulingExample example = new ProjectBigSchedulingExample();
+        example.createCriteria().andSchemeNoEqualTo(schemeNo);
+        example.setOrderByClause("sort asc");
+        return projectBigSchedulingMapper.selectByExample(example);
+    }
 }

@@ -336,4 +336,14 @@ public interface DesignDispatchService {
      * @author  lqd
      */
     DesignContractToVo getDesigneContractInfo(String orderNo);
+    /**
+     * @Author jiang
+     * @Description
+     * @Date
+     * @Param 设计订单编号
+     * @Param 合同类型
+     * @return
+     **/
+    void contractApproval(String orderNo,Integer type, int contractType);
+
 }

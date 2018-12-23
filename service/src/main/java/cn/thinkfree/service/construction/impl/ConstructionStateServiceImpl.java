@@ -14,6 +14,7 @@ import cn.thinkfree.service.construction.*;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.build.BuildConfigService;
 import cn.thinkfree.service.project.ProjectService;
+import cn.thinkfree.service.project.ProjectStageLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     @Autowired
     ProjectBigSchedulingDetailsMapper detailsMapper;
     @Autowired
-    BuildPayConfigMapper buildPayConfigMapper;
+    private BuildPayConfigService buildPayConfigService;
     @Autowired
     private BuildConfigService buildConfigService;
     @Autowired
@@ -59,6 +60,9 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     private NewSchedulingService schedulingService;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private ProjectStageLogService projectStageLogService;
+
 
 
     /**
@@ -381,11 +385,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         map.put("bigSort", bigSort);
 
         //获取支付方案
-        BuildPayConfigExample configExample = new BuildPayConfigExample();
-        BuildPayConfigExample.Criteria criteria = configExample.createCriteria();
-        criteria.andSchemeNoEqualTo(projectBigSchedulingDetailsList.get(0).getSchemeNo());
-        criteria.andDeleteStateIn(Arrays.asList(2, 3));
-        List<BuildPayConfig> buildPayConfigList = buildPayConfigMapper.selectByExample(configExample);
+        List<BuildPayConfig> buildPayConfigList = buildPayConfigService.findBySchemeNo(projectBigSchedulingDetailsList.get(0).getSchemeNo());
         if (buildPayConfigList.size() == 0) {
             throw new RuntimeException("支付方案不存在");
         }
@@ -435,6 +435,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         constructionOrder.setRemark(cancelReason);
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
         if (isUpdate == 1) {
+            projectStageLogService.create(list.get(0).getProjectNo(), constructionOrder.getOrderStage());
             return RespData.success();
         } else {
             return RespData.error(ResultMessage.ERROR.code, "取消订单失败-请稍后重试");
@@ -503,7 +504,18 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
     }
 
     @Override
-    public List<OrderStatusDTO> getStates(int type, Integer currentStatus) {
+    public List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo) {
+
+        List<ConstructionStateEnum> removeStates = null;
+        if (StringUtils.isNotBlank(schemeNo)) {
+            List<BuildPayConfig> buildPayConfigs = buildPayConfigService.findBySchemeNo(schemeNo);
+            if (buildPayConfigs != null && buildPayConfigs.size() <= 2) {
+                removeStates = new ArrayList<>(2);
+                removeStates.add(ConstructionStateEnum.STATE_630);
+                removeStates.add(ConstructionStateEnum.STATE_640);
+            }
+        }
+
         List<OrderStatusDTO> orderStatusDTOs = new ArrayList<>();
         ConstructionStateEnum[] stateEnums = ConstructionStateEnum.values();
         String preStateName = "";
@@ -520,6 +532,9 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
             }
             if (constructionState.getState() > ConstructionStateEnum.STATE_700.getState()) {
                 break;
+            }
+            if (removeStates != null && removeStates.contains(constructionState)) {
+                continue;
             }
             preStateName = stateName;
             OrderStatusDTO orderStatusDTO = new OrderStatusDTO();

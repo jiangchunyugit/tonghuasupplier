@@ -12,7 +12,9 @@ import java.util.List;
  * @author gejiaming
  */
 public class DateUtil {
-    public static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String FORMAT_YYMMDD_HHmmss = "yyyy-MM-dd HH:mm:ss";
+
+    public static final String FORMAT_YYMMDD = "yyyy-MM-dd";
     /**
      * 保留2位小数
      */
@@ -258,6 +260,7 @@ public class DateUtil {
         try {
             return fmt.parse(timeStr);
         } catch (ParseException e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -295,8 +298,8 @@ public class DateUtil {
     }
 
     public static void main(String[] args) {
-        Date date1 = formateToDate("2018-08-09 00:00:00", FORMAT);
-        Date date2 = formateToDate("2018-08-01 00:00:01", FORMAT);
+        Date date1 = formateToDate("2018-08-09 00:00:00", FORMAT_YYMMDD_HHmmss);
+        Date date2 = formateToDate("2018-08-01 00:00:01", FORMAT_YYMMDD_HHmmss);
         int i = differentHoursByMillisecond(date1, date2);
         System.out.println(i);
     }

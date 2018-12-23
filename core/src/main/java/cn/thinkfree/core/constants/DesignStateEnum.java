@@ -103,12 +103,16 @@ public enum DesignStateEnum {
      * 分期款状态<br/>
      * 设计公司	审批合同（通过）
      */
-    STATE_140(140, "首款待支付", "合同审核通过", new Integer[]{150, 141}, true),
+    STATE_140(140, "合同待用户确认", "合同审核通过", new Integer[]{141,142}, true),
     /**
      * 订单阶段逆行<br/>
      * 消费者	拒绝支付订单款项（超时未支付）
      */
     STATE_141(141, "订单关闭", "订单关闭（支付超时）", "订单关闭（支付超时）", "订单关闭（支付超时）", "业主拒绝支付订单，订单被关闭", new Integer[]{}, false),
+   /**
+    *消费者 同意
+    **/
+   STATE_142(142, "首款待支付", "首款待支付", new Integer[]{150}, true),
     /**
      * 消费者	支付订单首款
      */
@@ -210,12 +214,16 @@ public enum DesignStateEnum {
      * 全款状态<br/>
      * 设计公司	审批合同通过
      */
-    STATE_220(220, "全款待支付", "合同审核通过", new Integer[]{230, 221}, true),
+    STATE_220(220, "合同待用户确认", "合同审核通过", new Integer[]{221,222}, true),
     /**
      * 订单阶段逆行<br/>
      * 消费者	拒绝支付订单款项（超时未支付）
      */
     STATE_221(221, "订单关闭", "订单关闭（支付超时）", "订单关闭（支付超时）", "订单关闭（支付超时）", "业主拒绝支付订单，订单被关闭", new Integer[]{}, false),
+    /**
+     * 业主同意
+     **/
+    STATE_222(222, "全款待支付", "全款待支付", new Integer[]{230}, true),
     /**
      * 消费者	支付订单款项（全款）
      */
@@ -330,7 +338,6 @@ public enum DesignStateEnum {
                 return null;
         }
     }
-
     public static List<Map<String, Object>> allState(int state) {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();

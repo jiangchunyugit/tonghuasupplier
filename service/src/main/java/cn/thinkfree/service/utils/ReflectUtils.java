@@ -87,7 +87,11 @@ public class ReflectUtils {
 	public static <K, T> Map<K, T> listToMap(List<T> ts, String key) {
 		Map<K, T> mapT = new HashMap<>(16);
 		for (T t : ts) {
-			mapT.put((K) getVal(t, key), t);
+			K k = (K) getVal(t, key);
+			if(k == null){
+				continue;
+			}
+			mapT.put(k, t);
 		}
 		return mapT;
 	}

@@ -657,4 +657,5 @@ public class DesignDispatchController extends AbsBaseController {
                 areaCode, contractState, signTimeS, signTimeE, ownerMsg, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, itemVo);
     }
+
 }

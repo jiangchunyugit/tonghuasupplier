@@ -4,6 +4,7 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.vo.AfCheckResultVO;
 import cn.thinkfree.database.vo.AfInstanceDetailVO;
 import cn.thinkfree.database.vo.AfInstanceListVO;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
@@ -119,5 +120,13 @@ public class AfInstanceController extends AbsBaseController {
     @ApiParam(name = "projectNo", value = "项目编号", required = true)
     public MyRespBundle<List<String>> projectApprovalList(@RequestParam(name = "projectNo") String projectNo){
         return sendJsonData(ResultMessage.SUCCESS, instanceService.projectApprovalList(projectNo));
+    }
+
+    @RequestMapping(value = "/checkList", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="前端-审批实例列表-宋传让")
+    @ApiParam(name = "projectNo", value = "项目编号", required = true)
+    public MyRespBundle<List<AfCheckResultVO>> checkList(@RequestParam(name = "projectNo") String projectNo){
+        return sendJsonData(ResultMessage.SUCCESS, instanceService.checkList(projectNo));
     }
 }
