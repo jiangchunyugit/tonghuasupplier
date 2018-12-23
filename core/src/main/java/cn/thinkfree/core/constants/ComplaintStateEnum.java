@@ -6,10 +6,26 @@ package cn.thinkfree.core.constants;
  * @Description:客诉状态
  */
 public enum ComplaintStateEnum {
+    /**
+     * 客诉情况：未投诉
+     */
     STATE_1(1, "未投诉"),
-    STATE_2(2, "处理中"),
-    STATE_3(3, "关闭"),
-    STATE_4(4, "已取消");
+    /**
+     * 客诉情况：投诉处理中
+     */
+    STATE_2(2, "投诉处理中"),
+    /**
+     * 客诉情况：订单关闭
+     */
+    STATE_3(3, "订单关闭"),
+    /**
+     * 客诉情况：取消投诉
+     */
+    STATE_4(4, "取消投诉"),
+    /**
+     * 客诉情况：未投诉，直接取消订单
+     */
+    STATE_5(5, "未投诉，直接取消订单");
 
     private int state;
     private String code;

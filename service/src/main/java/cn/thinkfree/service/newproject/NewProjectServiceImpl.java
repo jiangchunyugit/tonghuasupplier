@@ -15,6 +15,7 @@ import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.designer.service.DesignerOrderService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.basics.BasicsService;
@@ -108,6 +109,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     ContractTermsMapper contractTermsMapper;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private DesignerOrderService designerOrderService;
 
 
     /**
@@ -1236,22 +1239,26 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle cancleOrder(String orderNo, String projectNo, String userId, String cancelReason) {
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria designerCriteria = designerOrderExample.createCriteria();
-        designerCriteria.andOrderNoEqualTo(orderNo);
-        designerCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if (designerOrders.size() == 0) {
-            return RespData.error("查无此项目");
-        }
-        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
-            //如果设计订单完成,则请求施工订单更改状态
-            constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
+    public void cancelOrder(String orderNo, String projectNo, String userId, Integer orderType, String cancelReason) {
+        if (orderType == 1) {
+            DesignerOrder designerOrder = designerOrderService.findByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            if (designerOrder == null) {
+                throw new RuntimeException("查无此项目");
+            }
+            if (DesignStateEnum.getAllCancelState().contains(DesignStateEnum.queryByState(designerOrder.getOrderStage()))) {
+                designDispatchService.endOrder(projectNo, userId, cancelReason);
+            }
         } else {
-            designDispatchService.endOrder(projectNo, userId, cancelReason);
+            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+            if (constructionOrder == null) {
+                throw new RuntimeException("查无此项目");
+            }
+            if (constructionOrder.getOrderStage() <= ConstructionStateEnum.STATE_600.getState()) {
+                constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
+            } else {
+                throw new RuntimeException("当前订单不能取消");
+            }
         }
-        return RespData.success();
     }
 
     /**

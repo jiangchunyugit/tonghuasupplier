@@ -17,4 +17,11 @@ public interface DesignerOrderService {
      * @return
      */
     DesignerOrder findByProjectNo(String projectNo);
+
+    /**
+     * 根据项目编号查询设计订单
+     * @param projectNo
+     * @return
+     */
+    DesignerOrder findByProjectNoAndStatus(String projectNo, Integer status);
 }
