@@ -376,6 +376,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         //验收结果
         ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        checkExample.setOrderByClause("submit_time DESC");
         ProjectQuotationCheckExample.Criteria checkCriteria = checkExample.createCriteria();
         checkCriteria.andProjectNoEqualTo(projectNo);
         checkCriteria.andStatusEqualTo(1);
