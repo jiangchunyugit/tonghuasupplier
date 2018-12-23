@@ -45,4 +45,6 @@ public class ConsListVo {
     private String cmName;
     @ApiModelProperty("管家姓名")
     private String csName;
+    @ApiModelProperty("1是待运营平台派单，2待公司派单，3不展示派单按钮")
+    private int isDistribution;
 }
