@@ -12,6 +12,7 @@ import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
+import cn.thinkfree.service.utils.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -201,6 +202,18 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
         //组合延期天数
         for (ProjectBigSchedulingDetailsVO bigSchedulingVO : playBigList) {
             bigSchedulingVO.setDelay(DateUtil.differentHoursByMillisecond(bigSchedulingVO.getPlanEndTime(), bigSchedulingVO.getActualEndTime()));
+            //添加进度信息
+            if (bigSchedulingVO.getIsCompleted() == 1) {
+                bigSchedulingVO.setPercentage(100);
+            } else {
+                bigSchedulingVO.setPercentage(MathUtil.getPercentage(bigSchedulingVO.getPlanStartTime(), bigSchedulingVO.getPlanEndTime(), new Date()));
+                if (bigSchedulingVO.getPercentage() == 100) {
+                    bigSchedulingVO.setPercentage(99);
+                }
+            }
+            if (bigSchedulingVO.getActualStartTime()==null){
+                bigSchedulingVO.setPercentage(0);
+            }
         }
         return RespData.success(playBigList);
     }

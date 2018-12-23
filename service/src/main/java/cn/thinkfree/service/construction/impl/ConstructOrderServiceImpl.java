@@ -479,6 +479,12 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
             if(orderContract != null && orderContract.getSignTime() != null){
                 consListVo.setSignTime(orderContract.getSignTime().getTime() + "");
             }
+            consListVo.setIsDistribution(3);
+            if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_500.getState()){
+                consListVo.setIsDistribution(1);
+            }else if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_510.getState()){
+                consListVo.setIsDistribution(2);
+            }
             consListVos.add(consListVo);
         }
         PageVo<List<ConsListVo>> pageVo = PageVo.def(consListVos);

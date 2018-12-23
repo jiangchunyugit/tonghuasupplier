@@ -213,7 +213,7 @@
         %充作保证金，-->
 
         <#list code13 as c>
-        <div class="indent">  1.2.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+           <div class="indent">  1.2.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
              <#if c.cType == 1 >
                     元
              <#else>
@@ -221,6 +221,7 @@
              </#if>
             ${(c.costName?split("@")[1]) }。</div>
         </#list>
+
         直到剩余保证金补足为止。
     </div>
         </#if>
@@ -275,7 +276,7 @@
 <section class="indent">
     4.施工服务费
     <div class="indent">
-        4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput"></div>%作为施工服务费，甲方分两次与乙方结算施工服务费。
+        4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c12}</div>%作为施工服务费，甲方分两次与乙方结算施工服务费。
     </div>
     <#list code10 as c>
                 <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
