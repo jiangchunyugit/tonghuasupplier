@@ -637,6 +637,32 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()) > 0 ? 1 : 0);
         projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()) > 0 ? 1 : 0);
         projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()) > 0 ? 1 : 0);
+        //添加客诉判断
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(project.getProjectNo());
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        projectVo.setComplaintState(designerOrder.getComplaintState());
+        if (designerOrder.getComplaintState() == 2) {
+            projectVo.setComplaintState(designerOrder.getComplaintState());
+            projectVo.setProjectDynamic(2);
+            projectVo.setProjectOrder(2);
+            projectVo.setProjectData(2);
+            projectVo.setProjectInvoice(2);
+        }
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+        if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+            projectVo.setComplaintState(constructionOrder.getComplaintState());
+            projectVo.setProjectDynamic(2);
+            projectVo.setProjectOrder(2);
+            projectVo.setProjectData(2);
+            projectVo.setProjectInvoice(2);
+        }
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
@@ -651,15 +677,15 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setOwner(owner);
 
         //组合设计订单
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
-        designCriteria.andProjectNoEqualTo(projectNo);
-        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("查无此设计订单");
-        }
-        DesignerOrder designerOrder = designerOrders.get(0);
+//        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+//        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+//        designCriteria.andProjectNoEqualTo(projectNo);
+//        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+//        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+//            return RespData.error("查无此设计订单");
+//        }
+//        DesignerOrder designerOrder = designerOrders.get(0);
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放客服信息
         designerOrderDetailVo.setComplaintState(designerOrder.getComplaintState());
@@ -718,7 +744,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
-            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+//            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             //存放客服信息
             constructionOrderDetailVo.setComplaintState(constructionOrder.getComplaintState());
             List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getComplaintState(), constructionOrder.getSchemeNo());
