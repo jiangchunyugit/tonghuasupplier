@@ -852,6 +852,25 @@ public class NewProjectServiceImpl implements NewProjectService {
         } else {
             projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
         }
+
+        //添加客诉判断
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(project.getProjectNo());
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        projectTitleVo.setComplaintState(designerOrder.getComplaintState());
+        if (designerOrder.getComplaintState() == 2) {
+            projectTitleVo.setComplaintState(designerOrder.getComplaintState());
+        }
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+        if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+            projectTitleVo.setComplaintState(constructionOrder.getComplaintState());
+        }
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
@@ -871,7 +890,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderPlayVos.size() != 0) {
             OrderPlayVo orderPlayVo = orderPlayVos.get(0);
             String totalMoney = "";
-            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+//            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
