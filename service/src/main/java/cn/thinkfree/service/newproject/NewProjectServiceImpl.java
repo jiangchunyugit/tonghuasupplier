@@ -1140,9 +1140,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
             if (dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
-                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
-                    return RespData.error("3D全景度为空");
-                }
+//                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
+//                    return RespData.error("3D全景度为空");
+//                }
                 projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
             } else {
                 if (urlDetailVo.getImgUrl() == null || urlDetailVo.getImgUrl().trim().isEmpty()) {
