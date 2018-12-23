@@ -583,7 +583,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				ContractTermsChildExample example1 = new ContractTermsChildExample();
 				example1.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
 						.andCostTypeEqualTo(childList.get(i).getCostType());
-				example1.setOrderByClause("sort desc ");
+				example1.setOrderByClause("sort asc ");
 				List<ContractTermsChild> childListOne = contractTermsChildMapper.selectByExample(example1);
 				//替换宏变量
 				List<ContractTermsChild> childListTwo = new ArrayList<>(childListOne.size());
