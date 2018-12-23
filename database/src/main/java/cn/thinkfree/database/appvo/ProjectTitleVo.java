@@ -47,6 +47,8 @@ public class ProjectTitleVo {
     private String stageDesignName;
     @ApiModelProperty(value = "消息内容,内容不存在时不要展示")
     private String message;
+    @ApiModelProperty(name = "owner",value = "业主实体")
+    private PersionVo owner;
 
 
 }
