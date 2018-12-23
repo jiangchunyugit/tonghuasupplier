@@ -279,7 +279,7 @@ public class ContractController extends AbsBaseController{
     @PostMapping("/examineOrderContract")
     @MyRespBody
     public MyRespBundle<String> examineOrderContract(@ApiParam("订单编号")@RequestParam String orderNumber,@ApiParam("审核状态 0 不通过1通过")@RequestParam String status,
-    		@ApiParam("不通过原因")@RequestParam String cause){
+    		@ApiParam("不通过原因")@RequestParam(required = false) String cause){
     	
     	boolean  flag  = contractService.examineOrderContract(orderNumber, status, cause);
     	   
