@@ -32,6 +32,8 @@ public class ProjectOrderDetailVo {
     private Boolean cancle;
     @ApiModelProperty(name = "orderPlayVo",value = "展示信息")
     private OrderPlayVo orderPlayVo;
+    @ApiModelProperty("1,未投诉，2处理中，3关闭，4已取消")
+    private Integer complaintState;
 //    private List<FlexibleOrderPlayVo> flexibleOrderPlayVos;
 
 }

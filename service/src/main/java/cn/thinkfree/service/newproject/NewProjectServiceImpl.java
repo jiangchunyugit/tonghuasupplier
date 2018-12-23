@@ -637,6 +637,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         }
         DesignerOrder designerOrder = designerOrders.get(0);
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
+        //存放客服信息
+        designerOrderDetailVo.setComplaintState(designerOrder.getComplaintState());
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
         List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage());
@@ -693,6 +695,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
             ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+            //存放客服信息
+            constructionOrderDetailVo.setComplaintState(constructionOrder.getComplaintState());
             List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getSchemeNo());
             for (OrderStatusDTO orderStatus : states) {
                 OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
