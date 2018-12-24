@@ -2,21 +2,16 @@ package cn.thinkfree.controller;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.*;
-import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.newproject.NewProjectService;
 import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author gejiaming
@@ -24,7 +19,7 @@ import java.util.Map;
 @Api(tags = "APP/PC-项目相关")
 @RestController
 @RequestMapping(value = "project")
-public class AppProjectController {
+public class AppProjectController extends BasicsController {
     @Autowired
     private NewProjectService newProjectService;
 
@@ -125,11 +120,20 @@ public class AppProjectController {
 
     @RequestMapping(value = "cancleOrder", method = RequestMethod.POST)
     @ApiOperation(value = "APP-取消订单")
-    public MyRespBundle cancleOrder(@RequestParam("orderNo") @ApiParam(name = "orderNo", value = "订单编号", required = true) String orderNo,
-                                    @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo,
-                                    @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-                                    @RequestParam("cancelReason") @ApiParam(name = "cancelReason", value = "取消原因", required = true) String cancelReason) {
-        return newProjectService.cancleOrder(orderNo, projectNo, userId, cancelReason);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderNo", value = "订单编号", required = true),
+            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
+            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
+            @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
+            @ApiImplicitParam(name = "cancelReason", value = "取消原因", required = true)
+    })
+    public MyRespBundle cancleOrder(@RequestParam("orderNo") String orderNo,
+                                    @RequestParam("projectNo") String projectNo,
+                                    @RequestParam("orderType") Integer orderType,
+                                    @RequestParam("userId") String userId,
+                                    @RequestParam("cancelReason") String cancelReason) {
+        newProjectService.cancelOrder(orderNo, projectNo, userId, orderType, cancelReason);
+        return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)

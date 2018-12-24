@@ -448,6 +448,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         } catch (Exception e) {
             designerOrderVo.setOrderSource("未知");
         }
+        try {
+            BasicsData huxing = basicsService.queryDataOne(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode(), project.getHouseHuxing() + "");
+            String huxingName = null;
+            if (huxing != null) {
+                huxingName = huxing.getBasicsName();
+            }
+            designerOrderVo.setHuxing(huxingName);
+        } catch (Exception e) {
+            designerOrderVo.setHuxing("未知");
+        }
         if (project.getCreateTime() != null) {
             designerOrderVo.setCreateTime(project.getCreateTime().getTime() + "");
         }
@@ -562,7 +572,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveLog(stateEnum.getState(), project);
         updateProjectState(project.getProjectNo(), stateEnum.getState());
         // 支付阶段通知
-        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
+        /*constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);*/
     }
 
     @Override
@@ -701,6 +711,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 "", "小区名称", designerOrder.getProjectNo());
         designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
+        designOrderDelVo.setPeopleNo(project.getPeopleNo() + "");
         if(designerOrder.getVolumeRoomTime() != null){
             pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
         }
@@ -717,7 +728,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     private List<ProjectData> getProjectData(String projectNo, int dataType) {
         ProjectDataExample dataExample = new ProjectDataExample();
-        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType);
+        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType).andStatusEqualTo(1);
         return projectDataMapper.selectByExample(dataExample);
     }
 
@@ -2032,8 +2043,36 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", "合同审核通过");
         saveLog(stateEnum.getState(), project);
         updateProjectState(project.getProjectNo(), stateEnum.getState());
- /*       // 支付阶段通知
-        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);*/
+      // 支付阶段通知
+        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
+
+    }
+    /**
+     * @Author jiang
+     * @Description 返回是否能撤换设计师 0不能 1能
+     * @Date
+     * @Param orderNo
+     * @return
+     **/
+    @Override
+    public Integer replaceDesigners(String orderNo) {
+        if(StringUtils.isBlank(orderNo)){
+            throw new RuntimeException("订单编号不能为空");
+        }
+        Integer status;
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        designerOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.get(0).getOrderStage() > 142 && designerOrders.get(0).getOrderStage() <= 210){
+            status = 0;
+            return status;
+        }else  if (designerOrders.get(0).getOrderStage() > 222 && designerOrders.get(0).getOrderStage() <= 270){
+            status = 0;
+            return status;
+        }else {
+            status = 1;
+            return status;
+        }
     }
 
 }

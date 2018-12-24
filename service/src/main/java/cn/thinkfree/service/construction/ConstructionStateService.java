@@ -1,6 +1,7 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.model.OrderStatusDTO;
 
 import java.util.List;
@@ -73,8 +74,7 @@ public interface ConstructionStateService {
      * 取消订单
      * 签约阶段逆向
      */
-    MyRespBundle<String> customerCancelOrder(String userId, String orderNo, String cancelReason);
-
+    void customerCancelOrder(String userId, String orderNo, String cancelReason);
 
     /**
      * 消费者
@@ -90,6 +90,14 @@ public interface ConstructionStateService {
      * 支付未开工逆向
      */
     MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type);
+
+    /**
+     * 获取订单状态
+     * @param state 订单状态
+     * @param complaintState 客诉状态
+     * @return 订单状态
+     */
+    ConstructionStateEnum getState(int state, int complaintState);
 
     /**
      * 判断订单状态划分

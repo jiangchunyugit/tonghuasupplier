@@ -15,6 +15,7 @@ import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.designer.service.DesignerOrderService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.basics.BasicsService;
@@ -108,6 +109,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     ContractTermsMapper contractTermsMapper;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private DesignerOrderService designerOrderService;
 
 
     /**
@@ -654,6 +657,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProjectOrder(2);
             projectVo.setProjectData(2);
             projectVo.setProjectInvoice(2);
+            projectVo.setStage(DesignStateEnum.STATE_261.getState());
+        } else if (designerOrder.getComplaintState() == 3) {
+            projectVo.setStage(DesignStateEnum.STATE_262.getState());
         }
         ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
         if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
@@ -662,6 +668,11 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectVo.setProjectOrder(2);
             projectVo.setProjectData(2);
             projectVo.setProjectInvoice(2);
+            projectVo.setStage(ConstructionStateEnum.STATE_715.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 3) {
+            projectVo.setStage(ConstructionStateEnum.STATE_730.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 5) {
+            projectVo.setStage(ConstructionStateEnum.STATE_710.getState());
         }
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
@@ -691,7 +702,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         designerOrderDetailVo.setComplaintState(designerOrder.getComplaintState());
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
-        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage());
+        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage(), designerOrder.getComplaintState());
         for (Map<String, Object> map : maps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setName(map.get("val").toString());
@@ -1316,22 +1327,26 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle cancleOrder(String orderNo, String projectNo, String userId, String cancelReason) {
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria designerCriteria = designerOrderExample.createCriteria();
-        designerCriteria.andOrderNoEqualTo(orderNo);
-        designerCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if (designerOrders.size() == 0) {
-            return RespData.error("查无此项目");
-        }
-        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
-            //如果设计订单完成,则请求施工订单更改状态
-            constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
+    public void cancelOrder(String orderNo, String projectNo, String userId, Integer orderType, String cancelReason) {
+        if (orderType == 1) {
+            DesignerOrder designerOrder = designerOrderService.findByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            if (designerOrder == null) {
+                throw new RuntimeException("查无此项目");
+            }
+            if (DesignStateEnum.getAllCancelState().contains(DesignStateEnum.queryByState(designerOrder.getOrderStage()))) {
+                designDispatchService.endOrder(projectNo, userId, cancelReason);
+            }
         } else {
-            designDispatchService.endOrder(projectNo, userId, cancelReason);
+            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+            if (constructionOrder == null) {
+                throw new RuntimeException("查无此项目");
+            }
+            if (constructionOrder.getOrderStage() <= ConstructionStateEnum.STATE_600.getState()) {
+                constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
+            } else {
+                throw new RuntimeException("当前订单不能取消");
+            }
         }
-        return RespData.success();
     }
 
     /**

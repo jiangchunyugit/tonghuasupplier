@@ -183,6 +183,11 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         if (json.size() == 0) {
             return "上海暂无此公司的施工基础信息!";
         }
+
+
+
+
+
         String jsonString = JSONObject.toJSONString(json);
         List<ProjectSmallScheduling> smallList = JSONObject.parseArray(jsonString, ProjectSmallScheduling.class);
         if (smallList.size() == Scheduling.INSERT_FAILD.getValue()) {

@@ -408,38 +408,37 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
      * 签约阶段逆向
      */
     @Override
-    public MyRespBundle<String> customerCancelOrder(String userId, String orderNo, String cancelReason) {
+    public void customerCancelOrder(String userId, String orderNo, String cancelReason) {
         if (StringUtils.isBlank(orderNo)) {
-            return RespData.error(ResultMessage.ERROR.code, "订单编号不能为空");
+            throw new RuntimeException("订单编号不能为空");
         }
 
         if (StringUtils.isBlank(userId)) {
-            return RespData.error(ResultMessage.ERROR.code, "用户ID不能为空");
+            throw new RuntimeException("用户ID不能为空");
         }
 
         ProjectExample example = new ProjectExample();
         example.createCriteria().andOwnerIdEqualTo(userId).andStatusEqualTo(1);
         List<Project> list = projectMapper.selectByExample(example);
         if (list.size() <= 0) {
-            return RespData.error(ResultMessage.ERROR.code, "用户不存在");
+            throw new RuntimeException("用户不存在");
         }
 
         Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
         if (stageCode >= ConstructionStateEnum.STATE_600.getState()) {
-            return RespData.error(ResultMessage.ERROR.code, "当前状态不能取消订单");
+            throw new RuntimeException("当前状态不能取消订单");
         }
 
         ConstructionOrderExample example2 = new ConstructionOrderExample();
         example2.createCriteria().andOrderNoEqualTo(orderNo);
         ConstructionOrder constructionOrder = new ConstructionOrder();
-        constructionOrder.setOrderStage(ConstructionStateEnum.STATE_710.getState());
         constructionOrder.setRemark(cancelReason);
+        constructionOrder.setComplaintState(ComplaintStateEnum.STATE_5.getState());
         int isUpdate = constructionOrderMapper.updateByExampleSelective(constructionOrder, example2);
         if (isUpdate == 1) {
             projectStageLogService.create(list.get(0).getProjectNo(), constructionOrder.getOrderStage());
-            return RespData.success();
         } else {
-            return RespData.error(ResultMessage.ERROR.code, "取消订单失败-请稍后重试");
+            throw new RuntimeException("取消订单失败-请稍后重试");
         }
     }
 
@@ -538,7 +537,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 continue;
             }
             OrderStatusDTO orderStatusDTO;
-            if (currentStatus > constructionState.getState() && complaintStatus != null) {
+            if (constructionState.getState() > currentStatus && complaintStatus != null) {
                 if (complaintStatus == ComplaintStateEnum.STATE_2.getState()) {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_715, type);
                     orderStatusDTOs.add(orderStatusDTO);
@@ -549,9 +548,14 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_730, type);
                     orderStatusDTOs.add(orderStatusDTO);
                     return orderStatusDTOs;
+                } else if (complaintStatus == ComplaintStateEnum.STATE_5.getState()) {
+                    orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_710, type);
+                    orderStatusDTOs.add(orderStatusDTO);
+                    return orderStatusDTOs;
                 }
             }
             preStateName = stateName;
+
             orderStatusDTO = createOrderStatusDTO(constructionState, type);
 
             orderStatusDTOs.add(orderStatusDTO);
@@ -565,6 +569,21 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         }
 
         return orderStatusDTOs;
+    }
+
+    @Override
+    public ConstructionStateEnum getState(int state, int complaintState) {
+        ConstructionStateEnum constructionState;
+        if (complaintState == ComplaintStateEnum.STATE_2.getState()) {
+            constructionState = ConstructionStateEnum.STATE_715;
+        } else if (complaintState == ComplaintStateEnum.STATE_3.getState()) {
+            constructionState = ConstructionStateEnum.STATE_730;
+        } else if (complaintState == ComplaintStateEnum.STATE_5.getState()) {
+            constructionState = ConstructionStateEnum.STATE_710;
+        } else {
+            constructionState = ConstructionStateEnum.queryByState(state);
+        }
+        return constructionState;
     }
 
     private OrderStatusDTO createOrderStatusDTO(ConstructionStateEnum constructionState, int type) {
