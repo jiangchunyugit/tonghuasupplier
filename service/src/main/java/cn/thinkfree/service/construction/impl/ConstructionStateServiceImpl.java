@@ -537,7 +537,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 continue;
             }
             OrderStatusDTO orderStatusDTO;
-            if (currentStatus > constructionState.getState() && complaintStatus != null) {
+            if (constructionState.getState() > currentStatus && complaintStatus != null) {
                 if (complaintStatus == ComplaintStateEnum.STATE_2.getState()) {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_715, type);
                     orderStatusDTOs.add(orderStatusDTO);
@@ -551,9 +551,11 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 } else if (complaintStatus == ComplaintStateEnum.STATE_5.getState()) {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_710, type);
                     orderStatusDTOs.add(orderStatusDTO);
+                    return orderStatusDTOs;
                 }
             }
             preStateName = stateName;
+
             orderStatusDTO = createOrderStatusDTO(constructionState, type);
 
             orderStatusDTOs.add(orderStatusDTO);
@@ -567,6 +569,36 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         }
 
         return orderStatusDTOs;
+    }
+
+    @Override
+    public ConstructionStateEnum getState(int state, int complaintState) {
+        ConstructionStateEnum constructionState;
+        if (complaintState == ComplaintStateEnum.STATE_2.getState()) {
+            constructionState = ConstructionStateEnum.STATE_715;
+        } else if (complaintState == ComplaintStateEnum.STATE_3.getState()) {
+            constructionState = ConstructionStateEnum.STATE_730;
+        } else if (complaintState == ComplaintStateEnum.STATE_5.getState()) {
+            constructionState = ConstructionStateEnum.STATE_710;
+        } else {
+            constructionState = ConstructionStateEnum.queryByState(state);
+        }
+        return constructionState;
+    }
+
+    @Override
+    public int getStateCode(int state, int complaintState) {
+        int constructionStateCode;
+        if (complaintState == ComplaintStateEnum.STATE_2.getState()) {
+            constructionStateCode = ConstructionStateEnum.STATE_715.getState();
+        } else if (complaintState == ComplaintStateEnum.STATE_3.getState()) {
+            constructionStateCode = ConstructionStateEnum.STATE_730.getState();
+        } else if (complaintState == ComplaintStateEnum.STATE_5.getState()) {
+            constructionStateCode = ConstructionStateEnum.STATE_710.getState();
+        } else {
+            constructionStateCode = state;
+        }
+        return constructionStateCode;
     }
 
     private OrderStatusDTO createOrderStatusDTO(ConstructionStateEnum constructionState, int type) {

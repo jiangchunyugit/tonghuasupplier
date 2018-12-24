@@ -345,5 +345,12 @@ public interface DesignDispatchService {
      * @return
      **/
     void contractApproval(String orderNo,Integer type, int contractType);
-
+    /**
+     * @Author jiang
+     * @Description 返回是否能撤换设计师 0不能 1能
+     * @Date
+     * @Param orderNo
+     * @return
+     **/
+    Integer replaceDesigners(String orderNo);
 }
