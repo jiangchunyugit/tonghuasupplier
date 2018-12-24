@@ -2063,10 +2063,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         designerOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.get(0).getOrderStage() > 142 && designerOrders.get(0).getOrderStage() <= 210){
+        if(designerOrders.get(0).getOrderStage() >= 170 && designerOrders.get(0).getOrderStage() <= 210){
             status = 0;
             return status;
-        }else  if (designerOrders.get(0).getOrderStage() > 222 && designerOrders.get(0).getOrderStage() <= 270){
+        }else  if (designerOrders.get(0).getOrderStage() >= 250 && designerOrders.get(0).getOrderStage() <= 270){
             status = 0;
             return status;
         }else {
