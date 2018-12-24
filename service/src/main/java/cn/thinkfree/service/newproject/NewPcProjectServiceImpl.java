@@ -2,10 +2,7 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.BasicsDataParentEnum;
-import cn.thinkfree.core.constants.ConstructOrderConstants;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.DesignStateEnum;
+import cn.thinkfree.core.constants.*;
 import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.appvo.OrderTaskSortVo;
 import cn.thinkfree.database.appvo.PersionVo;
@@ -104,13 +101,8 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
             allOrderTask.add(orderTaskSortVo);
         }
         orderAllTaskVo.setAllOrderTask(allOrderTask);
-        ProjectExample example = new ProjectExample();
-        ProjectExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(projectNo);
-        List<Project> projects = projectMapper.selectByExample(example);
-        if (projects.size() > 0) {
-            orderAllTaskVo.setCurrentSort(projects.get(0).getStage());
-        }
+        int stateCode = constructionStateService.getStateCode(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+        orderAllTaskVo.setCurrentSort(stateCode);
         return RespData.success(orderAllTaskVo);
     }
 
@@ -179,7 +171,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 break;
         }
         //订单阶段
-        constructionOrderVO.setOrderStage(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        ConstructionStateEnum state = constructionStateService.getState(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+        constructionOrderVO.setOrderStage(state.getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
 
         return RespData.success(constructionOrderVO);
     }
