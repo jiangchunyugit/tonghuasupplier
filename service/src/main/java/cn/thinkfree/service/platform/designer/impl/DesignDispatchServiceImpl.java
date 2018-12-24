@@ -717,7 +717,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     private List<ProjectData> getProjectData(String projectNo, int dataType) {
         ProjectDataExample dataExample = new ProjectDataExample();
-        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType);
+        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType).andStatusEqualTo(1);
         return projectDataMapper.selectByExample(dataExample);
     }
 
