@@ -209,7 +209,8 @@ public class ConstructionStateController extends AbsBaseController {
                                                     @RequestParam @ApiParam(value = "订单编号",required = true) String orderNo,
                                                     @RequestParam(required = false) @ApiParam(value = "理由")  String cancelReason) {
 
-        return constructionStateService.customerCancelOrder(userId, orderNo,cancelReason);
+        constructionStateService.customerCancelOrder(userId, orderNo,cancelReason);
+        return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 
     /**
