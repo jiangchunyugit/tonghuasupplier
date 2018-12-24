@@ -537,7 +537,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 continue;
             }
             OrderStatusDTO orderStatusDTO;
-            if (currentStatus > constructionState.getState() && complaintStatus != null) {
+            if (constructionState.getState() > currentStatus && complaintStatus != null) {
                 if (complaintStatus == ComplaintStateEnum.STATE_2.getState()) {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_715, type);
                     orderStatusDTOs.add(orderStatusDTO);
@@ -551,9 +551,11 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 } else if (complaintStatus == ComplaintStateEnum.STATE_5.getState()) {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_710, type);
                     orderStatusDTOs.add(orderStatusDTO);
+                    return orderStatusDTOs;
                 }
             }
             preStateName = stateName;
+
             orderStatusDTO = createOrderStatusDTO(constructionState, type);
 
             orderStatusDTOs.add(orderStatusDTO);
