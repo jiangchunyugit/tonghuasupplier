@@ -425,7 +425,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOwnerName(ownerMsg.getUserName());
             designerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
-        designerOrderVo.setAddress(project.getAddressDetail());
+        designerOrderVo.setAddress(getProjectAdress(project.getProjectNo()));
         if (StringUtils.isNotBlank(project.getProvince())) {
             Map<String, String> province = basicsService.getProvince(project.getProvince());
             designerOrderVo.setProvinceName(province.get(project.getProvince()));
@@ -493,6 +493,58 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
         }
         return designerOrderVo;
+    }
+
+    /**
+     * 根据项目编号获取地址信息
+     *
+     * @param projectNo
+     * @return
+     */
+    public String getProjectAdress(String projectNo) {
+        StringBuilder builder = new StringBuilder();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return "";
+        }
+        Project project = projects.get(0);
+        //查询省份
+        if (project.getProvince() != null && !project.getProvince().trim().isEmpty()) {
+            ProvinceExample provinceExample = new ProvinceExample();
+            ProvinceExample.Criteria provinceCriteria = provinceExample.createCriteria();
+            provinceCriteria.andProvinceCodeEqualTo(project.getProvince());
+            List<Province> provinces = provinceMapper.selectByExample(provinceExample);
+            if (provinces.size() > 0) {
+                builder.append(provinces.get(0).getProvinceName());
+            }
+        }
+        //查询城市
+        if (project.getCity() != null && !project.getCity().trim().isEmpty()) {
+            CityExample ciytExample = new CityExample();
+            CityExample.Criteria cityCriteria = ciytExample.createCriteria();
+            cityCriteria.andCityCodeEqualTo(project.getCity());
+            List<City> cities = cityMapper.selectByExample(ciytExample);
+            if (cities.size() > 0) {
+                builder.append(cities.get(0).getCityName());
+            }
+        }
+        //查询区域
+        if (project.getRegion() != null && !project.getRegion().trim().isEmpty()) {
+            AreaExample areaExample = new AreaExample();
+            AreaExample.Criteria areaCriteria = areaExample.createCriteria();
+            areaCriteria.andAreaCodeEqualTo(project.getRegion());
+            List<Area> areas = areaMapper.selectByExample(areaExample);
+            if (areas.size() > 0) {
+                builder.append(areas.get(0).getAreaName());
+            }
+        }
+        builder.append(project.getAddressDetail());
+        return builder.toString();
+
     }
 
     /**
@@ -2063,10 +2115,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         designerOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if(designerOrders.get(0).getOrderStage() > 142 && designerOrders.get(0).getOrderStage() <= 210){
+        if(designerOrders.get(0).getOrderStage() >= 170 && designerOrders.get(0).getOrderStage() <= 210){
             status = 0;
             return status;
-        }else  if (designerOrders.get(0).getOrderStage() > 222 && designerOrders.get(0).getOrderStage() <= 270){
+        }else  if (designerOrders.get(0).getOrderStage() >= 250 && designerOrders.get(0).getOrderStage() <= 270){
             status = 0;
             return status;
         }else {
