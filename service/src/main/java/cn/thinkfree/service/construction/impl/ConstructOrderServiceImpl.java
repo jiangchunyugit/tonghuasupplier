@@ -15,6 +15,7 @@ import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructOrderService;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConsListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
@@ -90,6 +91,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     private BasicsService basicsService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private ConstructionStateService constructionStateService;
     /**
      * 订单列表
      *
@@ -446,7 +449,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
                 }
                 consListVo.setProjectNo(project.getProjectNo());
                 consListVo.setProvinceName(provinceMap.get(project.getProvince()));
-                consListVo.setStateName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(1));
+                ConstructionStateEnum constructionState = constructionStateService.getState(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+                consListVo.setStateName(constructionState.getStateName(1));
             }
             String[] userMsg = userMsgMap.get("CD-" + constructionOrder.getProjectNo());
             if(userMsg != null){
@@ -480,10 +484,12 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
                 consListVo.setSignTime(orderContract.getSignTime().getTime() + "");
             }
             consListVo.setIsDistribution(3);
-            if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_500.getState()){
-                consListVo.setIsDistribution(1);
-            }else if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_510.getState()){
-                consListVo.setIsDistribution(2);
+            if (constructionOrder.getComplaintState() == ComplaintStateEnum.STATE_1.getState() || constructionOrder.getComplaintState() == ComplaintStateEnum.STATE_4.getState()) {
+                if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_500.getState()){
+                    consListVo.setIsDistribution(1);
+                }else if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_510.getState()){
+                    consListVo.setIsDistribution(2);
+                }
             }
             consListVos.add(consListVo);
         }
