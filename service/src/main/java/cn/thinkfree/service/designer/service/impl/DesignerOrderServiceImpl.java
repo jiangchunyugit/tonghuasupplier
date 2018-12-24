@@ -32,4 +32,12 @@ public class DesignerOrderServiceImpl implements DesignerOrderService {
         List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(example);
         return designerOrders != null && designerOrders.size() > 0 ? designerOrders.get(0) : null;
     }
+
+    @Override
+    public DesignerOrder findByProjectNoAndStatus(String projectNo, Integer status) {
+        DesignerOrderExample example = new DesignerOrderExample();
+        example.createCriteria().andProjectNoEqualTo(projectNo).andStatusEqualTo(status);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(example);
+        return designerOrders != null && designerOrders.size() > 0 ? designerOrders.get(0) : null;
+    }
 }

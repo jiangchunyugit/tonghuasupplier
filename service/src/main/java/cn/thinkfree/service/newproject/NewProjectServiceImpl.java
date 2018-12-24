@@ -15,6 +15,7 @@ import cn.thinkfree.service.constants.Scheduling;
 import cn.thinkfree.service.constants.UserJobs;
 import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.designer.service.DesignerOrderService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.platform.basics.BasicsService;
@@ -108,6 +109,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     ContractTermsMapper contractTermsMapper;
     @Autowired
     private BasicsService basicsService;
+    @Autowired
+    private DesignerOrderService designerOrderService;
 
 
     /**
@@ -637,6 +640,40 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setProjectOrder(Integer.valueOf(operationVo.getProjectOrder()) > 0 ? 1 : 0);
         projectVo.setProjectData(Integer.valueOf(operationVo.getProjectData()) > 0 ? 1 : 0);
         projectVo.setProjectInvoice(Integer.valueOf(operationVo.getInvoice()) > 0 ? 1 : 0);
+        //添加客诉判断
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(project.getProjectNo());
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        projectVo.setComplaintState(designerOrder.getComplaintState());
+        if (designerOrder.getComplaintState() == 2) {
+            projectVo.setComplaintState(designerOrder.getComplaintState());
+            projectVo.setProjectDynamic(2);
+            projectVo.setProjectOrder(2);
+            projectVo.setProjectData(2);
+            projectVo.setProjectInvoice(2);
+            projectVo.setStage(DesignStateEnum.STATE_261.getState());
+        } else if (designerOrder.getComplaintState() == 3) {
+            projectVo.setStage(DesignStateEnum.STATE_262.getState());
+        }
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+        if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+            projectVo.setComplaintState(constructionOrder.getComplaintState());
+            projectVo.setProjectDynamic(2);
+            projectVo.setProjectOrder(2);
+            projectVo.setProjectData(2);
+            projectVo.setProjectInvoice(2);
+            projectVo.setStage(ConstructionStateEnum.STATE_715.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 3) {
+            projectVo.setStage(ConstructionStateEnum.STATE_730.getState());
+        } else if (constructionOrder != null && constructionOrder.getComplaintState() == 5) {
+            projectVo.setStage(ConstructionStateEnum.STATE_710.getState());
+        }
         projectVo.setStageNameColor("#50ABD2");
         //添加业主信息
         PersionVo owner = new PersionVo();
@@ -651,21 +688,21 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setOwner(owner);
 
         //组合设计订单
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
-        designCriteria.andProjectNoEqualTo(projectNo);
-        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            return RespData.error("查无此设计订单");
-        }
-        DesignerOrder designerOrder = designerOrders.get(0);
+//        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+//        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+//        designCriteria.andProjectNoEqualTo(projectNo);
+//        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+//        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+//        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+//            return RespData.error("查无此设计订单");
+//        }
+//        DesignerOrder designerOrder = designerOrders.get(0);
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放客服信息
         designerOrderDetailVo.setComplaintState(designerOrder.getComplaintState());
         //存放阶段信息
         List<OrderTaskSortVo> orderTaskSortVoList = new ArrayList<>();
-        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage());
+        List<Map<String, Object>> maps = DesignStateEnum.allState(designerOrder.getOrderStage(), designerOrder.getComplaintState());
         for (Map<String, Object> map : maps) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setName(map.get("val").toString());
@@ -718,7 +755,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectOrderDetailVo constructionOrderDetailVo = constructionOrderMapper.selectByProjectNo(projectNo);
         List<OrderTaskSortVo> orderTaskSortVoList1 = new ArrayList<>();
         if (constructionOrderDetailVo != null) {
-            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+//            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             //存放客服信息
             constructionOrderDetailVo.setComplaintState(constructionOrder.getComplaintState());
             List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getComplaintState(), constructionOrder.getSchemeNo());
@@ -826,6 +863,25 @@ public class NewProjectServiceImpl implements NewProjectService {
         } else {
             projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
         }
+
+        //添加客诉判断
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
+        designCriteria.andProjectNoEqualTo(project.getProjectNo());
+        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.error("查无此设计订单");
+        }
+        DesignerOrder designerOrder = designerOrders.get(0);
+        projectTitleVo.setComplaintState(designerOrder.getComplaintState());
+        if (designerOrder.getComplaintState() == 2) {
+            projectTitleVo.setComplaintState(designerOrder.getComplaintState());
+        }
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(project.getProjectNo());
+        if (constructionOrder != null && constructionOrder.getComplaintState() == 2) {
+            projectTitleVo.setComplaintState(constructionOrder.getComplaintState());
+        }
         //添加业主信息
         PersionVo owner = new PersionVo();
         try {
@@ -845,7 +901,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderPlayVos.size() != 0) {
             OrderPlayVo orderPlayVo = orderPlayVos.get(0);
             String totalMoney = "";
-            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+//            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
             OrderContractExample contractExample = new OrderContractExample();
             OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
             contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
@@ -1114,9 +1170,9 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
             if (dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
-                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
-                    return RespData.error("3D全景度为空");
-                }
+//                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
+//                    return RespData.error("3D全景度为空");
+//                }
                 projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
             } else {
                 if (urlDetailVo.getImgUrl() == null || urlDetailVo.getImgUrl().trim().isEmpty()) {
@@ -1271,22 +1327,26 @@ public class NewProjectServiceImpl implements NewProjectService {
      * @return
      */
     @Override
-    public MyRespBundle cancleOrder(String orderNo, String projectNo, String userId, String cancelReason) {
-        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-        DesignerOrderExample.Criteria designerCriteria = designerOrderExample.createCriteria();
-        designerCriteria.andOrderNoEqualTo(orderNo);
-        designerCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-        if (designerOrders.size() == 0) {
-            return RespData.error("查无此项目");
-        }
-        if (designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_270.getState()) || designerOrders.get(0).getOrderStage().equals(DesignStateEnum.STATE_210.getState())) {
-            //如果设计订单完成,则请求施工订单更改状态
-            constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
+    public void cancelOrder(String orderNo, String projectNo, String userId, Integer orderType, String cancelReason) {
+        if (orderType == 1) {
+            DesignerOrder designerOrder = designerOrderService.findByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
+            if (designerOrder == null) {
+                throw new RuntimeException("查无此项目");
+            }
+            if (DesignStateEnum.getAllCancelState().contains(DesignStateEnum.queryByState(designerOrder.getOrderStage()))) {
+                designDispatchService.endOrder(projectNo, userId, cancelReason);
+            }
         } else {
-            designDispatchService.endOrder(projectNo, userId, cancelReason);
+            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+            if (constructionOrder == null) {
+                throw new RuntimeException("查无此项目");
+            }
+            if (constructionOrder.getOrderStage() <= ConstructionStateEnum.STATE_600.getState()) {
+                constructionStateService.customerCancelOrder(userId, orderNo, cancelReason);
+            } else {
+                throw new RuntimeException("当前订单不能取消");
+            }
         }
-        return RespData.success();
     }
 
     /**
