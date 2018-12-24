@@ -1,6 +1,7 @@
 package cn.thinkfree.service.construction;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.model.OrderStatusDTO;
 
 import java.util.List;
@@ -73,8 +74,7 @@ public interface ConstructionStateService {
      * 取消订单
      * 签约阶段逆向
      */
-    MyRespBundle<String> customerCancelOrder(String userId, String orderNo, String cancelReason);
-
+    void customerCancelOrder(String userId, String orderNo, String cancelReason);
 
     /**
      * 消费者
@@ -92,6 +92,21 @@ public interface ConstructionStateService {
     MyRespBundle<String> customerCancelOrderForPay(String orderNo, int type);
 
     /**
+     * 获取订单状态
+     * @param state 订单状态
+     * @param complaintState 客诉状态
+     * @return 订单状态
+     */
+    ConstructionStateEnum getState(int state, int complaintState);
+
+    /**
+     *
+     * @param state
+     * @param complaintState
+     * @return
+     */
+    int getStateCode(int state, int complaintState);
+    /**
      * 判断订单状态划分
      * @param state 订单状态
      * @param complaintState 订单状态 1,未投诉，2处理中，3关闭，4已取消
@@ -102,7 +117,8 @@ public interface ConstructionStateService {
      * 根据类型获取订单状态类型列表
      * @param type 1：获取平台状态；2：获取装饰公司状态；3：获取施工人员状态；4：获取消费者状态
      * @param currentStatus 当前订单状态值
+     * @param complaintStatus 客诉状态
      * @param schemeNo 施工方案编号
      * @return 订单状态信息
      */
-    List<OrderStatusDTO> getStates(int type, Integer currentStatus, String schemeNo);}
+    List<OrderStatusDTO> getStates(int type, Integer currentStatus, Integer complaintStatus, String schemeNo);}

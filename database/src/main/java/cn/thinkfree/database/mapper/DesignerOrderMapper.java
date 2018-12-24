@@ -7,8 +7,6 @@ import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.DesignerOrderExample;
 import java.util.List;
 
-import cn.thinkfree.database.vo.AcceptanceResultsVO;
-import cn.thinkfree.database.vo.ConstructionContractVO;
 import cn.thinkfree.database.vo.DesignContractVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import org.apache.ibatis.annotations.Param;

@@ -18,6 +18,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -966,13 +967,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMsg.setRoleCode("");
         employeeMsg.setCompanyId("");
         employeeMsgMapper.updateByPrimaryKeySelective(employeeMsg);
-
         EmployeeApplyLog employeeApplyLog = new EmployeeApplyLog();
         employeeApplyLog.setDealExplain(dealExplain);
         employeeApplyLog.setDealTime(new Date());
         employeeApplyLog.setDealState(1);
-        employeeApplyLog.setDealUserId(dealUserId);
+        employeeApplyLog.setDealUserId(SessionUserDetailsUtil.getLoginUserName());
         employeeApplyLog.setCompanyId(companyId);
+        employeeApplyLog.setUserId(employeeId);
         employeeApplyLog.setRemark("办理员工离职");
         applyLogMapper.insertSelective(employeeApplyLog);
     }

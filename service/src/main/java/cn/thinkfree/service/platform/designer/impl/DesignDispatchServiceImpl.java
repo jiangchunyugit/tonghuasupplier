@@ -425,7 +425,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOwnerName(ownerMsg.getUserName());
             designerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
-        designerOrderVo.setAddress(project.getAddressDetail());
+        designerOrderVo.setAddress(getProjectAdress(project.getProjectNo()));
         if (StringUtils.isNotBlank(project.getProvince())) {
             Map<String, String> province = basicsService.getProvince(project.getProvince());
             designerOrderVo.setProvinceName(province.get(project.getProvince()));
@@ -447,6 +447,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOrderSource(sourceName);
         } catch (Exception e) {
             designerOrderVo.setOrderSource("未知");
+        }
+        try {
+            BasicsData huxing = basicsService.queryDataOne(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode(), project.getHouseHuxing() + "");
+            String huxingName = null;
+            if (huxing != null) {
+                huxingName = huxing.getBasicsName();
+            }
+            designerOrderVo.setHuxing(huxingName);
+        } catch (Exception e) {
+            designerOrderVo.setHuxing("未知");
         }
         if (project.getCreateTime() != null) {
             designerOrderVo.setCreateTime(project.getCreateTime().getTime() + "");
@@ -483,6 +493,58 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
         }
         return designerOrderVo;
+    }
+
+    /**
+     * 根据项目编号获取地址信息
+     *
+     * @param projectNo
+     * @return
+     */
+    public String getProjectAdress(String projectNo) {
+        StringBuilder builder = new StringBuilder();
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<Project> projects = projectMapper.selectByExample(example);
+        if (projects.size() == 0) {
+            return "";
+        }
+        Project project = projects.get(0);
+        //查询省份
+        if (project.getProvince() != null && !project.getProvince().trim().isEmpty()) {
+            ProvinceExample provinceExample = new ProvinceExample();
+            ProvinceExample.Criteria provinceCriteria = provinceExample.createCriteria();
+            provinceCriteria.andProvinceCodeEqualTo(project.getProvince());
+            List<Province> provinces = provinceMapper.selectByExample(provinceExample);
+            if (provinces.size() > 0) {
+                builder.append(provinces.get(0).getProvinceName());
+            }
+        }
+        //查询城市
+        if (project.getCity() != null && !project.getCity().trim().isEmpty()) {
+            CityExample ciytExample = new CityExample();
+            CityExample.Criteria cityCriteria = ciytExample.createCriteria();
+            cityCriteria.andCityCodeEqualTo(project.getCity());
+            List<City> cities = cityMapper.selectByExample(ciytExample);
+            if (cities.size() > 0) {
+                builder.append(cities.get(0).getCityName());
+            }
+        }
+        //查询区域
+        if (project.getRegion() != null && !project.getRegion().trim().isEmpty()) {
+            AreaExample areaExample = new AreaExample();
+            AreaExample.Criteria areaCriteria = areaExample.createCriteria();
+            areaCriteria.andAreaCodeEqualTo(project.getRegion());
+            List<Area> areas = areaMapper.selectByExample(areaExample);
+            if (areas.size() > 0) {
+                builder.append(areas.get(0).getAreaName());
+            }
+        }
+        builder.append(project.getAddressDetail());
+        return builder.toString();
+
     }
 
     /**
@@ -562,7 +624,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveLog(stateEnum.getState(), project);
         updateProjectState(project.getProjectNo(), stateEnum.getState());
         // 支付阶段通知
-        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
+        /*constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);*/
     }
 
     @Override
@@ -701,6 +763,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 "", "小区名称", designerOrder.getProjectNo());
         designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
+        designOrderDelVo.setPeopleNo(project.getPeopleNo() + "");
         if(designerOrder.getVolumeRoomTime() != null){
             pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
         }
@@ -717,7 +780,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
 
     private List<ProjectData> getProjectData(String projectNo, int dataType) {
         ProjectDataExample dataExample = new ProjectDataExample();
-        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType);
+        dataExample.createCriteria().andProjectNoEqualTo(projectNo).andTypeEqualTo(dataType).andStatusEqualTo(1);
         return projectDataMapper.selectByExample(dataExample);
     }
 
@@ -2032,8 +2095,36 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveOptionLog(designerOrder.getOrderNo(), "system", "system", "合同审核通过");
         saveLog(stateEnum.getState(), project);
         updateProjectState(project.getProjectNo(), stateEnum.getState());
- /*       // 支付阶段通知
-        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);*/
+      // 支付阶段通知
+        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
+
+    }
+    /**
+     * @Author jiang
+     * @Description 返回是否能撤换设计师 0不能 1能
+     * @Date
+     * @Param orderNo
+     * @return
+     **/
+    @Override
+    public Integer replaceDesigners(String orderNo) {
+        if(StringUtils.isBlank(orderNo)){
+            throw new RuntimeException("订单编号不能为空");
+        }
+        Integer status;
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        designerOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.get(0).getOrderStage() >= 170 && designerOrders.get(0).getOrderStage() <= 210){
+            status = 0;
+            return status;
+        }else  if (designerOrders.get(0).getOrderStage() >= 250 && designerOrders.get(0).getOrderStage() <= 270){
+            status = 0;
+            return status;
+        }else {
+            status = 1;
+            return status;
+        }
     }
 
 }
