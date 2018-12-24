@@ -2036,5 +2036,32 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
 
     }
+    /**
+     * @Author jiang
+     * @Description 返回是否能撤换设计师 0不能 1能
+     * @Date
+     * @Param orderNo
+     * @return
+     **/
+    @Override
+    public Integer replaceDesigners(String orderNo) {
+        if(StringUtils.isBlank(orderNo)){
+            throw new RuntimeException("订单编号不能为空");
+        }
+        Integer status;
+        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+        designerOrderExample.createCriteria().andOrderNoEqualTo(orderNo);
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+        if(designerOrders.get(0).getOrderStage() > 142 && designerOrders.get(0).getOrderStage() <= 210){
+            status = 0;
+            return status;
+        }else  if (designerOrders.get(0).getOrderStage() > 222 && designerOrders.get(0).getOrderStage() <= 270){
+            status = 0;
+            return status;
+        }else {
+            status = 1;
+            return status;
+        }
+    }
 
 }

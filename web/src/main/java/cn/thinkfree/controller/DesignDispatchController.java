@@ -658,4 +658,17 @@ public class DesignDispatchController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS, itemVo);
     }
 
+    @ApiOperation("返回是否能撤换设计师 0不能 1能")
+    @MyRespBody
+    @RequestMapping(value = "replaceDesigners", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<Integer> replaceDesigners(
+            @ApiParam(name = "orderNo", required = false, value = "订单编号") @RequestParam(name = "orderNo", required = false) String orderNo) {
+        try {
+            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.replaceDesigners(orderNo));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+        }
+    }
+
 }
