@@ -368,7 +368,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					//是否个性化
 					vo.setStyleType(designerOrders == null ? "" : designerOrders.get(0).getStyleType());
 
-					vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
+					vo.setSort((Integer.valueOf(jsonMap.get("sortNumber"))+1)+"");
 					//阶段名称
 
 					vo.setCompanyAddrNo(companyInfo.getId()+"");
