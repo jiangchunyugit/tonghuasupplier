@@ -101,6 +101,13 @@ public class AppProjectController {
         return newProjectService.getDesignData(projectNo);
     }
 
+    @RequestMapping(value = "getNewDesignData", method = RequestMethod.POST)
+    @ApiOperation(value = "APP-获取设计资料(新)")
+    public MyRespBundle<NewDataVo> getNewDesignData(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo) {
+        return newProjectService.getNewDesignData(projectNo);
+    }
+
     @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
     @ApiOperation(value = "APP/PC-获取施工资料")
     public MyRespBundle<ConstructionDataVo> getConstructionData(
@@ -133,6 +140,21 @@ public class AppProjectController {
         } catch (Exception e) {
             e.printStackTrace();
             return RespData.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "computerConfirmVolumeRoomData", method = RequestMethod.POST)
+    @ApiOperation(value = "PC-设计师上传资料")
+    public MyRespBundle<String> computerConfirmVolumeRoomData(
+            @RequestParam(value = "projectNo",required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo,
+            @RequestParam(value = "userId",required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(value = "jsonData",required = false)@ApiParam(name = "dataVo", value = "资料详情的json ",required = false) String jsonData) {
+        try {
+            return newProjectService.computerConfirmVolumeRoomData(projectNo,userId,jsonData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+
         }
     }
 

@@ -176,4 +176,23 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(int pageSize, int pageNum, String userId, Integer delayBegin, Integer delayEnd, Integer schedulingSort, Integer checkSort, Integer checkComplete, String projectNo);
+
+    /**
+     * PC-设计师上传资料
+     * @param projectNo
+     * @param userId
+     * @param jsonData
+     * @return
+     */
+    MyRespBundle<String> computerConfirmVolumeRoomData(String projectNo, String userId, String jsonData);
+
+    /**
+     * APP-获取设计资料
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<NewDataVo> getNewDesignData(String projectNo);
+
+
+
 }
