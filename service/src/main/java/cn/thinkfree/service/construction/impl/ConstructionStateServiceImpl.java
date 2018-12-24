@@ -548,6 +548,9 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                     orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_730, type);
                     orderStatusDTOs.add(orderStatusDTO);
                     return orderStatusDTOs;
+                } else if (complaintStatus == ComplaintStateEnum.STATE_5.getState()) {
+                    orderStatusDTO = createOrderStatusDTO(ConstructionStateEnum.STATE_710, type);
+                    orderStatusDTOs.add(orderStatusDTO);
                 }
             }
             preStateName = stateName;
