@@ -448,6 +448,16 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         } catch (Exception e) {
             designerOrderVo.setOrderSource("未知");
         }
+        try {
+            BasicsData huxing = basicsService.queryDataOne(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode(), project.getHouseHuxing() + "");
+            String huxingName = null;
+            if (huxing != null) {
+                huxingName = huxing.getBasicsName();
+            }
+            designerOrderVo.setHuxing(huxingName);
+        } catch (Exception e) {
+            designerOrderVo.setHuxing("未知");
+        }
         if (project.getCreateTime() != null) {
             designerOrderVo.setCreateTime(project.getCreateTime().getTime() + "");
         }
@@ -701,6 +711,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 "", "小区名称", designerOrder.getProjectNo());
         designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
+        designOrderDelVo.setPeopleNo(project.getPeopleNo() + "");
         if(designerOrder.getVolumeRoomTime() != null){
             pcDesignOrderMsgVo.setVolumeRoomDate(designerOrder.getVolumeRoomTime().getTime());
         }
