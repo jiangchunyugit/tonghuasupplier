@@ -1096,72 +1096,142 @@ public class ProjectDataExample {
         }
 
         public Criteria andHsDesignidIsNull() {
-            addCriterion("hs_designId is null");
+            addCriterion("hs_designid is null");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidIsNotNull() {
-            addCriterion("hs_designId is not null");
+            addCriterion("hs_designid is not null");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidEqualTo(String value) {
-            addCriterion("hs_designId =", value, "hsDesignid");
+            addCriterion("hs_designid =", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidNotEqualTo(String value) {
-            addCriterion("hs_designId <>", value, "hsDesignid");
+            addCriterion("hs_designid <>", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidGreaterThan(String value) {
-            addCriterion("hs_designId >", value, "hsDesignid");
+            addCriterion("hs_designid >", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidGreaterThanOrEqualTo(String value) {
-            addCriterion("hs_designId >=", value, "hsDesignid");
+            addCriterion("hs_designid >=", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidLessThan(String value) {
-            addCriterion("hs_designId <", value, "hsDesignid");
+            addCriterion("hs_designid <", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidLessThanOrEqualTo(String value) {
-            addCriterion("hs_designId <=", value, "hsDesignid");
+            addCriterion("hs_designid <=", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidLike(String value) {
-            addCriterion("hs_designId like", value, "hsDesignid");
+            addCriterion("hs_designid like", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidNotLike(String value) {
-            addCriterion("hs_designId not like", value, "hsDesignid");
+            addCriterion("hs_designid not like", value, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidIn(List<String> values) {
-            addCriterion("hs_designId in", values, "hsDesignid");
+            addCriterion("hs_designid in", values, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidNotIn(List<String> values) {
-            addCriterion("hs_designId not in", values, "hsDesignid");
+            addCriterion("hs_designid not in", values, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidBetween(String value1, String value2) {
-            addCriterion("hs_designId between", value1, value2, "hsDesignid");
+            addCriterion("hs_designid between", value1, value2, "hsDesignid");
             return (Criteria) this;
         }
 
         public Criteria andHsDesignidNotBetween(String value1, String value2) {
-            addCriterion("hs_designId not between", value1, value2, "hsDesignid");
+            addCriterion("hs_designid not between", value1, value2, "hsDesignid");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonIsNull() {
+            addCriterion("data_json is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonIsNotNull() {
+            addCriterion("data_json is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonEqualTo(String value) {
+            addCriterion("data_json =", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonNotEqualTo(String value) {
+            addCriterion("data_json <>", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonGreaterThan(String value) {
+            addCriterion("data_json >", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonGreaterThanOrEqualTo(String value) {
+            addCriterion("data_json >=", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonLessThan(String value) {
+            addCriterion("data_json <", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonLessThanOrEqualTo(String value) {
+            addCriterion("data_json <=", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonLike(String value) {
+            addCriterion("data_json like", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonNotLike(String value) {
+            addCriterion("data_json not like", value, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonIn(List<String> values) {
+            addCriterion("data_json in", values, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonNotIn(List<String> values) {
+            addCriterion("data_json not in", values, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonBetween(String value1, String value2) {
+            addCriterion("data_json between", value1, value2, "dataJson");
+            return (Criteria) this;
+        }
+
+        public Criteria andDataJsonNotBetween(String value1, String value2) {
+            addCriterion("data_json not between", value1, value2, "dataJson");
             return (Criteria) this;
         }
     }

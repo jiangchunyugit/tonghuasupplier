@@ -1603,4 +1603,213 @@ public class NewProjectServiceImpl implements NewProjectService {
         return projectMessages.get(0).getContent();
     }
 
+    /**
+     * PC-设计师上传资料
+     *
+     * @param projectNo
+     * @param userId
+     * @param jsonData
+     * @return
+     */
+    @Override
+    public MyRespBundle<String> computerConfirmVolumeRoomData(String projectNo, String userId, String jsonData) {
+        if (StringUtils.isBlank(userId)) {
+            return RespData.error("请给userid赋值");
+        }
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空");
+        }
+        if (jsonData == null || jsonData.trim().isEmpty()) {
+            return RespData.error("jsonData 不可为空");
+        }
+        JSONObject urlJsonData = JSONObject.parseObject(jsonData);
+        Integer type = urlJsonData.getInteger("type");
+        String hsDesignId = urlJsonData.getString("hsDesignId");
+        if (type == null) {
+            return RespData.error("type=" + type);
+        }
+        if (hsDesignId == null || hsDesignId.trim().isEmpty()) {
+            return RespData.error("hsDesignId 不可为空");
+        }
+        EmployeeMsgExample example = new EmployeeMsgExample();
+        EmployeeMsgExample.Criteria criteria = example.createCriteria();
+        criteria.andUserIdEqualTo(userId);
+        criteria.andEmployeeStateEqualTo(1);
+        criteria.andRoleCodeEqualTo("CD");
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(example);
+        if (employeeMsgs.size() == 0) {
+            return RespData.error("查无此设计师!");
+        }
+        OrderUserExample userExample = new OrderUserExample();
+        OrderUserExample.Criteria userCriteria = userExample.createCriteria();
+        userCriteria.andRoleCodeEqualTo("CD");
+        userCriteria.andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if (orderUsers.size() == 0 || orderUsers.size() > 1) {
+            return RespData.error("您不符合接单条件/设计师身份有误，请核实后再操作！");
+        }
+        ProjectDataExample dataExample = new ProjectDataExample();
+        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+        dataCriteria.andHsDesignidEqualTo(hsDesignId);
+        dataCriteria.andProjectNoNotEqualTo(projectNo);
+        List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
+        if (projectOldDatas.size() > 0) {
+            return RespData.error("该案例已使用，请创作新的设计案例为消费者提供交付");
+        }
+        if (orderUsers.get(0).getTransferUserId() == null || orderUsers.get(0).getTransferUserId().isEmpty()) {
+            //未更换过设计师
+            if (type == 2 || type == 3) {
+                ProjectDataExample oneDataExample = new ProjectDataExample();
+                ProjectDataExample.Criteria oneDataCriteria = oneDataExample.createCriteria();
+                oneDataCriteria.andProjectNoEqualTo(projectNo);
+                oneDataCriteria.andTypeEqualTo(1);
+                List<ProjectData> projectDataList = projectDataMapper.selectByExample(oneDataExample);
+                if (projectDataList.size() == 0) {
+                    return RespData.error("此项目尚未上传量房资料");
+                }
+                if (!hsDesignId.equals(projectDataList.get(0).getHsDesignid())) {
+                    return RespData.error("请选择本项目案例");
+                }
+            }
+        } else {
+            //已更换过设计师
+            if (type == 3) {
+                ProjectDataExample oneDataExample = new ProjectDataExample();
+                ProjectDataExample.Criteria oneDataCriteria = oneDataExample.createCriteria();
+                oneDataCriteria.andProjectNoEqualTo(projectNo);
+                oneDataCriteria.andTypeEqualTo(2);
+                List<ProjectData> projectDataList = projectDataMapper.selectByExample(oneDataExample);
+                if (projectDataList.size() == 0) {
+                    return RespData.error("此项目尚未上传量房资料");
+                }
+                if (!hsDesignId.equals(projectDataList.get(0).getHsDesignid())) {
+                    return RespData.error("请选择本项目案例");
+                }
+            }
+        }
+        if (type == null) {
+            return RespData.error("请选择资料类型");
+        }
+        ProjectData projectData = new ProjectData();
+        projectData.setFileType(ProjectDataStatus.FILE_PNG.getValue());
+        projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
+        projectData.setType(type);
+        projectData.setCategory(type);
+        projectData.setProjectNo(projectNo);
+        projectData.setHsDesignid(hsDesignId);
+        projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+        projectData.setDataJson(jsonData);
+        int i = projectDataMapper.insertSelective(projectData);
+        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            throw new RuntimeException("确认失败!");
+        }
+        if (type == 3) {
+            String result = cloudService.getShangHaiPriceDetail(hsDesignId);
+            if (result.trim().isEmpty()) {
+                throw new RuntimeException("获取上海报价信息失败!");
+            }
+            JSONObject jsonObject = JSON.parseObject(result);
+            JSONObject data = jsonObject.getJSONObject("data");
+            Integer code = jsonObject.getJSONObject("status").getInteger("code");
+            if (code != 0) {
+                throw new RuntimeException("未提交报价，不能提交施工资料");
+            }
+            if (data == null) {
+                throw new RuntimeException(jsonObject.getJSONObject("status").getString("message"));
+            }
+            String quoteId = data.getString("quoteId");
+            String baseUrl = "https://aly-uat-api.homestyler.com/quote-system/api/v1/quote/" + quoteId + "/export?exportCode=";
+            ProjectData projectDataTwo = new ProjectData();
+            projectDataTwo.setFileType(ProjectDataStatus.FILE_PNG.getValue());
+            projectDataTwo.setCompanyId(employeeMsgs.get(0).getCompanyId());
+            projectDataTwo.setType(type);
+            projectDataTwo.setCategory(type);
+            projectDataTwo.setProjectNo(projectNo);
+            projectDataTwo.setHsDesignid(hsDesignId);
+            projectDataTwo.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+            projectDataTwo.setUploadTime(new Date());
+            for (int constructionType = 1; constructionType <= 5; constructionType++) {
+                switch (constructionType) {
+                    case 1:
+                        projectDataTwo.setFileName("全屋报价");
+                        projectDataTwo.setUrl(baseUrl + constructionType);
+                        break;
+                    case 2:
+                        projectDataTwo.setFileName("施工报价");
+                        projectDataTwo.setUrl(baseUrl + constructionType);
+                        break;
+                    case 3:
+                        projectDataTwo.setFileName("材料报价");
+                        projectDataTwo.setUrl(baseUrl + constructionType);
+                        break;
+                    case 4:
+                        projectDataTwo.setFileName("硬装报价");
+                        projectDataTwo.setUrl(baseUrl + constructionType);
+                        break;
+                    default:
+                        projectDataTwo.setFileName("软装报价");
+                        projectDataTwo.setUrl(baseUrl + constructionType);
+                        break;
+                }
+                int a = projectDataMapper.insertSelective(projectDataTwo);
+                if (a == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                    throw new RuntimeException("确认失败!");
+                }
+            }
+        }
+        if (type.equals(ProjectDataStatus.VOLUME_DATA.getValue())) {
+            designDispatchService.updateOrderState(projectNo, DesignStateEnum.STATE_60.getState(), "system", "system");
+        }
+        if (type.equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_240;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_160;
+            }
+            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+        }
+        if (type.equals(ProjectDataStatus.CONSTRUCTION_DATA.getValue())) {
+            DesignStateEnum stateEnum = DesignStateEnum.STATE_260;
+            //1全款合同，2分期合同
+            if (designDispatchService.queryDesignerOrder(projectNo).getContractType() == 2) {
+                stateEnum = DesignStateEnum.STATE_190;
+            }
+            designDispatchService.updateOrderState(projectNo, stateEnum.getState(), "system", "system");
+        }
+        return RespData.success();
+    }
+
+    /**
+     * APP-获取设计资料
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public MyRespBundle<NewDataVo> getNewDesignData(String projectNo) {
+        if (projectNo == null || projectNo.trim().isEmpty()) {
+            return RespData.error("projectNo 不可为空");
+        }
+        ProjectDataExample example = new ProjectDataExample();
+        ProjectDataExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoEqualTo(projectNo);
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        List<Integer> typeList = new ArrayList<>();
+        typeList.add(ProjectDataStatus.EFFECT_STATUS.getValue());
+        typeList.add(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
+        criteria.andTypeIn(typeList);
+        List<ProjectData> projectDataList = projectDataMapper.selectByExample(example);
+        if (projectDataList.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
+            return RespData.success(null, "暂无设计资料");
+        }
+        NewDataVo newDataVo = new NewDataVo();
+        for (ProjectData projectData : projectDataList) {
+            if (projectData.getType() == 1) {
+                newDataVo.setQuantityDataJson(projectData.getDataJson());
+            } else if (projectData.getType() == 2) {
+                newDataVo.setDesignDataJson(projectData.getDataJson());
+            }
+        }
+        return RespData.success(newDataVo);
+    }
 }
