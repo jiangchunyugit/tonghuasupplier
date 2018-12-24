@@ -410,9 +410,11 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
             criteria.andCompanyIdIn(companyIds);
         }
         if(orderType == 1){
-            criteria.andOrderStageIn(Arrays.asList(ConstructionStateEnum.STATE_500.getState(),ConstructionStateEnum.STATE_510.getState()));
-        }else{
-            criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_540.getState());
+            criteria.andOrderStageEqualTo(ConstructionStateEnum.STATE_500.getState());
+            List<Integer> complaintStates = new ArrayList<>();
+            complaintStates.add(ComplaintStateEnum.STATE_1.getState());
+            complaintStates.add(ComplaintStateEnum.STATE_4.getState());
+            criteria.andComplaintStateIn(complaintStates);
         }
         if(StringUtils.isNotBlank(companyId)){
             criteria.andCompanyIdEqualTo(companyId);
