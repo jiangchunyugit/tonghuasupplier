@@ -1,5 +1,6 @@
 package cn.thinkfree.service.remote;
 
+import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.database.model.SystemMessage;
 import cn.thinkfree.database.vo.MarginContractVO;
 import cn.thinkfree.database.vo.remote.SyncContractVO;
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CloudServiceImpl implements CloudService {
+public class CloudServiceImpl extends AbsLogPrinter implements CloudService {
 
     @Autowired
     RestTemplate restTemplate;
@@ -317,14 +318,16 @@ public class CloudServiceImpl implements CloudService {
         Gson gson = new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create();
         String body = gson.toJson(syncOrderVO);
         HttpEntity<String> requestEntity = new HttpEntity<String>(body, headers);
-
+        printInfoMes("生成订单发送json数据为：json {}", body);
         RemoteResult<String> result = null;
         try {
             result = invokeRemoteMethodForJson(syncOrderUrl, requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
+            printInfoMes("生成订单调用接口发生错误",e.getStackTrace());
             return buildFailResult();
         }
+        printInfoMes("生成订单接口返回结果为：result  {}",result);
         return result;
 
     }

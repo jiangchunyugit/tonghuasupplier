@@ -49,6 +49,8 @@ public class DesignerOrderVo {
     private String orderState;
     @ApiModelProperty("项目总额（订单总额）")
     private String projectMoney;
+    @ApiModelProperty("户型")
+    private String huxing;
 
     public DesignerOrderVo() {
     }
@@ -75,6 +77,13 @@ public class DesignerOrderVo {
         this.optionTime = optionTime;
         this.orderState = orderState;
         this.projectMoney = projectMoney;
+    }
+    public void setHuxing(String huxing) {
+        this.huxing = huxing;
+    }
+
+    public String getHuxing() {
+        return huxing;
     }
 
     public String getProjectNo() {
