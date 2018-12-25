@@ -1086,8 +1086,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (dataVo.getProjectNo() == null || dataVo.getProjectNo().trim().isEmpty()) {
             return RespData.error("projectNo 不可为空");
         }
-
-
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(dataVo.getUserId());
@@ -1097,7 +1095,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (employeeMsgs.size() == 0) {
             return RespData.error("查无此设计师!");
         }
-
         OrderUserExample userExample = new OrderUserExample();
         OrderUserExample.Criteria userCriteria = userExample.createCriteria();
         userCriteria.andRoleCodeEqualTo("CD");
@@ -1158,11 +1155,14 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectData.setHsDesignid(dataVo.getHsDesignId());
             projectData.setFileName(urlDetailVo.getName());
             projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+            projectData.setIsConfirm(0);
             if (dataVo.getType().equals(ProjectDataStatus.DESIGN_DATA.getValue())) {
-//                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
-//                    return RespData.error("3D全景度为空");
-//                }
-                projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
+                if (urlDetailVo.getPhoto360Url() == null || urlDetailVo.getPhoto360Url().trim().isEmpty()) {
+                    projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
+                }
+                if (urlDetailVo.getImgUrl() == null || urlDetailVo.getImgUrl().trim().isEmpty()) {
+                    projectData.setUrl(urlDetailVo.getImgUrl());
+                }
             } else {
                 if (urlDetailVo.getImgUrl() == null || urlDetailVo.getImgUrl().trim().isEmpty()) {
                     return RespData.error("图片地址为空");
@@ -1804,8 +1804,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         for (ProjectData projectData : projectDataList) {
             if (projectData.getType() == 1) {
                 newDataVo.setQuantityDataJson(projectData.getDataJson());
+                newDataVo.setDesignDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
             } else if (projectData.getType() == 2) {
                 newDataVo.setDesignDataJson(projectData.getDataJson());
+                newDataVo.setDesignDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
             }
         }
         return RespData.success(newDataVo);
