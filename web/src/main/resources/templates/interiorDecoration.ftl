@@ -184,13 +184,13 @@
 <section class='indent'>
     分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
  <#list c100 as c>
- <#if c.sortNumber ==0>
+ <#if c.sortNumber ==1>
     ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费首期款，即 <p class="placeholderK">${c.costValue}</p>元；
  </#if> 
- <#if c.sortNumber ==1>
+ <#if c.sortNumber ==2>
    ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费中期款，即 <p class="placeholderK">${c.costValue}</p>元；
  </#if> 
-  <#if c.sortNumber ==2>
+  <#if c.sortNumber ==3>
  ${c.name} ，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费尾期款，即 <p class="placeholderK">${c.costValue}</p>元。
   </#if> 
 </section>
