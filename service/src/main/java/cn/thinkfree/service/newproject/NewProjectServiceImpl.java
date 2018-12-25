@@ -856,6 +856,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("项目不存在!!");
         }
         Project project = projects.get(0);
+        //添加项目阶段值
+        projectTitleVo.setStage(project.getStage());
         //添加进度展示
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             //添加进度信息
@@ -863,7 +865,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         } else {
             projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
         }
-
         //添加客诉判断
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
