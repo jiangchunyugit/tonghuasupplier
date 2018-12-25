@@ -63,6 +63,8 @@ public class AccountListVO extends BaseModel {
      @ApiModelProperty("角色")
     private String roles;
 
+     private String memo;
+
      public String getRoles() {
          return roles;
      }
@@ -149,5 +151,13 @@ public class AccountListVO extends BaseModel {
 
      public void setEmail(String email) {
          this.email = email;
+     }
+
+     public String getMemo() {
+         return memo;
+     }
+
+     public void setMemo(String memo) {
+         this.memo = memo;
      }
  }
