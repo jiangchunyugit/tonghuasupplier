@@ -3,6 +3,7 @@ package cn.thinkfree.service.platform.employee.impl;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.appvo.UserVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
@@ -71,7 +72,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(authState == 4 && StringUtils.isBlank(reason)){
             reason = "证件信息有误";
         }
-        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
@@ -85,6 +85,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 插入操作记录
         OptionLog optionLog = new OptionLog();
         optionLog.setRemark(reason);
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         if(userVO != null){
             optionLog.setOptionUserName(userVO.getName());
             optionLog.setOptionUserId(userVO.getUserID());
@@ -244,7 +245,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         applyLog = new EmployeeApplyLog();
         applyLog.setDealTime(new Date());
         applyLog.setDealExplain(dealExplain);
-        applyLog.setDealUserId(dealUserId);
+        applyLog.setDealUserId(SessionUserDetailsUtil.getLoginUserName());
+        String remark = null;
+        if (employeeApplyState == 2){
+            remark = "拒绝";
+        }else if(employeeApplyState == 3){
+            remark = "同意";
+        }
+        applyLog.setRemark(remark);
         //1，已处理，2未处理，3已过期
         applyLog.setDealState(1);
         res = applyLogMapper.updateByExampleSelective(applyLog, employeeApplyLogExample);

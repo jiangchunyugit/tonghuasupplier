@@ -2096,7 +2096,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         saveLog(stateEnum.getState(), project);
         updateProjectState(project.getProjectNo(), stateEnum.getState());
       // 支付阶段通知
-        constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);
+        /*constructionAndPayStateService.notifyPay(designerOrder.getOrderNo(), 1);*/
 
     }
     /**

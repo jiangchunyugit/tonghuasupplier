@@ -87,15 +87,15 @@
     <h1 class="text-algin">家庭居室装饰装修施工合同</h1>
     <div>
         <span>甲方：${c01}</span>
-        <span style="margin-left: 22%">乙方：${c01}</span>
+        <span style="margin-left: 22%">乙方：${c02}</span>
     </div>
     <div>
         <span>甲方电话：${c09}</span>
         <span style="margin-left: 20%">营业执照号：${c13}</span>
     </div>
     <div>
-        <span>会员卡号：${c05}</span>
-        <span style="margin-left: 20%">建筑资质等级证书号：${c10}</span>
+        <span>会员卡号：${c10}</span>
+        <span style="margin-left: 20%">建筑资质等级证书号：${c14}</span>
     </div>
     <div>
         <span>电子邮箱：${c11}</span>
