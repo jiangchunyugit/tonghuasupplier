@@ -100,7 +100,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     }
 
     @Override
-    public PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone, int pageSize, int pageIndex) {
+    public PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone, int state, int pageSize, int pageIndex) {
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         ReserveProjectExample.Criteria criteria = reserveProjectExample.createCriteria();
         if (StringUtils.isNotBlank(ownerName)) {
@@ -109,8 +109,12 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         if (StringUtils.isNotBlank(phone)) {
             criteria.andPhoneLike("%" + phone + "%");
         }
+        if (state != -1) {
+            criteria.andStateEqualTo(state);
+        }
         long total = reserveProjectMapper.countByExample(reserveProjectExample);
         PageHelper.startPage(pageIndex, pageSize);
+        reserveProjectExample.setOrderByClause(" reserve_time desc ");
         List<ReserveProject> reserveProjects = reserveProjectMapper.selectByExample(reserveProjectExample);
         PageVo<List<ReserveProjectVo>> pageVo = new PageVo<>();
         List<ReserveProjectVo> reserveProjectVos = new ArrayList<>();

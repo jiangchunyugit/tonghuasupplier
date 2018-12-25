@@ -78,11 +78,12 @@ public class ReserveOrderController extends AbsBaseController {
     @RequestMapping(value = "query", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<PageVo<List<ReserveProjectVo>>> queryReserveOrder(
             @ApiParam(name = "ownerName", required = false, value = "业主姓名") @RequestParam(name = "ownerName", required = false) String ownerName,
-            @ApiParam(name = "phone", required = false, value = "订单状态,3业主取消，4其他") @RequestParam(name = "phone", required = false) String phone,
-            @ApiParam(name = "pageSize", required = false, value = "订单状态,3业主取消，4其他") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
-            @ApiParam(name = "pageIndex", required = false, value = "关闭原因") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex){
+            @ApiParam(name = "phone", required = false, value = "业主手机号") @RequestParam(name = "phone", required = false) String phone,
+            @ApiParam(name = "state", required = false, value = "1待转换，2已转换，3业主取消，4其他") @RequestParam(name = "state", required = false, defaultValue = "-1") int state,
+            @ApiParam(name = "pageSize", required = false, value = "每页条数") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
+            @ApiParam(name = "pageIndex", required = false, value = "第几页") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex){
         try {
-            PageVo<List<ReserveProjectVo>> pageVo = reserveOrderService.queryReserveOrder(ownerName, phone, pageSize, pageIndex);
+            PageVo<List<ReserveProjectVo>> pageVo = reserveOrderService.queryReserveOrder(ownerName, phone, state, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
