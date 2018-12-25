@@ -368,28 +368,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         String instanceNo = UniqueCodeGenerator.AF_INSTANCE.getCode();
-        if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)) {
-            // 变更单校验变更数据
-            verifyChangeOrderData(data);
-        } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)) {
-            AfInstance instance = findOneByConfigNoAndProjectNoAndStatusOrderCreateTimeDesc(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
-            if (instance == null) {
-                LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
-                throw new RuntimeException();
-            }
-            instanceRelevancyService.create(instance.getInstanceNo(), instanceNo, instance.getData());
-        } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
-            int maxDelayDays = getMaxDelayDays(projectNo);
-            int delayDays = getDelayDays(data);
-            if (delayDays > maxDelayDays) {
-                LOGGER.error("传入的延期天数大于实际延期天数，projectNo:{}, maxDelayDays:{}, delayDays:{}", projectNo, maxDelayDays, delayDays);
-                throw new RuntimeException();
-            }
-        } else if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
-            verifyCheckData(data);
-        } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)) {
-            verifyCheckData(data);
-        }
+        verifySubmitStartData(projectNo, configNo, instanceNo, data);
         for (int index = 0; index < approvalRoles.size(); index++) {
             UserRoleSet role = approvalRoles.get(index);
             AfApprovalLog approvalLog = null;
@@ -431,7 +410,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         instance.setConfigSchemeNo(configSchemeNo);
         instance.setRemark(remark);
 
-        sendMessageToSub(configSchemeNo, projectNo, userId, orderUsers);
+        sendMessageToSub(projectNo, configSchemeNo, userId, orderUsers);
 
         if (approvalLogs.size() > 1) {
             instance.setCurrentApprovalLogNo(approvalLogs.get(1).getApprovalNo());
@@ -449,6 +428,31 @@ public class AfInstanceServiceImpl implements AfInstanceService {
 
         insert(instance);
         approvalLogService.create(approvalLogs);
+    }
+
+    private void verifySubmitStartData(String projectNo, String configNo, String instanceNo, String data) {
+        if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)) {
+            // 变更单校验变更数据
+            verifyChangeOrderData(data);
+        } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)) {
+            AfInstance instance = findOneByConfigNoAndProjectNoAndStatusOrderCreateTimeDesc(AfConfigs.CHANGE_ORDER.configNo, projectNo, AfConstants.APPROVAL_STATUS_SUCCESS);
+            if (instance == null) {
+                LOGGER.error("未查询到已完成的{}, projectNo:{}", AfConfigs.CHANGE_ORDER.name, projectNo);
+                throw new RuntimeException();
+            }
+            instanceRelevancyService.create(instance.getInstanceNo(), instanceNo, instance.getData());
+        } else if (AfConfigs.DELAY_ORDER.configNo.equals(configNo)) {
+            int maxDelayDays = getMaxDelayDays(projectNo);
+            int delayDays = getDelayDays(data);
+            if (delayDays > maxDelayDays) {
+                LOGGER.error("传入的延期天数大于实际延期天数，projectNo:{}, maxDelayDays:{}, delayDays:{}", projectNo, maxDelayDays, delayDays);
+                throw new RuntimeException();
+            }
+        } else if (AfConfigs.CHECK_APPLICATION.configNo.equals(configNo)) {
+            verifyCheckData(data);
+        } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)) {
+            verifyCheckData(data);
+        }
     }
 
     private void verifyCheckData(String data) {

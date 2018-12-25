@@ -77,12 +77,12 @@ public interface ConstructionStateService {
     void customerCancelOrder(String userId, String orderNo, String cancelReason);
 
     /**
-     * 消费者
-     * 取消订单
-     * 签约阶段逆向
-     * 查看状态
+     * 判断订单能否取消
+     * @param state 订单状态
+     * @param complaintState 客诉状态
+     * @return 订单能否取消
      */
-    Boolean customerCancelOrderState(String userId, String orderNo);
+    boolean orderCanCancel(int state, int complaintState);
 
     /**
      * 消费者

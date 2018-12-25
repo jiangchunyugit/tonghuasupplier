@@ -104,6 +104,8 @@
       LEFT OUTER JOIN pc_system_role_permission pc_system_role_permission
       on  pc_system_permission.id = pc_system_role_permission.permission_id
       and pc_system_role_permission.role_id = #{id}
+      where pc_system_permission.is_del=0
+      and pc_system_permission.is_enable = 1
 
   </select>
   <select id="selectEffectivePermission"  parameterType="java.util.List"   resultMap="BaseResultMap">

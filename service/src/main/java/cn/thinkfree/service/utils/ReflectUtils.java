@@ -1,11 +1,10 @@
 package cn.thinkfree.service.utils;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import cn.thinkfree.database.model.ReserveProject;
+import cn.thinkfree.service.platform.vo.ReserveProjectVo;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -45,26 +44,52 @@ public class ReflectUtils {
 		return map;
 	}
 
+	public static void main(String[] args) {
+		ReserveProject project = new ReserveProject();
+		project.setOwnerName("sdfasdf");
+		ReserveProjectVo reserveProjectVo = new ReserveProjectVo();
+		beanCopy(project, reserveProjectVo);
+		System.out.println(JSONObject.toJSONString(reserveProjectVo));
+	}
 	/**
 	 * java对象文件copy
-	 * 
+	 *
 	 * @param p
 	 * @param c
 	 * @return
 	 */
 	public static <P, C extends P> C beanCopy(P p, C c) {
-		Field[] fields = c.getClass().getSuperclass().getDeclaredFields();
-		Field[] fields2 = p.getClass().getDeclaredFields();
-		Map<String, Field> map = getMapByFields(fields);
-		for (Field field : fields2) {
-			field.setAccessible(true);
+		Field[] cfs = getFs(c);
+		Field[] pfs = getFs(p);
+		Map<String, Field> map = getMapByFields(cfs);
+		for (Field pf : pfs) {
+			pf.setAccessible(true);
 			try {
-				field.set(c, map.get(field.getName()).get(p));
+				Field cf = map.get(pf.getName());
+				if(cf != null){
+					cf.set(c, pf.get(p));
+				}
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 			}
 		}
 		return c;
+	}
+
+	private static Field[] getFs(Object o){
+		List<Field> fieldList = new ArrayList<>();
+		Field[] cfs = o.getClass().getDeclaredFields();
+		fieldList.addAll(Arrays.asList(cfs));
+		Class<?> cls = o.getClass().getSuperclass();
+		while(cls != null){
+			List<Field> fields = Arrays.asList(cls.getDeclaredFields());
+			if(fields.isEmpty()){
+				break;
+			}
+			fieldList.addAll(fields);
+			cls = cls.getSuperclass();
+		}
+		return fieldList.toArray(new Field[]{});
 	}
 
 	private static Map<String, Field> getMapByFields(Field[] fields) {

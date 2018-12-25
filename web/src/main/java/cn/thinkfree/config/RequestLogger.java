@@ -1,5 +1,7 @@
 package cn.thinkfree.config;
 
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.vo.UserVO;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -32,11 +34,13 @@ public class RequestLogger {
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         String strLog = pjp.getTarget().getClass().getName()+"."+pjp.getSignature().getName();
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         log.info("[request ip     ]：{}", request.getRemoteAddr());
         log.info("[request url    ]：{}", request.getRequestURL().toString());
         log.info("[request method ]：{}", strLog);
         log.info("[request headers]：{}", getHeaders(request));
         log.info("[request params ]：{}", JSONObject.toJSONString(request.getParameterMap()));
+        log.info("[option msg     ]：{}", JSONObject.toJSONString(userVO));
         long time = System.currentTimeMillis();
         Object retVal = pjp.proceed();
         time = System.currentTimeMillis() - time;

@@ -188,7 +188,7 @@ public class ReviewDetailsController extends AbsBaseController {
     public MyRespBundle projectPredating(
             @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo,
             @RequestParam(name = "predatingTime") @ApiParam(name = "predatingTime", value = "预约时间 yyyy-MM-dd", required = true) Date predatingTime,
-            @RequestParam(name = "remark") @ApiParam(name = "remark", value = "备注", required = true) String remark) {
+            @RequestParam(name = "remark",required = false) @ApiParam(name = "remark", value = "备注", required = false) String remark) {
         return reviewDetailsService.projectPredating(projectNo, predatingTime, remark);
     }
 
