@@ -586,6 +586,21 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
         return constructionState;
     }
 
+    @Override
+    public int getStateCode(int state, int complaintState) {
+        int constructionStateCode;
+        if (complaintState == ComplaintStateEnum.STATE_2.getState()) {
+            constructionStateCode = ConstructionStateEnum.STATE_715.getState();
+        } else if (complaintState == ComplaintStateEnum.STATE_3.getState()) {
+            constructionStateCode = ConstructionStateEnum.STATE_730.getState();
+        } else if (complaintState == ComplaintStateEnum.STATE_5.getState()) {
+            constructionStateCode = ConstructionStateEnum.STATE_710.getState();
+        } else {
+            constructionStateCode = state;
+        }
+        return constructionStateCode;
+    }
+
     private OrderStatusDTO createOrderStatusDTO(ConstructionStateEnum constructionState, int type) {
         OrderStatusDTO orderStatusDTO = new OrderStatusDTO();
         orderStatusDTO.setStatus(constructionState.getState());

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import cn.thinkfree.database.model.ReserveProject;
+import cn.thinkfree.service.platform.vo.ReserveProjectVo;
 import com.alibaba.fastjson.JSONObject;
 
 /**
@@ -45,9 +47,16 @@ public class ReflectUtils {
 		return map;
 	}
 
+	public static void main(String[] args) {
+		ReserveProject project = new ReserveProject();
+		project.setOwnerName("sdfasdf");
+		ReserveProjectVo reserveProjectVo = new ReserveProjectVo();
+		beanCopy(project, reserveProjectVo);
+		System.out.println(JSONObject.toJSONString(reserveProjectVo));
+	}
 	/**
 	 * java对象文件copy
-	 * 
+	 *
 	 * @param p
 	 * @param c
 	 * @return
