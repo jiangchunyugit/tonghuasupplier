@@ -5,6 +5,7 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.database.model.JoinStatus;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
@@ -39,6 +40,21 @@ public class CompanyInfoSubmitController extends AbsBaseController {
 	ContractService contractService;
     @Autowired
     ContractTemplateService contractTemplateService;
+
+    /**
+     * 入驻公司成功前的公司状态修改
+     * @return
+     */
+    @RequestMapping(value = "/changeNode", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="前端--装饰/设计公司管理中心--入驻--入驻公司操作")
+    public MyRespBundle<String> changeCompanyInfo(@ApiParam("入驻公司节点信息")JoinStatus joinStatus){
+        boolean flag = companySubmitService.changeNode(joinStatus);
+        if(flag){
+            return sendSuccessMessage("操作成功");
+        }
+        return sendFailMessage("操作失败");
+    }
 
     /**
      * 查询资质变更审批信息

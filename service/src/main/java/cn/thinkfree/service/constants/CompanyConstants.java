@@ -220,5 +220,30 @@ public class CompanyConstants{
             return Short.valueOf(code.toString());
         }
     }
+
+    /**
+     * 入驻公司节点：0：平台确认    1：缴纳保证金
+     */
+    public enum JoinCompanyNode{
+        /**
+         * 平台确认
+         */
+        PLATFORMTRUE(0,"平台确认"),
+        /**
+         * 缴纳保证金
+         */
+        MONEY(1,"缴纳保证金");
+
+        public final Integer code;
+        public final String mes;
+
+        JoinCompanyNode(Integer code ,String mes){
+            this.code = code;
+            this.mes = mes;
+        }
+        public String shortVal(){
+            return code.toString();
+        }
+    }
 }
 
