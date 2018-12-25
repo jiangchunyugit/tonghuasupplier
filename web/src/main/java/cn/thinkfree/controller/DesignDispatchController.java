@@ -611,6 +611,29 @@ public class DesignDispatchController extends AbsBaseController {
         }
     }
 
+    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\",\"ZSG(转施工)\"]")
+    @MyRespBody
+    @RequestMapping(value = "showBtnByUserId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<String>> showBtnByUserId(
+            @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId,
+            @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo) {
+        try {
+            if (projectNo==null||projectNo.trim().isEmpty()){
+                return RespData.error("请检查入参projectNo="+projectNo);
+            }
+            if (designOrderNo==null||designOrderNo.trim().isEmpty()){
+                return RespData.error("请检查入参designOrderNo="+designOrderNo);
+            }
+            if (userId==null||userId.trim().isEmpty()){
+                return RespData.error("请检查入参userId="+userId);
+            }
+            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.showBtnByUserId(projectNo,designOrderNo,userId));
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
     @ApiOperation("根据项目编号查询业主和公司信息")
     @MyRespBody
     @RequestMapping(value = "queryContractMsg", method = {RequestMethod.POST, RequestMethod.GET})
