@@ -19,7 +19,7 @@ import java.util.Map;
 public class ProjectVo {
     @ApiModelProperty(name = "projectNo",value = "项目编号")
     private String projectNo;
-    @ApiModelProperty(name = "stage",value = "项目阶段(预约/量房/设计/施工)")
+    @ApiModelProperty(name = "stage",value = "项目阶段")
     private Integer stage;
     @ApiModelProperty(value = "B端项目阶段名称")
     private String stageDesignName;
