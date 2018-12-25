@@ -1483,11 +1483,6 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					constructionStateService.contractCompleteState(orderNumber);
 				}
 				record.setSignTime(new Date());// 插入时间
-				printInfoMes("合同审批调用 生成订单orderNumber{}", orderNumber);
-				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNumber);
-				CreateOrder order = new CreateOrder();
-				order.setData(syncOrderVo);
-				eventService.publish(order);
 
 			} else {// 拒绝 插入拒绝原因
 				// 查询合同编号
@@ -1577,6 +1572,14 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				String content ="业主不同意项目编号"+projectNo+"的设计合同，请您重新编辑";
 				printInfoMes("设计合同业主不同意发送消息projectNo:{},subUserId{}",projectNo,content);
 				this.sendMessage(projectNo,"",subUserId,content);
+			}else{
+				//发送订单数据
+				printInfoMes("合同审批调用 生成订单orderNumber{}", orderNo);
+				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNo);
+				CreateOrder order = new CreateOrder();
+				order.setData(syncOrderVo);
+				eventService.publish(order);
+
 			}
 			//查询是否全款 1全款合同，2分期款合同
 			// 查询合同是全款换是分期
