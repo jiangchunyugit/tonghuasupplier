@@ -195,7 +195,7 @@ public class AccountControllerTest extends AbsControllerTest {
     }
     @Test
     public void detailRole() throws Exception {
-        String rs = mvc.perform(get("/account/role/54")
+        String rs = mvc.perform(get("/account/role/65")
                 .with(user(userVO))
         )
                 .andExpect(status().isOk())
@@ -210,7 +210,7 @@ public class AccountControllerTest extends AbsControllerTest {
 
     @Test
     public void editRole() throws Exception {
-        String rs = mvc.perform(post("/account/role/54")
+        String rs = mvc.perform(post("/account/role/65")
                 .with(user(userVO))
                 .param("desc","改动")
         )

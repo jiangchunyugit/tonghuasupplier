@@ -69,7 +69,8 @@ public class SystemRoleVO extends SystemRole {
     @ApiModelProperty("是否选中总部")
     public Integer getSelectedRoot(){
 
-        return (getScope() == null || getScope() == 0) ? 0 : (RoleScope.ROOT.code.intValue() < getScope()) ? 1 : 0  ;
+
+        return (getScope() == null || getScope() == 0) ? 0 : (RoleScope.ROOT.code.intValue() <= getScope()) ? 1 : 0  ;
     }
 
     public void setRoot(Integer root) {
