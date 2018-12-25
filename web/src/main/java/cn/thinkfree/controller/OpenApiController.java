@@ -65,9 +65,9 @@ public class OpenApiController extends AbsBaseController {
     @ApiOperation(value = "APP模糊查询公司列表",notes = "默认30条数据")
     @PostMapping("/companyInfo")
     @MyRespBody
-    public MyRespBundle<List<SelectItem>> companyInfo(String name){
+    public MyRespBundle<List<SelectItem>> companyInfo(String name,String type){
 
-        List<SelectItem> items = companyInfoService.listCompanyByLikeName(name);
+        List<SelectItem> items = companyInfoService.listCompanyByLikeName(name,type);
 
         return sendJsonData(ResultMessage.SUCCESS,items);
     }

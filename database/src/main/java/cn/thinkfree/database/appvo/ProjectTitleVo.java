@@ -51,6 +51,8 @@ public class ProjectTitleVo {
     private PersionVo owner;
     @ApiModelProperty("1,未投诉，2处理中，3关闭，4已取消")
     private Integer complaintState;
+    @ApiModelProperty(name = "stage",value = "项目阶段")
+    private Integer stage;
 
 
 }
