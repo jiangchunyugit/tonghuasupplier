@@ -1560,7 +1560,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			if(status.equals("0")){
 				//修改设计合同订单状态为未审核
 				OrderContract recordTwo = new OrderContract();
-				recordTwo.setAuditType("2");//审核未通过
+				recordTwo.setAuditType("0");//审核不通過
 				OrderContractExample exampleTwo = new OrderContractExample();
 				exampleTwo.createCriteria().andOrderNumberEqualTo(orderNo);
 				orderContractMapper.updateByExampleSelective(recordTwo,exampleTwo);
