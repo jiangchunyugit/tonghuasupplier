@@ -6,6 +6,8 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -164,6 +166,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.notDispatch(projectNo, reason, optionUserId, optionUserName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -181,6 +188,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName, contractType);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -211,6 +223,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.refuseOrder(projectNo, companyId, reason, optionUserId, optionUserName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -228,6 +245,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.assignDesigner(projectNo, companyId, designerUserId, optionUserId, optionUserName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
