@@ -12,6 +12,7 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import cn.thinkfree.service.businessentity.BusinessEntityService;
 import cn.thinkfree.service.constants.CompanyConstants;
+import cn.thinkfree.service.constants.CompanyType;
 import cn.thinkfree.service.utils.UserNoUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -120,7 +121,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
         condition.createCriteria().andCompanyNameLike("%"+name+"%")
                 .andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-                .andBusinessTypeEqualTo(Short.valueOf(type))
+                .andRoleIdEqualTo(CompanyType.values()[Integer.valueOf(type)].name())
 //                .andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
                 .andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.code.toString())
                 .andPlatformTypeEqualTo(CompanyConstants.PlatformType.NORMAL.shortVal());
