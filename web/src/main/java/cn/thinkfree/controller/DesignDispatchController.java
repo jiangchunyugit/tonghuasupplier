@@ -6,6 +6,8 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -164,6 +166,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.notDispatch(projectNo, reason, optionUserId, optionUserName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -181,6 +188,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.dispatch(projectNo, companyId, optionUserId, optionUserName, contractType);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -211,6 +223,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.refuseOrder(projectNo, companyId, reason, optionUserId, optionUserName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -228,6 +245,11 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserId", required = false, value = "操作人员ID") @RequestParam(name = "optionUserId", required = false) String optionUserId,
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
+            UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+            if(userVO != null){
+                optionUserId = userVO.getUserID();
+                optionUserName = userVO.getName();
+            }
             designDispatchService.assignDesigner(projectNo, companyId, designerUserId, optionUserId, optionUserName);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -606,6 +628,29 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo) {
         try {
             return sendJsonData(ResultMessage.SUCCESS, designDispatchService.showBtn(designOrderNo));
+        } catch (Exception e) {
+            return sendFailMessage(e.getMessage());
+        }
+    }
+
+    @ApiOperation("是否展示操作按钮---->app使用：[\"LFFY(提醒支付量房费用)\",\"LFZL(提交量房资料)\",\"SJZL(提交设计资料)\",\"CKHT(查看合同)\",\"ZSG(转施工)\"]")
+    @MyRespBody
+    @RequestMapping(value = "showBtnByUserId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<String>> showBtnByUserId(
+            @ApiParam(name = "projectNo", required = false, value = "项目编号") @RequestParam(name = "projectNo", required = false) String projectNo,
+            @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId,
+            @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo) {
+        try {
+            if (projectNo==null||projectNo.trim().isEmpty()){
+                return RespData.error("请检查入参projectNo="+projectNo);
+            }
+            if (designOrderNo==null||designOrderNo.trim().isEmpty()){
+                return RespData.error("请检查入参designOrderNo="+designOrderNo);
+            }
+            if (userId==null||userId.trim().isEmpty()){
+                return RespData.error("请检查入参userId="+userId);
+            }
+            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.showBtnByUserId(projectNo,designOrderNo,userId));
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }

@@ -1,5 +1,6 @@
 package cn.thinkfree.service.companysubmit;
 
+import cn.thinkfree.database.model.JoinStatus;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
@@ -142,5 +143,12 @@ public interface CompanySubmitService {
      * @return
      */
     PageInfo<CompanyListVo> agencyList(CompanyListSEO companyListSEO);
+
+    /**
+     * 入驻公司修改公司状态
+     * @param joinStatus
+     * @return
+     */
+    boolean changeNode(JoinStatus joinStatus);
 
 }

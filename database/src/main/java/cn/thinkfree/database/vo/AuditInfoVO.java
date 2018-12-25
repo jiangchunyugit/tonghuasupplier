@@ -14,6 +14,17 @@ public class AuditInfoVO extends PcAuditInfo {
     @ApiModelProperty(value = "公司入驻状态name")
     private String companyAuditName;
 
+    @ApiModelProperty(value = "入驻公司状态节点")
+    private String node;
+
+    public String getNode() {
+        return node;
+    }
+
+    public void setNode(String node) {
+        this.node = node;
+    }
+
     public String getCompanyAuditName() {
         return companyAuditName;
     }

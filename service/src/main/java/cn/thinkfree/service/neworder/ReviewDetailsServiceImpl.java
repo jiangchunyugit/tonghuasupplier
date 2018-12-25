@@ -675,7 +675,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
         dataCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
         dataCriteria.andProjectNoEqualTo(projectNo);
-        dataCriteria.andTypeEqualTo(3);
+        dataCriteria.andTypeEqualTo(2);
         List<ProjectData> projectDatas = projectDataMapper.selectByExample(dataExample);
         if (projectDatas.size() == 0 || projectDatas.get(0).getHsDesignid() == null || projectDatas.get(0).getHsDesignid().trim().isEmpty()) {
             throw new RuntimeException("此项目尚未提交设计案例");
