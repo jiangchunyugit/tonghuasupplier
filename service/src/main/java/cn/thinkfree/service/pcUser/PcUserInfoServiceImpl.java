@@ -469,7 +469,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
         PcUserInfo pcUserInfo = pcUserInfoMapper.selectByPrimaryKey(id);
 
-        if(!UserEnabled.Enabled_false.shortVal().equals(pcUserInfo.getEnabled())){
+        if(UserEnabled.Enabled_false.shortVal().equals(pcUserInfo.getEnabled())){
             PcUserInfo delObj = new PcUserInfo();
             delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
             delObj.setId(id);

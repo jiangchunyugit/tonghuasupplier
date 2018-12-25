@@ -1481,6 +1481,12 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				} else {// 施工合同
 					printInfoMes("合同审批调用 订单接口 orderNo{}", orderNumber);
 					constructionStateService.contractCompleteState(orderNumber);
+
+					printInfoMes("合同审批调用 生成订单orderNumber{}", orderNumber);
+					List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNumber);
+					CreateOrder order = new CreateOrder();
+					order.setData(syncOrderVo);
+					eventService.publish(order);
 				}
 				record.setSignTime(new Date());// 插入时间
 

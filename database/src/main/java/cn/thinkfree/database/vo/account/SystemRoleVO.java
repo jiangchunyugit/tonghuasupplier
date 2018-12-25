@@ -105,10 +105,10 @@ public class SystemRoleVO extends SystemRole {
         if(getScope() == null || getScope() == 0){
             return Integer.valueOf(SysConstants.YesOrNo.NO.val.toString());
         }
-        if(RoleScope.COMMON.code.equals(getScope()) || RoleScope.PROVINCE.code.equals(getScope())){
+        if(RoleScope.COMMON.code.equals(getScope()) || RoleScope.CITY.code.equals(getScope())){
             return Integer.valueOf(SysConstants.YesOrNo.YES.val.toString());
         }
-        if(getScope() == 2 || getScope() == 5){
+        if(getScope() == 3 || getScope() == 5){
             return Integer.valueOf(SysConstants.YesOrNo.YES.val.toString());
         }
         return Integer.valueOf(SysConstants.YesOrNo.NO.val.toString());
