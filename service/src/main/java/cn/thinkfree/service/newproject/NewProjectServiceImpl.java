@@ -1106,14 +1106,15 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (orderUsers.size() == 0 || orderUsers.size() > 1) {
             return RespData.error("您不符合接单条件/设计师身份有误，请核实后再操作！");
         }
-
-        ProjectDataExample dataExample = new ProjectDataExample();
-        ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
-        dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
-        dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
-        List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
-        if (projectOldDatas.size() > 0) {
-            return RespData.error("该案例已使用，请创作新的设计案例为消费者提供交付");
+        if (dataVo.getType() == 1 || dataVo.getType() == 2) {
+            ProjectDataExample dataExample = new ProjectDataExample();
+            ProjectDataExample.Criteria dataCriteria = dataExample.createCriteria();
+            dataCriteria.andHsDesignidEqualTo(dataVo.getHsDesignId());
+            dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
+            List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
+            if (projectOldDatas.size() > 0) {
+                return RespData.error("该案例已使用，请创作新的设计案例为消费者提供交付");
+            }
         }
         if (orderUsers.get(0).getTransferUserId() == null || orderUsers.get(0).getTransferUserId().isEmpty()) {
             //未更换过设计师
