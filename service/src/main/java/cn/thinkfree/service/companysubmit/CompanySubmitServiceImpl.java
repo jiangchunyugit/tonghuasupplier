@@ -169,9 +169,9 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 
 	@Override
 	public AuditInfoVO findAuditStatus(String companyId) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>(2);
 		map.put("companyId", companyId);
-		List<String>  list = new ArrayList<>();
+		List<String>  list = new ArrayList<>(2);
 		list.add(CompanyConstants.AuditType.JOINON.stringVal());
 		list.add(CompanyConstants.AuditType.CONTRACT.stringVal());
 		map.put("auditType", list);
@@ -181,11 +181,10 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		//查询入驻公司当前节点状态
 		JoinStatus joinStatus = joinStatusMapper.joinCompanyNode(companyId);
 
-		List<Integer> caiwu = new ArrayList<>();
+		List<Integer> caiwu = new ArrayList<>(3);
 		caiwu.add(CompanyAuditStatus.CHECKING.code);
 		caiwu.add(CompanyAuditStatus.SUCCESSCHECK.code);
 		caiwu.add(CompanyAuditStatus.FAILCHECK.code);
-		Integer[] sign = {};
 		if(joinStatus != null){
 		    if(caiwu.contains(auditInfoVO.getCompanyAuditType()) ||
                     caiwu.contains(joinStatus.getPreNode()) ||
