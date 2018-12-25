@@ -9,22 +9,23 @@ import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.Project;
 import cn.thinkfree.database.model.ReserveProject;
 import cn.thinkfree.database.model.ReserveProjectExample;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.ReserveOrderService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.ReserveProjectVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.utils.DateUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
+import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author xusonghui
@@ -40,6 +41,8 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     private DesignerOrderMapper DesignerOrderMapper;
     @Autowired
     private ProjectUserService userService;
+    @Autowired
+    private BasicsService basicsService;
 
     /**
      * 创建设计订单
@@ -53,8 +56,9 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
      * @param acreage   装修面积
      */
     @Override
-    public void createReserveOrder(String ownerName, String phone, String address, int source,
-                                   int style, String budget, String acreage, String userId, String companyId) {
+    public void createReserveOrder(
+            String ownerName, String phone, String address, Integer source, Integer style, String provinceCode, String cityCode, String areaCode,
+            String oldOrNew, String budget, String acreage, String userId, String designerId, String companyId) {
         // TODO 待转换订单创建
         ReserveProject reserveProject = new ReserveProject();
         reserveProject.setOwnerName(ownerName);
@@ -66,6 +70,11 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         reserveProject.setAcreage(acreage);
         reserveProject.setCreateUserId(userId);
         reserveProject.setCompanyId(companyId);
+        reserveProject.setProvince(provinceCode);
+        reserveProject.setCity(cityCode);
+        reserveProject.setArea(areaCode);
+        reserveProject.setOldOrNew(oldOrNew);
+        reserveProject.setDesignerId(designerId);
         //1待转换，2已转换，3业主取消，4其他
         reserveProject.setState(1);
         reserveProject.setReserveNo(OrderNoUtils.getNo("REVO"));
@@ -91,7 +100,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     }
 
     @Override
-    public PageVo<List<ReserveProject>> queryReserveOrder(String ownerName, String phone, int pageSize, int pageIndex) {
+    public PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone, int pageSize, int pageIndex) {
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         ReserveProjectExample.Criteria criteria = reserveProjectExample.createCriteria();
         if (StringUtils.isNotBlank(ownerName)) {
@@ -103,23 +112,68 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         long total = reserveProjectMapper.countByExample(reserveProjectExample);
         PageHelper.startPage(pageIndex, pageSize);
         List<ReserveProject> reserveProjects = reserveProjectMapper.selectByExample(reserveProjectExample);
-        PageVo<List<ReserveProject>> pageVo = new PageVo<>();
-        pageVo.setData(reserveProjects);
+        PageVo<List<ReserveProjectVo>> pageVo = new PageVo<>();
+        List<ReserveProjectVo> reserveProjectVos = new ArrayList<>();
+        Map<String,String> provinceMap = basicsService.getProvince(ReflectUtils.getList(reserveProjects,"province").toArray(new String[]{}));
+        Map<String,String> cityMap = basicsService.getCity(ReflectUtils.getList(reserveProjects,"city").toArray(new String[]{}));
+        Map<String,String> areaMap = basicsService.getArea(ReflectUtils.getList(reserveProjects,"area").toArray(new String[]{}));
+        for(ReserveProject reserveProject : reserveProjects){
+            ReserveProjectVo reserveProjectVo = new ReserveProjectVo();
+            getVo(reserveProject, reserveProjectVo, provinceMap, cityMap, areaMap);
+            reserveProjectVos.add(reserveProjectVo);
+        }
+        pageVo.setData(reserveProjectVos);
         pageVo.setTotal(total);
         pageVo.setPageSize(pageSize);
         return pageVo;
     }
 
     @Override
-    public ReserveProject queryReserveOrderByNo(String reserveNo) {
+    public ReserveProjectVo queryReserveOrderByNo(String reserveNo) {
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
         List<ReserveProject> reserveProjects = reserveProjectMapper.selectByExample(reserveProjectExample);
         if (reserveProjects.isEmpty()) {
             throw new RuntimeException("无效的订单");
         }
-        return reserveProjects.get(0);
+        ReserveProject reserveProject = reserveProjects.get(0);
+        ReserveProjectVo reserveProjectVo = new ReserveProjectVo();
+        Map<String,String> provinceMap = basicsService.getProvince(reserveProjectVo.getProvince());
+        Map<String,String> cityMap = basicsService.getCity(reserveProjectVo.getCity());
+        Map<String,String> areaMap = basicsService.getArea(reserveProjectVo.getArea());
+        getVo(reserveProject, reserveProjectVo, provinceMap, cityMap, areaMap);
+        return reserveProjectVo;
     }
+
+    private void getVo(ReserveProject reserveProject, ReserveProjectVo reserveProjectVo, Map<String, String> provinceMap,
+                       Map<String, String> cityMap, Map<String, String> areaMap) {
+        reserveProjectVo.setProvinceName(provinceMap.get(reserveProjectVo.getProvince()));
+        reserveProjectVo.setCityName(cityMap.get(reserveProjectVo.getCity()));
+        reserveProjectVo.setAreaName(areaMap.get(reserveProjectVo.getArea()));
+        reserveProjectVo.setOwnerName(reserveProject.getOwnerName());
+        reserveProjectVo.setArea(reserveProject.getArea());
+        reserveProjectVo.setCity(reserveProject.getCity());
+        reserveProjectVo.setProvince(reserveProject.getProvince());
+        reserveProjectVo.setAcreage(reserveProject.getAcreage());
+        reserveProjectVo.setAddress(reserveProject.getAddress());
+        reserveProjectVo.setBudget(reserveProject.getBudget());
+        reserveProjectVo.setChangeTime(reserveProject.getChangeTime());
+        reserveProjectVo.setCompanyId(reserveProject.getCompanyId());
+        reserveProjectVo.setCreateUserId(reserveProject.getCreateUserId());
+        reserveProjectVo.setDesignerId(reserveProject.getDesignerId());
+        reserveProjectVo.setDesignOrderNo(reserveProject.getDesignOrderNo());
+        reserveProjectVo.setOldOrNew(reserveProject.getOldOrNew());
+        reserveProjectVo.setPhone(reserveProject.getPhone());
+        reserveProjectVo.setProjectNo(reserveProject.getProjectNo());
+        reserveProjectVo.setReserveTime(reserveProject.getReserveTime());
+        reserveProjectVo.setReason(reserveProject.getReason());
+        reserveProjectVo.setReserveNo(reserveProject.getReserveNo());
+        reserveProjectVo.setSource(reserveProject.getSource());
+        reserveProjectVo.setState(reserveProject.getState());
+        reserveProjectVo.setStyle(reserveProject.getStyle());
+        reserveProjectVo.setHuxing(reserveProject.getHuxing());
+    }
+
     @Autowired
     private UserCenterService userCenterService;
 
@@ -152,6 +206,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     public void createProject(String reserveNo, String companyId, int source, int huxing, int roomNum, int officeNum, int toiletNum,
                               String province, String city, String region, String addressDetail, String style, int area, int houseType, int peopleNum, String planStartTime,
                               String planEndTime, int decorationBudget, int balconyNum, String ownerName, String ownerPhone, String designerId) {
+        checkReserve(reserveNo);
         UserMsgVo msgVo = userCenterService.registerUser(ownerName, ownerPhone, true);
         if(msgVo == null){
             throw new RuntimeException("业主注册失败");
@@ -214,9 +269,24 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
         ReserveProject reserveProject = new ReserveProject();
         reserveProject.setProjectNo(project.getProjectNo());
-        reserveProject.setDesignerOrderNo(designerOrder.getOrderNo());
+        reserveProject.setDesignOrderNo(designerOrder.getOrderNo());
         reserveProject.setChangeTime(new Date());
         reserveProject.setState(2);
-        reserveProjectMapper.updateByExample(reserveProject, reserveProjectExample);
+        reserveProjectMapper.updateByExampleSelective(reserveProject, reserveProjectExample);
+    }
+
+    private void checkReserve(String reserveNo){
+        if(StringUtils.isBlank(reserveNo)){
+            return;
+        }
+        ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
+        reserveProjectExample.createCriteria().andReserveNoEqualTo(reserveNo);
+        List<ReserveProject> projects = reserveProjectMapper.selectByExample(reserveProjectExample);
+        if(projects.isEmpty()){
+            throw new RuntimeException("没有查询到该订单");
+        }
+        if(projects.get(0).getState() == null || projects.get(0).getState() != 1){
+            throw new RuntimeException("待转换订单状态不合法");
+        }
     }
 }

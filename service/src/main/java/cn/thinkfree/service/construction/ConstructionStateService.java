@@ -100,6 +100,13 @@ public interface ConstructionStateService {
     ConstructionStateEnum getState(int state, int complaintState);
 
     /**
+     *
+     * @param state
+     * @param complaintState
+     * @return
+     */
+    int getStateCode(int state, int complaintState);
+    /**
      * 判断订单状态划分
      * @param state 订单状态
      * @param complaintState 订单状态 1,未投诉，2处理中，3关闭，4已取消

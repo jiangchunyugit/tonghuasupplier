@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 首页使用菜单树形
@@ -16,6 +17,14 @@ public class IndexMenuVO extends Menu {
 
     @ApiModelProperty("子集")
     private List<IndexMenuVO> child;
+
+    public IndexMenuVO(Menu menu, List<Menu> menus) {
+        SpringBeanUtil.copy(menu,this);
+        setChild(menus.stream()
+                .filter(m -> menu.getId().equals(m.getPid()))
+                .map(m->new IndexMenuVO(m,menus))
+                .collect(Collectors.toList()));
+    }
 
     public List<IndexMenuVO> getChild() {
         return child;

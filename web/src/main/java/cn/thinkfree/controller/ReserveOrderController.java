@@ -7,6 +7,7 @@ import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.ReserveProject;
 import cn.thinkfree.service.platform.designer.ReserveOrderService;
 import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.ReserveProjectVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,7 +25,7 @@ import java.util.List;
  * 预约订单
  */
 @Api(value = "待转换订单接口", tags = "待转换订单接口")
-@Controller
+@RestController
 @RequestMapping("reserveOrder")
 public class ReserveOrderController extends AbsBaseController {
     @Autowired
@@ -35,15 +37,21 @@ public class ReserveOrderController extends AbsBaseController {
     public MyRespBundle createReserveOrder(
             @ApiParam(name = "ownerName", required = true, value = "业主姓名") @RequestParam(name = "ownerName", required = true) String ownerName,
             @ApiParam(name = "phone", required = true, value = "业主手机号") @RequestParam(name = "phone", required = true) String phone,
-            @ApiParam(name = "address", required = false, value = "装修地址") @RequestParam(name = "address", required = false) String address,
-            @ApiParam(name = "source", required = false, value = "来源，1,运营后台创建，2设计公司创建，3天猫，4业主预约") @RequestParam(name = "source", required = false) int source,
-            @ApiParam(name = "style", required = false, value = "装修风格，见具体接口") @RequestParam(name = "style", required = false) int style,
-            @ApiParam(name = "budget", required = false, value = "装修预算") @RequestParam(name = "budget", required = false) String budget,
-            @ApiParam(name = "acreage", required = false, value = "房屋面积") @RequestParam(name = "acreage", required = false) String acreage,
-            @ApiParam(name = "userId", required = false, value = "操作人ID") @RequestParam(name = "userId", required = false) String userId,
-            @ApiParam(name = "companyId", required = false, value = "公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
+            @ApiParam(name = "address", value = "装修地址") @RequestParam(name = "address", required = false) String address,
+            @ApiParam(name = "source", value = "来源，1,运营后台创建，2设计公司创建，3天猫，4业主预约") @RequestParam(name = "source", required = false) Integer source,
+            @ApiParam(name = "style", value = "装修风格，见具体接口") @RequestParam(name = "style", required = false) Integer style,
+            @ApiParam(name = "budget", value = "装修预算") @RequestParam(name = "budget", required = false) String budget,
+            @ApiParam(name = "acreage", value = "房屋面积") @RequestParam(name = "acreage", required = false) String acreage,
+            @ApiParam(name = "userId", value = "操作人ID") @RequestParam(name = "userId", required = false) String userId,
+            @ApiParam(name = "designerId", value = "指定的设计师ID") @RequestParam(name = "designerId", required = false) String designerId,
+            @ApiParam(name = "provinceCode", value = "省份编码") @RequestParam(name = "provinceCode", required = false) String provinceCode,
+            @ApiParam(name = "cityCode", value = "城市编码") @RequestParam(name = "cityCode", required = false) String cityCode,
+            @ApiParam(name = "areaCode", value = "区编码") @RequestParam(name = "areaCode", required = false) String areaCode,
+            @ApiParam(name = "oldOrNew", value = "房屋新旧程度，1新房，2旧房") @RequestParam(name = "oldOrNew", required = false) String oldOrNew,
+            @ApiParam(name = "companyId", value = "当前登陆人公司ID") @RequestParam(name = "companyId", required = false) String companyId) {
         try {
-            reserveOrderService.createReserveOrder(ownerName, phone, address, source, style, budget, acreage, userId, companyId);
+            reserveOrderService.createReserveOrder(ownerName, phone, address, source, style, provinceCode, cityCode, areaCode, oldOrNew,
+                    budget, acreage, userId, designerId, companyId);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -68,13 +76,13 @@ public class ReserveOrderController extends AbsBaseController {
     @ApiOperation("查询待转换订单")
     @MyRespBody
     @RequestMapping(value = "query", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<PageVo<List<ReserveProject>>> queryReserveOrder(
-            @ApiParam(name = "ownerName", required = false, value = "待订单编号") @RequestParam(name = "ownerName", required = false) String ownerName,
+    public MyRespBundle<PageVo<List<ReserveProjectVo>>> queryReserveOrder(
+            @ApiParam(name = "ownerName", required = false, value = "业主姓名") @RequestParam(name = "ownerName", required = false) String ownerName,
             @ApiParam(name = "phone", required = false, value = "订单状态,3业主取消，4其他") @RequestParam(name = "phone", required = false) String phone,
             @ApiParam(name = "pageSize", required = false, value = "订单状态,3业主取消，4其他") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "关闭原因") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex){
         try {
-            PageVo<List<ReserveProject>> pageVo = reserveOrderService.queryReserveOrder(ownerName, phone, pageSize, pageIndex);
+            PageVo<List<ReserveProjectVo>> pageVo = reserveOrderService.queryReserveOrder(ownerName, phone, pageSize, pageIndex);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
@@ -83,9 +91,9 @@ public class ReserveOrderController extends AbsBaseController {
     @ApiOperation("查询待转换订单详情")
     @MyRespBody
     @RequestMapping(value = "queryDel", method = {RequestMethod.POST, RequestMethod.GET})
-    public MyRespBundle<ReserveProject> queryReserveOrderByNo(@ApiParam(name = "reserveNo", required = true, value = "待订单编号") @RequestParam(name = "reserveNo", required = true) String reserveNo){
+    public MyRespBundle<ReserveProjectVo> queryReserveOrderByNo(@ApiParam(name = "reserveNo", required = true, value = "待订单编号") @RequestParam(name = "reserveNo", required = true) String reserveNo){
         try {
-            ReserveProject reserveProject = reserveOrderService.queryReserveOrderByNo(reserveNo);
+            ReserveProjectVo reserveProject = reserveOrderService.queryReserveOrderByNo(reserveNo);
             return sendJsonData(ResultMessage.SUCCESS, reserveProject);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
