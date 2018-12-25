@@ -154,28 +154,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         reserveProjectVo.setProvinceName(provinceMap.get(reserveProjectVo.getProvince()));
         reserveProjectVo.setCityName(cityMap.get(reserveProjectVo.getCity()));
         reserveProjectVo.setAreaName(areaMap.get(reserveProjectVo.getArea()));
-        reserveProjectVo.setOwnerName(reserveProject.getOwnerName());
-        reserveProjectVo.setArea(reserveProject.getArea());
-        reserveProjectVo.setCity(reserveProject.getCity());
-        reserveProjectVo.setProvince(reserveProject.getProvince());
-        reserveProjectVo.setAcreage(reserveProject.getAcreage());
-        reserveProjectVo.setAddress(reserveProject.getAddress());
-        reserveProjectVo.setBudget(reserveProject.getBudget());
-        reserveProjectVo.setChangeTime(reserveProject.getChangeTime());
-        reserveProjectVo.setCompanyId(reserveProject.getCompanyId());
-        reserveProjectVo.setCreateUserId(reserveProject.getCreateUserId());
-        reserveProjectVo.setDesignerId(reserveProject.getDesignerId());
-        reserveProjectVo.setDesignOrderNo(reserveProject.getDesignOrderNo());
-        reserveProjectVo.setOldOrNew(reserveProject.getOldOrNew());
-        reserveProjectVo.setPhone(reserveProject.getPhone());
-        reserveProjectVo.setProjectNo(reserveProject.getProjectNo());
-        reserveProjectVo.setReserveTime(reserveProject.getReserveTime());
-        reserveProjectVo.setReason(reserveProject.getReason());
-        reserveProjectVo.setReserveNo(reserveProject.getReserveNo());
-        reserveProjectVo.setSource(reserveProject.getSource());
-        reserveProjectVo.setState(reserveProject.getState());
-        reserveProjectVo.setStyle(reserveProject.getStyle());
-        reserveProjectVo.setHuxing(reserveProject.getHuxing());
+        ReflectUtils.beanCopy(reserveProject,reserveProjectVo);
     }
 
     @Autowired
