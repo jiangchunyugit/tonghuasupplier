@@ -93,4 +93,11 @@ public interface JoinStatusMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(JoinStatus record);
+
+    /**
+     * 查询入驻公司最新状态
+     * @param companyId
+     * @return
+     */
+    JoinStatus joinCompanyNode(String companyId);
 }

@@ -445,73 +445,143 @@ public class JoinStatusExample extends cn.thinkfree.core.model.AbstractDataAuth 
             return (Criteria) this;
         }
 
-        public Criteria andDescIsNull() {
-            addCriterion("desc is null");
+        public Criteria andDescptionIsNull() {
+            addCriterion("descption is null");
             return (Criteria) this;
         }
 
-        public Criteria andDescIsNotNull() {
-            addCriterion("desc is not null");
+        public Criteria andDescptionIsNotNull() {
+            addCriterion("descption is not null");
             return (Criteria) this;
         }
 
-        public Criteria andDescEqualTo(String value) {
-            addCriterion("desc =", value, "desc");
+        public Criteria andDescptionEqualTo(String value) {
+            addCriterion("descption =", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescNotEqualTo(String value) {
-            addCriterion("desc <>", value, "desc");
+        public Criteria andDescptionNotEqualTo(String value) {
+            addCriterion("descption <>", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescGreaterThan(String value) {
-            addCriterion("desc >", value, "desc");
+        public Criteria andDescptionGreaterThan(String value) {
+            addCriterion("descption >", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescGreaterThanOrEqualTo(String value) {
-            addCriterion("desc >=", value, "desc");
+        public Criteria andDescptionGreaterThanOrEqualTo(String value) {
+            addCriterion("descption >=", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescLessThan(String value) {
-            addCriterion("desc <", value, "desc");
+        public Criteria andDescptionLessThan(String value) {
+            addCriterion("descption <", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescLessThanOrEqualTo(String value) {
-            addCriterion("desc <=", value, "desc");
+        public Criteria andDescptionLessThanOrEqualTo(String value) {
+            addCriterion("descption <=", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescLike(String value) {
-            addCriterion("desc like", value, "desc");
+        public Criteria andDescptionLike(String value) {
+            addCriterion("descption like", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescNotLike(String value) {
-            addCriterion("desc not like", value, "desc");
+        public Criteria andDescptionNotLike(String value) {
+            addCriterion("descption not like", value, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescIn(List<String> values) {
-            addCriterion("desc in", values, "desc");
+        public Criteria andDescptionIn(List<String> values) {
+            addCriterion("descption in", values, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescNotIn(List<String> values) {
-            addCriterion("desc not in", values, "desc");
+        public Criteria andDescptionNotIn(List<String> values) {
+            addCriterion("descption not in", values, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescBetween(String value1, String value2) {
-            addCriterion("desc between", value1, value2, "desc");
+        public Criteria andDescptionBetween(String value1, String value2) {
+            addCriterion("descption between", value1, value2, "descption");
             return (Criteria) this;
         }
 
-        public Criteria andDescNotBetween(String value1, String value2) {
-            addCriterion("desc not between", value1, value2, "desc");
+        public Criteria andDescptionNotBetween(String value1, String value2) {
+            addCriterion("descption not between", value1, value2, "descption");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeIsNull() {
+            addCriterion("pre_node is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeIsNotNull() {
+            addCriterion("pre_node is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeEqualTo(String value) {
+            addCriterion("pre_node =", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeNotEqualTo(String value) {
+            addCriterion("pre_node <>", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeGreaterThan(String value) {
+            addCriterion("pre_node >", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeGreaterThanOrEqualTo(String value) {
+            addCriterion("pre_node >=", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeLessThan(String value) {
+            addCriterion("pre_node <", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeLessThanOrEqualTo(String value) {
+            addCriterion("pre_node <=", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeLike(String value) {
+            addCriterion("pre_node like", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeNotLike(String value) {
+            addCriterion("pre_node not like", value, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeIn(List<String> values) {
+            addCriterion("pre_node in", values, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeNotIn(List<String> values) {
+            addCriterion("pre_node not in", values, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeBetween(String value1, String value2) {
+            addCriterion("pre_node between", value1, value2, "preNode");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreNodeNotBetween(String value1, String value2) {
+            addCriterion("pre_node not between", value1, value2, "preNode");
             return (Criteria) this;
         }
     }
