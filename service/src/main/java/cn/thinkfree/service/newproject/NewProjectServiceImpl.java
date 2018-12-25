@@ -688,15 +688,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         projectVo.setOwner(owner);
 
         //组合设计订单
-//        DesignerOrderExample designerOrderExample = new DesignerOrderExample();
-//        DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
-//        designCriteria.andProjectNoEqualTo(projectNo);
-//        designCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-//        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
-//        if (designerOrders.size() == ProjectDataStatus.INSERT_FAILD.getValue()) {
-//            return RespData.error("查无此设计订单");
-//        }
-//        DesignerOrder designerOrder = designerOrders.get(0);
         ProjectOrderDetailVo designerOrderDetailVo = BaseToVoUtils.getVo(designerOrder, ProjectOrderDetailVo.class);
         //存放客服信息
         designerOrderDetailVo.setComplaintState(designerOrder.getComplaintState());
@@ -766,9 +757,8 @@ public class NewProjectServiceImpl implements NewProjectService {
                 orderTaskSortVoList1.add(orderTaskSortVo);
             }
             constructionOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList1);
-//            constructionOrderDetailVo.setTaskStage(projects.get(0).getStage());
-            Boolean aBoolean = constructionStateService.customerCancelOrderState(project.getOwnerId(), constructionOrderDetailVo.getOrderNo());
-            constructionOrderDetailVo.setCancle(aBoolean);
+            boolean orderCanCancel = constructionStateService.orderCanCancel(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+            constructionOrderDetailVo.setCancle(orderCanCancel);
             //存放订单类型
             constructionOrderDetailVo.setOrderType(ProjectDataStatus.CONSTRUCTION_STATUS.getValue());
             //存放展示信息
@@ -856,6 +846,8 @@ public class NewProjectServiceImpl implements NewProjectService {
             return RespData.error("项目不存在!!");
         }
         Project project = projects.get(0);
+        //添加项目阶段值
+        projectTitleVo.setStage(project.getStage());
         //添加进度展示
         if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
             //添加进度信息
@@ -863,7 +855,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         } else {
             projectTitleVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
         }
-
         //添加客诉判断
         DesignerOrderExample designerOrderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria designCriteria = designerOrderExample.createCriteria();
