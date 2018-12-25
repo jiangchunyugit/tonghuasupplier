@@ -245,6 +245,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         applyLog.setDealTime(new Date());
         applyLog.setDealExplain(dealExplain);
         applyLog.setDealUserId(dealUserId);
+        String remark = null;
+        if (employeeApplyState == 2){
+            remark = "拒绝";
+        }else if(employeeApplyState == 3){
+            remark = "同意";
+        }
+        applyLog.setRemark(remark);
         //1，已处理，2未处理，3已过期
         applyLog.setDealState(1);
         res = applyLogMapper.updateByExampleSelective(applyLog, employeeApplyLogExample);

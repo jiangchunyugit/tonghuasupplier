@@ -449,27 +449,13 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
      * 查看状态
      */
     @Override
-    public Boolean customerCancelOrderState(String userId, String orderNo) {
-        if (StringUtils.isBlank(orderNo)) {
-            return false;
+    public boolean orderCanCancel(int state, int complaintState) {
+        if (complaintState == ComplaintStateEnum.STATE_1.getState() || complaintState == ComplaintStateEnum.STATE_4.getState()) {
+            if (state >= ConstructionStateEnum.STATE_500.getState() && state <= ConstructionStateEnum.STATE_600.getState()) {
+                return true;
+            }
         }
-
-        if (StringUtils.isBlank(userId)) {
-            return false;
-        }
-
-        ProjectExample example = new ProjectExample();
-        example.createCriteria().andOwnerIdEqualTo(userId).andStatusEqualTo(1);
-        List<Project> list = projectMapper.selectByExample(example);
-        if (list.size() <= 0) {
-            return false;
-        }
-
-        Integer stageCode = commonService.queryStateCodeByOrderNo(orderNo);
-        if (ConstructionStateEnum.STATE_600.getState() <= stageCode) {
-            return false;
-        }
-        return true;
+        return false;
     }
 
     /**
