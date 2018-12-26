@@ -34,7 +34,7 @@ import static cn.thinkfree.service.config.swagger.MyProperties.*;
 public class MySerializableParameterFactories {
     /**
      * 合并接口为内部接口
-     * @see springfox.documentation.swagger2.mappers.SecuritySchemeFactory;
+     * @see springfox.documentation.swagger2.mappers.SerializableParameterFactory;
      */
     interface SerializableParameterFactory {
         SerializableParameter create(Parameter parameter);

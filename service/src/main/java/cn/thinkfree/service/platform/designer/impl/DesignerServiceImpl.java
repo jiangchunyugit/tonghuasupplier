@@ -190,6 +190,9 @@ public class DesignerServiceImpl implements DesignerService {
             return new HashMap<>();
         }
         List<String> companyIds = ReflectUtils.getList(employeeMsgs,"companyId");
+        if(companyIds == null || companyIds.isEmpty()){
+            return new HashMap<>();
+        }
         CompanyInfoExample infoExample = new CompanyInfoExample();
         infoExample.createCriteria().andCompanyIdIn(companyIds);
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(infoExample);

@@ -308,7 +308,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 			vo.setSignedTime(DateUtil.formartDate(contract.getSignTime(), "yyyy-MM-dd"));
 			//是否个性化
 			vo.setStyleType(designerOrders.get(0) == null ? "" : designerOrders.get(0).getStyleType());
-			vo.setSort("");
+			vo.setSort("1");
 			vo.setTypeSubName("设计费总额");
 			vo.setCompanyAddrNo(companyInfo.getId()+"");
 			vo.setUserId(list.get(0).getUserId());
@@ -368,7 +368,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					//是否个性化
 					vo.setStyleType(designerOrders == null ? "" : designerOrders.get(0).getStyleType());
 
-					vo.setSort(String.valueOf(jsonMap.get("sortNumber")));
+					vo.setSort((Integer.valueOf(jsonMap.get("sortNumber")))+"");
 					//阶段名称
 
 					vo.setCompanyAddrNo(companyInfo.getId()+"");
@@ -489,7 +489,7 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 		      vo.setFromContractId(contractNumber);
 			 
 			  //合同类型 订单类型：设计1、施工2、合同3
-			  vo.setType("8");
+			  vo.setType("8");//
 			  //项目地址
 			  vo.setProjectAddr("");
 			  //项目编号

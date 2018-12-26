@@ -2,21 +2,16 @@ package cn.thinkfree.controller;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.*;
-import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.newproject.NewProjectService;
 import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author gejiaming
@@ -24,7 +19,7 @@ import java.util.Map;
 @Api(tags = "APP/PC-项目相关")
 @RestController
 @RequestMapping(value = "project")
-public class AppProjectController {
+public class AppProjectController extends BasicsController {
     @Autowired
     private NewProjectService newProjectService;
 
@@ -101,6 +96,13 @@ public class AppProjectController {
         return newProjectService.getDesignData(projectNo);
     }
 
+    @RequestMapping(value = "getNewDesignData", method = RequestMethod.POST)
+    @ApiOperation(value = "APP-获取设计资料(新)")
+    public MyRespBundle<NewDataVo> getNewDesignData(
+            @RequestParam(name = "projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo) {
+        return newProjectService.getNewDesignData(projectNo);
+    }
+
     @RequestMapping(value = "getConstructionData", method = RequestMethod.POST)
     @ApiOperation(value = "APP/PC-获取施工资料")
     public MyRespBundle<ConstructionDataVo> getConstructionData(
@@ -118,11 +120,20 @@ public class AppProjectController {
 
     @RequestMapping(value = "cancleOrder", method = RequestMethod.POST)
     @ApiOperation(value = "APP-取消订单")
-    public MyRespBundle cancleOrder(@RequestParam("orderNo") @ApiParam(name = "orderNo", value = "订单编号", required = true) String orderNo,
-                                    @RequestParam("projectNo") @ApiParam(name = "projectNo", value = "项目编号", required = true) String projectNo,
-                                    @RequestParam("userId") @ApiParam(name = "userId", value = "用户编号", required = true) String userId,
-                                    @RequestParam("cancelReason") @ApiParam(name = "cancelReason", value = "取消原因", required = true) String cancelReason) {
-        return newProjectService.cancleOrder(orderNo, projectNo, userId, cancelReason);
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "orderNo", value = "订单编号", required = true),
+            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
+            @ApiImplicitParam(name = "projectNo", value = "项目编号", required = true),
+            @ApiImplicitParam(name = "userId", value = "用户编号", required = true),
+            @ApiImplicitParam(name = "cancelReason", value = "取消原因", required = true)
+    })
+    public MyRespBundle cancleOrder(@RequestParam("orderNo") String orderNo,
+                                    @RequestParam("projectNo") String projectNo,
+                                    @RequestParam("orderType") Integer orderType,
+                                    @RequestParam("userId") String userId,
+                                    @RequestParam("cancelReason") String cancelReason) {
+        newProjectService.cancelOrder(orderNo, projectNo, userId, orderType, cancelReason);
+        return sendSuccessMessage(ResultMessage.SUCCESS.message);
     }
 
     @RequestMapping(value = "confirmVolumeRoomData", method = RequestMethod.POST)
@@ -133,6 +144,21 @@ public class AppProjectController {
         } catch (Exception e) {
             e.printStackTrace();
             return RespData.error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "computerConfirmVolumeRoomData", method = RequestMethod.POST)
+    @ApiOperation(value = "PC-设计师上传资料")
+    public MyRespBundle<String> computerConfirmVolumeRoomData(
+            @RequestParam(value = "projectNo",required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo,
+            @RequestParam(value = "userId",required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
+            @RequestParam(value = "jsonData",required = false)@ApiParam(name = "dataVo", value = "资料详情的json ",required = false) String jsonData) {
+        try {
+            return newProjectService.computerConfirmVolumeRoomData(projectNo,userId,jsonData);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+
         }
     }
 
@@ -176,10 +202,11 @@ public class AppProjectController {
             @RequestParam("designerId") @ApiParam(name = "designerId", value = "设计师ID") String designerId,
             @RequestParam(value = "ownerMsg", required = false) @ApiParam(name = "ownerMsg", value = "业主信息，手机号/姓名") String ownerMsg,
             @RequestParam(value = "projectNo", required = false) @ApiParam(name = "projectNo", value = "项目编号") String projectNo,
+            @RequestParam(value = "states", required = false) @ApiParam(name = "states", value = "订单状态") List<Integer> states,
             @RequestParam(value = "pageIndex",required = false, defaultValue = "1") @ApiParam(name = "pageIndex", value = "第几页") int pageIndex,
             @RequestParam(value = "pageSize",required = false, defaultValue = "50") @ApiParam(name = "pageSize", value = "每页多少条")int pageSize) {
         try{
-            return RespData.success(newProjectService.getDesignOrderData(designerId, ownerMsg, projectNo, pageIndex, pageSize));
+            return RespData.success(newProjectService.getDesignOrderData(designerId, ownerMsg, projectNo, states, pageIndex, pageSize));
         }catch (Exception e){
             e.printStackTrace();
             return RespData.error(e.getMessage());

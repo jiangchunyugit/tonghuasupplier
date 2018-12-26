@@ -2,6 +2,7 @@ package cn.thinkfree.service.platform.designer;
 
 import cn.thinkfree.database.model.ReserveProject;
 import cn.thinkfree.service.platform.vo.PageVo;
+import cn.thinkfree.service.platform.vo.ReserveProjectVo;
 
 import java.util.List;
 
@@ -22,8 +23,8 @@ public interface ReserveOrderService {
      * @param userId    操作人Id
      * @param companyId 公司ID
      */
-    void createReserveOrder(String ownerName, String phone, String address, int source, int style,
-                            String budget, String acreage, String userId, String companyId);
+    void createReserveOrder(String ownerName, String phone, String address, Integer source, Integer style, String provinceCode, String cityCode, String areaCode,
+                            String oldOrNew, String budget, String acreage, String userId, String designerId, String companyId);
 
     /**
      * 关闭待转换订单
@@ -39,11 +40,12 @@ public interface ReserveOrderService {
      *
      * @param ownerName 业主姓名
      * @param phone     业主手机号
+     * @param state     状态
      * @param pageSize  每页多少条
      * @param pageIndex 第几页
      * @return
      */
-    PageVo<List<ReserveProject>> queryReserveOrder(String ownerName, String phone, int pageSize, int pageIndex);
+    PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone, int state, int pageSize, int pageIndex);
 
     /**
      * 根据预约订单编号查询预约订单信息
@@ -51,7 +53,7 @@ public interface ReserveOrderService {
      * @param reserveNo 预约订单编号
      * @return
      */
-    ReserveProject queryReserveOrderByNo(String reserveNo);
+    ReserveProjectVo queryReserveOrderByNo(String reserveNo);
 
     /**
      * 创建项目订单

@@ -344,5 +344,21 @@ public interface DesignDispatchService {
      * @Param 合同类型
      * @return
      **/
-    void agreeContractApproval(String orderNo, int contractType);
+    void contractApproval(String orderNo,Integer type, int contractType);
+    /**
+     * @Author jiang
+     * @Description 返回是否能撤换设计师 0不能 1能
+     * @Date
+     * @Param orderNo
+     * @return
+     **/
+    Integer replaceDesigners(String orderNo);
+    /**
+     * @Author jiang
+     * @Description 获取房间厅室数量
+     * @Date
+     * @Param
+     * @return
+     **/
+    public String getHouseTypeNum(String projectNo);
 }

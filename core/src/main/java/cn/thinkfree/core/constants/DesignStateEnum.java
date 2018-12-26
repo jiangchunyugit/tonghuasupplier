@@ -11,7 +11,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	发布需求
      */
-    STATE_1(1, "预约中", "待派单", "无", "无", "创建订单", new Integer[]{10, 2, 3}, true),
+    STATE_1(1, "预约中", "待派单", "无", "无", "创建订单", new Integer[]{10, 2, 3,261}, true),
     /**
      * 运营平台手动关闭订单
      */
@@ -23,7 +23,7 @@ public enum DesignStateEnum {
     /**
      * 运营平台	运营平台人员派单至设计公司
      */
-    STATE_10(10, "预约中", "平台已派单", "待派单", "无", "运营平台人员派单至设计公司", new Integer[]{20, 1, 11}, true),
+    STATE_10(10, "预约中", "平台已派单", "待派单", "无", "运营平台人员派单至设计公司", new Integer[]{20, 1, 11,261}, true),
     /**
      * 消费者	订单终止
      */
@@ -31,7 +31,7 @@ public enum DesignStateEnum {
     /**
      * 设计公司	设计公司派单给设计师
      */
-    STATE_20(20, "预约中", "设计公司已派单", "设计公司已派单", "待接单", "设计公司派单给设计师", new Integer[]{30, 10, 21}, true),
+    STATE_20(20, "预约中", "设计公司已派单", "设计公司已派单", "待接单", "设计公司派单给设计师", new Integer[]{30, 10, 21,261}, true),
     /**
      * 消费者	订单终止
      */
@@ -39,7 +39,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	设计师接单
      */
-    STATE_30(30, "服务中", "设计师已接单", "设计师已接单", "设计师已接单", "设计师接单", new Integer[]{40, 31}, true),
+    STATE_30(30, "服务中", "设计师已接单", "设计师已接单", "设计师已接单", "设计师接单", new Integer[]{40, 31,261}, true),
     /**
      * 消费者	订单终止
      */
@@ -47,7 +47,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_40(40, "量房待确认", "设计师发起量房预约", new Integer[]{45, 42, 41}, true),
+    STATE_40(40, "量房待确认", "设计师发起量房预约", new Integer[]{45, 42, 41,261}, true),
     /**
      * 消费者	订单终止
      */
@@ -59,13 +59,13 @@ public enum DesignStateEnum {
     /**
      * 设计师	发起量房预约
      */
-    STATE_45(45, "量房待支付", "业主确认了量房预约申请", new Integer[]{50, 46}, true),
+    STATE_45(45, "量房待支付", "业主确认了量房预约申请", new Integer[]{50, 46,261}, true),
 
     STATE_ORDER_END_46(46, "订单关闭", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "订单关闭（消费者终止）", "业主终止了订单", new Integer[]{}, false),
     /**
      * 消费者	支付量房费
      */
-    STATE_50(50, "量房待交付", "业主支付量房费", new Integer[]{60, 51}, true),
+    STATE_50(50, "量房待交付", "业主支付量房费", new Integer[]{60, 51,261}, true),
     /**
      * 消费者	申请退款
      */
@@ -85,15 +85,15 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传量房资料
      */
-    STATE_60(60, "量房待确认", "设计师上传量房资料", new Integer[]{50,70}, true),
+    STATE_60(60, "量房待确认", "设计师上传量房资料", new Integer[]{50,70,261}, true),
     /**
      * 消费者	确认量房交付物
      */
-    STATE_70(70, "量房已确认", "业主确认量房交付物", new Integer[]{130}, true),
+    STATE_70(70, "量房已确认", "业主确认量房交付物", new Integer[]{130,261}, true),
     /**
      * 发起设计合同及报价
      */
-    STATE_130(130, "量房已确认", "合同待审核", "合同待审核", "合同待审核", "设计师发起设计合同及报价", new Integer[]{140, 220, 131}, true),
+    STATE_130(130, "量房已确认", "合同待审核", "合同待审核", "合同待审核", "设计师发起设计合同及报价", new Integer[]{140, 220, 131,261}, true),
     /**
      * 公司审核不通过
      */
@@ -103,7 +103,7 @@ public enum DesignStateEnum {
      * 分期款状态<br/>
      * 设计公司	审批合同（通过）
      */
-    STATE_140(140, "首款待支付", "合同审核通过", new Integer[]{150, 141,142}, true),
+    STATE_140(140, "合同待用户确认", "合同审核通过", new Integer[]{141,142,261}, true),
     /**
      * 订单阶段逆行<br/>
      * 消费者	拒绝支付订单款项（超时未支付）
@@ -112,11 +112,11 @@ public enum DesignStateEnum {
    /**
     *消费者 同意
     **/
-   STATE_142(142, "合同同意", "合同同意", new Integer[]{}, true),
+   STATE_142(142, "首款待支付", "首款待支付", new Integer[]{150,261}, true),
     /**
      * 消费者	支付订单首款
      */
-    STATE_150(150, "3D待交付", "业主支付订单收款", new Integer[]{160, 151}, true),
+    STATE_150(150, "3D待交付", "业主支付订单收款", new Integer[]{160, 151,261}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -136,7 +136,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传3D效果图
      */
-    STATE_160(160, "3D待确认", "设计师上传了3D效果图", new Integer[]{170, 161,150}, true),
+    STATE_160(160, "3D待确认", "设计师上传了3D效果图", new Integer[]{170, 161,150,261}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -156,7 +156,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	确认3D效果图
      */
-    STATE_170(170, "中期款待支付", "业主确认了3D效果图", new Integer[]{180, 171}, true),
+    STATE_170(170, "中期款待支付", "业主确认了3D效果图", new Integer[]{180, 171,261}, true),
     /**
      * 订单阶段逆行<br/>
      * 消费者	拒绝支付订单款项（超时未支付）
@@ -165,7 +165,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	支付订单中期款
      */
-    STATE_180(180, "施工图待交付", "业主支付了中期款", new Integer[]{190, 181}, true),
+    STATE_180(180, "施工图待交付", "业主支付了中期款", new Integer[]{190, 181,261}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -185,7 +185,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传施工图
      */
-    STATE_190(190, "施工图待确认", "设计师上传了施工图", new Integer[]{200, 191,180}, true),
+    STATE_190(190, "施工图待确认", "设计师上传了施工图", new Integer[]{200, 191,180,261}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -205,7 +205,7 @@ public enum DesignStateEnum {
     /**
      * 消费者	确认交付物
      */
-    STATE_200(200, "尾款待支付", "业主确认了交付物", new Integer[]{210}, true),
+    STATE_200(200, "尾款待支付", "业主确认了交付物", new Integer[]{210,261}, true),
     /**
      * 消费者	支付订单尾款
      */
@@ -214,7 +214,7 @@ public enum DesignStateEnum {
      * 全款状态<br/>
      * 设计公司	审批合同通过
      */
-    STATE_220(220, "全款待支付", "合同审核通过", new Integer[]{230, 221,222}, true),
+    STATE_220(220, "合同待用户确认", "合同审核通过", new Integer[]{221,222,261}, true),
     /**
      * 订单阶段逆行<br/>
      * 消费者	拒绝支付订单款项（超时未支付）
@@ -223,11 +223,11 @@ public enum DesignStateEnum {
     /**
      * 业主同意
      **/
-    STATE_222(222, "合同同意", "合同同意", new Integer[]{}, true),
+    STATE_222(222, "全款待支付", "全款待支付", new Integer[]{230,261}, true),
     /**
      * 消费者	支付订单款项（全款）
      */
-    STATE_230(230, "3D待交付", "业主支付了订单（全款）", new Integer[]{240, 231}, true),
+    STATE_230(230, "3D待交付", "业主支付了订单（全款）", new Integer[]{240, 231,261}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -247,7 +247,7 @@ public enum DesignStateEnum {
     /**
      * 设计师	上传3D效果图
      */
-    STATE_240(240, "3D待确认", "设计师上传了3D效果图", new Integer[]{250, 241,230}, true),
+    STATE_240(240, "3D待确认", "设计师上传了3D效果图", new Integer[]{250, 241,230,261}, true),
     /**
      * 消费者	申请退款（收款或全款）
      */
@@ -267,11 +267,20 @@ public enum DesignStateEnum {
     /**
      * 消费者	确认3D效果图
      */
-    STATE_250(250, "施工图待交付", "业主确认了3D效果图", new Integer[]{260}, true),
+    STATE_250(250, "施工图待交付", "业主确认了3D效果图", new Integer[]{260,261}, true),
     /**
      * 设计师	上传施工图
      */
-    STATE_260(260, "施工图待确认", "设计师上传了施工图", new Integer[]{270,250}, true),
+    STATE_260(260, "施工图待确认", "设计师上传了施工图", new Integer[]{270,250,261}, true),
+    /**
+     * 客诉处理
+     */
+    STATE_261(261, "客诉处理中", "客诉处理中", "客诉处理中", "客诉处理中", "客诉处理中", new Integer[]{262}, false),
+    /**
+     * 订单关闭
+     */
+    STATE_262(262, "订单关闭", "订单关闭", "订单关闭", "订单关闭", "订单关闭", new Integer[]{}, false),
+
     /**
      * 消费者	确认交付物	交易完成
      */
@@ -338,7 +347,6 @@ public enum DesignStateEnum {
                 return null;
         }
     }
-
     public static List<Map<String, Object>> allState(int state) {
         DesignStateEnum[] stateEnums = DesignStateEnum.values();
         Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
@@ -348,6 +356,57 @@ public enum DesignStateEnum {
             enumMap.put(stateEnum.state, stateEnum);
             if (stateEnum.stateType && stateEnum.state <= state) {
                 addList(mapList, states, stateEnum);
+            }
+        }
+        DesignStateEnum stateEnum = enumMap.get(state);
+        if (!stateEnum.stateType) {
+            stateEnum = falseState(enumMap, state);
+        }
+        getData(enumMap, states, stateEnum, mapList, stateEnum.stateType);
+        List<Map<String, Object>> removeData = new ArrayList<>();
+        int lastState = -1;
+        int endState = -1;
+        int startState = -1;
+        for (int i = (mapList.size() - 1); i >= 0; i--) {
+            Map<String, Object> map = mapList.get(i);
+            int integer = (int) map.get("key");
+            if (lastState < 0) {
+                lastState = integer;
+                continue;
+            }
+            DesignStateEnum stateEnum1 = enumMap.get(integer);
+            if (!Arrays.asList(stateEnum1.nextStates).contains(lastState)) {
+                endState = lastState;
+            }
+            if (endState > 0 && Arrays.asList(stateEnum1.nextStates).contains(endState)) {
+                startState = integer;
+            }
+            if (endState > 0 && startState < 0) {
+                removeData.add(map);
+            }
+            lastState = integer;
+        }
+        mapList.removeAll(removeData);
+        return mapList;
+    }
+
+    public static List<Map<String, Object>> allState(int state, int complaintState) {
+        ConstructionStateEnum[] constructionState = ConstructionStateEnum.values();
+        DesignStateEnum[] stateEnums = DesignStateEnum.values();
+        Map<Integer, DesignStateEnum> enumMap = new HashMap<>();
+        List<Map<String, Object>> mapList = new ArrayList<>();
+        List<Integer> states = new ArrayList<>();
+        for (DesignStateEnum stateEnum : stateEnums) {
+            enumMap.put(stateEnum.state, stateEnum);
+            if (stateEnum.stateType && stateEnum.state <= state) {
+                addList(mapList, states, stateEnum);
+            } else if (complaintState == ComplaintStateEnum.STATE_2.getState()) {
+                addList(mapList, states, STATE_261);
+                return mapList;
+            } else if ( complaintState == ComplaintStateEnum.STATE_3.getState()) {
+                addList(mapList, states, STATE_261);
+                addList(mapList, states, STATE_262);
+                return mapList;
             }
         }
         DesignStateEnum stateEnum = enumMap.get(state);

@@ -3,6 +3,7 @@ package cn.thinkfree.service.platform.employee.impl;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.appvo.UserVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
@@ -18,6 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,7 +72,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         if(authState == 4 && StringUtils.isBlank(reason)){
             reason = "证件信息有误";
         }
-        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
         msgExample.createCriteria().andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
@@ -84,6 +85,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         // 插入操作记录
         OptionLog optionLog = new OptionLog();
         optionLog.setRemark(reason);
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         if(userVO != null){
             optionLog.setOptionUserName(userVO.getName());
             optionLog.setOptionUserId(userVO.getUserID());
@@ -243,7 +245,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         applyLog = new EmployeeApplyLog();
         applyLog.setDealTime(new Date());
         applyLog.setDealExplain(dealExplain);
-        applyLog.setDealUserId(dealUserId);
+        applyLog.setDealUserId(SessionUserDetailsUtil.getLoginUserName());
+        String remark = null;
+        if (employeeApplyState == 2){
+            remark = "拒绝";
+        }else if(employeeApplyState == 3){
+            remark = "同意";
+        }
+        applyLog.setRemark(remark);
         //1，已处理，2未处理，3已过期
         applyLog.setDealState(1);
         res = applyLogMapper.updateByExampleSelective(applyLog, employeeApplyLogExample);
@@ -559,15 +568,21 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("角色编码不能为空");
         }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria().andRoleCodeEqualTo(roleCode);
+        EmployeeMsgExample.Criteria criteria = msgExample.createCriteria();
         if(StringUtils.isBlank(companyId)){
             throw new RuntimeException("公司ID不能为空");
         }
-        criteria.andCompanyIdEqualTo(companyId);
         if (StringUtils.isNotBlank(searchKey)) {
-            msgExample.or().andUserIdLike("%" + searchKey + "%");
-            msgExample.or().andRealNameLike("%" + searchKey + "%");
-            msgExample.or().andCertificateLike("%" + searchKey + "%");
+            msgExample.or().andUserIdLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andRealNameLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andCertificateLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(searchKey);
+            List<String> userIds = ReflectUtils.getList(userMsgVos,"staffId");
+            if(userIds != null && !userIds.isEmpty()){
+                msgExample.or().andUserIdIn(userIds).andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            }
+        }else{
+            criteria.andCompanyIdEqualTo(companyId);
         }
         long total = employeeMsgMapper.countByExample(msgExample);
         PageHelper.startPage(pageIndex, pageSize);
@@ -619,6 +634,9 @@ public class EmployeeServiceImpl implements EmployeeService {
             List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
             if(!employeeMsgs.isEmpty()){
                 userIds.addAll(ReflectUtils.getList(employeeMsgs,"userId"));
+            }
+            if(userIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
             }
             criteria.andUserIdIn(userIds);
         }
@@ -736,11 +754,12 @@ public class EmployeeServiceImpl implements EmployeeService {
             throw new RuntimeException("角色编码不能为空");
         }
         EmployeeMsgExample msgExample = new EmployeeMsgExample();
-        msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
         if (StringUtils.isNotBlank(searchKey)) {
-            msgExample.or().andUserIdLike("%" + searchKey + "%");
-            msgExample.or().andRealNameLike("%" + searchKey + "%");
-            msgExample.or().andCertificateLike("%" + searchKey + "%");
+            msgExample.or().andUserIdLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andRealNameLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+            msgExample.or().andCertificateLike("%" + searchKey + "%").andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
+        }else{
+            msgExample.createCriteria().andCompanyIdEqualTo(companyId).andRoleCodeEqualTo(roleCode);
         }
         long total = employeeMsgMapper.countByExample(msgExample);
         PageHelper.startPage(pageIndex, pageSize);
@@ -956,13 +975,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeMsg.setRoleCode("");
         employeeMsg.setCompanyId("");
         employeeMsgMapper.updateByPrimaryKeySelective(employeeMsg);
-
         EmployeeApplyLog employeeApplyLog = new EmployeeApplyLog();
         employeeApplyLog.setDealExplain(dealExplain);
         employeeApplyLog.setDealTime(new Date());
         employeeApplyLog.setDealState(1);
-        employeeApplyLog.setDealUserId(dealUserId);
+        employeeApplyLog.setDealUserId(SessionUserDetailsUtil.getLoginUserName());
         employeeApplyLog.setCompanyId(companyId);
+        employeeApplyLog.setUserId(employeeId);
         employeeApplyLog.setRemark("办理员工离职");
         applyLogMapper.insertSelective(employeeApplyLog);
     }

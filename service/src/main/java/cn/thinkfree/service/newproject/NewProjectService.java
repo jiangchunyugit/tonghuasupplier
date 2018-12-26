@@ -2,14 +2,10 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
-import cn.thinkfree.database.model.OrderApplyRefund;
-import cn.thinkfree.database.pcvo.ConstructionOrderVO;
-import cn.thinkfree.database.pcvo.PcProjectDetailVo;
 import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 项目相关
@@ -94,10 +90,11 @@ public interface NewProjectService {
      * @param orderNo
      * @param projectNo
      * @param userId
+     * @param orderType
      * @param cancelReason
      * @return
      */
-    MyRespBundle cancleOrder(String orderNo, String projectNo, String userId, String cancelReason);
+    void cancelOrder(String orderNo, String projectNo, String userId, Integer orderType, String cancelReason);
 
     /**
      * APP-获取项目详情头接口
@@ -131,7 +128,7 @@ public interface NewProjectService {
      * @param designerId
      * @return
      */
-    PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, int pageIndex, int pageSize);
+    PageVo<List<DesignOrderVo>> getDesignOrderData(String designerId, String ownerMsg, String projectNo, List<Integer> states, int pageIndex, int pageSize);
 
     /**
      * C/B-项目列表--施工端
@@ -176,4 +173,23 @@ public interface NewProjectService {
      * @return
      */
     MyRespBundle<PageVo<List<ConstructionProjectVo>>> getProjectByScreen(int pageSize, int pageNum, String userId, Integer delayBegin, Integer delayEnd, Integer schedulingSort, Integer checkSort, Integer checkComplete, String projectNo);
+
+    /**
+     * PC-设计师上传资料
+     * @param projectNo
+     * @param userId
+     * @param jsonData
+     * @return
+     */
+    MyRespBundle<String> computerConfirmVolumeRoomData(String projectNo, String userId, String jsonData);
+
+    /**
+     * APP-获取设计资料
+     * @param projectNo
+     * @return
+     */
+    MyRespBundle<NewDataVo> getNewDesignData(String projectNo);
+
+
+
 }

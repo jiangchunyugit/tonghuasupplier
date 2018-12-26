@@ -309,12 +309,19 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         accountVO.setPcUserInfo(pcUserInfo);
 
         if(StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())){
-            BranchCompany branchCompany = branchCompanyMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getBranchCompanyId()));
-            accountVO.setBranchCompany(branchCompany);
+            BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
+            branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId());
+//            BranchCompany branchCompany = branchCompanyMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getBranchCompanyId()));
+            List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
+            accountVO.setBranchCompany((branchCompanies!=null && branchCompanies.size() == 1) ?
+                                            branchCompanies.get(0) : new BranchCompany());
         }
         if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
-            CityBranch cityBranch = cityBranchMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getCityBranchCompanyId()));
-            accountVO.setCityBranch(cityBranch);
+            CityBranchExample cityBranchExample = new CityBranchExample();
+            cityBranchExample.createCriteria().andCityBranchCodeEqualTo(pcUserInfo.getCityBranchCompanyId());
+//            CityBranch cityBranch = cityBranchMapper.selectByPrimaryKey(Integer.valueOf(pcUserInfo.getCityBranchCompanyId()));
+            List<CityBranch> cityBranchs = cityBranchMapper.selectByExample(cityBranchExample);
+            accountVO.setCityBranch((cityBranchs!=null && cityBranchs.size() == 1)? cityBranchs.get(0) :new CityBranch());
         }
 
 
@@ -469,7 +476,7 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
         PcUserInfo pcUserInfo = pcUserInfoMapper.selectByPrimaryKey(id);
 
-        if(!UserEnabled.Enabled_false.shortVal().equals(pcUserInfo.getEnabled())){
+        if(UserEnabled.Enabled_false.shortVal().equals(pcUserInfo.getEnabled())){
             PcUserInfo delObj = new PcUserInfo();
             delObj.setIsDelete(SysConstants.YesOrNo.YES.shortVal());
             delObj.setId(id);

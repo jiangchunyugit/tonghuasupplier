@@ -1,7 +1,6 @@
 package cn.thinkfree.service.company;
 
 import cn.thinkfree.database.model.CompanyInfo;
-import cn.thinkfree.database.model.CompanyUserSet;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.vo.remote.SyncTransactionVO;
 import com.github.pagehelper.PageInfo;
@@ -42,9 +41,10 @@ public interface CompanyInfoService {
     /**
      * 获取公司信息根据公司名
      * @param name
+     * @param type
      * @return
      */
-    List<SelectItem> listCompanyByLikeName(String name);
+    List<SelectItem> listCompanyByLikeName(String name, String type);
 
     /**
      * 根据公司编号获取同步数据

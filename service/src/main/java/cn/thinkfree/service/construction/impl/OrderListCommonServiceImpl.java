@@ -1,12 +1,15 @@
 package cn.thinkfree.service.construction.impl;
 
 
+import cn.thinkfree.core.constants.ComplaintStateEnum;
+import cn.thinkfree.core.constants.ConstructOrderConstants;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.database.appvo.PersionVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.construction.CommonService;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
 import cn.thinkfree.service.construction.vo.DecorationOrderListVo;
@@ -15,7 +18,6 @@ import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.HttpUtils;
 import cn.thinkfree.service.utils.PageInfoUtils;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -70,6 +72,8 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
     ProjectQuotationMapper projectQuotationMapper;
     @Autowired
     private OrderContractMapper orderContractMapper;
+    @Autowired
+    private ConstructionStateService constructionStateService;
 
     /**
      * 用户中心地址接口
@@ -405,10 +409,16 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
 
         ConstructionOrderExample example = new ConstructionOrderExample();
         example.setOrderByClause("create_time DESC");
-        example.createCriteria().andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
+
+        List<Integer> complaintStates = new ArrayList<>();
+        complaintStates.add(ComplaintStateEnum.STATE_1.getState());
+        complaintStates.add(ComplaintStateEnum.STATE_4.getState());
+        criteria.andComplaintStateIn(complaintStates);
 
         if (!StringUtils.isBlank(projectNo)) {
-            example.createCriteria().andProjectNoEqualTo(projectNo);
+            criteria.andProjectNoEqualTo(projectNo);
         }
 
         List<ConstructionOrder> list = constructionOrderMapper.selectByExample(example);
@@ -482,7 +492,6 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             // 订单编号
             decorationOrderListVo.setOrderNo(constructionOrder.getOrderNo());
             // 派单给员工-是否可以
-            // TODO 520
             if (constructionOrder.getOrderStage().equals(ConstructionStateEnum.STATE_510.getState())) {
                 decorationOrderListVo.setIsCheck(1);
             } else {
@@ -494,7 +503,8 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
                     continue conOut;
                 }
             }
-            decorationOrderListVo.setOrderStage(ConstructionStateEnum.getNowStateInfo(constructionOrder.getOrderStage(), 2));
+            ConstructionStateEnum constructionState = constructionStateService.getState(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+            decorationOrderListVo.setOrderStage(constructionState.getStateName(ConstructOrderConstants.APP_TYPE_CONSTRUCT));
             // 项目经理
             for (Map<String, String> OrderUser : list2) {
                 if (constructionOrder.getProjectNo().equals(OrderUser.get("projectNo"))) {

@@ -1,5 +1,6 @@
 package cn.thinkfree.service.contract;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public interface ContractService {
 	/**
 	 * 
 	 * 根据条件分页查询 合同数据
-	 * @param ContractSEO
+	 * @param projectSEO
 	 * @return pageList
 	 */
     PageInfo<ContractVo> pageContractBySEO(ContractSEO projectSEO);
@@ -44,7 +45,7 @@ public interface ContractService {
     
     /**
      * 导出数据 （根据数据导出）
-     * @param ContractSEO
+     * @param projectSEO
      * @return null
      */
 	
@@ -53,7 +54,7 @@ public interface ContractService {
     /**
 	 * 
 	 * 财务审核
-	 * @param ContractSEO
+	 * @param contractNumber 合同编号 companyId公司编号
 	 * @return map  code mess
 	 */
     boolean auditContract(String contractNumber,String companyId,String auditStatus,String auditCase);
@@ -63,7 +64,7 @@ public interface ContractService {
     /**
 	 * 
 	 * 确认保证金
-	 * @param ContractSEO
+	 * @param contractNumber 合同编号 companyId公司编号
 	 * @return String mess
 	 */
     Map<String,String> ackEarnestMoney(String contractNumber,String companyId);
@@ -73,7 +74,7 @@ public interface ContractService {
     /**
   	 * 
   	 * 合同详情 
-  	 * @param ContractSEO
+  	 * @param contractNumber 合同编号 companyId公司编号
   	 * @return String mess
   	 */
     ContractDetailsVo  contractDetails(String contractNumber,String companyId);
@@ -102,7 +103,7 @@ public interface ContractService {
       /**
        * 新增合同 条款信息(如果信息存再删除添加 不存在新增 )
        *  @param contractNumber
-       *  @param map 合同
+       *  @param companyId
        */
       boolean  insertContractClause(String contractNumber,String companyId,ContractClauseVO contractClausevo);
       
@@ -157,7 +158,7 @@ public interface ContractService {
        * 获取合同中的结算比例
        * @param contractNumber
        * @param CompanyId
-       * @param roleType公司类型
+       * @param roleType 公司类型
        */
       Map<String, Object>  balanceInfo(String contractNumber, String CompanyId, String roleType);
       
@@ -179,7 +180,7 @@ public interface ContractService {
       
       /**
        * 根据公司编号查询公司合同
-       * @param  orderNumber
+       * @param  companyId
        * @return list 
        */
       List<ContractInfo>  getEnterContractBycompanyId(String companyId);
@@ -247,4 +248,11 @@ public interface ContractService {
      * 根据订单编号查询设计合同信息
      */
     Map<String,String> getDesignerContractInfo(String contractNo);
+
+
+    /**
+     * 根据订单编号查询 合同总金额
+     *
+     */
+    String  getConstructionOrderAmount(String orderNo);
 }

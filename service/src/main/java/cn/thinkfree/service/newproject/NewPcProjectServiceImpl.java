@@ -2,10 +2,7 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.core.constants.BasicsDataParentEnum;
-import cn.thinkfree.core.constants.ConstructOrderConstants;
-import cn.thinkfree.core.constants.ConstructionStateEnum;
-import cn.thinkfree.core.constants.DesignStateEnum;
+import cn.thinkfree.core.constants.*;
 import cn.thinkfree.core.model.OrderStatusDTO;
 import cn.thinkfree.database.appvo.OrderTaskSortVo;
 import cn.thinkfree.database.appvo.PersionVo;
@@ -96,7 +93,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         //获取项目阶段信息,所有的阶段时间都以开始时间展示为主,展示所有的PC项目阶段
         List<OrderTaskSortVo> allOrderTask = new ArrayList<>();
         ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
-        List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage());
+        List<OrderStatusDTO> states = constructionStateService.getStates(ConstructOrderConstants.APP_TYPE_CUSTOMER, constructionOrder.getOrderStage(), constructionOrder.getComplaintState(), constructionOrder.getSchemeNo());
         for (OrderStatusDTO orderStatus : states) {
             OrderTaskSortVo orderTaskSortVo = new OrderTaskSortVo();
             orderTaskSortVo.setSort(orderStatus.getStatus());
@@ -104,13 +101,8 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
             allOrderTask.add(orderTaskSortVo);
         }
         orderAllTaskVo.setAllOrderTask(allOrderTask);
-        ProjectExample example = new ProjectExample();
-        ProjectExample.Criteria criteria = example.createCriteria();
-        criteria.andProjectNoEqualTo(projectNo);
-        List<Project> projects = projectMapper.selectByExample(example);
-        if (projects.size() > 0) {
-            orderAllTaskVo.setCurrentSort(projects.get(0).getStage());
-        }
+        int stateCode = constructionStateService.getStateCode(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+        orderAllTaskVo.setCurrentSort(stateCode);
         return RespData.success(orderAllTaskVo);
     }
 
@@ -179,7 +171,9 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
                 break;
         }
         //订单阶段
-        constructionOrderVO.setOrderStage(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
+        ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        ConstructionStateEnum state = constructionStateService.getState(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+        constructionOrderVO.setOrderStage(state.getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
 
         return RespData.success(constructionOrderVO);
     }
@@ -262,17 +256,17 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         if (projectQuotations.size() == 1) {
             ProjectQuotation projectQuotation = projectQuotations.get(0);
             //面积
-            offerVo.setArea(projectQuotation.getInnerArea().toString());
+            offerVo.setArea(projectQuotation.getInnerArea() != null ? projectQuotation.getInnerArea().toString() : "");
             //平米单价
-            offerVo.setUnitPrice(projectQuotation.getUnitPrice().toString());
+            offerVo.setUnitPrice(projectQuotation.getUnitPrice() != null ? projectQuotation.getUnitPrice().toString() : "");
             //总价
-            offerVo.setTotalPrice(projectQuotation.getTotalPrice().toString());
+            offerVo.setTotalPrice(projectQuotation.getTotalPrice() != null ? projectQuotation.getTotalPrice().toString() : "");
             //基础施工保价
-            offerVo.setBasePrice(projectQuotation.getConstructionTotalPrice().toString());
+            offerVo.setBasePrice(projectQuotation.getConstructionTotalPrice() != null ? projectQuotation.getConstructionTotalPrice().toString() : "");
             //软装保价
-            offerVo.setMainMaterialFee(projectQuotation.getSoftDecorationPrice().toString());
+            offerVo.setMainMaterialFee(projectQuotation.getSoftDecorationPrice() != null ? projectQuotation.getSoftDecorationPrice().toString() : "");
             //硬装保价
-            offerVo.setOtherFee(projectQuotation.getHardDecorationPrice().toString());
+            offerVo.setOtherFee(projectQuotation.getHardDecorationPrice() != null ? projectQuotation.getHardDecorationPrice().toString() : "");
             //变更保价
             FundsOrderFeeExample fundsOrderFeeExample = new FundsOrderFeeExample();
             FundsOrderFeeExample.Criteria criteria3 = fundsOrderFeeExample.createCriteria();
@@ -376,6 +370,7 @@ public class NewPcProjectServiceImpl implements NewPcProjectService {
         }
         //验收结果
         ProjectQuotationCheckExample checkExample = new ProjectQuotationCheckExample();
+        checkExample.setOrderByClause("submit_time DESC");
         ProjectQuotationCheckExample.Criteria checkCriteria = checkExample.createCriteria();
         checkCriteria.andProjectNoEqualTo(projectNo);
         checkCriteria.andStatusEqualTo(1);

@@ -300,7 +300,7 @@
     <div class="indent">
         <#if ( code13?size > 1)>
     <div class="indent">
-        1.2资质审核通过后，在共计<div class="textput smalltextput">${c17}</div>万的入驻保证金里缴纳
+        1.2资质审核通过后，在共计<div class="textput smalltextput">${c17}</div>元的入驻保证金里缴纳
     <#--  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
       剩余部分从接到的每一个平台项目里扣除项目总金额的
       <div class="textput smalltextput">${code13.[0].costValue}</div>

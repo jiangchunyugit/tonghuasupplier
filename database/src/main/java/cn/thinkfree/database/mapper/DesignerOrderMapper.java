@@ -7,8 +7,6 @@ import cn.thinkfree.database.model.DesignerOrder;
 import cn.thinkfree.database.model.DesignerOrderExample;
 import java.util.List;
 
-import cn.thinkfree.database.vo.AcceptanceResultsVO;
-import cn.thinkfree.database.vo.ConstructionContractVO;
 import cn.thinkfree.database.vo.DesignContractVO;
 import cn.thinkfree.database.vo.ProjectOrderVO;
 import org.apache.ibatis.annotations.Param;
@@ -130,7 +128,7 @@ public interface DesignerOrderMapper {
     Integer selectContractCount(@Param("designContractVO") DesignContractVO designContractVO);
 
 
-    List<DesignOrderVo> selectByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status, @Param("projectNos") List<String> projectNos,@Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
+    List<DesignOrderVo> selectByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status, @Param("projectNos") List<String> projectNos,@Param("states") List<Integer> states, @Param("pageNum") Integer pageNum,@Param("pageSize") Integer pageSize);
 
-    long countByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status, @Param("projectNos") List<String> projectNos);
+    long countByDesignerId(@Param("designerId") String designerId,@Param("status") Integer status, @Param("projectNos") List<String> projectNos, @Param("states") List<Integer> states);
 }

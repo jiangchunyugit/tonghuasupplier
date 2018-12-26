@@ -2,7 +2,6 @@ package cn.thinkfree.service.company;
 
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.SysConstants;
-import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.constants.CompanyAuditStatus;
@@ -110,17 +109,19 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
      * 获取公司信息根据公司名
      *
      * @param name
+     * @param type
      * @return
      */
     @Override
-    public List<SelectItem> listCompanyByLikeName(String name) {
-        if (StringUtils.isBlank(name)){
+    public List<SelectItem> listCompanyByLikeName(String name, String type) {
+        if (StringUtils.isBlank(name) || StringUtils.isBlank(type)){
             return Collections.EMPTY_LIST;
         }
         CompanyInfoExample condition = new CompanyInfoExample();
 
         condition.createCriteria().andCompanyNameLike("%"+name+"%")
                 .andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
+                .andRoleIdEqualTo(CompanyType.values()[Integer.valueOf(type)].name())
 //                .andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
                 .andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.code.toString())
                 .andPlatformTypeEqualTo(CompanyConstants.PlatformType.NORMAL.shortVal());

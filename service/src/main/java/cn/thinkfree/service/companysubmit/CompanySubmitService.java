@@ -1,15 +1,12 @@
 package cn.thinkfree.service.companysubmit;
 
-import java.util.List;
-import java.util.Map;
-
+import cn.thinkfree.database.model.JoinStatus;
 import cn.thinkfree.database.model.PcAuditInfo;
-import cn.thinkfree.database.model.PcAuditTemporaryInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
-import org.apache.catalina.User;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author ying007
@@ -146,5 +143,12 @@ public interface CompanySubmitService {
      * @return
      */
     PageInfo<CompanyListVo> agencyList(CompanyListSEO companyListSEO);
+
+    /**
+     * 入驻公司修改公司状态
+     * @param joinStatus
+     * @return
+     */
+    boolean changeNode(JoinStatus joinStatus);
 
 }

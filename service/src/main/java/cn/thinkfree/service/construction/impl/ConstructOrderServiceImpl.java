@@ -15,6 +15,7 @@ import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructOrderService;
+import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.construction.OrderListCommonService;
 import cn.thinkfree.service.construction.vo.ConsListVo;
 import cn.thinkfree.service.construction.vo.ConstructionOrderListVo;
@@ -90,6 +91,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     private BasicsService basicsService;
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private ConstructionStateService constructionStateService;
     /**
      * 订单列表
      *
@@ -337,11 +340,11 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         constructDetailVO.setLimitDays(DateUtil.differentDaysByMillisecond(projectScheduling.getStartTime(), projectScheduling.getEndTime()));
 
         ProjectBigScheduling projectBigScheduling = schedulingBaseService.findBySchemeNoAndSort(schemeNo, projectScheduling.getRate());
-        if (projectBigScheduling == null) {
-            LOGGER.error("未查询到排期信息，schemeNo:{}, sort:{}", schemeNo, projectScheduling.getRate());
-            throw new RuntimeException();
+        if (projectBigScheduling != null) {
+            constructDetailVO.setConstructProgress(projectBigScheduling.getName());
+//            LOGGER.error("未查询到排期信息，schemeNo:{}, sort:{}", schemeNo, projectScheduling.getRate());
+//            throw new RuntimeException();
         }
-        constructDetailVO.setConstructProgress(projectBigScheduling.getName());
         return constructDetailVO;
     }
 
@@ -375,7 +378,7 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     @Override
     public PageVo<List<ConsListVo>> getConsList(int orderType,
             String projectNo, String companyName, String provinceCode, String cityCode, String areaCode, String createTimeS, String createTimeE,
-            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, int pageNum, int pageSize) {
+            String againTimeS, String againTimeE, String address, String ownerName, String ownerPhone, String companyId, int pageNum, int pageSize) {
         List<String> userProjectNos = searchOwner(ownerName, ownerPhone);
         if(userProjectNos != null && userProjectNos.isEmpty()){
             return PageVo.def(new ArrayList<>());
@@ -407,9 +410,14 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
             criteria.andCompanyIdIn(companyIds);
         }
         if(orderType == 1){
-            criteria.andOrderStageIn(Arrays.asList(ConstructionStateEnum.STATE_500.getState(),ConstructionStateEnum.STATE_510.getState()));
-        }else{
-            criteria.andOrderStageGreaterThanOrEqualTo(ConstructionStateEnum.STATE_540.getState());
+            criteria.andOrderStageEqualTo(ConstructionStateEnum.STATE_500.getState());
+            List<Integer> complaintStates = new ArrayList<>();
+            complaintStates.add(ComplaintStateEnum.STATE_1.getState());
+            complaintStates.add(ComplaintStateEnum.STATE_4.getState());
+            criteria.andComplaintStateIn(complaintStates);
+        }
+        if(StringUtils.isNotBlank(companyId)){
+            criteria.andCompanyIdEqualTo(companyId);
         }
         long total = constructionOrderMapper.countByExample(constructionOrderExample);
         PageHelper.startPage(pageNum, pageSize);
@@ -420,14 +428,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         projectNos = ReflectUtils.getList(constructionOrders,"projectNo");
         companyIds = ReflectUtils.getList(constructionOrders,"companyId");
         orderNos = ReflectUtils.getList(constructionOrders,"orderNo");
-        OrderContractExample orderContractExample = new OrderContractExample();
-        orderContractExample.createCriteria().andOrderNumberIn(orderNos);
-        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
-        Map<String,OrderContract> orderContractMap = ReflectUtils.listToMap(orderContracts,"orderNumber");
-        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
-        companyInfoExample.createCriteria().andCompanyIdIn(companyIds);
-        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
-        Map<String,CompanyInfo> companyInfoMap = ReflectUtils.listToMap(companyInfos,"companyId");
+        Map<String, OrderContract> orderContractMap = getStringOrderContractMap(orderNos);
+        Map<String, CompanyInfo> companyInfoMap = getStringCompanyInfoMap(companyIds);
         Map<String, String[]> userMsgMap = getStaffBy(projectNos);
         ProjectExample projectExample = new ProjectExample();
         projectExample.createCriteria().andProjectNoIn(projectNos);
@@ -449,7 +451,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
                 }
                 consListVo.setProjectNo(project.getProjectNo());
                 consListVo.setProvinceName(provinceMap.get(project.getProvince()));
-                consListVo.setStateName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(1));
+                ConstructionStateEnum constructionState = constructionStateService.getState(constructionOrder.getOrderStage(), constructionOrder.getComplaintState());
+                consListVo.setStateName(constructionState.getStateName(1));
             }
             String[] userMsg = userMsgMap.get("CD-" + constructionOrder.getProjectNo());
             if(userMsg != null){
@@ -482,6 +485,14 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
             if(orderContract != null && orderContract.getSignTime() != null){
                 consListVo.setSignTime(orderContract.getSignTime().getTime() + "");
             }
+            consListVo.setIsDistribution(3);
+            if (constructionOrder.getComplaintState() == ComplaintStateEnum.STATE_1.getState() || constructionOrder.getComplaintState() == ComplaintStateEnum.STATE_4.getState()) {
+                if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_500.getState()){
+                    consListVo.setIsDistribution(1);
+                }else if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_510.getState()){
+                    consListVo.setIsDistribution(2);
+                }
+            }
             consListVos.add(consListVo);
         }
         PageVo<List<ConsListVo>> pageVo = PageVo.def(consListVos);
@@ -489,6 +500,26 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
         pageVo.setPageIndex(pageNum);
         pageVo.setTotal(total);
         return pageVo;
+    }
+
+    private Map<String, OrderContract> getStringOrderContractMap(List<String> orderNos) {
+        if(orderNos == null || orderNos.isEmpty()){
+            return new HashMap<>();
+        }
+        OrderContractExample orderContractExample = new OrderContractExample();
+        orderContractExample.createCriteria().andOrderNumberIn(orderNos);
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(orderContractExample);
+        return ReflectUtils.listToMap(orderContracts,"orderNumber");
+    }
+
+    private Map<String, CompanyInfo> getStringCompanyInfoMap(List<String> companyIds) {
+        if(companyIds == null || companyIds.isEmpty()){
+            return new HashMap<>();
+        }
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andCompanyIdIn(companyIds);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        return ReflectUtils.listToMap(companyInfos,"companyId");
     }
 
     /**

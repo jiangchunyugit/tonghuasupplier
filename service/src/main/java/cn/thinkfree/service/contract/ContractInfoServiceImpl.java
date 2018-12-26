@@ -583,7 +583,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				ContractTermsChildExample example1 = new ContractTermsChildExample();
 				example1.createCriteria().andCompanyIdEqualTo(companyId).andContractNumberEqualTo(contractNumber)
 						.andCostTypeEqualTo(childList.get(i).getCostType());
-				example1.setOrderByClause("sort desc ");
+				example1.setOrderByClause("sort asc ");
 				List<ContractTermsChild> childListOne = contractTermsChildMapper.selectByExample(example1);
 				//替换宏变量
 				List<ContractTermsChild> childListTwo = new ArrayList<>(childListOne.size());
@@ -1479,15 +1479,16 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					designDispatchService.reviewPass(orderNumber, type);
 
 				} else {// 施工合同
-					printInfoMes("合同审批调用 订单接口 orderNo{}}", orderNumber);
+					printInfoMes("合同审批调用 订单接口 orderNo{}", orderNumber);
 					constructionStateService.contractCompleteState(orderNumber);
+
+					printInfoMes("合同审批调用 生成订单orderNumber{}", orderNumber);
+					List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNumber);
+					CreateOrder order = new CreateOrder();
+					order.setData(syncOrderVo);
+					eventService.publish(order);
 				}
 				record.setSignTime(new Date());// 插入时间
-				printInfoMes("合同审批调用 生成订单orderNumber{}}", orderNumber);
-				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNumber);
-				CreateOrder order = new CreateOrder();
-				order.setData(syncOrderVo);
-				eventService.publish(order);
 
 			} else {// 拒绝 插入拒绝原因
 				// 查询合同编号
@@ -1560,7 +1561,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			if(status.equals("0")){
 				//修改设计合同订单状态为未审核
 				OrderContract recordTwo = new OrderContract();
-				recordTwo.setAuditType("2");//审核未通过
+				recordTwo.setAuditType("0");//审核不通過
 				OrderContractExample exampleTwo = new OrderContractExample();
 				exampleTwo.createCriteria().andOrderNumberEqualTo(orderNo);
 				orderContractMapper.updateByExampleSelective(recordTwo,exampleTwo);
@@ -1569,39 +1570,73 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				exampleOne.createCriteria().andOrderNoEqualTo(orderNo);
 				List<DesignerOrder>  projectList = designerOrderMapper.selectByExample(exampleOne);
 				OrderUserExample example = new OrderUserExample();
-				example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CC");
+				example.createCriteria().andProjectNoEqualTo(projectList.get(0).getProjectNo()).andRoleCodeEqualTo("CD");
 				List<OrderUser> list = orderUserMapper.selectByExample(example);
 				//designerOrderMapper.selectByExample()
 				String projectNo = projectList.size()>0?projectList.get(0).getProjectNo():"";
 				String subUserId =list.size()>0?list.get(0).getUserId():"";
-				String content ="业主不同意合同，请重新编辑合同";
+				String content ="业主不同意项目编号"+projectNo+"的设计合同，请您重新编辑";
 				printInfoMes("设计合同业主不同意发送消息projectNo:{},subUserId{}",projectNo,content);
 				this.sendMessage(projectNo,"",subUserId,content);
 			}else{
-				//查询是否全款 1全款合同，2分期款合同
-				// 查询合同是全款换是分期
-				OrderContractExample example = new OrderContractExample();
-				example.createCriteria().andOrderNumberEqualTo(orderNo);
-				// 查询合同
-				List<OrderContract> list = orderContractMapper.selectByExample(example);
-				ContractTermsExample example1 = new ContractTermsExample();
-				example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
-				List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
-				Map<String, String> chMap = new HashMap<>();
-				for (int i = 0; i < childListr.size(); i++) {
-					chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
-				}
-				// 1全款合同，2分期合同
-				int type = 1;
-				if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
-					type = 2;
-				}
-				designDispatchService.agreeContractApproval(orderNo, type);
+				//发送订单数据
+				printInfoMes("合同审批调用 生成订单orderNumber{}", orderNo);
+				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNo);
+				CreateOrder order = new CreateOrder();
+				order.setData(syncOrderVo);
+				eventService.publish(order);
+
 			}
+			//查询是否全款 1全款合同，2分期款合同
+			// 查询合同是全款换是分期
+			OrderContractExample example = new OrderContractExample();
+			example.createCriteria().andOrderNumberEqualTo(orderNo);
+			// 查询合同
+			List<OrderContract> list = orderContractMapper.selectByExample(example);
+			ContractTermsExample example1 = new ContractTermsExample();
+			example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
+			List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+			Map<String, String> chMap = new HashMap<>();
+			for (int i = 0; i < childListr.size(); i++) {
+				chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+			}
+			// 1全款合同，2分期合同
+			int type = 1;
+			if (String.valueOf(chMap.get("c18")).equals("1")) {// 分期
+				type = 2;
+			}
+			//1 同意 2不同意
+			int contractType  =  1;
+			if(status.equals("0")){
+				contractType = 2;
+			}
+			designDispatchService.contractApproval(orderNo,contractType,type);
 			return true;
 		}
 		return false;
 	}
+
+	public String getConstructionOrderAmount(String orderNo) {
+
+		OrderContractExample example = new OrderContractExample();
+		example.createCriteria().andOrderNumberEqualTo(orderNo);
+		// 查询合同
+		List<OrderContract> list = orderContractMapper.selectByExample(example);
+		if(list == null || list.size() == 0){
+			printErrorMes("订单编号为orderNo:{} 合同不存",orderNo);
+			throw new RuntimeException("订单编号为orderNo:"+orderNo+"合同不存");
+		}
+		ContractTermsExample example1 = new ContractTermsExample();
+		example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
+		List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+		Map<String, String> chMap = new HashMap<>(childListr.size());
+		for (int i = 0; i < childListr.size(); i++) {
+			chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+		}
+		return chMap.get("c17")==null?"0":String.valueOf(chMap.get("c17"));
+	}
+
+
 
 
 	@Override
@@ -1615,6 +1650,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		}
 		return chMap;
 	}
+
+	
 
 	/**
 	 * @return

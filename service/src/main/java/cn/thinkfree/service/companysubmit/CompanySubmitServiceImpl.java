@@ -86,6 +86,9 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 	@Autowired
 	EventService eventService;
 
+	@Autowired
+	JoinStatusMapper joinStatusMapper;
+
 
 	final static String TARGET = "static/";
 
@@ -166,14 +169,30 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 
 	@Override
 	public AuditInfoVO findAuditStatus(String companyId) {
-		Map<String, Object> map = new HashMap<>();
+		Map<String, Object> map = new HashMap<>(2);
 		map.put("companyId", companyId);
-		List<String>  list = new ArrayList<>();
+		List<String>  list = new ArrayList<>(2);
 		list.add(CompanyConstants.AuditType.JOINON.stringVal());
 		list.add(CompanyConstants.AuditType.CONTRACT.stringVal());
 		map.put("auditType", list);
-
+		//查询公司状态
 		AuditInfoVO auditInfoVO = pcAuditInfoMapper.findAuditStatus(map);
+
+		//查询入驻公司当前节点状态
+		JoinStatus joinStatus = joinStatusMapper.joinCompanyNode(companyId);
+
+		List<Integer> caiwu = new ArrayList<>(3);
+		caiwu.add(CompanyAuditStatus.CHECKING.code);
+		caiwu.add(CompanyAuditStatus.SUCCESSCHECK.code);
+		caiwu.add(CompanyAuditStatus.FAILCHECK.code);
+		if(joinStatus != null){
+		    if(caiwu.contains(auditInfoVO.getCompanyAuditType()) ||
+                    caiwu.contains(joinStatus.getPreNode()) ||
+                    auditInfoVO.getCompanyAuditType().equals(joinStatus.getPreNode())){
+                auditInfoVO.setNode(joinStatus.getNode().toString());
+            }
+		}
+
 		if(auditInfoVO == null){
 //			auditInfoVO = new AuditInfoVO();
 //			auditInfoVO.setCompanyAuditType(CompanyAuditStatus.AUDITING.stringVal());
@@ -841,5 +860,15 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
 		List<CompanyListVo> companyListVoList = companyInfoMapper.agencyList(companyListSEO);
 		return new PageInfo<>(companyListVoList);
+	}
+
+	@Override
+	public boolean changeNode(JoinStatus joinStatus) {
+		joinStatus.setCreateDate(new Date());
+		int line = joinStatusMapper.insertSelective(joinStatus);
+		if(line > 0){
+			return true;
+		}
+		return false;
 	}
 }

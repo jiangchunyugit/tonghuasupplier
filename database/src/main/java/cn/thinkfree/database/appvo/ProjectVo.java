@@ -19,7 +19,7 @@ import java.util.Map;
 public class ProjectVo {
     @ApiModelProperty(name = "projectNo",value = "项目编号")
     private String projectNo;
-    @ApiModelProperty(name = "stage",value = "项目阶段(预约/量房/设计/施工)")
+    @ApiModelProperty(name = "stage",value = "项目阶段")
     private Integer stage;
     @ApiModelProperty(value = "B端项目阶段名称")
     private String stageDesignName;
@@ -57,5 +57,7 @@ public class ProjectVo {
     private Boolean refuseButton;
     @ApiModelProperty(value = "是否展示 立即接单 按钮")
     private Boolean agreeButto;
+    @ApiModelProperty("1,未投诉，2处理中，3关闭，4已取消")
+    private Integer complaintState;
 
 }

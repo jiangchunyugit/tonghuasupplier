@@ -195,19 +195,22 @@ public class AccountControllerTest extends AbsControllerTest {
     }
     @Test
     public void detailRole() throws Exception {
-        String rs = mvc.perform(get("/account/role/4")
+        String rs = mvc.perform(get("/account/role/65")
                 .with(user(userVO))
         )
                 .andExpect(status().isOk())
                 .andDo(print())         //打印出请求和相应的内容
                 .andReturn().getResponse().getContentAsString();
         MyRespBundle<SystemRoleVO> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<SystemRoleVO>>() {}.getType());
+        System.out.println(rsb.getData().getSelectedRoot());
+        System.out.println(rsb.getData().getSelectedProvince());
+        System.out.println(rsb.getData().getSelectedCity());
         Assert.assertEquals(rsb.getData().getSelectedCity(),Integer.valueOf(1));
     }
 
     @Test
     public void editRole() throws Exception {
-        String rs = mvc.perform(post("/account/role/6")
+        String rs = mvc.perform(post("/account/role/65")
                 .with(user(userVO))
                 .param("desc","改动")
         )
@@ -221,7 +224,7 @@ public class AccountControllerTest extends AbsControllerTest {
 
     @Test
     public void permissions() throws Exception {
-        String rs = mvc.perform(get("/account/role/5/permission")
+        String rs = mvc.perform(get("/account/role/57/permission")
                 .with(user(userVO))
         )
                 .andExpect(status().isOk())
@@ -271,15 +274,15 @@ public class AccountControllerTest extends AbsControllerTest {
 
         String rs = mvc.perform(post("/account/info")
                 .with(user(userVO))
-                .param("pcUserInfo.memo","备注")
-//                .param("branchCompany.id","1")
-//                .param("branchCompany.provinceCode","37")
-//                .param("cityBranch.id","1")
-//                .param("cityBranch.provinceCode","37")
-//                .param("cityBranch.cityCode","3701")
+                .param("pcUserInfo.memo","")
+                .param("branchCompany.id",null)
+                .param("branchCompany.provinceCode",null)
+                .param("cityBranch.id",null)
+                .param("cityBranch.provinceCode",null)
+                .param("cityBranch.cityCode",null)
                 .param("roles[0].id","1")
-                .param("roles[1].id","2")
-                .param("roles[2].id","3")
+//                .param("roles[1].id","2")
+//                .param("roles[2].id","3")
                 .param("thirdAccount.dept","临时部门")
                 .param("thirdAccount.group","临时组")
                 .param("thirdAccount.name","临时姓名")

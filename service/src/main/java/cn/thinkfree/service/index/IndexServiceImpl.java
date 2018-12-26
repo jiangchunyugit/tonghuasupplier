@@ -60,7 +60,7 @@ public class IndexServiceImpl implements IndexService  {
             return Collections.emptyList();
         }
 
-        List<String> resourceCode = userVO.getResources().stream().map(SystemResource::getCode).collect(Collectors.toList());
+        List<String> resourceCode = userVO.getResources().stream().map(SystemResource::getCode).distinct().collect(Collectors.toList());
         if(resourceCode.isEmpty()){
             return Collections.EMPTY_LIST;
         }
@@ -129,14 +129,6 @@ public class IndexServiceImpl implements IndexService  {
      */
     private List<IndexMenuVO> convertMenus(List<Menu> menus) {
         List<Menu> root = menus.stream().filter(m -> MenuType.ROOT.code.equals(m.getPid())).collect(Collectors.toList());
-        return root.stream().map(r->{
-            IndexMenuVO indexMenuVO = new IndexMenuVO(r);
-            indexMenuVO.setChild(menus.stream()
-                    .filter(m -> r.getId().equals(m.getPid()))
-                    .map(m->new IndexMenuVO(m))
-                    .collect(Collectors.toList())
-            );
-            return indexMenuVO;
-        }).collect(Collectors.toList());
+        return root.stream().map(r-> new IndexMenuVO(r,menus)).collect(Collectors.toList());
     }
 }
