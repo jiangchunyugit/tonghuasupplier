@@ -339,6 +339,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String ownerRoleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.OWNER_POWER);
         String designerRoleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
         Map<String,OrderUser> orderUserMap = getOrderUserMap(orderUsers, ownerRoleCode, designerRoleCode);
+        List<String> staffIds = new ArrayList<>();
         for (DesignerOrder designerOrder : designerOrders) {
             CompanyInfo companyInfo = companyInfoMap.get(designerOrder.getCompanyId());
             Project project = projectMap.get(designerOrder.getProjectNo());
@@ -347,9 +348,25 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setProvinceName(provinceMap.get(project.getProvince()));
             designerOrderVo.setCityName(cityMap.get(project.getCity()));
             designerOrderVo.setRegionName(areaMap.get(project.getRegion()));
+            staffIds.add(designerOrderVo.getDesignerName());
             designerOrderVos.add(designerOrderVo);
         }
+        queryStaffMsg(designerOrderVos, staffIds);
         return designerOrderVos;
+    }
+
+    private void queryStaffMsg(List<DesignerOrderVo> designerOrderVos, List<String> staffIds) {
+        EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+        employeeMsgExample.createCriteria().andUserIdIn(staffIds);
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+        Map<String,EmployeeMsg> employeeMsgMap = ReflectUtils.listToMap(employeeMsgs,"userId");
+        for(DesignerOrderVo designerOrderVo : designerOrderVos){
+            EmployeeMsg employeeMsg = employeeMsgMap.get(designerOrderVo.getDesignerName());
+            if(employeeMsg == null){
+                continue;
+            }
+            designerOrderVo.setDesignerName(employeeMsg.getRealName());
+        }
     }
 
     private List<String> getProjectNos(String provinceCode, String cityCode, String areaCode, String projectNo, String orderSource, String money, List<String> queryProjectNo) {
@@ -504,10 +521,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         String designerId = null;
         if(orderUser != null){
             designerId = orderUser.getUserId();
-            EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
-            if (employeeMsg != null) {
-                designerOrderVo.setDesignerName(employeeMsg.getRealName());
-            }
+            designerOrderVo.setDesignerName(designerId);
         }
         try {
             designerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
@@ -741,6 +755,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String,OrderUser> orderUserMap = getOrderUserMap(orderUsers, ownerRoleCode, designerRoleCode);
         DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder,
                 project, msgVoMap, projectSourceMap, huxingMap, orderUserMap, ownerRoleCode, designerRoleCode);
+        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerOrderVo.getDesignerName());
+        if(employeeMsg != null){
+            designerOrderVo.setDesignerName(employeeMsg.getRealName());
+        }
         Map<String, String> provinceMap = basicsService.getProvince(project.getProvince());
         Map<String, String> cityMap = basicsService.getCity(project.getCity());
         Map<String, String> areaMap = basicsService.getArea(project.getRegion());
