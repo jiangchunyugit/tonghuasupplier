@@ -17,6 +17,7 @@ import cn.thinkfree.service.construction.ConstructOrderPayService;
 import cn.thinkfree.service.construction.ConstructOrderService;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.construction.ConstructionStateService;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
@@ -95,6 +96,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private ConstructOrderService constructOrderService;
     @Autowired
     private ConstructOrderPayService constructOrderPayService;
+    @Autowired
+    private ContractService contractService;
 
     @Override
     public AfInstanceDetailVO start(String projectNo, String userId, String configNo, Integer scheduleSort) {
@@ -152,6 +155,14 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         } else if (AfConfigs.CHECK_REPORT.configNo.equals(configNo)){
             List<AfCheckItemVO> checkItems = getCheckReportCheckItems(projectNo, scheduleSort);
             instanceDetailVO.setCheckItems(checkItems);
+        } else if (AfConfigs.CHANGE_ORDER.configNo.equals(configNo)){
+            ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+            if (constructionOrder == null) {
+                LOGGER.error("未查询到施工订单，projectNo:{}", projectNo);
+                throw new RuntimeException();
+            }
+            String contractAmount = contractService.getConstructionOrderAmount(constructionOrder.getOrderNo());
+            instanceDetailVO.setContractAmount(contractAmount);
         } else if (AfConfigs.CHANGE_COMPLETE.configNo.equals(configNo)){
             AfInstance instance = getRelevanceChangeOrderInstance(projectNo);
             if (instance == null) {
