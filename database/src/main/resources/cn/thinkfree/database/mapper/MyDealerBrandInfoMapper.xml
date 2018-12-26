@@ -116,7 +116,7 @@
 FROM
 	pc_agency_contract contract
 	LEFT JOIN pc_dealer_brand_info brand ON contract.company_id = brand.company_id
-	AND contract.agency_code = brand.agency_code
+	AND contract.dealer_company_id = brand.agency_code
 	AND contract.brand_no = brand.brand_no
 	AND contract.category_no = brand.category_no
 WHERE

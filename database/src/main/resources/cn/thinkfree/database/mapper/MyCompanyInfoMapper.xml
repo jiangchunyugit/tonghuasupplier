@@ -211,9 +211,9 @@
         left join (select company_id, agency_code, count(id)
                     from pc_dealer_brand_info where audit_status in (0, 5)
                     group by company_id, agency_code) orderIndex on info.company_id = orderIndex.company_id
-        LEFT JOIN ( SELECT company_id, agency_code, string_agg (brand_name, '、' ) brand_name FROM pc_agency_contract
-    WHERE status = 8 GROUP BY company_id, agency_code ) brand ON info.company_id = brand.company_id
-        AND info.dealer_company_id = brand.agency_code
+        LEFT JOIN ( SELECT company_id, dealer_company_id, string_agg (brand_name, '、' ) brand_name FROM pc_agency_contract
+    WHERE status = 8 GROUP BY company_id, dealer_company_id ) brand ON info.company_id = brand.company_id
+        AND info.dealer_company_id = brand.dealer_company_id
     <where>
         and info.company_classify = 2
         <if test="relationMap != null">
