@@ -1810,7 +1810,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         for (ProjectData projectData : projectDataList) {
             if (projectData.getType() == 1) {
                 newDataVo.setQuantityDataJson(projectData.getDataJson());
-                newDataVo.setDesignDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
+                newDataVo.setQuantityDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
             } else if (projectData.getType() == 2) {
                 newDataVo.setDesignDataJson(projectData.getDataJson());
                 newDataVo.setDesignDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
