@@ -25,7 +25,7 @@
         b.taxpayer_registration_number, b.company_register_no, b.organization_code_url,
         province.province_name, city.city_name, area.area_name, registerProvince.province_name register_province_name,
 				registerCity.city_name register_city_name, registerArea.area_name register_area_name, b.work_card_valid_start_date,
-				b.work_card_valid_end_date
+				b.work_card_valid_end_date, b.dealer_company_id, b.business_duration
     </sql>
     <select id="findCompanyTemporaryInfo" parameterType="java.lang.String" resultMap="MyBaseResultMap">
     SELECT

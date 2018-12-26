@@ -1,12 +1,12 @@
 package cn.thinkfree.service.companysubmit;
 
+import java.util.Map;
 import cn.thinkfree.database.model.JoinStatus;
 import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.*;
 import com.github.pagehelper.PageInfo;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
 
 /**
  * @author ying007
@@ -41,15 +41,22 @@ public interface CompanySubmitService {
      * @return true false
      */
     boolean upCompanyInfo(CompanySubmitVo companySubmitVo);
-    
-    
+
+
     /**
      * 运营审批
      * @author lvqidong
-     * 
+     *
      */
 
     Map<String,Object>  auditContract(PcAuditInfoVO pcAuditInfo);
+
+    /**
+     * 运营审批经销商
+     * @param pcAuditInfo
+     * @return
+     */
+    Map<String,Object>  auditDealerCompany(PcAuditInfoVO pcAuditInfo);
 
     /**
      * 公司列表
@@ -57,6 +64,13 @@ public interface CompanySubmitService {
      * @return
      */
     PageInfo<CompanyListVo> list(CompanyListSEO companyListSEO);
+
+    /**
+     * 经销商公司列表
+     * @param companyListSEO
+     * @return
+     */
+    PageInfo<CompanyListVo> dealerList(CompanyListSEO companyListSEO);
 
     /**
      * 列表导出
@@ -136,13 +150,6 @@ public interface CompanySubmitService {
      * @return
      */
     Map<String, Object> updateCompanyInfo(CompanySubmitVo companySubmitVo);
-
-    /**
-     * 公司经销商查询list
-     * @param companyListSEO
-     * @return
-     */
-    PageInfo<CompanyListVo> agencyList(CompanyListSEO companyListSEO);
 
     /**
      * 入驻公司修改公司状态

@@ -36,7 +36,7 @@ public class CompanySubmitVo {
     /**
      * 公司类型  比如：有限公司，集体公司
      */
-    @ApiModelProperty("公司类型：0:有限责任公司,1:股份有限公司,2:个人独资企业,3:合伙企业,4:全民所有制企业,5:集体所有制企业'")
+    @ApiModelProperty("公司类型：0:有限责任公司,1:股份有限公司,2:个人独资企业,3:合伙企业,4:全民所有制企业,5:集体所有制企业6:个人（经销商）7：公司（经销商'")
     private String companyTypeName;
 
     public String getCompanyTypeName() {

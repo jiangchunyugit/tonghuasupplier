@@ -32,7 +32,8 @@
         info.phone, info.business_photo_url, info.work_photo_url, info.deposit_money, info.lbs, info.is_delete, info.city_code,
         info.area_code, info.telephone, info.content, info.audit_status, info.lefal_card_up_url, info.lefal_card_down_url,
         info.work_card_from, info.work_card_indate, info.update_time, info.work_code, info.company_classify, info.site_company_id,
-        info.business_type, info.platform_type, info.work_card_valid_start_date, info.work_card_valid_end_date, info.dealer_company_id
+        info.business_type, info.platform_type, info.work_card_valid_start_date, info.work_card_valid_end_date,
+        info.dealer_company_id, info.business_duration
     </sql>
 
   <select id="selectRelationMap" parameterType="cn.thinkfree.database.model.CompanyInfo" resultType="java.lang.String">
@@ -199,8 +200,8 @@
 <select id="dealerList" parameterType="cn.thinkfree.database.vo.CompanyListSEO" resultMap="CompanyListVo">
       SELECT
             <include refid="Base_Column_List_VO" />,province.province_name, city.city_name,
-            branch.company_name siteProvinceName,
-            cityBranch.city_branch_name siteCityName, brand.brand_name, orderIndex.count brand_count
+            branch.company_name site_province_name,
+            cityBranch.city_branch_name site_city_name, brand.brand_name, orderIndex.count brand_count
     FROM
         company_info info
         LEFT JOIN province province ON info.province_code = province.province_code
@@ -208,13 +209,18 @@
         left join pc_branch_company branch on info.branch_company_code = branch.branch_company_code
         left join pc_city_branch cityBranch on info.city_branch_code = cityBranch.city_branch_code
         left join (select company_id, agency_code, count(id)
-                    from pc_dealer_brand_info where audit_status = 0
+                    from pc_dealer_brand_info where audit_status in (0, 5)
                     group by company_id, agency_code) orderIndex on info.company_id = orderIndex.company_id
-        LEFT JOIN ( SELECT company_id, agency_code, string_agg ( brand_name, '、' ) brand_name FROM pc_dealer_brand_info
-            WHERE audit_status = 3 GROUP BY company_id, agency_code ) brand ON info.company_id = brand.company_id
-        AND info.dealer_company_id = brand.agency_code
+        LEFT JOIN ( SELECT company_id, dealer_company_id, string_agg (brand_name, '、' ) brand_name FROM pc_agency_contract
+    WHERE status = 8 GROUP BY company_id, dealer_company_id ) brand ON info.company_id = brand.company_id
+        AND info.dealer_company_id = brand.dealer_company_id
     <where>
         and info.company_classify = 2
+        <if test="relationMap != null">
+            and info.site_company_id in <foreach item="item" index="index" collection="relationMap" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        </if>
         <if test="branchCompanyCode != null and branchCompanyCode != ''">
             AND info.branch_company_code = #{branchCompanyCode}
         </if>
@@ -235,6 +241,9 @@
         </if>
         <if test="cityCode != null and cityCode != ''">
             AND info.city_code = #{cityCode}
+        </if>
+        <if test="roleId != null and roleId != ''">
+            AND info.role_id = #{roleId}
         </if>
     </where>
     order by orderIndex.count, info.update_time

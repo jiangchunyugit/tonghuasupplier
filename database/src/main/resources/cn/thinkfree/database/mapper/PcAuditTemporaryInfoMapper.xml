@@ -73,6 +73,9 @@
     <result column="organization_code_url" jdbcType="VARCHAR" property="organizationCodeUrl" />
     <result column="work_card_valid_start_date" jdbcType="TIMESTAMP" property="workCardValidStartDate" />
     <result column="work_card_valid_end_date" jdbcType="TIMESTAMP" property="workCardValidEndDate" />
+    <result column="dealer_company_id" jdbcType="VARCHAR" property="dealerCompanyId" />
+    <result column="business_duration" jdbcType="TIMESTAMP" property="businessDuration" />
+    <result column="change_desc" jdbcType="VARCHAR" property="changeDesc" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <!--
@@ -156,7 +159,7 @@
     change_status, change_date, account_province, account_city, account_district, account_name, 
     card_name, account_branch_name, account_number, license_url, account_area, account_type, 
     taxpayer_registration_number, company_register_no, organization_code_url, work_card_valid_start_date, 
-    work_card_valid_end_date
+    work_card_valid_end_date, dealer_company_id, business_duration, change_desc
   </sql>
   <select id="selectByExample" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfoExample" resultMap="BaseResultMap">
     <!--
@@ -214,7 +217,8 @@
       license_url, account_area, account_type, 
       taxpayer_registration_number, company_register_no, 
       organization_code_url, work_card_valid_start_date, 
-      work_card_valid_end_date)
+      work_card_valid_end_date, dealer_company_id, 
+      business_duration, change_desc)
     values (#{id,jdbcType=INTEGER}, #{companyId,jdbcType=VARCHAR}, #{companyName,jdbcType=VARCHAR}, 
       #{roleId,jdbcType=VARCHAR}, #{provinceCode,jdbcType=SMALLINT}, #{address,jdbcType=VARCHAR}, 
       #{legalName,jdbcType=VARCHAR}, #{legalPhone,jdbcType=VARCHAR}, #{legalIdCard,jdbcType=VARCHAR}, 
@@ -238,7 +242,8 @@
       #{licenseUrl,jdbcType=VARCHAR}, #{accountArea,jdbcType=VARCHAR}, #{accountType,jdbcType=SMALLINT}, 
       #{taxpayerRegistrationNumber,jdbcType=VARCHAR}, #{companyRegisterNo,jdbcType=VARCHAR}, 
       #{organizationCodeUrl,jdbcType=VARCHAR}, #{workCardValidStartDate,jdbcType=TIMESTAMP}, 
-      #{workCardValidEndDate,jdbcType=TIMESTAMP})
+      #{workCardValidEndDate,jdbcType=TIMESTAMP}, #{dealerCompanyId,jdbcType=VARCHAR}, 
+      #{businessDuration,jdbcType=TIMESTAMP}, #{changeDesc,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="cn.thinkfree.database.model.PcAuditTemporaryInfo">
     <!--
@@ -448,6 +453,15 @@
       <if test="workCardValidEndDate != null">
         work_card_valid_end_date,
       </if>
+      <if test="dealerCompanyId != null">
+        dealer_company_id,
+      </if>
+      <if test="businessDuration != null">
+        business_duration,
+      </if>
+      <if test="changeDesc != null">
+        change_desc,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -650,6 +664,15 @@
       </if>
       <if test="workCardValidEndDate != null">
         #{workCardValidEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="dealerCompanyId != null">
+        #{dealerCompanyId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessDuration != null">
+        #{businessDuration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="changeDesc != null">
+        #{changeDesc,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -871,6 +894,15 @@
       <if test="record.workCardValidEndDate != null">
         work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP},
       </if>
+      <if test="record.dealerCompanyId != null">
+        dealer_company_id = #{record.dealerCompanyId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessDuration != null">
+        business_duration = #{record.businessDuration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.changeDesc != null">
+        change_desc = #{record.changeDesc,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -948,7 +980,10 @@
       company_register_no = #{record.companyRegisterNo,jdbcType=VARCHAR},
       organization_code_url = #{record.organizationCodeUrl,jdbcType=VARCHAR},
       work_card_valid_start_date = #{record.workCardValidStartDate,jdbcType=TIMESTAMP},
-      work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP}
+      work_card_valid_end_date = #{record.workCardValidEndDate,jdbcType=TIMESTAMP},
+      dealer_company_id = #{record.dealerCompanyId,jdbcType=VARCHAR},
+      business_duration = #{record.businessDuration,jdbcType=TIMESTAMP},
+      change_desc = #{record.changeDesc,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>

@@ -117,7 +117,7 @@ public class PcAuditInfo extends BaseModel {
      *
      * @mbg.generated
      */
-    @ApiModelProperty(value="contractNumber合同编号/规则编号")
+    @ApiModelProperty(value="contractNumber合同编号/规则编号/品牌id")
     private String contractNumber;
 
     /**

@@ -6,6 +6,7 @@ import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.vo.*;
@@ -51,6 +52,8 @@ public class DesignerServiceImpl implements DesignerService {
     private RoleFunctionService functionService;
     @Autowired
     private CompanyInfoMapper companyInfoMapper;
+    @Autowired
+    private DesignDispatchService designDispatchService;
 
     /**
      * @param designerName          设计师用户名
@@ -133,6 +136,13 @@ public class DesignerServiceImpl implements DesignerService {
         }
         if (!StringUtils.isEmpty(cardNo)) {
             msgExampleCriteria.andCertificateLike("%" + cardNo + "%");
+        }
+        List<String> observeCompanyIds = designDispatchService.getCompanyIds();
+        if(observeCompanyIds != null && observeCompanyIds.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        if(observeCompanyIds != null){
+            msgExampleCriteria.andCompanyIdIn(observeCompanyIds);
         }
         long total = employeeMsgMapper.countByExample(employeeMsgExample);
         if(total == 0){

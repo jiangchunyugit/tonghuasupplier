@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.Map;
 
 
@@ -81,7 +80,6 @@ public class CompanyInfoSubmitController extends AbsBaseController {
         PcAuditInfo auditInfo = companySubmitService.findAuditCase(companyId);
         return sendJsonData(success, "操作成功", auditInfo);
     }
-
 
     /**
      * 审批详情查询
@@ -149,7 +147,6 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @MyRespBody
     public MyRespBundle<String> auditChangeCompany(@ApiParam("审批参数")PcAuditInfoVO auditInfoVO){
         String msg = companySubmitService.auditChangeCompany(auditInfoVO);
-
         return sendJsonData(ResultMessage.SUCCESS, msg);
 
     }
@@ -178,13 +175,13 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     }
 
     /**
-     * 公司经销商查询list
+     * 经销商公司资质查询list
      */
-    @RequestMapping(value = "/agencyList", method = RequestMethod.GET)
+    @RequestMapping(value = "/dealerList", method = RequestMethod.GET)
     @MyRespBody
-    @ApiOperation(value="前端--运营后台----公司管理--装饰/设计公司--列表--李阳")
-    public MyRespBundle<PageInfo<CompanyListVo>> agencyList(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
-        PageInfo<CompanyListVo> pageInfo = companySubmitService.agencyList(companyListSEO);
+    @ApiOperation(value="前端--运营后台----公司管理--经销商公司--列表--李阳")
+    public MyRespBundle<PageInfo<CompanyListVo>> dealerList(@ApiParam("条件查询参数")CompanyListSEO companyListSEO){
+        PageInfo<CompanyListVo> pageInfo = companySubmitService.dealerList(companyListSEO);
         return sendJsonData(success, "操作成功", pageInfo);
     }
 
@@ -202,7 +199,6 @@ public class CompanyInfoSubmitController extends AbsBaseController {
      * 查看合同
      * @author lqd
      * @return Message
-     * 
      */
     @ApiOperation(value = "前端--运营后台----公司管理--装饰/设计公司--查看合同----李阳", notes = "查看合同",consumes = "application/text")
     @PostMapping("/getContractDetailInfo")
@@ -277,6 +273,22 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     public MyRespBundle<Map<String,Object>> auditCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
 
         Map<String,Object> result = companySubmitService.auditContract(pcAuditInfo);
+
+        return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 运营人员审批经销商
+     * @author lqd
+     * @return Message
+     */
+    @ApiOperation(value = "前端--运营后台----公司管理--公司详情--资质审批经销商--李阳", notes = "运营审核")
+    @PostMapping("/auditDealerCompany")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
+    public MyRespBundle<Map<String,Object>> auditDealerCompany(@ApiParam("审批参数")PcAuditInfoVO pcAuditInfo){
+
+        Map<String,Object> result = companySubmitService.auditDealerCompany(pcAuditInfo);
 
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
