@@ -51,4 +51,6 @@ public class AfInstanceDetailVO {
     private String relevancyDate;
     @ApiModelProperty("最大延期天数")
     private Integer maxDelayDays;
+    @ApiModelProperty("合同金额")
+    private String contractAmount;
 }

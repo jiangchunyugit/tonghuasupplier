@@ -1616,6 +1616,28 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		return false;
 	}
 
+	public String getConstructionOrderAmount(String orderNo) {
+
+		OrderContractExample example = new OrderContractExample();
+		example.createCriteria().andOrderNumberEqualTo(orderNo);
+		// 查询合同
+		List<OrderContract> list = orderContractMapper.selectByExample(example);
+		if(list == null || list.size() == 0){
+			printErrorMes("订单编号为orderNo:{} 合同不存",orderNo);
+			throw new RuntimeException("订单编号为orderNo:"+orderNo+"合同不存");
+		}
+		ContractTermsExample example1 = new ContractTermsExample();
+		example1.createCriteria().andContractNumberEqualTo(list.get(0).getContractNumber());
+		List<ContractTerms> childListr = pcContractTermsMapper.selectByExample(example1);
+		Map<String, String> chMap = new HashMap<>(childListr.size());
+		for (int i = 0; i < childListr.size(); i++) {
+			chMap.put(childListr.get(i).getContractDictCode(), childListr.get(i).getContractValue());
+		}
+		return chMap.get("c17")==null?"0":String.valueOf(chMap.get("c17"));
+	}
+
+
+
 
 	@Override
 	public Map<String, String> getDesignerContractInfo(String contractNo) {
@@ -1628,6 +1650,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		}
 		return chMap;
 	}
+
+	
 
 	/**
 	 * @return
