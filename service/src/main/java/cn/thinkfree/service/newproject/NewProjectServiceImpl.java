@@ -701,7 +701,13 @@ public class NewProjectServiceImpl implements NewProjectService {
             orderTaskSortVoList.add(orderTaskSortVo);
         }
         designerOrderDetailVo.setOrderTaskSortVoList(orderTaskSortVoList);
-        designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());
+        if (designerOrder.getComplaintState() == 2) {
+            designerOrderDetailVo.setTaskStage(DesignStateEnum.STATE_261.getState());
+        } else if (designerOrder.getComplaintState() == 3) {
+            designerOrderDetailVo.setTaskStage(DesignStateEnum.STATE_262.getState());
+        }else {
+            designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());
+        }
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
         List<DesignStateEnum> allCancelState = DesignStateEnum.getAllCancelState();
         designerOrderDetailVo.setCancle(allCancelState.contains(DesignStateEnum.queryByState(designerOrder.getOrderStage())));
