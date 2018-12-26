@@ -14,6 +14,7 @@
         <result column="phone" property="phone"/>
         <result column="email" property="email"/>
         <result column="roles" property="roles"/>
+        <result column="memo" property="memo"/>
     </resultMap>
 
     <resultMap id="pcUserInfoVo" type="cn.thinkfree.database.vo.PcUserInfoVo" extends="BaseResultMap">
@@ -231,6 +232,7 @@
             pc_user_info.phone,
             pc_user_info.branch_company_id,
             pc_user_info.city_branch_company_id,
+            pc_user_info.memo,
             pc_city_branch.city_branch_name,
             pc_branch_company.company_name,
             hr_people_entity.people_group,
