@@ -4,13 +4,10 @@ import cn.thinkfree.core.annotation.MyRespBody;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
-import cn.thinkfree.database.model.PcApplyInfo;
-import cn.thinkfree.database.model.UserRegister;
 import cn.thinkfree.database.vo.CompanyApplySEO;
 import cn.thinkfree.database.vo.PcApplyInfoSEO;
 import cn.thinkfree.database.vo.PcApplyInfoVo;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
-import cn.thinkfree.service.pcUser.PcUserInfoService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -108,7 +105,6 @@ public class CompanyApplyController extends AbsBaseController {
     }
 
 
-    //申请列表条数
     @RequestMapping(value = "/countApply", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--运营后台--设计公司/装饰公司--申请信息--个数查询--李阳")

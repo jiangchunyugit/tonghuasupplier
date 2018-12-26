@@ -27,25 +27,25 @@ public class PcApplyInfoSEO extends PcApplyInfo {
     private String siteCompanyId;
 
     @ApiModelProperty(value = "分公司编号")
-    private String branchCompanyId;
+    private String branchCompanyCode;
 
     @ApiModelProperty(value = "城市分站编号")
-    private String cityBranchCompanyId;
+    private String cityBranchCode;
 
-    public String getBranchCompanyId() {
-        return branchCompanyId;
+    public String getBranchCompanyCode() {
+        return branchCompanyCode;
     }
 
-    public void setBranchCompanyId(String branchCompanyId) {
-        this.branchCompanyId = branchCompanyId;
+    public void setBranchCompanyCode(String branchCompanyCode) {
+        this.branchCompanyCode = branchCompanyCode;
     }
 
-    public String getCityBranchCompanyId() {
-        return cityBranchCompanyId;
+    public String getCityBranchCode() {
+        return cityBranchCode;
     }
 
-    public void setCityBranchCompanyId(String cityBranchCompanyId) {
-        this.cityBranchCompanyId = cityBranchCompanyId;
+    public void setCityBranchCode(String cityBranchCode) {
+        this.cityBranchCode = cityBranchCode;
     }
 
     public String getSiteCompanyId() {

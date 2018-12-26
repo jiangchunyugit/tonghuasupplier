@@ -12,7 +12,7 @@ import java.util.Date;
 @ApiModel("公司列表返回数据")
 public class CompanyListVo extends CompanyInfo {
 
-    @ApiModelProperty(value = "审核中的品牌数量")
+    @ApiModelProperty(value = "审核和变更中的品牌数量")
     private String brandCount;
     /**
      * 省
