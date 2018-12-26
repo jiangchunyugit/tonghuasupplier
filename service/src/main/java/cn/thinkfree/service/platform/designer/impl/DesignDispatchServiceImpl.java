@@ -138,8 +138,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Override
     public PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
-            String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, int companyState, String optionUserName,
-            String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
+            String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, int companyState,
+            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
         if (orderTpye == null) {
             throw new RuntimeException("请输入订单类别");
         }
@@ -190,35 +190,33 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (designerOrders.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
-        List<DesignerOrderVo> designerOrderVos = new ArrayList<>();
-        Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
-        projectNos = ReflectUtils.getList(designerOrders, "projectNo");
-        companyIds = ReflectUtils.getList(designerOrders, "companyId");
-        OrderUserExample userExample = new OrderUserExample();
-        userExample.createCriteria().andProjectNoIn(projectNos);
-        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
-        List<String> userIds = ReflectUtils.getList(orderUsers, "userId");
-        Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(companyIds);
-        Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
-        Map<String, Project> projectMap = getProjectMap(projectNos);
-        Map<String, String> provinceMap = basicsService.getProvince();
-        Map<String, String> cityMap = basicsService.getCity();
-        Map<String, String> areaMap = basicsService.getArea();
-        for (DesignerOrder designerOrder : designerOrders) {
-            CompanyInfo companyInfo = companyInfoMap.get(designerOrder.getCompanyId());
-            Project project = projectMap.get(designerOrder.getProjectNo());
-            DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfo, stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
-            designerOrderVo.setProvinceName(provinceMap.get(project.getProvince()));
-            designerOrderVo.setCityName(cityMap.get(project.getCity()));
-            designerOrderVo.setRegionName(areaMap.get(project.getRegion()));
-            designerOrderVos.add(designerOrderVo);
-        }
+        List<DesignerOrderVo> designerOrderVos = getDesignerOrderVos(stateType, designerOrders);
         PageVo<List<DesignerOrderVo>> pageVo = new PageVo<>();
         pageVo.setPageSize(pageSize);
         pageVo.setTotal(total);
         pageVo.setData(designerOrderVos);
         pageVo.setPageIndex(pageIndex);
         return pageVo;
+    }
+
+    /**
+     * 项目角色拼接
+     * @param orderUsers
+     * @param ownerRoleCode
+     * @param designerRoleCode
+     * @return
+     */
+    private Map<String,OrderUser> getOrderUserMap(List<OrderUser> orderUsers, String ownerRoleCode, String designerRoleCode){
+        Map<String,OrderUser> orderUserMap = new HashMap<>();
+        for(OrderUser orderUser : orderUsers){
+            if(ownerRoleCode != null && ownerRoleCode.equals(orderUser.getRoleCode())){
+                orderUserMap.put(ownerRoleCode + "-" + orderUser.getProjectNo(), orderUser);
+            }
+            if(designerRoleCode != null && designerRoleCode.equals(orderUser.getRoleCode())){
+                orderUserMap.put(designerRoleCode + "-" + orderUser.getProjectNo(), orderUser);
+            }
+        }
+        return orderUserMap;
     }
 
     private Map<String, Project> getProjectMap(List<String> projectNos) {
@@ -283,10 +281,26 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (designerOrders.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
+        List<DesignerOrderVo> designerOrderVos = getDesignerOrderVos(stateType, designerOrders);
+        PageVo<List<DesignerOrderVo>> pageVo = new PageVo<>();
+        pageVo.setPageSize(pageSize);
+        pageVo.setTotal(total);
+        pageVo.setData(designerOrderVos);
+        pageVo.setPageIndex(pageIndex);
+        return pageVo;
+    }
+
+    /**
+     * 数据拼接
+     * @param stateType
+     * @param designerOrders
+     * @return
+     */
+    private List<DesignerOrderVo> getDesignerOrderVos(int stateType, List<DesignerOrder> designerOrders) {
+        List<String> companyIds;
+        List<String> projectNos;
         List<DesignerOrderVo> designerOrderVos = new ArrayList<>();
         Map<String, DesignerStyleConfigVo> designerStyleConfigMap = queryDesignerStyleConfig();
-        List<String> companyIds = new ArrayList<>();
-        companyIds.add(companyId);
         companyIds = ReflectUtils.getList(designerOrders, "companyId");
         projectNos = ReflectUtils.getList(designerOrders, "projectNo");
         OrderUserExample userExample = new OrderUserExample();
@@ -299,21 +313,24 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String, String> provinceMap = basicsService.getProvince();
         Map<String, String> cityMap = basicsService.getCity();
         Map<String, String> areaMap = basicsService.getArea();
+        List<BasicsData> projectSourceList = basicsService.queryData(BasicsDataParentEnum.PROJECT_SOURCE.getCode());
+        Map<String,BasicsData> projectSourceMap = ReflectUtils.listToMap(projectSourceList,"basicsCode");
+        List<BasicsData> huxingList = basicsService.queryData(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode());
+        Map<String,BasicsData> huxingMap = ReflectUtils.listToMap(huxingList,"basicsCode");
+        String ownerRoleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.OWNER_POWER);
+        String designerRoleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
+        Map<String,OrderUser> orderUserMap = getOrderUserMap(orderUsers, ownerRoleCode, designerRoleCode);
         for (DesignerOrder designerOrder : designerOrders) {
             CompanyInfo companyInfo = companyInfoMap.get(designerOrder.getCompanyId());
             Project project = projectMap.get(designerOrder.getProjectNo());
-            DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfo, stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
+            DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfo, stateType, designerStyleConfigMap, designerOrder, project,
+                    msgVoMap, projectSourceMap, huxingMap, orderUserMap, ownerRoleCode, designerRoleCode);
             designerOrderVo.setProvinceName(provinceMap.get(project.getProvince()));
             designerOrderVo.setCityName(cityMap.get(project.getCity()));
             designerOrderVo.setRegionName(areaMap.get(project.getRegion()));
             designerOrderVos.add(designerOrderVo);
         }
-        PageVo<List<DesignerOrderVo>> pageVo = new PageVo<>();
-        pageVo.setPageSize(pageSize);
-        pageVo.setTotal(total);
-        pageVo.setData(designerOrderVos);
-        pageVo.setPageIndex(pageIndex);
-        return pageVo;
+        return designerOrderVos;
     }
 
     private List<String> getProjectNos(String provinceCode, String cityCode, String areaCode, String projectNo, String orderSource, String money, List<String> queryProjectNo) {
@@ -415,31 +432,24 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      */
     private DesignerOrderVo getDesignerOrderVo(
             CompanyInfo companyInfo, int stateType, Map<String, DesignerStyleConfigVo> designerStyleConfigMap, DesignerOrder DesignerOrder,
-            Project project, Map<String, UserMsgVo> msgVoMap) {
+            Project project, Map<String, UserMsgVo> msgVoMap, Map<String,BasicsData> projectSourceMap, Map<String,BasicsData> huxingMap,
+            Map<String,OrderUser> orderUserMap, String ownerRoleCode, String designerRoleCode) {
         DesignerOrderVo designerOrderVo = new DesignerOrderVo();
         designerOrderVo.setProjectNo(project.getProjectNo());
         designerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
-        String ownerId = projectUserService.queryUserIdOne(project.getProjectNo(), RoleFunctionEnum.OWNER_POWER);
-        UserMsgVo ownerMsg = msgVoMap.get(ownerId);
+        OrderUser orderUser = orderUserMap.get(ownerRoleCode + "-" + project.getProjectNo());
+        UserMsgVo ownerMsg = null;
+        if(orderUser != null){
+            String ownerId = orderUser.getUserId();
+            ownerMsg = msgVoMap.get(ownerId);
+        }
         if (ownerMsg != null) {
             designerOrderVo.setOwnerName(ownerMsg.getUserName());
             designerOrderVo.setOwnerPhone(ownerMsg.getUserPhone());
         }
-        designerOrderVo.setAddress(getProjectAdress(project.getProjectNo()));
-        if (StringUtils.isNotBlank(project.getProvince())) {
-            Map<String, String> province = basicsService.getProvince(project.getProvince());
-            designerOrderVo.setProvinceName(province.get(project.getProvince()));
-        }
-        if (StringUtils.isNotBlank(project.getCity())) {
-            Map<String, String> city = basicsService.getCity(project.getCity());
-            designerOrderVo.setCityName(city.get(project.getCity()));
-        }
-        if (StringUtils.isNotBlank(project.getRegion())) {
-            Map<String, String> area = basicsService.getArea(project.getRegion());
-            designerOrderVo.setRegionName(area.get(project.getRegion()));
-        }
+        designerOrderVo.setAddress(project.getAddressDetail());
         try {
-            BasicsData basicsData = basicsService.queryDataOne(BasicsDataParentEnum.PROJECT_SOURCE.getCode(), project.getOrderSource() + "");
+            BasicsData basicsData = projectSourceMap.get(project.getOrderSource() + "");
             String sourceName = null;
             if (basicsData != null) {
                 sourceName = basicsData.getBasicsName();
@@ -449,7 +459,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setOrderSource("未知");
         }
         try {
-            BasicsData huxing = basicsService.queryDataOne(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode(), project.getHouseHuxing() + "");
+            BasicsData huxing = huxingMap.get(project.getHouseHuxing() + "");
             String huxingName = null;
             if (huxing != null) {
                 huxingName = huxing.getBasicsName();
@@ -471,10 +481,14 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setCompanyName(companyInfo.getCompanyName());
             designerOrderVo.setCompanyState(companyInfo.getAuditStatus());
         }
-        String designerId = projectUserService.queryUserIdOne(project.getProjectNo(), RoleFunctionEnum.DESIGN_POWER);
-        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
-        if (employeeMsg != null) {
-            designerOrderVo.setDesignerName(employeeMsg.getRealName());
+        orderUser = orderUserMap.get(designerRoleCode + "-" + project.getProjectNo());
+        String designerId = null;
+        if(orderUser != null){
+            designerId = orderUser.getUserId();
+            EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(designerId);
+            if (employeeMsg != null) {
+                designerOrderVo.setDesignerName(employeeMsg.getRealName());
+            }
         }
         try {
             designerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
@@ -483,68 +497,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         designerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
         designerOrderVo.setProjectMoney(project.getDecorationBudget() + "");
-        OptionLogExample logExample = new OptionLogExample();
-        logExample.createCriteria().andLinkNoEqualTo(DesignerOrder.getOrderNo()).andOptionTypeEqualTo("DO");
-        logExample.setOrderByClause(" option_time desc limit 1");
-        List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
-        if (!optionLogs.isEmpty()) {
-            OptionLog optionLog = optionLogs.get(0);
-            designerOrderVo.setOptionUserName(optionLog.getOptionUserName());
-            designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
-        }
         return designerOrderVo;
-    }
-
-    /**
-     * 根据项目编号获取地址信息
-     *
-     * @param projectNo
-     * @return
-     */
-    public String getProjectAdress(String projectNo) {
-        StringBuilder builder = new StringBuilder();
-        ProjectExample example = new ProjectExample();
-        ProjectExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
-        criteria.andProjectNoEqualTo(projectNo);
-        List<Project> projects = projectMapper.selectByExample(example);
-        if (projects.size() == 0) {
-            return "";
-        }
-        Project project = projects.get(0);
-        //查询省份
-        if (project.getProvince() != null && !project.getProvince().trim().isEmpty()) {
-            ProvinceExample provinceExample = new ProvinceExample();
-            ProvinceExample.Criteria provinceCriteria = provinceExample.createCriteria();
-            provinceCriteria.andProvinceCodeEqualTo(project.getProvince());
-            List<Province> provinces = provinceMapper.selectByExample(provinceExample);
-            if (provinces.size() > 0) {
-                builder.append(provinces.get(0).getProvinceName());
-            }
-        }
-        //查询城市
-        if (project.getCity() != null && !project.getCity().trim().isEmpty()) {
-            CityExample ciytExample = new CityExample();
-            CityExample.Criteria cityCriteria = ciytExample.createCriteria();
-            cityCriteria.andCityCodeEqualTo(project.getCity());
-            List<City> cities = cityMapper.selectByExample(ciytExample);
-            if (cities.size() > 0) {
-                builder.append(cities.get(0).getCityName());
-            }
-        }
-        //查询区域
-        if (project.getRegion() != null && !project.getRegion().trim().isEmpty()) {
-            AreaExample areaExample = new AreaExample();
-            AreaExample.Criteria areaCriteria = areaExample.createCriteria();
-            areaCriteria.andAreaCodeEqualTo(project.getRegion());
-            List<Area> areas = areaMapper.selectByExample(areaExample);
-            if (areas.size() > 0) {
-                builder.append(areas.get(0).getAreaName());
-            }
-        }
-        builder.append(project.getAddressDetail());
-        return builder.toString();
-
     }
 
     /**
@@ -757,11 +710,37 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER));
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
-        DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder, project, msgVoMap);
+        List<BasicsData> projectSourceList = basicsService.queryData(BasicsDataParentEnum.PROJECT_SOURCE.getCode());
+        Map<String,BasicsData> projectSourceMap = ReflectUtils.listToMap(projectSourceList,"basicsCode");
+        List<BasicsData> huxingList = basicsService.queryData(BasicsDataParentEnum.HOUSE_STRUCTURE.getCode());
+        Map<String,BasicsData> huxingMap = ReflectUtils.listToMap(huxingList,"basicsCode");
+        String ownerRoleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.OWNER_POWER);
+        String designerRoleCode = roleFunctionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
+        OrderUserExample userExample = new OrderUserExample();
+        userExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        Map<String,OrderUser> orderUserMap = getOrderUserMap(orderUsers, ownerRoleCode, designerRoleCode);
+        DesignerOrderVo designerOrderVo = getDesignerOrderVo(companyInfoMap.get(designerOrder.getCompanyId()), stateType, designerStyleConfigMap, designerOrder,
+                project, msgVoMap, projectSourceMap, huxingMap, orderUserMap, ownerRoleCode, designerRoleCode);
+        Map<String, String> provinceMap = basicsService.getProvince(project.getProvince());
+        Map<String, String> cityMap = basicsService.getCity(project.getCity());
+        Map<String, String> areaMap = basicsService.getArea(project.getRegion());
+        designerOrderVo.setProvinceName(provinceMap.get(project.getProvince()));
+        designerOrderVo.setCityName(cityMap.get(project.getCity()));
+        designerOrderVo.setRegionName(areaMap.get(project.getRegion()));
         DesignStateEnum stateEnum = DesignStateEnum.queryByState(designerOrder.getOrderStage());
         DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(1, stateEnum.getStateName(stateType),
                 "", "小区名称", designerOrder.getProjectNo());
         designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
+        OptionLogExample logExample = new OptionLogExample();
+        logExample.createCriteria().andLinkNoEqualTo(designerOrder.getOrderNo()).andOptionTypeEqualTo("DO");
+        logExample.setOrderByClause(" option_time desc limit 1");
+        List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
+        if (!optionLogs.isEmpty()) {
+            OptionLog optionLog = optionLogs.get(0);
+            designerOrderVo.setOptionUserName(optionLog.getOptionUserName());
+            designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
+        }
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
         designOrderDelVo.setPeopleNo(project.getPeopleNo() + "");
         if(designerOrder.getVolumeRoomTime() != null){
