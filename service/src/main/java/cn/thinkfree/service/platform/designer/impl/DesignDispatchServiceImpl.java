@@ -757,8 +757,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
         if (!optionLogs.isEmpty()) {
             OptionLog optionLog = optionLogs.get(0);
-            designerOrderVo.setOptionUserName(optionLog.getOptionUserName());
-            designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
+            designOrderDelVo.setOptionUserName(optionLog.getOptionUserName());
+            designOrderDelVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
         }
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
         designOrderDelVo.setPeopleNo(project.getPeopleNo() + "");
