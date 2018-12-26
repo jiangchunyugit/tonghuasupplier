@@ -80,4 +80,11 @@ public interface DealerBrandInfoMapper {
      * @return
      */
     List<BrandItemsVO> showBrandItems(@Param("companyId") String companyId, @Param("agencyCode") String agencyCode);
+
+    /**
+     * 查询品牌
+     * @param companyId
+     * @return
+     */
+    List<DealerBrandInfo> selectByContract(String companyId);
 }

@@ -82,4 +82,14 @@
     brand_name,
     category_name
   </select>
+
+  <select id="selectByContract" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+      pc_dealer_brand_info
+    WHERE
+        id IN ( SELECT max( id ) FROM pc_dealer_brand_info WHERE audit_status = 2 AND company_id = #{companyId} GROUP BY brand_no )
+  </select>
+
 </mapper>
