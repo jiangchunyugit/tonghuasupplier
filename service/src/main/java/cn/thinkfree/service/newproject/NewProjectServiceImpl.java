@@ -18,6 +18,7 @@ import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.designer.service.DesignerOrderService;
 import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
+import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
@@ -111,6 +112,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     private BasicsService basicsService;
     @Autowired
     private DesignerOrderService designerOrderService;
+    @Autowired
+    NewSchedulingService newSchedulingService;
 
 
     /**
@@ -616,7 +619,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
                 projectVo.setConstructionProgress(100);
             } else {
-                projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                projectVo.setConstructionProgress(newSchedulingService.getProjectSpeed(projectNo));
             }
             projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
             projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
@@ -705,7 +708,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             designerOrderDetailVo.setTaskStage(DesignStateEnum.STATE_261.getState());
         } else if (designerOrder.getComplaintState() == 3) {
             designerOrderDetailVo.setTaskStage(DesignStateEnum.STATE_262.getState());
-        }else {
+        } else {
             designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());
         }
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
@@ -922,10 +925,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectTitleVo.setTaskNum(orderPlayVo.getTaskNum());
                 projectTitleVo.setCost(totalMoney);
             }
-            //获取合同开始结束时间
-            if (orderContracts.size() > 0 && orderContracts.get(0).getStartTime() == null && orderContracts.get(0).getEndTime() == null) {
-                projectTitleVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
-            }
+            projectTitleVo.setConstructionProgress(newSchedulingService.getProjectSpeed(projectNo));
             //添加进度展示
             if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
                 projectTitleVo.setConstructionProgress(100);
@@ -1116,7 +1116,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
             List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
             if (projectOldDatas.size() > 0) {
-                return RespData.error("该案例已使用，请创作新的设计案例为消费者提供交付");
+                return RespData.error("该案例用于编号" + projectOldDatas.get(0).getProjectNo() + "的项目，请创作新的设计案例为消费者提供交付");
             }
         }
         if (orderUsers.get(0).getTransferUserId() == null || orderUsers.get(0).getTransferUserId().isEmpty()) {
@@ -1809,10 +1809,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         NewDataVo newDataVo = new NewDataVo();
         for (ProjectData projectData : projectDataList) {
             if (projectData.getType() == 1) {
-                newDataVo.setQuantityDataJson(projectData.getDataJson());
+                newDataVo.setQuantityDataJson(JSON.parseObject(projectData.getDataJson()));
                 newDataVo.setQuantityDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
             } else if (projectData.getType() == 2) {
-                newDataVo.setDesignDataJson(projectData.getDataJson());
+                newDataVo.setDesignDataJson(JSON.parseObject(projectData.getDataJson()));
                 newDataVo.setDesignDataIsConfirm(projectData.getIsConfirm() == null ? 0 : projectData.getIsConfirm());
             }
         }

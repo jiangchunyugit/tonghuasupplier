@@ -45,6 +45,12 @@ public interface DesignDispatchService {
             String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage,
             int designerOrderState, int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
 
+    /**
+     * 获取当前登陆用户所能看到的所有公司ID
+     * @return
+     */
+    List<String> getCompanyIds();
+
     PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,

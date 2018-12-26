@@ -2,6 +2,9 @@ package cn.thinkfree.service.newscheduling;
 
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.ConstructOrderConstants;
+import cn.thinkfree.core.constants.ConstructionStateEnum;
+import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
@@ -211,7 +214,7 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
                     bigSchedulingVO.setPercentage(99);
                 }
             }
-            if (bigSchedulingVO.getActualStartTime()==null){
+            if (bigSchedulingVO.getActualStartTime() == null) {
                 bigSchedulingVO.setPercentage(0);
             }
         }
@@ -517,5 +520,59 @@ public class NewSchedulingServiceImpl implements NewSchedulingService {
             return RespData.error("修改失败");
         }
         return RespData.success();
+    }
+
+    /**
+     * 获取项目的施工进度
+     *
+     * @param projectNo
+     * @return
+     */
+    @Override
+    public Integer getProjectSpeed(String projectNo) {
+        ConstructionOrderExample example = new ConstructionOrderExample();
+        ConstructionOrderExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
+        criteria.andProjectNoEqualTo(projectNo);
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(example);
+        if (constructionOrders.size() == 0) {
+            return 0;
+        }
+        ConstructionOrder constructionOrder = constructionOrders.get(0);
+        ProjectBigSchedulingDetailsExample detailsExample = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria detailsCriteria = detailsExample.createCriteria();
+        detailsCriteria.andProjectNoEqualTo(projectNo);
+        detailsCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        List<ProjectBigSchedulingDetails> allSchedulings = projectBigSchedulingDetailsMapper.selectByExample(detailsExample);
+        detailsCriteria.andIsCompletedEqualTo(Scheduling.BASE_STATUS.getValue());
+        List<ProjectBigSchedulingDetails> completedSchedulings = projectBigSchedulingDetailsMapper.selectByExample(detailsExample);
+        if (allSchedulings.size() == 0 || completedSchedulings.size() == 0) {
+            return 0;
+        }
+        //获取合同开始结束时间
+        OrderContractExample contractExample = new OrderContractExample();
+        OrderContractExample.Criteria contractCriteria = contractExample.createCriteria();
+        contractCriteria.andOrderNumberEqualTo(constructionOrder.getOrderNo());
+        List<OrderContract> orderContracts = orderContractMapper.selectByExample(contractExample);
+        if (orderContracts.size() == 0 || orderContracts.get(0).getStartTime() == null || orderContracts.get(0).getEndTime() == null) {
+            return 0;
+        }
+
+        ProjectBigSchedulingDetailsExample oneDetailsExample = new ProjectBigSchedulingDetailsExample();
+        ProjectBigSchedulingDetailsExample.Criteria oneDetailsCriteria = oneDetailsExample.createCriteria();
+        oneDetailsCriteria.andProjectNoEqualTo(projectNo);
+        oneDetailsCriteria.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        oneDetailsCriteria.andBigSortEqualTo(1);
+        List<ProjectBigSchedulingDetails> oneSchedulings = projectBigSchedulingDetailsMapper.selectByExample(detailsExample);
+        if (oneSchedulings.size() == 0 || oneSchedulings.get(0).getActualStartTime() == null) {
+            return 0;
+        }
+        Integer currentPercentage = MathUtil.getPercentage(oneSchedulings.get(0).getActualStartTime(), orderContracts.get(0).getEndTime(), new Date());
+        Integer completedPercentageEnd = MathUtil.getPercentage(allSchedulings.size(), completedSchedulings.size() + 1);
+        Integer completedPercentageStart = MathUtil.getPercentage(allSchedulings.size(), completedSchedulings.size());
+        if (currentPercentage > completedPercentageEnd || currentPercentage < completedPercentageStart) {
+            return completedPercentageStart;
+        }
+        return currentPercentage;
     }
 }
