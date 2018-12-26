@@ -138,18 +138,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, int companyState,
-            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
+            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType, String companyName, String designerName) {
         if (orderTpye == null) {
             throw new RuntimeException("请输入订单类别");
         }
         // 模糊查询用户信息
         List<String> queryProjectNo = queryProjectNos(userMsg);
         // 根据公司状态查询公司ID
-        List<String> companyIds = queryCompanyIds(companyState);
+        List<String> companyIds = queryCompanyIds(companyState, companyName);
         if (companyIds != null && companyIds.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
-        List<String> projectNos = getProjectNos(provinceCode, cityCode, areaCode, projectNo, orderSource, money, queryProjectNo);
+        List<String> projectNos = getProjectNos(provinceCode, cityCode, areaCode, projectNo, orderSource, money, queryProjectNo, designerName);
         if (projectNos != null && projectNos.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
@@ -252,7 +252,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, String optionUserName,
-            String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType) {
+            String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType, String designerName) {
         if (StringUtils.isBlank(companyId)) {
             throw new RuntimeException("公司缺失");
         }
@@ -262,7 +262,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         // 模糊查询用户信息
         List<String> queryProjectNo = queryProjectNos(userMsg);
         // 根据公司状态查询公司ID
-        List<String> projectNos = getProjectNos(provinceCode, cityCode, areaCode, projectNo, orderSource, money, queryProjectNo);
+        List<String> projectNos = getProjectNos(provinceCode, cityCode, areaCode, projectNo, orderSource, money, queryProjectNo, designerName);
         DesignerOrderExample orderExample = new DesignerOrderExample();
         DesignerOrderExample.Criteria orderExampleCriteria = orderExample.createCriteria();
         if (orderTpye == 1) {
@@ -369,10 +369,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
     }
 
-    private List<String> getProjectNos(String provinceCode, String cityCode, String areaCode, String projectNo, String orderSource, String money, List<String> queryProjectNo) {
+    private List<String> getProjectNos(String provinceCode, String cityCode, String areaCode, String projectNo, String orderSource, String money, List<String> queryProjectNo, String designerName) {
         ProjectExample projectExample = new ProjectExample();
         ProjectExample.Criteria projectCriteria = projectExample.createCriteria();
         int conditionNum = 0;
+        List<String> eProjectNos = queryProjectNoAndDesignerName(designerName);
+        if(eProjectNos != null && eProjectNos.isEmpty()){
+            return new ArrayList<>();
+        }
+        if(eProjectNos != null && !eProjectNos.isEmpty()){
+            projectCriteria.andProjectNoIn(eProjectNos);
+            conditionNum++;
+        }
         if (StringUtils.isNotBlank(provinceCode)) {
             projectCriteria.andProvinceEqualTo(provinceCode);
             conditionNum++;
@@ -409,6 +417,22 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return projectNos;
     }
 
+    private List<String> queryProjectNoAndDesignerName(String designerName){
+        if(StringUtils.isBlank(designerName)){
+            return null;
+        }
+        EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+        employeeMsgExample.createCriteria().andRealNameLike("%" + designerName + "%");
+        List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(employeeMsgExample);
+        if(employeeMsgs.isEmpty()){
+            return new ArrayList<>();
+        }
+        OrderUserExample userExample = new OrderUserExample();
+        userExample.createCriteria().andUserIdIn(ReflectUtils.getList(employeeMsgs,"userId"));
+        List<OrderUser> userList = orderUserMapper.selectByExample(userExample);
+        return ReflectUtils.getList(userList, "projectNo");
+    }
+
     private List<String> queryProjectNos(String userMsg) {
         if (StringUtils.isBlank(userMsg)) {
             return new ArrayList<>();
@@ -428,13 +452,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      * @param companyState 0入驻中 1资质待审核 2资质审核通过 3资质审核不通过4财务审核中5财务审核成功6财务审核失败7待交保证金8入驻成功
      * @return
      */
-    private List<String> queryCompanyIds(int companyState) {
-        if (companyState < 0) {
+    private List<String> queryCompanyIds(int companyState, String companyName) {
+        if (companyState < 0 && StringUtils.isBlank(companyName)) {
             return null;
         }
         CompanyInfoExample infoExample = new CompanyInfoExample();
         CompanyInfoExample.Criteria criteria = infoExample.createCriteria();
-        criteria.andAuditStatusEqualTo(companyState + "");
+        if(companyState >= 0){
+            criteria.andAuditStatusEqualTo(companyState + "");
+        }
+        if(StringUtils.isNotBlank(companyName)){
+            criteria.andCompanyNameLike("%" + companyName + "%");
+        }
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(infoExample);
         return ReflectUtils.getList(companyInfos, "companyId");
     }
@@ -548,7 +577,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                                    String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, int companyState, String optionUserName,
                                    String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response) {
         PageVo<List<DesignerOrderVo>> pageVo = queryDesignerOrder(null, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType);
+                provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType, null, null);
 
         List<List<String>> lists = new ArrayList<>();
         lists.add(Arrays.asList("序号", "订单编号", "订单子编号", "业主姓名", "业主电话", "所在地", "订单来源", "创建时间",
