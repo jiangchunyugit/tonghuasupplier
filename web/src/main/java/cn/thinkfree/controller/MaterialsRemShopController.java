@@ -10,6 +10,7 @@ import cn.thinkfree.service.materialsremshop.MaterialsRemShopService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,17 +35,24 @@ public class MaterialsRemShopController extends AbsBaseController{
     @GetMapping(value = "/materialsRemShopList")
     @MyRespBody
     @ApiOperation(value="经销商：门店信息")
-    public MyRespBundle<List<MaterialsRemShop>> materialsRemShopList(){
+    public MyRespBundle<List<MaterialsRemLeaseContract>> materialsRemShopList(@ApiParam("经销商编号")@RequestParam(value = "dealerCompanyId") String dealerCompanyId){
 
-        return sendJsonData(ResultMessage.SUCCESS, materialsRemShopService.getMaterialsRemShops());
+        if (StringUtils.isBlank(dealerCompanyId)) {
+            return sendJsonData(ResultMessage.FAIL,"操作失败");
+        }
+        return sendJsonData(ResultMessage.SUCCESS, materialsRemShopService.getMaterialsRemShops(dealerCompanyId));
     }
 
     @GetMapping(value = "/materialsRemLeaseContractList")
     @MyRespBody
     @ApiOperation(value="经销商：摊位信息")
-    public MyRespBundle<List<MaterialsRemLeaseContract>> materialsRemLeaseContractList(@ApiParam("门店编码")@RequestParam(value = "fddm") String fddm){
+    public MyRespBundle<List<MaterialsRemLeaseContract>> materialsRemLeaseContractList(@ApiParam("经销商编号")@RequestParam(value = "dealerCompanyId") String dealerCompanyId,
+                                                                                       @ApiParam("门店编码")@RequestParam(value = "fddm") String fddm){
 
-        return sendJsonData(ResultMessage.SUCCESS, materialsRemShopService.getMaterialsRemLeaseContracts(fddm));
+        if (StringUtils.isNotBlank(dealerCompanyId) && StringUtils.isNotBlank(fddm)) {
+            return sendJsonData(ResultMessage.SUCCESS, materialsRemShopService.getMaterialsRemLeaseContracts(dealerCompanyId,fddm));
+        }
+        return sendJsonData(ResultMessage.FAIL,"操作失败");
     }
 }
 

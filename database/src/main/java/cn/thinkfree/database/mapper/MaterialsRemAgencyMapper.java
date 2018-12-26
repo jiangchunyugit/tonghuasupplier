@@ -3,6 +3,8 @@ package cn.thinkfree.database.mapper;
 import cn.thinkfree.database.model.MaterialsRemAgency;
 import cn.thinkfree.database.model.MaterialsRemAgencyExample;
 import java.util.List;
+
+import cn.thinkfree.database.vo.AgencyContractCompanyInfoVo;
 import org.apache.ibatis.annotations.Param;
 
 public interface MaterialsRemAgencyMapper {
@@ -93,4 +95,12 @@ public interface MaterialsRemAgencyMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(MaterialsRemAgency record);
+
+    /**
+     * 经销商信息
+     * @param companyId
+     * @param dealerCompanyId
+     * @return
+     */
+    List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(@Param("companyId")String companyId, @Param("dealerCompanyId")String dealerCompanyId);
 }

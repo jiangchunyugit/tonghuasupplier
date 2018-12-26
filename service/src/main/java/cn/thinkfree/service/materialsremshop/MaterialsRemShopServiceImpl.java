@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author jiangchunyu(后台)
@@ -26,17 +27,26 @@ public class MaterialsRemShopServiceImpl implements MaterialsRemShopService {
     MaterialsRemLeaseContractMapper materialsRemLeaseContractMapper;
 
     @Override
-    public List<MaterialsRemShop> getMaterialsRemShops() {
+    public List<MaterialsRemLeaseContract> getMaterialsRemShops(String dealerCompanyId) {
 
-        MaterialsRemShopExample materialsRemShopExample = new MaterialsRemShopExample();
-        return materialsRemShopMapper.selectByExample(materialsRemShopExample);
+        MaterialsRemLeaseContractExample materialsRemLeaseContractExample = new MaterialsRemLeaseContractExample();
+        materialsRemLeaseContractExample.createCriteria()
+                .andGhdwdmEqualTo(dealerCompanyId);
+        return materialsRemLeaseContractMapper.selectByExample(materialsRemLeaseContractExample);
+//        List<MaterialsRemLeaseContract> materialsRemLeaseContracts =
+//        List<String> contracts = materialsRemLeaseContracts.stream().map(e->e.getFddm()).collect(Collectors.toList());
+//        MaterialsRemShopExample materialsRemShopExample = new MaterialsRemShopExample();
+//        materialsRemShopExample.createCriteria().andFddmIn(contracts);
+//        return materialsRemShopMapper.selectByExample(materialsRemShopExample);
     }
 
     @Override
-    public List<MaterialsRemLeaseContract> getMaterialsRemLeaseContracts(String fddm) {
+    public List<MaterialsRemLeaseContract> getMaterialsRemLeaseContracts(String dealerCompanyId, String fddm) {
 
         MaterialsRemLeaseContractExample materialsRemLeaseContractExample = new MaterialsRemLeaseContractExample();
-        materialsRemLeaseContractExample.createCriteria().andFddmEqualTo(fddm);
+        materialsRemLeaseContractExample.createCriteria()
+                .andGhdwdmEqualTo(dealerCompanyId)
+                .andFddmEqualTo(fddm);
         return materialsRemLeaseContractMapper.selectByExample(materialsRemLeaseContractExample);
     }
 }
