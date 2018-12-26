@@ -13,6 +13,7 @@ import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
 import cn.thinkfree.service.constants.*;
+import cn.thinkfree.service.contract.AgencyService;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.ContractNum;
@@ -88,6 +89,9 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 
 	@Autowired
 	JoinStatusMapper joinStatusMapper;
+
+	@Autowired
+	AgencyService agencyService;
 
 
 	final static String TARGET = "static/";
@@ -418,10 +422,11 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 				brandInfo.setIsValid(Integer.valueOf(SysConstants.YesOrNo.NO.shortVal()));
 				brandInfo.setUpdateTime(date);
 				int dealerLine = dealerBrandInfoMapper.updateByExampleSelective(brandInfo, dealerBrandInfoExample);
-				if (dealerLine <= 0){
+				//通知合同作废
+				boolean flag = agencyService.updateContractStatus(companyId,"", AgencyConstants.AgencyType.INVALID_ING.code.toString());
+				if (dealerLine <= 0 || !flag){
 					throw new RuntimeException("经销商资质审批失败");
 				}
-				//todo 通知合同作废
 			}
 
 			//运营审核通过添加一条审批记录
