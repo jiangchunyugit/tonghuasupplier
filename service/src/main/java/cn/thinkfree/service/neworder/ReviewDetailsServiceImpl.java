@@ -3,6 +3,7 @@ package cn.thinkfree.service.neworder;
 import cn.thinkfree.core.base.ErrorCode;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
+import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.appvo.OrderPlayVo;
 import cn.thinkfree.database.appvo.PersionVo;
@@ -15,10 +16,13 @@ import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.construction.ConstructionStateService;
 import cn.thinkfree.service.newproject.NewProjectService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
+import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.order.OrderService;
-import cn.thinkfree.service.platform.order.SendOrderNoticeService;import cn.thinkfree.service.project.ProjectStageLogService;import cn.thinkfree.service.remote.CloudService;
+import cn.thinkfree.service.platform.order.SendOrderNoticeService;
+import cn.thinkfree.service.project.ProjectStageLogService;
+import cn.thinkfree.service.remote.CloudService;
 import cn.thinkfree.service.utils.BaseToVoUtils;
 import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.DateUtils;
@@ -84,6 +88,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
     SendOrderNoticeService orderNoticeService;
     @Autowired
     ProjectStageLogService projectStageLogService;
+    @Autowired
+    BasicsService basicsService;
 
     /**
      * 获取精准报价
@@ -879,7 +885,8 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
         //装修预算
         projectDetailVO.setDecorationBudget(project.getDecorationBudget());
         //装修风格
-        projectDetailVO.setStyle(project.getStyle());
+        BasicsData basicsData = basicsService.queryDataOne(BasicsDataParentEnum.DESIGN_STYLE.getCode(), project.getStyle());
+        projectDetailVO.setStyle(basicsData == null ? "" : basicsData.getBasicsName());
         //计划装修开始时间
         projectDetailVO.setPlanStartTime(DateUtil.getStringDate(project.getPlanStartTime(), "yyyy-MM-dd-HH-mm-ss"));
         //计划装修结束时间
@@ -986,7 +993,7 @@ public class ReviewDetailsServiceImpl implements ReviewDetailsService {
             throw new RuntimeException("修改设计订单预交底状态失败!");
         }
         //记录状态更改
-        projectStageLogService.create(projectNo,ProjectDataStatus.BASE_STATUS.getValue());
+        projectStageLogService.create(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
     }
 
 }

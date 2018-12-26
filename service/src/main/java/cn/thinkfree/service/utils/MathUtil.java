@@ -138,6 +138,23 @@ public class MathUtil {
         return aa.intValue();
     }
 
+    /**
+     * 传入两个Int值 获取百分数
+     *
+     * @param allNum      总任务数
+     * @param completeNum 完成任务数+1
+     * @return
+     */
+    public static Integer getPercentage(Integer allNum, Integer completeNum) {
+        if (allNum == null || allNum == 0 || completeNum == null || completeNum == 0 || allNum < completeNum) {
+            return 0;
+        }
+        BigDecimal b1 = new BigDecimal(completeNum);
+        BigDecimal b2 = new BigDecimal(allNum);
+        Double aa = b1.divide(b2, DEF_DIV_SCALE, BigDecimal.ROUND_HALF_UP).doubleValue() * 100;
+        return aa.intValue();
+    }
+
 
     /**
      * 获取进度
@@ -215,10 +232,11 @@ public class MathUtil {
 
     /**
      * 元转分
+     *
      * @param money
      * @return
      */
-    public static Long getFen(String money){
+    public static Long getFen(String money) {
         BigDecimal b1 = new BigDecimal(money);
         BigDecimal b2 = new BigDecimal(100);
         long result = b1.multiply(b2).longValue();
@@ -227,10 +245,11 @@ public class MathUtil {
 
     /**
      * 分转元
+     *
      * @param money
      * @return
      */
-    public static String getYuan(Long money){
+    public static String getYuan(Long money) {
         BigDecimal b1 = new BigDecimal(money);
         BigDecimal b2 = new BigDecimal(100);
         String result = b1.divide(b2, 2, BigDecimal.ROUND_HALF_UP).toString();
@@ -238,7 +257,8 @@ public class MathUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(getYuan((long)1));
+
+        System.out.println(getPercentage(3,2));
     }
 
 }
