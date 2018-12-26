@@ -180,7 +180,7 @@ public class CityBranchServiceImpl implements CityBranchService {
             // 市账号
             if (UserLevel.Company_City.code == level && userVO.getCityBranch() != null
                     && StringUtils.isNotBlank(userVO.getCityBranch().getCityBranchCode())) {
-                criteria.andBranchCompanyCodeEqualTo(userVO.getCityBranch().getCityBranchCode());
+                criteria.andCityBranchCodeEqualTo(userVO.getCityBranch().getCityBranchCode());
             }
         }
 

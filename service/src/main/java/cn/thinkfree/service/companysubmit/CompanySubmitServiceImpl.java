@@ -12,10 +12,8 @@ import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.database.vo.contract.ContractCostVo;
 import cn.thinkfree.service.companyapply.CompanyApplyService;
-import cn.thinkfree.service.constants.AuditStatus;
-import cn.thinkfree.service.constants.CompanyApply;
-import cn.thinkfree.service.constants.CompanyConstants;
-import cn.thinkfree.service.constants.ContractStatus;
+import cn.thinkfree.service.constants.*;
+import cn.thinkfree.service.contract.AgencyService;
 import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.ContractNum;
@@ -84,10 +82,16 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 	CompanyInfoExpandMapper companyInfoExpandMapper;
 
 	@Autowired
+	DealerBrandInfoMapper dealerBrandInfoMapper;
+
+	@Autowired
 	EventService eventService;
 
 	@Autowired
 	JoinStatusMapper joinStatusMapper;
+
+	@Autowired
+	AgencyService agencyService;
 
 
 	final static String TARGET = "static/";
@@ -213,6 +217,84 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 	}
 
 	@Override
+	public PageInfo<CompanyListVo> dealerList(CompanyListSEO companyListSEO) {
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+//		if(StringUtils.isBlank(companyListSEO.getBranchCompanyCode()) && userVO.getBranchCompany() != null){
+//			companyListSEO.setBranchCompanyCode(StringUtils.isBlank(userVO.getBranchCompany().getBranchCompanyCode()) ? "" : userVO.getBranchCompany().getBranchCompanyCode());
+//		}
+//		if(StringUtils.isBlank(companyListSEO.getCityBranchCode()) && userVO.getCityBranch() != null){
+//			companyListSEO.setCityBranchCode(StringUtils.isBlank(userVO.getCityBranch().getCityBranchCode()) ? "" : userVO.getCityBranch().getCityBranchCode());
+//		}
+//
+//		if(userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null){
+//			if(!UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
+//				companyListSEO.setCityBranchCode("");
+//				companyListSEO.setBranchCompanyCode("");
+//			}
+//		}
+		List<String> relationMap = null;
+		if(userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null){
+			if(!UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
+				if(userVO != null){
+					relationMap = new ArrayList<>();
+					relationMap = userVO.getRelationMap();
+					if(relationMap != null && relationMap.size() > 0){
+						companyListSEO.setRelationMap(relationMap);
+					}
+				}
+			}
+		}
+
+		if(StringUtils.isNotBlank(companyListSEO.getParam())){
+			companyListSEO.setParam("%"+companyListSEO.getParam()+"%");
+		}
+		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
+		List<CompanyListVo> companyListVoList = companyInfoMapper.dealerList(companyListSEO);
+		return new PageInfo<>(companyListVoList);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Map<String, Object> auditDealerCompany(PcAuditInfoVO pcAuditInfo) {
+		Date date = new Date();
+
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+
+		Map<String,Object> map = new HashMap<>();
+		String companyId = pcAuditInfo.getCompanyId();
+		if(StringUtils.isBlank(companyId)){
+			map.put("isSuccess", false);
+			map.put("msg", "公司编号不能为空");
+			return map;
+		}
+		boolean applyFlag = false;
+		//审核通过
+		if(AuditStatus.AuditPass.shortVal().equals(pcAuditInfo.getAuditStatus())){
+			//修改公司状态
+			applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSJOIN.stringVal(), date);
+
+		}else{//审核失败
+			applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.FAILAUDIT.stringVal(), date);
+
+		}
+		//添加审核记录表
+		int flagon = saveAuditInfo(CompanyConstants.AuditType.JOINON.stringVal(), pcAuditInfo, userVO, date, "");
+		if(applyFlag &&  flagon  > 0 ){
+			//todo 调取事件同步埃森哲
+			map.put("isSuccess", true);
+			map.put("msg", "审核成功");
+			return map;
+		}else{
+			map.put("isSuccess", false);
+			map.put("msg", "审核失败");
+			return map;
+		}
+	}
+
+
+
+	@Override
 	public CompanySubmitVo findCompanyInfo(String companyId) {
 		if(companyId == null){
 			return null;
@@ -310,24 +392,41 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 			pcAuditTemporaryInfo.get(0).setChangeStatus(Short.valueOf(AuditStatus.AuditPass.shortVal()));
 			int addLine = pcAuditTemporaryInfoMapper.updateByExampleSelective(pcAuditTemporaryInfo.get(0), example);
 			if(addLine <= 0){
-				throw new RuntimeException("审批失败");
+				throw new RuntimeException("资质变更失败");
 			}
 			//3：审批通过，临时表数据更新到公司表
 			int companyLine = updateTempTOCompanyInfo(companyId, date, pcAuditTemporaryInfo.get(0));
 			if(companyLine <= 0){
-				throw new RuntimeException("审批失败");
+				throw new RuntimeException("公司信息审批失败");
 			}
 
 			//4:审批通过，临时表数据更新到公司拓展表
 			int companyExpandLine = updateTempTOCompanyInfoExpand(companyId, date, pcAuditTemporaryInfo.get(0));
 			if(companyExpandLine <= 0){
-				throw new RuntimeException("审批失败");
+				throw new RuntimeException("公司拓展信息审批失败");
 			}
 
 			//5:审批通过，临时表数据更新到公司银行账户表
-			int financialLine = updateTempTOCompanyFinancial(companyId, date, pcAuditTemporaryInfo.get(0));
-			if(financialLine <= 0){
-				throw new RuntimeException("审批失败");
+			if(!CompanyConstants.RoleType.DR.code.equals(pcAuditTemporaryInfo.get(0).getRoleId())){
+				int financialLine = updateTempTOCompanyFinancial(companyId, date, pcAuditTemporaryInfo.get(0));
+				if(financialLine <= 0){
+					throw new RuntimeException("公司账户审批失败");
+				}
+			} else{
+				//经销商资质变更时候，作废此经销商全部品牌
+				DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
+				dealerBrandInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
+						.andAgencyCodeEqualTo(pcAuditTemporaryInfo.get(0).getDealerCompanyId());
+				DealerBrandInfo brandInfo = new DealerBrandInfo();
+				brandInfo.setAuditStatus(BrandConstants.AuditStatus.DISCARD.code);
+				brandInfo.setIsValid(Integer.valueOf(SysConstants.YesOrNo.NO.shortVal()));
+				brandInfo.setUpdateTime(date);
+				int dealerLine = dealerBrandInfoMapper.updateByExampleSelective(brandInfo, dealerBrandInfoExample);
+				//通知合同作废
+				boolean flag = agencyService.updateContractStatus(companyId,"", AgencyConstants.AgencyType.INVALID_ING.code.toString());
+				if (dealerLine <= 0 || !flag){
+					throw new RuntimeException("经销商资质审批失败");
+				}
 			}
 
 			//运营审核通过添加一条审批记录
@@ -497,7 +596,12 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		int ci = updateCompanyInfo(companySubmitVo, date);
 
 		//2.更新表pc_company_financial
-		int pcf = updateFinancial(companySubmitVo, date);
+		int pcf = 0;
+		if(!CompanyConstants.RoleType.DR.code.equals(companySubmitVo.getCompanyInfo().getRoleId())){
+			pcf = updateFinancial(companySubmitVo, date);
+		}else{
+			pcf = 1;
+		}
 
 		//3.更新表company_info_expand
 		int cie = updateCompanyExpand(companySubmitVo, date);
@@ -579,14 +683,12 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 				List<PcAuditInfo> auditlist = pcAuditInfoMapper.selectByExample(example);
 				if (auditlist.size() >= 2) {
 					//1.修改公司表
-					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString(), date);
+					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.stringVal(), date);
 				}else{
-					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.AUDITING.code.toString(), date);
+					applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.AUDITING.stringVal(), date);
 				}
-			}else if(roleLent.length == 1 && CompanyConstants.RoleType.DR.code.equals(con.getRoleId())) {
-				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SIGNING.stringVal(), date);
 			}else {
-				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.code.toString(), date);
+				applyFlag = companyApplyService.updateStatus(companyId, CompanyAuditStatus.SUCCESSAUDIT.stringVal(), date);
 			}
 			String contractNumber =ContractNum.getInstance().GenerateOrder(pcAuditInfo.getRoleId());
 			//	String contractNumber = String.valueOf(UUID.randomUUID());
@@ -595,11 +697,16 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 			int flag = saveContracInfo(pcAuditInfo, date, companyId, contractNumber);
 
 			//3.添加审核记录表
-			int flagon = saveAuditInfo(CompanyConstants.auditLevel.JOINON.stringVal(), pcAuditInfo, userVO, date, contractNumber);
+			int flagon = saveAuditInfo(CompanyConstants.AuditType.JOINON.stringVal(), pcAuditInfo, userVO, date, contractNumber);
 
 			if(flag > 0 && applyFlag &&  flagon  > 0 ){
 				//todo 调取事件同步埃森哲
-				eventService.publish(new CompanyJoin(companyId));
+				try{
+					eventService.publish(new CompanyJoin(companyId));
+				}catch (Exception e){
+					e.printStackTrace();
+					printErrorMes("入驻公司审批成功调取事件同步埃森哲失败{}", e);
+				}
 				map.put("code", true);
 				map.put("msg", "审核成功");
 				return map;
@@ -609,10 +716,10 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 				return map;
 			}
 		}else{//审核失败
-			applyFlag = companyApplyService.updateStatus(pcAuditInfo.getCompanyId(), CompanyAuditStatus.FAILAUDIT.code.toString(), date);
+			applyFlag = companyApplyService.updateStatus(pcAuditInfo.getCompanyId(), CompanyAuditStatus.FAILAUDIT.stringVal(), date);
 
 			//添加审核记录表
-			int line = saveAuditInfo(CompanyConstants.auditLevel.JOINON.stringVal(), pcAuditInfo, userVO, date, "");
+			int line = saveAuditInfo(CompanyConstants.AuditType.JOINON.stringVal(), pcAuditInfo, userVO, date, "");
 			if (applyFlag && line > 0) {
 				map.put("code", true);
 				map.put("msg", "审核成功");
@@ -810,8 +917,13 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 					//更新表company_info_expand
 					int exLine = updateCompanyExpand(companySubmitVo, date);
 					//更新表pc_company_financial
-					int fcLine = updateFinancial(companySubmitVo, date);
-
+					int fcLine = 0;
+					if(!CompanyConstants.RoleType.DR.code.equals(companySubmitVo.getCompanyInfo().getRoleId())){
+						fcLine = updateFinancial(companySubmitVo, date);
+					}else{
+						//经销商直接通过
+						fcLine = 1;
+					}
 					if(exLine > 0 && fcLine > 0){
 						map.put("msg", "资质变更操作成功！！！");
 						map.put("code", true);
@@ -835,31 +947,6 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		map.put("msg", "资质变更操作失败！！！");
 		map.put("code", false);
 		return map;
-	}
-
-	@Override
-	public PageInfo<CompanyListVo> agencyList(CompanyListSEO companyListSEO) {
-		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-
-		List<String> relationMap = null;
-		if(userVO != null && userVO.getPcUserInfo() != null && userVO.getPcUserInfo().getLevel() != null){
-			if(!UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
-				if(userVO != null){
-					relationMap = new ArrayList<>();
-					relationMap = userVO.getRelationMap();
-					if(relationMap != null && relationMap.size() > 0){
-						companyListSEO.setRelationMap(relationMap);
-					}
-				}
-			}
-		}
-
-		if(StringUtils.isNotBlank(companyListSEO.getParam())){
-			companyListSEO.setParam("%"+companyListSEO.getParam()+"%");
-		}
-		PageHelper.startPage(companyListSEO.getPage(),companyListSEO.getRows());
-		List<CompanyListVo> companyListVoList = companyInfoMapper.agencyList(companyListSEO);
-		return new PageInfo<>(companyListVoList);
 	}
 
 	@Override

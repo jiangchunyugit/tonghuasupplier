@@ -54,12 +54,12 @@ public enum CompanyAuditStatus {
     /**
      * 入驻成功
      */
-    SUCCESSJOIN(8,"入驻成功"),
+    SUCCESSJOIN(8,"入驻成功");
 
     /**
      * 9待签约
      */
-    SIGNING(9, "待签约");
+//    SIGNING(9, "待签约");
 
 
     public final Integer code;

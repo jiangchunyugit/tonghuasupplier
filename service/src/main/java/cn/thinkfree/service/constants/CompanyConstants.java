@@ -29,7 +29,16 @@ public class CompanyConstants{
         /**
          * 集体所有制企业
          */
-        COLLECTIVELY_OWNED_ENTERPRISE(5,"集体所有制企业");
+        COLLECTIVELY_OWNED_ENTERPRISE(5,"集体所有制企业"),
+
+        /**
+         * 个人，经销商用
+         */
+        PERSON(6,"个人"),
+        /**
+         * 公司：经销商
+         */
+        COMPANY(7, "公司");
 
 
         public final Integer code;

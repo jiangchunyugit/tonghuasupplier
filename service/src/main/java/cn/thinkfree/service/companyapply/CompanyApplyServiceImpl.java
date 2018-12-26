@@ -246,7 +246,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     public Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
         Map<String, Object> map = new HashMap<>();
 
-        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole()) && StringUtils.isBlank(pcApplyInfoSEO.getSiteCompanyId())){
+        if(StringUtils.isBlank(pcApplyInfoSEO.getSiteCompanyId())){
             map.put("code", false);
             map.put("msg", "请选择门店!");
             return map;
@@ -267,11 +267,16 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         //公司id
         String companyId = pcApplyInfoSEO.getCompanyId();
 
-        //插入账户表
-        int finaLine = saveCompanyFinancial(date, companyId);
-
         //插入公司表
         int infoLine = saveCompanyInfo(pcApplyInfoSEO, date, companyId);
+
+        //插入账户表
+        int finaLine = 0;
+        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            finaLine = saveCompanyFinancial(date, companyId);
+        }else{
+            finaLine = 1;
+        }
 
         //插入公司拓展表
         int expandLine = saveCompanyInfoExpand(pcApplyInfoSEO, date, companyId);
@@ -427,9 +432,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfoExpand.setEmail(pcApplyInfoSEO.getEmail());
         companyInfoExpand.setContactName(pcApplyInfoSEO.getContactName());
         companyInfoExpand.setContactPhone(pcApplyInfoSEO.getContactPhone());
-        companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
-        companyInfoExpand.setRegisterCityCode(pcApplyInfoSEO.getCityCode());
-        companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());
+        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            companyInfoExpand.setRegisterProvinceCode(pcApplyInfoSEO.getProvinceCode());
+            companyInfoExpand.setRegisterCityCode(pcApplyInfoSEO.getCityCode());
+            companyInfoExpand.setRegisterAreaCode(pcApplyInfoSEO.getAreaCode());
+        }
         companyInfoExpand.setCompanyId(companyId);
         return companyInfoExpandMapper.insertSelective(companyInfoExpand);
     }
@@ -442,7 +449,19 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         companyInfo.setCompanyName(pcApplyInfoSEO.getCompanyName());
         companyInfo.setRoleId(pcApplyInfoSEO.getCompanyRole());
         companyInfo.setPhone(pcApplyInfoSEO.getContactPhone());
+        if(CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            companyInfo.setCityCode(pcApplyInfoSEO.getCityCode());
+            companyInfo.setProvinceCode(pcApplyInfoSEO.getProvinceCode());
+        }
+        //门店
         companyInfo.setSiteCompanyId(pcApplyInfoSEO.getSiteCompanyId());
+        //分公司
+        companyInfo.setBranchCompanyCode(pcApplyInfoSEO.getBranchCompanyCode());
+        //城市分站
+        companyInfo.setCityBranchCode(pcApplyInfoSEO.getCityBranchCode());
+        //经销商公司id
+        companyInfo.setDealerCompanyId(StringUtils.isBlank(pcApplyInfoSEO.getDealerCompanyId()) ? "" : pcApplyInfoSEO.getDealerCompanyId());
+
         //审核状态(入驻中）
         companyInfo.setAuditStatus(CompanyAuditStatus.JOINING.stringVal());
         //公司平台类型：platform_type = 0

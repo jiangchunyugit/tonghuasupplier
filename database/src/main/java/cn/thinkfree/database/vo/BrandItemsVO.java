@@ -8,13 +8,24 @@ import io.swagger.annotations.ApiModelProperty;
 public class BrandItemsVO extends DealerBrandInfo{
 
     @ApiModelProperty(value="大于0则是经销商有品牌品类需要被审批")
-    private String count;
+    private String auditCount;
 
-    public String getCount() {
-        return count;
+    @ApiModelProperty(value="大于0则是经销商有品牌品类需要被审批")
+    private String auditChangeBrand;
+
+    public String getAuditCount() {
+        return auditCount;
     }
 
-    public void setCount(String count) {
-        this.count = count;
+    public void setAuditCount(String auditCount) {
+        this.auditCount = auditCount;
+    }
+
+    public String getAuditChangeBrand() {
+        return auditChangeBrand;
+    }
+
+    public void setAuditChangeBrand(String auditChangeBrand) {
+        this.auditChangeBrand = auditChangeBrand;
     }
 }

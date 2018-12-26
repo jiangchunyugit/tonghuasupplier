@@ -12,12 +12,23 @@
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
   </resultMap>
   <resultMap id="BrandItemsVO" type="cn.thinkfree.database.vo.BrandItemsVO" extends="BaseResultMap">
-    <result column="count" jdbcType="VARCHAR" property="count" />
+    <result column="audit_count" jdbcType="VARCHAR" property="auditCount" />
+    <result column="audit_change_brand" jdbcType="VARCHAR" property="auditChangeBrand" />
   </resultMap>
   <sql id="My_Base_Column_List">
-    brand.id, brand.dealer_brand_name, brand.dealer_category_name, brand.brand_authorization_card_url,
-    brand.brand_authorization_card_validity,
-    brand.is_valid, brand.company_id, brand.audit_status, brand.sbbm, brand.spfldm_2, brand.dealer_company_id,
+    brand.id,
+    brand.brand_name,
+    brand.category_name,
+    brand.authorization_card_url,
+    brand.authorization_card_validity,
+    brand.is_valid,
+    brand.company_id,
+    brand.audit_status,
+    brand.brand_no,
+    brand.category_no,
+    brand.agency_code,
+    brand.create_time,
+    brand. update_time,
     info.company_name,
 	audit.audit_type,
 	audit.audit_persion,
@@ -26,6 +37,21 @@
 	audit.audit_case,
 	audit.audit_account,
 	audit.audit_level
+  </sql>
+  <sql id="Sign_Base_Column_List">
+    brand.id,
+    brand.brand_name,
+    brand.category_name,
+    brand.authorization_card_url,
+    brand.authorization_card_validity,
+    brand.is_valid,
+    brand.company_id,
+    brand.audit_status,
+    brand.brand_no,
+    brand.category_no,
+    brand.agency_code,
+    brand. create_time,
+    brand.update_time
   </sql>
   <select id="showBrandDetail" parameterType="cn.thinkfree.database.vo.BrandDetailVO" resultMap="AuditBrandInfoVO">
     SELECT
@@ -52,7 +78,7 @@
       and brand.brand_no = #{brandNo}
     </if>
     ORDER BY
-    brand.update_time DESC
+    audit.audit_time desc,brand.update_time DESC;
   </select>
 
   <select id="showBrandItems" resultMap="BrandItemsVO">
@@ -63,16 +89,17 @@
     category_no,
     brand_name,
     category_name,
-    sum( CASE WHEN audit_status = 0 THEN 1 ELSE 0 END ) AS count
+    sum( CASE WHEN audit_status = 0 THEN 1 ELSE 0 END ) AS audit_count,
+    sum( CASE WHEN audit_status = 0 THEN 1 ELSE 0 END ) AS audit_change_count
     FROM
     pc_dealer_brand_info
     WHERE
-    AND is_valid = 1
+    is_valid = 1
     <if test="companyId != null and companyId != ''">
-      and brand.company_id = #{companyId}
+      and company_id = #{companyId}
     </if>
     <if test="agencyCode != null and agencyCode != ''">
-      and brand.agency_code = #{agencyCode}
+      and agency_code = #{agencyCode}
     </if>
     GROUP BY
     brand_no,
@@ -83,13 +110,30 @@
     category_name
   </select>
 
-  <select id="selectByContract" parameterType="java.lang.String" resultMap="BaseResultMap">
-    SELECT
-      *
-    FROM
-      pc_dealer_brand_info
-    WHERE
-        id IN ( SELECT max( id ) FROM pc_dealer_brand_info WHERE audit_status = 2 AND company_id = #{companyId} GROUP BY brand_no )
+  <select id="showSignBrand" resultMap="BaseResultMap" parameterType="java.lang.String">
+      SELECT
+      <include refid="Sign_Base_Column_List" />
+FROM
+	pc_agency_contract contract
+	LEFT JOIN pc_dealer_brand_info brand ON contract.company_id = brand.company_id
+	AND contract.agency_code = brand.agency_code
+	AND contract.brand_no = brand.brand_no
+	AND contract.category_no = brand.category_no
+WHERE
+	contract.STATUS = 8
+	AND brand.is_valid = 1
+	AND brand.audit_status = 2
+    <if test="_parameter!= null and _parameter!= ''">
+      and contract.company_id  = #{companyId}
+    </if>
   </select>
 
+  <select id="selectByContract" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    pc_dealer_brand_info
+    WHERE
+    id IN ( SELECT max( id ) FROM pc_dealer_brand_info WHERE audit_status = 2 AND company_id = #{companyId} GROUP BY brand_no )
+  </select>
 </mapper>

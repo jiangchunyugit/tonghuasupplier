@@ -300,7 +300,6 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
     @Override
     public boolean updateContractStatus(String companyId, String contractNumber, String status) {
         //9冻结10过期11作废
-        //冻结 0  解冻 1 作废2
         boolean flag = false;
         AgencyContract record = new AgencyContract();
         record.setStatus(status);
