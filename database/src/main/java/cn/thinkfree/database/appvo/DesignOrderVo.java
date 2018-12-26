@@ -56,4 +56,6 @@ public class DesignOrderVo {
     private String conractUrlPdf;
     @ApiModelProperty("合同签订时间")
     private Date signTime;
+    @ApiModelProperty("客诉状态：1,未投诉，2处理中，3关闭，4已取消")
+    private Integer complaintState;
 }
