@@ -708,7 +708,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             designerOrderDetailVo.setTaskStage(DesignStateEnum.STATE_261.getState());
         } else if (designerOrder.getComplaintState() == 3) {
             designerOrderDetailVo.setTaskStage(DesignStateEnum.STATE_262.getState());
-        }else {
+        } else {
             designerOrderDetailVo.setTaskStage(designerOrder.getOrderStage());
         }
         designerOrderDetailVo.setPlayTask(designDispatchService.showBtnByUserId(designerOrder.getProjectNo(), designerOrder.getOrderNo(), userId));
@@ -1116,7 +1116,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             dataCriteria.andProjectNoNotEqualTo(dataVo.getProjectNo());
             List<ProjectData> projectOldDatas = projectDataMapper.selectByExample(dataExample);
             if (projectOldDatas.size() > 0) {
-                return RespData.error("该案例已使用，请创作新的设计案例为消费者提供交付");
+                return RespData.error("该案例用于编号" + projectOldDatas.get(0).getProjectNo() + "的项目，请创作新的设计案例为消费者提供交付");
             }
         }
         if (orderUsers.get(0).getTransferUserId() == null || orderUsers.get(0).getTransferUserId().isEmpty()) {

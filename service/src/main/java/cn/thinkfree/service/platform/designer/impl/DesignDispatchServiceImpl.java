@@ -113,7 +113,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     private FundsSettleAccountsNodeLogMapper fundsSettleAccountsNodeLogMapper;
     @Autowired
     private ProjectStageLogService projectStageLogService;
-
+    @Autowired
+    private BasicsDataMapper basicsDataMapper;
     /**
      * 查询设计订单，主表为design_order,附表为project
      *
@@ -1694,7 +1695,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                 volumeReservationDetailsVO.setOrderSource("其他");
                 break;
         }
-        volumeReservationDetailsVO.setHouseType(project.getHouseRoom() + "室" + project.getHouseToilet() + "厅");
+
+        volumeReservationDetailsVO.setHouseType(getHouseTypeNum(projectNo));
         volumeReservationDetailsVO.setPermanentResidents(project.getPeopleNo());
         volumeReservationDetailsVO.setArea(project.getArea());
         volumeReservationDetailsVO.setCompanyName(designOrderPlayVo.getConstructionCompany());
@@ -2104,6 +2106,27 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             status = 1;
             return status;
         }
+    }
+
+    /**
+     * @Author jiang
+     * @Description 获取房间厅室数量
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public String getHouseTypeNum(String projectNo) {
+        if(StringUtils.isBlank(projectNo)){
+            throw new RuntimeException("项目编号不能为空");
+        }
+        ProjectExample projectExample = new ProjectExample();
+        projectExample.createCriteria().andProjectNoEqualTo(projectNo);
+        List<Project> project = projectMapper.selectByExample(projectExample);
+        BasicsDataExample basicsDataExample = new BasicsDataExample();
+        basicsDataExample.createCriteria().andBasicsCodeEqualTo(project.get(0).getHouseHuxing().toString());
+        List<BasicsData> basicsData = basicsDataMapper.selectByExample(basicsDataExample);
+        return  basicsData.get(0).getBasicsName();
     }
 
 }

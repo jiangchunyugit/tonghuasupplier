@@ -179,6 +179,15 @@ public class AccountHelper {
      */
     private static String random(int size){
         StringBuffer sb = new StringBuffer(size);
+        SecureRandom random = getRandom();
+
+        for(int i = 0;i< size;i++){
+            sb.append(random.nextInt(16));
+        }
+        return sb.toString();
+    }
+
+    public static SecureRandom getRandom() {
         SecureRandom random = null;
         try {
             random = SecureRandom.getInstanceStrong();
@@ -186,9 +195,19 @@ public class AccountHelper {
             e.printStackTrace();
             random = new SecureRandom();
         }
+        return random;
+    }
 
+    /**
+     * 经销商合同编号后三位随机数
+     * @param size
+     * @return
+     */
+    public static String randomAgencyContract(int size){
+        StringBuffer sb = new StringBuffer(size);
+        SecureRandom random = getRandom();
         for(int i = 0;i< size;i++){
-            sb.append(random.nextInt(16));
+            sb.append(random.nextInt(9));
         }
         return sb.toString();
     }

@@ -53,8 +53,7 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
     @Override
     public List<DealerBrandInfo> getDealerBrandList(String companyId) {
 
-//        return dealerBrandInfoMapper.selectByContract(companyId);
-        return null;
+        return dealerBrandInfoMapper.selectByContract(companyId);
     }
 
     @Override
