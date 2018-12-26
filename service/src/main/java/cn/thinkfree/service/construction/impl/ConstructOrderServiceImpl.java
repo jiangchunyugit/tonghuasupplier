@@ -3,12 +3,14 @@ package cn.thinkfree.service.construction.impl;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.*;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.ConstructionProjectVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.AfUserDTO;
 import cn.thinkfree.database.vo.ConstructCountVO;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.construct.*;
 import cn.thinkfree.service.approvalflow.AfConfigService;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
@@ -24,6 +26,7 @@ import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingBaseService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.basics.BasicsService;
+import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.EmployeeMsgVo;
@@ -93,6 +96,8 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
     private EmployeeService employeeService;
     @Autowired
     private ConstructionStateService constructionStateService;
+    @Autowired
+    private DesignDispatchService designDispatchService;
     /**
      * 订单列表
      *
@@ -415,6 +420,15 @@ public class ConstructOrderServiceImpl implements ConstructOrderService {
             complaintStates.add(ComplaintStateEnum.STATE_1.getState());
             complaintStates.add(ComplaintStateEnum.STATE_4.getState());
             criteria.andComplaintStateIn(complaintStates);
+        }
+        if(orderType == 2){
+            List<String> observeCompanyIds = designDispatchService.getCompanyIds();
+            if(observeCompanyIds != null && observeCompanyIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
+            if(observeCompanyIds != null){
+                criteria.andCompanyIdIn(observeCompanyIds);
+            }
         }
         if(StringUtils.isNotBlank(companyId)){
             criteria.andCompanyIdEqualTo(companyId);

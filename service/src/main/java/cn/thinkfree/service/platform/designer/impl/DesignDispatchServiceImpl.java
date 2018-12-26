@@ -3,14 +3,12 @@ package cn.thinkfree.service.platform.designer.impl;
 import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.*;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
-import cn.thinkfree.database.vo.AfUserDTO;
-import cn.thinkfree.database.vo.CompanyInfoVo;
-import cn.thinkfree.database.vo.DesignContractToVo;
-import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
@@ -162,6 +160,13 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         if (orderTpye == 2) {
             orderExampleCriteria.andOrderStageGreaterThanOrEqualTo(DesignStateEnum.STATE_30.getState());
+            List<String> observeCompanyIds = getCompanyIds();
+            if(observeCompanyIds != null && observeCompanyIds.isEmpty()){
+                return PageVo.def(new ArrayList<>());
+            }
+            if(observeCompanyIds != null){
+                orderExampleCriteria.andCompanyIdIn(observeCompanyIds);
+            }
         }
         if (StringUtils.isNotBlank(createTimeStart)) {
             orderExampleCriteria.andCreateTimeGreaterThanOrEqualTo(DateUtils.strToDate(createTimeStart));
@@ -198,6 +203,19 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setData(designerOrderVos);
         pageVo.setPageIndex(pageIndex);
         return pageVo;
+    }
+
+    @Override
+    public List<String> getCompanyIds(){
+        UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        if(userVO == null){
+            return null;
+        }
+        List<String> relationMap = userVO.getRelationMap();
+        CompanyInfoExample companyInfoExample = new CompanyInfoExample();
+        companyInfoExample.createCriteria().andSiteCompanyIdIn(relationMap);
+        List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
+        return ReflectUtils.getList(companyInfos,"companyId");
     }
 
     /**
@@ -1838,6 +1856,13 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         if (designOrders != null && !designOrders.isEmpty()) {
             contractCriteria.andOrderNumberIn(designOrders);
+        }
+        List<String> observeCompanyIds = getCompanyIds();
+        if(observeCompanyIds != null && observeCompanyIds.isEmpty()){
+            return PageVo.def(new ArrayList<>());
+        }
+        if(observeCompanyIds != null){
+            contractCriteria.andCompanyIdIn(observeCompanyIds);
         }
         long total = orderContractMapper.countByExample(contractExample);
         if (total <= 0) {
