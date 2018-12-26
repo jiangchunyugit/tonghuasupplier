@@ -31,6 +31,7 @@ import cn.thinkfree.service.utils.DateUtil;
 import cn.thinkfree.service.utils.MathUtil;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -1175,10 +1176,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 }
                 projectData.setUrl(urlDetailVo.getImgUrl());
             }
-
-            if (DateUtil.getNewDate(dataVo.getCaseUploadTime()) != null) {
-                projectData.setUploadTime(DateUtil.getNewDate(dataVo.getCaseUploadTime()));
-            }
+            projectData.setUploadTime(new Date());
             int i = projectDataMapper.insertSelective(projectData);
             if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
                 throw new RuntimeException("确认失败!");
@@ -1635,6 +1633,10 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (hsDesignId == null || hsDesignId.trim().isEmpty()) {
             return RespData.error("hsDesignId 不可为空");
         }
+        JSONArray dataList = urlJsonData.getJSONArray("dataList");
+        if ((type == 1 || type == 2) && dataList.size() <= 0) {
+            return RespData.error("请选择案例图片");
+        }
         EmployeeMsgExample example = new EmployeeMsgExample();
         EmployeeMsgExample.Criteria criteria = example.createCriteria();
         criteria.andUserIdEqualTo(userId);
@@ -1694,18 +1696,38 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (type == null) {
             return RespData.error("请选择资料类型");
         }
-        ProjectData projectData = new ProjectData();
-        projectData.setFileType(ProjectDataStatus.FILE_PNG.getValue());
-        projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
-        projectData.setType(type);
-        projectData.setCategory(type);
-        projectData.setProjectNo(projectNo);
-        projectData.setHsDesignid(hsDesignId);
-        projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
-        projectData.setDataJson(jsonData);
-        int i = projectDataMapper.insertSelective(projectData);
-        if (i == ProjectDataStatus.INSERT_FAILD.getValue()) {
-            throw new RuntimeException("确认失败!");
+        for (int i = 0; i < dataList.size(); i++) {
+            JSONObject data = dataList.getJSONObject(i);
+            //添加报价房屋信息表
+            String roomString = JSONObject.toJSONString(data);
+            NewUrlDetailVo newUrlDetailVo = JSONObject.parseObject(roomString, NewUrlDetailVo.class);
+            for (UrlDetailVo urlDetailVo : newUrlDetailVo.getImgs()) {
+                //组合插入数据
+                ProjectData projectData = new ProjectData();
+                projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
+                projectData.setType(type);
+                projectData.setProjectNo(projectNo);
+                projectData.setHsDesignid(hsDesignId);
+                projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+                projectData.setDataJson(jsonData);
+                projectData.setUploadTime(new Date());
+                if (urlDetailVo.getImgUrl()!=null){
+                    projectData.setUrl(urlDetailVo.getImgUrl());
+                }
+                if (urlDetailVo.getPhoto360Url()!=null){
+                    projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
+                }
+                if (urlDetailVo.getViewType()!=null){
+                    projectData.setCategory(Integer.valueOf(urlDetailVo.getViewType()));
+                }
+                if (newUrlDetailVo.getRoomName()!=null){
+                    projectData.setFileName(newUrlDetailVo.getRoomName());
+                }
+                int a = projectDataMapper.insertSelective(projectData);
+                if (a == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                    throw new RuntimeException("确认失败!");
+                }
+            }
         }
         if (type == 3) {
             String result = cloudService.getShangHaiPriceDetail(hsDesignId);
