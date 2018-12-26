@@ -6,36 +6,32 @@ import cn.thinkfree.database.model.PcAuditInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.ArrayList;
 import java.util.List;
 
-
-@ApiModel(description = "经销商合同新增入参")
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经销商合同详情
+ */
+@ApiModel(description = "经销商合同详情")
 public class ParamAgency  {
-
-
-    public AgencyContract getAgencyContract() {
-        return agencyContract;
-    }
-
-    public void setAgencyContract(AgencyContract agencyContract) {
-        this.agencyContract = agencyContract;
-    }
 
     @ApiModelProperty(value="合同信息")
     private AgencyContract agencyContract;
 
-    public AgencyContractTerms getAgencyContractTerms() {
-        return agencyContractTerms;
-    }
-
-    public void setAgencyContractTerms(AgencyContractTerms agencyContractTerms) {
-        this.agencyContractTerms = agencyContractTerms;
-    }
-
     @ApiModelProperty(value="品牌信息")
-    private AgencyContractTerms  agencyContractTerms;
+    private List<AgencyContractTerms>  agencyContractTermsList;
 
+    @ApiModelProperty("审核信息")
+    private List<PcAuditInfo> auditInfo;
+
+    public List<AgencyContractTerms> getAgencyContractTermsList() {
+        return agencyContractTermsList;
+    }
+
+    public void setAgencyContractTermsList(List<AgencyContractTerms> agencyContractTermsList) {
+        this.agencyContractTermsList = agencyContractTermsList;
+    }
 
     public List<PcAuditInfo> getAuditInfo() {
         return auditInfo;
@@ -45,7 +41,11 @@ public class ParamAgency  {
         this.auditInfo = auditInfo;
     }
 
-    @ApiModelProperty("审核信息")
-    private List<PcAuditInfo> auditInfo;
+    public AgencyContract getAgencyContract() {
+        return agencyContract;
+    }
 
+    public void setAgencyContract(AgencyContract agencyContract) {
+        this.agencyContract = agencyContract;
+    }
 }

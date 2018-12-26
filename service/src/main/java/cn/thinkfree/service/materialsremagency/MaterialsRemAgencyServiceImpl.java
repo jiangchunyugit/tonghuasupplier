@@ -3,6 +3,7 @@ package cn.thinkfree.service.materialsremagency;
 import cn.thinkfree.database.mapper.MaterialsRemAgencyMapper;
 import cn.thinkfree.database.model.MaterialsRemAgency;
 import cn.thinkfree.database.model.MaterialsRemAgencyExample;
+import cn.thinkfree.database.vo.AgencyContractCompanyInfoVo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,5 +41,17 @@ public class MaterialsRemAgencyServiceImpl implements MaterialsRemAgencyService{
             criteria.andNameLike(stringBufferName.toString());
         }
         return materialsRemAgencyMapper.selectByExample(materialsRemAgencyExample);
+    }
+
+    @Override
+    public List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(String companyId, String dealerCompanyId) {
+        if (StringUtils.isNotBlank(dealerCompanyId)) {
+            StringBuffer stringBufferName = new StringBuffer();
+            stringBufferName.append("%");
+            stringBufferName.append(dealerCompanyId);
+            stringBufferName.append("%");
+            dealerCompanyId = stringBufferName.toString();
+        }
+        return materialsRemAgencyMapper.getAgencyCompanyInfos(companyId,dealerCompanyId);
     }
 }

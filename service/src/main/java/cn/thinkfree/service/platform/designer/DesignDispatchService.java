@@ -353,4 +353,12 @@ public interface DesignDispatchService {
      * @return
      **/
     Integer replaceDesigners(String orderNo);
+    /**
+     * @Author jiang
+     * @Description 获取房间厅室数量
+     * @Date
+     * @Param
+     * @return
+     **/
+    public String getHouseTypeNum(String projectNo);
 }

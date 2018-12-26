@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.thinkfree.database.mapper.MaterialsRemAgencyMapper">
+  <resultMap id="CompanyInfoBaseResultMap" type="cn.thinkfree.database.vo.AgencyContractCompanyInfoVo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="company_id" jdbcType="VARCHAR" property="companyId" />
+    <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="role_id" jdbcType="VARCHAR" property="roleId" />
+    <result column="province_code" jdbcType="SMALLINT" property="provinceCode" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="legal_name" jdbcType="VARCHAR" property="legalName" />
+    <result column="legal_phone" jdbcType="VARCHAR" property="legalPhone" />
+    <result column="legal_id_card" jdbcType="VARCHAR" property="legalIdCard" />
+    <result column="business_code" jdbcType="VARCHAR" property="businessCode" />
+    <result column="organization_code" jdbcType="VARCHAR" property="organizationCode" />
+    <result column="tax_code" jdbcType="VARCHAR" property="taxCode" />
+    <result column="is_check" jdbcType="SMALLINT" property="isCheck" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="business_photo_url" jdbcType="VARCHAR" property="businessPhotoUrl" />
+    <result column="work_photo_url" jdbcType="VARCHAR" property="workPhotoUrl" />
+    <result column="deposit_money" jdbcType="INTEGER" property="depositMoney" />
+    <result column="lbs" jdbcType="VARCHAR" property="lbs" />
+    <result column="is_delete" jdbcType="SMALLINT" property="isDelete" />
+    <result column="city_code" jdbcType="SMALLINT" property="cityCode" />
+    <result column="area_code" jdbcType="INTEGER" property="areaCode" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="audit_status" jdbcType="VARCHAR" property="auditStatus" />
+    <result column="lefal_card_up_url" jdbcType="VARCHAR" property="lefalCardUpUrl" />
+    <result column="lefal_card_down_url" jdbcType="VARCHAR" property="lefalCardDownUrl" />
+    <result column="work_card_from" jdbcType="VARCHAR" property="workCardFrom" />
+    <result column="work_card_indate" jdbcType="TIMESTAMP" property="workCardIndate" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="work_code" jdbcType="VARCHAR" property="workCode" />
+    <result column="company_classify" jdbcType="SMALLINT" property="companyClassify" />
+    <result column="site_company_id" jdbcType="VARCHAR" property="siteCompanyId" />
+    <result column="business_type" jdbcType="SMALLINT" property="businessType" />
+    <result column="platform_type" jdbcType="SMALLINT" property="platformType" />
+    <result column="branch_company_code" jdbcType="VARCHAR" property="branchCompanyCode" />
+    <result column="city_branch_code" jdbcType="VARCHAR" property="cityBranchCode" />
+    <result column="cf" jdbcType="VARCHAR" property="cf" />
+    <result column="tf" jdbcType="VARCHAR" property="tf" />
+    <result column="work_card_valid_start_date" jdbcType="TIMESTAMP" property="workCardValidStartDate" />
+    <result column="work_card_valid_end_date" jdbcType="TIMESTAMP" property="workCardValidEndDate" />
+    <result column="dealer_company_id" jdbcType="VARCHAR" property="dealerCompanyId" />
+
+    <result column="organization_text" jdbcType="VARCHAR" property="storeName" />
+    <result column="city_branch_name" jdbcType="VARCHAR" property="cityBranchName" />
+    <result column="branch_company_name" jdbcType="VARCHAR" property="branchCompanyName" />
+    <result column="entity_name" jdbcType="VARCHAR" property="entityName" />
+    <result column="business_entity_code" jdbcType="VARCHAR" property="businessEntityCode" />
+
+  </resultMap>
+  <sql id="CompanyInfo_Column_List">
+    id, company_id, company_name, role_id, province_code, address, legal_name, legal_phone,
+    legal_id_card, business_code, organization_code, tax_code, is_check, create_time,
+    phone, business_photo_url, work_photo_url, deposit_money, lbs, is_delete, city_code,
+    area_code, telephone, content, audit_status, lefal_card_up_url, lefal_card_down_url,
+    work_card_from, work_card_indate, update_time, work_code, company_classify, site_company_id,
+    business_type, platform_type, branch_company_code, city_branch_code, cf, tf, work_card_valid_start_date,
+    work_card_valid_end_date, dealer_company_id
+  </sql>
+  <select id="getAgencyCompanyInfos" parameterType="map" resultMap="CompanyInfoBaseResultMap">
+
+    SELECT
+    ci.id,
+    ci.company_id,
+    ci.company_name,
+    ci.role_id,
+    ci.province_code,
+    ci.address,
+    ci.legal_name,
+    ci.legal_phone,
+    ci.legal_id_card,
+    ci.business_code,
+    ci.organization_code,
+    ci.tax_code,
+    ci.is_check,
+    ci.create_time,
+    ci.phone,
+    ci.business_photo_url,
+    ci.work_photo_url,
+    ci.deposit_money,
+    ci.lbs,
+    ci.is_delete,
+    ci.city_code,
+    ci.area_code,
+    ci.telephone,
+    ci.content,
+    ci.audit_status,
+    ci.lefal_card_up_url,
+    ci.lefal_card_down_url,
+    ci.work_card_from,
+    ci.work_card_indate,
+    ci.update_time,
+    ci.work_code,
+    ci.company_classify,
+    ci.site_company_id,
+    ci.business_type,
+    ci.platform_type,
+    ci.branch_company_code,
+    ci.city_branch_code,
+    cf,
+    tf,
+    ci.work_card_valid_start_date,
+    ci.work_card_valid_end_date,
+    ci.dealer_company_id,
+    pbc.company_name AS branch_company_name,
+    pcb.city_branch_name,
+    bes.entity_name,
+    bes.business_entity_code
+    FROM
+    company_info ci
+    LEFT JOIN pc_branch_company pbc ON ci.branch_company_code = pbc.branch_company_code
+    LEFT JOIN pc_city_branch pcb ON pcb.city_branch_code = ci.city_branch_code
+    LEFT JOIN pc_business_entity_store bes ON ci.site_company_id = bes.store_id
+    <where>
+      ci.audit_status = 8 AND ci.role_id = 'DR'
+      <if test="companyId != null and companyId != ''">
+        and ci.company_id = #{companyId}
+      </if>
+      <if test="dealerCompanyId != null and dealerCompanyId != ''">
+        and ci.dealer_company_id LIKE #{dealerCompanyId}
+      </if>
+    </where>
+  </select>
+</mapper>

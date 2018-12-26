@@ -4,7 +4,11 @@ import cn.thinkfree.database.vo.AbsPageSearchCriteria;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-
+/**
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经销商合同列表查询参数
+ */
 @ApiModel(description = "经销商合同列表查询参数")
 public class AgencySEO extends AbsPageSearchCriteria {
 
@@ -14,8 +18,6 @@ public class AgencySEO extends AbsPageSearchCriteria {
     @ApiModelProperty(value = "经销商编码/名称")
     private String agency;
 
-
-
     @ApiModelProperty(value = "品牌编码/名称")
     private String brand;
 
@@ -23,14 +25,35 @@ public class AgencySEO extends AbsPageSearchCriteria {
     private String category;
 
     @ApiModelProperty(value = "分公司code")
-    private String filialeId;
+    private String branchCompanyCode;
 
     @ApiModelProperty(value = "城市站code")
-    private String metroId;
+    private String cityBranchCode;
 
     @ApiModelProperty(value = "状态")
     private String status;
 
+    @ApiModelProperty(value = "结束时间")
+    private String endTime;
+
+    @ApiModelProperty(value = "开始时间")
+    private String startTime;
+
+    public String getBranchCompanyCode() {
+        return branchCompanyCode;
+    }
+
+    public void setBranchCompanyCode(String branchCompanyCode) {
+        this.branchCompanyCode = branchCompanyCode;
+    }
+
+    public String getCityBranchCode() {
+        return cityBranchCode;
+    }
+
+    public void setCityBranchCode(String cityBranchCode) {
+        this.cityBranchCode = cityBranchCode;
+    }
 
     public String getStartTime() {
         return startTime;
@@ -40,10 +63,6 @@ public class AgencySEO extends AbsPageSearchCriteria {
         this.startTime = startTime;
     }
 
-    @ApiModelProperty(value = "开始时间")
-    private String startTime;
-
-
     public String getEndTime() {
         return endTime;
     }
@@ -52,9 +71,6 @@ public class AgencySEO extends AbsPageSearchCriteria {
         this.endTime = endTime;
     }
 
-    @ApiModelProperty(value = "结束时间")
-    private String endTime;
-
     public String getStatus() {
         return status;
     }
@@ -62,8 +78,6 @@ public class AgencySEO extends AbsPageSearchCriteria {
     public void setStatus(String status) {
         this.status = status;
     }
-
-
 
     public String getContractNumber() {
         return contractNumber;
@@ -96,23 +110,4 @@ public class AgencySEO extends AbsPageSearchCriteria {
     public void setCategory(String category) {
         this.category = category;
     }
-
-    public String getFilialeId() {
-        return filialeId;
-    }
-
-    public void setFilialeId(String filialeId) {
-        this.filialeId = filialeId;
-    }
-
-    public String getMetroId() {
-        return metroId;
-    }
-
-    public void setMetroId(String metroId) {
-        this.metroId = metroId;
-    }
-
-
-
 }
