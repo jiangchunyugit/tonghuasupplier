@@ -40,12 +40,12 @@ public class MaterialsRemAgencyController extends AbsBaseController{
     @GetMapping(value = "/companyAgencyList")
     @MyRespBody
     @ApiOperation(value="经销商：合同列表入口选择经销商信息")
-    public MyRespBundle<List<AgencyContractCompanyInfoVo>> companyAgencyList(@ApiParam("经销商编号")@RequestParam(value = "dealerCompanyId") String dealerCompanyId){
+    public MyRespBundle<List<AgencyContractCompanyInfoVo>> companyAgencyList(@ApiParam("经销商名称")@RequestParam(value = "companyName") String companyName){
 
-        List<AgencyContractCompanyInfoVo> agencyContractCompanyInfoVos = materialsRemAgencyService.getAgencyCompanyInfos("",dealerCompanyId);
+        List<AgencyContractCompanyInfoVo> agencyContractCompanyInfoVos = materialsRemAgencyService.getAgencyCompanyInfos("",companyName);
         if (agencyContractCompanyInfoVos.size() ==0) {
 
-            return sendFailMessage("没有查到入驻成功经销商信息。请先去办理经销商");
+            return sendFailMessage("没有查到相关入驻成功的经销商信息。请先去办理经销商");
         }
         return sendJsonData(ResultMessage.SUCCESS, agencyContractCompanyInfoVos);
     }

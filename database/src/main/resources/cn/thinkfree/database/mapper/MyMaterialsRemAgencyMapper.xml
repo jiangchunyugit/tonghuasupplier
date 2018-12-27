@@ -120,8 +120,8 @@
       <if test="companyId != null and companyId != ''">
         and ci.company_id = #{companyId}
       </if>
-      <if test="dealerCompanyId != null and dealerCompanyId != ''">
-        and ci.dealer_company_id LIKE #{dealerCompanyId}
+      <if test="companyName != null and companyName != ''">
+        and ci.company_name LIKE #{companyName}
       </if>
     </where>
   </select>

@@ -13,12 +13,18 @@ import java.util.List;
 public interface StoreInfoService {
 
     /**
-     * 通过城市编码查询门店
+     * 通过城市编码查询门店(少栋哥，构建关系图（不校验主体名称）)
      * @param cityBranchCode
      * @return
      */
     List<StoreInfo> storeInfoListByCityId (String cityBranchCode);
 
+    /**
+     * 通过城市编码查询门店
+     * @param cityBranchCode
+     * @return
+     */
+    List<StoreInfo> storeInfoListByCityCode (String cityBranchCode);
     /**
      * 通过分公司查询门店
      * @param branchCompanyCode
