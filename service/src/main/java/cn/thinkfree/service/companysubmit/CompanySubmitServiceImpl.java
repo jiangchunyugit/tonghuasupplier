@@ -413,18 +413,24 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 					throw new RuntimeException("公司账户审批失败");
 				}
 			} else{
-				//经销商资质变更时候，作废此经销商全部品牌
-				DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
-				dealerBrandInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
-						.andAgencyCodeEqualTo(pcAuditTemporaryInfo.get(0).getDealerCompanyId());
-				DealerBrandInfo brandInfo = new DealerBrandInfo();
-				brandInfo.setAuditStatus(BrandConstants.AuditStatus.DISCARD.code);
-				brandInfo.setIsValid(Integer.valueOf(SysConstants.YesOrNo.NO.shortVal()));
-				brandInfo.setUpdateTime(date);
-				int dealerLine = dealerBrandInfoMapper.updateByExampleSelective(brandInfo, dealerBrandInfoExample);
-				//通知合同作废
-				boolean flag = agencyService.updateContractStatus(companyId,"", AgencyConstants.AgencyType.INVALID_ING.code.toString());
-				if (dealerLine <= 0 || !flag){
+				try{
+					//经销商资质变更时候，作废此经销商全部品牌
+					DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
+					dealerBrandInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
+							.andAgencyCodeEqualTo(pcAuditTemporaryInfo.get(0).getDealerCompanyId());
+					DealerBrandInfo brandInfo = new DealerBrandInfo();
+					brandInfo.setAuditStatus(BrandConstants.AuditStatus.DISCARD.code);
+					brandInfo.setIsValid(Integer.valueOf(SysConstants.YesOrNo.NO.shortVal()));
+					brandInfo.setUpdateTime(date);
+					dealerBrandInfoMapper.updateByExampleSelective(brandInfo, dealerBrandInfoExample);
+					//通知合同作废
+					boolean flag = agencyService.updateContractStatus(companyId,"", AgencyConstants.AgencyType.INVALID_ING.code.toString());
+					if (!flag){
+						throw new RuntimeException("经销商资质审批失败");
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+					printErrorMes("经销商资质审批失败"+e.getMessage());
 					throw new RuntimeException("经销商资质审批失败");
 				}
 			}
