@@ -44,7 +44,13 @@ public class AppUpdateServiceImpl implements AppUpdateService {
         appUpdateLogExample.setOrderByClause(" effect_time desc limit 1");
         List<AppUpdateLog> appUpdateLogs = appUpdateLogMapper.selectByExample(appUpdateLogExample);
         if (appUpdateLogs.isEmpty()) {
-            return new HashMap<>();
+            Map<String, Object> objectMap = new HashMap<>();
+            objectMap.put("minVersion", "0");
+            objectMap.put("nowVersion", "1");
+            objectMap.put("apkUrl", "");
+            objectMap.put("updateDescription", "");
+            objectMap.put("forceUpdateVersions", JSONObject.parseArray("[]"));
+            return objectMap;
         }
         AppUpdateLog androidLog = appUpdateLogs.get(0);
         Map<String, Object> objectMap = new HashMap<>();
@@ -62,7 +68,13 @@ public class AppUpdateServiceImpl implements AppUpdateService {
         appUpdateLogExample.setOrderByClause(" effect_time desc limit 1");
         List<AppUpdateLog> appUpdateLogs = appUpdateLogMapper.selectByExample(appUpdateLogExample);
         if (appUpdateLogs.isEmpty()) {
-            return new HashMap<>();
+            Map<java.lang.String, java.lang.Object> objectMap = new HashMap<>();
+            objectMap.put("minVersion", "0.0.0");
+            objectMap.put("nowVersion", "1.0.0");
+            objectMap.put("iosUrl", "");
+            objectMap.put("updateDescription", "");
+            objectMap.put("forceUpdateVersions", JSONObject.parseArray("[]"));
+            return objectMap;
         }
         AppUpdateLog iosLog = appUpdateLogs.get(0);
         Map<java.lang.String, java.lang.Object> objectMap = new HashMap<>();
