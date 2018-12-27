@@ -58,17 +58,30 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     private final int FlagZero = 0;
 
     @Override
-    public boolean checkRepeat(BusinessEntity businessEntity) {
-        if (StringUtils.isNotBlank(businessEntity.getEntityName())) {
-            BusinessEntityExample businessEntityExample = new BusinessEntityExample();
-            BusinessEntityExample.Criteria criteria = businessEntityExample.createCriteria();
-            criteria.andEntityNameEqualTo(businessEntity.getEntityName());
-            if (businessEntity.getId() != null) {
-                criteria.andIdNotEqualTo(businessEntity.getId());
-            }
-            return businessEntityMapper.countByExample(businessEntityExample) >FlagZero?true:false;
+    public String checkRepeat(BusinessEntity businessEntity) {
+
+        if (this.checkCondition(businessEntity,1)){
+            return "经营主体名称重复";
         }
-        return false;
+        if (this.checkCondition(businessEntity,0)){
+            return "ebsid不可以重复";
+        }
+        return null;
+    }
+
+    private boolean checkCondition(BusinessEntity businessEntity ,int checkFlag) {
+
+        BusinessEntityExample businessEntityExample = new BusinessEntityExample();
+        BusinessEntityExample.Criteria criteria = businessEntityExample.createCriteria();
+        if (checkFlag == 1){
+            criteria.andEntityNameEqualTo(businessEntity.getEntityName());
+        } else {
+            criteria.andEbsidEqualTo(businessEntity.getEbsid());
+        }
+        if (businessEntity.getId() != null) {
+            criteria.andIdNotEqualTo(businessEntity.getId());
+        }
+        return businessEntityMapper.countByExample(businessEntityExample) >FlagZero?true:false;
     }
 
     @Override
