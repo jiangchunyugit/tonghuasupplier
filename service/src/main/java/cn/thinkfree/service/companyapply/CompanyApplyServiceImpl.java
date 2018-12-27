@@ -245,6 +245,13 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> addCompanyAdmin(PcApplyInfoSEO pcApplyInfoSEO) {
         Map<String, Object> map = new HashMap<>();
+        if(CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            if(StringUtils.isBlank(pcApplyInfoSEO.getDealerCompanyId())){
+                map.put("code", false);
+                map.put("msg", "请选择经销商公司名称!");
+                return map;
+            }
+        }
 
         if(StringUtils.isBlank(pcApplyInfoSEO.getSiteCompanyId())){
             map.put("code", false);

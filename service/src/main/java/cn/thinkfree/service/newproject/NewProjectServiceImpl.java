@@ -1711,16 +1711,14 @@ public class NewProjectServiceImpl implements NewProjectService {
                 projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                 projectData.setDataJson(jsonData);
                 projectData.setUploadTime(new Date());
-                if (urlDetailVo.getImgUrl()!=null){
+                if (urlDetailVo.getImgUrl() != null) {
                     projectData.setUrl(urlDetailVo.getImgUrl());
                 }
-                if (urlDetailVo.getPhoto360Url()!=null){
+                if (urlDetailVo.getPhoto360Url() != null) {
                     projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
                 }
-                if (urlDetailVo.getViewType()!=null){
-                    projectData.setCategory(Integer.valueOf(urlDetailVo.getViewType()));
-                }
-                if (newUrlDetailVo.getRoomName()!=null){
+                projectData.setCategory(type);
+                if (newUrlDetailVo.getRoomName() != null) {
                     projectData.setFileName(newUrlDetailVo.getRoomName());
                 }
                 int a = projectDataMapper.insertSelective(projectData);
