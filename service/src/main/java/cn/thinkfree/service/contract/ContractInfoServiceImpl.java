@@ -173,7 +173,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			fundsCompanyCash.setContractMoney(promissMony);
 			fundsCompanyCash.setDirectMoney(defaultMony);
 			fundsCompanyCash.setGoodsMoney(defaultMony);
-			fundsCompanyCash.setDisposableMoney(StringUtils.isNotBlank(disposableMoney)?BigDecimal.valueOf(Integer.valueOf(disposableMoney)):new BigDecimal(0));
+			//保证金金额
+			fundsCompanyCash.setDisposableMoney(StringUtils.isNotBlank(disposableMoney)?BigDecimal.valueOf(Double.valueOf(disposableMoney)):new BigDecimal(0));
 			// 公司id不为空获取门店id，名称，公司id，名称。经营主体编号，名称。
 			if (StringUtils.isNotBlank(companyInfoVo.getCompanyId())) {
 				EnterCompanyOrganizationVO enterCompanyOrganizationVO = branchCompanyService.getCompanyOrganizationByCompanyId(companyInfoVo.getCompanyId());
@@ -1586,7 +1587,14 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNo);
 				CreateOrder order = new CreateOrder();
 				order.setData(syncOrderVo);
-				eventService.publish(order);
+
+				try {
+					eventService.publish(order);
+				} catch (Exception e) {
+					e.printStackTrace();
+					printErrorMes("生成订单接口异常"+e.getMessage());
+					throw new RuntimeException("生成预防订单接口异常");
+				}
 
 			}
 			//查询是否全款 1全款合同，2分期款合同

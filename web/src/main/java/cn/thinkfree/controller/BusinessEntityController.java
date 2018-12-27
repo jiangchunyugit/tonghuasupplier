@@ -213,5 +213,21 @@ public class BusinessEntityController extends AbsBaseController{
         }
         return sendJsonData(ResultMessage.FAIL, "操作失败");
     }
+
+    /**
+     * 根据门店id 查询 经营主体名称
+     * @2018年12月27日 15:09:48
+     * @authr 吕
+     */
+    @RequestMapping(value = "/getBusinessStoreName", method = RequestMethod.POST)
+    @MyRespBody
+    @ApiOperation(value="经营主体数据：根据门店id查询 经营主体名称")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PROJECT,desc = "禁用经营主体")
+    public MyRespBundle<String> getBusinessStoreName(@ApiParam("经营主体id")@RequestParam(value = "storeId") String storeId){
+
+        String  entityName = businessEntityService.getBusinessStoreName(storeId);
+
+        return sendJsonData(ResultMessage.SUCCESS, entityName);
+    }
 }
 

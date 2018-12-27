@@ -277,4 +277,19 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         }
         return "";
     }
+
+
+
+
+    @Override
+    public String getBusinessStoreName(String storeId) {
+
+        BusinessEntityStoreExample businessEntityStoreExample = new BusinessEntityStoreExample();
+        businessEntityStoreExample.createCriteria().andStoreIdEqualTo(storeId);
+        List<BusinessEntityStore> businessEntityStores = businessEntityStoreMapper.selectByExample(businessEntityStoreExample);
+        if(businessEntityStores == null || businessEntityStores.size()== 0){
+            throw new RuntimeException("数据异常");
+        }
+        return businessEntityStores.get(0).getEntityName();
+    }
 }

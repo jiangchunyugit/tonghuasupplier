@@ -27,20 +27,20 @@ public class AppUpdateServiceImpl implements AppUpdateService {
     private AppUpdateLogMapper appUpdateLogMapper;
 
     @Override
-    public Map<String, Object> getVersionMsg() {
+    public Map<String, Object> getVersionMsg(String appType) {
         Map<String, Object> objectMap = new HashMap<>();
         try{
-            objectMap.put("androidVesionMsg", getAndroidVersionMsg());
-            objectMap.put("iosVersionMsg", getIosVersionMsg());
+            objectMap.put("androidVesionMsg", getAndroidVersionMsg(appType));
+            objectMap.put("iosVersionMsg", getIosVersionMsg(appType));
         }catch (Exception e){
             logger.error("获取版本信息失败：",e);
         }
         return objectMap;
     }
 
-    private Map<String, Object> getAndroidVersionMsg() {
+    private Map<String, Object> getAndroidVersionMsg(String appType) {
         AppUpdateLogExample appUpdateLogExample = new AppUpdateLogExample();
-        appUpdateLogExample.createCriteria().andAppTypeEqualTo("android").andEffectTimeLessThanOrEqualTo(new Date());
+        appUpdateLogExample.createCriteria().andAppTypeEqualTo("android-" + appType).andEffectTimeLessThanOrEqualTo(new Date());
         appUpdateLogExample.setOrderByClause(" effect_time desc limit 1");
         List<AppUpdateLog> appUpdateLogs = appUpdateLogMapper.selectByExample(appUpdateLogExample);
         if (appUpdateLogs.isEmpty()) {
@@ -56,9 +56,9 @@ public class AppUpdateServiceImpl implements AppUpdateService {
         return objectMap;
     }
 
-    private Map<String, Object> getIosVersionMsg() {
+    private Map<String, Object> getIosVersionMsg(String appType) {
         AppUpdateLogExample appUpdateLogExample = new AppUpdateLogExample();
-        appUpdateLogExample.createCriteria().andAppTypeEqualTo("ios").andEffectTimeLessThanOrEqualTo(new Date());
+        appUpdateLogExample.createCriteria().andAppTypeEqualTo("ios-" + appType).andEffectTimeLessThanOrEqualTo(new Date());
         appUpdateLogExample.setOrderByClause(" effect_time desc limit 1");
         List<AppUpdateLog> appUpdateLogs = appUpdateLogMapper.selectByExample(appUpdateLogExample);
         if (appUpdateLogs.isEmpty()) {

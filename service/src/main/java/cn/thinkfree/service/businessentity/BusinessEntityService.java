@@ -90,4 +90,11 @@ public interface BusinessEntityService {
      * @return
      */
     String getBusinessEbsIdByCompanyId(String companyId);
+
+
+    /**
+     * 根据门店id 查询 经营主体名称
+     * @param  storeId
+     */
+    String getBusinessStoreName(String storeId);
 }

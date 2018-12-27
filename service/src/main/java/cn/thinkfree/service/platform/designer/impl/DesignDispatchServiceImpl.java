@@ -2199,7 +2199,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             return "";
         }
         BasicsDataExample basicsDataExample = new BasicsDataExample();
-        basicsDataExample.createCriteria().andBasicsCodeEqualTo(project.get(0).getHouseHuxing().toString());
+        basicsDataExample.createCriteria().andBasicsCodeEqualTo(project.get(0).getHouseHuxing().toString()).andBasicsGroupEqualTo("HOUSE_STRUCTURE");
         List<BasicsData> basicsData = basicsDataMapper.selectByExample(basicsDataExample);
         if(basicsData.isEmpty()){
             return "";

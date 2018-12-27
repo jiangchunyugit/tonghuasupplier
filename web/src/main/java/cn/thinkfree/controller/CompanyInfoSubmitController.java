@@ -47,7 +47,7 @@ public class CompanyInfoSubmitController extends AbsBaseController {
     @RequestMapping(value = "/changeNode", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="前端--装饰/设计公司管理中心--入驻--入驻公司操作")
-    public MyRespBundle<String> changeCompanyInfo(@ApiParam("入驻公司节点信息")JoinStatus joinStatus){
+    public MyRespBundle<String> changeNode(@ApiParam("入驻公司节点信息")JoinStatus joinStatus){
         boolean flag = companySubmitService.changeNode(joinStatus);
         if(flag){
             return sendSuccessMessage("操作成功");

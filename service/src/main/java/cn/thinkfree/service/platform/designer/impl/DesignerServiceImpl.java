@@ -110,7 +110,7 @@ public class DesignerServiceImpl implements DesignerService {
         String roleCode = functionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
         EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
         addWhere(designerRealName, authState, province, city, area, cardNo, registrationTimeStart, registrationTimeEnd, userIds, observeCompanyIds, roleCode, employeeMsgExample.or());
-        addWhere(designerRealName, authState, province, city, area, cardNo, registrationTimeStart, registrationTimeEnd, userIds, observeCompanyIds, roleCode, employeeMsgExample.or().andCompanyIdIsNull());
+        addWhere(designerRealName, authState, province, city, area, cardNo, registrationTimeStart, registrationTimeEnd, userIds, null, roleCode, employeeMsgExample.or().andCompanyIdIsNull());
         long total = employeeMsgMapper.countByExample(employeeMsgExample);
         if(total == 0){
             return PageVo.def(new ArrayList<>());
@@ -162,7 +162,9 @@ public class DesignerServiceImpl implements DesignerService {
         return msgVo;
     }
 
-    private void addWhere(String designerRealName, String authState, String province, String city, String area, String cardNo, String registrationTimeStart, String registrationTimeEnd, List<String> userIds, List<String> observeCompanyIds, String roleCode, EmployeeMsgExample.Criteria msgExampleCriteria) {
+    private void addWhere(String designerRealName, String authState, String province, String city, String area, String cardNo,
+                          String registrationTimeStart, String registrationTimeEnd, List<String> userIds, List<String> observeCompanyIds,
+                          String roleCode, EmployeeMsgExample.Criteria msgExampleCriteria) {
         if(StringUtils.isEmpty(roleCode)){
             roleCode = "CD";
         }

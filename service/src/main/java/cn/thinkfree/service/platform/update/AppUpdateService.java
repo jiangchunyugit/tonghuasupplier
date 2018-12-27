@@ -11,5 +11,5 @@ public interface AppUpdateService {
      * 获取版本信息
      * @return
      */
-    Map<String,Object> getVersionMsg();
+    Map<String,Object> getVersionMsg(String appType);
 }

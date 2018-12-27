@@ -219,7 +219,7 @@ public class DesignerMsgVo {
 
     public void setWorkingTime(Integer workingTime) {
         if(workingTime == null){
-            this.workingTime = -1;
+            this.workingTime = 0;
         }else{
             this.workingTime = workingTime;
         }
