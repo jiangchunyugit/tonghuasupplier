@@ -162,7 +162,7 @@ public class OpenApiController extends AbsBaseController {
      */
 
     @ApiOperation(value = "B端--设计师输入合同--吕启栋", notes = "设计合同录入 for 江宁哥 新增 （合同总金额—c21） " +
-            "（设计合同开始时间—c22）（设计合同开始时间—c22）（设计合同结束时间—c23）（合同类型 0新增1修改—c24）)" +
+            "（设计合同开始时间—c22）（设计合同开始时间—c22）（设计合同结束时间—c23）" +
             "",consumes = "application/json")
     @PostMapping("/insertDesignOrderContract/{orderNumber}")
     @MyRespBody

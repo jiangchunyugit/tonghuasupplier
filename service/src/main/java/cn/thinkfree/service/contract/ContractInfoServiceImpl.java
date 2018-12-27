@@ -1586,7 +1586,14 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				List<SyncOrderVO> syncOrderVo = thirdPartDateService.getOrderContract(orderNo);
 				CreateOrder order = new CreateOrder();
 				order.setData(syncOrderVo);
-				eventService.publish(order);
+
+				try {
+					eventService.publish(order);
+				} catch (Exception e) {
+					e.printStackTrace();
+					printErrorMes("生成订单接口异常"+e.getMessage());
+					throw new RuntimeException("生成预防订单接口异常");
+				}
 
 			}
 			//查询是否全款 1全款合同，2分期款合同
