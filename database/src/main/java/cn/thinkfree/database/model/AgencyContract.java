@@ -256,7 +256,7 @@ public class AgencyContract extends BaseModel {
      * @mbg.generated
      */
     @ApiModelProperty(value="unifySocialCreditCode三证合一")
-    @NotBlank(message = "三证合一不可以为空",groups = {Severitys.Insert.class})
+//    @NotBlank(message = "三证合一不可以为空",groups = {Severitys.Insert.class})
     private String unifySocialCreditCode;
 
     /**

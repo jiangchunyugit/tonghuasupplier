@@ -20,6 +20,7 @@ import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
@@ -48,8 +49,9 @@ public class BusinessEntityController extends AbsBaseController{
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PROJECT,desc = "创建经营主体")
     public MyRespBundle<String> saveBusinessEntity(@ApiParam("经营主体信息") BusinessEntity businessEntity){
         BeanValidator.validate(businessEntity, Severitys.Insert.class);
-        if (businessEntityService.checkRepeat(businessEntity)) {
-            return sendFailMessage("经营主体名称已存在");
+        String result = businessEntityService.checkRepeat(businessEntity);
+        if (StringUtils.isNotBlank(result)) {
+            return sendFailMessage(result);
         }
         if(businessEntityService.addBusinessEntity(businessEntity)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
@@ -66,8 +68,9 @@ public class BusinessEntityController extends AbsBaseController{
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PROJECT,desc = "编辑经营主体")
     public MyRespBundle<String> updateBusinessEntity(@ApiParam("经营主体信息")BusinessEntity businessEntity){
         BeanValidator.validate(businessEntity, Severitys.Update.class);
-        if (businessEntityService.checkRepeat(businessEntity)) {
-            return sendFailMessage("经营主体名称已存在");
+        String result = businessEntityService.checkRepeat(businessEntity);
+        if (StringUtils.isNotBlank(result)) {
+            return sendFailMessage(result);
         }
         if(businessEntityService.updateBusinessEntity(businessEntity)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
