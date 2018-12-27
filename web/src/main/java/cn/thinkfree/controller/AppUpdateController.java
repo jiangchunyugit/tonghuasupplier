@@ -23,7 +23,7 @@ public class AppUpdateController extends AbsBaseController{
     private AppUpdateService appUpdateService;
 
     @RequestMapping("versionMsg")
-    public MyRespBundle<Object> getVersionMsg(@RequestParam(name = "appType") @ApiParam(name = "appType", value = "app类型：1消费者，2施工app，3设计师app", required = false) String appType){
-        return sendJsonData(ResultMessage.SUCCESS,appUpdateService.getVersionMsg(appType));
+    public MyRespBundle<Object> getVersionMsg(@RequestParam(name = "appCode") @ApiParam(name = "appCode", value = "app类型：1消费者，2施工app，3设计师app", required = false) String appCode){
+        return sendJsonData(ResultMessage.SUCCESS,appUpdateService.getVersionMsg(appCode));
     }
 }
