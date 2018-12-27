@@ -306,9 +306,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
         criteria.andUserIdEqualTo(userId);
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(example);
         if (employeeMsgs.size() == 0) {
-            map.put("result", false);
-            map.put("message", "查无此员工");
-            return map;
+            EmployeeMsg employeeMsg = new EmployeeMsg();
+            employeeMsg.setUserId(userId);
+            employeeMsgMapper.insertSelective(employeeMsg);
         }
         map.put("result", true);
         map.put("example", example);
@@ -327,9 +327,9 @@ public class DesignerDataServiceImpl implements DesignerDataService {
         criteria.andUserIdEqualTo(userId);
         List<DesignerMsg> designerMsgs = designerMsgMapper.selectByExample(example);
         if (designerMsgs.size() == 0) {
-            map.put("result", false);
-            map.put("message", "查无此员工");
-            return map;
+            DesignerMsg designerMsg = new DesignerMsg();
+            designerMsg.setUserId(userId);
+            designerMsgMapper.insertSelective(designerMsg);
         }
         map.put("result", true);
         map.put("example", example);
@@ -348,7 +348,7 @@ public class DesignerDataServiceImpl implements DesignerDataService {
         //获取员工表信息
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectForUserId(userId);
         if (employeeMsgs.size() == 0) {
-            return RespData.error("查无此员工");
+            return RespData.success(new DesignerDataVo());
         }
         EmployeeMsg employeeMsg = employeeMsgs.get(0);
         if (employeeMsg.getSex() != null) {
