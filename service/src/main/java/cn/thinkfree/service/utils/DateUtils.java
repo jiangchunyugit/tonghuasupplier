@@ -23,6 +23,7 @@ public class DateUtils {
         }
         return new Date(0);
     }
+
     /**
      * 时间格式化
      * @param strDate
@@ -30,8 +31,33 @@ public class DateUtils {
      * @return
      */
     public static Date strToDate(String strDate){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = null;
         try {
+            sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS Z");
+            return sdf.parse(strDate.replace("Z", " UTC"));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            return sdf.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            return sdf.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            sdf = new SimpleDateFormat("yyyy-MM-dd HH");
+            return sdf.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            sdf = new SimpleDateFormat("yyyy-MM-dd");
             return sdf.parse(strDate);
         } catch (ParseException e) {
             e.printStackTrace();

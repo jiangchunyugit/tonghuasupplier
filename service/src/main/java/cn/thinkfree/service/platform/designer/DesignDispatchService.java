@@ -43,7 +43,8 @@ public interface DesignDispatchService {
     PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage,
-            int designerOrderState, int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
+            int designerOrderState, int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType,
+            String companyName, String designerName);
 
     /**
      * 获取当前登陆用户所能看到的所有公司ID
@@ -54,7 +55,7 @@ public interface DesignDispatchService {
     PageVo<List<DesignerOrderVo>> queryDesignerOrderByCompanyId(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,
-            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType);
+            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType, String designerName);
 
     /**
      * 订单不派单

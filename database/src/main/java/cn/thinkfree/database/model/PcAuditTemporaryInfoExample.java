@@ -4634,6 +4634,206 @@ public class PcAuditTemporaryInfoExample extends cn.thinkfree.core.model.Abstrac
             addCriterion("work_card_valid_end_date not between", value1, value2, "workCardValidEndDate");
             return (Criteria) this;
         }
+
+        public Criteria andDealerCompanyIdIsNull() {
+            addCriterion("dealer_company_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIsNotNull() {
+            addCriterion("dealer_company_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdEqualTo(String value) {
+            addCriterion("dealer_company_id =", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotEqualTo(String value) {
+            addCriterion("dealer_company_id <>", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdGreaterThan(String value) {
+            addCriterion("dealer_company_id >", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("dealer_company_id >=", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLessThan(String value) {
+            addCriterion("dealer_company_id <", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLessThanOrEqualTo(String value) {
+            addCriterion("dealer_company_id <=", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdLike(String value) {
+            addCriterion("dealer_company_id like", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotLike(String value) {
+            addCriterion("dealer_company_id not like", value, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdIn(List<String> values) {
+            addCriterion("dealer_company_id in", values, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotIn(List<String> values) {
+            addCriterion("dealer_company_id not in", values, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdBetween(String value1, String value2) {
+            addCriterion("dealer_company_id between", value1, value2, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andDealerCompanyIdNotBetween(String value1, String value2) {
+            addCriterion("dealer_company_id not between", value1, value2, "dealerCompanyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationIsNull() {
+            addCriterion("business_duration is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationIsNotNull() {
+            addCriterion("business_duration is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationEqualTo(Date value) {
+            addCriterion("business_duration =", value, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationNotEqualTo(Date value) {
+            addCriterion("business_duration <>", value, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationGreaterThan(Date value) {
+            addCriterion("business_duration >", value, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationGreaterThanOrEqualTo(Date value) {
+            addCriterion("business_duration >=", value, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationLessThan(Date value) {
+            addCriterion("business_duration <", value, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationLessThanOrEqualTo(Date value) {
+            addCriterion("business_duration <=", value, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationIn(List<Date> values) {
+            addCriterion("business_duration in", values, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationNotIn(List<Date> values) {
+            addCriterion("business_duration not in", values, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationBetween(Date value1, Date value2) {
+            addCriterion("business_duration between", value1, value2, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andBusinessDurationNotBetween(Date value1, Date value2) {
+            addCriterion("business_duration not between", value1, value2, "businessDuration");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescIsNull() {
+            addCriterion("change_desc is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescIsNotNull() {
+            addCriterion("change_desc is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescEqualTo(String value) {
+            addCriterion("change_desc =", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescNotEqualTo(String value) {
+            addCriterion("change_desc <>", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescGreaterThan(String value) {
+            addCriterion("change_desc >", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescGreaterThanOrEqualTo(String value) {
+            addCriterion("change_desc >=", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescLessThan(String value) {
+            addCriterion("change_desc <", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescLessThanOrEqualTo(String value) {
+            addCriterion("change_desc <=", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescLike(String value) {
+            addCriterion("change_desc like", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescNotLike(String value) {
+            addCriterion("change_desc not like", value, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescIn(List<String> values) {
+            addCriterion("change_desc in", values, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescNotIn(List<String> values) {
+            addCriterion("change_desc not in", values, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescBetween(String value1, String value2) {
+            addCriterion("change_desc between", value1, value2, "changeDesc");
+            return (Criteria) this;
+        }
+
+        public Criteria andChangeDescNotBetween(String value1, String value2) {
+            addCriterion("change_desc not between", value1, value2, "changeDesc");
+            return (Criteria) this;
+        }
     }
 
     /**

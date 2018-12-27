@@ -12,6 +12,9 @@ import java.util.Map;
  */
 @ApiModel("公司列表参数")
 public class CompanyListSEO extends AbsPageSearchCriteria  {
+
+    @ApiModelProperty(value = "经销商公司编号")
+    private String dealerCompanyId;
     /**
      * 公司编号
      */
@@ -88,6 +91,37 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
      */
     @ApiModelProperty(value = "排序字段")
     Map<String, String> orderList;
+
+    @ApiModelProperty(value = "分公司code")
+    private String branchCompanyCode;
+
+    @ApiModelProperty(value = "城市分站code")
+    private String cityBranchCode;
+
+    public String getDealerCompanyId() {
+        return dealerCompanyId;
+    }
+
+    public void setDealerCompanyId(String dealerCompanyId) {
+        this.dealerCompanyId = dealerCompanyId;
+    }
+
+    public String getBranchCompanyCode() {
+        return branchCompanyCode;
+    }
+
+    public void setBranchCompanyCode(String branchCompanyCode) {
+        this.branchCompanyCode = branchCompanyCode;
+    }
+
+
+    public String getCityBranchCode() {
+        return cityBranchCode;
+    }
+
+    public void setCityBranchCode(String cityBranchCode) {
+        this.cityBranchCode = cityBranchCode;
+    }
 
     public String getStartTime() {
         return startTime;

@@ -152,7 +152,7 @@ public class AppProjectController extends BasicsController {
     public MyRespBundle<String> computerConfirmVolumeRoomData(
             @RequestParam(value = "projectNo",required = false) @ApiParam(name = "projectNo", value = "项目编号", required = false) String projectNo,
             @RequestParam(value = "userId",required = false) @ApiParam(name = "userId", value = "用户编号", required = false) String userId,
-            @RequestParam(value = "jsonData",required = false)@ApiParam(name = "dataVo", value = "资料详情的json ",required = false) String jsonData) {
+            @RequestParam(value = "jsonData",required = false)@ApiParam(name = "jsonData", value = "资料详情的json ",required = false) String jsonData) {
         try {
             return newProjectService.computerConfirmVolumeRoomData(projectNo,userId,jsonData);
         } catch (Exception e) {

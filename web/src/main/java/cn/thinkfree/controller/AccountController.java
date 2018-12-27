@@ -625,6 +625,7 @@ public class AccountController extends AbsBaseController {
         }
         if(userVO.getCompanyInfo() != null){
             result.put("auditStatus", userVO.getCompanyInfo().getAuditStatus());
+            result.put("dealerCompanyId", userVO.getCompanyInfo().getDealerCompanyId());
         }
         return sendJsonData(ResultMessage.SUCCESS,result);
     }

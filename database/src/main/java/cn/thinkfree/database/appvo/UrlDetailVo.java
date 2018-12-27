@@ -27,4 +27,7 @@ public class UrlDetailVo {
     private Date uploadTime;
     @ApiModelProperty(value = "资料名字")
     private String name;
+    @ApiModelProperty(value = "房屋类型")
+    private String viewType;
+
 }

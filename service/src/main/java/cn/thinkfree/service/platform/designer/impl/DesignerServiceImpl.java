@@ -100,50 +100,17 @@ public class DesignerServiceImpl implements DesignerService {
             }
             userIds.addAll(designerMsgIds);
         }
-        EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
-        EmployeeMsgExample.Criteria msgExampleCriteria = employeeMsgExample.createCriteria();
-        String roleCode = functionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
-        if(StringUtils.isEmpty(roleCode)){
-            roleCode = "CD";
-        }
-        msgExampleCriteria.andRoleCodeEqualTo(roleCode);
         if(userIds != null && userIds.isEmpty()){
             return PageVo.def(new ArrayList<>());
-        }
-        if(userIds != null && !userIds.isEmpty()){
-            msgExampleCriteria.andUserIdIn(userIds);
-        }
-        if (!StringUtils.isEmpty(designerRealName)) {
-            msgExampleCriteria.andRealNameEqualTo(designerRealName);
-        }
-        if (!StringUtils.isEmpty(authState)) {
-            msgExampleCriteria.andAuthStateEqualTo(Integer.parseInt(authState));
-        }
-        if (!StringUtils.isEmpty(province)) {
-            msgExampleCriteria.andProvinceEqualTo(province);
-        }
-        if (!StringUtils.isEmpty(city)) {
-            msgExampleCriteria.andCityEqualTo(city);
-        }
-        if (!StringUtils.isEmpty(area)) {
-            msgExampleCriteria.andAreaEqualTo(area);
-        }
-        if (!StringUtils.isEmpty(registrationTimeStart)) {
-            msgExampleCriteria.andBindDateGreaterThanOrEqualTo(DateUtils.strToDate(registrationTimeStart));
-        }
-        if (!StringUtils.isEmpty(registrationTimeEnd)) {
-            msgExampleCriteria.andBindDateLessThanOrEqualTo(DateUtils.strToDate(registrationTimeEnd));
-        }
-        if (!StringUtils.isEmpty(cardNo)) {
-            msgExampleCriteria.andCertificateLike("%" + cardNo + "%");
         }
         List<String> observeCompanyIds = designDispatchService.getCompanyIds();
         if(observeCompanyIds != null && observeCompanyIds.isEmpty()){
             return PageVo.def(new ArrayList<>());
         }
-        if(observeCompanyIds != null){
-            msgExampleCriteria.andCompanyIdIn(observeCompanyIds);
-        }
+        String roleCode = functionService.queryRoleCode(RoleFunctionEnum.DESIGN_POWER);
+        EmployeeMsgExample employeeMsgExample = new EmployeeMsgExample();
+        addWhere(designerRealName, authState, province, city, area, cardNo, registrationTimeStart, registrationTimeEnd, userIds, observeCompanyIds, roleCode, employeeMsgExample.or());
+        addWhere(designerRealName, authState, province, city, area, cardNo, registrationTimeStart, registrationTimeEnd, userIds, observeCompanyIds, roleCode, employeeMsgExample.or().andCompanyIdIsNull());
         long total = employeeMsgMapper.countByExample(employeeMsgExample);
         if(total == 0){
             return PageVo.def(new ArrayList<>());
@@ -193,6 +160,43 @@ public class DesignerServiceImpl implements DesignerService {
         msgVo.setData(msgVos);
         msgVo.setPageIndex(pageIndex);
         return msgVo;
+    }
+
+    private void addWhere(String designerRealName, String authState, String province, String city, String area, String cardNo, String registrationTimeStart, String registrationTimeEnd, List<String> userIds, List<String> observeCompanyIds, String roleCode, EmployeeMsgExample.Criteria msgExampleCriteria) {
+        if(StringUtils.isEmpty(roleCode)){
+            roleCode = "CD";
+        }
+        msgExampleCriteria.andRoleCodeEqualTo(roleCode);
+        if(userIds != null && !userIds.isEmpty()){
+            msgExampleCriteria.andUserIdIn(userIds);
+        }
+        if (!StringUtils.isEmpty(designerRealName)) {
+            msgExampleCriteria.andRealNameEqualTo(designerRealName);
+        }
+        if (!StringUtils.isEmpty(authState)) {
+            msgExampleCriteria.andAuthStateEqualTo(Integer.parseInt(authState));
+        }
+        if (!StringUtils.isEmpty(province)) {
+            msgExampleCriteria.andProvinceEqualTo(province);
+        }
+        if (!StringUtils.isEmpty(city)) {
+            msgExampleCriteria.andCityEqualTo(city);
+        }
+        if (!StringUtils.isEmpty(area)) {
+            msgExampleCriteria.andAreaEqualTo(area);
+        }
+        if (!StringUtils.isEmpty(registrationTimeStart)) {
+            msgExampleCriteria.andBindDateGreaterThanOrEqualTo(DateUtils.strToDate(registrationTimeStart));
+        }
+        if (!StringUtils.isEmpty(registrationTimeEnd)) {
+            msgExampleCriteria.andBindDateLessThanOrEqualTo(DateUtils.strToDate(registrationTimeEnd));
+        }
+        if (!StringUtils.isEmpty(cardNo)) {
+            msgExampleCriteria.andCertificateLike("%" + cardNo + "%");
+        }
+        if(observeCompanyIds != null){
+            msgExampleCriteria.andCompanyIdIn(observeCompanyIds);
+        }
     }
 
     private Map<String, CompanyInfo> getStringCompanyInfoMap(List<EmployeeMsg> employeeMsgs) {

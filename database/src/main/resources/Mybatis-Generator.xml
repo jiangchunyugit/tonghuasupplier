@@ -50,7 +50,7 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 表-->
-        <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
+        <!--<table tableName="pc_audit_temporary_info" domainObjectName="PcAuditTemporaryInfo" />-->
         <!--<table tableName="province" domainObjectName="Province" />-->
         <!--<table tableName="pc_city_branch" domainObjectName="CityBranch" />-->
         <!--<table tableName="city" domainObjectName="City"/>-->
@@ -168,6 +168,7 @@
         <!--<table tableName="build_scheme_company_rel" domainObjectName="BuildSchemeCompanyRel"/>-->
         <!--<table tableName="complaint_order_info" domainObjectName="ComplaintOrderInfo"/>-->
         <!--<table tableName="complaint_record_log" domainObjectName="ComplaintRecordLog"/>-->
+        <!--<table tableName="app_update_log" domainObjectName="AppUpdateLog"/>-->
 
     </context>
 </generatorConfiguration>

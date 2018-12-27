@@ -82,6 +82,13 @@ public interface DealerBrandInfoMapper {
     List<BrandItemsVO> showBrandItems(@Param("companyId") String companyId, @Param("agencyCode") String agencyCode);
 
     /**
+     * 经销商品牌审核回显品牌品类条目
+     * @param companyId
+     * @return
+     */
+    List<DealerBrandInfo> showSignBrand(String companyId);
+
+    /**
      * 查询品牌
      * @param companyId
      * @return
