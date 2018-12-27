@@ -21,7 +21,7 @@ public interface BusinessEntityService {
      * @param businessEntity
      * @return
      */
-    boolean checkRepeat(BusinessEntity businessEntity);
+    String checkRepeat(BusinessEntity businessEntity);
     /**
      * 添加经营主体
      * @param businessEntity
