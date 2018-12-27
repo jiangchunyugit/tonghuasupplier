@@ -180,9 +180,9 @@ public class BuildConfigServiceImpl implements BuildConfigService {
             BuildPayConfig buildPayConfig = new BuildPayConfig();
             buildPayConfig.setSchemeNo(schemeNo);
             buildPayConfig.setPaySchemeNo(OrderNoUtils.getNo("BUC"));
-            buildPayConfig.setProgressName("线下签约完成");
+            buildPayConfig.setProgressName("首款待支付");
             buildPayConfig.setStageCode("-1");
-            buildPayConfig.setRemark("线下签约完成");
+            buildPayConfig.setRemark("首款待支付");
             buildPayConfig.setDeleteState(3);
             payConfigMapper.insertSelective(buildPayConfig);
             payConfigs.add(buildPayConfig);
