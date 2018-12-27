@@ -68,11 +68,13 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionTimeStart", required = false, value = "操作时间开始") @RequestParam(name = "optionTimeStart", required = false) String optionTimeStart,
             @ApiParam(name = "optionTimeEnd", required = false, value = "操作时间结束") @RequestParam(name = "optionTimeEnd", required = false) String optionTimeEnd,
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType,
+            @ApiParam(name = "companyName", required = false, value = "所属公司名称") @RequestParam(name = "companyName", required = false) String companyName,
+            @ApiParam(name = "designerName", required = false, value = "所属设计师名称") @RequestParam(name = "designerName", required = false) String designerName,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType, companyName, designerName);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,11 +105,12 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionTimeStart", required = false, value = "操作时间开始") @RequestParam(name = "optionTimeStart", required = false) String optionTimeStart,
             @ApiParam(name = "optionTimeEnd", required = false, value = "操作时间结束") @RequestParam(name = "optionTimeEnd", required = false) String optionTimeEnd,
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType,
+            @ApiParam(name = "designerName", required = false, value = "所属设计师名称") @RequestParam(name = "designerName", required = false) String designerName,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrderByCompanyId(queryStage, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType, designerName);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
