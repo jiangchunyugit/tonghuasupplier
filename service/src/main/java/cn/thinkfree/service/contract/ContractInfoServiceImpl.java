@@ -1502,11 +1502,13 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 
 			}
 			orderContractMapper.updateByExampleSelective(record, example);
+			return true;
 		} catch (Exception e) {
 			e.getStackTrace();
 			printErrorMes("订单编号  orderNumber 合同审核程序异常{}",e.getMessage());
+			return false;
 		}
-		return false;
+
 	}
 
 
@@ -1651,7 +1653,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 		return chMap;
 	}
 
-	
+
 
 	/**
 	 * @return
