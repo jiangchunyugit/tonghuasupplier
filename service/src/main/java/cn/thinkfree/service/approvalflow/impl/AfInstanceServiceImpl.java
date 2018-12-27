@@ -326,7 +326,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         checkItemVO.setType(1);
         checkItemVO.setName(projectBigScheduling.getRename());
         checkItems.add(checkItemVO);
-        if (projectBigScheduling.getIsWaterTest() == 1) {
+        if (projectBigScheduling.getIsWaterTest() != null && projectBigScheduling.getIsWaterTest() == 1) {
             checkItemVO = new AfCheckItemVO();
             checkItemVO.setType(2);
             checkItemVO.setName("闭水验收");
@@ -1243,7 +1243,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 if (projectBigScheduling.getIsNeedCheck() == 1) {
                     result++;
                 }
-                if (projectBigScheduling.getIsWaterTest() == 1) {
+                if (projectBigScheduling.getIsWaterTest() != null && projectBigScheduling.getIsWaterTest() == 1) {
                     result++;
                 }
                 return result;
@@ -1632,7 +1632,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                 if (instances != null && instances.size() > 0 ) {
                     for (AfInstance instance : instances) {
                         AfCheckResultVO checkResultVO = null;
-                        if (projectBigScheduling.getIsWaterTest() == 1) {
+                        if (projectBigScheduling.getIsWaterTest() != null && projectBigScheduling.getIsWaterTest() == 1) {
                             AfCheckItemVO checkItem = getCheckItem(instance.getData());
                             if (checkItem.getType() == 2) {
                                 checkResultVO = new AfCheckResultVO();
@@ -1658,7 +1658,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                         AfCheckResultVO closedWaterTestCheckResultVO = null;
                         AfCheckResultVO checkResultVO = null;
                         for (AfInstance instance : instances) {
-                            if (projectBigScheduling.getIsWaterTest() == 1 && closedWaterTestCheckResultVO == null) {
+                            if (projectBigScheduling.getIsWaterTest() != null && projectBigScheduling.getIsWaterTest() == 1 && closedWaterTestCheckResultVO == null) {
                                 AfCheckItemVO checkItem = getCheckItem(instance.getData());
                                 if (checkItem.getType() == 2) {
                                     closedWaterTestCheckResultVO = new AfCheckResultVO();
@@ -1688,7 +1688,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                             }
                         }
                     } else {
-                        if (projectBigScheduling.getIsWaterTest() == 1) {
+                        if (projectBigScheduling.getIsWaterTest() != null && projectBigScheduling.getIsWaterTest() == 1) {
                             AfCheckResultVO closedWaterTestCheckResultVO = new AfCheckResultVO();
                             closedWaterTestCheckResultVO.setCheckName("闭水验收");
                             closedWaterTestCheckResultVO.setIsCheck(0);
