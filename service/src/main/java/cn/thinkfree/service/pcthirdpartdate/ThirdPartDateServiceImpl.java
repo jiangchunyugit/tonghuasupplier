@@ -203,7 +203,10 @@ public class ThirdPartDateServiceImpl extends AbsLogPrinter implements ThirdPart
 					  //合同金额 全款
 					  @SuppressWarnings("unchecked")
 					  Map<String,String> jsonMap = (Map<String, String>) jsonArray.get(i);
-					  vo.setActualAmount(jsonMap.get("payMoney"));//支付金额
+					  BigDecimal amount = new BigDecimal(String.valueOf(jsonMap.get("payMoney")));
+					  amount = amount.setScale(2, RoundingMode.HALF_UP);
+					  vo.setActualAmount(String.valueOf(amount));//支付金额(出来金额为0的情况)
+					  //vo.setActualAmount(jsonMap.get("payMoney"));
 					  vo.setCompanyId(contract.getCompanyId());
 					  //公司名称
 					  vo.setCompanyName(companyInfo==null?"系统数据错误":companyInfo.getCompanyName());
