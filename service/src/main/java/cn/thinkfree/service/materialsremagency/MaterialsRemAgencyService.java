@@ -23,8 +23,8 @@ public interface MaterialsRemAgencyService {
     /**
      * 合同经销商信息
      * @param companyId
-     * @param dealerCompanyId
+     * @param companyName
      * @return
      */
-    List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(String companyId, String dealerCompanyId);
+    List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(String companyId, String companyName);
 }

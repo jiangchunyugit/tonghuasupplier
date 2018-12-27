@@ -37,7 +37,7 @@ public class StoreInfoController extends AbsBaseController {
     @ApiOperation(value="门店：门店信息（通过城市分站编号查询门店信息）")
     public MyRespBundle<List<StoreInfo>> storeInfoListByCityId(@ApiParam("城市分站编号")String cityBranchCode){
 
-        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByCityId(cityBranchCode));
+        return sendJsonData(ResultMessage.SUCCESS, storeInfoService.storeInfoListByCityCode(cityBranchCode));
     }
 
     /**
@@ -64,7 +64,7 @@ public class StoreInfoController extends AbsBaseController {
     }
 
     /**
-     * 查询城市分站信息
+     * 查询门店信息
      */
     @GetMapping(value = "/updateStoreInfoListByCityBranchCode")
     @MyRespBody
@@ -76,11 +76,11 @@ public class StoreInfoController extends AbsBaseController {
     }
 
     /**
-     * 查询城市分站信息
+     * 查询门店信息
      */
     @GetMapping(value = "/businessEntityStoreByCityBranchCode")
     @MyRespBody
-    @ApiOperation(value="门店：查询城市站点下分站")
+    @ApiOperation(value="门店：经营主体选择门店")
     public MyRespBundle<List<StoreInfo>> businessEntityStoreByCityBranchCode(@ApiParam("城市分站编码")@RequestParam(value = "cityBranchCode") String cityBranchCode
             ,@ApiParam("经营主体编码") @RequestParam(value = "businessEntityCode") String businessEntityCode){
 

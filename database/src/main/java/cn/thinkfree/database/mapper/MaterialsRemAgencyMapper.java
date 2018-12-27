@@ -99,8 +99,8 @@ public interface MaterialsRemAgencyMapper {
     /**
      * 经销商信息
      * @param companyId
-     * @param dealerCompanyId
+     * @param companyName
      * @return
      */
-    List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(@Param("companyId")String companyId, @Param("dealerCompanyId")String dealerCompanyId);
+    List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(@Param("companyId")String companyId, @Param("companyName")String companyName);
 }
