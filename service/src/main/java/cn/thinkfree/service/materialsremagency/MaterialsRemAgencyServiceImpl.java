@@ -44,14 +44,14 @@ public class MaterialsRemAgencyServiceImpl implements MaterialsRemAgencyService{
     }
 
     @Override
-    public List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(String companyId, String dealerCompanyId) {
-        if (StringUtils.isNotBlank(dealerCompanyId)) {
+    public List<AgencyContractCompanyInfoVo> getAgencyCompanyInfos(String companyId, String companyName) {
+        if (StringUtils.isNotBlank(companyName)) {
             StringBuffer stringBufferName = new StringBuffer();
             stringBufferName.append("%");
-            stringBufferName.append(dealerCompanyId);
+            stringBufferName.append(companyName);
             stringBufferName.append("%");
-            dealerCompanyId = stringBufferName.toString();
+            companyName = stringBufferName.toString();
         }
-        return materialsRemAgencyMapper.getAgencyCompanyInfos(companyId,dealerCompanyId);
+        return materialsRemAgencyMapper.getAgencyCompanyInfos(companyId,companyName);
     }
 }
