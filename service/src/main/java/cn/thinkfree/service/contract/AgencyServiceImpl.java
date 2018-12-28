@@ -255,7 +255,9 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         AgencyContract record = new AgencyContract();
         record.setStatus(dbStart);
         record.setUpdateTime(new Date());
-        record.setPdfUrl(pdfUrl);
+        if (StringUtils.isNotBlank(pdfUrl)) {
+            record.setPdfUrl(pdfUrl);
+        }
         AgencyContractExample example = new AgencyContractExample();
         example.createCriteria().andContractNumberEqualTo(contractNumber);
 
