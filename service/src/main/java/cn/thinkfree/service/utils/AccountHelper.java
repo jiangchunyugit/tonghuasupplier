@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicLong;
@@ -190,7 +191,7 @@ public class AccountHelper {
     public static SecureRandom getRandom() {
         SecureRandom random = null;
         try {
-            random = SecureRandom.getInstanceStrong();
+            random = SecureRandom.getInstance("NativePRNGNonBlocking");
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
             random = new SecureRandom();
