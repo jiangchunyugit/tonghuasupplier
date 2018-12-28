@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * 项目派单列表-反参实体
@@ -23,7 +22,7 @@ public class DecorationOrderListVo {
     private String projectNo;
 
     @ApiModelProperty("预约日期2")
-    private Date appointmentTime;
+    private Long appointmentTime;
 
     @ApiModelProperty("项目地址3")
     private String addressDetail;
