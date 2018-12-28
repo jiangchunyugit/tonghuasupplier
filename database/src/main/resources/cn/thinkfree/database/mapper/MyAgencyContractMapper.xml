@@ -42,7 +42,7 @@
         and   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
       </if>
     <if test="agency!= null and agency != ''">
-       and   t.agency_code LIKE concat(concat('%',#{agency}),'%')
+       and   t.dealer_company_id LIKE concat(concat('%',#{agency}),'%')
      </if>
      <if test="agency!= null and agency != ''">
        and   t.company_name LIKE concat(concat('%',#{agency}),'%')
@@ -87,7 +87,7 @@
                 and   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
             </if>
             <if test="agency!= null and agency != ''">
-                and   t.agency_code LIKE concat(concat('%',#{agency}),'%')
+                and   t.dealer_company_id LIKE concat(concat('%',#{agency}),'%')
             </if>
             <if test="agency!= null and agency != ''">
                 and   t.company_name LIKE concat(concat('%',#{agency}),'%')
@@ -132,7 +132,7 @@
                 and   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
             </if>
             <if test="agency!= null and agency != ''">
-                and   t.agency_code LIKE concat(concat('%',#{agency}),'%')
+                and   t.dealer_company_id LIKE concat(concat('%',#{agency}),'%')
             </if>
             <if test="agency!= null and agency != ''">
                 and   t.company_name LIKE concat(concat('%',#{agency}),'%')
