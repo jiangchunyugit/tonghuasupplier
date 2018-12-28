@@ -266,9 +266,8 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             return map;
         }
 
-        //todo 登陆密码级别低需要修改
-//        String password = AccountHelper.createUserPassWord();
-        String password = "123456";
+        String password = AccountHelper.createUserPassWord();
+//        String password = "123456";
         pcApplyInfoSEO.setPassword(password);
 
         //公司id
