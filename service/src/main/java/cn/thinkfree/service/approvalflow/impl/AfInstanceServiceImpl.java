@@ -1072,7 +1072,9 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             if (getPreScheduleSortSuccceed(projectNo, projectBigSchedulings, scheduleSort)) {
                 if (!getScheduleSortSucceed(projectNo, scheduleSort)) {
 
-                    long checkApplicationCount = getSuccessCount(projectNo, AfConfigs.CHECK_APPLICATION.configNo, scheduleSort);
+                    long checkApplicationSuccessCount = getSuccessCount(projectNo, AfConfigs.CHECK_APPLICATION.configNo, scheduleSort);
+                    long checkReportSuccessCount = getSuccessCount(projectNo, AfConfigs.CHECK_REPORT.configNo, scheduleSort);
+                    long checkApplicationCount = getStartAndSuccessCount(projectNo, AfConfigs.CHECK_APPLICATION.configNo, scheduleSort);
                     long checkReportCount = getStartAndSuccessCount(projectNo, AfConfigs.CHECK_REPORT.configNo, scheduleSort);
 
 
@@ -1084,7 +1086,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                         if (configNo != null && configNo.equals(AfConfigs.CHECK_APPLICATION.configNo)) {
                             return result;
                         }
-                        if (checkApplicationCount > checkReportCount && checkConfig > checkReportCount) {
+                        if (checkApplicationSuccessCount > checkReportCount && checkConfig > checkReportCount) {
                             // 如果验收申请数量大于验收报告数量，发起验收报告菜单
                             result += 2;
                             if (configNo != null && configNo.equals(AfConfigs.CHECK_REPORT.configNo)) {
@@ -1093,21 +1095,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
                         }
                     }
                     if (constructionAndPayStateService.isBeComplete(projectNo, scheduleSort)) {
-                        if (checkApplicationCount == checkReportCount && checkReportCount == checkConfig) {
-                            long checkApplicationStartCount = getCount(projectNo, scheduleSort, AfConfigs.CHECK_APPLICATION.configNo, AfConstants.APPROVAL_STATUS_START);
-                            long checkReportStartCount = getCount(projectNo, scheduleSort, AfConfigs.CHECK_REPORT.configNo, AfConstants.APPROVAL_STATUS_START);
-                            if (checkApplicationStartCount == 0 && checkReportStartCount == 0) {
-                                if (getLargestScheduleSort(projectBigSchedulings).equals(scheduleSort)) {
-                                    // 当前阶段为最后一个阶段
-                                    if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
-                                            && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
-                                            && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
-                                        result += 4;
-                                    }
-                                } else {
-                                    // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
+                        if (checkApplicationCount == checkApplicationSuccessCount
+                                && checkApplicationCount == checkReportSuccessCount
+                                && checkApplicationCount == checkReportCount
+                                && checkApplicationCount == checkConfig) {
+                            if (getLargestScheduleSort(projectBigSchedulings).equals(scheduleSort)) {
+                                // 当前阶段为最后一个阶段
+                                if (getCount(projectNo, AfConstants.APPROVAL_STATUS_START) == 0
+                                        && countEqual(projectNo, AfConfigs.PROBLEM_RECTIFICATION.configNo, AfConfigs.RECTIFICATION_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)
+                                        && countEqual(projectNo, AfConfigs.CHANGE_ORDER.configNo, AfConfigs.CHANGE_COMPLETE.configNo, AfConstants.APPROVAL_STATUS_SUCCESS)) {
                                     result += 4;
                                 }
+                            } else {
+                                // 当前节点不存在未完成的验收申请与验收报告，且验收申请与验收报告数量相等，发起完成申请菜单
+                                result += 4;
                             }
                         }
                     }
