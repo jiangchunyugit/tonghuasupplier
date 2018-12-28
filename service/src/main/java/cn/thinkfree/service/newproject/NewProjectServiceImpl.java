@@ -135,6 +135,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoIn(ReflectUtils.getList(orderUsers,"projectNo"));
+        example.setOrderByClause(" create_time desc ");
         PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
         List<Project> projects = projectMapper.selectByExample(example);
         List<ProjectVo> projectVos = new ArrayList<>();
