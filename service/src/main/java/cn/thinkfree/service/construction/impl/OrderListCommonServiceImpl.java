@@ -466,7 +466,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
             for (Project project : list1) {
                 if (constructionOrder.getProjectNo().equals(project.getProjectNo())) {
                     decorationOrderListVo.setAddressDetail(project.getAddressDetail());
-                    decorationOrderListVo.setAppointmentTime(project.getCreateTime());
+                    decorationOrderListVo.setAppointmentTime(project.getCreateTime().getTime());
                     // 业主 & 手机号
                     Map<String, String> map = new HashMap<>();
                     map.put("userId", project.getOwnerId());
