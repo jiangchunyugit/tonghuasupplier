@@ -38,12 +38,18 @@
         }
         .mintextput{
             width: 200px !important;
+            text-align: center;
+            text-indent: 0;
         }
         .smintextput{
             width: 130px !important;
+            text-align: center;
+            text-indent: 0;
         }
         .smalltextput{
             min-width: 60px !important;
+            text-align: center;
+            text-indent: 0;
         }
         .placeholder {
             margin: 0;
@@ -51,7 +57,10 @@
             width: 200px;
             height: 30px;
             line-height: 30px;
-            border-bottom: 1px solid #000
+            border-bottom: 1px solid #000;
+            text-align: center;
+            text-indent: 0;
+
         }
 
         .placeholderT {
@@ -62,6 +71,7 @@
             line-height: 20px;
             border-bottom: 1px solid #000;
             text-align: center;
+            text-indent: 0;
         }
 
         .placeholderK {
@@ -72,6 +82,7 @@
             line-height: 20px;
             border-bottom: 1px solid #000;
             text-align: center;
+            text-indent: 0;
         }
 
         .indent{
@@ -187,31 +198,26 @@
 </section>
 <h4>四、入驻保证金</h4>
 <section class="indent">
+  <#--  1.乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金     元，保证金缴纳遵循如下约定：
+    1.1资质审核通过后，一次性缴纳     元入驻保证金；
+    1.2剩余部分从接到的每一个平台项目里扣除项目总金额的  20   %充作保证金，直到剩余保证金补足为止。-->
 
-    1.乙方通过线上账号提交资质并在平台审核通过后的5日内，乙方应按
-    <div class="textput smalltextput">
-     <#if (code13?size == 1)>
-         1.1
-     <#else>
-         1.2
-     </#if>
-    </div>方式向甲方支付入驻保证金：
-
+    1.乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金<div class="textput smalltextput">${c15}</div>元，保证金缴纳遵循如下约定
 <#list code13 as c>
     <#if (code13?size = 1)>
     <div class="indent">
-        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>万的入驻保证金；
+        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>元的入驻保证金；
     </div>
     </#if>
 </#list>
 <#if ( code13?size > 1)>
     <div class="indent">
-        1.2资质审核通过后，在共计<div class="textput smalltextput">${c15}</div>万的入驻保证金里缴纳
-      <#--  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
+       <#-- 1.2资质审核通过后，在共计<div class="textput smalltextput">${c15}</div>元的入驻保证金里缴纳
+      &lt;#&ndash;  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
         剩余部分从接到的每一个平台项目里扣除项目总金额的
         <div class="textput smalltextput">${code13.[0].costValue}</div>
-        %充作保证金，-->
-
+        %充作保证金，&ndash;&gt;
+-->
         <#list code13 as c>
            <div class="indent">  1.2.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
              <#if c.cType == 1 >
@@ -221,8 +227,6 @@
              </#if>
             ${(c.costName?split("@")[1]) }。</div>
         </#list>
-
-        直到剩余保证金补足为止。
     </div>
         </#if>
 </section>
@@ -238,7 +242,7 @@
     1.设计费
 </section>
 <section class="indent">
-    <div class="indent">1.1甲方在对应《设计合同》收到客户支付相应设计费后分两次与乙方结算设计费款项，分别为：</div>
+    <div class="indent">1.1甲方根据《设计合同》收到客户支付的相应设计费后，分两次与乙方结算：</div>
      <#list code01 as c>
         <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
              <#if c.cType == 1 >
@@ -276,10 +280,10 @@
 <section class="indent">
     4.施工服务费
     <div class="indent">
-        4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c12}</div>%作为施工服务费，甲方分两次与乙方结算施工服务费。
+        4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c12}</div>%作为施工服务费。
     </div>
     <#list code10 as c>
-                <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+                <div class="indent">  4.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
                 <#if c.cType == 1 >
                             元
                 <#else>
@@ -295,14 +299,14 @@
         4.1.2施工竣工验收结束后，甲方向乙方支付施工服务费总额<div class="textput smalltextput"></div>%的尾款。
     </div>-->
     <div class="indent">
-        4.1.3施工过程中合同解约，因设计师设计原因造成解约的，设计师的全部施工服务费不予支付，与设计方无关的解约，施工服务费按实际发生费用支付。
+        4.1.6施工过程中发生合同解约，如因设计师设计原因造成，则设计师的全部施工服务费不予支付；如非由设计师造成，则施工服务费按实际发生费用支付。
     </div>
 </section>
 <section class="indent">
-    5.甲方在支付乙方设计服务费、材料推荐服务费、施工服务费同时乙方应根据法律为甲方开具税率为 6% 的增值税专用发票，如无法提供定额税点发票则甲方有权扣除差额部分税点作为对甲方税点损失的补偿。个人设计师依据《中华人民共和国个人所得税法(2018年修正本)》由甲方代扣代缴个人所得税的，剩余部分按协议约定返还。
+    5.甲方支付乙方设计服务费、材料推荐服务费、施工服务费时，乙方应根据法律为甲方开具税率为 6% 的增值税专用发票。如乙方无法提供定额税点发票，则甲方有权扣除税点差额部分作为对甲方税点损失的补偿。个人设计师依据《中华人民共和国个人所得税法(2018年修正本)》由甲方代扣代缴个人所得税，返款剩余部分按协议约定进行返还。
 </section>
-<section class="indent">
-    6.上述所有付款，甲乙双方于每月20至25日之间结算上月度款项。
+<section class="indent">每月20至25日
+    6.上述所有付款，甲乙双方于<div class="textput smalltextput">${c13}</div>之间结算上月度款项。
 </section>
 <h4>六、违约责任</h4>
 <section class="indent">

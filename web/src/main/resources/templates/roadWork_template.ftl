@@ -28,23 +28,38 @@
             outline:none;
             font-size: 16px;
             display: inline-block;
+            text-align: center;
+            text-indent: 0;
         }
         div.textput{
             margin-bottom: -7px;
             margin-right: 3px;
+            text-align: center;
+            text-indent: 0;
         }
         .defaultwidth{
             width: 380px;
+            text-align: center;
+            table-layout: fixed;
+            text-indent: 0;
         }
         .mintextput{
             width: 200px !important;
+            text-align: center;
+            table-layout: fixed;
+            text-indent: 0;
         }
         .smintextput{
             width: 130px !important;
+            text-align: center;
+            table-layout: fixed;
+            text-indent: 0;
         }
         .smalltextput{
-            min-width: 30px !important;
-            align-items: center;
+            min-width: 60px !important;
+            text-align: center;
+            table-layout: fixed;
+            text-indent: 0;
         }
         .placeholder {
             margin: 0;
@@ -116,10 +131,10 @@
 <h4>一、合作内容</h4>
 <section class="indent">
     1.1 <span style="margin-right:2em;">乙方资质：</span>
-    <div class="indent">企业法人：<div class="textput smalltextput">${c03}</div> </div>
+    <div class="indent">企业法人：<div class="textput smalltextput" >${c03}</div> </div>
     <div class="indent">劳务分包资质证书号码：<div class="textput smalltextput">${c04}</div> </div>
     <div class="indent">发证机关：<div class="textput smalltextput">${c05}</div> </div>
-    <div class="indent">资质专业及等级：<div class="textput smalltextput"><img src="${c06}"  alt="无" /></div> </div>
+    <div class="indent">资质专业及等级：<div class="textput smalltextput"><img src="${c06}" width="200" height="200"  alt="无" /></div> </div>
     <div class="indent">复审时间：<div class="textput smalltextput">${c07}</div> </div>
     <div class="indent">有效期：<div class="textput smalltextput">${c26}至${c27}</div> </div>
 </section>
@@ -139,7 +154,7 @@
 
         。在经营过程中，乙方应本着诚信原则为甲方客户提供服务。乙方指定返施工款等其他相关款项的账户信息为：
     </div>
-       <#if c22 == 0>
+       <#if c24 == 0>
        <div class="indent">
            户名： <input name="secondParty" class="textput defaultwidth" type="text" value="居然金融">
        </div>
@@ -286,13 +301,12 @@
     5.3.甲方有权在保修期内认定保修范围，同时乙方保证在接到甲方通知2小时内与客户取得联系，48小时之内完成维修内容，若特殊情况可与客户约定维修工期，保证在工期内完成维修工作。若乙方未在甲方规定的时间内完成维修或拒不配合维修的，甲方有权直接委托其他人员代替乙方维修，其总维修费用按三倍计，并从乙方合同保证金中扣除，支付给维修人员。
 </section>
 <section class="indent">
-    5.4.乙方组织规模施工，服从甲方管理并自愿在协议签订时交纳合同保证金，合同保证金的缴纳需要同时满足下诉两个条件：
-
+    5.4.	乙方组织规模施工，服从甲方管理并自愿在协议签订时交纳合同保证金，乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金 <div class="textput smalltextput">${c17}</div>元，保证金缴纳遵循如下约定
     <div class="indent">
     <#list code13 as c>
         <#if (code13?size = 1)>
     <div class="indent">
-        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>万的入驻保证金；
+        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>元的入驻保证金；
     </div>
         </#if>
     </#list>
@@ -300,14 +314,14 @@
     <div class="indent">
         <#if ( code13?size > 1)>
     <div class="indent">
-        1.2资质审核通过后，在共计<div class="textput smalltextput">${c17}</div>元的入驻保证金里缴纳
+      <#--  1.2资质审核通过后，在共计<div class="textput smalltextput">${c17}</div>元的入驻保证金里缴纳-->
     <#--  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
       剩余部分从接到的每一个平台项目里扣除项目总金额的
       <div class="textput smalltextput">${code13.[0].costValue}</div>
       %充作保证金，-->
 
         <#list code13 as c>
-        <div class="indent">  1.2.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+        <div class="indent"> (${c_index+1}) ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
              <#if c.cType == 1 >
                     元
              <#else>
@@ -315,7 +329,6 @@
              </#if>
             ${(c.costName?split("@")[1]) }。</div>
         </#list>
-        直到剩余保证金补足为止。
     </div>
         </#if>
         <#--承接施工合同每个合同扣除合同额的5%作为合同保证金，直到累计合同保证金达到<div class="textput smalltextput"></div>万元上限为止，最后一笔如果超出上限，以上限金额为准。-->
@@ -370,7 +383,7 @@
     <#--施工合同生效后收取<div class="textput smalltextput"></div>%，
     消费者结算尾款后收取<div class="textput smalltextput"></div>%。-->
      <#list code03 as c>
-                <div class="indent">  1.1.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+                <div class="indent">  6.6.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
                 <#if c.cType == 1 >
                             元
                 <#else>
@@ -378,7 +391,12 @@
                 </#if>
                     ${(c.costName?split("@")[1]) }。</div>
      </#list>
-    施工合同中途解约的，平台施工服务管理费按照实际发生金额收取。
+    <#--6.6.6甲方代扣返还设计师的施工服务费，其中客户来源为设计师回单的，
+    施工服务费按合同折后总金额（含变更单金额）的<div class="textput smalltextput"></div>代扣，开工代扣<div class="textput smalltextput"></div>，
+    竣工验收结束后代扣<div class="textput smalltextput"></div>，
+    其余客户来源的，施工服务费按合同折后总金额的<div class="textput smalltextput"></div>代扣，
+    开工代扣<div class="textput smalltextput"></div>，竣工验收结束后代扣 <div class="textput smalltextput"></div>。
+    施工合同中途解约的，平台施工服务管理费按照实际发生金额代扣。-->
 </section>
 <section class="indent">
     6.7.甲方代扣返还设计师的施工服务费，其中客户来源为设计师回单的，施工服务费按合同折后总金额（含变更单金额）的10%代扣，开工代扣8%，竣工验收结束后代扣2%，其余客户来源的，施工服务费按合同折后总金额的5%代扣，开工代扣3%，竣工验收结束后代扣2%。施工合同中途解约的，平台施工服务管理费按照实际发生金额代扣。
