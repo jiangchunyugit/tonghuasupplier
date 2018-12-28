@@ -3,7 +3,6 @@ package cn.thinkfree.service.settle.rule;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.utils.DateUtils;
@@ -51,10 +50,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     @Autowired
     private CostRebateNodeMapper costRebateNodeMapper;
-
-
-
-
 
     @Override
     public PageInfo<SettlementRuleInfo> pageSettlementRuleBySEO (SettlementRuleSEO rule) {
@@ -156,11 +151,11 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         SettlementRuleInfo rule = (list!=null && list.size() > 0)?list.get(0):null;
 
         if(rule != null){
-            Map<String, String> paream = convertNames();
-            //翻译
-            if (StringUtils.isNotBlank(rule.getFeeName())) {
-                rule.setFeeName(paream.get(rule.getFeeName()));
-            }
+//            Map<String, String> paream = convertNames();
+//            //翻译
+//            if (StringUtils.isNotBlank(rule.getFeeName())) {
+//                rule.setFeeName(paream.get(rule.getFeeName()));
+//            }
             SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
             settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(rule.getRuleNumber());
             List<SettlementMethodInfo> settlementMethodInfos = settlementMethodInfoMapper.selectByExample(settlementMethodInfoExample);

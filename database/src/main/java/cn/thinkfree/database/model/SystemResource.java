@@ -356,4 +356,20 @@ public class SystemResource extends SecurityResource {
     public String getAccessMode() {
         return this.requestMethod;
     }
+
+    @Override
+    public String toString() {
+        return "SystemResource{" +
+                "id=" + id +
+                ", module='" + module + '\'' +
+                ", name='" + name + '\'' +
+                ", code='" + code + '\'' +
+                ", url='" + url + '\'' +
+                ", type='" + type + '\'' +
+                ", sortNum=" + sortNum +
+                ", pid=" + pid +
+                ", platform=" + platform +
+                ", requestMethod='" + requestMethod + '\'' +
+                '}';
+    }
 }

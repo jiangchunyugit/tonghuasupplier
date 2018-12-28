@@ -196,6 +196,24 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         return dealerBrandInfoMapper.showSignBrand(companyId);
     }
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean editBrand(DealerBrandInfo dealerBrandInfo) {
+        DealerBrandInfoExample example = new DealerBrandInfoExample();
+        example.createCriteria().andIdEqualTo(dealerBrandInfo.getId())
+                .andCompanyIdEqualTo(dealerBrandInfo.getCompanyId())
+                .andAgencyCodeEqualTo(dealerBrandInfo.getAgencyCode())
+                .andBrandNoEqualTo(dealerBrandInfo.getBrandNo())
+                .andCategoryNoEqualTo(dealerBrandInfo.getCategoryNo());
+        dealerBrandInfo.setUpdateTime(new Date());
+        dealerBrandInfo.setAuditStatus(BrandConstants.AuditStatus.AUDITING.code);
+        int line = dealerBrandInfoMapper.updateByExampleSelective(dealerBrandInfo, example);
+        if(line > 0){
+            return true;
+        }
+        return false;
+    }
+
     private boolean updateChangeStatus(PcAuditInfoVO pcAuditInfoVO) {
         DealerBrandInfoExample example = new DealerBrandInfoExample();
         example.createCriteria().andCompanyIdEqualTo(pcAuditInfoVO.getCompanyId())

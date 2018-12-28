@@ -366,7 +366,7 @@ public class CompanySubmitServiceImpl extends AbsLogPrinter implements CompanySu
 		String companyId = auditInfoVO.getCompanyId();
 
 		PcAuditInfo pcAuditInfo = new PcAuditInfo();
-		 SpringBeanUtil.copy(auditInfoVO, pcAuditInfo);
+		SpringBeanUtil.copy(auditInfoVO, pcAuditInfo);
 
 		//获取登陆用户信息
 		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();

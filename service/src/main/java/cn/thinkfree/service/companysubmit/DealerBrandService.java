@@ -65,4 +65,11 @@ public interface DealerBrandService {
      */
     List<DealerBrandInfo> showSignBrand(String companyId);
 
+    /**
+     * 品牌编辑
+     * @param dealerBrandInfo
+     * @return
+     */
+    boolean editBrand(DealerBrandInfo dealerBrandInfo);
+
 }

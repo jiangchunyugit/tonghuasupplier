@@ -49,6 +49,9 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
     @Autowired
     AgencyContractChangeMapper agencyContractChangeMapper;
 
+    @Autowired
+    DealerBrandInfoMapper dealerBrandInfoMapper;
+
     @Value( "${custom.cloud.fileUpload.dir}" )
     private String filePathDir;
 
@@ -82,26 +85,35 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertContract(ParamAgencySEO paramAgencySEO) {
+        Long debugFlag = System.currentTimeMillis();
         boolean  flag = false;
             try {
+
                 if(StringUtils.isEmpty(paramAgencySEO.getContractNumber())){
+                    printErrorMes("新增合同:{},处理合同编号",debugFlag);
                     //生成合同编号
                     String contractNumber =  this.getOrderContract(paramAgencySEO.getDealerCompanyId(), paramAgencySEO.getBrandNo());
+                    printErrorMes("新增合同:{},处理合同编号:{}",debugFlag,contractNumber);
                     paramAgencySEO.setContractNumber(contractNumber);
                     paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
                     paramAgencySEO.setCreateTime(new Date());
                     agencyContractMapper.insertSelective(paramAgencySEO);
                 }else{
+                    printErrorMes("更新合同:{},拼装数据",debugFlag);
                     paramAgencySEO.setUpdateTime(new Date());
                     paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
                     AgencyContractExample example = new AgencyContractExample();
                     example.createCriteria().andContractNumberEqualTo(paramAgencySEO.getContractNumber());
                     agencyContractMapper.updateByExampleSelective(paramAgencySEO,example);
+                    printErrorMes("更新合同:{},更新完成",debugFlag);
                     AgencyContractTermsExample example1 = new AgencyContractTermsExample();
                     example1.createCriteria().andContractNumberEqualTo(paramAgencySEO.getContractNumber());
                     agencyContractTermsMapper.deleteByExample(example1);
+                    printErrorMes("更新合同:{},更新完成,清理子表",debugFlag);
                 }
+                printErrorMes("新增合同:{},处理子表",debugFlag);
                 this.insertAgencyContractTerm(paramAgencySEO);
+                printErrorMes("新增合同:{},子表完成",debugFlag);
                 flag = true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -158,7 +170,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
      * @return result
      * 品牌编码（8位）+商户号（5位）+年份（2位）+序号（3位）
      */
-    public synchronized  String getOrderContract(String brandNo, String agency) {
+    public  String getOrderContract(String brandNo, String agency) {
         String no = new SimpleDateFormat( "yy" ).format( new Date() ) + AccountHelper.randomAgencyContract(3);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(brandNo);
@@ -217,6 +229,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
 
                 //签约生效 dbStart = "8";
                 dbStart = AgencyConstants.AgencyType.EFFECT_ING.code.toString();
+//                this.updateBrandStatus(contractNumber,dbStart);
                 // 判断是否是变更合同。（变更合同需要把之前的合同作废）
                 AgencyContractChangeExample agencyContractChangeExample = new AgencyContractChangeExample();
                 agencyContractChangeExample.createCriteria().andChangeAfterCodeEqualTo(contractNumber)
@@ -242,7 +255,9 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         AgencyContract record = new AgencyContract();
         record.setStatus(dbStart);
         record.setUpdateTime(new Date());
-        record.setPdfUrl(pdfUrl);
+        if (StringUtils.isNotBlank(pdfUrl)) {
+            record.setPdfUrl(pdfUrl);
+        }
         AgencyContractExample example = new AgencyContractExample();
         example.createCriteria().andContractNumberEqualTo(contractNumber);
 
@@ -311,6 +326,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             }
             if (StringUtils.isNotBlank(contractNumber)) {
                 criteria.andContractNumberEqualTo(contractNumber);
+//                this.updateBrandStatus(contractNumber,status);
             }
              agencyContractMapper.updateByExampleSelective(record,example);
             flag =  true;
@@ -408,6 +424,53 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             }
             }
         return null;
+    }
+
+    /**
+     * 刷新品牌状态
+     * @param contractNumber
+     * @param status
+     * @return
+     */
+    private boolean updateBrandStatus(String contractNumber,String status) {
+
+        AgencyContractExample agencyContractExample = new AgencyContractExample();
+        agencyContractExample.createCriteria().andContractNumberEqualTo(contractNumber);
+
+        List<AgencyContract> agencyContracts = agencyContractMapper.selectByExample(agencyContractExample);
+
+        if (agencyContracts.size() >0) {
+            AgencyContract agencyContract = agencyContracts.get(0);
+            if (StringUtils.isNotBlank(agencyContract.getBrandNo()) && StringUtils.isNotBlank(agencyContract.getCompanyId())
+                    && StringUtils.isNotBlank(agencyContract.getCategoryNo())) {
+                DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
+                dealerBrandInfoExample.createCriteria().andBrandNoEqualTo(agencyContract.getBrandNo()).
+                        andCategoryNoEqualTo(agencyContract.getCategoryNo()).andCompanyIdEqualTo(agencyContract.getCompanyId());
+                List<DealerBrandInfo> dealerBrandInfos = dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
+                if (dealerBrandInfos.size() > 0) {
+
+                    DealerBrandInfo dealerBrandInfo = new DealerBrandInfo();
+                    dealerBrandInfo = dealerBrandInfos.get(0);
+
+                    String dealerStatus = null;
+                    if (dealerBrandInfo.getAuditStatus().equals(AgencyConstants.AgencyType.OPERATING_AUDIT_THROUGH.code)
+                            && AgencyConstants.AgencyType.EFFECT_ING.code.toString().equals(status)) {
+
+                        dealerStatus = AgencyConstants.AgencyType.OPERATING_AUDIT_REFUSED.code.toString();
+                    } else if (dealerBrandInfo.getAuditStatus().equals(AgencyConstants.AgencyType.OPERATING_AUDIT_REFUSED.code)
+                            && AgencyConstants.AgencyType.INVALID_ING.code.toString().equals(status)) {
+
+                        dealerStatus = AgencyConstants.AgencyType.OPERATING_AUDIT_THROUGH.code.toString();
+                    }
+
+                    if (StringUtils.isNotBlank(dealerStatus)) {
+                        dealerBrandInfo.setAuditStatus(Integer.valueOf(dealerStatus));
+                        return dealerBrandInfoMapper.updateByExampleSelective(dealerBrandInfo,dealerBrandInfoExample)>0?true:false;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     class AuditRecord {
