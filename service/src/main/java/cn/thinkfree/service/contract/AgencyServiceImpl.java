@@ -170,7 +170,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
      * @return result
      * 品牌编码（8位）+商户号（5位）+年份（2位）+序号（3位）
      */
-    public synchronized  String getOrderContract(String brandNo, String agency) {
+    public  String getOrderContract(String brandNo, String agency) {
         String no = new SimpleDateFormat( "yy" ).format( new Date() ) + AccountHelper.randomAgencyContract(3);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(brandNo);
