@@ -4,6 +4,7 @@ import cn.thinkfree.core.base.RespData;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.appvo.*;
+import cn.thinkfree.database.model.Project;
 import cn.thinkfree.service.newproject.NewProjectService;
 import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
@@ -22,6 +23,13 @@ import java.util.List;
 public class AppProjectController extends BasicsController {
     @Autowired
     private NewProjectService newProjectService;
+
+    @RequestMapping(value = "getProjects", method = RequestMethod.POST)
+    @ApiOperation(value = "C/B-项目列表")
+    public MyRespBundle<PageInfo<ProjectVo>> getProjects(@ApiParam(name = "appProjectSEO", value = "项目列表入参实体") AppProjectSEO appProjectSEO){
+        PageInfo<ProjectVo> pageInfo = newProjectService.getProjects(appProjectSEO);
+        return RespData.success(pageInfo);
+    }
 
     @RequestMapping(value = "getAllProject", method = RequestMethod.POST)
     @ApiOperation(value = "C/B-项目列表")

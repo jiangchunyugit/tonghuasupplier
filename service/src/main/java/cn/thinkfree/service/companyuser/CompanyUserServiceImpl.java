@@ -5,12 +5,14 @@ import java.util.List;
 
 import cn.thinkfree.core.base.MyLogger;
 import cn.thinkfree.core.constants.SysConstants;
+import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.core.security.utils.MultipleMd5;
 import cn.thinkfree.core.utils.LogUtil;
 import cn.thinkfree.database.event.account.AccountCreate;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.constants.UserRegisterType;
+import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.StringUtil;
@@ -54,12 +56,14 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 
 	@Override
 	public PageInfo<CompanyUser> queryCompanyUserList(CompanyUserSEO companyUser) {
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 		PageHelper.startPage(companyUser.getPage(),companyUser.getRows());
 		CompanyUserExample example = new CompanyUserExample();
+		CompanyUserExample.Criteria criteria = example.createCriteria().andCompanyIdEqualTo(userVO.getCompanyID());
 		if(!StringUtil.isEmpty(companyUser.getEmpName())) {
-			example.createCriteria().andEmpNameLike("%"+companyUser.getEmpName()+"%");
+			criteria.andEmpNameLike("%"+companyUser.getEmpName()+"%");
 		}if(!StringUtil.isEmpty(companyUser.getEmpNumber())){
-			example.createCriteria().andEmpNumberLike("%"+companyUser.getEmpNumber()+"%");
+			criteria.andEmpNumberLike("%"+companyUser.getEmpNumber()+"%");
 		}
 		List<CompanyUser>  list =  companyUserMapper.selectByExample(example);
 		
@@ -75,8 +79,9 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 	@Transactional(rollbackFor = Exception.class)
 	public boolean insertOrUpdateCompanyUser(CompanyUserVo companyUser) {
 
+		UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 		CompanyUser saveObj = companyUser.getCompanyUser();
-
+		saveObj.setCompanyId(userVO.getCompanyID());
 		if(saveObj.getId() == null ){//判断主键值是否空
 			saveObj.setEmpNumber(AccountHelper.createUserNo(AccountHelper.UserType.PE.prefix));
 			saveObj.setCreateTime(new Date());
@@ -125,9 +130,10 @@ public class CompanyUserServiceImpl implements CompanyUserService {
 	@Override
 	public boolean updateUserStatus(String userId,String stauts) {
 		CompanyUser user = new CompanyUser();
-		user.setEmpNumber(userId);
 		user.setStatus(stauts);
-		int  falg = companyUserMapper.updateByExampleSelective(user, new CompanyUserExample());
+		CompanyUserExample companyUserExample = new CompanyUserExample();
+		companyUserExample.createCriteria().andEmpNumberEqualTo(userId);
+		int  falg = companyUserMapper.updateByExampleSelective(user, companyUserExample);
 		if(falg > 0 ){
 			return true;
 		}
