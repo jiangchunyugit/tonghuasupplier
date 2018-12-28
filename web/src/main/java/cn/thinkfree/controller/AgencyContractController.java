@@ -65,13 +65,17 @@ public class AgencyContractController extends AbsBaseController {
     @PostMapping("/insertContract")
     @MyRespBody
     public MyRespBundle<String> insertContract(@RequestBody ParamAgencySEO paramAgency){
-
+        Long debugFlag = System.currentTimeMillis();
+        printErrorMes("新增经销商合同：{}",debugFlag);
         BeanValidator.validate(paramAgency,Severitys.Insert.class);
+        printErrorMes("新增经销商合同：{},通过验证",debugFlag);
         String result = agencyService.checkRepeat(paramAgency);
+        printErrorMes("新增经销商合同：{},通过去重",debugFlag);
         if (StringUtils.isNotBlank(result)) {
             return sendFailMessage(result);
         }
         boolean  flag = agencyService.insertContract(paramAgency);
+        printErrorMes("新增经销商合同：{},插入完成",debugFlag);
         return sendJsonData(ResultMessage.SUCCESS,flag);
     }
 
