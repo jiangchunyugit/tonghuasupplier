@@ -314,9 +314,6 @@ public class UserCenterServiceImpl implements UserCenterService {
             String headPortraits = userObj.getString("headPortraits");
             String consumerId = userObj.getString("consumerId");
             String staffId = userObj.getString("staffId");
-            if (StringUtils.isBlank(consumerId)) {
-                continue;
-            }
             UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
             msgVo.setStaffId(staffId);
             userMsgVos.add(msgVo);

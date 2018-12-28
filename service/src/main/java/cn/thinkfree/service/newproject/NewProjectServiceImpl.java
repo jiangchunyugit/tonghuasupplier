@@ -9,6 +9,7 @@ import cn.thinkfree.database.appvo.*;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.ProjectBigSchedulingDetailsVO;
+import cn.thinkfree.service.account.UserRoleSetService;
 import cn.thinkfree.service.approvalflow.AfInstanceService;
 import cn.thinkfree.service.constants.ProjectDataStatus;
 import cn.thinkfree.service.constants.Scheduling;
@@ -20,16 +21,14 @@ import cn.thinkfree.service.neworder.NewOrderService;
 import cn.thinkfree.service.neworder.NewOrderUserService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.platform.basics.BasicsService;
+import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
 import cn.thinkfree.service.platform.vo.PageVo;
 import cn.thinkfree.service.platform.vo.UserMsgVo;
 import cn.thinkfree.service.remote.CloudService;
-import cn.thinkfree.service.utils.BaseToVoUtils;
-import cn.thinkfree.service.utils.DateUtil;
-import cn.thinkfree.service.utils.MathUtil;
-import cn.thinkfree.service.utils.ReflectUtils;
+import cn.thinkfree.service.utils.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -80,8 +79,6 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Autowired
     private ProjectUserService projectUserService;
     @Autowired
-    private UserCenterService userCenterService;
-    @Autowired
     private BasicsDataMapper basicsDataMapper;
     @Autowired
     private AfInstanceService afInstanceService;
@@ -115,6 +112,134 @@ public class NewProjectServiceImpl implements NewProjectService {
     private DesignerOrderService designerOrderService;
     @Autowired
     NewSchedulingService newSchedulingService;
+    @Autowired
+    private RoleFunctionService roleFunctionService;
+    @Autowired
+    private UserCenterService userCenterService;
+
+    @Override
+    public PageInfo<ProjectVo> getProjects(AppProjectSEO appProjectSEO){
+        if (appProjectSEO.getUserId() == null || appProjectSEO.getUserId().trim().isEmpty() || appProjectSEO.getWhichEnd() == null) {
+            return new PageInfo<>();
+        }
+        EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(appProjectSEO.getUserId());
+        if (appProjectSEO.getWhichEnd() != 1 && (employeeMsg == null || employeeMsg.getEmployeeState() == 2)) {
+            return new PageInfo<>();
+        }
+        OrderUserExample orderUserExample = new OrderUserExample();
+        orderUserExample.createCriteria().andUserIdEqualTo(appProjectSEO.getUserId());
+        List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        if(orderUsers.isEmpty()){
+            return new PageInfo<>();
+        }
+        ProjectExample example = new ProjectExample();
+        ProjectExample.Criteria criteria = example.createCriteria();
+        criteria.andProjectNoIn(ReflectUtils.getList(orderUsers,"projectNo"));
+        PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
+        List<Project> projects = projectMapper.selectByExample(example);
+        List<ProjectVo> projectVos = new ArrayList<>();
+        String userRoleCode = "CC";
+        if(employeeMsg != null){
+            userRoleCode = employeeMsg.getRoleCode();
+        }
+        List<String> projectNos = ReflectUtils.getList(projects,"projectNo");
+        Map<String,UserMsgVo> userMsgVoMap = getStringUserMsgVoMap(projectNos);
+        Map<String, Integer> complaints = isComplaint(projectNos);
+        for (Project project : projects) {
+            ProjectVo projectVo = BaseToVoUtils.getVo(project, ProjectVo.class);
+            //添加业主信息
+            PersionVo owner = new PersionVo();
+            try {
+                UserMsgVo userMsgVo = userMsgVoMap.get(project.getProjectNo());
+                if(userMsgVo != null){
+                    owner.setName(userMsgVo.getUserName());
+                    owner.setPhone(userMsgVo.getUserPhone());
+                    owner.setRole("CC");
+                    owner.setUserId(userMsgVo.getConsumerId());
+                    owner.setPersonalHomeUrl(userMsgVo.getUserIcon());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.info("调取人员信息失败!");
+            }
+            if (userRoleCode.equals(UserJobs.Designer.roleCode) && project.getStage().equals(DesignStateEnum.STATE_20.getState())) {
+                projectVo.setAgreeButto(true);
+                projectVo.setRefuseButton(true);
+                owner.setPhone(null);
+            } else {
+                projectVo.setAgreeButto(false);
+                projectVo.setRefuseButton(false);
+            }
+            projectVo.setOwner(owner);
+            projectVo.setAddress(getProjectAdress(project.getProjectNo()));
+            //添加进度展示
+            if (project.getStage() >= ConstructionStateEnum.STATE_500.getState()) {
+                projectVo.setProgressIsShow(true);
+                //添加进度信息
+                if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
+                    projectVo.setConstructionProgress(100);
+                } else {
+                    projectVo.setConstructionProgress(newSchedulingService.getProjectSpeed(project.getProjectNo()));
+                }
+                projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
+                projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
+            } else {
+                projectVo.setStageDesignName(DesignStateEnum.queryByState(project.getStage()).getStateName(3));
+                projectVo.setStageConsumerName(DesignStateEnum.queryByState(project.getStage()).getStateName(4));
+                projectVo.setProgressIsShow(false);
+            }
+            setMsgRemind(project, projectVo);
+            if(complaints.containsKey(project.getProjectNo())){
+                projectVo.setComplaintState(complaints.get(project.getProjectNo()));
+                projectVo.setProjectDynamic(2);
+                projectVo.setProjectOrder(2);
+                projectVo.setProjectData(2);
+                projectVo.setProjectInvoice(2);
+            }else{
+                projectVo.setComplaintState(1);
+            }
+            projectVo.setStageNameColor("#50ABD2");
+            projectVos.add(projectVo);
+        }
+        PageInfo<Project> pageInfo = new PageInfo<>(projects);
+        return PageInfoUtils.pageInfo(pageInfo,projectVos);
+    }
+
+    private Map<String,Integer> isComplaint(List<String> projectNos){
+        DesignerOrderExample orderExample = new DesignerOrderExample();
+        orderExample.createCriteria().andProjectNoIn(projectNos).andComplaintStateIn(Arrays.asList(2,3));
+        List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(orderExample);
+
+        ConstructionOrderExample constructionOrderExample = new ConstructionOrderExample();
+        constructionOrderExample.createCriteria().andProjectNoIn(projectNos).andComplaintStateIn(Arrays.asList(2,3));
+        List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(constructionOrderExample);
+        Map<String,Integer> complaints = new HashMap<>();
+        for(DesignerOrder designerOrder : designerOrders){
+            complaints.put(designerOrder.getProjectNo(), designerOrder.getComplaintState());
+        }
+        for(ConstructionOrder constructionOrder : constructionOrders){
+            complaints.put(constructionOrder.getProjectNo(), constructionOrder.getComplaintState());
+        }
+        return complaints;
+    }
+
+    private void setMsgRemind(Project project, ProjectVo projectVo) {
+        String projectMessageStatus = cloudService.getProjectMessageStatus(project.getProjectNo(), project.getOwnerId());
+        if (projectMessageStatus.trim().isEmpty()) {
+            return;
+        }
+        JSONObject messageJson = JSONObject.parseObject(projectMessageStatus);
+        JSONObject data = messageJson.getJSONObject("data");
+        if (!messageJson.getInteger("code").equals(ErrorCode.OK.getCode())) {
+            return;
+        }
+        String dataString = JSONObject.toJSONString(data);
+        OperationVo operationVo = JSONObject.parseObject(dataString, OperationVo.class);
+        projectVo.setProjectDynamic(Integer.parseInt(operationVo.getProjectDynamic()) > 0 ? 1 : 0);
+        projectVo.setProjectOrder(Integer.parseInt(operationVo.getProjectOrder()) > 0 ? 1 : 0);
+        projectVo.setProjectData(Integer.parseInt(operationVo.getProjectData()) > 0 ? 1 : 0);
+        projectVo.setProjectInvoice(Integer.parseInt(operationVo.getInvoice()) > 0 ? 1 : 0);
+    }
 
 
     /**
@@ -947,7 +1072,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (!projectSchedulings.isEmpty()) {
             projectTitleVo.setIsConfirm(projectSchedulings.get(0).getIsConfirm());
         }
-        projectTitleVo.setGanttChartUrl("https://www.baidu.com");
+        projectTitleVo.setGanttChartUrl(null);
         return RespData.success(projectTitleVo);
     }
 
@@ -1500,9 +1625,15 @@ public class NewProjectServiceImpl implements NewProjectService {
     }
 
     private Map<String, UserMsgVo> getStringUserMsgVoMap(List<String> projectNos) {
+        if(projectNos == null || projectNos.isEmpty()){
+            return new HashMap<>();
+        }
         OrderUserExample orderUserExample = new OrderUserExample();
         orderUserExample.createCriteria().andProjectNoIn(projectNos).andRoleCodeEqualTo("CC");
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+        if(orderUsers.isEmpty()){
+            return new HashMap<>();
+        }
         List<String> ownerIds = ReflectUtils.getList(orderUsers, "userId");
         List<UserMsgVo> userMsgVos = userCenterService.queryUsers(ownerIds);
         Map<String, UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos, "consumerId");
