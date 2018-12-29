@@ -490,18 +490,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
      *
      * @param stateType              1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态
      * @param designerStyleConfigMap
-     * @param DesignerOrder          设计订单信息
+     * @param designerOrder          设计订单信息
      * @param project                项目信息
      * @param msgVoMap               用户信息
      * @return
      */
     private DesignerOrderVo getDesignerOrderVo(
-            CompanyInfo companyInfo, int stateType, Map<String, DesignerStyleConfigVo> designerStyleConfigMap, DesignerOrder DesignerOrder,
+            CompanyInfo companyInfo, int stateType, Map<String, DesignerStyleConfigVo> designerStyleConfigMap, DesignerOrder designerOrder,
             Project project, Map<String, UserMsgVo> msgVoMap, Map<String,BasicsData> projectSourceMap, Map<String,BasicsData> huxingMap,
             Map<String,OrderUser> orderUserMap, String ownerRoleCode, String designerRoleCode) {
         DesignerOrderVo designerOrderVo = new DesignerOrderVo();
         designerOrderVo.setProjectNo(project.getProjectNo());
-        designerOrderVo.setDesignOrderNo(DesignerOrder.getOrderNo());
+        designerOrderVo.setDesignOrderNo(designerOrder.getOrderNo());
         OrderUser orderUser = orderUserMap.get(ownerRoleCode + "-" + project.getProjectNo());
         UserMsgVo ownerMsg = null;
         if(orderUser != null){
@@ -536,7 +536,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (project.getCreateTime() != null) {
             designerOrderVo.setCreateTime(project.getCreateTime().getTime() + "");
         }
-        DesignerStyleConfigVo designerStyleConfig = designerStyleConfigMap.get(DesignerOrder.getStyleType());
+        DesignerStyleConfigVo designerStyleConfig = designerStyleConfigMap.get(designerOrder.getStyleType());
         if (designerStyleConfig != null) {
             designerOrderVo.setStyleName(designerStyleConfig.getStyleName());
         }
@@ -553,12 +553,21 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setDesignerName(designerId);
         }
         try {
-            designerOrderVo.setOrderStateName(DesignStateEnum.queryByState(DesignerOrder.getOrderStage()).getStateName(stateType));
+            designerOrderVo.setOrderStateName(DesignStateEnum.queryByState(designerOrder.getOrderStage()).getStateName(stateType));
         } catch (Exception e) {
             designerOrderVo.setOrderStateName("未知");
         }
-        designerOrderVo.setOrderState(DesignerOrder.getOrderStage() + "");
+        designerOrderVo.setOrderState(designerOrder.getOrderStage() + "");
         designerOrderVo.setProjectMoney(project.getDecorationBudget() + "");
+        OptionLogExample logExample = new OptionLogExample();
+        logExample.createCriteria().andLinkNoEqualTo(designerOrder.getOrderNo()).andOptionTypeEqualTo("DO");
+        logExample.setOrderByClause(" option_time desc limit 1");
+        List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
+        if (!optionLogs.isEmpty()) {
+            OptionLog optionLog = optionLogs.get(0);
+            designerOrderVo.setOptionUserName(optionLog.getOptionUserName());
+            designerOrderVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
+        }
         return designerOrderVo;
     }
 
@@ -798,15 +807,6 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         DesignOrderDelVo designOrderDelVo = new DesignOrderDelVo(1, stateEnum.getStateName(stateType),
                 "", "小区名称", designerOrder.getProjectNo());
         designOrderDelVo = ReflectUtils.beanCopy(designerOrderVo, designOrderDelVo);
-        OptionLogExample logExample = new OptionLogExample();
-        logExample.createCriteria().andLinkNoEqualTo(designerOrder.getOrderNo()).andOptionTypeEqualTo("DO");
-        logExample.setOrderByClause(" option_time desc limit 1");
-        List<OptionLog> optionLogs = optionLogMapper.selectByExample(logExample);
-        if (!optionLogs.isEmpty()) {
-            OptionLog optionLog = optionLogs.get(0);
-            designOrderDelVo.setOptionUserName(optionLog.getOptionUserName());
-            designOrderDelVo.setOptionTime(optionLog.getOptionTime().getTime() + "");
-        }
         pcDesignOrderMsgVo.setDesignerOrderVo(designOrderDelVo);
         designOrderDelVo.setPeopleNo(project.getPeopleNo() + "");
         if(designerOrder.getVolumeRoomTime() != null){
