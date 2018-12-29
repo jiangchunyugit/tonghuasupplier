@@ -14,6 +14,7 @@ import cn.thinkfree.service.construction.CommonService;
 import cn.thinkfree.service.construction.ConstructionAndPayStateService;
 import cn.thinkfree.service.newscheduling.NewSchedulingService;
 import cn.thinkfree.service.utils.HttpUtils;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -199,16 +200,14 @@ public class ConstructionAndPayStateServiceImpl implements ConstructionAndPaySta
      * 支付阶段通知
      */
     @Override
-    public void notifyPay(String orderNo,Integer sort) {
-        try {
-            Map<String, Object> map = new HashMap<>();
-            map.put("fromOrderid", orderNo);
-            map.put("sort", sort);
-            HttpUtils.post(getUrl(contractUrl), getParams(map));
-        } catch (Exception e) {
-            System.out.println("支付阶段通知异常");
-        }
-
+    public Object notifyPay(String orderNo,Integer sort) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("fromOrderid", orderNo);
+        map.put("sort", sort);
+        HttpUtils.HttpRespMsg httpRespMsg = HttpUtils.post(getUrl(contractUrl), getParams(map));
+        String content = httpRespMsg.getContent();
+        JSONObject jsonObject = JSONObject.parseObject(content);
+        return jsonObject.get("data");
     }
 
 

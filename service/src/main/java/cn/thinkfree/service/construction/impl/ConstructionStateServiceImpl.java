@@ -309,6 +309,8 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 constructionOrderPay.setSort(sort.shortValue());
                 constructionOrderPay.setIsEnd("construction");
                 commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), ConstructionStateEnum.STATE_620.getState());
+
+                constructOrderPayService.updateByOrderNo(constructionOrderPay, constructionOrder.getOrderNo());
             } else {
 
                 //查询当前施工阶段名称
@@ -349,10 +351,13 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                     commonService.updateStateCodeByOrderNo(constructionOrder.getOrderNo(), nextConstructState.getState());
                 }
 
+                constructOrderPayService.updateByOrderNo(constructionOrderPay, constructionOrder.getOrderNo());
                 //支付阶段通知
-                constructionAndPayStateService.notifyPay(constructionOrder.getOrderNo(), sort);
+                Object pay = constructionAndPayStateService.notifyPay(constructionOrder.getOrderNo(), sort);
+                if (pay != null && 1 == Double.valueOf(pay.toString()).intValue()) {
+                    customerPay(constructionOrder.getOrderNo(), currentProjectBigScheduling.getBigName(), sort, "");
+                }
             }
-            constructOrderPayService.updateByOrderNo(constructionOrderPay, constructionOrder.getOrderNo());
         }
 
         return RespData.success();
