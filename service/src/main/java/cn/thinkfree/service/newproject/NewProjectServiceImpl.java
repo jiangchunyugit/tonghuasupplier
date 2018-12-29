@@ -321,7 +321,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
                     projectVo.setConstructionProgress(100);
                 } else {
-                    projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                    projectVo.setConstructionProgress(newSchedulingService.getProjectSpeed(project.getProjectNo()));
                 }
                 projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
                 projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
