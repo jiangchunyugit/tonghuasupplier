@@ -96,7 +96,7 @@
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
         WHERE
-        dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
+        dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status} AND po.order_number IS NOT NULL
         <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{designContractVO.contractNo},'%' )
         </if>
@@ -142,7 +142,7 @@
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
         WHERE
-        dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status}
+        dor.company_id = #{designContractVO.companyId} AND dor.status = #{designContractVO.status} AND po.order_number IS NOT NULL
         <if test="designContractVO.contractNo!=null and designContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{designContractVO.contractNo},'%' )
         </if>
