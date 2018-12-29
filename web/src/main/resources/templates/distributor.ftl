@@ -219,7 +219,7 @@
     <h4 style="margin-left: 30%;display:inline-block">联系电话：</h4>
 </div>
 <div class="footer">
-    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
+    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
     <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
 </body>
