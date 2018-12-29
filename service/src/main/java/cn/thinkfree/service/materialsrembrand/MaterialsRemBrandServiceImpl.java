@@ -27,6 +27,10 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
 
     @Autowired
     DealerBrandInfoMapper dealerBrandInfoMapper;
+    /**
+     * 截取最小值
+     */
+    private final int MinValue = 3;
     @Override
     public List<MaterialsRemBrand> getMaterialsRemBrands(String sbmc) {
 
@@ -47,7 +51,7 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
 
         MaterialsRemBrandSecondExample materialsRemBrandSecondExample = new MaterialsRemBrandSecondExample();
         materialsRemBrandSecondExample.createCriteria().andSbbmEqualTo(sbbm);
-        return materialsRemBrandSecondMapper.selectByExample(materialsRemBrandSecondExample);
+        return this.interceptCategoryCode(materialsRemBrandSecondMapper.selectByExample(materialsRemBrandSecondExample));
     }
 
     @Override
@@ -68,4 +72,24 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
 
         return dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
         }
+
+    /**
+     * 截取品类编码从第四位开始
+     * @param materialsRemBrandSeconds
+     * @return
+     */
+    private List<MaterialsRemBrandSecond> interceptCategoryCode(List<MaterialsRemBrandSecond> materialsRemBrandSeconds) {
+
+        if (materialsRemBrandSeconds != null && materialsRemBrandSeconds.size() > 0) {
+
+            materialsRemBrandSeconds.forEach(e->{
+                if (e.getSpfldm2().length() >MinValue) {
+                    String intercept = e.getSpfldm2().substring(MinValue);
+                    e.setSpfldm2(intercept);
+                }
+            });
+        }
+
+    return materialsRemBrandSeconds;
+    }
 }
