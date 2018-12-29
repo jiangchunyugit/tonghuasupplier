@@ -93,8 +93,8 @@
 <body>
 <h1 class="text-algin">“居然设计家”平台经销商合作协议（2019版）</h1>
 <div>
-    <h4 class="inline-block">甲方: </h4>
-    <input name="firstParty" class="textput defaultwidth" type="text" value="北京居然设计家网络科技有限公司">
+    <h4 class="inline-block">甲方：</h4>
+    <input name="firstParty" class="textput defaultwidth" type="text" value="${agencyContract.entityName}">
     <h4 style="display:inline-block">(以下简称甲方)</h4>
 </div>
 <div>
@@ -121,7 +121,7 @@
 </section>
 <h4>二、代收款结算约定</h4>
 <section class='indent'>
-    1．结算周期:乙方应于每月1-10日与甲方核对完毕上月应付平台的平台管理费和材料推荐服务费，并于每月25日之前将上月的平台管理费和材料推荐服务费结算给甲方。
+    1．结算周期：乙方应于每月1-10日与甲方核对完毕上月应付平台的平台管理费和材料推荐服务费，并于每月25日之前将上月的平台管理费和材料推荐服务费结算给甲方。
 </section>
 <section class="indent">
     2．发票开具：甲方应于乙方缴清应交平台管理费和材料推荐服务费后，给乙方开具等额发票。
@@ -219,7 +219,7 @@
     <h4 style="margin-left: 30%;display:inline-block">联系电话：</h4>
 </div>
 <div class="footer">
-    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
+    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
     <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
 </body>
