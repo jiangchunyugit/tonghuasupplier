@@ -128,7 +128,7 @@
 <section class="indent">
     甲乙双方同意建立业务合作伙伴关系。经甲乙双方协商一致，根据《中华人民共和国合同法》及有关法律、法规的规定，签订本协议。
 </section>
-<h4>一、合作内容</h4>
+<h4>1.合作内容</h4>
 <section class="indent">
     1.1 <span style="margin-right:2em;">乙方资质：</span>
     <div class="indent">企业法人：<div class="textput smalltextput" >${c03}</div> </div>
@@ -154,29 +154,29 @@
 
         。在经营过程中，乙方应本着诚信原则为甲方客户提供服务。乙方指定返施工款等其他相关款项的账户信息为：
     </div>
-       <#if c24 == 0>
-       <div class="indent">
-           户名： <input name="secondParty" class="textput defaultwidth" type="text" value="居然金融">
-       </div>
+    <#if c24 == 0>
+        <div class="indent">
+            户名： <input name="secondParty" class="textput defaultwidth" type="text" value="居然金融">
+        </div>
         <div class="indent">
             开户行： <input name="secondParty" class="textput defaultwidth" type="text" value="${c12}">
         </div>
-       <#else>
-            <div class="indent">
-                户名： <input name="secondParty" class="textput defaultwidth" type="text" value="${c10}">
-            </div>
-            <div class="indent">
-                开户行： <input name="secondParty" class="textput defaultwidth" type="text"  value="${c11}" >
-            </div>
-            <div class="indent">
-                账号：  <input name="secondParty" class="textput defaultwidth" type="text" value="${c12}">
-            </div>
-       </#if>
+    <#else>
+        <div class="indent">
+            户名： <input name="secondParty" class="textput defaultwidth" type="text" value="${c10}">
+        </div>
+        <div class="indent">
+            开户行： <input name="secondParty" class="textput defaultwidth" type="text"  value="${c11}" >
+        </div>
+        <div class="indent">
+            账号：  <input name="secondParty" class="textput defaultwidth" type="text" value="${c12}">
+        </div>
+    </#if>
 </section>
 <section class="indent">
     1.4 <span style="margin-right:2em;">合作区域：</span> <div class="textput smalltextput">${c13}${c14}${c15}</div>
 </section>
-<h4>二、甲方权利与义务</h4>
+<h4>2.甲方权利与义务</h4>
 <section class='indent'>
     2.1.甲方利用自身媒体优势对乙方进行包装推广，甲方推广宣传渠道包括且不限于室内外广告、平面广告、杂志、报刊等平面媒体，以及网页、微信、微博、网络等其他新媒体形式。
 </section>
@@ -208,7 +208,7 @@
     2.10.甲方有权在乙方违反法律法规、违反行业施工准则、违反甲方规定、出现重大投诉事故等情况下解除与乙方的合作关系。
 </section>
 
-<h4>三、乙方的权利与义务</h4>
+<h4>3.乙方的权利与义务</h4>
 <section class="indent">
     3.1.严禁乙方与甲方客户进行场外交易，否则视同乙方违约并终止合同。
 </section>
@@ -252,9 +252,6 @@
     3.14.因乙方施工质量、施工进度和施工人员引起的客诉，乙方必须配合甲方解决处理并在48小时内处理完毕且无条件服从甲方的处理决定。乙方按照与客户约定的时间派人维修，若乙方在保修期内未处理好售后服务工作，甲方可委托其他人员维修，维修产生的一切费用由乙方承担，并按三倍计费从合同保证金中扣除，支付给维修人员。
 </section>
 <section class="indent">
-    3.14.因乙方施工质量、施工进度和施工人员引起的客诉，乙方必须配合甲方解决处理并在48小时内处理完毕且无条件服从甲方的处理决定。乙方按照与客户约定的时间派人维修，若乙方在保修期内未处理好售后服务工作，甲方可委托其他人员维修，维修产生的一切费用由乙方承担，并按三倍计费从合同保证金中扣除，支付给维修人员。
-</section>
-<section class="indent">
     3.15.乙方不得私拿、私用客户的材料、设备、设施（包括拆旧材料）等一切属于客户的财产。严禁私收任何平台客户施工项目施工过程中产生的费用，一经举报查实，收一罚十。如违反此条款，除按上述规定执行外，甲方有权直接解除合同。
 </section>
 <section class="indent">
@@ -266,7 +263,7 @@
 <section class="indent">
     3.18.为了规避施工过程中存在的风险，乙方有义务为开工工地缴纳安装工程一切险及第三者责任险，费用由乙方承担，并向甲方提供相关凭证。
 </section>
-<h4>四、乙方人员管理</h4>
+<h4>4.乙方人员管理</h4>
 <section class="indent">
     4.1.乙方现场施工人员必须具备一定的装饰装修从业年限（不低于5年），必须全面熟悉施工工作，保证施工人员为相对稳定的专业人员；乙方须向甲方及客户提供人员组织结构关系资料及现场管理责任书。
 </section>
@@ -289,7 +286,7 @@
     4.7.乙方负责约束所属工人遵守国家法规、当地及物业管理部门的规定，若有违反需自行承担相关责任。
 </section>
 
-<h4>五、5.维保服务及合同保证金</h4>
+<h4>5.维保服务及合同保证金</h4>
 
 <section class="indent">
     5.1.工程施工质量必须严格按国家及地方标准进行验收，施工合同中对质量有更高要求的，乙方必须确保工程质量合格。乙方按照施工工艺及甲方制定的各种工艺要求及标准进行施工安装，现场施工内容按照客户、设计师、乙方三方确认的施工图纸报价进行施工。施工工期结合实际施工项目制定计划，核定施工工期，并严格执行。
@@ -301,43 +298,43 @@
     5.3.甲方有权在保修期内认定保修范围，同时乙方保证在接到甲方通知2小时内与客户取得联系，48小时之内完成维修内容，若特殊情况可与客户约定维修工期，保证在工期内完成维修工作。若乙方未在甲方规定的时间内完成维修或拒不配合维修的，甲方有权直接委托其他人员代替乙方维修，其总维修费用按三倍计，并从乙方合同保证金中扣除，支付给维修人员。
 </section>
 <section class="indent">
-    5.4.	乙方组织规模施工，服从甲方管理并自愿在协议签订时交纳合同保证金，乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金 <div class="textput smalltextput">${c17}</div>元，保证金缴纳遵循如下约定
+    5.4.乙方组织规模施工，服从甲方管理并自愿在协议签订时交纳合同保证金，乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金 <div class="textput smalltextput">${c17}</div>元，保证金缴纳遵循如下约定
     <div class="indent">
-    <#list code13 as c>
-        <#if (code13?size = 1)>
-    <div class="indent">
-        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>元的入驻保证金；
-    </div>
-        </#if>
-    </#list>
+        <#list code13 as c>
+            <#if (code13?size = 1)>
+                <div class="indent">
+                    5.4.1签约平台合作合同时一次性缴纳<div class="textput smalltextput">${c.costValue}</div>元的合同保证金；
+                </div>
+            </#if>
+        </#list>
     </div>
     <div class="indent">
         <#if ( code13?size > 1)>
-    <div class="indent">
-      <#--  1.2资质审核通过后，在共计<div class="textput smalltextput">${c17}</div>元的入驻保证金里缴纳-->
-    <#--  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
-      剩余部分从接到的每一个平台项目里扣除项目总金额的
-      <div class="textput smalltextput">${code13.[0].costValue}</div>
-      %充作保证金，-->
+            <div class="indent">
+                <#--  1.2资质审核通过后，在共计<div class="textput smalltextput">${c17}</div>元的入驻保证金里缴纳-->
+                <#--  <div class="textput smalltextput">${code13.[0].costValue}</div>元，
+                  剩余部分从接到的每一个平台项目里扣除项目总金额的
+                  <div class="textput smalltextput">${code13.[0].costValue}</div>
+                  %充作保证金，-->
 
-        <#list code13 as c>
-        <div class="indent"> (${c_index+1}) ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
-             <#if c.cType == 1 >
-                    元
-             <#else>
-            %
-             </#if>
-            ${(c.costName?split("@")[1]) }。</div>
-        </#list>
-    </div>
+                <#list code13 as c>
+                    <div class="indent"> (${c_index+1}) ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+                        <#if c.cType == 1 >
+                            元
+                        <#else>
+                            %
+                        </#if>
+                        ${(c.costName?split("@")[1]) }。</div>
+                </#list>
+            </div>
         </#if>
         <#--承接施工合同每个合同扣除合同额的5%作为合同保证金，直到累计合同保证金达到<div class="textput smalltextput"></div>万元上限为止，最后一笔如果超出上限，以上限金额为准。-->
     </div>
 </section>
 <section class="indent">
-    5.5.5.5.	甲方应在乙方最后一份施工合同保修期结束6个月后，将合同保证金无息退还给乙方。如乙方与甲方签约后未承接工程申请解除协议的，甲方应在乙方提出申请之日起30日内将合同保证金无息退还乙
+    5.5.甲方应在乙方最后一份施工合同保修期结束6个月后，将合同保证金无息退还给乙方。如乙方与甲方签约后未承接工程申请解除协议的，甲方应在乙方提出申请之日起30日内将合同保证金无息退还乙方。
 </section>
-<h4>六、返款方式及时间</h4>
+<h4>6.代收、返款方式及时间</h4>
 <section class="indent">
     6.1.乙方与平台客户签订施工合同后，甲方负责代收施工款，乙方负责施工，乙方同意甲方按照<div class="textput smalltextput"></div>方式代收：
     <div class="indent">（1）合同总金额分为三次代收，签订施工合同时代收合同折后总金额的55%作为首期款，中期验收结束后代收合同折后总金额的40%作为中期款，竣工结束后代收合同折后总金额的5%作为尾款。</div>
@@ -347,19 +344,19 @@
 </section>
 <section class="indent">
     6.2.甲方按进度给乙方进行返款，返款比例及时间节点如下：
-  <#list code02 as c>
-        <div class="indent">  6.2.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
-             <#if c.cType == 1 >
-                    元
-             <#else>
-            %
-             </#if>
+    <#list code02 as c>
+        <div class="indent">  6.2.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+            <#if c.cType == 1 >
+                元
+            <#else>
+                %
+            </#if>
             ${(c.costName?split("@")[1]) }。</div>
-  </#list>
-   <#-- <div class="indent">工地开工之后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>
-    <div class="indent">隐蔽工程验收合格后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>
-    <div class="indent">中期验收合格后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>
-    <div class="indent">基础验收合格后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>-->
+    </#list>
+    <#-- <div class="indent">工地开工之后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>
+     <div class="indent">隐蔽工程验收合格后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>
+     <div class="indent">中期验收合格后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>
+     <div class="indent">基础验收合格后按照合同折后总金额的<div class="textput smalltextput">20</div>%返款；</div>-->
     <#--<div class="indent">客户竣工验收合格（施工完工，主材全部安装完毕）并结算尾款后按照竣工结算工程款实收款与前四次返款的差额返款。</div>-->
 </section>
 <section class="indent">
@@ -375,19 +372,18 @@
     6.5.乙方接受施工合同中关于增减项的约定。
 </section>
 <section class="indent">
-    6.6.甲方收取乙方与甲方客户签订的合同折后合同额（含变更单金额）的<div class="textput smalltextput">${c16}</div>%作为平台施工服务管理费。
-    管理费分期收取，
+    6.6.甲方代收施工服务费，并按照乙方与客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c16}</div>%作为施工服务费。
     <#--施工合同生效后收取<div class="textput smalltextput"></div>%，
     消费者结算尾款后收取<div class="textput smalltextput"></div>%。-->
-     <#list code03 as c>
-                <div class="indent">  6.6.${c_index} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
-                <#if c.cType == 1 >
-                            元
-                <#else>
-                    %
-                </#if>
-                    ${(c.costName?split("@")[1]) }。</div>
-     </#list>
+    <#list code03 as c>
+        <div class="indent">  6.6.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+            <#if c.cType == 1 >
+                元
+            <#else>
+                %
+            </#if>
+            ${(c.costName?split("@")[1]) }。</div>
+    </#list>
     <#--6.6.6甲方代扣返还设计师的施工服务费，其中客户来源为设计师回单的，
     施工服务费按合同折后总金额（含变更单金额）的<div class="textput smalltextput"></div>代扣，开工代扣<div class="textput smalltextput"></div>，
     竣工验收结束后代扣<div class="textput smalltextput"></div>，
@@ -399,15 +395,15 @@
     6.7.甲方代扣返还设计师的施工服务费，其中客户来源为设计师回单的，施工服务费按合同折后总金额（含变更单金额）的10%代扣，开工代扣8%，竣工验收结束后代扣2%，其余客户来源的，施工服务费按合同折后总金额的5%代扣，开工代扣3%，竣工验收结束后代扣2%。施工合同中途解约的，平台施工服务管理费按照实际发生金额代扣。
 </section>-->
 <section class="indent">
-    6.8.客户不认可的工程增减项费用，甲方不与乙方进行返款。
+    6.7.客户不认可的工程增减项费用，甲方不与乙方进行返款。
 </section>
 <section class="indent">
-    6.9.乙方负责提供客户施工费合规的全额发票，发票税金及相关费用由乙方承担。
+    6.8.乙方负责提供客户施工费合规的全额发票，发票税金及相关费用由乙方承担。
 </section>
 <section class="indent">
-    6.10.乙方在收到甲方的施工费返款后,应确保及时发放到位，不得克扣、挪用，并不得低于当地规定的最低工资标准,否则视为根本违约，甲方有权解除本合同，并暂扣未支付的施工费，待乙方相关费用清算后另行支付。若出现劳务纠纷事件乙方要积极处理，不得对甲方造成经济和名誉上的损失，如甲方因该行为受到损害，乙方应全部予以赔偿。甲方有权对乙方施工人员的劳务费发放进行指导和监督，以保证乙方内部和谐稳定的用工关系。如乙方不听从甲方的指导和监督，出现顶撞、污蔑、威胁甲方管理人员及委派人员，每次应向甲方支付违约金人民币壹拾万元，同时甲方有权立即解除合同，乙方应及时向甲方进行竣工工程交接，因此给甲方造成的损失，乙方负责赔偿。另，如乙方拖欠其工人的劳务费，乙方应立即支付而与甲方无关，如出现乙方工人到甲方办公场所讨要劳务费，每出现一次，视情节乙方应向甲方最高支付违约金人民币壹拾万元。
+    6.9.乙方在收到甲方的施工费返款后,应确保及时发放到位，不得克扣、挪用，并不得低于当地规定的最低工资标准,否则视为根本违约，甲方有权解除本合同，并暂扣未支付的施工费，待乙方相关费用清算后另行支付。若出现劳务纠纷事件乙方要积极处理，不得对甲方造成经济和名誉上的损失，如甲方因该行为受到损害，乙方应全部予以赔偿。甲方有权对乙方施工人员的劳务费发放进行指导和监督，以保证乙方内部和谐稳定的用工关系。如乙方不听从甲方的指导和监督，出现顶撞、污蔑、威胁甲方管理人员及委派人员，每次应向甲方支付违约金人民币壹拾万元，同时甲方有权立即解除合同，乙方应及时向甲方进行竣工工程交接，因此给甲方造成的损失，乙方负责赔偿。另，如乙方拖欠其工人的劳务费，乙方应立即支付而与甲方无关，如出现乙方工人到甲方办公场所讨要劳务费，每出现一次，视情节乙方应向甲方最高支付违约金人民币壹拾万元。
 </section>
-<h4>七、违约责任</h4>
+<h4>7.违约责任</h4>
 <section class="indent">
     7.1.乙方不得私自与甲方客户达成其它施工协议，如违反约定，一切后果均由乙方承担，并按本合同承担违约责任，并根据违约严重程度扣除工程项目相应的工程款及合同保证金。
 </section>
@@ -429,7 +425,7 @@
 <section class="indent">
     7.7.甲乙双方均有保密义务，对双方合作协议、合作过程中涉及到的信息不得向第三方泄露。合同终止或提前解除不影响保密约束义务的持续有效。
 </section>
-<h4>八.争议解决</h4>
+<h4>8.争议解决</h4>
 <section class="indent">
     8.1.本合同执行期间若发生纠纷，双方应及时协商解决。协商不成的，任意一方均可向甲方所在地的人民法院提起诉讼。
 </section>
@@ -448,7 +444,7 @@
     8.4.本合同未尽事宜，双方协商签订补充协议，补充协议与本合同具有同等法律效力。
 </section>
 <section class="indent">
-    乙方特此申明完全理解本合同的所有内容，甲乙双方对本合同条款中的全部规定均无任何异议。
+    8.5.乙方特此申明完全理解本合同的所有内容，甲乙双方对本合同条款中的全部规定均无任何异议。
 </section>
 
 <div class="footer">
