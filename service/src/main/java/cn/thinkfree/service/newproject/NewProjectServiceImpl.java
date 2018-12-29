@@ -37,6 +37,7 @@ import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -116,6 +117,8 @@ public class NewProjectServiceImpl implements NewProjectService {
     private RoleFunctionService roleFunctionService;
     @Autowired
     private UserCenterService userCenterService;
+    @Value("${shanghai.construction.data}")
+    String constructionData;
 
     @Override
     public PageInfo<ProjectVo> getProjects(AppProjectSEO appProjectSEO){
@@ -259,7 +262,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         msgCriteria.andUserIdEqualTo(appProjectSEO.getUserId());
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         if (appProjectSEO.getWhichEnd() != 1 && (employeeMsgs.size() == 0 || employeeMsgs.get(0).getEmployeeState() == 2)) {
-            return RespData.success(new PageInfo<>());
+            PageInfo<ProjectVo> objectPageInfo = new PageInfo<>();
+            objectPageInfo.setList(new ArrayList<>());
+            return RespData.success(objectPageInfo);
         }
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
@@ -269,7 +274,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size() == 0) {
-            return RespData.success(new PageInfo<>(), "此用户尚未分配项目");
+            PageInfo<ProjectVo> objectPageInfo = new PageInfo<>();
+            objectPageInfo.setList(new ArrayList<>());
+            return RespData.success(objectPageInfo, "此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
@@ -314,7 +321,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 if (project.getStage() == ConstructionStateEnum.STATE_700.getState()) {
                     projectVo.setConstructionProgress(100);
                 } else {
-                    projectVo.setConstructionProgress(MathUtil.getPercentage(project.getPlanStartTime(), project.getPlanEndTime(), new Date()));
+                    projectVo.setConstructionProgress(newSchedulingService.getProjectSpeed(project.getProjectNo()));
                 }
                 projectVo.setStageConsumerName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_CUSTOMER));
                 projectVo.setStageDesignName(ConstructionStateEnum.queryByState(project.getStage()).getStateName(ConstructOrderConstants.APP_TYPE_DESIGN));
@@ -420,6 +427,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             List<ConstructionProjectVo> allProjects = new ArrayList<>();
             Integer count = 0;
             for (ConstructionProjectVo projectVo : list) {
+                projectVo.setAddress(getProjectAdress(projectVo.getProjectNo()));
                 if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
                     if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize && constructionStateService.getConstructState(projectVo.getStage(), projectVo.getComplaintState(), projectType)) {
                         playProjects.add(projectVo);
@@ -649,7 +657,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             ConstructionProjectVo constructionProjectVo = new ConstructionProjectVo();
             constructionProjectVo.setProjectNo(constructionOrder.getProjectNo());
             constructionProjectVo.setOrderNo(constructionOrder.getOrderNo());
-            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm;ss"));
+            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
             constructionProjectVo.setType(constructionOrder.getType());
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
             constructionProjectVo.setStage(constructionOrder.getOrderStage());
@@ -661,7 +669,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
             List<Project> projects = projectMapper.selectByExample(projectExample);
             if (projects.size() != 0) {
-                constructionProjectVo.setAddress(projects.get(0).getAddressDetail());
+                constructionProjectVo.setAddress(getProjectAdress(projects.get(0).getProjectNo()));
                 //业主信息
                 Map user = new HashMap();
                 try {
@@ -1332,7 +1340,8 @@ public class NewProjectServiceImpl implements NewProjectService {
                 throw new RuntimeException(jsonObject.getJSONObject("status").getString("message"));
             }
             String quoteId = data.getString("quoteId");
-            String baseUrl = "https://aly-uat-api.homestyler.com/quote-system/api/v1/quote/" + quoteId + "/export?exportCode=";
+//            String baseUrl = "https://aly-uat-api.homestyler.com/quote-system/api/v1/quote/" + quoteId + "/export?exportCode=";
+            String baseUrl = constructionData + quoteId + "/export?exportCode=";
             ProjectData projectData = new ProjectData();
             projectData.setFileType(ProjectDataStatus.FILE_PNG.getValue());
             projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
@@ -1828,37 +1837,6 @@ public class NewProjectServiceImpl implements NewProjectService {
         if (type == null) {
             return RespData.error("请选择资料类型");
         }
-        for (int i = 0; i < dataList.size(); i++) {
-            JSONObject data = dataList.getJSONObject(i);
-            //添加报价房屋信息表
-            String roomString = JSONObject.toJSONString(data);
-            NewUrlDetailVo newUrlDetailVo = JSONObject.parseObject(roomString, NewUrlDetailVo.class);
-            for (UrlDetailVo urlDetailVo : newUrlDetailVo.getImgs()) {
-                //组合插入数据
-                ProjectData projectData = new ProjectData();
-                projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
-                projectData.setType(type);
-                projectData.setProjectNo(projectNo);
-                projectData.setHsDesignid(hsDesignId);
-                projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
-                projectData.setDataJson(jsonData);
-                projectData.setUploadTime(new Date());
-                if (urlDetailVo.getImgUrl() != null) {
-                    projectData.setUrl(urlDetailVo.getImgUrl());
-                }
-                if (urlDetailVo.getPhoto360Url() != null) {
-                    projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
-                }
-                projectData.setCategory(type);
-                if (newUrlDetailVo.getRoomName() != null) {
-                    projectData.setFileName(newUrlDetailVo.getRoomName());
-                }
-                int a = projectDataMapper.insertSelective(projectData);
-                if (a == ProjectDataStatus.INSERT_FAILD.getValue()) {
-                    throw new RuntimeException("确认失败!");
-                }
-            }
-        }
         if (type == 3) {
             String result = cloudService.getShangHaiPriceDetail(hsDesignId);
             if (result.trim().isEmpty()) {
@@ -1874,7 +1852,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                 throw new RuntimeException(jsonObject.getJSONObject("status").getString("message"));
             }
             String quoteId = data.getString("quoteId");
-            String baseUrl = "https://aly-uat-api.homestyler.com/quote-system/api/v1/quote/" + quoteId + "/export?exportCode=";
+            String baseUrl = constructionData + quoteId + "/export?exportCode=";
             ProjectData projectDataTwo = new ProjectData();
             projectDataTwo.setFileType(ProjectDataStatus.FILE_PNG.getValue());
             projectDataTwo.setCompanyId(employeeMsgs.get(0).getCompanyId());
@@ -1910,6 +1888,38 @@ public class NewProjectServiceImpl implements NewProjectService {
                 int a = projectDataMapper.insertSelective(projectDataTwo);
                 if (a == ProjectDataStatus.INSERT_FAILD.getValue()) {
                     throw new RuntimeException("确认失败!");
+                }
+            }
+        }else {
+            for (int i = 0; i < dataList.size(); i++) {
+                JSONObject data = dataList.getJSONObject(i);
+                //添加报价房屋信息表
+                String roomString = JSONObject.toJSONString(data);
+                NewUrlDetailVo newUrlDetailVo = JSONObject.parseObject(roomString, NewUrlDetailVo.class);
+                for (UrlDetailVo urlDetailVo : newUrlDetailVo.getImgs()) {
+                    //组合插入数据
+                    ProjectData projectData = new ProjectData();
+                    projectData.setCompanyId(employeeMsgs.get(0).getCompanyId());
+                    projectData.setType(type);
+                    projectData.setProjectNo(projectNo);
+                    projectData.setHsDesignid(hsDesignId);
+                    projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
+                    projectData.setDataJson(jsonData);
+                    projectData.setUploadTime(new Date());
+                    if (urlDetailVo.getImgUrl() != null) {
+                        projectData.setUrl(urlDetailVo.getImgUrl());
+                    }
+                    if (urlDetailVo.getPhoto360Url() != null) {
+                        projectData.setPhotoPanoramaUrl(urlDetailVo.getPhoto360Url());
+                    }
+                    projectData.setCategory(type);
+                    if (newUrlDetailVo.getRoomName() != null) {
+                        projectData.setFileName(newUrlDetailVo.getRoomName());
+                    }
+                    int a = projectDataMapper.insertSelective(projectData);
+                    if (a == ProjectDataStatus.INSERT_FAILD.getValue()) {
+                        throw new RuntimeException("确认失败!");
+                    }
                 }
             }
         }

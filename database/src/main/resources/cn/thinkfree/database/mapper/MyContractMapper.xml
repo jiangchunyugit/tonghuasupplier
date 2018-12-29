@@ -56,7 +56,7 @@
             and p.city_code = #{city}
           </if>
           
-          <if test="companyInfo != null and companyInfo !='' ">
+          <if test="area != null and area !='' ">
             and  p.area_code =#{area}
           </if>
           
