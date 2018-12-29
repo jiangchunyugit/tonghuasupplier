@@ -259,7 +259,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         msgCriteria.andUserIdEqualTo(appProjectSEO.getUserId());
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         if (appProjectSEO.getWhichEnd() != 1 && (employeeMsgs.size() == 0 || employeeMsgs.get(0).getEmployeeState() == 2)) {
-            return RespData.success(new PageInfo<>());
+            PageInfo<ProjectVo> objectPageInfo = new PageInfo<>();
+            objectPageInfo.setList(new ArrayList<>());
+            return RespData.success(objectPageInfo);
         }
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
@@ -269,7 +271,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size() == 0) {
-            return RespData.success(new PageInfo<>(), "此用户尚未分配项目");
+            PageInfo<ProjectVo> objectPageInfo = new PageInfo<>();
+            objectPageInfo.setList(new ArrayList<>());
+            return RespData.success(objectPageInfo, "此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
