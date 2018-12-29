@@ -1,6 +1,7 @@
 package cn.thinkfree.config;
 
 import cn.thinkfree.core.base.MyLogger;
+import cn.thinkfree.database.mapper.JobManagerMapper;
 import cn.thinkfree.database.mapper.ProjectBigSchedulingDetailsMapper;
 import cn.thinkfree.database.mapper.ProjectSchedulingMapper;
 import cn.thinkfree.database.model.ProjectBigSchedulingDetails;
@@ -29,11 +30,14 @@ public class DelayTiming {
     private ProjectBigSchedulingDetailsMapper projectBigSchedulingDetailsMapper;
     @Autowired
     private ProjectSchedulingMapper projectSchedulingMapper;
-
+    @Autowired
+    private JobManagerMapper jobManagerMapper;
     @Scheduled(cron = "0 0 1 * * ?")
     public void timing() {
+        String jobName = "延期天数";
         try {
             LOGGER.info("开始执行定时任务");
+            if (canExecute(jobName)){
             ProjectBigSchedulingDetailsExample projectBigSchedulingDetailsExample = new ProjectBigSchedulingDetailsExample();
             //查询未完成的阶段项目
             projectBigSchedulingDetailsExample.createCriteria().andIsCompletedEqualTo(0).andStatusEqualTo(1);
@@ -68,12 +72,31 @@ public class DelayTiming {
                             throw new RuntimeException();
                         }
                     }
-                });
+                }
+                );
+            }
+                jobManagerMapper.updateJobStatus(jobName,"off");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+    private Boolean canExecute(String jobName) throws Exception {
+        int max = 10000;
+        int min = (int) Math.round(Math.random()*8000);
+        long sleepTime = Math.round(Math.random()*(max-min));
+        LOGGER.info(jobName+"睡了："+ sleepTime + "毫秒");
+        Thread.sleep(sleepTime);
+
+        if (jobManagerMapper.getJobOff(jobName) == 1){
+            jobManagerMapper.updateJobStatus(jobName,"on");
+            return true;
+        }
+        LOGGER.info(jobName+"已被其他服务器执行");
+        return false;
+    }
+
+
 }
 

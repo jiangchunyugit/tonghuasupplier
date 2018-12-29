@@ -259,7 +259,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         msgCriteria.andUserIdEqualTo(appProjectSEO.getUserId());
         List<EmployeeMsg> employeeMsgs = employeeMsgMapper.selectByExample(msgExample);
         if (appProjectSEO.getWhichEnd() != 1 && (employeeMsgs.size() == 0 || employeeMsgs.get(0).getEmployeeState() == 2)) {
-            return RespData.success(new PageInfo<>());
+            PageInfo<ProjectVo> objectPageInfo = new PageInfo<>();
+            objectPageInfo.setList(new ArrayList<>());
+            return RespData.success(objectPageInfo);
         }
         OrderUserExample example1 = new OrderUserExample();
         OrderUserExample.Criteria criteria1 = example1.createCriteria();
@@ -269,7 +271,9 @@ public class NewProjectServiceImpl implements NewProjectService {
         //查询此人名下所有项目
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(example1);
         if (orderUsers.size() == 0) {
-            return RespData.success(new PageInfo<>(), "此用户尚未分配项目");
+            PageInfo<ProjectVo> objectPageInfo = new PageInfo<>();
+            objectPageInfo.setList(new ArrayList<>());
+            return RespData.success(objectPageInfo, "此用户尚未分配项目");
         }
         String userRoleCode = orderUsers.get(0).getRoleCode();
         List<String> list = new ArrayList<>();
@@ -420,6 +424,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             List<ConstructionProjectVo> allProjects = new ArrayList<>();
             Integer count = 0;
             for (ConstructionProjectVo projectVo : list) {
+                projectVo.setAddress(getProjectAdress(projectVo.getProjectNo()));
                 if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
                     if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize && constructionStateService.getConstructState(projectVo.getStage(), projectVo.getComplaintState(), projectType)) {
                         playProjects.add(projectVo);
@@ -649,7 +654,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             ConstructionProjectVo constructionProjectVo = new ConstructionProjectVo();
             constructionProjectVo.setProjectNo(constructionOrder.getProjectNo());
             constructionProjectVo.setOrderNo(constructionOrder.getOrderNo());
-            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm;ss"));
+            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
             constructionProjectVo.setType(constructionOrder.getType());
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
             constructionProjectVo.setStage(constructionOrder.getOrderStage());
@@ -661,7 +666,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
             List<Project> projects = projectMapper.selectByExample(projectExample);
             if (projects.size() != 0) {
-                constructionProjectVo.setAddress(projects.get(0).getAddressDetail());
+                constructionProjectVo.setAddress(getProjectAdress(projects.get(0).getProjectNo()));
                 //业主信息
                 Map user = new HashMap();
                 try {

@@ -330,25 +330,26 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 
 	private void searchRef (SettlementRatioInfoExample example,SettlementRatioSEO ratio) {
 
+		SettlementRatioInfoExample.Criteria criteria = example.createCriteria();
 		if(!StringUtils.isBlank(ratio.getRatioNumber())){
-			example.createCriteria().andRatioNumberLike("%"+ratio.getRatioNumber()+"%");
+			criteria.andRatioNumberLike("%"+ratio.getRatioNumber()+"%");
 		}
 		if(!StringUtils.isBlank(ratio.getRatioName())){
-			example.createCriteria().andFeeNameLike("%"+ratio.getRatioName()+"%");
+			criteria.andFeeNameLike("%"+ratio.getRatioName()+"%");
 		}
 		if(!StringUtils.isBlank(ratio.getCreateUser())){
-			example.createCriteria().andCreateUserLike("%"+ratio.getCreateUser()+"%");
+			criteria.andCreateUserLike("%"+ratio.getCreateUser()+"%");
 		}
 		if(ratio.getStartTime() !=null && !StringUtils.isBlank(ratio.getStartTime()+"")){
-			example.createCriteria().andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
+			criteria.andEffectStartTimeGreaterThanOrEqualTo(ratio.getStartTime());
 		}
 		if(ratio.getEndTime() != null && !StringUtils.isBlank(ratio.getEndTime()+"")){
-			example.createCriteria().andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
+			criteria.andEffectEndTimeLessThanOrEqualTo(ratio.getEndTime());
 		}
 
 		if(!StringUtils.isEmpty(ratio.getRatioStatus())){
 			//1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
-			example.createCriteria().andStatusEqualTo(ratio.getRatioStatus());
+			criteria.andStatusEqualTo(ratio.getRatioStatus());
 		}
 	}
 
