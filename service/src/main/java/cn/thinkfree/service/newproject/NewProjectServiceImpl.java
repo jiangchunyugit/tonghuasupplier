@@ -654,7 +654,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             ConstructionProjectVo constructionProjectVo = new ConstructionProjectVo();
             constructionProjectVo.setProjectNo(constructionOrder.getProjectNo());
             constructionProjectVo.setOrderNo(constructionOrder.getOrderNo());
-            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm;ss"));
+            constructionProjectVo.setAppointmentTime(DateUtil.formartDate(constructionOrder.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
             constructionProjectVo.setType(constructionOrder.getType());
             constructionProjectVo.setStageName(ConstructionStateEnum.queryByState(constructionOrder.getOrderStage()).getStateName(3));
             constructionProjectVo.setStage(constructionOrder.getOrderStage());
