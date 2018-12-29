@@ -45,6 +45,12 @@ public class DateUtils {
             e.printStackTrace();
         }
         try {
+            sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+            return sdf.parse(strDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
             sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             return sdf.parse(strDate);
         } catch (ParseException e) {
