@@ -120,21 +120,22 @@ public class NewProjectServiceImpl implements NewProjectService {
     @Override
     public PageInfo<ProjectVo> getProjects(AppProjectSEO appProjectSEO){
         if (appProjectSEO.getUserId() == null || appProjectSEO.getUserId().trim().isEmpty() || appProjectSEO.getWhichEnd() == null) {
-            return new PageInfo<>();
+            return PageInfoUtils.pageInfo(new PageInfo<>(),new ArrayList<>());
         }
         EmployeeMsg employeeMsg = employeeMsgMapper.selectByPrimaryKey(appProjectSEO.getUserId());
         if (appProjectSEO.getWhichEnd() != 1 && (employeeMsg == null || employeeMsg.getEmployeeState() == 2)) {
-            return new PageInfo<>();
+            return PageInfoUtils.pageInfo(new PageInfo<>(),new ArrayList<>());
         }
         OrderUserExample orderUserExample = new OrderUserExample();
         orderUserExample.createCriteria().andUserIdEqualTo(appProjectSEO.getUserId());
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
         if(orderUsers.isEmpty()){
-            return new PageInfo<>();
+            return PageInfoUtils.pageInfo(new PageInfo<>(),new ArrayList<>());
         }
         ProjectExample example = new ProjectExample();
         ProjectExample.Criteria criteria = example.createCriteria();
         criteria.andProjectNoIn(ReflectUtils.getList(orderUsers,"projectNo"));
+        example.setOrderByClause(" create_time desc ");
         PageHelper.startPage(appProjectSEO.getPage(), appProjectSEO.getRows());
         List<Project> projects = projectMapper.selectByExample(example);
         List<ProjectVo> projectVos = new ArrayList<>();
