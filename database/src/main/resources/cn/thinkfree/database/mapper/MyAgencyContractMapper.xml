@@ -37,77 +37,54 @@
   <sql id="my_Where_Clause">
 
     <where>
-        and  ( status = '0' or   status = '3' or  status = '5'  or    status = '6'  or   status = '7'   or   status = '8'  or   status = '9'  or   status = '10' or    status = '11')
-      <if test="contractNumber!= null and contractNumber != ''">
-        and   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
-      </if>
-    <if test="agency!= null and agency != ''">
-       and   t.agency_code LIKE concat(concat('%',#{agency}),'%')
-     </if>
-     <if test="agency!= null and agency != ''">
-       and   t.company_name LIKE concat(concat('%',#{agency}),'%')
-     </if>
-     <if test="brand!= null and brand != ''">
-       and   brand_no LIKE concat(concat('%',#{brand}),'%')
-     </if>
-     <if test="brand!= null and brand != ''">
-       and   brand_name LIKE concat(concat('%',#{brand}),'%')
-     </if>
-
-     <if test="category!= null and category != ''">
-       and   category_name LIKE concat(concat('%',#{category}),'%')
-     </if>
-     <if test="category!= null and category != ''">
-       and   category_no LIKE concat(concat('%',#{category}),'%')
-     </if>
-
-     <if test="status != null and status != ''">
-       and   status =#{status}
-     </if>
-     <if test="startTime != null and startTime!=''">
-      <![CDATA[ AND end_time &gt;=#{startTime}]]>
-     </if>
-     <if test="endTime != null and endTime!=''">
-       <![CDATA[ AND  end_time &lt;=#{endTime} ]]>
-     </if>
-     <if test="branchCompanyCode != null and branchCompanyCode != ''">
-       AND  branch_company_code =#{branchCompanyCode}
-     </if>
-     <if test="cityBranchCode!=null and cityBranchCode != ''">
-       AND  city_branch_code = #{cityBranchCode}
-     </if>
+        <if test="contractNumber!= null and contractNumber != ''">
+            AND t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
+        </if>
+        <if test="agency!= null and agency != ''">
+            AND (t.dealer_company_id LIKE concat(concat('%',#{agency}),'%') OR t.company_name LIKE concat(concat('%',#{agency}),'%'))
+        </if>
+        <if test="brand!= null and brand != ''">
+            AND  (brand_no LIKE concat(concat('%',#{brand}),'%') OR brand_name LIKE concat(concat('%',#{brand}),'%'))
+        </if>
+        <if test="category!= null and category != ''">
+            AND  (category_name LIKE concat(concat('%',#{category}),'%') OR category_no LIKE concat(concat('%',#{category}),'%'))
+        </if>
+        <if test="status != null and status != ''">
+            AND   status =#{status}
+        </if>
+        <if test="startTime != null and startTime!=''">
+        <![CDATA[ AND end_time &gt;=#{startTime}]]>
+        </if>
+        <if test="endTime != null and endTime!=''">
+        <![CDATA[ AND  end_time &lt;=#{endTime} ]]>
+        </if>
+        <if test="branchCompanyCode != null and branchCompanyCode != ''">
+        AND  branch_company_code =#{branchCompanyCode}
+        </if>
+        <if test="cityBranchCode!=null and cityBranchCode != ''">
+        AND  city_branch_code = #{cityBranchCode}
+        </if>
    </where>
   </sql>
 
     <sql id="my_Where_Clause_one">
 
         <where>
-            and  status = '1'
+            AND  status = '1'
             <if test="contractNumber!= null and contractNumber != ''">
-                and   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
+                AND   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
             </if>
             <if test="agency!= null and agency != ''">
-                and   t.agency_code LIKE concat(concat('%',#{agency}),'%')
-            </if>
-            <if test="agency!= null and agency != ''">
-                and   t.company_name LIKE concat(concat('%',#{agency}),'%')
+                AND (t.dealer_company_id LIKE concat(concat('%',#{agency}),'%') OR t.company_name LIKE concat(concat('%',#{agency}),'%'))
             </if>
             <if test="brand!= null and brand != ''">
-                and   brand_no LIKE concat(concat('%',#{brand}),'%')
-            </if>
-            <if test="brand!= null and brand != ''">
-                and   brand_name LIKE concat(concat('%',#{brand}),'%')
-            </if>
-
-            <if test="category!= null and category != ''">
-                and   category_name LIKE concat(concat('%',#{category}),'%')
+                AND  (brand_no LIKE concat(concat('%',#{brand}),'%') OR brand_name LIKE concat(concat('%',#{brand}),'%'))
             </if>
             <if test="category!= null and category != ''">
-                and   category_no LIKE concat(concat('%',#{category}),'%')
+                AND  (category_name LIKE concat(concat('%',#{category}),'%') OR category_no LIKE concat(concat('%',#{category}),'%'))
             </if>
-
             <if test="status != null and status != ''">
-                and   status =#{status}
+                AND   status =#{status}
             </if>
             <if test="startTime != null and startTime!=''">
                 <![CDATA[ AND end_time &gt;=#{startTime}]]>
@@ -129,30 +106,19 @@
         <where>
             and  status = '4'
             <if test="contractNumber!= null and contractNumber != ''">
-                and   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
+                AND   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
             </if>
             <if test="agency!= null and agency != ''">
-                and   t.agency_code LIKE concat(concat('%',#{agency}),'%')
-            </if>
-            <if test="agency!= null and agency != ''">
-                and   t.company_name LIKE concat(concat('%',#{agency}),'%')
+                AND (t.dealer_company_id LIKE concat(concat('%',#{agency}),'%') OR t.company_name LIKE concat(concat('%',#{agency}),'%'))
             </if>
             <if test="brand!= null and brand != ''">
-                and   brand_no LIKE concat(concat('%',#{brand}),'%')
-            </if>
-            <if test="brand!= null and brand != ''">
-                and   brand_name LIKE concat(concat('%',#{brand}),'%')
-            </if>
-
-            <if test="category!= null and category != ''">
-                and   category_name LIKE concat(concat('%',#{category}),'%')
+                AND  (brand_no LIKE concat(concat('%',#{brand}),'%') OR brand_name LIKE concat(concat('%',#{brand}),'%'))
             </if>
             <if test="category!= null and category != ''">
-                and   category_no LIKE concat(concat('%',#{category}),'%')
+                AND  (category_name LIKE concat(concat('%',#{category}),'%') OR category_no LIKE concat(concat('%',#{category}),'%'))
             </if>
-
             <if test="status != null and status != ''">
-                and   status =#{status}
+                AND   status =#{status}
             </if>
             <if test="startTime != null and startTime!=''">
                 <![CDATA[ AND end_time &gt;=#{startTime}]]>

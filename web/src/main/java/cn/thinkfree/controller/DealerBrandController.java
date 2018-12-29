@@ -132,4 +132,16 @@ public class DealerBrandController  extends AbsBaseController {
         return sendJsonData(success, "操作成功", brandItemsVOS);
     }
 
+    @ApiOperation(value = "前端--运营后台--经销商公司管理--品牌编辑")
+    @PostMapping("/editBrand")
+    @MyRespBody
+    //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
+    public MyRespBundle<String> editBrand(@ApiParam("品牌信息")DealerBrandInfo dealerBrandInfo){
+        boolean result = dealerBrandService.editBrand(dealerBrandInfo);
+        if(result){
+            return sendSuccessMessage("编辑成功");
+        }
+        return sendFailMessage("编辑失败");
+    }
+
 }

@@ -18,6 +18,17 @@ public class BrandDetailVO {
     @ApiModelProperty(value="品牌编号")
     private String brandNo;
 
+    @ApiModelProperty(value="品牌状态")
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getCompanyId() {
         return companyId;
     }

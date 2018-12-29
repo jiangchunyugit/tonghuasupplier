@@ -2,6 +2,7 @@ package cn.thinkfree.service.newproject;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.database.appvo.*;
+import cn.thinkfree.database.model.Project;
 import cn.thinkfree.service.platform.vo.PageVo;
 import com.github.pagehelper.PageInfo;
 
@@ -13,6 +14,8 @@ import java.util.List;
  * @author gejiaming
  */
 public interface NewProjectService {
+
+    PageInfo<ProjectVo> getProjects(AppProjectSEO appProjectSEO);
     /**
      * 项目列表
      *
