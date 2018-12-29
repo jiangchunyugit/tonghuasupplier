@@ -161,24 +161,6 @@
             <version>4.1.14</version>
         </dependency>
     </dependencies>
-    <profiles>
-        <profile>
-            <!-- windows环境 -->
-            <id>win</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <pom.office.home>C:/Program Files (x86)/LibreOffice</pom.office.home>
-            </properties>
-        </profile>
-        <profile>
-            <!-- linux环境 -->
-            <id>linux</id>
-            <properties>
-                <pom.office.home>/opt/libreoffice6.1</pom.office.home>
-            </properties>
-        </profile>
-    </profiles>
+
 
 </project>
