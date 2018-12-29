@@ -424,6 +424,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             List<ConstructionProjectVo> allProjects = new ArrayList<>();
             Integer count = 0;
             for (ConstructionProjectVo projectVo : list) {
+                projectVo.setAddress(getProjectAdress(projectVo.getProjectNo()));
                 if (projectVo.getAddress().contains(inputData) || projectVo.getProjectNo().contains(inputData) || projectVo.getOrderNo().contains(inputData) || projectVo.getOwner().contains(inputData)) {
                     if ((pageNum - 1) * pageSize <= count && count < pageNum * pageSize && constructionStateService.getConstructState(projectVo.getStage(), projectVo.getComplaintState(), projectType)) {
                         playProjects.add(projectVo);
@@ -665,7 +666,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectCriteria.andStatusEqualTo(ProjectDataStatus.BASE_STATUS.getValue());
             List<Project> projects = projectMapper.selectByExample(projectExample);
             if (projects.size() != 0) {
-                constructionProjectVo.setAddress(projects.get(0).getAddressDetail());
+                constructionProjectVo.setAddress(getProjectAdress(projects.get(0).getProjectNo()));
                 //业主信息
                 Map user = new HashMap();
                 try {
