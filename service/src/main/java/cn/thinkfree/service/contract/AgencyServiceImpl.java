@@ -387,14 +387,14 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             return "品牌，品类已存在，请重新选择";
         } else {
 
-            List<String> contractNumbers = agencyContractMapper.selectByExample(agencyContractExampleShop).stream().map(a->a.getContractNumber()).collect(Collectors.toList());
+//            List<String> contractNumbers = agencyContractMapper.selectByExample(agencyContractExampleShop).stream().map(a->a.getContractNumber()).collect(Collectors.toList());
             if (paramAgencyList.getAgencyContractTermsList() != null) {
                 Set resultcheck = new HashSet();
                 for (AgencyContractTerms e:paramAgencyList.getAgencyContractTermsList()) {
 
                     resultcheck.add(e);
-                    AgencyContractTermsExample agencyContractTermsExample = new AgencyContractTermsExample();
-                    AgencyContractTermsExample.Criteria criteria1 = agencyContractTermsExample.createCriteria();
+//                    AgencyContractTermsExample agencyContractTermsExample = new AgencyContractTermsExample();
+//                    AgencyContractTermsExample.Criteria criteria1 = agencyContractTermsExample.createCriteria();
 
                     if (StringUtils.isBlank(e.getShopName()) || StringUtils.isBlank(e.getShopCode())) {
                         return "门店名称不可为空";
@@ -402,21 +402,21 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                     if (StringUtils.isBlank(e.getBoothName()) || StringUtils.isBlank(e.getBoothCode())) {
                         return "摊位名称不可为空";
                     }
-                    if (contractNumbers.size() > 0) {
-                        criteria1.andContractNumberIn(contractNumbers);
-                        criteria1.andShopCodeEqualTo(e.getShopCode());
-                        criteria1.andBoothCodeEqualTo(e.getBoothCode());
-                        if (agencyContractTermsMapper.countByExample(agencyContractTermsExample) >0) {
-                            StringBuffer stringBuffer = new StringBuffer();
-                            stringBuffer.append("门店：");
-                            stringBuffer.append(e.getShopName());
-                            stringBuffer.append(",");
-                            stringBuffer.append(e.getBoothName());
-                            stringBuffer.append(".");
-                            stringBuffer.append("已存在，请重新选择");
-                            return stringBuffer.toString();
-                        }
-                    }
+//                    if (contractNumbers.size() > 0) {
+//                        criteria1.andContractNumberIn(contractNumbers);
+//                        criteria1.andShopCodeEqualTo(e.getShopCode());
+//                        criteria1.andBoothCodeEqualTo(e.getBoothCode());
+//                        if (agencyContractTermsMapper.countByExample(agencyContractTermsExample) >0) {
+//                            StringBuffer stringBuffer = new StringBuffer();
+//                            stringBuffer.append("门店：");
+//                            stringBuffer.append(e.getShopName());
+//                            stringBuffer.append(",");
+//                            stringBuffer.append(e.getBoothName());
+//                            stringBuffer.append(".");
+//                            stringBuffer.append("已存在，请重新选择");
+//                            return stringBuffer.toString();
+//                        }
+//                    }
                 }
                 if (resultcheck.size() < paramAgencyList.getAgencyContractTermsList().size()) {
                     return "请不要选择相同的门店和摊位";
