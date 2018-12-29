@@ -208,7 +208,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
         if (checkItems.size() > 1) {
             List<AfCheckItemVO> checkApplicationCheckItems = new ArrayList<>();
-            List<AfInstance> checkApplicationInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_APPLICATION.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+            List<Integer> status = new ArrayList<>();
+            status.add(AfConstants.APPROVAL_STATUS_START);
+            status.add(AfConstants.APPROVAL_STATUS_SUCCESS);
+            List<AfInstance> checkApplicationInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_APPLICATION.configNo, projectNo, scheduleSort, status);
             if (checkApplicationInstances != null) {
                 for (AfInstance checkApplicationInstance : checkApplicationInstances) {
                     AfCheckItemVO checkItem =  getCheckItem(checkApplicationInstance.getData());
@@ -239,6 +242,7 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         List<AfCheckItemVO> checkItems = getCheckItems(projectNo, scheduleSort);
         if (checkItems.size() > 1) {
             List<AfCheckItemVO> checkApplicationCheckItems = new ArrayList<>();
+
             List<AfInstance> checkApplicationInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_APPLICATION.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
             if (checkApplicationInstances != null) {
                 for (AfInstance checkApplicationInstance : checkApplicationInstances) {
@@ -248,7 +252,10 @@ public class AfInstanceServiceImpl implements AfInstanceService {
             }
             if (checkApplicationCheckItems.size() > 1) {
                 List<AfCheckItemVO> checkReportCheckItems = new ArrayList<>();
-                List<AfInstance> checkReportInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, scheduleSort, AfConstants.APPROVAL_STATUS_SUCCESS);
+                List<Integer> status = new ArrayList<>();
+                status.add(AfConstants.APPROVAL_STATUS_START);
+                status.add(AfConstants.APPROVAL_STATUS_SUCCESS);
+                List<AfInstance> checkReportInstances = findByConfigNoAndProjectNoAndScheduleSortAndStatus(AfConfigs.CHECK_REPORT.configNo, projectNo, scheduleSort, status);
                 if (checkReportInstances != null) {
                     for (AfInstance checkReportInstance : checkReportInstances) {
                         AfCheckItemVO checkItem =  getCheckItem(checkReportInstance.getData());
@@ -1070,7 +1077,8 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         int result = 0;
         if (!projectCompleted(projectBigSchedulings, projectNo)) {
             if (getPreScheduleSortSuccceed(projectNo, projectBigSchedulings, scheduleSort)) {
-                if (!getScheduleSortSucceed(projectNo, scheduleSort)) {
+                long completeApplicationCount = getStartAndSuccessCount(projectNo, AfConfigs.COMPLETE_APPLICATION.configNo, scheduleSort);
+                if (completeApplicationCount == 0) {
 
                     long checkApplicationSuccessCount = getSuccessCount(projectNo, AfConfigs.CHECK_APPLICATION.configNo, scheduleSort);
                     long checkReportSuccessCount = getSuccessCount(projectNo, AfConfigs.CHECK_REPORT.configNo, scheduleSort);
@@ -1448,6 +1456,20 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     private List<AfInstance> findByConfigNoAndProjectNoAndScheduleSortAndStatus(String configNo, String projectNo, Integer scheduleSort, int status) {
         AfInstanceExample example = new AfInstanceExample();
         example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andStatusEqualTo(status);
+        return instanceMapper.selectByExample(example);
+    }
+
+    /**
+     * 根据审批流配置编号、项目编号、排期编号查询审批实例
+     * @param configNo 审批流配置编号
+     * @param projectNo 项目编号
+     * @param scheduleSort 排期编号
+     * @param status 实例状态
+     * @return 审批实例
+     */
+    private List<AfInstance> findByConfigNoAndProjectNoAndScheduleSortAndStatus(String configNo, String projectNo, Integer scheduleSort, List<Integer> status) {
+        AfInstanceExample example = new AfInstanceExample();
+        example.createCriteria().andConfigNoEqualTo(configNo).andProjectNoEqualTo(projectNo).andScheduleSortEqualTo(scheduleSort).andStatusIn(status);
         return instanceMapper.selectByExample(example);
     }
 
