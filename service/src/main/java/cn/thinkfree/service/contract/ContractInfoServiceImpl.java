@@ -115,6 +115,9 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 	@Value( "${custom.cloud.fileUpload.dir}" )
 	private String filePathDir;
 
+	@Value("${custom.field.ebsID}")
+	private Integer ebsID;
+
 	@Autowired
 	ContractTemplateDictMapper contractTemplateDictMapper;
 
@@ -1436,7 +1439,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 //					printErrorMes(e.getMessage());
 //				}
 //			}
-			result.setGsdm(Integer.valueOf("783"));
+			result.setGsdm(ebsID);
 		}
 		// 10 有效 20无效
 		result.setStatus("10");
