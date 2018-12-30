@@ -11,5 +11,5 @@ public interface ConstructionAndPayStateService {
 
     boolean isBeComplete(String projectNo, Integer sort);
 
-    void notifyPay(String orderNo,Integer sort);
+    Object notifyPay(String orderNo,Integer sort);
 }
