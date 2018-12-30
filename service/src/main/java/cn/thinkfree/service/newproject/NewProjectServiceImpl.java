@@ -854,7 +854,8 @@ public class NewProjectServiceImpl implements NewProjectService {
         //存放展示信息
         OrderPlayVo designOrderPlayVo = designerOrderMapper.selectByProjectNoAndStatus(projectNo, ProjectDataStatus.BASE_STATUS.getValue());
         if (designOrderPlayVo == null) {
-            return RespData.success(null);
+//            return RespData.success(null);
+            return RespData.success(projectVo);
         }
         List<PersionVo> persionList = new ArrayList<>();
         String designerId = projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER);
