@@ -101,5 +101,5 @@ public interface DealerCategoryMapper {
      * @param brandId
      * @return
      */
-    List<AuditBrandInfoVO> showBrandDetail(String brandId);
+//    List<AuditBrandInfoVO> showBrandDetail(String brandId);
 }
