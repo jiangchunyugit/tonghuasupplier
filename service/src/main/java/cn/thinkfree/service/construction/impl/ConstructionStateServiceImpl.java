@@ -354,7 +354,7 @@ public class ConstructionStateServiceImpl implements ConstructionStateService {
                 constructOrderPayService.updateByOrderNo(constructionOrderPay, constructionOrder.getOrderNo());
                 //支付阶段通知
                 Object pay = constructionAndPayStateService.notifyPay(constructionOrder.getOrderNo(), sort);
-                if (pay != null && 1 == Double.valueOf(pay.toString()).intValue()) {
+                if (pay != null && "1".equals(pay.toString())) {
                     customerPay(constructionOrder.getOrderNo(), currentProjectBigScheduling.getBigName(), sort, "");
                 }
             }
