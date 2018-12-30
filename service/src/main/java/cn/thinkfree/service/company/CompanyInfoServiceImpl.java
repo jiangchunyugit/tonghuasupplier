@@ -18,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.thinkfree.database.mapper.CompanyUserSetMapper;
@@ -41,6 +42,8 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
     @Autowired
     BusinessEntityService businessEntityService;
+    @Value("${custom.field.ebsID}")
+    private Integer ebsID;
     /**
      * 根据相关公司id查询公司信息
      * @param userVO
@@ -159,7 +162,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 //        String code = businessEntityService.getBusinessEbsIdByCompanyId(companyID);
 //        if(StringUtils.isNotBlank(code)){
 //            try{
-                sync.setCwgsdm( Integer.valueOf("783"));
+                sync.setCwgsdm(ebsID);
 //            }catch (Exception e){
 //                logger.error(e.getMessage());
 //            }
