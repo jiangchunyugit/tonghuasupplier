@@ -56,7 +56,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 60px !important;
+            min-width: 50px !important;
             text-align: center;
             table-layout: fixed;
             text-indent: 0;
@@ -454,12 +454,12 @@
 </section>
 
 <div class="footer">
-    <h4 style="display:inline-block">甲方（盖章）/法人代表签字：</h4>
-    <h4 style="margin-left: 28%;display:inline-block">乙方（盖章）/法人代表签字：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >甲方（盖章）/法人代表签字：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;">乙方（盖章）/法人代表签字：</h4>
 </div>
 <div class="footer">
-    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
-    <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div>日</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
 </body>
 
