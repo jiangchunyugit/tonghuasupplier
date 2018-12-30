@@ -376,13 +376,19 @@
     <#--施工合同生效后收取<div class="textput smalltextput"></div>%，
     消费者结算尾款后收取<div class="textput smalltextput"></div>%。-->
     <#list code03 as c>
-        <div class="indent">  6.6.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+        <div class="indent">
+            6.6.${c_index+1} ${(c.costName?split("@")[0])}
+            <div class="textput smalltextput">
+               <#if (c.costName?split("@")[1])??>
+                ${c.costValue}</div>
             <#if c.cType == 1 >
                 元
             <#else>
                 %
             </#if>
-            ${(c.costName?split("@")[1]) }。</div>
+            ${(c.costName?split("@")[1]) }。
+            </#if>
+        </div>
     </#list>
     <#--6.6.6甲方代扣返还设计师的施工服务费，其中客户来源为设计师回单的，
     施工服务费按合同折后总金额（含变更单金额）的<div class="textput smalltextput"></div>代扣，开工代扣<div class="textput smalltextput"></div>，
