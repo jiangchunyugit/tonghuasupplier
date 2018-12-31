@@ -242,9 +242,6 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
      */
     @Override
     public PageInfo<ConstructionOrderListVo> getDecorateOrderList(String companyNo, int pageNum, int pageSize) {
-        if(pageSize < 5){
-            pageSize = 5;
-        }
         if (StringUtils.isBlank(companyNo)) {
             return new PageInfo<>();
         }
@@ -411,6 +408,7 @@ public class OrderListCommonServiceImpl implements OrderListCommonService {
         example.setOrderByClause("create_time DESC");
         ConstructionOrderExample.Criteria criteria = example.createCriteria();
         criteria.andCompanyIdEqualTo(companyNo).andStatusEqualTo(1);
+        criteria.andOrderStageEqualTo(ConstructionStateEnum.STATE_510.getState());
 
         List<Integer> complaintStates = new ArrayList<>();
         complaintStates.add(ComplaintStateEnum.STATE_1.getState());
