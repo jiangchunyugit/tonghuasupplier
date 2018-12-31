@@ -122,18 +122,13 @@
         <span> 乙方售后服务电话： </span>
         <span style="margin-left: 10%">  居然之家集团全国服务热线：4006503333 </span>
     </div>
-    <table>
-        <tr>
-            <td>
-                <span class="inline-block">甲方(授权人)签字（盖章）：</span>
-                <p class="placeholder"></p>
-            </td>
-            <td>
-                <span class="inline-block">乙方(授权人)签字（盖章）：</span>
-                <p class="placeholder"></p>
-            </td>
-        </tr>
-    </table>
+
+    <div class="footer" >
+        <h4  style="float:left;display:inline-block;width:50%;">甲方(授权人)签字（盖章）：<p class="placeholder"></p></h4>
+        <h4 style="float:left;display:inline-block;width:50%;" >乙方(授权人)签字（盖章）：<p class="placeholder"></p></h4>
+    </div>
+
+
     <p class="inline-block">居然设计家（盖章）： </p>
     <h4 style="text-align: center">目录</h4>
     <section class='indent'>
@@ -525,7 +520,7 @@
         10.1.1 工程的室内环境污染控制应当严格按照《民用建筑工程室内环境污染控制规范》（GB50325-2010）的标准执行。
     </section>
     <section class='indent'>
-        10.1.2工程施工质量按下列第<p class="placeholderK"></p>项标准执行：
+        10.1.2工程施工质量按下列第<p class="placeholderK">（1）</p>项标准执行：
     </section>
     <section class='indent'>
         （1）北京市地方标准（《居住建筑装修装饰工程质量验收规范》）。

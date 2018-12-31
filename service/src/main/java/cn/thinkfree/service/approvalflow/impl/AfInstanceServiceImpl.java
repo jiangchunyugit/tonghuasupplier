@@ -987,10 +987,18 @@ public class AfInstanceServiceImpl implements AfInstanceService {
     @Override
     public AfInstanceListVO list(String userId, String projectNo, String approvalType, Integer scheduleSort) {
         AfInstanceListVO instanceListVO = new AfInstanceListVO();
+
         List<AfInstanceVO> instanceVOs = new ArrayList<>();
+        instanceListVO.setInstances(instanceVOs);
+
         List<AfStartMenuVO> startMenus = new ArrayList<>();
+        instanceListVO.setStartMenus(startMenus);
 
         ConstructionOrder constructionOrder = constructOrderService.findByProjectNo(projectNo);
+        if (constructionOrder == null) {
+            return instanceListVO;
+        }
+
         List<ProjectBigScheduling> projectBigSchedulings = schedulingBaseService.findBySchemeNoOrderBySortAsc(constructionOrder.getSchemeNo());
         if (projectBigSchedulings == null || projectBigSchedulings.isEmpty()) {
             LOGGER.error("未查询到正确的排期信息，projectNo:{}", projectNo);
@@ -1046,8 +1054,6 @@ public class AfInstanceServiceImpl implements AfInstanceService {
         }
 
         instanceVOs.sort(Comparator.comparing(AfInstanceVO::getCreateTime).reversed());
-        instanceListVO.setInstances(instanceVOs);
-        instanceListVO.setStartMenus(startMenus);
         return instanceListVO;
     }
 

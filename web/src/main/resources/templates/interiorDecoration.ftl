@@ -263,38 +263,22 @@
 <section class='indent'>
     2. 本合同经甲乙双方同意或签字后即刻生效。
 </section>
-<div class="footer">
-    <table width="500px;">
-        <tr>
-            <td style="padding-right: 20%">
-                <h4 class="inline-block">甲方（委托方）</h4>
-            </td>
-            <td style="padding-left: 15%">
-                <h4 class="inline-block">乙方（设计方）</h4>
-            </td>
-        </tr>
-        <br>
-        <br>
-        <tr>
-            <td style="padding-right: 20%">
-                <h4 class="inline-block">签字/盖章</h4>
-            </td>
-            <td style="padding-left: 15%">
-                <h4 class="inline-block">签字/盖章</h4>
-            </td>
-        </tr>
-        <br>
-        <br>
-        <tr>
-            <td style="padding-right: 20%">
-                <span>日期：<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日</span>
-            </td>
-            <td style="padding-left: 15%">
-                <span>日期：<p class="placeholderK"></p>年<p class="placeholderK"></p>月<p class="placeholderK"></p>日</span>
-            </td>
-        </tr>
-    </table>
+
+
+<div class="footer" >
+    <h4  style="float:left;display:inline-block;width:50%;">甲方（委托方）：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >乙方（设计方）：</h4>
 </div>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >签字/盖章</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >签字/盖章</h4>
+</div>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+</div>
+
+
 </body>
 
 </html>

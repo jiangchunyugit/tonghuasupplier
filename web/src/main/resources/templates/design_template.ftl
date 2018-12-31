@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>设计家平台入驻协议</title>
     <style>
+
         body {
             font-family: SimSun;
         }
@@ -47,7 +48,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 60px !important;
+            min-width: 50px !important;
             text-align: center;
             text-indent: 0;
         }
@@ -365,22 +366,36 @@
     <div class="textput smalltextput">${signedTime?string('dd')}</div>日。
 </section>
 
-<div class="footer">
-    <h4 style="display:inline-block">甲方（盖章）：</h4>
-    <h4 style="margin-left: 28%;display:inline-block">乙方（盖章）：</h4>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >甲方（盖章）：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;">乙方（盖章）：</h4>
 </div>
-<div class="footer">
-    <h4 style="display:inline-block">签约代理人（签字）：</h4>
-    <h4 style="margin-left: 25.5%;display:inline-block">签约代理人（签字）：</h4>
+<div class="footer" >
+    <h4  style="float:left;display:inline-block;width:50%;">签约代理人（签字）：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >签约代理人（签字）：</h4>
 </div>
-<div class="footer">
-    <h4 style="display:inline-block">联系电话：</h4>
-    <h4 style="margin-left: 30%;display:inline-block">联系电话：</h4>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
 </div>
-<div class="footer">
-    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
-    <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
+
 <p>附件1:</p>
 <div class="text-algin">居然设计家设计行业公约</div>
 <div class="text-algin">
