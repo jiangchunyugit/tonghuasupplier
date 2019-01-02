@@ -293,4 +293,22 @@ public class UserServiceImpl extends AbsLogPrinter implements UserService, Secur
         }
         return "操作成功";
     }
+
+    /**
+     * 用户是否存在
+     *
+     * @param userID 用户编号
+     * @return
+     */
+    @Override
+    public Boolean isExist(String userID ) {
+
+        UserRegisterExample condition = new UserRegisterExample();
+
+        condition.createCriteria().andIsDeleteEqualTo(SysConstants.YesOrNo.NO.shortVal())
+                .andUserIdEqualTo(userID);
+
+        long countUser = userRegisterMapper.countByExample(condition);
+        return countUser == 1;
+    }
 }

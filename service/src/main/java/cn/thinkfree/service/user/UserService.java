@@ -60,4 +60,11 @@ public interface UserService {
      * @return
      */
     String updatePassWordOnForget(String email, String pwd, String code);
+
+    /**
+     * 用户是否存在
+     * @param userID 用户编号
+     * @return
+     */
+    Boolean isExist(String userID);
 }
