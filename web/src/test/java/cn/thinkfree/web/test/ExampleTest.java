@@ -6,6 +6,7 @@ import cn.thinkfree.database.mapper.CityMapper;
 import cn.thinkfree.database.mapper.ProvinceMapper;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.account.PermissionVO;
+import cn.thinkfree.service.contract.ContractService;
 import cn.thinkfree.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import com.google.gson.reflect.TypeToken;
@@ -32,10 +33,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebAppConfiguration
 public class ExampleTest extends AbsControllerTest {
 
+    @Autowired
+    ContractService contractService;
 
     @Test
     public void saveTest(){
-
+        contractService.createContractDoc("BDHT201812311230256290001");
     }
 
     @Test
