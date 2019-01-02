@@ -1769,6 +1769,7 @@ public class NewProjectServiceImpl implements NewProjectService {
         JSONObject urlJsonData = JSONObject.parseObject(jsonData);
         Integer type = urlJsonData.getInteger("type");
         String hsDesignId = urlJsonData.getString("hsDesignId");
+        String caseId = urlJsonData.getString("caseId");
         if (type == null) {
             return RespData.error("type=" + type);
         }
@@ -1861,6 +1862,7 @@ public class NewProjectServiceImpl implements NewProjectService {
             projectDataTwo.setCategory(type);
             projectDataTwo.setProjectNo(projectNo);
             projectDataTwo.setHsDesignid(hsDesignId);
+            projectDataTwo.setCaseId(caseId);
             projectDataTwo.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
             projectDataTwo.setUploadTime(new Date());
             for (int constructionType = 1; constructionType <= 5; constructionType++) {
@@ -1904,6 +1906,7 @@ public class NewProjectServiceImpl implements NewProjectService {
                     projectData.setType(type);
                     projectData.setProjectNo(projectNo);
                     projectData.setHsDesignid(hsDesignId);
+                    projectData.setCaseId(caseId);
                     projectData.setStatus(ProjectDataStatus.BASE_STATUS.getValue());
                     projectData.setDataJson(jsonData);
                     projectData.setUploadTime(new Date());
