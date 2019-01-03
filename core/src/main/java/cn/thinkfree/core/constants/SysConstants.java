@@ -77,7 +77,7 @@ public class SysConstants {
     /**
      * 邮件模板
      */
-    public enum EmailTemplate{
+    public  enum EmailTemplate{
         /**
          * 用户注册
          */

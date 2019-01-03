@@ -15,7 +15,7 @@ public class JwtUtils {
     /**
      * 密钥
      */
-    private final String secret = "thinkfree";
+    private final static String secret = "thinkfree";
 
     /**
      * 从数据声明生成令牌
