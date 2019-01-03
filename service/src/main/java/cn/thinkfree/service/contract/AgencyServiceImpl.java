@@ -24,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author jiangchunyu(后台)
@@ -444,8 +443,8 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             if (StringUtils.isNotBlank(agencyContract.getBrandNo()) && StringUtils.isNotBlank(agencyContract.getCompanyId())
                     && StringUtils.isNotBlank(agencyContract.getCategoryNo())) {
                 DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
-                dealerBrandInfoExample.createCriteria().andBrandNoEqualTo(agencyContract.getBrandNo()).
-                        andCategoryNoEqualTo(agencyContract.getCategoryNo()).andCompanyIdEqualTo(agencyContract.getCompanyId());
+//                dealerBrandInfoExample.createCriteria().andBrandNoEqualTo(agencyContract.getBrandNo()).
+//                        andCategoryNoEqualTo(agencyContract.getCategoryNo()).andCompanyIdEqualTo(agencyContract.getCompanyId());
                 List<DealerBrandInfo> dealerBrandInfos = dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
                 if (dealerBrandInfos.size() > 0) {
 

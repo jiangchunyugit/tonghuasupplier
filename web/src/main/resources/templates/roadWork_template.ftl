@@ -345,11 +345,14 @@
 <section class="indent">
     6.2.甲方按进度给乙方进行返款，返款比例及时间节点如下：
     <#list code02 as c>
-        <div class="indent">  6.2.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+        <div class="indent">  6.2.${c_index+1} ${(c.costName?split("@")[0])}
+          <#if c.costValue !='' >
+            <div class="textput smalltextput">${c.costValue}</div>
             <#if c.cType == 1 >
                 元
             <#else>
                 %
+            </#if>
             </#if>
             ${(c.costName?split("@")[1]) }。</div>
     </#list>
@@ -378,16 +381,18 @@
     <#list code03 as c>
         <div class="indent">
             6.6.${c_index+1} ${(c.costName?split("@")[0])}
-            <div class="textput smalltextput">
-               <#if (c.costName?split("@")[1])??>
-                ${c.costValue}</div>
-            <#if c.cType == 1 >
-                元
-            <#else>
-                %
-            </#if>
-            ${(c.costName?split("@")[1]) }。
-            </#if>
+            <#if (c.costValue !='')>
+           <#--    <#if (c.costName?split("@")[1])??>-->
+                   <div class="textput smalltextput">
+                        ${c.costValue}</div>
+                    <#if c.cType == 1 >
+                        元
+                    <#else>
+                        %
+                    </#if>
+                    ${(c.costName?split("@")[1]) }
+           </#if>
+            。
         </div>
     </#list>
     <#--6.6.6甲方代扣返还设计师的施工服务费，其中客户来源为设计师回单的，
