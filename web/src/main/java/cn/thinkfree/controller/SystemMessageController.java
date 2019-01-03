@@ -14,9 +14,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
+/**
+ * 施工工具时代的产物
+ * 如果无人使用在二月份将进行移除
+ */
 @RestController
 @RequestMapping(value = "/sysMsg")
 @Api(value = "公告管理",description = "公告管理")
+@Deprecated
 public class SystemMessageController extends AbsBaseController {
 
     @Autowired

@@ -137,7 +137,7 @@ public class AccountHelper {
             userNo.append(System.currentTimeMillis());
         }else{
             String salt = random(1);
-            userNo.append(Long.toHexString(Integer.valueOf(salt)).toUpperCase());
+            userNo.append(Long.toHexString(Integer.parseInt(salt)).toUpperCase());
             userNo.append(StringUtils.leftPad("0",PRESET_LENGTH,FILLER));
             userNo.append(salt(Integer.valueOf(salt),System.currentTimeMillis()));
         }

@@ -91,11 +91,4 @@ public interface PcUserResourceMapper {
 
     List<Integer> selectByUserId(String userId);
 
-    int deleteByUserId(String userId);
-
-    /**
-     *
-     * @return
-     */
-    int insertBatch(List<PcUserResource> list);
 }

@@ -36,6 +36,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * 随时移除
+ */
+@Deprecated
 @RestController
 public class ExampleController extends AbsBaseController {
 	

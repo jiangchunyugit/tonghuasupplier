@@ -186,12 +186,7 @@ public class DictionaryController extends AbsBaseController {
         List<UserRoleSet> userRoleSet = dictionaryService.getCompanyRole();
         return sendJsonData(ResultMessage.SUCCESS, userRoleSet);
     }
-//    @GetMapping("/resource")
-//    @MyRespBody
-//    public MyRespBundle<List<SystemResource>> resources(){
-//        List<SystemResource> resources =dictionaryService.listResource();
-//        return sendJsonData(ResultMessage.SUCCESS,resources);
-//    }
+
 
 
     /**
