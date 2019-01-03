@@ -407,8 +407,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             // TODO 经销商是个神奇的东西
             para.put("http", "");
         }
-        cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
-                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
+        // TODO  不需要发送短信
+//        cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
+//                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
 
         cloudService.sendEmail(pcApplyInfoSEO.getEmail(),
                 SysConstants.EmailTemplate.join.code,

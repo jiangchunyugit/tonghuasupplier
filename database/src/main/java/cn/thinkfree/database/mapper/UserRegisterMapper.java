@@ -84,12 +84,6 @@ public interface UserRegisterMapper{
      */
     int updateByPrimaryKey(UserRegister record);
 
-    /**
-     * 根据userid删除注册表信息
-     * @param userId
-     * @return
-     */
-    int deleteByUserId(String userId);
 
     /**
      * 根据userid查询注册信息
@@ -98,11 +92,6 @@ public interface UserRegisterMapper{
      */
     UserRegister selectByUserId(String userId);
 
-    /**
-     * 根据userid修改账户
-     * @return
-     */
-    int updateByUserId(UserRegister userRegister);
 
     /**
      * 查询所有注册过的手机号码(is_delete=0)

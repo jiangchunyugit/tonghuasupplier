@@ -18,9 +18,4 @@ public interface PcSystemResourceMapper {
 
     int updateByPrimaryKey(PcSystemResource record);
 
-    /**
-     * 查询所有
-     * @return
-     */
-    List<PcSystemResourceVo> selectAll();
 }

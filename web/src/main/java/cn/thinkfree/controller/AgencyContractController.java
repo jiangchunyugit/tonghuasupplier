@@ -1,9 +1,12 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.SysLogAction;
+import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.Severitys;
@@ -19,7 +22,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 账号相关
+ * @author jiangchunyu(后台)
+ * @date 2018
+ * @Description 经销商合同
  */
 @Api(description="经销商合同")
 @RestController
@@ -64,6 +69,7 @@ public class AgencyContractController extends AbsBaseController {
     @ApiOperation(value="前端-运营平台-运营录入经销商合同", notes="新增经销商合同(新增的时候status为0 )")
     @PostMapping("/insertContract")
     @MyRespBody
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "新增经销商合同")
     public MyRespBundle<String> insertContract(@RequestBody ParamAgencySEO paramAgency){
         Long debugFlag = System.currentTimeMillis();
         printErrorMes("新增经销商合同：{}",debugFlag);
@@ -87,6 +93,7 @@ public class AgencyContractController extends AbsBaseController {
     @ApiOperation(value="前端-运营平台-运营编辑经销商合同", notes="编辑经销商合同")
     @PostMapping("/updateContract")
     @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_CONTRACT,desc = "编辑经销商合同")
     public MyRespBundle<String> updateContract( @RequestBody ParamAgencySEO paramAgency){
 
         BeanValidator.validate(paramAgency,Severitys.Update.class);
@@ -106,6 +113,7 @@ public class AgencyContractController extends AbsBaseController {
     @ApiOperation(value="前端-运营平台-合同变更续签", notes="合同变更续签(变更续签的时候status为0 )")
     @PostMapping("/changeContract")
     @MyRespBody
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_CONTRACT,desc = "合同变更续签")
     public MyRespBundle<String> changeContract( @RequestBody ParamAgencySEO paramAgency){
 
         BeanValidator.validate(paramAgency,Severitys.Insert.class);
@@ -128,6 +136,7 @@ public class AgencyContractController extends AbsBaseController {
     @ApiOperation(value="前端-运营平台-审核经销商合同", notes="审核经销商合同")
     @PostMapping("/auditContract")
     @MyRespBody
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "审核经销商合同")
     public MyRespBundle<String> auditContract(AgencyAuditContractSEO agencyAuditContractSEO){
 
         BeanValidator.validate(agencyAuditContractSEO,Severitys.Insert.class);
@@ -145,6 +154,7 @@ public class AgencyContractController extends AbsBaseController {
     @ApiOperation(value="前端-运营平台-(冻结,解冻,作废)经销商合同", notes="审核经销商合同（）")
     @PostMapping("/updateContractStatus")
     @MyRespBody
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "(冻结,解冻,作废)经销商合同")
     public MyRespBundle<String> updateContractStatus(AgencyAuditContractSEO agencyAuditContractSEO){
 
         BeanValidator.validate(agencyAuditContractSEO,Severitys.Update.class);
@@ -154,8 +164,9 @@ public class AgencyContractController extends AbsBaseController {
     }
 
     /**
-     * 查看合同详情
-     *
+     * 合同详情
+     * @param contractNumber
+     * @return
      */
     @ApiOperation(value="前端-运营平台-根据合同编号查询合同信息", notes="根据合同编号查询合同信息")
     @PostMapping("/getAgencyContract")

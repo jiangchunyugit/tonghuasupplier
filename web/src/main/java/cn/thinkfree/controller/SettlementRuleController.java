@@ -1,9 +1,12 @@
 package cn.thinkfree.controller;
 
 import cn.thinkfree.core.annotation.MyRespBody;
+import cn.thinkfree.core.annotation.MySysLog;
 import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
+import cn.thinkfree.core.constants.SysLogAction;
+import cn.thinkfree.core.constants.SysLogModule;
 import cn.thinkfree.database.param.SettlementRuleParam;
 import cn.thinkfree.database.model.RebateNode;
 import cn.thinkfree.database.model.SettlementRuleInfo;
@@ -50,7 +53,6 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "结算规则列表", notes = "根据一定条件获取分页结算规则记录")
     @PostMapping("/queryRulePage")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "分页查询结算规则")
     public MyRespBundle<SystemPermission> queryRulePage(SettlementRuleSEO settlementRuleSEO){
 
         BeanValidator.validate(settlementRuleSEO);
@@ -91,7 +93,7 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "创建结算规则（collectionType代收款类型 0 代收款结算规则 1 平台结算规则）", notes = "新增或者修改结算规则")
     @PostMapping("/insertRule")
     @MyRespBody
-    // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
     public MyRespBundle<String> insertRule(@ApiParam("结算规则信息")   SettlementRuleVO settlementRuleVO){
 
         BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
@@ -106,7 +108,7 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "查看作废---提交结算规则", notes = "编辑结算规则")
     @PostMapping("/updateRule")
     @MyRespBody
-    // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
+    @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
     public MyRespBundle<String> updateRule(@ApiParam("结算规则信息")   SettlementRuleVO settlementRuleVO){
 
         BeanValidator.validate(settlementRuleVO,Severitys.Insert.class);
@@ -125,7 +127,6 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "查看结算规则", notes = "根据结算规则编号获取结算规则")
     @GetMapping("/getRuleByRuleNumber")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
     public MyRespBundle<SettlementRuleVO> getRuleByRuleNumber(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 
         BeanValidator.validate(ruleNumber);
@@ -141,7 +142,7 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "拷贝结算规则", notes = "拷贝结算规则")
     @PostMapping("/copyRule")
     @MyRespBody
-    // @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
+    @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_CONTRACT,desc = "拷贝结算规则")
     public MyRespBundle<String> copyRule(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 
         BeanValidator.validate(ruleNumber);
@@ -160,7 +161,7 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "作废结算规则", notes = "作废结算规则")
     @PostMapping("/cancellatRule")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_CONTRACT,desc = "添加结算规则")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "作废结算规则")
     public MyRespBundle<String> cancellatSettlementRule(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 
         boolean  result= settlementRuleService.cancelledSettlementRule(ruleNumber);
@@ -177,7 +178,6 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "代收款费用名称Map", notes = "费用名称Map （key字符串 value字符串）")
     @GetMapping("/getCostNames")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
     public MyRespBundle<Map<String,String>> getCostNames(){
 
         Map<String, String>  result= settlementRuleService.getCostNames();
@@ -191,7 +191,6 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "平台费用名称Map", notes = "费用名称Map （key字符串 value字符串）")
     @GetMapping("/getPlateformCostNames")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
     public MyRespBundle<Map<String,String>> getPlateformCostNames(){
 
         Map<String, String>  result= settlementRuleService.getPlateFormNames();
@@ -205,7 +204,7 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "批量审批", notes = "批量审批")
     @PostMapping("/batchcCheckSettlementRule")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "批量审批")
     public MyRespBundle<String> batchcCheckSettlementRule(SettlementRuleParam param){
 
         BeanValidator.validate(param);
@@ -227,7 +226,7 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "申请废除", notes = "申请废除")
     @PostMapping("/applicationInvalid")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
+    @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_CONTRACT,desc = "申请废除")
     public MyRespBundle<String> applicationInvalid(@ApiParam("结算规则编号")@RequestParam String ruleNumber){
 
         boolean  result= settlementRuleService.applicationInvalid(ruleNumber);
@@ -244,15 +243,10 @@ public class SettlementRuleController extends AbsBaseController {
     @ApiOperation(value = "通过费用类型查询返回返款节点", notes = "通过费用类型查询返回返款节点")
     @PostMapping("/getRefundList")
     @MyRespBody
-    //@MySysLog(action = SysLogAction.QUERY,module = SysLogModule.PC_CONTRACT,desc = "查询结算规则名称")
     public MyRespBundle<String> getRefundList(@ApiParam("费用类型code ")@RequestParam String type){
 
             List<RebateNode>   result= settlementRuleService.getCostNamesForRebateNode(type);
 
           return sendJsonData(ResultMessage.SUCCESS,result);
     }
-
-
-
-
 }

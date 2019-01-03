@@ -124,7 +124,7 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
 
         condition.createCriteria().andCompanyNameLike("%"+name+"%")
                 .andIsDeleteEqualTo(SysConstants.YesOrNoSp.NO.shortVal())
-                .andRoleIdEqualTo(CompanyType.values()[Integer.valueOf(type)].name())
+                .andRoleIdEqualTo(CompanyType.values()[Integer.parseInt(type)].name())
 //                .andIsCheckEqualTo(SysConstants.YesOrNoSp.YES.shortVal())
                 .andAuditStatusEqualTo(CompanyAuditStatus.SUCCESSJOIN.code.toString())
                 .andPlatformTypeEqualTo(CompanyConstants.PlatformType.NORMAL.shortVal());
