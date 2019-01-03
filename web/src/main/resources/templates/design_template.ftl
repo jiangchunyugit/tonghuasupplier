@@ -245,12 +245,15 @@
 <section class="indent">
     <div class="indent">1.1甲方根据《设计合同》收到客户支付的相应设计费后，分两次与乙方结算：</div>
      <#list code01 as c>
-        <div class="indent">  1.1.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+        <div class="indent">  1.1.${c_index+1} ${(c.costName?split("@")[0])}
+          <#if c.costValue !='' >
+            <div class="textput smalltextput">${c.costValue}</div>
              <#if c.cType == 1 >
                     元
              <#else>
             %
              </#if>
+          </#if>
             ${(c.costName?split("@")[1]) }。</div>
      </#list>
     <#--<div class="indent">1.1.1所有设计阶段完成后，平台与乙方结算设计费总额的 <div class="textput smalltextput">70</div> %。</div>
@@ -267,11 +270,14 @@
     <#--<div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>--><#--<div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>-->
     <div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的百分比作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准）。甲方分两次与乙方结算材料推荐服务费</div>
     <#list code09 as c>
-              <div class="indent"> 3.1.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+              <div class="indent"> 3.1.${c_index+1} ${(c.costName?split("@")[0])}
+        <#if c.costValue !='' >
+            <div class="textput smalltextput">${c.costValue}</div>
         <#if c.cType == 1 >
                     元
         <#else>
             %
+        </#if>
         </#if>
              ${(c.costName?split("@")[1]) }。</div>
     </#list>
@@ -285,13 +291,16 @@
         4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c12}</div>%作为施工服务费。
     </div>
     <#list code10 as c>
-                <div class="indent">  4.1.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+                <div class="indent">  4.1.${c_index+1} ${(c.costName?split("@")[0])}
+        <#if c.costValue !='' >
+               <div class="textput smalltextput">${c.costValue}</div>
                 <#if c.cType == 1 >
                             元
                 <#else>
                     %
                 </#if>
-                 ${(c.costName?split("@")[1]) }。</div>
+        </#if>
+              ${(c.costName?split("@")[1]) }。</div>
     </#list>
  <#--
     <div class="indent">
@@ -301,7 +310,7 @@
         4.1.2施工竣工验收结束后，甲方向乙方支付施工服务费总额<div class="textput smalltextput"></div>%的尾款。
     </div>-->
     <div class="indent">
-        4.1.6施工过程中发生合同解约，如因设计师设计原因造成，则设计师的全部施工服务费不予支付；如非由设计师造成，则施工服务费按实际发生费用支付。
+        4.1.6 施工过程中发生合同解约，如因设计师设计原因造成，则设计师的全部施工服务费不予支付；如非由设计师造成，则施工服务费按实际发生费用支付。
     </div>
 </section>
 <section class="indent">
@@ -365,7 +374,6 @@
     <div class="textput smalltextput">${signedTime?string('MM')}</div>月
     <div class="textput smalltextput">${signedTime?string('dd')}</div>日。
 </section>
-
 <br/>
 <br/>
 <br/>
@@ -395,7 +403,19 @@
     <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
     <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
-
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div>
 <p>附件1:</p>
 <div class="text-algin">居然设计家设计行业公约</div>
 <div class="text-algin">
@@ -406,6 +426,7 @@
     <p>恪守诚信 以诚信服务为宗旨，严格履行合同，保障客户正当权益</p>
     <p>合理收益 以实现合理收益为方向，杜绝设计施工中的不正当收益；</p>
     <p>提升自我 以自身素质提高为目标，注重学习积累，不断提高自我。</p>
+</div>
 </div>
 </body>
 
