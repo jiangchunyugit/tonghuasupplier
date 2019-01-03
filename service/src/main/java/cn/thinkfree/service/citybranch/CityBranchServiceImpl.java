@@ -49,12 +49,12 @@ public class CityBranchServiceImpl implements CityBranchService {
     /**
      * 判断查询还是创建
      */
-    private final int SearchFlag = 1;
+    private final int searchFlag = 1;
 
     /**
      * list非空判断
      */
-    private final int FlagZero = 0;
+    private final int flagZero = 0;
 
     @Override
     public boolean checkRepeat(CityBranchVO cityBranchVO) {
@@ -65,7 +65,7 @@ public class CityBranchServiceImpl implements CityBranchService {
             if (cityBranchVO.getId() != null) {
                 criteria.andIdNotEqualTo(cityBranchVO.getId());
             }
-            return cityBranchMapper.countByExample(cityBranchExample) >FlagZero?true:false;
+            return cityBranchMapper.countByExample(cityBranchExample) >flagZero?true:false;
         }
         return false;
     }
@@ -80,7 +80,7 @@ public class CityBranchServiceImpl implements CityBranchService {
         cityBranchVO.setIsEnable(UserEnabled.Enabled_false.shortVal());
         cityBranchVO.setCityBranchCode(AccountHelper.createUserNo("c"));
 
-        boolean result = cityBranchMapper.insertSelective(cityBranchVO)>FlagZero?true:false;
+        boolean result = cityBranchMapper.insertSelective(cityBranchVO)>flagZero?true:false;
         // 循环保存门店信息
         if (result) {
             this.branchCompanyProvinceInsert(cityBranchVO);
@@ -111,13 +111,13 @@ public class CityBranchServiceImpl implements CityBranchService {
             });
         });
         this.branchCompanyProvinceInsert(cityBranchVO);
-        return cityBranchMapper.updateByPrimaryKeySelective(cityBranchVO)>FlagZero?true:false;
+        return cityBranchMapper.updateByPrimaryKeySelective(cityBranchVO)>flagZero?true:false;
     }
 
     @Override
     public boolean enableCityBranch(CityBranch cityBranch) {
 
-        return cityBranchMapper.updateByPrimaryKeySelective(cityBranch)>FlagZero?true:false;
+        return cityBranchMapper.updateByPrimaryKeySelective(cityBranch)>flagZero?true:false;
     }
 
     private void deleteStores(String cityBranchCode) {
@@ -246,7 +246,7 @@ public class CityBranchServiceImpl implements CityBranchService {
         CityBranchExample.Criteria criteria = cityBranchExample.createCriteria();
         criteria.andBranchCompanyCodeEqualTo(branchCompanyCode)
                 .andIsDelEqualTo(OneTrue.YesOrNo.NO.shortVal());
-        if (flag==SearchFlag) {
+        if (flag==searchFlag) {
             criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
         }
         return cityBranchMapper.selectByExample(cityBranchExample);

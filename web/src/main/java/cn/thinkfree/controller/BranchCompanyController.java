@@ -189,7 +189,7 @@ public class BranchCompanyController extends AbsBaseController{
 
         BranchCompany branchCompany = new BranchCompany();
         branchCompany.setId(id);
-        branchCompany.setIsEnable(UserEnabled.Enabled_true.shortVal().shortValue());
+        branchCompany.setIsEnable(UserEnabled.Enabled_true.shortVal());
         if(branchCompanyService.enableBranchCompany(branchCompany)){
             return sendJsonData(ResultMessage.SUCCESS, "操作成功");
         }
