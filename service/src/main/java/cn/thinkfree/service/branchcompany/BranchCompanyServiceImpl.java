@@ -61,12 +61,12 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
     /**
      * 判断查询还是创建
      */
-    private final int SearchFlag = 1;
+    private final int searchFlag = 1;
 
     /**
      * list非空判断
      */
-    private final int FlagZero = 0;
+    private final int flagZero = 0;
 
     @Override
     public boolean checkRepeat(BranchCompanyVO branchCompanyVO) {
@@ -77,7 +77,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
             if (branchCompanyVO.getId() != null) {
                 criteria.andIdNotEqualTo(branchCompanyVO.getId());
             }
-            return branchCompanyMapper.countByExample(branchCompanyExample) >FlagZero?true:false;
+            return branchCompanyMapper.countByExample(branchCompanyExample) >flagZero?true:false;
         }
         return false;
     }
@@ -102,7 +102,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
 
         // 省份字表信息增加
         this.branchCompanyProvinceInsert(branchCompanyVO);
-        return branchCompanyMapper.insertSelective(branchCompanyVO)>FlagZero?true:false;
+        return branchCompanyMapper.insertSelective(branchCompanyVO)>flagZero?true:false;
     }
 
     /**
@@ -140,12 +140,12 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
             });
         }
         this.branchCompanyProvinceInsert(branchCompanyVO);
-        return branchCompanyMapper.updateByPrimaryKeySelective(branchCompanyVO)>FlagZero?true:false;
+        return branchCompanyMapper.updateByPrimaryKeySelective(branchCompanyVO)>flagZero?true:false;
     }
 
     @Override
     public boolean enableBranchCompany(BranchCompany branchCompany) {
-        return branchCompanyMapper.updateByPrimaryKeySelective(branchCompany)>FlagZero?true:false;
+        return branchCompanyMapper.updateByPrimaryKeySelective(branchCompany)>flagZero?true:false;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
         BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
         BranchCompanyExample.Criteria criteria = branchCompanyExample.createCriteria();
         // 查询创建分公司按照启用权限（1创建，0查询）
-        if (flag==SearchFlag) {
+        if (flag==searchFlag) {
             criteria.andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
         }
         criteria.andIsDelNotEqualTo(OneTrue.YesOrNo.YES.shortVal());
@@ -222,7 +222,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                 BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
                 branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(branchCompanyCode);
                 List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
-                if (branchCompanies != null && branchCompanies.size() > FlagZero ) {
+                if (branchCompanies != null && branchCompanies.size() > flagZero ) {
                     BranchCompany branchCompany = branchCompanies.get(0);
                     // 分公司名称
                     siteInfo.setEbsBranchCompany(branchCompany.getCompanyName());
@@ -238,7 +238,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                         CityBranchExample cityBranchExample = new CityBranchExample();
                         cityBranchExample.createCriteria().andCityBranchCodeEqualTo(userVO.getCityBranch().getCityBranchCode());
                         List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
-                        if (cityBranches.size() >FlagZero) {
+                        if (cityBranches.size() >flagZero) {
                             CityBranch cityBranch = cityBranches.get(0);
                             siteInfo.setEbsCityBranch(cityBranch.getCityBranchName());
                             siteInfo.setLegalName(cityBranch.getLegalName());
@@ -299,9 +299,9 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                 storeCriteria.andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId());
             }
             List<StoreInfo> storeInfoList = storeInfoMapper.selectByExample(storeInfoExample);
-            if (storeInfoList.size() >FlagZero ) {
+            if (storeInfoList.size() >flagZero ) {
                 List<String> storeIds = storeInfoList.stream().filter(e->StringUtils.isNotBlank(e.getStoreId())).map(e->e.getStoreId()).collect(Collectors.toList());
-                if (storeIds.size() >FlagZero ) {
+                if (storeIds.size() >flagZero ) {
                     criteria.andSiteCompanyIdIn(storeIds);
                 }
             }
@@ -329,7 +329,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                 storeInfoExample.createCriteria().andStoreIdEqualTo(companyInfo.getSiteCompanyId());
                 List<StoreInfo> storeInfoList = storeInfoMapper.selectByExample(storeInfoExample);
                 // 门店信息
-                if (storeInfoList.size() >FlagZero) {
+                if (storeInfoList.size() >flagZero) {
                     StoreInfo storeInfo = storeInfoList.get(0);
                     enterCompanyOrganizationVO.setStoreId(companyInfo.getSiteCompanyId());
                     // 分公司
@@ -338,7 +338,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                         branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(storeInfo.getBranchCompanyCode())
                         .andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
                         List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
-                        if (branchCompanies.size()>FlagZero) {
+                        if (branchCompanies.size()>flagZero) {
                             BranchCompany branchCompany = branchCompanies.get(0);
                             enterCompanyOrganizationVO.setBranchCompanyCode(branchCompany.getBranchCompanyCode());
                             enterCompanyOrganizationVO.setBranchCompanyNm(branchCompany.getCompanyName());
@@ -350,7 +350,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                         cityBranchExample.createCriteria().andCityBranchCodeEqualTo(storeInfo.getCityBranchCode())
                         .andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
                         List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
-                        if (cityBranches.size()>FlagZero) {
+                        if (cityBranches.size()>flagZero) {
                             CityBranch cityBranch = cityBranches.get(0);
                             enterCompanyOrganizationVO.setCityBranchCode(cityBranch.getCityBranchCode());
                             enterCompanyOrganizationVO.setCityBranchNm(cityBranch.getCityBranchName());
@@ -360,12 +360,12 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                     BusinessEntityStoreExample businessEntityStoreExample = new BusinessEntityStoreExample();
                     businessEntityStoreExample.createCriteria().andStoreIdEqualTo(storeInfo.getStoreId());
                     List<BusinessEntityStore> businessEntityStores = businessEntityStoreMapper.selectByExample(businessEntityStoreExample);
-                    if (businessEntityStores.size() > FlagZero) {
+                    if (businessEntityStores.size() > flagZero) {
                         BusinessEntityExample businessEntityExample = new BusinessEntityExample();
                         businessEntityExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityStores.get(0).getBusinessEntityCode())
                                 .andIsEnableEqualTo(UserEnabled.Enabled_true.code.shortValue());
                         List<BusinessEntity> businessEntices = businessEntityMapper.selectByExample(businessEntityExample);
-                        if (businessEntices.size()>FlagZero) {
+                        if (businessEntices.size()>flagZero) {
                             BusinessEntity businessEntity = businessEntices.get(0);
                             enterCompanyOrganizationVO.setBusinessEntityCode(businessEntity.getBusinessEntityCode());
                             enterCompanyOrganizationVO.setBusinessEntityNm(businessEntity.getEntityName());
@@ -375,7 +375,7 @@ public class BranchCompanyServiceImpl implements BranchCompanyService {
                     HrOrganizationEntityExample hrOrganizationEntityExample = new HrOrganizationEntityExample();
                     hrOrganizationEntityExample.createCriteria().andOrganizationIdEqualTo(companyInfo.getSiteCompanyId());
                     List<HrOrganizationEntity> hrOrganizationEntities = hrOrganizationEntityMapper.selectByExample(hrOrganizationEntityExample);
-                    if (hrOrganizationEntities.size() > FlagZero) {
+                    if (hrOrganizationEntities.size() > flagZero) {
                         HrOrganizationEntity hrOrganizationEntity = hrOrganizationEntities.get(0);
                         enterCompanyOrganizationVO.setStoreNm(hrOrganizationEntity.getOrganizationText());
                     }
