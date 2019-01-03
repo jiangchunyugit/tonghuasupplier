@@ -55,7 +55,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     /**
      * list非空判断
      */
-    private final int FlagZero = 0;
+    private final int flagZero = 0;
 
     @Override
     public String checkRepeat(BusinessEntity businessEntity) {
@@ -81,7 +81,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         if (businessEntity.getId() != null) {
             criteria.andIdNotEqualTo(businessEntity.getId());
         }
-        return businessEntityMapper.countByExample(businessEntityExample) >FlagZero?true:false;
+        return businessEntityMapper.countByExample(businessEntityExample) >flagZero?true:false;
     }
 
     @Override
@@ -92,13 +92,13 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         businessEntity.setIsDel(OneTrue.YesOrNo.NO.shortVal());
         businessEntity.setIsEnable(UserEnabled.Enabled_false.shortVal());
         businessEntity.setBusinessEntityCode(AccountHelper.createUserNo("e"));
-        return businessEntityMapper.insertSelective(businessEntity)>FlagZero?true:false;
+        return businessEntityMapper.insertSelective(businessEntity)>flagZero?true:false;
     }
 
     @Override
     public boolean updateBusinessEntity(BusinessEntity businessEntity) {
 
-        return businessEntityMapper.updateByPrimaryKeySelective(businessEntity)>FlagZero?true:false;
+        return businessEntityMapper.updateByPrimaryKeySelective(businessEntity)>flagZero?true:false;
     }
 
     @Override
@@ -166,7 +166,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
             BusinessEntityExample businessEntityExample = new BusinessEntityExample();
             businessEntityExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityStoreVO.getBusinessEntityCode());
             businessEntitys = businessEntityMapper.selectByExample(businessEntityExample);
-            if (businessEntitys.size() > FlagZero) {
+            if (businessEntitys.size() > flagZero) {
                 businessEntity = businessEntitys.get(0);
             } else {
                 return false;
@@ -180,7 +180,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
             // 新增门店信息
             if (businessEntityStoreVO.getBusinessEntityRelationVOS() != null) {
                 for (BusinessEntityRelationVO e:businessEntityStoreVO.getBusinessEntityRelationVOS()) {
-                    if (e.getBusinessEntityStoreList()!= null && e.getBusinessEntityStoreList().size()>FlagZero){
+                    if (e.getBusinessEntityStoreList()!= null && e.getBusinessEntityStoreList().size()>flagZero){
                         e.setBusinessEntityCode(businessEntityStoreVO.getBusinessEntityCode());
                         businessEntityRelationMapper.insertSelective(e);
                         for (BusinessEntityStore s:e.getBusinessEntityStoreList()){
@@ -230,7 +230,7 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
     private boolean storeCount(String businessEntityCode) {
         BusinessEntityRelationExample businessEntityRelationExample = new BusinessEntityRelationExample();
         businessEntityRelationExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityCode);
-        return businessEntityRelationMapper.countByExample(businessEntityRelationExample)>FlagZero?true:false;
+        return businessEntityRelationMapper.countByExample(businessEntityRelationExample)>flagZero?true:false;
     }
 
     @Override
@@ -254,20 +254,20 @@ public class BusinessEntityServiceImpl implements BusinessEntityService {
         companyInfoExample.createCriteria().andCompanyIdEqualTo(companyId);
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
 
-        if (companyInfos.size() > FlagZero) {
+        if (companyInfos.size() > flagZero) {
             if (StringUtils.isNotBlank(companyInfos.get(0).getSiteCompanyId())) {
 
                 BusinessEntityStoreExample businessEntityStoreExample = new BusinessEntityStoreExample();
                 businessEntityStoreExample.createCriteria().andStoreIdEqualTo(companyInfos.get(0).getSiteCompanyId());
                 List<BusinessEntityStore> businessEntityStores = businessEntityStoreMapper.selectByExample(businessEntityStoreExample);
-                if (businessEntityStores.size() > FlagZero) {
+                if (businessEntityStores.size() > flagZero) {
 
                     if (StringUtils.isNotBlank(businessEntityStores.get(0).getBusinessEntityCode())) {
 
                         BusinessEntityExample businessEntityExample = new BusinessEntityExample();
                         businessEntityExample.createCriteria().andBusinessEntityCodeEqualTo(businessEntityStores.get(0).getBusinessEntityCode());
                         List<BusinessEntity> businessEntities = businessEntityMapper.selectByExample(businessEntityExample);
-                        if (businessEntities.size() > FlagZero) {
+                        if (businessEntities.size() > flagZero) {
 
                             return StringUtils.isNotBlank(businessEntities.get(0).getEbsid())?businessEntities.get(0).getEbsid():"";
                         }

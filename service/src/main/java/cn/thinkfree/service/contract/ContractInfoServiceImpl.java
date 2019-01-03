@@ -598,6 +598,7 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 						childListTwo.add(term);
 					}else{
 						term.setCostName(term.getCostName()+"@");
+						childListTwo.add(term);
 					}
 				}
 
@@ -1012,9 +1013,10 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 					try {
 						JSONArray arr = JSONArray.parseArray(String.valueOf(root.get("c08")));
 						List<Map<String,String>> listR = new ArrayList<>();
-
+                        arr.sort(Comparator.comparing(obj -> ((JSONObject) obj).getShort("stageCode")));
 						for (int i = 0; i < arr.size(); i++) {
 							JSONObject job = arr.getJSONObject(i);
+
 							Map<String,String> mapR = new HashMap<>();
 							mapR.put("code01", job.getString("progressName"));
 							mapR.put("code02", job.getString("stageCode"));
@@ -1132,6 +1134,8 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 				String jsonSr = String.valueOf(root.get("c20"));
 				if(!StringUtils.isEmpty(jsonSr)){
 					JSONArray jsonArray=JSONArray.parseArray(jsonSr);
+                    //排序
+                    jsonArray.sort(Comparator.comparing(obj -> ((JSONObject) obj).getShort("sortNumber")));
 					for (int i = 0; i < jsonArray.size(); i++) {
 						Map<String,String> jsonMap = (Map<String, String>) jsonArray.get(i);
 						rootMap.add(jsonMap);
