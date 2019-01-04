@@ -3,15 +3,18 @@ package cn.thinkfree.service.platform.employee.impl;
 import cn.thinkfree.core.constants.ConstructionStateEnum;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.appvo.UserVo;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.service.config.HttpLinks;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.EmployeeService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.utils.DateUtils;
+import cn.thinkfree.service.utils.HttpUtils;
 import cn.thinkfree.service.utils.OrderNoUtils;
 import cn.thinkfree.service.utils.ReflectUtils;
 import com.github.pagehelper.PageHelper;
@@ -53,6 +56,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     private DesignerOrderMapper designerOrderMapper;
     @Autowired
     private ConstructionOrderMapper constructionOrderMapper;
+    @Autowired
+    private HttpLinks httpLinks;
 
     /**
      * 基础用户角色编码，不可修改
@@ -81,6 +86,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeMsg employeeMsg = new EmployeeMsg();
         employeeMsg.setAuthState(authState);
         int res = employeeMsgMapper.updateByExampleSelective(employeeMsg, msgExample);
+        //对接徐洋接口
+        if(authState == 2){
+            sendMessage(userId,"用户实名认证审核通过");
+        }else {
+            sendMessage(userId,"用户实名认证审核未通过");
+        }
         logger.info("更新用户实名认证审核状态：res={}", res);
         // 插入操作记录
         OptionLog optionLog = new OptionLog();
@@ -95,7 +106,27 @@ public class EmployeeServiceImpl implements EmployeeService {
         optionLog.setOptionTime(new Date());
         logMapper.insertSelective(optionLog);
     }
-
+    /**
+     * @return
+     * @Author jiang
+     * @Description 提醒业主支付量房费
+     * @Date
+     * @Param
+     **/
+    private void sendMessage(String subUserId, String content) {
+        Map<String, String> requestMsg = new HashMap<>();
+        requestMsg.put("userNo", "[\"" + subUserId + "\"]");
+        requestMsg.put("content", content);
+        requestMsg.put("dynamicId", "0");
+        requestMsg.put("type", "5");
+        logger.info("发送消息：requestMsg：{}", requestMsg);
+        try {
+            HttpUtils.HttpRespMsg respMsg = HttpUtils.post(httpLinks.getMessageSave(), requestMsg);
+            logger.info("respMsg:{}", JSONUtil.bean2JsonStr(respMsg));
+        } catch (Exception e) {
+            logger.error("发送消息出错", e);
+        }
+    }
     @Override
     public void employeeApply(String userId, int employeeApplyState, String companyId, String reason) {
         if (employeeApplyState != 1 && employeeApplyState != 4) {
