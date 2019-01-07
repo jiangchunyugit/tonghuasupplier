@@ -118,7 +118,7 @@
         </tr>
         <tr>
             <td> <h4 class="inline-block">项目地址：</h4>
-                <span class="placeholderT">${c08}</sp>省<span canlass="placeholderT">${c09}</sp>市<span class="placeholderT">${c10}</sp>区/县<span class="placeholderT">${c11}</ansp>
+                <span class="placeholderT">${c08}</span>省<span canlass="placeholderT">${c09}</span>市<span class="placeholderT">${c10}</span>区/县<span class="placeholderT">${c11}</span>
             </td>
         </tr>
         <tr>
@@ -138,7 +138,7 @@
     <p class="placeholderT">${c13}</p>张效果图和<p class="placeholderT">${c14}</p>套3D全屋漫游图，充分说明设计风格；
 </section>
 <section class='indent'>
-    3. 施工图设计：甲方通过平台确定3D方案设计后，乙方为甲方提供施工图纸及清单报价，施工图纸包括但不限于：图纸目录、施工总设计说明、原始结构图、墙体拆除图、新建墙体定位图、平面布置图、家具布置图、天花布置图、天花灯具定位图、地面材质图、照明控制图、插座布置图、给排水点位图、立面材质分布图、立面索引图、大样图、主要材料明细表;清单报价包括但不限于：基础施工清单、主材清单、家居饰品清单、电器清单。
+   3. 施工图设计：甲方通过平台确定3D方案设计后，乙方为甲方提供施工图纸及清单报价，施工图纸包括但不限于：图纸目录、施工总设计说明、原始结构图、墙体拆除图、新建墙体定位图、平面布置图、家具布置图、天花布置图、天花灯具定位图、地面材质图、照明控制图、插座布置图、给排水点位图、立面材质分布图、立面索引图、大样图、主要材料明细表;清单报价包括但不限于：基础施工清单、主材清单、家居饰品清单、电器清单。
 </section>
 <section class='indent'>
     4. 陈设设计：平面规划方案确定后，乙方为甲方项目确定陈设设计的基本概念和总体方向，效果方案确定后，乙方为甲方出具色彩搭配、家具配置、窗帘布艺、陈设品配置方案以及详细的产品采购推荐清单（所涉价格均为当期市场参考价格，以实际成交价为准）。
