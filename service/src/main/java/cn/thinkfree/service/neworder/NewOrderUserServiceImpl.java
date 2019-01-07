@@ -572,7 +572,7 @@ public class NewOrderUserServiceImpl implements NewOrderUserService {
                     }
                 }
                 if (vo.getAuditType() != null) {
-                    if (vo.getAuditType() == 1 && vo.getSigningTime().after(new Date())) {
+                    if (vo.getAuditType() == 1 && vo.getSigningTime().getTime() <= (new Date()).getTime()) {
                         vo.setContractStatus(1);//生效
                     } else {
                         vo.setContractStatus(0);//不生效
