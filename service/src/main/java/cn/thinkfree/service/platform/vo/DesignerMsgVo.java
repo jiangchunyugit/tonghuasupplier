@@ -62,6 +62,8 @@ public class DesignerMsgVo {
     private List<String> designerStyles;
     @ApiModelProperty("擅长风格")
     private List<String> designerStyleCodes;
+    @ApiModelProperty("员工当前状态，1在职，2离职")
+    private int employeeState;
 
     public String getRealName() {
         return realName;
@@ -291,5 +293,13 @@ public class DesignerMsgVo {
 
     public void setDesignerStyleCodes(List<String> designerStyleCodes) {
         this.designerStyleCodes = designerStyleCodes;
+    }
+
+    public void setEmployeeState(int employeeState) {
+        this.employeeState = employeeState;
+    }
+
+    public int getEmployeeState() {
+        return employeeState;
     }
 }
