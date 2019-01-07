@@ -702,7 +702,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 applyVo.setPhone(userMsgVo.getUserPhone());
             }
             applyVo.setApplyTime(getTime(applyLog.getApplyTime()));
-            applyVo.setDealTime(getTime(applyLog.getApplyTime()));
+            applyVo.setDealTime(getTime(applyLog.getDealTime()));
             applyVo.setDealState(applyLog.getDealState());
             applyVo.setDealUserName(applyLog.getDealUserId());
             applyVo.setUserId(applyLog.getUserId());
