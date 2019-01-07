@@ -629,9 +629,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         List<BasicsData> countryCodes = basicsService.countryType();
         Map<String,BasicsData> cardTypeMap = ReflectUtils.listToMap(cardTypes,"basicsCode");
         Map<String,BasicsData> countryCodeMap = ReflectUtils.listToMap(countryCodes,"basicsCode");
-        Map<String,String> provinceMap = basicsService.getProvince();
-        Map<String,String> cityMap = basicsService.getCity();
-        Map<String,String> areaMap = basicsService.getArea();
+        Map<String,String> provinceMap = basicsService.getProvince(ReflectUtils.getList(msgs,"province").toArray(new String[]{}));
+        Map<String,String> cityMap = basicsService.getCity(ReflectUtils.getList(msgs,"city").toArray(new String[]{}));
+        Map<String,String> areaMap = basicsService.getArea(ReflectUtils.getList(msgs,"area").toArray(new String[]{}));
         List<EmployeeMsgVo> employeeMsgVos = new ArrayList<>();
         for (EmployeeMsg employeeMsg : msgs) {
             UserMsgVo userMsgVo = userMsgVoMap.get(employeeMsg.getUserId());
@@ -869,10 +869,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         }else{
             msgVo.setWorkTime("--");
         }
-        msgVo.setAddress(provinceMap.get(employeeMsg.getProvince()) + "," + cityMap.get(employeeMsg.getCity()) + "," + areaMap.get(employeeMsg.getArea()));
-        if(msgVo.getAddress().contains("null")){
-            msgVo.setAddress("");
+        StringBuffer address = new StringBuffer();
+        if(employeeMsg.getProvince() != null){
+            address.append(provinceMap.get(employeeMsg.getProvince())).append(",");
         }
+        if(employeeMsg.getCity() != null){
+            address.append(cityMap.get(employeeMsg.getCity())).append(",");
+        }
+        if(employeeMsg.getArea() != null){
+            address.append(areaMap.get(employeeMsg.getArea())).append(",");
+        }
+        if(address.length() >= 1){
+            address.deleteCharAt(address.length() - 1);
+        }
+        msgVo.setAddress(address.toString());
         if(cardType != null){
             msgVo.setCertificateTypeName(cardType.getBasicsName());
         }
