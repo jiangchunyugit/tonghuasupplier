@@ -77,7 +77,7 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
     public List<DealerCategory> getDealerBrandSecondList(Integer id) {
 
         DealerCategoryExample dealerCategoryExample = new DealerCategoryExample();
-        dealerCategoryExample.createCriteria().andIdEqualTo(id);
+        dealerCategoryExample.createCriteria().andBrandIdEqualTo(id);
 
         return dealerCategoryMapper.selectByExample(dealerCategoryExample);
 //        DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
