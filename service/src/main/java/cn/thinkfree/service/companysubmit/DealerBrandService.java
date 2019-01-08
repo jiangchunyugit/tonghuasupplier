@@ -1,10 +1,7 @@
 package cn.thinkfree.service.companysubmit;
 
 import cn.thinkfree.database.model.DealerBrandInfo;
-import cn.thinkfree.database.vo.AuditBrandInfoVO;
-import cn.thinkfree.database.vo.BrandDetailVO;
-import cn.thinkfree.database.vo.BrandItemsVO;
-import cn.thinkfree.database.vo.PcAuditInfoVO;
+import cn.thinkfree.database.vo.*;
 
 import java.util.List;
 import java.util.Map;
@@ -17,10 +14,10 @@ public interface DealerBrandService {
 
     /**
      * 添加经销商品牌
-     * @param dealerBrandInfo
+     * @param dealerBrandInfoVO
      * @return
      */
-    Map<String, Object> saveBrand(DealerBrandInfo dealerBrandInfo);
+    Map<String, Object> saveBrand(DealerBrandInfoVO dealerBrandInfoVO);
 
     /**
      * 经销商品牌审核回显
@@ -49,7 +46,7 @@ public interface DealerBrandService {
      * @param dealerBrandInfo
      * @return
      */
-    boolean updateBrand(DealerBrandInfo dealerBrandInfo);
+    boolean updateBrand(DealerBrandInfoVO dealerBrandInfoVO);
 
     /**
      * 审批变更品牌
@@ -67,9 +64,15 @@ public interface DealerBrandService {
 
     /**
      * 品牌编辑
-     * @param dealerBrandInfo
+     * @param dealerBrandInfoVO
      * @return
      */
-    boolean editBrand(DealerBrandInfo dealerBrandInfo);
+    boolean editBrand(DealerBrandInfoVO dealerBrandInfoVO);
+
+    /**
+     * 查询已申请品牌信息
+     * @return
+     */
+    List<DealerBrandInfo> applyBrandDetail(BrandDetailVO brandDetailVO);
 
 }

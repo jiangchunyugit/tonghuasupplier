@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.DealerBrandInfo;
 import cn.thinkfree.database.model.DealerBrandInfoExample;
 import java.util.List;
 
+import cn.thinkfree.database.model.DealerCategory;
 import cn.thinkfree.database.vo.AuditBrandInfoVO;
 import cn.thinkfree.database.vo.BrandDetailVO;
 import cn.thinkfree.database.vo.BrandItemsVO;

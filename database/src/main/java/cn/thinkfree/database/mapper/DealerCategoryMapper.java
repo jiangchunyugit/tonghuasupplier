@@ -95,11 +95,4 @@ public interface DealerCategoryMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(DealerCategory record);
-
-    /**
-     * 经销商品牌审核回显
-     * @param brandId
-     * @return
-     */
-//    List<AuditBrandInfoVO> showBrandDetail(String brandId);
 }
