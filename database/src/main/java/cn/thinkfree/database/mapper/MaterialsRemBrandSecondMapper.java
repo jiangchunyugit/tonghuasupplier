@@ -93,4 +93,11 @@ public interface MaterialsRemBrandSecondMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(MaterialsRemBrandSecond record);
+
+    /**
+     * 通过品牌编号查询品类
+     * @param sbbm
+     * @return
+     */
+    List<MaterialsRemBrandSecond> selectBySbbm(String sbbm);
 }

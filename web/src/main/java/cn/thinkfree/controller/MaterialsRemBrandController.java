@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.DealerBrandInfo;
+import cn.thinkfree.database.model.DealerCategory;
 import cn.thinkfree.database.model.MaterialsRemBrand;
 import cn.thinkfree.database.model.MaterialsRemBrandSecond;
 import cn.thinkfree.service.materialsrembrand.MaterialsRemBrandService;
@@ -69,11 +70,10 @@ public class MaterialsRemBrandController extends AbsBaseController{
     @GetMapping(value = "/dealerBrandSecondList")
     @MyRespBody
     @ApiOperation(value="经销商：品类信息")
-    public MyRespBundle<List<DealerBrandInfo>> dealerBrandSecondList(@ApiParam("公司id")@RequestParam(value = "companyId") String companyId,
-                                                                     @ApiParam("品牌编码")@RequestParam(value = "brandNo") String brandNo){
+    public MyRespBundle<List<DealerCategory>> dealerBrandSecondList(@ApiParam("品牌id")@RequestParam(value = "id") Integer id){
 
-        if (StringUtils.isNotBlank(companyId) && StringUtils.isNotBlank(brandNo)) {
-            return sendJsonData(ResultMessage.SUCCESS, materialsRemBrandService.getDealerBrandSecondList(companyId,brandNo));
+        if (id != null) {
+            return sendJsonData(ResultMessage.SUCCESS, materialsRemBrandService.getDealerBrandSecondList(id));
         }
         return sendJsonData(ResultMessage.FAIL,"操作失败");
 

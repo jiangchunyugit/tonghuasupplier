@@ -1,6 +1,7 @@
 package cn.thinkfree.service.materialsrembrand;
 
 import cn.thinkfree.database.mapper.DealerBrandInfoMapper;
+import cn.thinkfree.database.mapper.DealerCategoryMapper;
 import cn.thinkfree.database.mapper.MaterialsRemBrandMapper;
 import cn.thinkfree.database.mapper.MaterialsRemBrandSecondMapper;
 import cn.thinkfree.database.model.*;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * @author jiangchunyu(后台)
@@ -27,6 +29,10 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
 
     @Autowired
     DealerBrandInfoMapper dealerBrandInfoMapper;
+
+    @Autowired
+    DealerCategoryMapper dealerCategoryMapper;
+
     /**
      * 截取最小值
      */
@@ -49,28 +55,39 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
     @Override
     public List<MaterialsRemBrandSecond> getMaterialsRemBrandSecond(String sbbm) {
 
-        MaterialsRemBrandSecondExample materialsRemBrandSecondExample = new MaterialsRemBrandSecondExample();
-        materialsRemBrandSecondExample.createCriteria().andSbbmEqualTo(sbbm);
-        return this.interceptCategoryCode(materialsRemBrandSecondMapper.selectByExample(materialsRemBrandSecondExample));
+//        MaterialsRemBrandSecondExample materialsRemBrandSecondExample = new MaterialsRemBrandSecondExample();
+//        materialsRemBrandSecondExample.createCriteria().andSbbmEqualTo(sbbm);
+        return this.interceptCategoryCode(materialsRemBrandSecondMapper.selectBySbbm(sbbm));
     }
 
     @Override
     public List<DealerBrandInfo> getDealerBrandList(String companyId) {
 
+
+        DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
+
+        dealerBrandInfoExample.createCriteria().andCompanyIdEqualTo(companyId)
+                .andAuditStatusEqualTo(BrandConstants.AuditStatus.AUDITSUCCESS.code);
+        dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
+
         return dealerBrandInfoMapper.selectByContract(companyId);
     }
 
     @Override
-    public List<DealerBrandInfo> getDealerBrandSecondList(String companyId, String brandNo) {
+    public List<DealerCategory> getDealerBrandSecondList(Integer id) {
 
-        DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
-        DealerBrandInfoExample.Criteria criteria = dealerBrandInfoExample.createCriteria();
+        DealerCategoryExample dealerCategoryExample = new DealerCategoryExample();
+        dealerCategoryExample.createCriteria().andIdEqualTo(id);
 
-        criteria.andCompanyIdEqualTo(companyId);
-        criteria.andAuditStatusEqualTo(BrandConstants.AuditStatus.AUDITSUCCESS.code);
-        criteria.andBrandNoEqualTo(brandNo);
+        return dealerCategoryMapper.selectByExample(dealerCategoryExample);
+//        DealerBrandInfoExample dealerBrandInfoExample = new DealerBrandInfoExample();
+//        DealerBrandInfoExample.Criteria criteria = dealerBrandInfoExample.createCriteria();
+//
+//        criteria.andCompanyIdEqualTo(companyId);
+//        criteria.andAuditStatusEqualTo(BrandConstants.AuditStatus.AUDITSUCCESS.code);
+//        criteria.andBrandNoEqualTo(brandNo);
 
-        return dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
+//        return dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
         }
 
     /**

@@ -70,7 +70,7 @@
     <sql id="my_Where_Clause_one">
 
         <where>
-            AND  status = '1'
+            AND  status != '0'
             <if test="contractNumber!= null and contractNumber != ''">
                 AND   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
             </if>
@@ -104,7 +104,7 @@
     <sql id="my_Where_Clause_two">
 
         <where>
-            and  status = '4'
+            and  (status = '4' OR status = '5' OR status = '6' OR status = '7' OR status = '8' OR status = '9' OR status = '10' OR status = '11')
             <if test="contractNumber!= null and contractNumber != ''">
                 AND   t.contract_number LIKE concat(concat('%',#{contractNumber}),'%')
             </if>

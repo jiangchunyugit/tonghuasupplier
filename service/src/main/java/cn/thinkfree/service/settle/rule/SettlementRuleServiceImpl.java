@@ -424,8 +424,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     }
 
-
-
     @Override
     public boolean applicationInvalid(String ruleNumber) {
 
