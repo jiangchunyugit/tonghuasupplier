@@ -11,8 +11,6 @@
             font-family: SimSun;
         }
 
-
-
         .text-algin {
             text-align: center;
         }
@@ -30,6 +28,9 @@
             outline:none;
             font-size: 16px;
             display: inline-block;
+        }
+        .placeholderT {
+            text-align: center;
         }
         div.textput{
             margin-bottom: -7px;
@@ -94,29 +95,29 @@
 <h1 class="text-algin">“居然设计家”平台经销商合作协议（2019版）</h1>
 <div>
     <h4 class="inline-block">甲方：</h4>
-    <input name="firstParty" class="textput defaultwidth" type="text" value="${agencyContract.entityName}">
+    <input name="firstParty" class="textput defaultwidth" type="text" value="${entityName}">
     <h4 style="display:inline-block">(以下简称甲方)</h4>
 </div>
 <div>
     <h4 class="inline-block">乙方：</h4>
-    <input name="secondParty" class="textput defaultwidth" type="text" value="${agencyContract.companyName}">
+    <input name="secondParty" class="textput defaultwidth" type="text" value="${companyName}">
     <h4 style="display:inline-block">(以下简称乙方)</h4>
 
 </div>
 <section class="indent">“居然设计家”（以下简称平台）是由居然之家打造的融线上线下为一体的智能设计和家装管理平台。包括设计云平台、家具材料采购平台、商品销售平台、施工管理平台、物流配送平台和智能家居服务平台六大部分。其宗旨是以互联网、大数据、云计算以及人工智能的技术应用为手段，改善家居消费者的服务体验、提升家居行业运行效率，从而让家居服务变得快乐简单，并以此为基础构建以家居为中心的家庭消费生态圈。</section>
 <h4>一、合作约定</h4>
 <section class='indent'>
-    1. 乙方经营的<div class="textput smalltextput">${agencyContract.categoryName}</div>品类
-    <div class="textput smalltextput">${agencyContract.brandName}</div>品牌店面（具体店面详见附件）的产品,乙方按照甲方客户实际购买成交金额的
-    <div class="textput smalltextput">${agencyContract.productRatio}</div>%向甲方提供服务费，其中<div class="textput smalltextput">${agencyContract.serviceRatio}</div>%为平台管理费,<div class="textput smalltextput">${agencyContract.recommendRatio}</div>%为材料推荐服务费。
+    1. 乙方经营的<div class="textput smalltextput">${categoryName}</div>品类
+    <div class="textput smalltextput">${brandName}</div>品牌店面（具体店面详见附件）的产品,乙方按照甲方客户实际购买成交金额的
+    <div class="textput smalltextput">${productRatio}</div>%向甲方提供服务费，其中<div class="textput smalltextput">${serviceRatio}</div>%为平台管理费,<div class="textput smalltextput">${recommendRatio}</div>%为材料推荐服务费。
 </section>
 <section class='indent'>
-    2．合作期限自<div class="textput smalltextput">${agencyContract.startTime?string('yyyy')}</div>年
-    <div class="textput smalltextput">${agencyContract.startTime?string('MM')}</div>
-    月<div class="textput smalltextput">${agencyContract.startTime?string('dd')}</div>日
-    至<div class="textput smalltextput">${agencyContract.endTime?string('yyyy')}</div>年
-    <div class="textput smalltextput">${agencyContract.endTime?string('MM')}</div>月
-    <div class="textput smalltextput">${agencyContract.endTime?string('dd')}</div>日止。
+    2．合作期限自<div class="textput smalltextput">${startTime?string('yyyy')}</div>年
+    <div class="textput smalltextput">${startTime?string('MM')}</div>
+    月<div class="textput smalltextput">${startTime?string('dd')}</div>日
+    至<div class="textput smalltextput">${endTime?string('yyyy')}</div>年
+    <div class="textput smalltextput">${endTime?string('MM')}</div>月
+    <div class="textput smalltextput">${endTime?string('dd')}</div>日止。
 </section>
 </section>
 <h4>二、代收款结算约定</h4>
@@ -168,7 +169,7 @@
     5．须按照《居然之家商品销售合同》约定，处理甲方客户的售后问题。
 </section>
 <section class="indent">
-    6．须每年参与不低于一次的甲方组织的相关活动，并承担不高于<div class="textput smalltextput">${agencyContract.activityCost}</div>万元的活动费用。
+    6．须每年参与不低于一次的甲方组织的相关活动，并承担不高于<div class="textput smalltextput">${activityCost}</div>万元的活动费用。
 </section>
 <section class="indent">
     7．须在合同期内为甲方提供2-3款特价产品，价格低于市场正常成交价格的5%以上。
@@ -222,6 +223,48 @@
     <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
     <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
+
+
+<section class="indent" style="clear:both">
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+</section>
+
+
+<section>
+    “居然设计家”平台经销商合作协议（2019版）附件</section>
+<h2 class="placeholderT">经销商签约合作门店摊位明细</h2>
+<table border="1" cellspacing="0" width="100%" class="table text-algin">
+    <tr>
+        <th>品类名称</th>
+        <th>品牌名称</th>
+        <th>公司名称</th>
+        <th>商户号</th>
+        <th>所在店面</th>
+        <th>摊位号</th>
+    </tr>
+    <#list agencyContractTermsList as c>
+        <tr>
+        <td>${brandName}</td>
+        <td>${categoryName}</td>
+        <td>${companyName}</td>
+        <td>${dealerCompanyId}</td>
+        <td>${c.shopName}</td>
+        <td>${c.boothName}</td>
+        </tr>
+    </#list>
+</table>
+
 </body>
 
 </html>

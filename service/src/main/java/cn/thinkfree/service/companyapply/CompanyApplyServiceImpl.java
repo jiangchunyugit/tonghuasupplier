@@ -104,7 +104,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Transactional(rollbackFor = Exception.class)
     public boolean updateStatus(String companyId, String status, Date date) {
         CompanyInfo companyInfo = new CompanyInfo();
-        if(date == null || date.equals("")){
+        if(date == null || "".equals(date)){
             date = new Date();
         }
         companyInfo.setUpdateTime(date);
@@ -396,6 +396,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
+        //邮箱参数
         Map<String,Object> para = new HashMap<>();
         para.put("userName",pcApplyInfoSEO.getEmail());
         para.put("pwd",pcApplyInfoSEO.getPassword());
@@ -407,10 +408,9 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             // TODO 经销商是个神奇的东西
             para.put("http", "");
         }
-        // TODO  不需要发送短信
-//        cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
-//                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
-
+        RemoteResult<String> result = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
+                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
+        System.out.println(result);
         cloudService.sendEmail(pcApplyInfoSEO.getEmail(),
                 SysConstants.EmailTemplate.join.code,
                 new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));

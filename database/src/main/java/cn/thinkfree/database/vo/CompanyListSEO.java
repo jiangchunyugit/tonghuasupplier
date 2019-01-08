@@ -13,6 +13,12 @@ import java.util.Map;
 @ApiModel("公司列表参数")
 public class CompanyListSEO extends AbsPageSearchCriteria  {
 
+    @ApiModelProperty(value = "经销商列表筛选：开始时间")
+    private String startDate;
+
+    @ApiModelProperty(value = "经销商列表筛选：结束时间")
+    private String endDate;
+
     @ApiModelProperty(value = "经销商公司编号")
     private String dealerCompanyId;
     /**
@@ -97,6 +103,22 @@ public class CompanyListSEO extends AbsPageSearchCriteria  {
 
     @ApiModelProperty(value = "城市分站code")
     private String cityBranchCode;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
 
     public String getDealerCompanyId() {
         return dealerCompanyId;

@@ -19,9 +19,12 @@ import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.support.atomic.RedisAtomicLong;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -92,8 +95,16 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                     printErrorMes("新增合同:{},处理合同编号",debugFlag);
                     //生成合同编号
                     String contractNumber =  this.getOrderContract(paramAgencySEO.getDealerCompanyId(), paramAgencySEO.getBrandNo());
-                    printErrorMes("新增合同:{},处理合同编号:{}",debugFlag,contractNumber);
+                    // 校验经销商合同编号
+                    AgencyContractExample agencyContractExample = new AgencyContractExample();
+                    agencyContractExample.createCriteria().andContractNumberEqualTo(contractNumber);
+                    if (agencyContractMapper.countByExample(agencyContractExample) > 0) {
+                        return false;
+                    }
+                    // 创建PDF预览
                     paramAgencySEO.setContractNumber(contractNumber);
+                    paramAgencySEO.setPdfUrl(contractPdf(paramAgencySEO));
+                    printErrorMes("新增合同:{},处理合同编号:{}",debugFlag,contractNumber);
                     paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
                     paramAgencySEO.setCreateTime(new Date());
                     agencyContractMapper.insertSelective(paramAgencySEO);
@@ -101,6 +112,8 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                     printErrorMes("更新合同:{},拼装数据",debugFlag);
                     paramAgencySEO.setUpdateTime(new Date());
                     paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
+                    // 创建PDF预览
+                    paramAgencySEO.setPdfUrl(contractPdf(paramAgencySEO));
                     AgencyContractExample example = new AgencyContractExample();
                     example.createCriteria().andContractNumberEqualTo(paramAgencySEO.getContractNumber());
                     agencyContractMapper.updateByExampleSelective(paramAgencySEO,example);
@@ -133,6 +146,8 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             paramAgencySEO.setContractNumber(contractNumber);
             paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
             paramAgencySEO.setCreateTime(new Date());
+            // 创建PDF预览
+            paramAgencySEO.setPdfUrl(contractPdf(paramAgencySEO));
             agencyContractMapper.insertSelective(paramAgencySEO);
 
             // 变更合同关联表插入
@@ -188,12 +203,19 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
            if(status.equals(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString()) && auditStatus.equals(SysConstants.YesOrNo.YES.val.toString())){
                //运营提交
                dbStart = AgencyConstants.AgencyType.OPERATING_AUDIT_ING.code.toString();
-               return this.auditContractUpdate(dbStart,pdfUrl,contractNumber);
+               return this.auditContractUpdate(dbStart,contractNumber);
+            }
+            if((status.equals(AgencyConstants.AgencyType.OPERATING_AUDIT_REFUSED.code.toString())
+                    || AgencyConstants.AgencyType.FINANCIAL_AUDIT_REFUSED.code.toString().equals(status))
+                    && auditStatus.equals(SysConstants.YesOrNo.YES.val.toString())){
+                //审核不通过提交
+                dbStart = AgencyConstants.AgencyType.OPERATING_AUDIT_ING.code.toString();
+                return this.auditContractUpdate(dbStart,contractNumber);
             }
             if(status.equals(AgencyConstants.AgencyType.OPERATING_AUDIT_ING.code.toString()) && auditStatus.equals(SysConstants.YesOrNo.YES.val.toString())){
                 //运营通过
                 dbStart = AgencyConstants.AgencyType.FINANCIAL_AUDIT_ING.code.toString();
-                if (this.auditContractUpdate(dbStart,pdfUrl,contractNumber)) {
+                if (this.auditContractUpdate(dbStart,contractNumber)) {
                     return this.auditRecord(new AuditRecord("1",auditStatus,cause,contractNumber));
                 }
                 return false;
@@ -201,7 +223,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             if(status.equals(AgencyConstants.AgencyType.OPERATING_AUDIT_ING.code.toString()) && auditStatus.equals(SysConstants.YesOrNo.NO.val.toString())){
                 //运营不通过
                 dbStart = AgencyConstants.AgencyType.OPERATING_AUDIT_REFUSED.code.toString();
-                if (this.auditContractUpdate(dbStart,pdfUrl,contractNumber)) {
+                if (this.auditContractUpdate(dbStart,contractNumber)) {
                     return this.auditRecord(new AuditRecord("1",auditStatus,cause,contractNumber));
                 }
                 return false;
@@ -210,8 +232,8 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                 //财务审核通过
                 dbStart = AgencyConstants.AgencyType.SIGN_UP.code.toString();
                 //生成pdf
-                pdfUrl = createPdf(contractNumber);
-                if (this.auditContractUpdate(dbStart,pdfUrl,contractNumber)) {
+//                pdfUrl = createPdf(contractNumber);
+                if (this.auditContractUpdate(dbStart,contractNumber)) {
                     return this.auditRecord(new AuditRecord("2",auditStatus,cause,contractNumber));
                 }
                 return false;
@@ -219,7 +241,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             if(status.equals(AgencyConstants.AgencyType.FINANCIAL_AUDIT_ING.code.toString()) && auditStatus.equals(SysConstants.YesOrNo.NO.val.toString())){
                 //财务审核不通过
                 dbStart = AgencyConstants.AgencyType.FINANCIAL_AUDIT_REFUSED.code.toString();
-                if (this.auditContractUpdate(dbStart,pdfUrl,contractNumber)) {
+                if (this.auditContractUpdate(dbStart,contractNumber)) {
                     return this.auditRecord(new AuditRecord("2",auditStatus,cause,contractNumber));
                 }
                 return false;
@@ -245,18 +267,18 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                         agencyContractMapper.updateByExampleSelective(agencyContract,agencyContractExample);
                     }
                 }
-                return this.auditContractUpdate(dbStart,pdfUrl,contractNumber);
+                return this.auditContractUpdate(dbStart,contractNumber);
             }
         }
         return false;
     }
-    private boolean auditContractUpdate(String dbStart, String pdfUrl, String contractNumber){
+    private boolean auditContractUpdate(String dbStart, String contractNumber){
         AgencyContract record = new AgencyContract();
         record.setStatus(dbStart);
         record.setUpdateTime(new Date());
-        if (StringUtils.isNotBlank(pdfUrl)) {
-            record.setPdfUrl(pdfUrl);
-        }
+//        if (StringUtils.isNotBlank(pdfUrl)) {
+//            record.setPdfUrl(pdfUrl);
+//        }
         AgencyContractExample example = new AgencyContractExample();
         example.createCriteria().andContractNumberEqualTo(contractNumber);
 
@@ -308,6 +330,20 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             e.printStackTrace();
             printErrorMes("生成pdf合同发生错误", e.getMessage());
         }
+        return  pdfUrl;
+    }
+
+    private String contractPdf(ParamAgencySEO paramAgencySEO){
+
+        // 上传服务器返回地址
+        String pdfUrl = "";
+        Map<String, Object> root = new HashMap<>();
+        String contractNumber = paramAgencySEO.getContractNumber();
+        Map<String, Object> a = (Map<String, Object>) JSON.toJSON(paramAgencySEO);
+        root.putAll(a);
+        String filePath = FreemarkerUtils.savePdf(filePathDir + contractNumber, "4", root);
+        // 上传
+        pdfUrl = PdfUplodUtils.upload(filePath, fileUploadUrl);
         return  pdfUrl;
     }
 
@@ -472,6 +508,34 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         return false;
     }
 
+    @Autowired
+    RedisTemplate<String, Object> redisTemplate;
+
+    public String agencyContractNumber(String key){
+
+        //从001开始
+        Long incr = getIncr(key);
+        if(incr==0) {
+            incr = getIncr(key);
+        }
+
+        //三位序列号
+        DecimalFormat df=new DecimalFormat("000");
+        return df.format(incr);
+    }
+
+    public  Long getIncr(String key) {
+        RedisAtomicLong entityIdCounter = new RedisAtomicLong(key, redisTemplate.getConnectionFactory());
+        Long increment = entityIdCounter.getAndIncrement();
+
+//        if ((null == increment || increment.longValue() == 0) && liveTime > 0) {//初始设置过期时间
+//            entityIdCounter.expire(liveTime, TimeUnit.MILLISECONDS);//单位毫秒
+//        }
+//        if (increment == 6) {
+//            entityIdCounter.set(NO_LENGTH);
+//        }
+        return increment;
+    }
     class AuditRecord {
 
         public AuditRecord(String auditLevel, String auditStatus, String cause, String contractNumber) {
