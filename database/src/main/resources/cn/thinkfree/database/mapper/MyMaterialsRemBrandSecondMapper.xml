@@ -9,6 +9,6 @@
     select
     <include refid="Base_Column_List" />
     from materials_rem_brand_second
-    id where IN ( SELECT max( id ) FROM materials_rem_brand_second WHERE sbbm= #{sbbm} GROUP BY spfldm_2 )
+     where id IN ( SELECT max( id ) FROM materials_rem_brand_second WHERE sbbm= #{sbbm} GROUP BY spfldm_2 )
   </select>
 </mapper>
