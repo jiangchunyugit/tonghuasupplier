@@ -194,9 +194,34 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
         SystemRoleExample systemRoleExample = new SystemRoleExample();
         systemRoleExample.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal())
                 .andIsEnableEqualTo(UserEnabled.Enabled_true.shortVal())
-                .andScopeIn(Lists.newArrayList(RoleScope.COMMON.code,scope));
+                .andScopeIn(convertScope(scope));
         return systemRoleMapper.selectByExample(systemRoleExample);
 
+    }
+
+    /**
+     * 转换角色区域
+     * @param scope
+     * @return
+     */
+    private List<Integer> convertScope(Integer scope) {
+        List<Integer> scopes = Lists.newArrayList(RoleScope.COMMON.code);
+
+        if(RoleScope.PROVINCE.code.equals(scope)){
+            scopes.add(scope);
+            scopes.add(RoleScope.PROVINCE.code + RoleScope.CITY.code);
+            scopes.add(RoleScope.ROOT.code + RoleScope.PROVINCE.code);
+        }else if(RoleScope.CITY.code.equals(scope)){
+            scopes.add(scope);
+            scopes.add(RoleScope.PROVINCE.code + RoleScope.CITY.code);
+            scopes.add(RoleScope.ROOT.code + RoleScope.CITY.code);
+        }else if(RoleScope.ROOT.code.equals(scope)){
+            scopes.add(scope);
+            scopes.add(RoleScope.ROOT.code + RoleScope.PROVINCE.code);
+            scopes.add(RoleScope.ROOT.code + RoleScope.CITY.code);
+        }
+
+        return scopes;
     }
 
     private SystemRole initRole(SystemRoleVO systemRoleVO, boolean isSave) {
