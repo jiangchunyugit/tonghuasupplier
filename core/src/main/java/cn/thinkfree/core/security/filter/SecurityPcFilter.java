@@ -28,6 +28,7 @@ import java.time.Instant;
 
 	private FilterInvocationSecurityMetadataSource securityMetadataSource;
 
+
  
 	/**  
 	 * 如果为APP用户则不进行拦截 直接放行
@@ -40,18 +41,15 @@ import java.time.Instant;
 		HttpServletRequest httpRequest = (HttpServletRequest)request;
 //		HttpServletResponse httpResponse = (HttpServletResponse)response;
 		String url = httpRequest.getRequestURI().replaceFirst(httpRequest.getContextPath(), "");
-
 		logger.info("拦截请求：" + url);
 
 		//	 过资源(URL)白名单：如果为公共页面，直接执行
-//		if(SecurityMetadataSourceTrustListHolder.isTrustSecurityMetadataSource(url)){
-//			chain.doFilter(request, response);
-//			return;
-//		}
+
 
 		FilterInvocation fi = new FilterInvocation(request, response, chain);
 		invoke(fi);
 	}
+
 
 
 

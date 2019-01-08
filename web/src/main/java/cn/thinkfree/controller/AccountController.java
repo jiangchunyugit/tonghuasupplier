@@ -463,7 +463,7 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "启用账号")
     public MyRespBundle<String> enableAccount(@PathVariable String id){
-        String mes = pcUserInfoService.updateAccountState(id,UserEnabled.Enabled_true.code);
+        pcUserInfoService.updateAccountState(id,UserEnabled.Enabled_true.code);
         return sendSuccessMessage(SUCCESS.message);
     }
 
@@ -481,7 +481,7 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.CHANGE_STATE,module = SysLogModule.PC_PERMISSION,desc = "停用账号")
     public MyRespBundle<String> disableAccount(@PathVariable String id){
-        String mes = pcUserInfoService.updateAccountState(id,UserEnabled.Disable.code);
+        pcUserInfoService.updateAccountState(id,UserEnabled.Disable.code);
         return sendSuccessMessage(SUCCESS.message);
     }
     /**
@@ -494,7 +494,7 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.EDIT,module = SysLogModule.PC_PERMISSION,desc = "初次登录重置密码")
     public MyRespBundle<String> initPassWord(@PathVariable String id,@ApiParam("密码") String passWord){
-        String mes = pcUserInfoService.updatePassWordForInit(id,passWord);
+        pcUserInfoService.updatePassWordForInit(id,passWord);
         return sendSuccessMessage(SUCCESS.message);
     }
 

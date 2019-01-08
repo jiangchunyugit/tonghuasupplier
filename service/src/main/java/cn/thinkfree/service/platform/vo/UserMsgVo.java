@@ -26,6 +26,8 @@ public class UserMsgVo {
 
     private String memberEcode;
 
+    private String emial;
+
     public UserMsgVo() {
     }
 
@@ -128,5 +130,13 @@ public class UserMsgVo {
 
     public String getRegisterTime() {
         return registerTime;
+    }
+
+    public void setEmial(String emial) {
+        this.emial = emial;
+    }
+
+    public String getEmial() {
+        return emial;
     }
 }

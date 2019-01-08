@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 
 public class ActivationCodeHelper {
 
-    protected static String FULL_CHART ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    protected static String CHART_TABLE ="ABCDEFGHJKLMNPQRSTUVWXYZ3456789";
+    protected final static String FULL_CHART ="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    protected final static String CHART_TABLE ="ABCDEFGHJKLMNPQRSTUVWXYZ3456789";
 
     public enum ActivationCode{
         /**

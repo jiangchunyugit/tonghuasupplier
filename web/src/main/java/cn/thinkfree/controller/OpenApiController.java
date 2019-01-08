@@ -259,4 +259,13 @@ public class OpenApiController extends AbsBaseController {
 
     }
 
+    /**
+     * 判断账号是否存在
+     * @return
+     */
+    @GetMapping("/account/exist")
+    @MyRespBody
+    public MyRespBundle<Boolean> accountIsExist(String userID ){
+        return sendJsonData(ResultMessage.SUCCESS,userService.isExist(userID));
+    }
 }

@@ -92,38 +92,6 @@ public interface PcUserInfoMapper {
     int updateByPrimaryKey(PcUserInfo record);
 
     /**
-     * 根据公司id查询账号信息
-     * @param companyId
-     * @return
-     */
-    List<PcUserInfo> selectByParam(List<String> companyId);
-
-    /**
-     * 权限管理  根据name或phone和companyID查询账号信息
-     * @param param
-     * @return
-     */
-    List<PcUserInfoVo> findByParam(Map<String, Object> param);
-
-    /**
-     * 根据userid查询单条数据信息
-     * @param userId
-     * @return
-     */
-    PcUserInfoVo findByUserId(String userId);
-
-    int updateById(PcUserInfoVo pcUserInfoVo);
-
-    int insertUserInfoVo(PcUserInfoVo pcUserInfoVo);
-
-    /**
-     * 查询账号详情 -- 根据用户主键
-     * @param id
-     * @return
-     */
-    AccountVO selectAccountVOByID(String id);
-
-    /**
      * 账号列表
      * @param accountSEO
      * @return

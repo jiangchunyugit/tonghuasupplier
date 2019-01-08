@@ -10,7 +10,7 @@ public class EnterPriseUserVO extends UserVO {
     @Override
     public boolean isEnabled() {
 
-        if(SysConstants.YesOrNo.YES.shortVal().equals(getCompanyInfo().getPlatformType().shortValue())){
+        if(SysConstants.YesOrNo.YES.shortVal().equals(getCompanyInfo().getPlatformType())){
             return false;
         }
         if(getCompanyUser() != null && SysConstants.YesOrNo.NO.shortVal().equals(getCompanyUser().getIsJob())){

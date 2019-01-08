@@ -121,11 +121,6 @@ public class CloudServiceImpl extends AbsLogPrinter implements CloudService {
         return result;
     }
 
-    private RemoteResult<String> invokeRemoteMethod(String url, HttpEntity<MultiValueMap> param) {
-        RemoteResult<String> result = restTemplate.postForObject(url, param, RemoteResult.class);
-        result.setIsComplete(SuccessCode.equals(result.getCode()) ? Boolean.TRUE : Boolean.FALSE);
-        return result;
-    }
 
     private MultiValueMap<String, Object> initParam() {
         MultiValueMap<String, Object> param = new LinkedMultiValueMap<>();

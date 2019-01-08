@@ -495,6 +495,27 @@ public enum DesignStateEnum {
         }
     }
 
+    public static List<Map<String,Object>> getSelectStates(int type){
+        List<Map<String, Object>> listMap = new ArrayList<>();
+        DesignStateEnum[] stateEnums = DesignStateEnum.values();
+        List<String> stateNames = new ArrayList<>();
+        for (DesignStateEnum designStateEnum : stateEnums) {
+            String stateName = designStateEnum.getStateName(type);
+            if (stateName == null) {
+                continue;
+            }
+            if(stateNames.contains(stateName)){
+                continue;
+            }
+            stateNames.add(stateName);
+            Map<String, Object> map = new HashMap<>();
+            map.put("key", designStateEnum.state);
+            map.put("val", stateName);
+            listMap.add(map);
+        }
+        return listMap;
+    }
+
     /**
      * 根据类型获取订单状态类型列表
      *

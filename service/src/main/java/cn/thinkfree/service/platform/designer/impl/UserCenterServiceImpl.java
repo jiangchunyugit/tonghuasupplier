@@ -70,7 +70,28 @@ public class UserCenterServiceImpl implements UserCenterService {
             }
         }
         userMsgVos.addAll(queryUserMsg(employeeMsgMap));
+        updateEmial(userMsgVos);
         return userMsgVos;
+    }
+    private void updateEmial(List<UserMsgVo> userMsgVos){
+        List<String> userIds = ReflectUtils.getList(userMsgVos,"staffId");
+        Map<String, EmployeeMsg> employeeMsgMap = queryEmployeeMsg(userIds);
+        for(UserMsgVo userMsgVo : userMsgVos){
+            if(StringUtils.isBlank(userMsgVo.getStaffId()) || StringUtils.isBlank(userMsgVo.getEmial())){
+                continue;
+            }
+            EmployeeMsg employeeMsg = employeeMsgMap.get(userMsgVo.getStaffId());
+            if(employeeMsg == null){
+                continue;
+            }
+            if(userMsgVo.getEmial().equals(employeeMsg.getEmail())){
+                continue;
+            }
+            employeeMsg = new EmployeeMsg();
+            employeeMsg.setUserId(userMsgVo.getStaffId());
+            employeeMsg.setEmail(userMsgVo.getEmial());
+            employeeMsgMapper.updateByPrimaryKeySelective(employeeMsg);
+        }
     }
 
     @Override
@@ -127,6 +148,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         msgVo.setConsumerId(user.getString("consumerId"));
         msgVo.setUserName(userName);
         msgVo.setUserPhone(userPhone);
+        msgVo.setEmial(user.getString("email"));
         return msgVo;
     }
 
@@ -156,6 +178,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         msgVo.setConsumerId(user.getString("consumerId"));
         msgVo.setUserName(userName);
         msgVo.setUserPhone(userPhone);
+        msgVo.setEmial(user.getString("emial"));
         return msgVo;
     }
 
@@ -191,6 +214,8 @@ public class UserCenterServiceImpl implements UserCenterService {
         msgVo.setStaffId(msgObj.getString("staffId"));
         msgVo.setMemberEcode(msgObj.getString("memberEcode"));
         msgVo.setRegisterTime(msgObj.getString("registerTime"));
+        msgVo.setEmial(msgObj.getString("email"));
+        updateEmial(Arrays.asList(msgVo));
         return msgVo;
     }
 
@@ -202,6 +227,7 @@ public class UserCenterServiceImpl implements UserCenterService {
         employeeMsg.setRoleCode(roleCode);
         employeeMsgMap.put(userId, employeeMsg);
         List<UserMsgVo> userMsgVos = queryUserMsg(employeeMsgMap);
+        updateEmial(userMsgVos);
         if (userMsgVos != null && !userMsgVos.isEmpty()) {
             return userMsgVos.get(0);
         }
@@ -233,9 +259,11 @@ public class UserCenterServiceImpl implements UserCenterService {
             String phone = userMsg.getString("phone");
             String headPortraits = userMsg.getString("headPortraits");
             String memberEcode = userMsg.getString("memberEcode");
+            String email = userMsg.getString("email");
             UserMsgVo userMsgVo = new UserMsgVo(userId, userName, phone, employeeMsg.getRoleCode(), employeeMsg.getRealName(), headPortraits, memberEcode);
             userMsgVo.setRegisterTime(userMsg.getString("registerTime"));
             userMsgVo.setStaffId(userMsg.getString("staffId"));
+            userMsgVo.setEmial(email);
             userMsgVos.add(userMsgVo);
         }
         return userMsgVos;
@@ -273,11 +301,14 @@ public class UserCenterServiceImpl implements UserCenterService {
             String consumerId = userObj.getString("consumerId");
             String staffId = userObj.getString("staffId");
             String registerTime = userObj.getString("registerTime");
+            String email = userObj.getString("email");
             UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
             msgVo.setStaffId(staffId);
             msgVo.setRegisterTime(registerTime);
+            msgVo.setEmial(email);
             userMsgVos.add(msgVo);
         }
+        updateEmial(userMsgVos);
         return userMsgVos;
     }
 
@@ -314,10 +345,13 @@ public class UserCenterServiceImpl implements UserCenterService {
             String headPortraits = userObj.getString("headPortraits");
             String consumerId = userObj.getString("consumerId");
             String staffId = userObj.getString("staffId");
+            String email = userObj.getString("email");
             UserMsgVo msgVo = new UserMsgVo(consumerId, userName, userPhone, "CC", "", headPortraits);
             msgVo.setStaffId(staffId);
+            msgVo.setEmial(email);
             userMsgVos.add(msgVo);
         }
+        updateEmial(userMsgVos);
         return userMsgVos;
     }
 

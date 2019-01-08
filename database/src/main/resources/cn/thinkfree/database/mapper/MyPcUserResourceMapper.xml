@@ -8,20 +8,4 @@
     where user_id = #{userId,jdbcType=VARCHAR}
   </select>
 
-  <delete id="deleteByUserId" parameterType="java.lang.String">
-    delete from pc_user_resource
-    where user_id = #{userId,jdbcType=VARCHAR}
-  </delete>
-
-
-  <insert id ="insertBatch" parameterType="java.util.List" >
-    insert into pc_user_resource
-    (user_id, resource_id)
-    values
-    <foreach collection ="list" item="item" index= "index" separator =",">
-      (
-      #{item.userId}, #{item.resourceId}
-      )
-    </foreach >
-  </insert >
 </mapper>

@@ -7,6 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>设计家平台入驻协议</title>
     <style>
+
         body {
             font-family: SimSun;
         }
@@ -47,7 +48,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 60px !important;
+            min-width: 50px !important;
             text-align: center;
             text-indent: 0;
         }
@@ -244,12 +245,15 @@
 <section class="indent">
     <div class="indent">1.1甲方根据《设计合同》收到客户支付的相应设计费后，分两次与乙方结算：</div>
      <#list code01 as c>
-        <div class="indent">  1.1.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+        <div class="indent">  1.1.${c_index+1} ${(c.costName?split("@")[0])}
+          <#if c.costValue !='' >
+            <div class="textput smalltextput">${c.costValue}</div>
              <#if c.cType == 1 >
                     元
              <#else>
             %
              </#if>
+          </#if>
             ${(c.costName?split("@")[1]) }。</div>
      </#list>
     <#--<div class="indent">1.1.1所有设计阶段完成后，平台与乙方结算设计费总额的 <div class="textput smalltextput">70</div> %。</div>
@@ -266,11 +270,14 @@
     <#--<div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>--><#--<div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>-->
     <div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的百分比作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准）。甲方分两次与乙方结算材料推荐服务费</div>
     <#list code09 as c>
-              <div class="indent"> 3.1.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+              <div class="indent"> 3.1.${c_index+1} ${(c.costName?split("@")[0])}
+        <#if c.costValue !='' >
+            <div class="textput smalltextput">${c.costValue}</div>
         <#if c.cType == 1 >
                     元
         <#else>
             %
+        </#if>
         </#if>
              ${(c.costName?split("@")[1]) }。</div>
     </#list>
@@ -284,13 +291,16 @@
         4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c12}</div>%作为施工服务费。
     </div>
     <#list code10 as c>
-                <div class="indent">  4.1.${c_index+1} ${(c.costName?split("@")[0])} <div class="textput smalltextput">${c.costValue}</div>
+                <div class="indent">  4.1.${c_index+1} ${(c.costName?split("@")[0])}
+        <#if c.costValue !='' >
+               <div class="textput smalltextput">${c.costValue}</div>
                 <#if c.cType == 1 >
                             元
                 <#else>
                     %
                 </#if>
-                 ${(c.costName?split("@")[1]) }。</div>
+        </#if>
+              ${(c.costName?split("@")[1]) }。</div>
     </#list>
  <#--
     <div class="indent">
@@ -300,14 +310,17 @@
         4.1.2施工竣工验收结束后，甲方向乙方支付施工服务费总额<div class="textput smalltextput"></div>%的尾款。
     </div>-->
     <div class="indent">
-        4.1.6施工过程中发生合同解约，如因设计师设计原因造成，则设计师的全部施工服务费不予支付；如非由设计师造成，则施工服务费按实际发生费用支付。
+        4.1.6 施工过程中发生合同解约，如因设计师设计原因造成，则设计师的全部施工服务费不予支付；如非由设计师造成，则施工服务费按实际发生费用支付。
     </div>
 </section>
 <section class="indent">
-    5.甲方支付乙方设计服务费、材料推荐服务费、施工服务费时，乙方应根据法律为甲方开具税率为 6% 的增值税专用发票。如乙方无法提供定额税点发票，则甲方有权扣除税点差额部分作为对甲方税点损失的补偿。个人设计师依据《中华人民共和国个人所得税法(2018年修正本)》由甲方代扣代缴个人所得税，返款剩余部分按协议约定进行返还。
+    5.甲方客户与乙方在平台签订《设计合同》时，甲方客户可按照每消费1元积1 分的比例获取积分，甲方客户在平台获取的积分可在居然之家积分商城兑换商品，也可按照200分兑换1元的比例兑换成专用电子券，凭会员卡到指定业态消费使用。甲方将于每次向乙方结算时同步扣除积分产生的会员积分费。甲方客户在平台退款时按退款金额扣除积分，并以平台退款记录为准退还会员积分费。
+</section>
+    <section class="indent">
+    6.甲方支付乙方设计服务费、材料推荐服务费、施工服务费时，乙方应根据法律为甲方开具税率为 6% 的增值税专用发票。如乙方无法提供定额税点发票，则甲方有权扣除税点差额部分作为对甲方税点损失的补偿。个人设计师依据《中华人民共和国个人所得税法(2018年修正本)》由甲方代扣代缴个人所得税，返款剩余部分按协议约定进行返还。
 </section>
 <section class="indent">
-    6.上述所有付款，甲乙双方于<div class="textput smalltextput">${c13}</div>之间结算上月度款项。
+    7.上述所有付款，甲乙双方于<div class="textput smalltextput">${c13}</div>之间结算上月度款项。
 </section>
 <h4>六、违约责任</h4>
 <section class="indent">
@@ -364,23 +377,48 @@
     <div class="textput smalltextput">${signedTime?string('MM')}</div>月
     <div class="textput smalltextput">${signedTime?string('dd')}</div>日。
 </section>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 
-<div class="footer">
-    <h4 style="display:inline-block">甲方（盖章）：</h4>
-    <h4 style="margin-left: 28%;display:inline-block">乙方（盖章）：</h4>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >甲方（盖章）：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;">乙方（盖章）：</h4>
 </div>
-<div class="footer">
-    <h4 style="display:inline-block">签约代理人（签字）：</h4>
-    <h4 style="margin-left: 25.5%;display:inline-block">签约代理人（签字）：</h4>
+<div class="footer" >
+    <h4  style="float:left;display:inline-block;width:50%;">签约代理人（签字）：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >签约代理人（签字）：</h4>
 </div>
-<div class="footer">
-    <h4 style="display:inline-block">联系电话：</h4>
-    <h4 style="margin-left: 30%;display:inline-block">联系电话：</h4>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
 </div>
-<div class="footer">
-    <h4  style="display:inline-block">日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
-    <h4 style="margin-left: 25.5%;display:inline-block">日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+<div class="footer" >
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
+    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div>
 <p>附件1:</p>
 <div class="text-algin">居然设计家设计行业公约</div>
 <div class="text-algin">
@@ -391,6 +429,7 @@
     <p>恪守诚信 以诚信服务为宗旨，严格履行合同，保障客户正当权益</p>
     <p>合理收益 以实现合理收益为方向，杜绝设计施工中的不正当收益；</p>
     <p>提升自我 以自身素质提高为目标，注重学习积累，不断提高自我。</p>
+</div>
 </div>
 </body>
 

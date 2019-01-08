@@ -17,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
+/**
+ * 施工工具时代的产物
+ * 如果无人使用在二月份将进行移除
+ */
 @RestController
 @RequestMapping("/index")
+@Deprecated
 public class IndexController extends AbsBaseController {
 
     @Autowired

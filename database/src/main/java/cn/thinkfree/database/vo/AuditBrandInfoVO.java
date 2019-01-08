@@ -1,14 +1,22 @@
 package cn.thinkfree.database.vo;
 
 import cn.thinkfree.database.model.DealerBrandInfo;
+import cn.thinkfree.database.model.DealerCategory;
 import cn.thinkfree.database.model.PcAuditInfo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
+import java.util.List;
 
 @ApiModel(value = "品牌和审批信息")
-public class AuditBrandInfoVO extends DealerBrandInfo{
+public class AuditBrandInfoVO extends DealerBrandInfo {
+
+    @ApiModelProperty(value="品类名称")
+    private String categoryName;
+
+    @ApiModelProperty(value="品类编码")
+    private String categoryNo;
 
     @ApiModelProperty(value="auditType审核类型0入驻 1合同 2变更 3续签4结算比例 5结算规则6:创建账号(录入）7经销商合同 8：经销商品牌审核")
     private String auditType;
@@ -21,7 +29,6 @@ public class AuditBrandInfoVO extends DealerBrandInfo{
 
     @ApiModelProperty(value="atStatus 审批表里的审批类型 0不通过1通过")
     private String atStatus;
-
     @ApiModelProperty(value="auditTime审核时间")
     private Date auditTime;
 
@@ -33,6 +40,22 @@ public class AuditBrandInfoVO extends DealerBrandInfo{
 
     @ApiModelProperty(value="公司名称")
     private String companyName;
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getCategoryNo() {
+        return categoryNo;
+    }
+
+    public void setCategoryNo(String categoryNo) {
+        this.categoryNo = categoryNo;
+    }
 
     public String getAuditType() {
         return auditType;
@@ -97,4 +120,5 @@ public class AuditBrandInfoVO extends DealerBrandInfo{
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
+
 }

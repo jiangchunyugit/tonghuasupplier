@@ -133,7 +133,7 @@ import java.util.stream.Collectors;
 	/**
 	 * 资源主键
 	 */
-	public class ResourceKey{
+	public static class ResourceKey{
 
 	 	String url;
 	 	String method;

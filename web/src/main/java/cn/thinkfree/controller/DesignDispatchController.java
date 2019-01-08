@@ -157,7 +157,7 @@ public class DesignDispatchController extends AbsBaseController {
     @RequestMapping(value = "allStates", method = {RequestMethod.POST, RequestMethod.GET})
     public MyRespBundle<List<Map<String, String>>> queryAllOrderStates(
             @ApiParam(name = "type", required = false, value = "参数：1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "type", required = false) int type) {
-        return sendJsonData(ResultMessage.SUCCESS, DesignStateEnum.allStates(type));
+        return sendJsonData(ResultMessage.SUCCESS, DesignStateEnum.getSelectStates(type));
     }
 
     @ApiOperation("设计订单不派单---->王玲组")

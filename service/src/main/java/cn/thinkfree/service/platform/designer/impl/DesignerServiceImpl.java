@@ -314,7 +314,26 @@ public class DesignerServiceImpl implements DesignerService {
         List<String> styleCodes = ReflectUtils.getList(styleConfigs, "styleCode");
         designerMsgVo.setDesignerStyles(styles);
         designerMsgVo.setDesignerStyleCodes(styleCodes);
+        designerMsgVo.setAddress(getAddress(employeeMsg));
+        designerMsgVo.setEmployeeState(employeeMsg.getEmployeeState());
         return designerMsgVo;
+    }
+
+    private String getAddress(EmployeeMsg employeeMsg){
+        StringBuffer stringBuffer = new StringBuffer();
+        if(employeeMsg.getProvince() != null){
+            stringBuffer.append(basicsService.getProvince(employeeMsg.getProvince()).get(employeeMsg.getProvince())).append(",");
+        }
+        if(employeeMsg.getCity() != null){
+            stringBuffer.append(basicsService.getCity(employeeMsg.getCity()).get(employeeMsg.getCity())).append(",");
+        }
+        if(employeeMsg.getArea() != null){
+            stringBuffer.append(basicsService.getArea(employeeMsg.getArea()).get(employeeMsg.getArea())).append(",");
+        }
+        if(stringBuffer.length() >= 1){
+            stringBuffer.deleteCharAt(stringBuffer.length() - 1);
+        }
+        return stringBuffer.toString();
     }
 
     private DesignerMsg getDesignerMsg(String userId) {

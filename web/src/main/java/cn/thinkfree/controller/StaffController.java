@@ -21,10 +21,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 
 
-
+/**
+ * 施工工具时代的产物
+ * 如果无人使用在二月份将进行移除
+ */
 @RequestMapping("/staff")
 @RestController
 @Api(value = "员工管理",description = "员工管理")
+@Deprecated
 public class StaffController extends AbsBaseController{
 
     @Autowired

@@ -2129,12 +2129,18 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             throw new RuntimeException("必须是否同意");
         }
         DesignStateEnum stateEnum = DesignStateEnum.STATE_222;
-        if(type == 2){
-            stateEnum = DesignStateEnum.STATE_70;
-        } else if (contractType == 2) {
-            stateEnum = DesignStateEnum.STATE_142;
-        } else {
-            stateEnum = DesignStateEnum.STATE_222;
+        //业主不同意
+        if(type == 2 && contractType == 2){
+            stateEnum = DesignStateEnum.STATE_140;
+        } else if (type == 2 && contractType == 1){
+            stateEnum = DesignStateEnum.STATE_220;
+        }else {
+            //业主同意
+            if (type == 1 && contractType == 2) {
+                stateEnum = DesignStateEnum.STATE_142;
+            } else {
+                stateEnum = DesignStateEnum.STATE_222;
+            }
         }
         DesignerOrder designerOrder = queryDesignerOrderByOrderNo(orderNo);
         Project project = queryProjectByNo(designerOrder.getProjectNo());

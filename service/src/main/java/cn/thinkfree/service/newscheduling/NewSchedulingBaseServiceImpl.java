@@ -58,7 +58,14 @@ public class NewSchedulingBaseServiceImpl implements NewSchedulingBaseService {
         if (voList == null) {
             System.out.println("工具类转换失败!!");
         }
-        return new PageInfo<>(voList);
+        PageInfo<ProjectSmallSchedulingVO> pageInfo = new PageInfo<>(voList);
+        ProjectSmallSchedulingExample projectSmallSchedulingExample1 = new ProjectSmallSchedulingExample();
+        projectSmallSchedulingExample1.setOrderByClause("create_time");
+        ProjectSmallSchedulingExample.Criteria criteria1 = projectSmallSchedulingExample1.createCriteria();
+        criteria1.andStatusEqualTo(Scheduling.BASE_STATUS.getValue());
+        long total = projectSmallSchedulingMapper.countByExample(projectSmallSchedulingExample1);
+        pageInfo.setTotal(total);
+        return pageInfo;
     }
 
     /**
