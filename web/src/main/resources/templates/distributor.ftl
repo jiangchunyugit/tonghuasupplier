@@ -29,8 +29,10 @@
             font-size: 16px;
             display: inline-block;
         }
-        .placeholderT {
-            text-align: center;
+        .caption{
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
         }
         div.textput{
             margin-bottom: -7px;
@@ -243,8 +245,9 @@
 
 <section>
     “居然设计家”平台经销商合作协议（2019版）附件</section>
-<h2 class="placeholderT">经销商签约合作门店摊位明细</h2>
 <table border="1" cellspacing="0" width="100%" class="table text-algin">
+    <div class="caption text-algin">经销商签约合作门店摊位明细</div>
+
     <tr>
         <th>品类名称</th>
         <th>品牌名称</th>
