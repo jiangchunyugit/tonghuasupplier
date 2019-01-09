@@ -112,19 +112,17 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 			String auditPersion = userVO == null ? "" : userVO.getUsername();
 			
 			if (StringUtils.isEmpty(settlementRatioSEO.getRatioNumber())) {
-				
 				settlementRatioSEO.setCreateTime(new Date());
 				settlementRatioSEO.setUpdateTime(new Date());
 				settlementRatioSEO.setCreateUser(auditPersion);
 				// 新增未待审核
 				// 当前时间大于结束时间作废
 				if (datecompare(settlementRatioSEO.getEffectEndTime()) > 0) {
-
 					settlementRatioSEO.setStatus(SettlementStatus.AuditCAN.getCode());
 				} else {
-
 					settlementRatioSEO.setStatus(SettlementStatus.AuditWait.getCode());
 				}
+
 				// 新增未待审核
 				settlementRatioSEO.setRatioNumber(getRatioNumber());
 				try {
@@ -132,6 +130,7 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 				} catch (Exception e) {
 					printErrorMes("添加结算比例{}" + e.getMessage());
 				}
+
 			} else {
 				settlementRatioSEO.setUpdateTime(new Date());
 				settlementRatioSEO.setCreateUser(auditPersion);
@@ -149,12 +148,12 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 				return true;
 			}
 		}
-
 		return false;
 	}
 
 	@Override
 	public boolean copySettlementRatio(String ratioNumber) {
+
 		if(!StringUtils.isEmpty(ratioNumber)){
 			UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 			String auditPersion = userVO == null ? "" : userVO.getUsername();
@@ -185,10 +184,10 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		example.createCriteria().andRatioNumberEqualTo(ratioNumber);
 		List<SettlementRatioInfo>  list = settlementRatioInfoMapper.selectByExample(example);
 		SettlementRatioInfo ratio = (list!=null && list.size() > 0)?list.get(0):null;
-		if(ratio != null && !StringUtils.isEmpty(ratio.getFeeDicId())){
-			Map<String, String> paream = getCostNames();
-			ratio.setFeeDicId(paream.get(ratio.getFeeDicId()));//翻译
-		}
+//		if(ratio != null && !StringUtils.isEmpty(ratio.getFeeDicId())){
+//			Map<String, String> paream = getCostNames();
+//			ratio.setFeeDicId(paream.get(ratio.getFeeDicId()));//翻译
+//		}
 		res.setInfo(ratio);
 		//获取 审批信息
 		PcAuditInfoExample autit = new PcAuditInfoExample();
@@ -218,16 +217,9 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		map.put("03", "施工平台管理服务费");
 		map.put("04", "设计平台管理服务费");
 		map.put("05", "产品服务费");
-		map.put("06", "租金");
-		map.put("07", "物业费");
-		map.put("08", "其他收费");
 		map.put("09", "材料推荐服务费");
 		map.put("10", "施工服务费");
-		map.put("11", "先行赔付款");
-		map.put("12", "客户赔偿款");
 		map.put("13", "合同保证金");
-		map.put("14", "入驻费");
-		map.put("15", "经销商平台管理服务费");
 		return map;
 	}
 
@@ -350,6 +342,10 @@ public  class SettlementRatioServiceImpl extends AbsLogPrinter implements Settle
 		if(!StringUtils.isEmpty(ratio.getRatioStatus())){
 			//1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
 			criteria.andStatusEqualTo(ratio.getRatioStatus());
+		}
+
+		if (StringUtils.isNotBlank(ratio.getFeeNm())) {
+			criteria.andFeeDicIdEqualTo(ratio.getFeeNm());
 		}
 	}
 
