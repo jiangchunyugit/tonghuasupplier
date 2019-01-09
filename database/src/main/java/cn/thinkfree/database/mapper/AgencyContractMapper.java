@@ -84,4 +84,10 @@ public interface AgencyContractMapper {
      */
     List<AgencyContract> selectFinancialPageList(AgencySEO example);
 
+    /**
+     * 小b平台
+     * @param example
+     * @return
+     */
+    List<AgencyContract> selectBPageList(AgencySEO example);
 }
