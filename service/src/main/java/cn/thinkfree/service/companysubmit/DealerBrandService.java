@@ -73,6 +73,6 @@ public interface DealerBrandService {
      * 查询已申请品牌信息
      * @return
      */
-    List<DealerBrandInfo> applyBrandDetail(BrandDetailVO brandDetailVO);
+//    List<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO);
 
 }

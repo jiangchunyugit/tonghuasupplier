@@ -35,13 +35,13 @@ public class DealerBrandController  extends AbsBaseController {
      * @param brandDetailVO
      * @return
      */
-    @RequestMapping(value = "/applyBrandDetail", method = RequestMethod.GET)
-    @MyRespBody
-    @ApiOperation(value="前端--经销商后台--已申请品牌")
-    public MyRespBundle<DealerBrandInfo> applyBrandDetail(BrandDetailVO brandDetailVO){
-        List<DealerBrandInfo> auditBrandInfoVOS = dealerBrandService.applyBrandDetail(brandDetailVO);
-        return sendJsonData(success, "操作成功", auditBrandInfoVOS);
-    }
+//    @RequestMapping(value = "/applyBrandDetail", method = RequestMethod.GET)
+//    @MyRespBody
+//    @ApiOperation(value="前端--经销商后台--已申请品牌")
+//    public MyRespBundle<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO){
+//        List<AuditBrandInfoVO> auditBrandInfoVOS = dealerBrandService.applyBrandDetail(brandDetailVO);
+//        return sendJsonData(success, "操作成功", auditBrandInfoVOS);
+//    }
 
     /**
      * 品牌添加
@@ -64,7 +64,7 @@ public class DealerBrandController  extends AbsBaseController {
     @RequestMapping(value = "/showBrandDetail", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--经销商后台--品牌审核--回显接口2")
-    public MyRespBundle<List<AuditBrandInfoVO>> showBrandDetail(BrandDetailVO brandDetailVO){
+    public MyRespBundle<AuditBrandInfoVO> showBrandDetail(BrandDetailVO brandDetailVO){
         List<AuditBrandInfoVO> auditBrandInfoVOS = dealerBrandService.showBrandDetail(brandDetailVO);
         return sendJsonData(success, "操作成功", auditBrandInfoVOS);
     }

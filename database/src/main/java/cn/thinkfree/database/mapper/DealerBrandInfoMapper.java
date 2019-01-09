@@ -95,4 +95,11 @@ public interface DealerBrandInfoMapper {
      * @return
      */
     List<DealerBrandInfo> selectByContract(String companyId);
+
+    /**
+     * 查询已经申请品牌信息
+     * @param brandDetailVO
+     * @return
+     */
+//    List<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO);
 }

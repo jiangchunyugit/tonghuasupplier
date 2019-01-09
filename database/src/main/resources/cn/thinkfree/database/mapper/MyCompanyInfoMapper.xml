@@ -201,7 +201,8 @@
       SELECT
             <include refid="Base_Column_List_VO" />,province.province_name, city.city_name,
             branch.company_name site_province_name,
-            cityBranch.city_branch_name site_city_name, brand.brand_name, orderIndex.count brand_count
+            cityBranch.city_branch_name site_city_name, brand.brand_name,
+           (case when orderIndex.count >= 0 then orderIndex.count else -1 end) brand_count
     FROM
         company_info info
         LEFT JOIN province province ON info.province_code = province.province_code
@@ -249,7 +250,7 @@
             AND info.update_time between #{startDate} and #{endDate}
         </if>
     </where>
-    order by orderIndex.count, info.update_time
+    order by info.audit_status asc, orderIndex.count asc, info.update_time desc
 
 
 
@@ -338,7 +339,7 @@
     </foreach>
     </if>
     <if test="orderList == null">
-        order by info.update_time desc
+        order by info.audit_status asc,info.update_time desc
     </if>
     </select>
 
