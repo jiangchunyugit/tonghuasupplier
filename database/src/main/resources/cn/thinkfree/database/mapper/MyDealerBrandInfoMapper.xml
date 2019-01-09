@@ -30,7 +30,6 @@
 	brand.agency_code,
 	brand.create_time,
 	brand.update_time,
-	info.company_name,
 	brand.category_name,
 	audit.audit_type,
 	audit.audit_persion,
@@ -71,7 +70,8 @@
     </sql>
   <select id="showBrandDetail" parameterType="cn.thinkfree.database.vo.BrandDetailVO" resultMap="AuditBrandInfoVO">
     SELECT
-    <include refid="My_Base_Column_List" />
+    <include refid="My_Base_Column_List" />,
+      info.company_name
       FROM
       pc_dealer_brand_info brand
       LEFT JOIN company_info info ON brand.company_id = info.company_id

@@ -328,15 +328,11 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         return false;
     }
 
-    @Override
-    public List<DealerBrandInfo> applyBrandDetail(BrandDetailVO brandDetailVO) {
-        DealerBrandInfoExample example = new DealerBrandInfoExample();
-        example.createCriteria().andCompanyIdEqualTo(brandDetailVO.getCompanyId())
-                .andAgencyCodeEqualTo(brandDetailVO.getAgencyCode())
-                .andIsValidEqualTo(Integer.valueOf(SysConstants.YesOrNo.YES.shortVal()));
-        List<DealerBrandInfo> dealerBrandInfos = dealerBrandInfoMapper.selectByExample(example);
-        return dealerBrandInfos;
-    }
+//    @Override
+//    public List<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO) {
+//        List<AuditBrandInfoVO> dealerBrandInfos = dealerBrandInfoMapper.applyBrandDetail(brandDetailVO);
+//        return dealerBrandInfos;
+//    }
 
     private boolean updateChangeStatus(PcAuditInfoVO pcAuditInfoVO) {
         DealerBrandInfoExample example = new DealerBrandInfoExample();

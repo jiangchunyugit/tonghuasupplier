@@ -95,4 +95,20 @@ public class DictionaryControllerTest extends AbsControllerTest {
         Assert.assertNotNull(rsb.getData());
 
     }
+
+    @Test
+    public void roles() throws Exception {
+        String rs = mvc.perform(get("/dictionary/account/roles").param("scope","4")
+//                .with(user(userVO))
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+
+        Type type = new TypeToken<MyRespBundle<List<SystemRole>>>() {}.getType();
+        MyRespBundle<SystemRole> rsb = gson.fromJson(rs, type);
+        Assert.assertNotNull(rsb.getData());
+
+    }
 }
