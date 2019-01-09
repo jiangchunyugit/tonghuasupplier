@@ -91,8 +91,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Value("${custom.cloud.designLoginUrl}")
     private String designLoginUrl;
+
     @Value("${custom.cloud.decorateLoginPage}")
     private String decorateLoginPage;
+
+    @Value("${custom.cloud.dealerLoginPage}")
+    private String dealerLoginPage;
 
     /**
      * 更新公司入驻状态
@@ -409,7 +413,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             para.put("http",designLoginUrl);
         }else {
             // TODO 经销商是个神奇的东西
-            para.put("http", "");
+            para.put("http", dealerLoginPage);
         }
         RemoteResult<String> result = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
                 ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));

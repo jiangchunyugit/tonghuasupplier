@@ -328,6 +328,26 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         return false;
     }
 
+    @Override
+    public Map<String, Object> isSignChange(String companyId, String agencyCode, String brandNo) {
+        Map<String, Object> map = new HashMap<>();
+
+        DealerBrandInfoExample example = new DealerBrandInfoExample();
+        example.createCriteria().andCompanyIdEqualTo(companyId)
+                .andAgencyCodeEqualTo(agencyCode)
+                .andBrandNoEqualTo(brandNo)
+                .andAuditStatusEqualTo(BrandConstants.AuditStatus.UPDATEING.code);
+        List<DealerBrandInfo> dealerBrandInfos = dealerBrandInfoMapper.selectByExample(example);
+        if(dealerBrandInfos.size() > 0){
+            map.put("isSuccess", false);
+            map.put("msg","品牌变更中，不可变更");
+        }else{
+            map.put("isSuccess", true);
+            map.put("msg","没毛病");
+        }
+        return map;
+    }
+
 //    @Override
 //    public List<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO) {
 //        List<AuditBrandInfoVO> dealerBrandInfos = dealerBrandInfoMapper.applyBrandDetail(brandDetailVO);

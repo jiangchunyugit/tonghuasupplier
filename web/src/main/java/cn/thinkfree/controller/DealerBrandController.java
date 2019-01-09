@@ -138,7 +138,7 @@ public class DealerBrandController  extends AbsBaseController {
     @RequestMapping(value = "/showSignBrand", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--经销商后台--入驻公司签约品牌回显")
-    public MyRespBundle<List<DealerBrandInfo>> showSignBrand(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId){
+    public MyRespBundle<DealerBrandInfo> showSignBrand(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId){
         List<DealerBrandInfo> brandItemsVOS = dealerBrandService.showSignBrand(companyId);
         return sendJsonData(success, "操作成功", brandItemsVOS);
     }
@@ -155,4 +155,17 @@ public class DealerBrandController  extends AbsBaseController {
         return sendFailMessage("操作失败");
     }
 
+    /**
+     * 入驻公司签约品牌是否可以变更
+     * @return
+     */
+    @RequestMapping(value = "/isSignChange", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--经销商后台--入驻公司签约品牌是否可以变更")
+    public MyRespBundle<Map<String,Object>> isSignChange(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId
+    ,@ApiParam("经销商编号") @RequestParam(value = "agencyCode") String agencyCode
+    ,@ApiParam("品牌编号") @RequestParam(value = "brandNo") String brandNo){
+        Map<String,Object> brandItemsVOS = dealerBrandService.isSignChange(companyId, agencyCode, brandNo);
+        return sendJsonData(success, "操作成功", brandItemsVOS);
+    }
 }

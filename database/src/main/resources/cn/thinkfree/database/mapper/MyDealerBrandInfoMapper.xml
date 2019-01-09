@@ -31,6 +31,7 @@
 	brand.create_time,
 	brand.update_time,
 	brand.category_name,
+	brand.category_code,
 	audit.audit_type,
 	audit.audit_persion,
 	audit.audit_status at_status,
@@ -43,6 +44,7 @@
     brand.id,
 	brand.brand_name,
 	category.category_name,
+	category.category_code,
 	brand.authorization_card_url,
 	brand.authorization_card_validity,
 	brand.is_valid,
@@ -143,7 +145,7 @@
       <include refid="Sign_Base_Column_List" />
       FROM
       pc_dealer_brand_info brand
-      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ', ' ) category_name FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
+      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ', ' ) category_name, string_agg ( category_no, ', ' ) category_code FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
       ON category.company_id = brand.company_id
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
