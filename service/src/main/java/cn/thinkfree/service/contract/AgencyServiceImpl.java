@@ -143,6 +143,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         return flag;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean changeContract(ParamAgencySEO paramAgencySEO) {
 
@@ -156,6 +157,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             paramAgencySEO.setCreateTime(new Date());
             // 创建PDF预览
             paramAgencySEO.setPdfUrl(contractPdf(paramAgencySEO));
+            paramAgencySEO.setId(null);
             agencyContractMapper.insertSelective(paramAgencySEO);
             this.insertAgencyContractTerm(paramAgencySEO);
             // 变更合同关联表插入
@@ -180,6 +182,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         if (paramAgencySEO.getAgencyContractTermsList() != null && paramAgencySEO.getAgencyContractTermsList().size() >0) {
 
             paramAgencySEO.getAgencyContractTermsList().forEach(e ->{
+                e.setId(null);
                 e.setContractNumber(paramAgencySEO.getContractNumber());
                 agencyContractTermsMapper.insertSelective(e);
             });
