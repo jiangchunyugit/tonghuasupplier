@@ -157,7 +157,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             // 创建PDF预览
             paramAgencySEO.setPdfUrl(contractPdf(paramAgencySEO));
             agencyContractMapper.insertSelective(paramAgencySEO);
-
+            this.insertAgencyContractTerm(paramAgencySEO);
             // 变更合同关联表插入
             AgencyContractChange agencyContractChange = new AgencyContractChange();
             agencyContractChange.setChangeAfterCode(paramAgencySEO.getContractNumber());
