@@ -85,6 +85,14 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
     }
 
     @Override
+    public PageInfo<AgencyContract> selectBPageList(AgencySEO gencySEO) {
+
+        PageHelper.startPage( gencySEO.getPage(), gencySEO.getRows() );
+        List<AgencyContract> list = agencyContractMapper.selectBPageList(gencySEO);
+        return  (new PageInfo<>( list ) );
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean insertContract(ParamAgencySEO paramAgencySEO) {
         Long debugFlag = System.currentTimeMillis();
