@@ -262,8 +262,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         Date date = new Date();
-        if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
-            return map;
+        //经销商不需要公司名称校验
+        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
+                return map;
+            }
         }
 
         String password = AccountHelper.createUserPassWord();
