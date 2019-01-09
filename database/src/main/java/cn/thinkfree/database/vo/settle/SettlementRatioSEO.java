@@ -36,6 +36,17 @@ public class SettlementRatioSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("审核状态 1 待审核 2审核通过 3审核不通过")
     private String auditStatus;
 
+	@ApiModelProperty("费用名称")
+	private String feeNm;
+
+	public String getFeeNm() {
+		return feeNm;
+	}
+
+	public void setFeeNm(String feeNm) {
+		this.feeNm = feeNm;
+	}
+
 	public String getRatioNumber() {
 		return ratioNumber;
 	}

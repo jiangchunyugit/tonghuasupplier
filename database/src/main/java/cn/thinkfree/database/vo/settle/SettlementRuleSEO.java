@@ -33,6 +33,17 @@ public class SettlementRuleSEO extends AbsPageSearchCriteria  {
     @ApiModelProperty("结束时间")
     private Date endTime;
 
+    @ApiModelProperty("费用名称")
+    private String feeNm;
+
+    public String getFeeNm() {
+        return feeNm;
+    }
+
+    public void setFeeNm(String feeNm) {
+        this.feeNm = feeNm;
+    }
+
     public String getRuleNumber() {
         return ruleNumber;
     }
