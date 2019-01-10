@@ -102,7 +102,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                 if(StringUtils.isEmpty(paramAgencySEO.getContractNumber())){
                     printErrorMes("新增合同:{},处理合同编号",debugFlag);
                     //生成合同编号
-                    String contractNumber =  this.getOrderContract(paramAgencySEO.getDealerCompanyId(), paramAgencySEO.getBrandNo());
+                    String contractNumber =  this.getOrderContract(paramAgencySEO.getBrandNo(),paramAgencySEO.getDealerCompanyId());
                     // 校验经销商合同编号
                     AgencyContractExample agencyContractExample = new AgencyContractExample();
                     agencyContractExample.createCriteria().andContractNumberEqualTo(contractNumber);
@@ -151,7 +151,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
 
             // 合同信息变更插入
             String oldContractNumber = paramAgencySEO.getContractNumber();
-            String contractNumber =  this.getOrderContract(paramAgencySEO.getDealerCompanyId(), paramAgencySEO.getBrandNo());
+            String contractNumber =  this.getOrderContract(paramAgencySEO.getBrandNo(),paramAgencySEO.getDealerCompanyId());
             paramAgencySEO.setContractNumber(contractNumber);
             paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
             paramAgencySEO.setCreateTime(new Date());
