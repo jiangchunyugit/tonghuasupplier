@@ -48,11 +48,11 @@ public class DealerBrandServiceImpl implements DealerBrandService{
             return map;
         }
         boolean brandflag = getBrandList(dealerBrandInfo);
-//        if(brandflag){
-//             map.put("isSuccess", false);
-//             map.put("msg", "此品牌审核已通过，请重新选择品牌");
-//             return map;
-//        }
+        if(brandflag){
+             map.put("isSuccess", false);
+             map.put("msg", "此品牌品类审核已通过，请重新选择品牌品类");
+             return map;
+        }
         //品牌添加
         boolean flag = saveBrandInfo(dealerBrandInfo, SysConstants.YesOrNo.YES.shortVal(), BrandConstants.AuditStatus.AUDITING.code);
         //品类添加
