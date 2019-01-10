@@ -149,8 +149,8 @@
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
       WHERE
-      brand.is_valid = 1
-      AND brand.audit_status = 2
+      brand.id in (select max(id) from pc_dealer_brand_info where is_valid = 1
+      AND audit_status = 2 group by company_id, brand_no)
       <if test="_parameter!= null and _parameter!= ''">
       and category.company_id  = #{companyId}
     </if>
