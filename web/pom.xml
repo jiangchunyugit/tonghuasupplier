@@ -27,11 +27,6 @@
                     <groupId>org.apache.poi</groupId>
                 </exclusion>
 
-                <exclusion>
-                    <artifactId>itextpdf</artifactId>
-                    <groupId>com.itextpdf</groupId>
-                </exclusion>
-
             </exclusions>
         </dependency>
         <dependency>

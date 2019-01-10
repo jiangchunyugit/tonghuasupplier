@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>居然设计家室内装饰设计合同（业务向）</title>
     <style>
@@ -36,6 +36,7 @@
             line-height: 20px;
             border-bottom: 1px solid #000;
             text-align: center;
+            text-indent: 0;
         }
 
         .placeholderK {
@@ -46,6 +47,7 @@
             line-height: 20px;
             border-bottom: 1px solid #000;
             text-align: center;
+            text-indent: 0;
         }
 
         .indent {
@@ -74,6 +76,10 @@
             float: left;
             margin-right: 20%;
         }
+        .smalltextput{
+           display: inline-block;
+            min-width: 50px;
+        }
     </style>
 </head>
 
@@ -81,108 +87,114 @@
 <h1 class="text-algin">“居然设计家”室内装饰设计合同</h1>
 <div>
     <h4 class="inline-block">甲方：(委托方) </h4>
-    <p class="placeholder">${c01}</p>
+    <p class="placeholder">&nbsp;${c01}</p>
 </div>
 <div>
     <h4 class="inline-block">乙方：(设计方) </h4>
-    <p class="placeholder">${c02}</p>
+    <p class="placeholder">&nbsp;${c02}</p>
 </div>
 <section class='indent'>
     根据《中华人民共和国合同法》，以及其他有关法律、法规规定的原则，结合室内装饰装修的特点，经甲、乙双方友好协商，现就甲方通过“居然设计家”平台（以下简称平台）委托乙方承担室内装饰设计（不含建筑设计、机电设计、园林设计）事宜达成如下协议。
 </section>
 <h4>第一条 设计项目概括</h4>
-<div class="content">
-    <table>
-        <tr>
-            <td><h4 class="inline-block">甲方姓名：</h4>
-                <span class="placeholdanerT">${c03}</sp>
-            </td>
-            <td>
-                <h4 class="inline-block">甲方电话：</h4>
-                <span class="placeholdanerT">${c04}</sp>
-            </td>
-        </tr>
-        <tr>
-            <td style="margin-right: 18%;"><h4 class="inline-block">设计师姓名：</h4>
-                <span class="placeholdanerT">${c05}</sp>
-            </td>
-            <td>
-                <h4 class="inline-block">设计师电话：</h4>
-                <span class="placeholdanerT">${c06}</sp>
-            </td>
-        </tr>
-        <tr>
-            <td><h4 class="inline-block">项目名称：</h4>
-                <span class="placeholdanerT">${c07}</sp>
-            </td>
-        </tr>
-        <tr>
-            <td> <h4 class="inline-block">项目地址：</h4>
-                <span class="placeholderT">${c08}</span>省<span canlass="placeholderT">${c09}</span>市<span class="placeholderT">${c10}</span>区/县<span class="placeholderT">${c11}</span>
-            </td>
-        </tr>
-        <tr>
-            <td> <h4 class="inline-block">项目套内建筑面积：</h4>
-                <span class="placeholderT">${c12}</span>
-                <span>m²</span>
-            </td>
-        </tr>
-    </table>
+<div class="footer" style="clear:both;margin-left:0">
+    <div style="float:left;display:inline-block;width:50%;" ><h4 class="inline-block">甲方姓名：</h4><span class="placeholdanerT">&nbsp;${c03}</span></div>
+    <div style="float:left;display:inline-block;width:50%;" ><h4 class="inline-block">甲方电话：</h4><span class="placeholdanerT">&nbsp;${c04}</span></div>
 </div>
+<div class="footer" style="clear:both;margin-left:0">
+    <div style="float:left;display:inline-block;width:50%;" ><h4 class="inline-block">设计师姓名：</h4><span class="placeholdanerT">&nbsp;${c05}</span></div>
+    <div style="float:left;display:inline-block;width:50%;" ><h4 class="inline-block">设计师电话：</h4><span class="placeholdanerT">&nbsp;${c06}</span></div>
+</div>
+<div class="footer" style="clear:both;margin-left:0">
+    <div style="float:left;display:inline-block;width:100%;" ><h4 class="inline-block">项目名称：</h4><span class="placeholdanerT">&nbsp;${c07}</span></div>
+</div>
+<div class="footer" style="clear:both;margin-left:0">
+    <div style="float:left;display:inline-block;width:100%;" ><h4 class="inline-block">项目地址：</h4>
+        <span class="placeholderT">&nbsp;${c08}</span>省
+        <span class="placeholderT">&nbsp;${c09}</span>市
+        <span class="placeholderT">&nbsp;${c10}</span>区/县
+        <span class="placeholderT">&nbsp;${c11}</span>
+    </div>
+</div>
+<div class="footer" style="clear:both;margin-left:0">
+    <div style="float:left;display:inline-block;width:100%;" ><h4 class="inline-block">项目套内建筑面积：</h4>
+        <span class="placeholderT">&nbsp;${c12}</span>
+        <span>m²</span>
+    </div>
+</div>
+
 <h4>第二条 设计工作内容</h4>
+甲方委托乙方进行的设计内容包括
 <section class='indent'>
-    1. 平面规划设计: 量房后乙方设计师根据甲方提供的需求信息开始平面规划设计，包括设计理念阐述、平面布置图、概念参考图等。甲方确认后，平面规划设计完成；
+    1. 规划设计: 量房后乙方设计师根据甲方提供的需求信息开始平面规划设计，包括设计理念阐述、平面布置图、概念参考图等。甲方确认后，平面规划设计完成；
 </section>
 <section class='indent'>
     2. 3D方案设计：平面规划设计确定后，乙方开始3D方案设计，乙方应提供给甲方由居然设计家3D云设计软件制作的
-    <p class="placeholderT">${c13}</p>张效果图和<p class="placeholderT">${c14}</p>套3D全屋漫游图，充分说明设计风格；
+    <p class="placeholderK">${c13}</p>张效果图和<p class="placeholderK">${c14}</p>套3D全屋漫游图，充分说明设计风格；
 </section>
 <section class='indent'>
-   3. 施工图设计：甲方通过平台确定3D方案设计后，乙方为甲方提供施工图纸及清单报价，施工图纸包括但不限于：图纸目录、施工总设计说明、原始结构图、墙体拆除图、新建墙体定位图、平面布置图、家具布置图、天花布置图、天花灯具定位图、地面材质图、照明控制图、插座布置图、给排水点位图、立面材质分布图、立面索引图、大样图、主要材料明细表;清单报价包括但不限于：基础施工清单、主材清单、家居饰品清单、电器清单。
+    3. 施工图设计：甲方通过平台确定3D方案设计后，乙方为甲方提供施工图纸及清单报价，施工图纸包括但不限于：图纸目录、施工总设计说明、原始结构图、墙体拆除图、新建墙体定位图、平面布置图、家具布置图、天花布置图、天花灯具定位图、地面材质图、照明控制图、插座布置图、给排水点位图、立面材质分布图、立面索引图、大样图、主要材料明细表; 施工图为参考图纸，具体以甲乙双方及施工单位最终确认的图纸为准，如甲方选择平台合作施工公司进行施工并在平台交易，则甲方及合作施工公司有权对施工图纸进行审核并要求乙方对施工图纸按标准调整，由于设计而导致的施工问题由甲乙双方及施工单位协商承担处理，平台承担相应连带责任，如甲方未选择平台指定的合作施工公司进行施工，则平台不承担任何相关责任。
 </section>
 <section class='indent'>
-    4. 陈设设计：平面规划方案确定后，乙方为甲方项目确定陈设设计的基本概念和总体方向，效果方案确定后，乙方为甲方出具色彩搭配、家具配置、窗帘布艺、陈设品配置方案以及详细的产品采购推荐清单（所涉价格均为当期市场参考价格，以实际成交价为准）。
+    4. 清单报价：乙方提供的清单报价包括但不限于：基础施工清单、主材清单、家居饰品清单、电器清单等。清单报价为参考报价，具体商品及报价金额以设计师材料推荐清单对应居然线上线下销售渠道的实际金额为准，所购买材料在运输、安装、使用中出现的相关问题由相应品牌商家负责。
 </section>
 <h4>第三条 设计费款项支付方式</h4>
 <table>
 
     <tr>
         <td>
-            <h4 class="inline-block">本项目设计费总额：<span class="placeholderk">${c16}</span>
+            <h4 class="inline-block">本项目设计费总额：<span class="placeholderK">&nbsp;${c16}</span>
                 元</h4>
         </td>
     </tr>
     <tr>
         <td>
             <h4 class="inline-block">人民币大写：</h4>
-            <span class="placeholderK"></span>
             <span>佰</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>拾</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>万</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>仟</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>佰</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>拾</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>圆</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
             <span>角</span>
-            <span>分。</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <span>分</span>
+            <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </td>
     </tr>
 </table>
 
 <section class='indent'>
-    预计设计周期为：<p class="placeholderT">${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）
+    预计设计周期为：<p class="placeholderT">&nbsp;${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）
 </section>
 <section class='indent'>
     1. 采取以下方式付款：
 </section>
  <#if c18 ==0>
 <section class='indent'>
-    一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">${c19}</p>元。
+    <input type="checkbox" checked="checked">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;${c19}</p>元。
 </section>
+ <section class='indent'>
+     <input type="checkbox" >分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款，
+     即在签订本合同并确认平面方案设计后，支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费首期款，即<p class="placeholderK">&nbsp;</p>元；
+     甲方确认3D方案设计后支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费中期款，即<p class="placeholderK">&nbsp;</p>元；
+     甲方确认施工图设计后支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费尾期款，即<p class="placeholderK">&nbsp;</p>元。
+ </section>
  </#if>
  <#if c18 ==1>
+ <section class='indent'>
+     <input type="checkbox" >一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;</p>元。
+ </section>
 <section class='indent'>
-    分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
+    <input type="checkbox" checked="checked">分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
  <#list c100 as c>
  <#if c.sortNumber ==1>
     ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费首期款，即 <p class="placeholderK">${c.costValue}</p>元；
@@ -192,9 +204,9 @@
  </#if> 
   <#if c.sortNumber ==3>
  ${c.name} ，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费尾期款，即 <p class="placeholderK">${c.costValue}</p>元。
-  </#if> 
-</section>
+  </#if>
  </#list>
+</section>
  </#if>
 <section class='indent'>
     备注：设计合同不超过5万元一次性全额付款。
