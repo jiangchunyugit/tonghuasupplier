@@ -126,7 +126,7 @@
 <h4>第二条 设计工作内容</h4>
 甲方委托乙方进行的设计内容包括
 <section class='indent'>
-    1. 规划设计: 量房后乙方设计师根据甲方提供的需求信息开始平面规划设计，包括设计理念阐述、平面布置图、概念参考图等。甲方确认后，平面规划设计完成；
+    1. 规划设计: 量房后乙方设计师根据甲方提供的需求信息开始平面规划设计，包括设计理念阐述、平面布置图、概念参考图等，甲方确认后，平面规划设计完成。
 </section>
 <section class='indent'>
     2. 3D方案设计：平面规划设计确定后，乙方开始3D方案设计，乙方应提供给甲方由居然设计家3D云设计软件制作的
@@ -170,20 +170,22 @@
             <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </td>
     </tr>
+    <tr>
+        <td>
+            <h4 class="inline-block">预计设计周期为：<p class="placeholderT">&nbsp;${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）</h4>
+        </td>
+    </tr>
 </table>
 
-<section class='indent'>
-    预计设计周期为：<p class="placeholderT">&nbsp;${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）
-</section>
 <section class='indent'>
     1. 采取以下方式付款：
 </section>
  <#if c18 ==0>
 <section class='indent'>
-    <input type="checkbox" checked="checked">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;${c19}</p>元。
+    <input type="checkbox" checked="checked" style="margin-top: 5px;">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;${c19}</p>元。
 </section>
  <section class='indent'>
-     <input type="checkbox" >分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款，
+     <input type="checkbox" style="margin-top: 5px;" >分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款，
      即在签订本合同并确认平面方案设计后，支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费首期款，即<p class="placeholderK">&nbsp;</p>元；
      甲方确认3D方案设计后支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费中期款，即<p class="placeholderK">&nbsp;</p>元；
      甲方确认施工图设计后支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费尾期款，即<p class="placeholderK">&nbsp;</p>元。
@@ -191,10 +193,10 @@
  </#if>
  <#if c18 ==1>
  <section class='indent'>
-     <input type="checkbox" >一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;</p>元。
+     <input type="checkbox" style="margin-top: 5px;">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;</p>元。
  </section>
 <section class='indent'>
-    <input type="checkbox" checked="checked">分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
+    <input type="checkbox" checked="checked" style="margin-top: 5px;">分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
  <#list c100 as c>
  <#if c.sortNumber ==1>
     ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费首期款，即 <p class="placeholderK">${c.costValue}</p>元；
