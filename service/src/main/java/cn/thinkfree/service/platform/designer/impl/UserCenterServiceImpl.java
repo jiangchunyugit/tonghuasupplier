@@ -351,7 +351,9 @@ public class UserCenterServiceImpl implements UserCenterService {
             msgVo.setEmial(email);
             userMsgVos.add(msgVo);
         }
-        updateEmial(userMsgVos);
+        if (!userMsgVos.isEmpty()) {
+            updateEmial(userMsgVos);
+        }
         return userMsgVos;
     }
 
