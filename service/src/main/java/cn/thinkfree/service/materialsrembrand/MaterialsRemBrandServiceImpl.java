@@ -86,11 +86,11 @@ public class MaterialsRemBrandServiceImpl implements MaterialsRemBrandService {
         if (list.size() > 0) {
             DealerBrandInfo dealerBrandInfo = list.get(0);
             dealerBrandInfoExample.clear();
-            dealerBrandInfoExample.createCriteria().andCompanyIdEqualTo(dealerBrandInfo.getCompanyId())
+            dealerBrandInfoExample.createCriteria().andCompanyIdEqualTo(dealerBrandInfo.getCompanyId()).andBrandNoEqualTo(dealerBrandInfo.getBrandNo())
                     .andAuditStatusEqualTo(BrandConstants.AuditStatus.AUDITSUCCESS.code);
             List<DealerBrandInfo> list1 = dealerBrandInfoMapper.selectByExample(dealerBrandInfoExample);
             DealerCategoryExample dealerCategoryExample = new DealerCategoryExample();
-            dealerCategoryExample.createCriteria().andIdIn(list1.stream().map(DealerBrandInfo::getId).collect(Collectors.toList()));
+            dealerCategoryExample.createCriteria().andBrandIdIn(list1.stream().map(DealerBrandInfo::getId).collect(Collectors.toList()));
             return dealerCategoryMapper.selectByExample(dealerCategoryExample);
         }
         return Collections.emptyList();
