@@ -48,11 +48,11 @@ public class DealerBrandServiceImpl implements DealerBrandService{
             return map;
         }
         boolean brandflag = getBrandList(dealerBrandInfo);
-        if(brandflag){
-             map.put("isSuccess", false);
-             map.put("msg", "此品牌审核已通过，请重新选择品牌");
-             return map;
-        }
+//        if(brandflag){
+//             map.put("isSuccess", false);
+//             map.put("msg", "此品牌审核已通过，请重新选择品牌");
+//             return map;
+//        }
         //品牌添加
         boolean flag = saveBrandInfo(dealerBrandInfo, SysConstants.YesOrNo.YES.shortVal(), BrandConstants.AuditStatus.AUDITING.code);
         //品类添加
@@ -377,8 +377,10 @@ public class DealerBrandServiceImpl implements DealerBrandService{
     public boolean getBrandList(DealerBrandInfo dealerBrandInfo){
         DealerBrandInfoExample example = new DealerBrandInfoExample();
         List<Integer> list = new ArrayList<>();
-        list.add(BrandConstants.AuditStatus.AUDITSUCCESS.code);
+        list.add(BrandConstants.AuditStatus.UPDATE_FAIL.code);
         list.add(BrandConstants.AuditStatus.DISCARD.code);
+
+//        list.add(BrandConstants.AuditStatus.DISCARD.code);
         example.createCriteria()
                 .andIsValidEqualTo(Integer.parseInt(SysConstants.YesOrNo.YES.val.toString()))
                 .andCompanyIdEqualTo(dealerBrandInfo.getCompanyId())
@@ -386,11 +388,18 @@ public class DealerBrandServiceImpl implements DealerBrandService{
                 .andBrandNoEqualTo(dealerBrandInfo.getBrandNo())
                 .andAuditStatusNotIn(list);
         List<DealerBrandInfo> dealerBrandInfos =  dealerBrandInfoMapper.selectByExample(example);
-        if(dealerBrandInfos.size() == 1){
-            return true;
-        }else {
-            return false;
+        String[] str = dealerBrandInfo.getCategoryCode().split(",");
+        for(DealerBrandInfo dealerBrandInfo1 : dealerBrandInfos){
+            for(int i = 0; i < str.length; i++){
+                if(dealerBrandInfo1.getCategoryCode().contains(str[i])){
+                    return true;
+                }else{
+                    return false;
+                }
+            }
         }
+        return false;
+
     }
 
     public boolean updateBrandStatus(Integer status, String id){
