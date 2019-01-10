@@ -11,7 +11,6 @@ import java.util.List;
 
 @ApiModel(value = "品牌和审批信息")
 public class AuditBrandInfoVO extends DealerBrandInfo {
-
     @ApiModelProperty(value="auditType审核类型0入驻 1合同 2变更 3续签4结算比例 5结算规则6:创建账号(录入）7经销商合同 8：经销商品牌审核")
     private String auditType;
 
