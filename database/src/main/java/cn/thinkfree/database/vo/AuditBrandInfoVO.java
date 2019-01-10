@@ -12,12 +12,6 @@ import java.util.List;
 @ApiModel(value = "品牌和审批信息")
 public class AuditBrandInfoVO extends DealerBrandInfo {
 
-    @ApiModelProperty(value="品类名称")
-    private String categoryName;
-
-    @ApiModelProperty(value="品类编码")
-    private String categoryNo;
-
     @ApiModelProperty(value="auditType审核类型0入驻 1合同 2变更 3续签4结算比例 5结算规则6:创建账号(录入）7经销商合同 8：经销商品牌审核")
     private String auditType;
 
@@ -40,22 +34,6 @@ public class AuditBrandInfoVO extends DealerBrandInfo {
 
     @ApiModelProperty(value="公司名称")
     private String companyName;
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getCategoryNo() {
-        return categoryNo;
-    }
-
-    public void setCategoryNo(String categoryNo) {
-        this.categoryNo = categoryNo;
-    }
 
     public String getAuditType() {
         return auditType;
