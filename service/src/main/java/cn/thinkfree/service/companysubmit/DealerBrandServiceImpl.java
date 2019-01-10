@@ -393,8 +393,6 @@ public class DealerBrandServiceImpl implements DealerBrandService{
             for(int i = 0; i < str.length; i++){
                 if(dealerBrandInfo1.getCategoryCode().contains(str[i])){
                     return true;
-                }else{
-                    return false;
                 }
             }
         }
