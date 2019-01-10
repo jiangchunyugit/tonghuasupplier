@@ -117,7 +117,7 @@
           </if>
           
            <if test="starTime != null and starTime !='' ">
-            and  c.star_time > = #{starTime}
+            and  c.start_time >= #{starTime}
           </if>
           
            <if test="endTime != null and endTime !='' ">
