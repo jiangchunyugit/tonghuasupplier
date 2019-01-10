@@ -145,10 +145,7 @@
     </div>
     <#else>
     <div class="indent">
-        开户行： <input name="secondParty" class="textput defaultwidth" type="text" value="居然金融">
-    </div>
-    <div class="indent">
-        账号：  <input name="secondParty" class="textput defaultwidth" type="text" value="${c07}">
+        居然金融账号：  <input name="secondParty" class="textput defaultwidth" type="text" value="${c07}">
     </div>
     </#if>
 </section>
@@ -426,7 +423,7 @@
     <p>助推行业 以推动行业发展为己任，提升公众对设计的认识和理解；</p>
     <p>保护生态 以绿色环保为原则，杜绝设计施工中私搭乱建和环境污染；</p>
     <p>珍视操守 以设计师职业道德为基准，避免恶性竞争和不公平交易；</p>
-    <p>恪守诚信 以诚信服务为宗旨，严格履行合同，保障客户正当权益</p>
+    <p>恪守诚信 以诚信服务为宗旨，严格履行合同，保障客户正当权益；</p>
     <p>合理收益 以实现合理收益为方向，杜绝设计施工中的不正当收益；</p>
     <p>提升自我 以自身素质提高为目标，注重学习积累，不断提高自我。</p>
 </div>
