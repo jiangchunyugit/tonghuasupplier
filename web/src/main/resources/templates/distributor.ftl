@@ -94,6 +94,9 @@
 </head>
 
 <body>
+<section class="indent">
+    合同编号：${contractNumber}
+</section>
 <h1 class="text-algin">“居然设计家”平台经销商合作协议（2019版）</h1>
 <div>
     <h4 class="inline-block">甲方：</h4>
@@ -152,11 +155,11 @@
     5．须按照合同约定将材料推荐服务费转付给相应的设计师、设计工作室等。
 </section>
 <section class="indent">
-    6．须将客户订单及相关信息通过软件推送至乙方线下门店及经销商后台。
+    6．须将客户订单及相关信息通过软件推送至乙方居然设计家企业版管理后台。
 </section>
 <h4>四、乙方义务</h4>
 <section class="indent">
-    1．须协调工厂将所有在售商品的模型及时上传到甲方平台，并关联到阿里“零珑”平台。
+    1．须协调工厂将所有在售商品的3D模型及时上传到阿里鸿雀后台及甲方平台，并关联到阿里零珑中台。
 </section>
 <section class="indent">
     2．须确保线下店面设计师使用甲方软件，并定期参加甲方的培训活动。
@@ -249,8 +252,8 @@
     <div class="caption text-algin">经销商签约合作门店摊位明细</div>
 
     <tr>
-        <th>品类名称</th>
         <th>品牌名称</th>
+        <th>品类名称</th>
         <th>公司名称</th>
         <th>商户号</th>
         <th>所在店面</th>
