@@ -201,16 +201,17 @@
       SELECT
             <include refid="Base_Column_List_VO" />,province.province_name, city.city_name,
             branch.company_name site_province_name,
-            cityBranch.city_branch_name site_city_name, brand.brand_name, orderIndex.count brand_count
+            cityBranch.city_branch_name site_city_name, brand.brand_name,
+            cast((case when orderIndex.count >= 0 then orderIndex.count else -1 end) as float) brand_count
     FROM
         company_info info
         LEFT JOIN province province ON info.province_code = province.province_code
         LEFT JOIN city city ON info.city_code = city.city_code
         left join pc_branch_company branch on info.branch_company_code = branch.branch_company_code
         left join pc_city_branch cityBranch on info.city_branch_code = cityBranch.city_branch_code
-        left join (select company_id, agency_code, count(id)
-                    from pc_dealer_brand_info where audit_status in (0, 5)
-                    group by company_id, agency_code) orderIndex on info.company_id = orderIndex.company_id
+        left join (select company_id, agency_code, sum( CASE WHEN audit_status in(0,5) THEN 1 ELSE 0 END ) AS count
+    from pc_dealer_brand_info
+    group by company_id, agency_code) orderIndex on info.company_id = orderIndex.company_id
         LEFT JOIN ( SELECT company_id, dealer_company_id, string_agg (brand_name, '、' ) brand_name FROM pc_agency_contract
     WHERE status = 8 GROUP BY company_id, dealer_company_id ) brand ON info.company_id = brand.company_id
         AND info.dealer_company_id = brand.dealer_company_id
@@ -245,8 +246,11 @@
         <if test="roleId != null and roleId != ''">
             AND info.role_id = #{roleId}
         </if>
+        <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+            AND info.update_time between #{startDate} and #{endDate}
+        </if>
     </where>
-    order by orderIndex.count, info.update_time
+    order by info.audit_status asc, brand_count desc, info.update_time desc
 
 
 
@@ -335,7 +339,7 @@
     </foreach>
     </if>
     <if test="orderList == null">
-        order by info.update_time desc
+        order by info.audit_status asc,info.update_time desc
     </if>
     </select>
 

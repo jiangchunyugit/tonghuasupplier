@@ -1,6 +1,7 @@
 package cn.thinkfree.service.materialsrembrand;
 
 import cn.thinkfree.database.model.DealerBrandInfo;
+import cn.thinkfree.database.model.DealerCategory;
 import cn.thinkfree.database.model.MaterialsRemBrand;
 import cn.thinkfree.database.model.MaterialsRemBrandSecond;
 
@@ -35,9 +36,8 @@ public interface MaterialsRemBrandService {
 
     /**
      * 查找公司品类
-     * @param companyId
-     * @param brandNo
+     * @param id
      * @return
      */
-    List<DealerBrandInfo> getDealerBrandSecondList(String companyId,String brandNo);
+    List<DealerCategory> getDealerBrandSecondList(Integer id);
 }

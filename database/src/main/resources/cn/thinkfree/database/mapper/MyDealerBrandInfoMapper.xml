@@ -10,6 +10,9 @@
     <result column="audit_case" jdbcType="VARCHAR" property="auditCase" />
     <result column="audit_account" jdbcType="VARCHAR" property="auditAccount" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
+    <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
+    <result column="category_no" jdbcType="VARCHAR" property="categoryNo" />
+
   </resultMap>
   <resultMap id="BrandItemsVO" type="cn.thinkfree.database.vo.BrandItemsVO" extends="BaseResultMap">
     <result column="audit_count" jdbcType="VARCHAR" property="auditCount" />
@@ -17,19 +20,18 @@
   </resultMap>
   <sql id="My_Base_Column_List">
     brand.id,
-    brand.brand_name,
-    brand.category_name,
-    brand.authorization_card_url,
-    brand.authorization_card_validity,
-    brand.is_valid,
-    brand.company_id,
-    brand.audit_status,
-    brand.brand_no,
-    brand.category_no,
-    brand.agency_code,
-    brand.create_time,
-    brand. update_time,
-    info.company_name,
+	brand.brand_name,
+	brand.authorization_card_url,
+	brand.authorization_card_validity,
+	brand.is_valid,
+	brand.company_id,
+	brand.audit_status,
+	brand.brand_no,
+	brand.agency_code,
+	brand.create_time,
+	brand.update_time,
+	brand.category_name,
+	brand.category_code,
 	audit.audit_type,
 	audit.audit_persion,
 	audit.audit_status at_status,
@@ -40,48 +42,77 @@
   </sql>
   <sql id="Sign_Base_Column_List">
     brand.id,
-    brand.brand_name,
-    brand.category_name,
-    brand.authorization_card_url,
-    brand.authorization_card_validity,
-    brand.is_valid,
-    brand.company_id,
-    brand.audit_status,
-    brand.brand_no,
-    brand.category_no,
-    brand.agency_code,
-    brand. create_time,
-    brand.update_time
+	brand.brand_name,
+	category.category_name,
+	category.category_code,
+	brand.authorization_card_url,
+	brand.authorization_card_validity,
+	brand.is_valid,
+	brand.company_id,
+	brand.audit_status,
+	brand.brand_no,
+	brand.agency_code,
+	brand.create_time,
+	brand.update_time
   </sql>
+
+    <sql id="MyColumnList" >
+        ${alias}.id,
+        ${alias}.brand_name,
+        ${alias}.authorization_card_url,
+        ${alias}.authorization_card_validity,
+        ${alias}.is_valid,
+        ${alias}.company_id,
+        ${alias}.brand_no,
+        ${alias}.audit_status,
+        ${alias}.agency_code,
+        ${alias}.create_time,
+        ${alias}.update_time,
+        category.category_name
+    </sql>
   <select id="showBrandDetail" parameterType="cn.thinkfree.database.vo.BrandDetailVO" resultMap="AuditBrandInfoVO">
     SELECT
-    <include refid="My_Base_Column_List" />
-    FROM
-    pc_dealer_brand_info brand
-    LEFT JOIN company_info info ON brand.company_id = info.company_id
-    AND brand.agency_code = info.dealer_company_id
-    LEFT JOIN pc_audit_info audit ON brand.company_id = audit.company_id
-    AND audit.contract_number = brand.id
-    WHERE
-    brand.is_valid = 1
-    AND info.audit_status = 8
-    <if test="companyId != null and companyId != ''">
-      and brand.company_id = #{companyId}
-    </if>
-    <if test="agencyCode != null and agencyCode != ''">
-      and brand.agency_code = #{agencyCode}
-    </if>
-    <if test="categoryNo != null and categoryNo != ''">
-      and brand.category_no = #{categoryNo}
-    </if>
-    <if test="brandNo != null and brandNo != ''">
-      and brand.brand_no = #{brandNo}
-    </if>
-    <if test="status != null and status != ''">
-      and brand.audit_status = #{status}
-    </if>
+    <include refid="My_Base_Column_List" />,
+      info.company_name
+      FROM
+      pc_dealer_brand_info brand
+      LEFT JOIN company_info info ON brand.company_id = info.company_id
+      AND brand.agency_code = info.dealer_company_id
+      LEFT JOIN ( SELECT
+      audit_type,
+      company_id,
+      audit_persion,
+      audit_status at_status,
+      audit_time,
+      audit_case,
+      audit_account,
+      contract_number,
+      audit_status,
+      audit_level
+      FROM pc_audit_info pc_audit_info
+      WHERE id IN ( SELECT max( id ) FROM pc_audit_info WHERE audit_type = 8 GROUP BY contract_number ) ) audit
+      ON brand.company_id = audit.company_id
+      AND audit.contract_number = brand.id
+      WHERE
+      brand.is_valid = 1
+      AND info.audit_status = 8
+      <if test="brandId!= null and brandId!= ''">
+          and brand.id = #{brandId}
+      </if>
+      <if test="companyId != null and companyId != ''">
+          and brand.company_id = #{companyId}
+      </if>
+      <if test="agencyCode != null and agencyCode != ''">
+          and brand.agency_code = #{agencyCode}
+      </if>
+      <if test="brandNo != null and brandNo != ''">
+          and brand.brand_no = #{brandNo}
+      </if>
+      <if test="status != null and status != ''">
+          and brand.audit_status = #{status}
+      </if>
     ORDER BY
-    audit.audit_time desc,brand.update_time DESC;
+    audit.audit_time desc,brand.update_time DESC
   </select>
 
   <select id="showBrandItems" resultMap="BrandItemsVO">
@@ -89,16 +120,14 @@
     agency_code,
     company_id,
     brand_no,
-    category_no,
     brand_name,
-    category_name,
-    sum( CASE WHEN audit_status = 0 THEN 1 ELSE 0 END ) AS audit_count,
-    sum( CASE WHEN audit_status = 0 THEN 1 ELSE 0 END ) AS audit_change_count
+      sum( CASE WHEN audit_status in(0,5) THEN 1 ELSE 0 END ) AS audit_count,
+      sum( CASE WHEN audit_status = 5 THEN 1 ELSE 0 END ) AS audit_change_count
     FROM
     pc_dealer_brand_info
     WHERE
     is_valid = 1
-    <if test="companyId != null and companyId != ''">
+      <if test="companyId != null and companyId != ''">
       and company_id = #{companyId}
     </if>
     <if test="agencyCode != null and agencyCode != ''">
@@ -106,28 +135,25 @@
     </if>
     GROUP BY
     brand_no,
-    category_no,
     agency_code,
     company_id,
-    brand_name,
-    category_name
+    brand_name
   </select>
 
   <select id="showSignBrand" resultMap="BaseResultMap" parameterType="java.lang.String">
       SELECT
       <include refid="Sign_Base_Column_List" />
-FROM
-	pc_agency_contract contract
-	LEFT JOIN pc_dealer_brand_info brand ON contract.company_id = brand.company_id
-	AND contract.dealer_company_id = brand.agency_code
-	AND contract.brand_no = brand.brand_no
-	AND contract.category_no = brand.category_no
-WHERE
-	contract.STATUS = 8
-	AND brand.is_valid = 1
-	AND brand.audit_status = 2
-    <if test="_parameter!= null and _parameter!= ''">
-      and contract.company_id  = #{companyId}
+      FROM
+      pc_dealer_brand_info brand
+      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ', ' ) category_name, string_agg ( category_no, ', ' ) category_code FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
+      ON category.company_id = brand.company_id
+      and brand.brand_no = category.brand_no
+      and brand.agency_code = category.dealer_company_id
+      WHERE
+      brand.is_valid = 1
+      AND brand.audit_status = 2
+      <if test="_parameter!= null and _parameter!= ''">
+      and category.company_id  = #{companyId}
     </if>
   </select>
 

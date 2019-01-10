@@ -61,6 +61,15 @@ public class AgencyContractController extends AbsBaseController {
         return sendJsonData(ResultMessage.SUCCESS,pageInfo);
     }
 
+    @ApiOperation(value="前端-运营平台-经销商合同(小b合同列表)", notes="小b合同列表")
+    @PostMapping("/selectBPageList")
+    @MyRespBody
+    public MyRespBundle<PageInfo<AgencyContract>> selectBPageList(@ApiParam("搜索条件")  AgencySEO seo){
+
+        PageInfo<AgencyContract> pageInfo = agencyService.selectBPageList(seo);
+        return sendJsonData(ResultMessage.SUCCESS,pageInfo);
+    }
+
     /**
      *  运营录入合同
      * @param

@@ -91,8 +91,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Value("${custom.cloud.designLoginUrl}")
     private String designLoginUrl;
+
     @Value("${custom.cloud.decorateLoginPage}")
     private String decorateLoginPage;
+
+    @Value("${custom.cloud.dealerLoginPage}")
+    private String dealerLoginPage;
 
     /**
      * 更新公司入驻状态
@@ -104,7 +108,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     @Transactional(rollbackFor = Exception.class)
     public boolean updateStatus(String companyId, String status, Date date) {
         CompanyInfo companyInfo = new CompanyInfo();
-        if(date == null || date.equals("")){
+        if(date == null || "".equals(date)){
             date = new Date();
         }
         companyInfo.setUpdateTime(date);
@@ -262,8 +266,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         Date date = new Date();
-        if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
-            return map;
+        //经销商不需要公司名称校验
+        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
+                return map;
+            }
         }
 
         String password = AccountHelper.createUserPassWord();
@@ -396,6 +403,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     private void sendMessage(PcApplyInfoSEO pcApplyInfoSEO) {
+        //邮箱参数
         Map<String,Object> para = new HashMap<>();
         para.put("userName",pcApplyInfoSEO.getEmail());
         para.put("pwd",pcApplyInfoSEO.getPassword());
@@ -405,12 +413,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             para.put("http",designLoginUrl);
         }else {
             // TODO 经销商是个神奇的东西
-            para.put("http", "");
+            para.put("http", dealerLoginPage);
         }
-        // TODO  不需要发送短信
-//        cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
-//                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
-
+        RemoteResult<String> result = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
+                ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));
+        System.out.println(result);
         cloudService.sendEmail(pcApplyInfoSEO.getEmail(),
                 SysConstants.EmailTemplate.join.code,
                 new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));

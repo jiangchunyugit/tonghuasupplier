@@ -35,6 +35,13 @@ public interface AgencyService {
     PageInfo<AgencyContract> selectFinancialPageList(AgencySEO gencySEO);
 
     /**
+     * 分页查询 经销商合同（小b）
+     * @param gencySEO
+     * @return
+     */
+    PageInfo<AgencyContract> selectBPageList(AgencySEO gencySEO);
+
+    /**
      * 新增经销商 合同信息
      * @param paramAgencyList
      * @return

@@ -151,11 +151,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         SettlementRuleInfo rule = (list!=null && list.size() > 0)?list.get(0):null;
 
         if(rule != null){
-//            Map<String, String> paream = convertNames();
-//            //翻译
-//            if (StringUtils.isNotBlank(rule.getFeeName())) {
-//                rule.setFeeName(paream.get(rule.getFeeName()));
-//            }
             SettlementMethodInfoExample settlementMethodInfoExample = new SettlementMethodInfoExample();
             settlementMethodInfoExample.createCriteria().andRuleCodeEqualTo(rule.getRuleNumber());
             List<SettlementMethodInfo> settlementMethodInfos = settlementMethodInfoMapper.selectByExample(settlementMethodInfoExample);
@@ -194,30 +189,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         Map<String, String> map = new HashMap<>();
         map.put("01", "设计费");
         map.put("02", "施工费");
-        return map;
-    }
-
-    /**
-     * 费用名称转换
-     * @return
-     */
-    private Map<String, String> convertNames () {
-
-        Map<String, String> map = new HashMap<>();
-        map.put("01", "设计费");
-        map.put("02", "施工费");
-        map.put("03", "施工平台管理服务费");
-        map.put("04", "设计平台管理服务费");
-        map.put("05", "产品服务费");
-        /* map.put("06", "租金");*/
-        /* map.put("07", "物业费");*/
-        /* map.put("08", "其他收费");*/
-        map.put("09", "材料推荐服务费");
-        map.put("10", "施工服务费");
-        /*    map.put("11", "先行赔付款");*/
-        /*    map.put("12", "客户赔偿款");*/
-        map.put("13", "合同保证金");
-        /*  map.put("14", "入驻费");*/
         return map;
     }
 
@@ -330,7 +301,7 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
                     // 作废标签
                     recordT.setInvalidStatus(OneTrue.YesOrNo.YES.val.toString());
                 } else {
-                    recordT.setStatus(SettlementStatus.AuditPass.getCode());
+                    recordT.setStatus(SettlementStatus.Effective.getCode());
                 }
             } else if (settlementRuleInfo.getStatus().equals(SettlementStatus.AuditWait.getCode())){
                 if (auditStatus.equals(SettlementStatus.AuditPass.getCode())) {
@@ -424,8 +395,6 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
 
     }
 
-
-
     @Override
     public boolean applicationInvalid(String ruleNumber) {
 
@@ -494,6 +463,10 @@ public class SettlementRuleServiceImpl extends AbsLogPrinter implements Settleme
         if(!StringUtils.isEmpty(rule.getRuleStatus())){
             //1 待审核 2审核通过 3审核不通过 4作废 5申请作废 7生效 8失效 9未生效
             criteria.andStatusEqualTo(rule.getRuleStatus());
+        }
+
+        if(StringUtils.isNotBlank(rule.getFeeNm())) {
+            criteria.andFeeNameEqualTo(rule.getFeeNm());
         }
     }
 

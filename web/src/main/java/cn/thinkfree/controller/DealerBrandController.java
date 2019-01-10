@@ -5,10 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.DealerBrandInfo;
-import cn.thinkfree.database.vo.AuditBrandInfoVO;
-import cn.thinkfree.database.vo.BrandDetailVO;
-import cn.thinkfree.database.vo.BrandItemsVO;
-import cn.thinkfree.database.vo.PcAuditInfoVO;
+import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.companysubmit.DealerBrandService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +29,20 @@ public class DealerBrandController  extends AbsBaseController {
     @Autowired
     DealerBrandService dealerBrandService;
 
+
+    /**
+     * 品牌审核回显
+     * @param brandDetailVO
+     * @return
+     */
+//    @RequestMapping(value = "/applyBrandDetail", method = RequestMethod.GET)
+//    @MyRespBody
+//    @ApiOperation(value="前端--经销商后台--已申请品牌")
+//    public MyRespBundle<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO){
+//        List<AuditBrandInfoVO> auditBrandInfoVOS = dealerBrandService.applyBrandDetail(brandDetailVO);
+//        return sendJsonData(success, "操作成功", auditBrandInfoVOS);
+//    }
+
     /**
      * 品牌添加
      * @param
@@ -40,7 +51,7 @@ public class DealerBrandController  extends AbsBaseController {
     @RequestMapping(value = "/saveBrand", method = RequestMethod.POST)
     @MyRespBody
     @ApiOperation(value="前端--经销商平台--添加经销商品牌")
-    public MyRespBundle<String> changeCompanyInfo(@ApiParam("经销商品牌信息查询条件")DealerBrandInfo dealerBrandInfo){
+    public MyRespBundle<String> changeCompanyInfo(@ApiParam("经销商品牌信息")DealerBrandInfoVO dealerBrandInfo){
         Map<String, Object> map = dealerBrandService.saveBrand(dealerBrandInfo);
         return sendJsonData(ResultMessage.SUCCESS, map);
     }
@@ -53,7 +64,7 @@ public class DealerBrandController  extends AbsBaseController {
     @RequestMapping(value = "/showBrandDetail", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--经销商后台--品牌审核--回显接口2")
-    public MyRespBundle<List<AuditBrandInfoVO>> showBrandDetail(BrandDetailVO brandDetailVO){
+    public MyRespBundle<AuditBrandInfoVO> showBrandDetail(BrandDetailVO brandDetailVO){
         List<AuditBrandInfoVO> auditBrandInfoVOS = dealerBrandService.showBrandDetail(brandDetailVO);
         return sendJsonData(success, "操作成功", auditBrandInfoVOS);
     }
@@ -65,7 +76,7 @@ public class DealerBrandController  extends AbsBaseController {
     @RequestMapping(value = "/showBrandItems", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--经销商后台--品牌审核--回显接口1")
-    public MyRespBundle<List<BrandItemsVO>> showBrandItems(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId,
+    public MyRespBundle<BrandItemsVO> showBrandItems(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId,
                                                               @ApiParam("经销商编号") @RequestParam(value = "agencyCode")String agencyCode){
         List<BrandItemsVO> brandItemsVOS = dealerBrandService.showBrandItems(companyId, agencyCode);
         return sendJsonData(success, "操作成功", brandItemsVOS);
@@ -96,7 +107,7 @@ public class DealerBrandController  extends AbsBaseController {
     @PostMapping("/updateBrand")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> updateBrand(@ApiParam("品牌信息")DealerBrandInfo dealerBrandInfo){
+    public MyRespBundle<String> updateBrand(@ApiParam("经销商品牌信息")DealerBrandInfoVO dealerBrandInfo){
         boolean result = dealerBrandService.updateBrand(dealerBrandInfo);
         if(result){
             return sendSuccessMessage("变更成功");
@@ -127,7 +138,7 @@ public class DealerBrandController  extends AbsBaseController {
     @RequestMapping(value = "/showSignBrand", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--经销商后台--入驻公司签约品牌回显")
-    public MyRespBundle<List<DealerBrandInfo>> showSignBrand(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId){
+    public MyRespBundle<DealerBrandInfo> showSignBrand(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId){
         List<DealerBrandInfo> brandItemsVOS = dealerBrandService.showSignBrand(companyId);
         return sendJsonData(success, "操作成功", brandItemsVOS);
     }
@@ -136,12 +147,25 @@ public class DealerBrandController  extends AbsBaseController {
     @PostMapping("/editBrand")
     @MyRespBody
     //@MySysLog(action = SysLogAction.DEL,module = SysLogModule.PC_CONTRACT,desc = "合同审批")
-    public MyRespBundle<String> editBrand(@ApiParam("品牌信息")DealerBrandInfo dealerBrandInfo){
+    public MyRespBundle<String> editBrand(@ApiParam("品牌信息")DealerBrandInfoVO dealerBrandInfo){
         boolean result = dealerBrandService.editBrand(dealerBrandInfo);
         if(result){
-            return sendSuccessMessage("编辑成功");
+            return sendSuccessMessage("操作成功");
         }
-        return sendFailMessage("编辑失败");
+        return sendFailMessage("操作失败");
     }
 
+    /**
+     * 入驻公司签约品牌是否可以变更
+     * @return
+     */
+    @RequestMapping(value = "/isSignChange", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--经销商后台--入驻公司签约品牌是否可以变更")
+    public MyRespBundle<Map<String,Object>> isSignChange(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId
+    ,@ApiParam("经销商编号") @RequestParam(value = "agencyCode") String agencyCode
+    ,@ApiParam("品牌编号") @RequestParam(value = "brandNo") String brandNo){
+        Map<String,Object> brandItemsVOS = dealerBrandService.isSignChange(companyId, agencyCode, brandNo);
+        return sendJsonData(success, "操作成功", brandItemsVOS);
+    }
 }

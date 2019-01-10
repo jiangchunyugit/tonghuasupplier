@@ -255,276 +255,6 @@ public class DealerBrandInfoExample extends cn.thinkfree.core.model.AbstractData
             return (Criteria) this;
         }
 
-        public Criteria andBrandNameIsNull() {
-            addCriterion("brand_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameIsNotNull() {
-            addCriterion("brand_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameEqualTo(String value) {
-            addCriterion("brand_name =", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameNotEqualTo(String value) {
-            addCriterion("brand_name <>", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameGreaterThan(String value) {
-            addCriterion("brand_name >", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameGreaterThanOrEqualTo(String value) {
-            addCriterion("brand_name >=", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameLessThan(String value) {
-            addCriterion("brand_name <", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameLessThanOrEqualTo(String value) {
-            addCriterion("brand_name <=", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameLike(String value) {
-            addCriterion("brand_name like", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameNotLike(String value) {
-            addCriterion("brand_name not like", value, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameIn(List<String> values) {
-            addCriterion("brand_name in", values, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameNotIn(List<String> values) {
-            addCriterion("brand_name not in", values, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameBetween(String value1, String value2) {
-            addCriterion("brand_name between", value1, value2, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andBrandNameNotBetween(String value1, String value2) {
-            addCriterion("brand_name not between", value1, value2, "brandName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameIsNull() {
-            addCriterion("category_name is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameIsNotNull() {
-            addCriterion("category_name is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameEqualTo(String value) {
-            addCriterion("category_name =", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameNotEqualTo(String value) {
-            addCriterion("category_name <>", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameGreaterThan(String value) {
-            addCriterion("category_name >", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameGreaterThanOrEqualTo(String value) {
-            addCriterion("category_name >=", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameLessThan(String value) {
-            addCriterion("category_name <", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameLessThanOrEqualTo(String value) {
-            addCriterion("category_name <=", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameLike(String value) {
-            addCriterion("category_name like", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameNotLike(String value) {
-            addCriterion("category_name not like", value, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameIn(List<String> values) {
-            addCriterion("category_name in", values, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameNotIn(List<String> values) {
-            addCriterion("category_name not in", values, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameBetween(String value1, String value2) {
-            addCriterion("category_name between", value1, value2, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNameNotBetween(String value1, String value2) {
-            addCriterion("category_name not between", value1, value2, "categoryName");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlIsNull() {
-            addCriterion("authorization_card_url is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlIsNotNull() {
-            addCriterion("authorization_card_url is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlEqualTo(String value) {
-            addCriterion("authorization_card_url =", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlNotEqualTo(String value) {
-            addCriterion("authorization_card_url <>", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlGreaterThan(String value) {
-            addCriterion("authorization_card_url >", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlGreaterThanOrEqualTo(String value) {
-            addCriterion("authorization_card_url >=", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlLessThan(String value) {
-            addCriterion("authorization_card_url <", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlLessThanOrEqualTo(String value) {
-            addCriterion("authorization_card_url <=", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlLike(String value) {
-            addCriterion("authorization_card_url like", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlNotLike(String value) {
-            addCriterion("authorization_card_url not like", value, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlIn(List<String> values) {
-            addCriterion("authorization_card_url in", values, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlNotIn(List<String> values) {
-            addCriterion("authorization_card_url not in", values, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlBetween(String value1, String value2) {
-            addCriterion("authorization_card_url between", value1, value2, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardUrlNotBetween(String value1, String value2) {
-            addCriterion("authorization_card_url not between", value1, value2, "authorizationCardUrl");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityIsNull() {
-            addCriterion("authorization_card_validity is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityIsNotNull() {
-            addCriterion("authorization_card_validity is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityEqualTo(Date value) {
-            addCriterion("authorization_card_validity =", value, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityNotEqualTo(Date value) {
-            addCriterion("authorization_card_validity <>", value, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityGreaterThan(Date value) {
-            addCriterion("authorization_card_validity >", value, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityGreaterThanOrEqualTo(Date value) {
-            addCriterion("authorization_card_validity >=", value, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityLessThan(Date value) {
-            addCriterion("authorization_card_validity <", value, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityLessThanOrEqualTo(Date value) {
-            addCriterion("authorization_card_validity <=", value, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityIn(List<Date> values) {
-            addCriterion("authorization_card_validity in", values, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityNotIn(List<Date> values) {
-            addCriterion("authorization_card_validity not in", values, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityBetween(Date value1, Date value2) {
-            addCriterion("authorization_card_validity between", value1, value2, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
-        public Criteria andAuthorizationCardValidityNotBetween(Date value1, Date value2) {
-            addCriterion("authorization_card_validity not between", value1, value2, "authorizationCardValidity");
-            return (Criteria) this;
-        }
-
         public Criteria andIsValidIsNull() {
             addCriterion("is_valid is null");
             return (Criteria) this;
@@ -715,6 +445,206 @@ public class DealerBrandInfoExample extends cn.thinkfree.core.model.AbstractData
             return (Criteria) this;
         }
 
+        public Criteria andBrandNameIsNull() {
+            addCriterion("brand_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameIsNotNull() {
+            addCriterion("brand_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameEqualTo(String value) {
+            addCriterion("brand_name =", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameNotEqualTo(String value) {
+            addCriterion("brand_name <>", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameGreaterThan(String value) {
+            addCriterion("brand_name >", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameGreaterThanOrEqualTo(String value) {
+            addCriterion("brand_name >=", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameLessThan(String value) {
+            addCriterion("brand_name <", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameLessThanOrEqualTo(String value) {
+            addCriterion("brand_name <=", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameLike(String value) {
+            addCriterion("brand_name like", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameNotLike(String value) {
+            addCriterion("brand_name not like", value, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameIn(List<String> values) {
+            addCriterion("brand_name in", values, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameNotIn(List<String> values) {
+            addCriterion("brand_name not in", values, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameBetween(String value1, String value2) {
+            addCriterion("brand_name between", value1, value2, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andBrandNameNotBetween(String value1, String value2) {
+            addCriterion("brand_name not between", value1, value2, "brandName");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlIsNull() {
+            addCriterion("authorization_card_url is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlIsNotNull() {
+            addCriterion("authorization_card_url is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlEqualTo(String value) {
+            addCriterion("authorization_card_url =", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlNotEqualTo(String value) {
+            addCriterion("authorization_card_url <>", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlGreaterThan(String value) {
+            addCriterion("authorization_card_url >", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlGreaterThanOrEqualTo(String value) {
+            addCriterion("authorization_card_url >=", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlLessThan(String value) {
+            addCriterion("authorization_card_url <", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlLessThanOrEqualTo(String value) {
+            addCriterion("authorization_card_url <=", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlLike(String value) {
+            addCriterion("authorization_card_url like", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlNotLike(String value) {
+            addCriterion("authorization_card_url not like", value, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlIn(List<String> values) {
+            addCriterion("authorization_card_url in", values, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlNotIn(List<String> values) {
+            addCriterion("authorization_card_url not in", values, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlBetween(String value1, String value2) {
+            addCriterion("authorization_card_url between", value1, value2, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardUrlNotBetween(String value1, String value2) {
+            addCriterion("authorization_card_url not between", value1, value2, "authorizationCardUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityIsNull() {
+            addCriterion("authorization_card_validity is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityIsNotNull() {
+            addCriterion("authorization_card_validity is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityEqualTo(Date value) {
+            addCriterion("authorization_card_validity =", value, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityNotEqualTo(Date value) {
+            addCriterion("authorization_card_validity <>", value, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityGreaterThan(Date value) {
+            addCriterion("authorization_card_validity >", value, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityGreaterThanOrEqualTo(Date value) {
+            addCriterion("authorization_card_validity >=", value, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityLessThan(Date value) {
+            addCriterion("authorization_card_validity <", value, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityLessThanOrEqualTo(Date value) {
+            addCriterion("authorization_card_validity <=", value, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityIn(List<Date> values) {
+            addCriterion("authorization_card_validity in", values, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityNotIn(List<Date> values) {
+            addCriterion("authorization_card_validity not in", values, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityBetween(Date value1, Date value2) {
+            addCriterion("authorization_card_validity between", value1, value2, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
+        public Criteria andAuthorizationCardValidityNotBetween(Date value1, Date value2) {
+            addCriterion("authorization_card_validity not between", value1, value2, "authorizationCardValidity");
+            return (Criteria) this;
+        }
+
         public Criteria andBrandNoIsNull() {
             addCriterion("brand_no is null");
             return (Criteria) this;
@@ -782,76 +712,6 @@ public class DealerBrandInfoExample extends cn.thinkfree.core.model.AbstractData
 
         public Criteria andBrandNoNotBetween(String value1, String value2) {
             addCriterion("brand_no not between", value1, value2, "brandNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoIsNull() {
-            addCriterion("category_no is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoIsNotNull() {
-            addCriterion("category_no is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoEqualTo(String value) {
-            addCriterion("category_no =", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoNotEqualTo(String value) {
-            addCriterion("category_no <>", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoGreaterThan(String value) {
-            addCriterion("category_no >", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoGreaterThanOrEqualTo(String value) {
-            addCriterion("category_no >=", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoLessThan(String value) {
-            addCriterion("category_no <", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoLessThanOrEqualTo(String value) {
-            addCriterion("category_no <=", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoLike(String value) {
-            addCriterion("category_no like", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoNotLike(String value) {
-            addCriterion("category_no not like", value, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoIn(List<String> values) {
-            addCriterion("category_no in", values, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoNotIn(List<String> values) {
-            addCriterion("category_no not in", values, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoBetween(String value1, String value2) {
-            addCriterion("category_no between", value1, value2, "categoryNo");
-            return (Criteria) this;
-        }
-
-        public Criteria andCategoryNoNotBetween(String value1, String value2) {
-            addCriterion("category_no not between", value1, value2, "categoryNo");
             return (Criteria) this;
         }
 
@@ -1042,6 +902,146 @@ public class DealerBrandInfoExample extends cn.thinkfree.core.model.AbstractData
 
         public Criteria andUpdateTimeNotBetween(Date value1, Date value2) {
             addCriterion("update_time not between", value1, value2, "updateTime");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameIsNull() {
+            addCriterion("category_name is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameIsNotNull() {
+            addCriterion("category_name is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameEqualTo(String value) {
+            addCriterion("category_name =", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameNotEqualTo(String value) {
+            addCriterion("category_name <>", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameGreaterThan(String value) {
+            addCriterion("category_name >", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameGreaterThanOrEqualTo(String value) {
+            addCriterion("category_name >=", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameLessThan(String value) {
+            addCriterion("category_name <", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameLessThanOrEqualTo(String value) {
+            addCriterion("category_name <=", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameLike(String value) {
+            addCriterion("category_name like", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameNotLike(String value) {
+            addCriterion("category_name not like", value, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameIn(List<String> values) {
+            addCriterion("category_name in", values, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameNotIn(List<String> values) {
+            addCriterion("category_name not in", values, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameBetween(String value1, String value2) {
+            addCriterion("category_name between", value1, value2, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryNameNotBetween(String value1, String value2) {
+            addCriterion("category_name not between", value1, value2, "categoryName");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeIsNull() {
+            addCriterion("category_code is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeIsNotNull() {
+            addCriterion("category_code is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeEqualTo(String value) {
+            addCriterion("category_code =", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeNotEqualTo(String value) {
+            addCriterion("category_code <>", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeGreaterThan(String value) {
+            addCriterion("category_code >", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeGreaterThanOrEqualTo(String value) {
+            addCriterion("category_code >=", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeLessThan(String value) {
+            addCriterion("category_code <", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeLessThanOrEqualTo(String value) {
+            addCriterion("category_code <=", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeLike(String value) {
+            addCriterion("category_code like", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeNotLike(String value) {
+            addCriterion("category_code not like", value, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeIn(List<String> values) {
+            addCriterion("category_code in", values, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeNotIn(List<String> values) {
+            addCriterion("category_code not in", values, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeBetween(String value1, String value2) {
+            addCriterion("category_code between", value1, value2, "categoryCode");
+            return (Criteria) this;
+        }
+
+        public Criteria andCategoryCodeNotBetween(String value1, String value2) {
+            addCriterion("category_code not between", value1, value2, "categoryCode");
             return (Criteria) this;
         }
     }
