@@ -40,12 +40,15 @@ public interface ReserveOrderService {
      *
      * @param ownerName 业主姓名
      * @param phone     业主手机号
+     * @param provinceCode
+     * @param cityCode
+     * @param areaCode
      * @param state     状态
      * @param pageSize  每页多少条
      * @param pageIndex 第几页
      * @return
      */
-    PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone, int state, int pageSize, int pageIndex);
+    PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone,String provinceCode,String cityCode,String areaCode,Integer source ,int state, int pageSize, int pageIndex);
 
     /**
      * 根据预约订单编号查询预约订单信息

@@ -32,6 +32,9 @@ public interface DesignerService {
      * @param registrationTimeStart 注册时间
      * @param registrationTimeEnd   注册时间
      * @param sort                  排序区域
+     * @param branchCompanyCode
+     * @param cityBranchCode
+     * @param storeCode
      * @param pageSize              每页多少条
      * @param pageIndex             第几页
      * @return
@@ -39,7 +42,7 @@ public interface DesignerService {
     PageVo<List<DesignerMsgListVo>> queryDesigners(
             String designerName, String designerRealName, String phone, String authState,
             String province, String city, String area, String level, String identity, String cardNo, String source,
-            String tag, String registrationTimeStart, String registrationTimeEnd, String sort, int pageSize, int pageIndex);
+            String tag, String registrationTimeStart, String registrationTimeEnd, String sort, String branchCompanyCode, String cityBranchCode, String storeCode, int pageSize, int pageIndex);
 
     /**
      * 根据用户ID查询设计师信息

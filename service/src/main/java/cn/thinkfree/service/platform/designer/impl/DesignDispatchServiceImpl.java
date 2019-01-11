@@ -21,12 +21,12 @@ import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.designer.UserCenterService;
 import cn.thinkfree.service.platform.employee.ProjectUserService;
-import cn.thinkfree.service.platform.order.OrderService;
 import cn.thinkfree.service.platform.order.SendOrderNoticeService;
 import cn.thinkfree.service.platform.vo.*;
 import cn.thinkfree.service.project.ProjectStageLogService;
 import cn.thinkfree.service.utils.*;
 import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -138,7 +138,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     public PageVo<List<DesignerOrderVo>> queryDesignerOrder(
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
             String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, int companyState,
-            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType, String companyName, String designerName) {
+            String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType, String companyName, String designerName,String branchCompanyCode,String cityBranchCode,String storeCode) {
         if (orderTpye == null) {
             throw new RuntimeException("请输入订单类别");
         }
@@ -197,7 +197,21 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (designerOrders.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
+        PageInfo<DesignerOrderVo> pageInfo = new PageInfo(designerOrders);
         List<DesignerOrderVo> designerOrderVos = getDesignerOrderVos(stateType, designerOrders);
+        List<CompanyCitySiteVO> companyCity = getCompanyCity(designerOrders, branchCompanyCode, cityBranchCode, storeCode);
+        for(DesignerOrderVo designerOrder :designerOrderVos){
+            for(CompanyCitySiteVO company:companyCity){
+                if(designerOrder.getCompanyId()!=null&&company.getCompanyId()!=null){
+                    if(designerOrder.getCompanyId().equals(company.getCompanyId())){
+                        designerOrder.setBranchCompanyName(company.getBranchCompanyName());
+                        designerOrder.setCityBranchName(company.getCityBranchName());
+                        designerOrder.setStoreName(company.getStoreName());
+                    }
+                }
+
+            }
+        }
         PageVo<List<DesignerOrderVo>> pageVo = new PageVo<>();
         pageVo.setPageSize(pageSize);
         pageVo.setTotal(total);
@@ -205,7 +219,21 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         pageVo.setPageIndex(pageIndex);
         return pageVo;
     }
-
+    public List<CompanyCitySiteVO> getCompanyCity(List<DesignerOrder> designerOrders,String branchCompanyCode,String cityBranchCode ,String storeCode){
+        if(designerOrders ==null || designerOrders.size() < 0){
+            throw new RuntimeException("为空");
+        }
+        List<CompanyCitySiteVO> companyList = new ArrayList<>();
+        List<String> companyIds =new ArrayList<>();
+        for (DesignerOrder companyId:designerOrders){
+            companyIds.add(companyId.getCompanyId());
+        }
+        companyInfoMapper.selectCompanyCitySiteByCompanyId(companyIds,branchCompanyCode,cityBranchCode,storeCode);
+        if(companyList == null || companyList.size() < 0){
+            throw new RuntimeException("公司城市分站信息查询为空");
+        }
+        return companyList;
+    }
     @Override
     public List<String> getCompanyIds(){
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
@@ -350,6 +378,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             designerOrderVo.setProvinceName(provinceMap.get(project.getProvince()));
             designerOrderVo.setCityName(cityMap.get(project.getCity()));
             designerOrderVo.setRegionName(areaMap.get(project.getRegion()));
+            designerOrderVo.setCompanyId(designerOrder.getCompanyId());
             staffIds.add(designerOrderVo.getDesignerName());
             designerOrderVos.add(designerOrderVo);
         }
@@ -586,9 +615,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Override
     public void designerOrderExcel(Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart, String createTimeEnd,
                                    String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState, int companyState, String optionUserName,
-                                   String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response) {
+                                   String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response,String branchCompanyCode,String cityBranchCode,String storeCode) {
         PageVo<List<DesignerOrderVo>> pageVo = queryDesignerOrder(null, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType, null, null);
+                provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, 1000000, 1, stateType, null, null,branchCompanyCode, cityBranchCode, storeCode);
 
         List<List<String>> lists = new ArrayList<>();
         lists.add(Arrays.asList("序号", "订单编号", "订单子编号", "业主姓名", "业主电话", "所在地", "订单来源", "创建时间",
@@ -1830,7 +1859,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
     @Override
     public PageVo<List<ContractListItemVo>> designContract(
             String contractNo, String projectNo, String orderSource, String provinceCode, String cityCode, String areaCode,
-            String contractState, String signTimeS, String signTimeE, String ownerMsg, int pageSize, int pageIndex) {
+            String contractState, String signTimeS, String signTimeE, String ownerMsg, String branchCompanyCode, String cityBranchCode, String storeCode, int pageSize, int pageIndex) {
         List<String> projectNos = null;
         if (StringUtils.isNotBlank(ownerMsg)) {
             List<UserMsgVo> userMsgVos = userService.queryUserMsg(ownerMsg);
@@ -1932,9 +1961,23 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         Map<String, UserMsgVo> userMsgVoMap = getOwnerMsg(designOrders);
         List<String> orderSources = new ArrayList<>();
         List<ContractListItemVo> itemVos = new ArrayList<>();
+        List<String> companyIds = new ArrayList<>();
+        for (OrderContract contract : orderContracts) {
+            companyIds.add(contract.getCompanyId());
+        }
+        List<CompanyCitySiteVO> companyList = companyInfoMapper.selectCompanyCitySiteByCompanyId(companyIds,branchCompanyCode,cityBranchCode,storeCode);
         for (OrderContract contract : orderContracts) {
             ContractListItemVo itemVo = new ContractListItemVo();
             Project project = projectMap.get(contract.getOrderNumber());
+           for(CompanyCitySiteVO company:companyList){
+               if(contract.getCompanyId()!=null && company.getCompanyId()!=null){
+                   if(contract.getCompanyId().equals(company.getCompanyId())){
+                       itemVo.setBranchCompanyName(company.getBranchCompanyName());
+                       itemVo.setCityBranchName(company.getCityBranchName());
+                       itemVo.setStoreName(company.getStoreName());
+                   }
+               }
+           }
             if (project != null) {
                 itemVo.setAddress(project.getAddressDetail());
                 orderSources.add(project.getOrderSource() + "");

@@ -70,11 +70,14 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType,
             @ApiParam(name = "companyName", required = false, value = "所属公司名称") @RequestParam(name = "companyName", required = false) String companyName,
             @ApiParam(name = "designerName", required = false, value = "所属设计师名称") @RequestParam(name = "designerName", required = false) String designerName,
+            @ApiParam(name = "branchCompanyCode", required = false, value = "分公司") @RequestParam(name = "branchCompanyCode", required = false) String branchCompanyCode,
+            @ApiParam(name = "cityBranchCode", required = false, value = "城市分站名称") @RequestParam(name = "cityBranchCode", required = false) String cityBranchCode,
+            @ApiParam(name = "storeCode", required = false, value = "门店名称") @RequestParam(name = "storeCode", required = false) String storeCode,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType, companyName, designerName);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType, companyName, designerName,branchCompanyCode,cityBranchCode,storeCode);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,10 +146,13 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "stateType", required = false, value = "1获取平台状态，2获取设计公司状态，3获取设计师状态，4获取消费者状态") @RequestParam(name = "stateType", required = false, defaultValue = "1") int stateType,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex,
-            @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response) {
+            @ApiParam(name = "fileName", required = false, value = "文件名") @RequestParam(name = "fileName", required = false) String fileName, HttpServletResponse response,
+            @ApiParam(name = "branchCompanyCode", required = false, value = "分公司") @RequestParam(name = "branchCompanyCode", required = false) String branchCompanyCode,
+            @ApiParam(name = "cityBranchCode", required = false, value = "城市分站名称") @RequestParam(name = "cityBranchCode", required = false) String cityBranchCode,
+            @ApiParam(name = "storeCode", required = false, value = "门店名称") @RequestParam(name = "storeCode", required = false) String storeCode) {
         try {
             designDispatchService.designerOrderExcel(orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response,branchCompanyCode,cityBranchCode,storeCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -699,10 +705,13 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "signTimeS", required = false, value = "签约时间开始") @RequestParam(name = "signTimeS", required = false) String signTimeS,
             @ApiParam(name = "signTimeE", required = false, value = "签约时间结束") @RequestParam(name = "signTimeE", required = false) String signTimeE,
             @ApiParam(name = "ownerMsg", required = false, value = "业主手机号/姓名") @RequestParam(name = "ownerMsg", required = false) String ownerMsg,
+            @ApiParam(name = "branchCompanyCode", required = false, value = "分公司") @RequestParam(name = "branchCompanyCode", required = false) String branchCompanyCode,
+            @ApiParam(name = "cityBranchCode", required = false, value = "城市分站名称") @RequestParam(name = "cityBranchCode", required = false) String cityBranchCode,
+            @ApiParam(name = "storeCode", required = false, value = "门店名称") @RequestParam(name = "storeCode", required = false) String storeCode,
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         PageVo<List<ContractListItemVo>> itemVo = designDispatchService.designContract(contractNo, projectNo, orderSource, provinceCode, cityCode,
-                areaCode, contractState, signTimeS, signTimeE, ownerMsg, pageSize, pageIndex);
+                areaCode, contractState, signTimeS, signTimeE, ownerMsg, branchCompanyCode,cityBranchCode,storeCode,pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, itemVo);
     }
 

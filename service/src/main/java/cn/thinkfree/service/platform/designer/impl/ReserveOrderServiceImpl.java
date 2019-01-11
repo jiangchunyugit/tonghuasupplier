@@ -100,7 +100,7 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
     }
 
     @Override
-    public PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone, int state, int pageSize, int pageIndex) {
+    public PageVo<List<ReserveProjectVo>> queryReserveOrder(String ownerName, String phone,String provinceCode,String cityCode,String areaCode, Integer source,int state, int pageSize, int pageIndex) {
         ReserveProjectExample reserveProjectExample = new ReserveProjectExample();
         ReserveProjectExample.Criteria criteria = reserveProjectExample.createCriteria();
         if (StringUtils.isNotBlank(ownerName)) {
@@ -108,6 +108,18 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
         }
         if (StringUtils.isNotBlank(phone)) {
             criteria.andPhoneLike("%" + phone + "%");
+        }
+        if (StringUtils.isNotBlank(provinceCode)) {
+            criteria.andProvinceEqualTo(provinceCode );
+        }
+        if (StringUtils.isNotBlank(cityCode)) {
+            criteria.andCityEqualTo(cityCode );
+        }
+        if (StringUtils.isNotBlank(areaCode)) {
+            criteria.andAreaEqualTo(areaCode);
+        }
+        if (source!=null) {
+            criteria.andSourceEqualTo(source);
         }
         if (state != -1) {
             criteria.andStateEqualTo(state);
@@ -151,9 +163,9 @@ public class ReserveOrderServiceImpl implements ReserveOrderService {
 
     private void getVo(ReserveProject reserveProject, ReserveProjectVo reserveProjectVo, Map<String, String> provinceMap,
                        Map<String, String> cityMap, Map<String, String> areaMap) {
-        reserveProjectVo.setProvinceName(provinceMap.get(reserveProjectVo.getProvince()));
-        reserveProjectVo.setCityName(cityMap.get(reserveProjectVo.getCity()));
-        reserveProjectVo.setAreaName(areaMap.get(reserveProjectVo.getArea()));
+        reserveProjectVo.setProvinceName(provinceMap.get(reserveProject.getProvince()));
+        reserveProjectVo.setCityName(cityMap.get(reserveProject.getCity()));
+        reserveProjectVo.setAreaName(areaMap.get(reserveProject.getArea()));
         ReflectUtils.beanCopy(reserveProject,reserveProjectVo);
     }
 

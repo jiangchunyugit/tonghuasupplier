@@ -502,4 +502,30 @@
             order by info.update_time desc
         </if>
     </select>
+
+    <!--根据公司id查询分公司城市门店-->
+    <select id="selectCompanyCitySiteByCompanyId" resultType="cn.thinkfree.database.vo.CompanyCitySiteVO">
+        SELECT
+        info.company_id AS companyId,
+        bc.company_name AS branchCompanyName,
+        ci.city_branch_name AS cityBranchName,
+        ho.organization_text AS storeName
+        FROM company_info info
+        left join pc_branch_company bc on bc.branch_company_code =info.branch_company_code
+        left join pc_city_branch ci on ci.city_branch_code = info.city_branch_code
+        left join hr_organization_entity ho on ho.organization_id = info.site_company_id
+        WHERE  company_id in
+        <foreach collection="companyIds" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        <if test="branchCompanyCode != null and branchCompanyCode != ''">
+            AND bc.branch_company_code = #{branchCompanyCode}
+        </if>
+        <if test="cityBranchCode != null and cityBranchCode != ''">
+            AND ci.city_branch_code = #{cityBranchCode}
+        </if>
+        <if test="storeCode != null and storeCode != ''">
+            AND ho.organization_id = #{storeCode}
+        </if>
+    </select>
 </mapper>

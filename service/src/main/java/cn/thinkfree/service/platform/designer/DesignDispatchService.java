@@ -44,7 +44,7 @@ public interface DesignDispatchService {
             String queryStage, Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
             String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage,
             int designerOrderState, int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int pageSize, int pageIndex, int stateType,
-            String companyName, String designerName);
+            String companyName, String designerName,String branchCompanyCode,String cityBranchCode,String storeCode);
 
     /**
      * 获取当前登陆用户所能看到的所有公司ID
@@ -258,7 +258,7 @@ public interface DesignDispatchService {
      */
     void designerOrderExcel(Integer orderTpye, String companyId, String projectNo, String userMsg, String orderSource, String createTimeStart,
                             String createTimeEnd, String styleCode, String provinceCode, String cityCode, String areaCode, String money, String acreage, int designerOrderState,
-                            int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response);
+                            int companyState, String optionUserName, String optionTimeStart, String optionTimeEnd, int stateType, String fileName, HttpServletResponse response,String branchCompanyCode,String cityBranchCode,String storeCode);
 
     /**
      * 设计师关联案例Id
@@ -330,11 +330,14 @@ public interface DesignDispatchService {
      * @param signTimeS     签约开始时间
      * @param signTimeE     签约结束时间
      * @param ownerMsg      业主姓名
+     * @param branchCompanyCode
+     * @param cityBranchCode
+     * @param storeCode
      * @return
      */
     PageVo<List<ContractListItemVo>> designContract(
             String contractNo, String projectNo, String orderSource, String provinceCode, String cityCode, String areaCode,
-            String contractState, String signTimeS, String signTimeE, String ownerMsg, int pageSize, int pageIndex);
+            String contractState, String signTimeS, String signTimeE, String ownerMsg, String branchCompanyCode, String cityBranchCode, String storeCode, int pageSize, int pageIndex);
 
 
     /**

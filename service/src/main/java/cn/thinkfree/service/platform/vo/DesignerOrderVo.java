@@ -51,19 +51,27 @@ public class DesignerOrderVo {
     private String projectMoney;
     @ApiModelProperty("户型")
     private String huxing;
+    @ApiModelProperty("分公司")
+    private String branchCompanyName;
+    @ApiModelProperty("城市分站名称")
+    private String cityBranchName;
+    @ApiModelProperty("门店名称")
+    private String storeName;
+    @ApiModelProperty("公司id")
+    private String companyId;
 
     public DesignerOrderVo() {
     }
 
-    public DesignerOrderVo(String projectNo, String designOrderNo, String ownerName, String ownerPhone, String address,
-                           String orderSource, String createTime, String styleName, String budget, String area, String companyName,
-                           String companyState, String designerName, String orderStateName, String optionUserName, String optionTime,
-                           String orderState, String projectMoney) {
+    public DesignerOrderVo(String projectNo, String designOrderNo, String ownerName, String ownerPhone, String address, String provinceName, String cityName, String regionName, String orderSource, String createTime, String styleName, String budget, String area, String companyName, String companyState, String designerName, String orderStateName, String optionUserName, String optionTime, String orderState, String projectMoney, String huxing, String branchCompanyName, String cityBranchName, String storeName, String companyId) {
         this.projectNo = projectNo;
         this.designOrderNo = designOrderNo;
         this.ownerName = ownerName;
         this.ownerPhone = ownerPhone;
         this.address = address;
+        this.provinceName = provinceName;
+        this.cityName = cityName;
+        this.regionName = regionName;
         this.orderSource = orderSource;
         this.createTime = createTime;
         this.styleName = styleName;
@@ -77,7 +85,13 @@ public class DesignerOrderVo {
         this.optionTime = optionTime;
         this.orderState = orderState;
         this.projectMoney = projectMoney;
+        this.huxing = huxing;
+        this.branchCompanyName = branchCompanyName;
+        this.cityBranchName = cityBranchName;
+        this.storeName = storeName;
+        this.companyId = companyId;
     }
+
     public void setHuxing(String huxing) {
         this.huxing = huxing;
     }
@@ -252,5 +266,37 @@ public class DesignerOrderVo {
 
     public void setRegionName(String regionName) {
         this.regionName = regionName;
+    }
+
+    public String getBranchCompanyName() {
+        return branchCompanyName;
+    }
+
+    public void setBranchCompanyName(String branchCompanyName) {
+        this.branchCompanyName = branchCompanyName;
+    }
+
+    public String getCityBranchName() {
+        return cityBranchName;
+    }
+
+    public void setCityBranchName(String cityBranchName) {
+        this.cityBranchName = cityBranchName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }
