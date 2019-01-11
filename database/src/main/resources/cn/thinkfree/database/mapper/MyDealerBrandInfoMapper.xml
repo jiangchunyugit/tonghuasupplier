@@ -11,7 +11,6 @@
     <result column="audit_account" jdbcType="VARCHAR" property="auditAccount" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
-    <result column="category_no" jdbcType="VARCHAR" property="categoryNo" />
 
   </resultMap>
   <resultMap id="BrandItemsVO" type="cn.thinkfree.database.vo.BrandItemsVO" extends="BaseResultMap">
@@ -145,13 +144,13 @@
       <include refid="Sign_Base_Column_List" />
       FROM
       pc_dealer_brand_info brand
-      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ', ' ) category_name, string_agg ( category_no, ', ' ) category_code FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
+      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ',' ) category_name, string_agg ( category_no, ', ' ) category_code FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
       ON category.company_id = brand.company_id
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
       WHERE
-      brand.is_valid = 1
-      AND brand.audit_status = 2
+      brand.id in (select max(id) from pc_dealer_brand_info where is_valid = 1
+      AND audit_status = 2 group by company_id, brand_no)
       <if test="_parameter!= null and _parameter!= ''">
       and category.company_id  = #{companyId}
     </if>

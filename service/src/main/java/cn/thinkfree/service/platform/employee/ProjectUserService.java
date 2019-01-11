@@ -75,4 +75,11 @@ public interface ProjectUserService {
      * @param roleCode         角色编码
      */
     void transferEmployee(String transferUserId, String beTransferUserId, String projectNo, String roleCode);
+
+    /**
+     * 查询用户名下的项目数量
+     * @param userId 用户编号
+     * @return 项目数量
+     */
+    long countByUserId(String userId);
 }

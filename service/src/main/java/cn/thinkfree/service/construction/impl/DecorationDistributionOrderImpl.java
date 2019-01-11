@@ -124,7 +124,8 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
                 appointWorkerListVo.setName(employeeMsg.getRealName());
                 appointWorkerListVo.setRoleName("工长");
                 appointWorkerListVo.setRoleType("业务人员");
-                appointWorkerListVo.setProjectNum("5");
+                long projectNum = projectUserService.countByUserId(employeeMsg.getUserId());
+                appointWorkerListVo.setProjectNum( projectNum + "");
                 list1.add(appointWorkerListVo);
             }
             if (employeeMsg.getRoleCode().equals("CS")) { //CS  管家
@@ -133,7 +134,8 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
                 appointWorkerListVo.setName(employeeMsg.getRealName());
                 appointWorkerListVo.setRoleName("管家");
                 appointWorkerListVo.setRoleType("业务人员");
-                appointWorkerListVo.setProjectNum("5");
+                long projectNum = projectUserService.countByUserId(employeeMsg.getUserId());
+                appointWorkerListVo.setProjectNum( projectNum + "");
                 list2.add(appointWorkerListVo);
 
             }
@@ -143,7 +145,8 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
                 appointWorkerListVo.setName(employeeMsg.getRealName());
                 appointWorkerListVo.setRoleName("项目经理");
                 appointWorkerListVo.setRoleType("业务人员");
-                appointWorkerListVo.setProjectNum("5");
+                long projectNum = projectUserService.countByUserId(employeeMsg.getUserId());
+                appointWorkerListVo.setProjectNum( projectNum + "");
                 list3.add(appointWorkerListVo);
             }
             if (employeeMsg.getRoleCode().equals("CQ")) { //CQ  质检员
@@ -152,7 +155,8 @@ public class DecorationDistributionOrderImpl implements DecorationDistributionOr
                 appointWorkerListVo.setName(employeeMsg.getRealName());
                 appointWorkerListVo.setRoleName("质检员");
                 appointWorkerListVo.setRoleType("业务人员");
-                appointWorkerListVo.setProjectNum("5");
+                long projectNum = projectUserService.countByUserId(employeeMsg.getUserId());
+                appointWorkerListVo.setProjectNum( projectNum + "");
                 list4.add(appointWorkerListVo);
             }
         }
