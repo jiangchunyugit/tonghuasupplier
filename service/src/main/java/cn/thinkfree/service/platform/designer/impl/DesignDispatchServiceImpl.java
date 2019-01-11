@@ -241,8 +241,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             return null;
         }
         List<String> relationMap = userVO.getRelationMap();
-        if(relationMap == null){
-            return null;
+        if(relationMap == null || relationMap.isEmpty()){
+            relationMap.add("-1");
         }
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andSiteCompanyIdIn(relationMap);
