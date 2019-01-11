@@ -241,6 +241,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
             return null;
         }
         List<String> relationMap = userVO.getRelationMap();
+        if(relationMap == null){
+            return null;
+        }
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andSiteCompanyIdIn(relationMap);
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
