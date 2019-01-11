@@ -228,8 +228,8 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         for (DesignerOrder companyId:designerOrders){
             companyIds.add(companyId.getCompanyId());
         }
-        companyInfoMapper.selectCompanyCitySiteByCompanyId(companyIds,branchCompanyCode,cityBranchCode,storeCode);
-        if(companyList == null || companyList.size() < 0){
+        companyList = companyInfoMapper.selectCompanyCitySiteByCompanyId(companyIds,branchCompanyCode,cityBranchCode,storeCode);
+        if(companyList.isEmpty()){
             throw new RuntimeException("公司城市分站信息查询为空");
         }
         return companyList;
