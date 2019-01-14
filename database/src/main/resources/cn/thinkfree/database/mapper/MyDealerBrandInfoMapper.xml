@@ -48,7 +48,7 @@
 	brand.authorization_card_validity,
 	brand.is_valid,
 	brand.company_id,
-	brand.audit_status,
+	category.audit_status,
 	brand.brand_no,
 	brand.agency_code,
 	brand.create_time,
@@ -144,7 +144,10 @@
       <include refid="Sign_Base_Column_List" />
       FROM
       pc_dealer_brand_info brand
-      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ',' ) category_name, string_agg ( category_no, ', ' ) category_code FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
+      inner JOIN ( SELECT company_id,dealer_company_id, brand_no,
+      string_agg ( category_name, ',' ) category_name,
+      string_agg ( category_no, ', ' ) category_code, status audit_status
+      FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id,status ) category
       ON category.company_id = brand.company_id
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
@@ -154,6 +157,7 @@
       <if test="_parameter!= null and _parameter!= ''">
       and category.company_id  = #{companyId}
     </if>
+      order by category.audit_status desc
   </select>
 
   <select id="selectByContract" parameterType="java.lang.String" resultMap="BaseResultMap">

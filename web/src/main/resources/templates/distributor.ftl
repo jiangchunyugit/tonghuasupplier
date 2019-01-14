@@ -109,11 +109,12 @@
     <h4 style="display:inline-block">(以下简称乙方)</h4>
 
 </div>
-<section class="indent">“居然设计家”（以下简称平台）是由居然之家打造的融线上线下为一体的智能设计和家装管理平台。包括设计云平台、家具材料采购平台、商品销售平台、施工管理平台、物流配送平台和智能家居服务平台六大部分。其宗旨是以互联网、大数据、云计算以及人工智能的技术应用为手段，改善家居消费者的服务体验、提升家居行业运行效率，从而让家居服务变得快乐简单，并以此为基础构建以家居为中心的家庭消费生态圈。</section>
+<section class="indent">“居然设计家”平台，是由居然之家打造的融线上线下为一体的智能设计 和家装管理平台,包括设计云平台、家具材料采购平台、商品销售平台、施工管 理平台、物流配送平台和智能家居服务平台六大部分。平台宗旨是以互联网、 大数据、云计算以及人工智能的技术应用为手段，改善家居消费者的服务体验、 提升家居行业运行效率，从而让家居服务变得快乐简单，并以此为基础构建以 家居为中心的家庭消费生态圈。
+</section>
 <h4>一、合作约定</h4>
 <section class='indent'>
-    1. 乙方经营的<div class="textput smalltextput">${categoryName}</div>品类
-    <div class="textput smalltextput">${brandName}</div>品牌店面（具体店面详见附件）的产品,乙方按照甲方客户实际购买成交金额的
+    1. 甲方签约设计师向客户推荐乙方在居然之家经营<div class="textput smalltextput">${categoryName}</div>品类
+    <div class="textput smalltextput">${brandName}</div>品牌店面（具体店面详见附件）的产品，乙方按照甲方客户实际购买成交金额的
     <div class="textput smalltextput">${productRatio}</div>%向甲方提供服务费，其中<div class="textput smalltextput">${serviceRatio}</div>%为平台管理费,<div class="textput smalltextput">${recommendRatio}</div>%为材料推荐服务费。
 </section>
 <section class='indent'>
