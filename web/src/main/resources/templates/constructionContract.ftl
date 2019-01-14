@@ -100,6 +100,10 @@
             line-height: 30px;
             clear: both;
         }
+        .page-break {
+            page-break-after:always;
+        }
+
     </style>
 </head>
 
@@ -128,31 +132,8 @@
 <section>
     <br/>
     <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
+
 </section>
-
-
-<div class="header">
-    <p style="text-align: center;">前 言</p>
-    <section class='indent'>
-        居室装修不但花费大，而且费时费力。普遍存在的问题一是没完没了地增项，实际结算金额超出合同金额很多；二是材料不环保，甚至以次充好，质量没保证，造成室内空气污染；三是缺乏工程管理的“大包”服务，消费者要在设计师、材料商、家装公司之间没完没了地协调扯皮，苦不堪言。有鉴于此，居然设计家在总结多年管理经验的基础上，参照《北京市家庭居室装饰装修工程施工合同范本》起草了自己的装修合同文本，不但承诺“零增项”，而且推出“大包” 管理服务，竭尽全力将上述消费者关注的问题一一解决。
-    </section>
-    <section class='indent'>
-        居室装修是一门永远不完美的“艺术”，对装修过程中出现的问题，居然设计家将本着 “诚信为本”、“服务为本”和“向消费者倾斜”的服务原则，让问题得到圆满解决。欢迎广大消费者共同监督，并对我们的工作提出意见和建议。
-    </section>
-    <p>
-        公司网站：https://www.homestyler.com
-    </p>
-    <p>
-        公司微信号：Easyhome_Loho
-    </p>
-    <span> 乙方售后服务电话： </span>
-    <span style="margin-left: 10%">  居然之家集团全国服务热线：4006503333 </span>
-</div>
 
 <div class="footer" >
     <h4  style="float:left;display:inline-block;width:50%;">甲方(授权人)签字（盖章）：<p class="placeholder"></p></h4>
@@ -162,116 +143,106 @@
 
 <p class="inline-block">居然设计家（盖章）： </p>
 
-
-
+<div class="page-break"/>
 <h4 style="text-align: center">目录</h4>
 <section class='indent1'>
     <span style="width: 20%"><em>1</em>装修基本情况</span>
-    <p class="dashed" style="width: 69%"></p><span>1</span>
+    <p class="dashed" style="width: 69%"></p><span>3</span>
 </section>
 <section class='indent1'>
-    <span style="width: 20%"><em>2</em>工期</span> <p class="dashed" style="width: 69%"></p><span>1</span>
+    <span style="width: 20%"><em>2</em>工期</span> <p class="dashed" style="width: 69%"></p><span>3</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>3</em>合同额及支付方式</span> <p class="dashed"></p><span>1</span>
+    <span style="width: 35%"><em>3</em>合同额、支付方式及先行赔付</span> <p class="dashed" style="width: 54%"></p><span>3</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>4</em>施工图纸</span> <p class="dashed"></p><span>2</span>
+    <span style="width: 25%"><em>4</em>施工图纸</span> <p class="dashed"></p><span>4</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>5</em>甲方责任</span> <p class="dashed"></p><span>2</span>
+    <span style="width: 25%"><em>5</em>甲方责任</span> <p class="dashed"></p><span>4</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>6</em>乙方责任</span><p class="dashed"></p><span>3</span>
+    <span style="width: 25%"><em>6</em>乙方责任</span><p class="dashed"></p><span>5</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>7</em>材料供应</span><p class="dashed"></p><span>4</span>
+    <span style="width: 25%"><em>7</em>材料供应</span><p class="dashed"></p><span>6</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>8</em>合同变更</span><p class="dashed"></p><span>4</span>
+    <span style="width: 25%"><em>8</em>合同变更</span><p class="dashed"></p><span>6</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>9</em>工期调整</span><p class="dashed"></p><span>5</span>
+    <span style="width: 25%"><em>9</em>工期调整</span><p class="dashed"></p><span>6</span>
 </section>
 <section class='indent1'>
-    <span style="width: 28%"><em>10</em>质量标准及验收交付 </span><p class="dashed" style="width: 61%"></p><span>5</span>
+    <span style="width: 28%"><em>10</em>质量标准及验收交付 </span><p class="dashed" style="width: 61%"></p><span>7</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>11</em>关于环保</span><p class="dashed"></p><span>7</span>
+    <span style="width: 25%"><em>11</em>关于环保</span><p class="dashed"></p><span>8</span>
 </section>
 <section class='indent1'>
     <span style="width: 28%"><em>12</em>关于家装“零增项”</span><p class="dashed" style="width: 61%"></p><span>8</span>
 </section>
 <section class='indent1'>
-    <span style="width: 35%"><em>13</em>关于家装施工“大包”服务 </span><p class="dashed" style="width: 50%"></p><span>8</span>
+    <span style="width: 35%"><em>13</em>关于保修</span><p class="dashed" style="width: 54%"></p><span>8</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"> <em>14</em>关于保修 </span><p class="dashed" style="width: 65%"></p><span>8</span>
+    <span style="width: 25%"> <em>14</em>违约责任</span><p class="dashed" style="width: 65%"></p><span>8</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"> <em>15</em>违约责任 </span><p class="dashed"></p><span>9</span>
+    <span style="width: 25%"> <em>15</em>争议解决方式</span><p class="dashed"></p><span>9</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"> <em>16</em>争议解决方式 </span><p class="dashed"></p><span>9</span>
+    <span style="width: 20%"> <em>16</em>附则 </span><p class="dashed" style="width: 69%"></p><span>9</span>
 </section>
 <section class='indent1'>
-    <span style="width: 20%"> <em>17</em>附则 </span><p class="dashed" style="width: 69%"></p><span>9</span>
+    <span style="width: 55%"> <em>16</em>附件：居然之家“先行赔付”实施办法</span><p class="dashed" style="width: 34%"></p><span>10</span>
 </section>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-    <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-</section>
+<div class="page-break"/>
+
+
+<h3 class='' style="font-weight: bold">
+    &nbsp;&nbsp; 依照《中华人民共和国合同法》、《中华人民共和国消费者权益保护法》等有关法律、法规的规定，
+    结合本市家庭居室装饰装修的特点，甲、乙双方在平等、自愿、公平、诚实信用的基础上，就乙方承包
+    甲方的家庭居室装饰装修工程（以下简称工程）有关事宜，达成如下协议：
+</h3>
 
 <section>1. 装修基本情况</section>
-<section>1.1 装修面积（套内建筑面积）：${c18} 平米</section>
-<section>1.2 装修承包方式：</section>
+<section>1.1 装修面积（套内建筑面积）：<p class="placeholderK">&nbsp;${c18}</p>。</section>
+<section>1.2 装修户型：<p class="placeholderK">&nbsp;</p>。</section>
+<section>1.3 装修承包方式：</section>
 <#if c03 == 2>
     <section class='indent'>
-        套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
+        <input type="checkbox" checked="checked" style="margin-top: 5px;">套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
+    </section>
+    <section class='indent'>
+        <input type="checkbox" style="margin-top: 5px;">个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
     </section>
 <#else>
     <section class='indent'>
-        个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
+        <input type="checkbox" style="margin-top: 5px;">套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
+    </section>
+    <section class='indent'>
+        <input type="checkbox" checked="checked" style="margin-top: 5px;">个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
     </section>
 </#if>
-<section>1.3 装修内容及施工方法：详见《施工图纸》和《清单式报价书》</section>
+<section>1.4 装修内容及施工方法：详见《施工图纸》和《清单式报价书》。</section>
 <section>2. 工期</section>
-<section>2.1 装修须在合同签订并交齐合同首期款三日后开工。</section>
-<section>2.2 计划开工开始日期：${c19}</section>
+<section>2.1 装修须在合同签订并交齐合同首期款及完成前期准备工作三日后开工。</section>
+<section>2.2 计划开工日期：<p class="placeholderT">&nbsp;${c19}</p></section>
 <section>
-    2.2 计划开工结束日期：${c20}
+    &nbsp;&nbsp;&nbsp;&nbsp;计划竣工日期：<p class="placeholderT">&nbsp;${c20}</p>
 </section>
 <section>
-    2.3 工期：${c04} 天
-</section>
-<section>
-    2.4 合同额  ${c17} 元
+    &nbsp;&nbsp;&nbsp;&nbsp;工期：<p class="placeholderT">&nbsp;${c04}</p> 日（自然日）
 </section>
 <section>
     3. 合同额、支付方式及先行赔付
 </section>
 <section>
-    3.1 为保护甲方权益，居然设计家实行“统一收款”。甲方在签订完施工合同后到居然设计家线上或线下指定收款系统交款。如果甲方私下同乙方直接结算，则居然设计家不对甲方承担任何相关服务责任。
+    3.1 为保护甲方权益，居然设计家实行“统一收款”。甲方在签订完施工合同后到居然设计家线上或线下指定收款系统交款。如果甲方私下同乙方直接结算，则居然设计家不对甲方承担任何相关服务责任和承诺。
 </section>
 <section>
-    3.2 为方便甲方售后服务，减少甲方与乙方之间的往返奔波，居然设计家实行统一售后服务制度。对装修过程中及装修结束后以及符合本合同的相关售后服务问题，甲方可以到居然设计家线上施工平台 办理。
+    3.2 为方便甲方售后服务，减少甲方与乙方之间的往返奔波，居然设计家实行统一售后服务制度。对装修过程中及装修结束后以及符合本合同的相关售后服务问题，甲方可以到居然设计家线上施工平台办理。
 </section>
 <section>
     3.3 先行赔付
@@ -286,14 +257,15 @@
     3.3.3 具体规定见《居然之家“先行赔付”实施办法》（详见附件），甲方在签订本合同前已阅知并理解《居然之家“先行赔付”实施办法》。
 </section>
 <section>
-    3.4 合同额：<p class="placeholderK">&nbsp;</p>。（详见《清单式报价书》//《套餐总价表》）
+    3.4 合同额：<p class="placeholderK">&nbsp; ${c17} </p>元。（详见《清单式报价书》//《套餐总价表》）
 </section>
 <section>
-    3.5 合同款支付采用下列第&nbsp;&nbsp;种方式：
+    3.5 合同款支付采用下列第<p class="placeholderK">&nbsp; </p>种方式：
 </section>
 <section>
     （1）本合同签字生效后，甲方按表中约定支付工程款。
 </section>
+
 <table border="1" cellspacing="0" width="100%" class="table text-algin">
     <tr>
         <th>工程进度</th>
@@ -311,19 +283,16 @@
     </#list>
 </table>
 <section>
-    （2）双方协商一致的其他支付方式：<p class="placeholder"></p>
+    （2）双方协商一致的其他支付方式：<p class="placeholder"></p>。
 </section>
 <section>
-    3.6 工程进度过半：是指现场工程中，水、电管线铺设完成，厨房、卫生间墙砖铺设完成，现场木作类定制完成。
+    3.6 中期工程验收通过后，甲方对乙方提交的按实际施工情况编制的《清单式报价书》进行审核。甲方自提交之日起三日内如未提出异议，视为甲方同意支付乙方工程中期款。
 </section>
 <section>
-    3.7 中期工程验收通过后，甲方对乙方提交的按实际施工情况编制的《清单式报价书》进行审核。甲方自提交之日起三日内如未提出异议，视为甲方同意支付乙方工程中期款。
+    3.7 工程竣工验收通过后，甲方应在三日内到平台指定代收收银系统支付尾款。工程款全部结清后，乙方应当向甲方开具正式发票作为工程款结算凭证。
 </section>
 <section>
-    3.8 工程竣工验收通过后，甲方应当在三日内到乙方财务部门支付尾款。工程款全部结清后，乙方应当向甲方开具正式发票作为工程款结算凭证。
-</section>
-<section>
-    3.9 乙方应当自收到甲方尾款后三日内办理工程交接，并开具《家装工程保修单》）。
+    3.8 乙方应当自甲方支付尾款后三日内办理工程交接，并给甲方办理《家装工程保修单》。
 </section>
 <section>
     4. 施工图纸
@@ -380,7 +349,7 @@
     5.8 施工中若必须涉及5.7项所列内容，则甲方必须向房屋管理部门提出申请，并由原设计单位或者具有相应资质等级的设计单位对改动方案的安全使用性进行审定并出具书面证明。
 </section>
 <section>
-    5.9 工程勘察设计、交底时，协助乙方进行房屋基础结构验收，以便确认房屋结构是否存在问题，向乙方提供原土建、水、电施工竣工图纸。
+    5.9 工程勘察设计 、交底时， 协助乙方进行房屋基础结构验收，以便确认房屋结构是否存在问题，向乙方提供原土建、水、电施工竣工图纸。
 </section>
 <section>
     5.10 对于旧房改造项目，施工期间甲方仍需部分使用该居室的，甲方应当负责配合乙方做好安全及消防的管理工作。
@@ -395,7 +364,7 @@
     5.13 在施工期间，如因出差等原因不便联系，应委托代理人配合乙方施工，并须事先向乙方提供书面授权委托书。
 </section>
 <section>
-    6.乙方责任
+    6. 乙方责任
 </section>
 <section>
     6.1 配合甲方协调好与物业管理部门的关系，遵守物业管理部门的各项规定。
@@ -434,7 +403,10 @@
     6.6 甲方为少数民族的，乙方在施工过程中应当尊重其民族风俗习惯。
 </section>
 <section>
-    7.材料供应
+    6.7 装修期间，保证施工安全和维护甲方财物，承担施工过程中因乙方原因造成的人员（包括但不限于甲方、乙方、第三方）人身伤害和财产损失。
+</section>
+<section>
+    7. 材料供应
 </section>
 <section>
     7.1 装修所用材料可由乙方代购，或者甲方自购。但无论哪方购买，材料均须依照《施工图纸》上标注的相关工程进度订购，未能按时提供材料影响工期的，由购买方承担相应责任。
@@ -452,28 +424,14 @@
     7.3.2 甲方自行验收的，甲方须通知乙方到场参与验收。
 </section>
 <section>
-    7.4 乙方代购材料
+    7.4 对“套餐家装”承包方式中涉及的乙方包配的材料，乙方除必须标明产品品牌、等级、型号之外，甲方可要求乙方提供产品的质检报告；包配的材料如遇市场货源不足，乙方可用质量不低于约定品牌的同类产品替代，但需甲方事先书面认可。
 </section>
-<section class='indent'>
-    7.4.1 甲乙双方需在《材料采购平台产品订购合同》上签字确认。
-</section>
-<section class='indent'>
-    7.4.2 乙方代购材料须甲方预先支付款项，乙方不垫付代购款。
-</section>
-<section class='indent'>
-    7.4.3 乙方代购材料可由乙方负责验收，并承担验收责任。
-</section>
-<section class='indent'>
-    7.4.4 甲乙双方在《施工图纸》中标注的相关施工进度前未签订《材料采购平台产品订购合同》的，视同甲方自购材料，并承担自购材料的相应责任。
+
+<section>
+    8. 合同变更
 </section>
 <section>
-    7.5 对“套餐家装”承包方式中涉及的乙方包配的材料，乙方除必须标明产品品牌、等级、型号之外，甲方可要求乙方提供产品的质检报告；包配的材料如遇市场货源不足，乙方可用质量不低于约定品牌的同类产品替代。
-</section>
-<section>
-    8.合同变更
-</section>
-<section>
-    8.1合同签订后，甲方提出设计和装修内容发生变更的或因甲方原因产生的合同变更造成延期的，甲乙双方须签订《施工项目及工期变更单》调整合同金额或工期。
+    8.1 合同签订后，甲方提出设计和装修内容发生变更的或因甲方原因产生的合同变更造成延期的，甲乙双方须在平台系统中签订《施工项目及工期变更单》调整合同金额或/及工期。
 </section>
 <section>
     8.2 未经甲方签字的合同变更，甲方一概不予认可。
@@ -485,19 +443,19 @@
     8.4 甲方不得与乙方设计师或施工人员私下变更工程项目和工程内容，否则乙方不但有权要求甲方承担由此造成的损失，而且有权拒绝承担整个工程的售后服务责任。
 </section>
 <section>
-    8.5施工期间本合同约定的工程内容如需变更，双方应当协商一致，共同签订书面变更协议，同时调整相关工程费用及工期。工程变更协议，作为竣工结算和顺延工期的根据。
+    8.5 施工期间本合同约定的工程内容如需变更，双方应当协商一致，共同签订书面变更协议，同时调整相关工程费用及工期。工程变更协议，作为竣工结算和顺延工期的根据。
 </section>
 <section>
-    8.6甲方对本合同约定的工程内容提出减项时，如该项目已开工，甲方应当承担由此造成的损失。
+    8.6 甲方对本合同约定的工程内容提出减项时，如该项目已开工，甲方应当承担由此造成的损失。
 </section>
 <section>
-    8.7工程增项时，甲方应当根据工程量适当延长工期，并在工程变更协议中予以注明。
+    8.7 工程增项时，甲方应当根据工程量适当延长工期，并在工程变更协议中予以注明。
 </section>
 <section>
     8.8 甲方不得与乙方设计师或施工人员私自确定工程变更内容，否则乙方有权拒绝承担相应责任。
 </section>
 <section>
-    9.工期调整
+    9. 工期调整
 </section>
 <section>
     9.1 发生下列情况，工期应当顺延，甲乙双方须签订《施工项目及工期变更单》：
@@ -527,7 +485,7 @@
     9.3 工程完工后，乙方通知甲方验收，甲方未能及时验收造成工程延期交付的，乙方不承担工程延期交付责任；工程完工后，但未通过甲方验收的，由乙方对存在的问题进行返工，工期不顺延。
 </section>
 <section>
-    10.质量标准及验收交付
+    10. 质量标准及验收交付
 </section>
 <section>
     10.1 工程质量
@@ -536,7 +494,7 @@
     10.1.1 工程的室内环境污染控制应当严格按照《民用建筑工程室内环境污染控制规范》（GB50325-2010）的标准执行。
 </section>
 <section class='indent'>
-    10.1.2工程施工质量按下列第<p class="placeholderK">（1）</p>项标准执行：
+    10.1.2 工程施工质量按下列第<p class="placeholderK">（1）</p>项标准执行：
 </section>
 <section class='indent'>
     （1）北京市地方标准（《居住建筑装修装饰工程质量验收规范》）。
@@ -553,28 +511,18 @@
 <section class='indent'>
     10.2.1 双方在施工过程中分以下阶段对工程质量进行联合验收：
 </section>
-<table>
-    <tr>
-        <td>
-            <span>（1）辅料验收；</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span>（2）隐蔽工程验收；</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span>（3）中期工程验收；</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span>（4）竣工验收。</span>
-        </td>
-    </tr>
-</table>
+<section class='indent'>
+    （1）辅料验收；
+</section>
+<section class='indent'>
+    （2）隐蔽工程验收；
+</section>
+<section class='indent'>
+    （3）中期工程验收；
+</section>
+<section class='indent'>
+    （4）竣工验收。
+</section>
 <section class='indent'>
     10.2.2 隐蔽工程和中期工程完工后，乙方应当通知甲方在三日内进行验收，待双方验收合格并签字确认后，乙方方可进行下道工序施工；如甲方不进行验收，乙方有权暂停施工，相应工期损失由甲方承担；如乙方未通知甲方进行隐蔽工程或中期工程验收而擅自进行下道工序施工的，甲方有权要求乙方停止施工，由此造成的损失由乙方承担。
 </section>
@@ -594,7 +542,7 @@
     10.2.7 双方未办理竣工验收手续，甲方不得入住，如擅自入住视同验收合格。
 </section>
 <section>
-    11.关于环保
+    11. 关于环保
 </section>
 <section>
     11.1 乙方保证本工程实行环保设计、采用环保材料、进行环保施工，装修后室内空气质量达到国家环保标准。装修后的室内空气质量标准执行《民用建筑工程室内环境污染控制规范》（GB50325-2010）。
@@ -624,7 +572,7 @@
     11.4 由于装修引起室内空气不合格的主要原因是使用了环保不达标的材料，因此如果室内空气经检测不合格，则首先要在所用材料上寻找原因。对甲方在居然之家市场外的外购材料，甲方必须提供省（市）级以上部门出具的一年期限内环保检测报告，若有必要，乙方可以委托相关部门重新进行检测。若材料全部在乙方和居然之家购买，则所有责任由乙方全部承担。
 </section>
 <section>
-    11.5 由于乙方原因导致室内空气不合格，乙方按本合同第15.5条的约定承担违约责任。
+    11.5 由于乙方原因导致室内空气不合格，乙方按本合同第15.5条的约定承担违约责任
 </section>
 <section>
     11.6 由于室内空气中有害物质含量会因挥发而越来越少，因此空气质量不存在保修期。
@@ -633,7 +581,7 @@
     11.7 室内空气质量不合格的原因除装修污染以外，还有建筑主体和自购家具等污染。对因这些方面原因造成的污染，乙方不承担任何责任。
 </section>
 <section>
-    12.于家装“零增项”
+    12. 关于家装“零增项”
 </section>
 <section>
     12.1 乙方承诺家装的实际结算额与合同额保持一致，未经甲方认可的工程增减项以及虽经甲方认可但未超过装修费3%的增减项，一律由乙方承担。因甲方原因超过合同额3%的部分, 据实结算。
@@ -642,34 +590,34 @@
     12.2 因乙方设计失误、有意丢漏项及其它非甲方意愿发生的工程增项，其费用由乙方承担。
 </section>
 <section>
-    13.关于保修
+    13. 关于保修
 </section>
 <section>
-    13.1.自验收合格双方签字之日起，在正常使用条件下室内装饰装修工程保修期限为三年，有防水要求的厨房、卫生间防渗漏工程保修期限为六年。
+    13.1 自验收合格双方签字之日起，在正常使用条件下室内装饰装修工程保修期限为三年，有防水要求的厨房、卫生间防渗漏工程保修期限为六年。
 </section>
 <section>
-    14.违约责任
+    14. 违约责任
 </section>
 <section>
-    14.1.甲乙双方任何一方未按约定履行合同义务给对方造成损失的，应当承担赔偿责任。
+    14.1 甲乙双方任何一方未按约定履行合同义务给对方造成损失的，应当承担赔偿责任。
 </section>
 <section>
-    14.2.甲乙双方任何一方无法继续履行合同的，应当及时通知另一方，违约方应承担因合同解除而给对方造成的损失。
+    14.2 甲乙双方任何一方无法继续履行合同的，应当及时通知另一方，违约方应承担因合同解除而给对方造成的损失。
 </section>
 <section>
-    14.3.甲方无正当理由未按合同约定期限交付工程款的，每延误一日，应当向乙方支付未付款的1‰作为违约金。由于乙方责任延误工期的，每延误一日，乙方支付给甲方合同款1‰作为违约金，累计不得超过工程造价总金额的20%。甲方延迟支付超过<p class="placeholderK"></p>日的，乙方有权解除合同。
+    14.3 甲方无正当理由未按合同约定期限交付工程款的，每延误一日，应当向乙方支付未付款的1‰作为违约金。由于乙方责任延误工期的，每延误一日，乙方支付给甲方合同款1‰作为违约金，累计不得超过工程造价总金额的20%。甲方延迟支付超过<p class="placeholderK"></p>日的，乙方有权解除合同。
 </section>
 <section>
     14.4 由于乙方责任导致工程质量不合格的，由乙方对不合格部位进行返工修理，因返工造成工程的延期交付视同工程延误，乙方须按14.3的标准向甲方支付违约金；同一部位返工3次仍不合格的，乙方须向甲方返还该部位全部价款。
 </section>
 <section>
-    14.5.因乙方原因造成室内空气质量不合格，由乙方进行综合治理，因治理造成工程的延误视同工程延期，按14.3的标准支付违约金；在一个月内经治理仍不合格的，乙方须向甲方返还已支付的全部合同款，并向甲方支付施工合同款5%的违约金。
+    14.5 因乙方原因造成室内空气质量不合格，由乙方进行综合治理，因治理造成工程的延误视同工程延期，按14.3的标准支付违约金；在一个月内经治理仍不合格的，乙方须向甲方返还已支付的全部合同款，并向甲方支付施工合同款5%的违约金。
 </section>
 <section>
-    15 .争议解决方式
+    15. 争议解决方式
 </section>
 <section>
-    15.1本合同项下发生的争议，首先应自行协商，协商不成的按居然设计家“先行赔付”的有关规定执行，经协商或调解未达成一致的，按下述第 &nbsp; &nbsp;种方式解决：
+    15.1 本合同项下发生的争议，首先应自行协商，协商不成的按居然设计家“先行赔付”的有关规定执行，经协商或调解未达成一致的，按下述第<p class="placeholderK">&nbsp;</p>种方式解决：
 </section>
 <section>
     (1).向合同签约地人民法院起诉。
@@ -678,7 +626,7 @@
     (2).向合同签约地仲裁委员会申请仲裁。
 </section>
 <section>
-    16 .附则
+    16. 附则
 </section>
 <section>
     16.1 本合同经甲乙双方签字（盖章）交齐首期款后生效。
@@ -687,10 +635,97 @@
     16.2 本合同一式两份，甲乙双方各执一份。
 </section>
 <section>
-    16.3.本合同签订及执行过程中的相关附件是本合同的重要组成部分。
+    16.3 本合同签订及执行过程中的相关附件是本合同的重要组成部分。
 </section>
 <section>
-    16.4.本合同履行完毕后自动终止。
+    16.4 本合同履行完毕后自动终止。
+</section>
+<div class="page-break"/>
+<section>
+    <h1 class="text-algin">附件：居然之家“先行赔付”实施办法</h1>
+    <div class="text-algin">（自2018年1月1日起执行）</div>
+    <h2>
+        一、“先行赔付”的含义
+    </h2>
+    <section>
+        “先行赔付”指居然之家对商户在居然之家卖场内向消费者销售的商品和服务承担民事连带责任。当消费者在居然之家卖场内购买的商品出现质量和服务问题（指不符合国家或行业要求或居然之家的服务承诺）时，消费者可以要求居然之家先行向其进行赔偿。
+        居然之家对商户承担先行赔付责任，仅限商户所售商品出现质量和服务问题所产生的民事赔偿责任，不包括商户从事与正常商品销售无关的活动而产生的民事赔偿责任以及从事违法行为所产生的刑事赔偿责任，以非消费者身份“知假买假”等以获取不正当高额牟利的行为也不在先行赔付之列。
+    </section>
+    <h2>
+        二、“先行赔付”的条件和程序
+    </h2>
+    <section>
+        （一）仅涉及商品质量和服务问题的民事赔偿
+    </section>
+    <section>
+        1、顾客须提供居然之家统一格式的商品销售合同和交款凭证；装修则要提供经居然之家认证的装修合同：
+    </section>
+    <section>
+        ①属于产品质量方面的问题，其期限必须在国家、行业或居然之家承诺的“三包”有效期内。其中家具建材的“三包”期为三年；装饰装修服务的保修期为三年，有防水要求的厨房、卫生间和外墙面的防渗漏保修期为六年。
+    </section>
+    <section>
+        ②属于服务或其他方面的问题，其期限按合同约定或居然之家的公开承诺执行。
+    </section>
+    <section>
+        2、经居然之家或国家有关质检部门鉴定，确认商户提供的商品质量或服务存在问题。
+    </section>
+    <section>
+        3、“先行赔付”的程序
+    </section>
+    <section>
+        ①消费者接受居然之家的处理意见，由居然之家直接向消费者进行赔付。
+    </section>
+    <section>
+        ②消费者不接受居然之家的处理意见，消费者可以到消费者协会申请调解赔付，也可以向人民法院提起诉讼或向仲裁机构提请仲裁，居然之家根据人民法院的裁定结果或仲裁机构的仲裁意见向消费者进行赔付。
+    </section>
+    <section>
+        （二）不仅仅是涉及商品质量服务问题，同时也涉及刑事责任的问题，消费者须遵照“先刑事、后民事”的程序依法对相关商户提起司法诉讼，居然之家根据法院裁判结果承担相应的民事赔偿责任。
+    </section>
+    <section>
+        （三）对商户从事与商品销售完全无关的经营活动（如借贷）或违法行为（如非法传销、非法集资等）所产生的民事及刑事赔偿责任，居然之家不承担先行赔付责任；购买者以非消费者身份在卖场内购买的商品出现质量和服务问题（如知假买假等以获取高额赔偿进行牟利的行为），不属于居然之家“先行赔付”范围之内，由购买者通过司法等其它途径直接向商户追索。
+    </section>
+    <div class="page-break"/>
+    <h2>
+        三、“先行赔付”的范围
+    </h2>
+
+    <section>
+        “先行赔付”的范围包括直接损失和间接损失，其中间接损失以国家有关法律、法规的规定为准。
+    </section>
+
+    <h2>
+        四、“先行赔付”的方式
+    </h2>
+
+    <section>
+        “先行赔付”的方式包括免费修理、换货、退货以及对不能维修的实行现金补偿，具体方式按国家有关法律法规执行。
+    </section>
+    <section>
+       <br/>
+        <br/> <br/> <br/> <br/> <br/>
+
+
+
+        <br/>
+        <br/> <br/>
+
+        <br/>
+        <br/>
+        <br/> <br/> <br/>
+        <br/> <br/>
+        <br/> <br/>
+
+
+
+
+
+
+
+
+
+
+
+
 </section>
 </body>
 

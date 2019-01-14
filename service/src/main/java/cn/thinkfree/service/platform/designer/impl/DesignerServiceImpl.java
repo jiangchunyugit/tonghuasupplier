@@ -4,6 +4,7 @@ import cn.thinkfree.core.constants.BasicsDataParentEnum;
 import cn.thinkfree.core.constants.RoleFunctionEnum;
 import cn.thinkfree.database.mapper.*;
 import cn.thinkfree.database.model.*;
+import cn.thinkfree.database.vo.CompanyCitySiteVO;
 import cn.thinkfree.service.platform.basics.BasicsService;
 import cn.thinkfree.service.platform.basics.RoleFunctionService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
@@ -71,6 +72,9 @@ public class DesignerServiceImpl implements DesignerService {
      * @param registrationTimeStart 注册时间
      * @param registrationTimeEnd   注册时间
      * @param sort                  排序区域
+     * @param branchCompanyCode
+     * @param cityBranchCode
+     * @param storeCode
      * @param pageSize              每页多少条
      * @param pageIndex             第几页
      * @return
@@ -79,7 +83,7 @@ public class DesignerServiceImpl implements DesignerService {
     public PageVo<List<DesignerMsgListVo>> queryDesigners(
             String designerName, String designerRealName, String phone, String authState,
             String province, String city, String area, String level, String identity, String cardNo, String source,
-            String tag, String registrationTimeStart, String registrationTimeEnd, String sort, int pageSize, int pageIndex) {
+            String tag, String registrationTimeStart, String registrationTimeEnd, String sort, String branchCompanyCode, String cityBranchCode, String storeCode, int pageSize, int pageIndex) {
         List<String> userIds = null;
         if(!StringUtils.isEmpty(phone)){
             List<UserMsgVo> userMsgVos = userCenterService.queryUserMsg(null, phone);
@@ -125,6 +129,12 @@ public class DesignerServiceImpl implements DesignerService {
         List<UserMsgVo> userMsgVos = userCenterService.queryUsers(ReflectUtils.getList(employeeMsgs,"userId"));
         Map<String,UserMsgVo> userMsgVoMap = ReflectUtils.listToMap(userMsgVos,"staffId");
         Map<String, CompanyInfo> companyInfoMap = getStringCompanyInfoMap(employeeMsgs);
+        List<String> companyIds = new ArrayList<>();
+        for (EmployeeMsg employeeMsg : employeeMsgs) {
+            companyIds.add(employeeMsg.getCompanyId());
+        }
+        List<CompanyCitySiteVO> companyList = companyInfoMapper.selectCompanyCitySiteByCompanyId(companyIds,branchCompanyCode,cityBranchCode,storeCode);
+
         for (EmployeeMsg employeeMsg : employeeMsgs) {
             DesignerMsgListVo msgVo = new DesignerMsgListVo();
             DesignerMsg msg = designerMsgMap.get(employeeMsg.getUserId());
@@ -134,6 +144,7 @@ public class DesignerServiceImpl implements DesignerService {
                 msgVo.setSource(msg.getSource() + "");
                 msgVo.setTag(msg.getTag() + "");
                 msgVo.setUserId(msg.getUserId());
+                msgVo.setCompanyId(employeeMsg.getCompanyId());
             }
             msgVo.setAddress(provinceMap.get(employeeMsg.getProvince()) + "," + cityMap.get(employeeMsg.getCity()) + "," + areaMap.get(employeeMsg.getArea()));
             if(msgVo.getAddress().contains("null")){
@@ -152,6 +163,15 @@ public class DesignerServiceImpl implements DesignerService {
             msgVo.setSex(employeeMsg.getSex() + "");
             msgVo.setRealName(employeeMsg.getRealName());
             msgVo.setBindCompanyState(employeeMsg.getEmployeeApplyState() + "");
+            for(CompanyCitySiteVO company :companyList){
+                if(msgVo.getCompanyId()!=null && company.getCompanyId() !=null){
+                    if(msgVo.getCompanyId().equals(company.getCompanyId())){
+                        msgVo.setBranchCompanyName(company.getBranchCompanyName());
+                        msgVo.setCityBranchName(company.getCityBranchName());
+                        msgVo.setStoreName(company.getStoreName());
+                    }
+                }
+            }
             msgVos.add(msgVo);
         }
         PageVo<List<DesignerMsgListVo>> msgVo = new PageVo<>();

@@ -37,7 +37,15 @@ public class DesignOrderDelVo extends DesignerOrderVo {
                 designerOrderVo.getOptionUserName(),
                 designerOrderVo.getOptionTime(),
                 designerOrderVo.getOrderState(),
-                designerOrderVo.getProjectMoney());
+                designerOrderVo.getProjectMoney(),
+                designerOrderVo.getBranchCompanyName(),
+                designerOrderVo.getCityBranchName(),
+                designerOrderVo.getStoreName(),
+                designerOrderVo.getHuxing(),
+                designerOrderVo.getProvinceName(),
+                designerOrderVo.getCityName(),
+                designerOrderVo.getRegionName(),
+                designerOrderVo.getCompanyId());
         this.state = state;
         this.stageName = stageName;
         this.reminder = reminder;

@@ -35,6 +35,14 @@ public class DesignerMsgListVo {
     private String userId;
     @ApiModelProperty("设计师绑定公司状态  1入驻待审核，2入驻不通过，3已入驻，4解约待审核，5解约不通过，6已解约")
     private String bindCompanyState;
+    @ApiModelProperty("分公司")
+    private String branchCompanyName;
+    @ApiModelProperty("城市分站名称")
+    private String cityBranchName;
+    @ApiModelProperty("门店名称")
+    private String storeName;
+    @ApiModelProperty("公司id")
+    private String companyId;
 
     public String getUserName() {
         return userName;
@@ -146,5 +154,37 @@ public class DesignerMsgListVo {
 
     public String getBindCompanyState() {
         return bindCompanyState;
+    }
+
+    public String getBranchCompanyName() {
+        return branchCompanyName;
+    }
+
+    public void setBranchCompanyName(String branchCompanyName) {
+        this.branchCompanyName = branchCompanyName;
+    }
+
+    public String getCityBranchName() {
+        return cityBranchName;
+    }
+
+    public void setCityBranchName(String cityBranchName) {
+        this.cityBranchName = cityBranchName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
     }
 }
