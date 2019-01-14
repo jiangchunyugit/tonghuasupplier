@@ -49,7 +49,7 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         }
         //判断添加的品牌品类是否是审批中，变更中，或者审核成功的
         Map<String, Object> brandMap = getBrandList(dealerBrandInfo);
-        if(brandMap.get("isSuccess").equals("false")){
+        if(brandMap.get("isSuccess").toString().equals("false")){
              return brandMap;
         }
         //品牌添加
@@ -172,7 +172,7 @@ public class DealerBrandServiceImpl implements DealerBrandService{
 
         //判断添加的品牌品类是否是审批中，变更中，或者审核成功的
         Map<String, Object> brandMap = getBrandList(dealerBrandInfo);
-        if(brandMap.get("isSuccess").equals("false")){
+        if(brandMap.get("isSuccess").toString().equals("false")){
             return brandMap;
         }
 
@@ -308,20 +308,21 @@ public class DealerBrandServiceImpl implements DealerBrandService{
     @Transactional(rollbackFor = Exception.class)
     public Map<String, Object> editBrand(DealerBrandInfoVO dealerBrandInfoVO) {
         Map<String, Object>  map = new HashMap<>();
-        //1.删除品类信息  2.更新品牌信息   3.再新增品类信息
-        //1.删除品类信息
-        DealerCategoryExample categoryExample = new DealerCategoryExample();
-        categoryExample.createCriteria().andBrandIdEqualTo(dealerBrandInfoVO.getId());
-        dealerCategoryMapper.deleteByExample(categoryExample);
 
         DealerBrandInfo dealerBrandInfo = new DealerBrandInfo();
         SpringBeanUtil.copy(dealerBrandInfoVO, dealerBrandInfo);
 
         //判断添加的品牌品类是否是审批中，变更中，或者审核成功的
         Map<String, Object> brandMap = getBrandList(dealerBrandInfo);
-        if(brandMap.get("isSuccess").equals("false")){
+        if(brandMap.get("isSuccess").toString().equals("false")){
             return brandMap;
         }
+
+        //1.删除品类信息  2.更新品牌信息   3.再新增品类信息
+        //1.删除品类信息
+        DealerCategoryExample categoryExample = new DealerCategoryExample();
+        categoryExample.createCriteria().andBrandIdEqualTo(dealerBrandInfoVO.getId());
+        dealerCategoryMapper.deleteByExample(categoryExample);
 
         //更新品牌信息
         DealerBrandInfoExample brandInfoExample = new DealerBrandInfoExample();
@@ -343,6 +344,7 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         }
         if(brandLine > 0 && line > 0 && line == cateLine){
             map.put("isSuccess", true);
+            map.put("msg", "重新提交成功");
             return map;
         }
         map.put("isSuccess", false);
@@ -426,12 +428,12 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         for(DealerBrandInfo dealerBrandInfo1 : dealerBrandInfos){
             for(int i = 0; i < str.length; i++){
                 if(dealerBrandInfo1.getCategoryCode().contains(str[i])){
-                    if(BrandConstants.AuditStatus.AUDITSUCCESS.code.toString().equals(dealerBrandInfo1.getAuditStatus())){
+                    if(BrandConstants.AuditStatus.AUDITSUCCESS.code == dealerBrandInfo1.getAuditStatus()){
                         map.put("isSuccess", false);
                         map.put("msg", "此品牌品类已通过审核");
                         return map;
                     }
-                    if(BrandConstants.AuditStatus.AUDITING.code.toString().equals(dealerBrandInfo1.getAuditStatus()) || BrandConstants.AuditStatus.UPDATEING.code.toString().equals(dealerBrandInfo1.getAuditStatus())){
+                    if(BrandConstants.AuditStatus.AUDITING.code == dealerBrandInfo1.getAuditStatus() || BrandConstants.AuditStatus.UPDATEING.code == dealerBrandInfo1.getAuditStatus()){
                         map.put("isSuccess", false);
                         map.put("msg", "此品牌品类正在审核中");
                         return map;
@@ -440,6 +442,7 @@ public class DealerBrandServiceImpl implements DealerBrandService{
             }
         }
         map.put("isSuccess", true);
+        map.put("msg", "操作成功！");
         return map;
     }
 

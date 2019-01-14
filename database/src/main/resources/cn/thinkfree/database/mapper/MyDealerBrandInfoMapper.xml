@@ -147,7 +147,7 @@
       inner JOIN ( SELECT company_id,dealer_company_id, brand_no,
       string_agg ( category_name, ',' ) category_name,
       string_agg ( category_no, ', ' ) category_code, status audit_status
-      FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id,status ) category
+      FROM pc_agency_contract where status in (8,9,10,11) GROUP BY company_id, brand_no, dealer_company_id,status ) category
       ON category.company_id = brand.company_id
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
@@ -157,7 +157,7 @@
       <if test="_parameter!= null and _parameter!= ''">
       and category.company_id  = #{companyId}
     </if>
-      order by category.audit_status desc
+      order by category.audit_status asc
   </select>
 
   <select id="selectByContract" parameterType="java.lang.String" resultMap="BaseResultMap">
