@@ -7,14 +7,19 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.DesignStateEnum;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.core.utils.JSONUtil;
 import cn.thinkfree.database.vo.UserVO;
 import cn.thinkfree.database.vo.VolumeReservationDetailsVO;
 import cn.thinkfree.service.platform.designer.ApplyRefundService;
 import cn.thinkfree.service.platform.designer.DesignDispatchService;
 import cn.thinkfree.service.platform.vo.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +84,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         try {
             PageVo<List<DesignerOrderVo>> pageVo = designDispatchService.queryDesignerOrder(queryStage, orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType, companyName, designerName,branchCompanyCode,cityBranchCode,storeCode);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, pageSize, pageIndex, stateType, companyName, designerName, branchCompanyCode, cityBranchCode, storeCode);
             return sendJsonData(ResultMessage.SUCCESS, pageVo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,7 +159,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "storeCode", required = false, value = "门店名称") @RequestParam(name = "storeCode", required = false) String storeCode) {
         try {
             designDispatchService.designerOrderExcel(orderTpye, companyId, projectNo, userMsg, orderSource, createTimeStart, createTimeEnd, styleCode,
-                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response,branchCompanyCode,cityBranchCode,storeCode);
+                    provinceCode, cityCode, areaCode, money, acreage, designerOrderState, companyState, optionUserName, optionTimeStart, optionTimeEnd, stateType, fileName, response, branchCompanyCode, cityBranchCode, storeCode);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -176,7 +183,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-            if(userVO != null){
+            if (userVO != null) {
                 optionUserId = userVO.getUserID();
                 optionUserName = userVO.getName();
             }
@@ -198,7 +205,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-            if(userVO != null){
+            if (userVO != null) {
                 optionUserId = userVO.getUserID();
                 optionUserName = userVO.getName();
             }
@@ -233,7 +240,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-            if(userVO != null){
+            if (userVO != null) {
                 optionUserId = userVO.getUserID();
                 optionUserName = userVO.getName();
             }
@@ -255,7 +262,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "optionUserName", required = false, value = "操作人员姓名") @RequestParam(name = "optionUserName", required = false) String optionUserName) {
         try {
             UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
-            if(userVO != null){
+            if (userVO != null) {
                 optionUserId = userVO.getUserID();
                 optionUserName = userVO.getName();
             }
@@ -650,16 +657,16 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "userId", required = false, value = "用户ID") @RequestParam(name = "userId", required = false) String userId,
             @ApiParam(name = "designOrderNo", required = false, value = "设计订单编号") @RequestParam(name = "designOrderNo", required = false) String designOrderNo) {
         try {
-            if (projectNo==null||projectNo.trim().isEmpty()){
-                return RespData.error("请检查入参projectNo="+projectNo);
+            if (projectNo == null || projectNo.trim().isEmpty()) {
+                return RespData.error("请检查入参projectNo=" + projectNo);
             }
-            if (designOrderNo==null||designOrderNo.trim().isEmpty()){
-                return RespData.error("请检查入参designOrderNo="+designOrderNo);
+            if (designOrderNo == null || designOrderNo.trim().isEmpty()) {
+                return RespData.error("请检查入参designOrderNo=" + designOrderNo);
             }
-            if (userId==null||userId.trim().isEmpty()){
-                return RespData.error("请检查入参userId="+userId);
+            if (userId == null || userId.trim().isEmpty()) {
+                return RespData.error("请检查入参userId=" + userId);
             }
-            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.showBtnByUserId(projectNo,designOrderNo,userId));
+            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.showBtnByUserId(projectNo, designOrderNo, userId));
         } catch (Exception e) {
             return sendFailMessage(e.getMessage());
         }
@@ -711,7 +718,7 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "pageSize", required = false, value = "每页多少条") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页，从1开始") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         PageVo<List<ContractListItemVo>> itemVo = designDispatchService.designContract(contractNo, projectNo, orderSource, provinceCode, cityCode,
-                areaCode, contractState, signTimeS, signTimeE, ownerMsg, branchCompanyCode,cityBranchCode,storeCode,pageSize, pageIndex);
+                areaCode, contractState, signTimeS, signTimeE, ownerMsg, branchCompanyCode, cityBranchCode, storeCode, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, itemVo);
     }
 
@@ -722,6 +729,24 @@ public class DesignDispatchController extends AbsBaseController {
             @ApiParam(name = "orderNo", required = false, value = "订单编号") @RequestParam(name = "orderNo", required = false) String orderNo) {
         try {
             return sendJsonData(ResultMessage.SUCCESS, designDispatchService.replaceDesigners(orderNo));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespData.error(e.getMessage());
+        }
+    }
+
+    @ApiOperation("返回订单为进行或进行数量")
+    @MyRespBody
+    @RequestMapping(value = "getOrderStatusValue", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<List<Map<String, String>>> getOrderStatusValue(
+            @ApiParam(name = "userMap", required = false, value = "用户id集合 userId state 1设计 2施工") @RequestParam(name = "userMap", required = false) String userMap) {
+        try {
+            List<Map<String, String>> listObjectFir = new ArrayList<>();
+            if (StringUtils.isNotBlank(userMap)) {
+                listObjectFir = (List<Map<String, String>>) JSONArray.parse(userMap);
+            }
+            return sendJsonData(ResultMessage.SUCCESS, designDispatchService.getOrderStatusValue(listObjectFir));
+
         } catch (Exception e) {
             e.printStackTrace();
             return RespData.error(e.getMessage());

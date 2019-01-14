@@ -2261,4 +2261,71 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         return  basicsData.get(0).getBasicsName();
     }
 
+    /**
+     * @Author jiang
+     * @Description 提供设计施工订单进行或者未进行接口
+     * @Date
+     * @Param
+     * @return
+     **/
+    @Override
+    public List<Map<String,String>> getOrderStatusValue(List<Map<String, String>> userMap) {
+        List<Map<String,String>> mapList = new ArrayList<>();
+        for(Map<String, String> user:userMap){
+            Map<String,String> map = new HashMap<>();
+            Integer num = 0;
+            Integer ing = 0;
+               Integer end = 0;
+               String userId = user.get("userId");
+               String state = user.get("state");
+               OrderUserExample orderUserExample = new OrderUserExample();
+               OrderUserExample.Criteria criteria = orderUserExample.createCriteria();
+               criteria.andUserIdEqualTo(userId);
+               List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
+               if(orderUsers.isEmpty() || orderUsers.size() == 0){
+                   throw new RuntimeException("查询结果集为空");
+               }
+               for(OrderUser order :orderUsers){
+                   //设计
+                   if(state.equals("1")){
+                       DesignerOrderExample designerOrderExample = new DesignerOrderExample();
+                       DesignerOrderExample.Criteria criteria1 = designerOrderExample.createCriteria();
+                       criteria1.andOrderNoEqualTo(order.getOrderNo());
+                       List<DesignerOrder> designerOrders = designerOrderMapper.selectByExample(designerOrderExample);
+                       if(designerOrders.isEmpty() || designerOrders.size() == 0){
+                           throw new RuntimeException("查询结果集为空");
+                       }
+                       for(DesignerOrder designerOrder:designerOrders){
+                           if(designerOrder.getOrderStage() == DesignStateEnum.STATE_270.getState() || designerOrder.getComplaintState() ==ComplaintStateEnum.STATE_2.getState() || designerOrder.getComplaintState() ==ComplaintStateEnum.STATE_3.getState()){
+                               end = end +1;
+                           }else {
+                               ing = ing +1;
+                           }
+                       }
+                   }else {
+                       //施工
+                       ConstructionOrderExample designerOrderExample = new ConstructionOrderExample();
+                       ConstructionOrderExample.Criteria criteria1 = designerOrderExample.createCriteria();
+                       criteria1.andOrderNoEqualTo(order.getOrderNo());
+                       List<ConstructionOrder> constructionOrders = constructionOrderMapper.selectByExample(designerOrderExample);
+                       if(constructionOrders.isEmpty() || constructionOrders.size() == 0){
+                           throw new RuntimeException("查询结果集为空");
+                       }
+                       for(ConstructionOrder constructionOrder:constructionOrders){
+                           if(constructionOrder.getOrderStage() == ConstructionStateEnum.STATE_700.getState() || constructionOrder.getComplaintState() ==ComplaintStateEnum.STATE_2.getState() || constructionOrder.getComplaintState() ==ComplaintStateEnum.STATE_3.getState() || constructionOrder.getComplaintState() ==ComplaintStateEnum.STATE_5.getState()){
+                               end = end +1;
+                           }else {
+                               ing = ing +1;
+                           }
+                       }
+                   }
+               }
+            map.put("userId",userId);
+            map.put("end",end.toString());
+            map.put("ing",ing.toString());
+            mapList.add(map);
+        }
+        return mapList;
+    }
+
 }

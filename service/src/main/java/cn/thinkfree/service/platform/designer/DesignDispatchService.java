@@ -10,6 +10,7 @@ import cn.thinkfree.service.platform.vo.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xusonghui
@@ -371,4 +372,12 @@ public interface DesignDispatchService {
      * @return
      **/
     public String getHouseTypeNum(String projectNo);
+    /**
+     * @Author jiang
+     * @Description 提供设计施工订单进行或者未进行接口
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<Map<String,String>> getOrderStatusValue(List<Map<String, String>> userMap);
 }
