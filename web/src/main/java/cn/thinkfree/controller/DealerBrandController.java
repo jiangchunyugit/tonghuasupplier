@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.DealerBrandInfo;
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.*;
 import cn.thinkfree.service.companysubmit.DealerBrandService;
 import io.swagger.annotations.Api;
@@ -161,5 +162,18 @@ public class DealerBrandController  extends AbsBaseController {
     ,@ApiParam("品牌编号") @RequestParam(value = "brandNo") String brandNo){
         Map<String,Object> brandItemsVOS = dealerBrandService.isSignChange(companyId, agencyCode, brandNo);
         return sendJsonData(success, "操作成功", brandItemsVOS);
+    }
+
+    /**
+     * 入驻公司申请品牌的审批信息
+     * @return
+     */
+    @RequestMapping(value = "/findAuditList", method = RequestMethod.GET)
+    @MyRespBody
+    @ApiOperation(value="前端--经销商后台--入驻公司申请品牌的审批信息")
+    public MyRespBundle<PcAuditInfo> findAuditList(@ApiParam("公司编号") @RequestParam(value = "companyId") String companyId
+            ,@ApiParam("品牌id") @RequestParam(value = "brandId") String brandId){
+        List<PcAuditInfo> auditList = dealerBrandService.findAuditList(brandId, companyId);
+        return sendJsonData(success, "操作成功", auditList);
     }
 }

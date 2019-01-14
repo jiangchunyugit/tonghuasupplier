@@ -1,6 +1,7 @@
 package cn.thinkfree.service.companysubmit;
 
 import cn.thinkfree.database.model.DealerBrandInfo;
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.*;
 
 import java.util.List;
@@ -83,5 +84,12 @@ public interface DealerBrandService {
      * @return
      */
     Map<String,Object> isSignChange(String companyId, String agencyCode, String brandNo);
+
+    /**
+     *入驻公司申请品牌的审批信息
+     * @param brandId
+     * @return
+     */
+    List<PcAuditInfo> findAuditList(String brandId, String companyId);
 
 }
