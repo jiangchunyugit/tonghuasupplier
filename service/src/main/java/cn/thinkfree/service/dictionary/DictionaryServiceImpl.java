@@ -83,23 +83,23 @@ public class DictionaryServiceImpl implements DictionaryService {
      */
     @Override
     public List<City> findCityByProvince(String province) {
-        UserVO	userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
         CityExample cityExample = new CityExample();
-        if(userVO != null) {
-            // 是否入驻
-            if (userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY.shortVal())) {
-                cityExample.createCriteria().andProvinceCodeEqualTo(province);
-            } else {
-                // 运营超管
-                if(UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
-                    cityExample.createCriteria().andProvinceCodeEqualTo(province);
-                }else{
-//                    cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo().getCity());
-                }
-            }
-        }else{
-            cityExample.createCriteria().andProvinceCodeEqualTo(province);
-        }
+        cityExample.createCriteria().andProvinceCodeEqualTo(province);
+//        if(userVO != null) {
+//            // 是否入驻
+//            if (userVO.getCompanyInfo().getCompanyClassify().equals(CompanyConstants.ClassClassify.JOINCOMPANY.shortVal())) {
+//                cityExample.createCriteria().andProvinceCodeEqualTo(province);
+//            } else {
+//                // 运营超管
+//                if(UserLevel.Company_Admin.shortVal().equals(userVO.getPcUserInfo().getLevel())){
+//                    cityExample.createCriteria().andProvinceCodeEqualTo(province);
+//                }else{
+//                    cityExample.createCriteria().andCityCodeEqualTo(userVO.getPcUserInfo()..getCity());
+//                }
+//            }
+//        }else{
+//            cityExample.createCriteria().andProvinceCodeEqualTo(province);
+//        }
         return cityMapper.selectByExample(cityExample);
     }
 

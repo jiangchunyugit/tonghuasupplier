@@ -43,10 +43,10 @@ public interface DealerBrandService {
 
     /**
      * 品牌变更
-     * @param dealerBrandInfo
+     * @param dealerBrandInfoVO
      * @return
      */
-    boolean updateBrand(DealerBrandInfoVO dealerBrandInfoVO);
+    Map<String,Object> updateBrand(DealerBrandInfoVO dealerBrandInfoVO);
 
     /**
      * 审批变更品牌
@@ -67,7 +67,7 @@ public interface DealerBrandService {
      * @param dealerBrandInfoVO
      * @return
      */
-    boolean editBrand(DealerBrandInfoVO dealerBrandInfoVO);
+    Map<String, Object> editBrand(DealerBrandInfoVO dealerBrandInfoVO);
 
     /**
      * 查询已申请品牌信息
