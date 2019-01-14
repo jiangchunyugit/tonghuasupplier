@@ -212,17 +212,17 @@
 <section>1.3 装修承包方式：</section>
 <#if c03 == 2>
     <section class='indent'>
-        <input type="checkbox" checked="checked" style="margin-top: 5px;">套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
+        <input type="checkbox" checked="checked" style="margin-top: 5px;">套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务。
     </section>
     <section class='indent'>
-        <input type="checkbox" style="margin-top: 5px;">个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
+        <input type="checkbox" style="margin-top: 5px;">个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务。
     </section>
 <#else>
     <section class='indent'>
-        <input type="checkbox" style="margin-top: 5px;">套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务
+        <input type="checkbox" style="margin-top: 5px;">套餐家装：乙方包工、包辅料及部分主材，其余主材由甲方自购或乙方提供主材代购服务。
     </section>
     <section class='indent'>
-        <input type="checkbox" checked="checked" style="margin-top: 5px;">个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务
+        <input type="checkbox" checked="checked" style="margin-top: 5px;">个性家装：乙方包工、包辅料，主材由甲方自购或乙方提供主材代购服务。
     </section>
 </#if>
 <section>1.4 装修内容及施工方法：详见《施工图纸》和《清单式报价书》。</section>
@@ -431,7 +431,7 @@
     8. 合同变更
 </section>
 <section>
-    8.1 合同签订后，甲方提出设计和装修内容发生变更的或因甲方原因产生的合同变更造成延期的，甲乙双方须在平台系统中签订《施工项目及工期变更单》调整合同金额或/及工期。
+    8.1 合同签订后，甲方提出设计和装修内容发生变更的或因甲方原因产生的合同变更造成延期的，甲乙双方须在平台系统中签订《施工项目及工期变更单》调整合同金额及工期。
 </section>
 <section>
     8.2 未经甲方签字的合同变更，甲方一概不予认可。
@@ -572,7 +572,7 @@
     11.4 由于装修引起室内空气不合格的主要原因是使用了环保不达标的材料，因此如果室内空气经检测不合格，则首先要在所用材料上寻找原因。对甲方在居然之家市场外的外购材料，甲方必须提供省（市）级以上部门出具的一年期限内环保检测报告，若有必要，乙方可以委托相关部门重新进行检测。若材料全部在乙方和居然之家购买，则所有责任由乙方全部承担。
 </section>
 <section>
-    11.5 由于乙方原因导致室内空气不合格，乙方按本合同第15.5条的约定承担违约责任
+    11.5 由于乙方原因导致室内空气不合格，乙方按本合同第15.1条的约定承担违约责任。
 </section>
 <section>
     11.6 由于室内空气中有害物质含量会因挥发而越来越少，因此空气质量不存在保修期。
