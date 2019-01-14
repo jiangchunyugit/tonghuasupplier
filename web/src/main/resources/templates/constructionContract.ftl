@@ -233,7 +233,7 @@
     &nbsp;&nbsp;&nbsp;&nbsp;计划竣工日期：<p class="placeholderT">&nbsp;${c20}</p>
 </section>
 <section>
-    &nbsp;&nbsp;&nbsp;&nbsp;工期：<p class="placeholderT">&nbsp;${c04}</p> 天
+    &nbsp;&nbsp;&nbsp;&nbsp;工期：<p class="placeholderT">&nbsp;${c04}</p> 日（自然日）
 </section>
 <section>
     3. 合同额、支付方式及先行赔付
@@ -283,7 +283,7 @@
     </#list>
 </table>
 <section>
-    （2）双方协商一致的其他支付方式：<p class="placeholder"></p>
+    （2）双方协商一致的其他支付方式：<p class="placeholder"></p>。
 </section>
 <section>
     3.6 中期工程验收通过后，甲方对乙方提交的按实际施工情况编制的《清单式报价书》进行审核。甲方自提交之日起三日内如未提出异议，视为甲方同意支付乙方工程中期款。
@@ -511,28 +511,18 @@
 <section class='indent'>
     10.2.1 双方在施工过程中分以下阶段对工程质量进行联合验收：
 </section>
-<table>
-    <tr>
-        <td>
-            <span>（1）辅料验收；</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span>（2）隐蔽工程验收；</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span>（3）中期工程验收；</span>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <span>（4）竣工验收。</span>
-        </td>
-    </tr>
-</table>
+<section class='indent'>
+    （1）辅料验收；
+</section>
+<section class='indent'>
+    （2）隐蔽工程验收；
+</section>
+<section class='indent'>
+    （3）中期工程验收；
+</section>
+<section class='indent'>
+    （4）竣工验收。
+</section>
 <section class='indent'>
     10.2.2 隐蔽工程和中期工程完工后，乙方应当通知甲方在三日内进行验收，待双方验收合格并签字确认后，乙方方可进行下道工序施工；如甲方不进行验收，乙方有权暂停施工，相应工期损失由甲方承担；如乙方未通知甲方进行隐蔽工程或中期工程验收而擅自进行下道工序施工的，甲方有权要求乙方停止施工，由此造成的损失由乙方承担。
 </section>
@@ -627,7 +617,7 @@
     15. 争议解决方式
 </section>
 <section>
-    15.1 本合同项下发生的争议，首先应自行协商，协商不成的按居然设计家“先行赔付”的有关规定执行，经协商或调解未达成一致的，按下述第 &nbsp; &nbsp;种方式解决：
+    15.1 本合同项下发生的争议，首先应自行协商，协商不成的按居然设计家“先行赔付”的有关规定执行，经协商或调解未达成一致的，按下述第<p class="placeholderK">&nbsp;</p>种方式解决：
 </section>
 <section>
     (1).向合同签约地人民法院起诉。
