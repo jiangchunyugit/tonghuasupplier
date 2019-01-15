@@ -395,7 +395,7 @@ public class DealerBrandServiceImpl implements DealerBrandService{
                 .andAuditStatusEqualTo(BrandConstants.AuditStatus.AUDITSUCCESS.code)
                 .andBrandNoEqualTo(pcAuditInfoVO.getBrandNo());
         DealerBrandInfo dealerBrandInfo = new DealerBrandInfo();
-        dealerBrandInfo.setAuditStatus(BrandConstants.AuditStatus.UPDATE_SUCCESS.code);
+        dealerBrandInfo.setAuditStatus(BrandConstants.AuditStatus.DISCARD.code);
         dealerBrandInfo.setUpdateTime(new Date());
         int line = dealerBrandInfoMapper.updateByExampleSelective(dealerBrandInfo, example);
         if(line > 0){
