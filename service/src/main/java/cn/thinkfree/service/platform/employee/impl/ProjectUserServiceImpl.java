@@ -43,6 +43,9 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andProjectNoEqualTo(projectNo).andRoleCodeIn(roleCodes);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if(orderUsers.isEmpty()){
+            return new ArrayList<OrderUser>();
+        }
         return orderUsers;
     }
 
