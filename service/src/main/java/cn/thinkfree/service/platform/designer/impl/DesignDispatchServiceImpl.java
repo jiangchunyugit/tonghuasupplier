@@ -197,7 +197,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         if (designerOrders.isEmpty()) {
             return PageVo.def(new ArrayList<>());
         }
-        PageInfo<DesignerOrderVo> pageInfo = new PageInfo(designerOrders);
+       // PageInfo<DesignerOrderVo> pageInfo = new PageInfo(designerOrders);
         List<DesignerOrderVo> designerOrderVos = getDesignerOrderVos(stateType, designerOrders);
         List<CompanyCitySiteVO> companyCity = getCompanyCity(designerOrders, branchCompanyCode, cityBranchCode, storeCode);
         for(DesignerOrderVo designerOrder :designerOrderVos){
@@ -230,7 +230,7 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         companyList = companyInfoMapper.selectCompanyCitySiteByCompanyId(companyIds,branchCompanyCode,cityBranchCode,storeCode);
         if(companyList.isEmpty()){
-            throw new RuntimeException("公司城市分站信息查询为空");
+            return  new ArrayList<>();
         }
         return companyList;
     }
