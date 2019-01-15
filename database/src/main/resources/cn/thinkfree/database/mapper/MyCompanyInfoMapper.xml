@@ -202,6 +202,7 @@
             <include refid="Base_Column_List_VO" />,province.province_name, city.city_name,
             branch.company_name site_province_name,
             cityBranch.city_branch_name site_city_name, brand.brand_name,
+            (case when info.audit_status = 1 then 0 else 1 end) ordNum,
             cast((case when orderIndex.count >= 0 then orderIndex.count else -1 end) as int) brand_count
     FROM
         company_info info
@@ -250,7 +251,7 @@
             AND info.update_time between #{startDate} and #{endDate}
         </if>
     </where>
-    order by info.audit_status asc, brand_count desc, info.update_time desc
+    order by ordNum asc, brand_count desc, info.update_time desc
 
 
 
