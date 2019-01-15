@@ -18,7 +18,7 @@ public class ReserveProjectVo {
     private String phone;
     @ApiModelProperty("装修地址")
     private String address;
-    @ApiModelProperty("来源（1,运营后台创建，2设计公司创建，3天猫，4业主预约）")
+    @ApiModelProperty("来源（1,运营后台创建，2设计公司创建，3天猫，4业主预约,5官网）")
     private Integer source;
     @ApiModelProperty("装修风格")
     private Integer style;

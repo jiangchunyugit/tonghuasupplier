@@ -91,8 +91,12 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
 
     @Value("${custom.cloud.designLoginUrl}")
     private String designLoginUrl;
+
     @Value("${custom.cloud.decorateLoginPage}")
     private String decorateLoginPage;
+
+    @Value("${custom.cloud.dealerLoginPage}")
+    private String dealerLoginPage;
 
     /**
      * 更新公司入驻状态
@@ -151,19 +155,27 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     @Override
-    public String sendMessage(String email) {
+    public Map<String, Object> sendMessage(String email) {
+        Map<String, Object> map = new HashMap<String, Object>();
+
         boolean pcflag = pcUserInfoService.isEnable(email);
         if( StringUtils.isNotBlank(email)){
             boolean emailFlag = companyApplyService.checkEmail(email);
             if(emailFlag || pcflag){
-                return "邮箱已被注册!";
+                map.put("isSuccess", false);
+                map.put("msg", "邮箱已被注册");
+                return map;
             }
         }else{
-            return "邮箱不能为空!";
+            map.put("isSuccess", false);
+            map.put("msg", "邮箱不能为空");
+            return map;
         }
 
         redisService.saveVerificationCode(email);
-        return "验证码已发送至邮箱";
+        map.put("isSuccess", true);
+        map.put("msg", "验证码已发送至邮箱");
+        return map;
     }
 
     /**
@@ -262,8 +274,11 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
         UserVO userVO = (UserVO) SessionUserDetailsUtil.getUserDetails();
 
         Date date = new Date();
-        if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
-            return map;
+        //经销商不需要公司名称校验
+        if(!CompanyConstants.RoleType.DR.code.equals(pcApplyInfoSEO.getCompanyRole())){
+            if (exitsEmailANDCompanyName(pcApplyInfoSEO, map)) {
+                return map;
+            }
         }
 
         String password = AccountHelper.createUserPassWord();
@@ -406,7 +421,7 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
             para.put("http",designLoginUrl);
         }else {
             // TODO 经销商是个神奇的东西
-            para.put("http", "");
+            para.put("http", dealerLoginPage);
         }
         RemoteResult<String> result = cloudService.sendCreateAccountNotice(pcApplyInfoSEO.getContactPhone()
                 ,new GsonBuilder().serializeNulls().enableComplexMapKeySerialization().create().toJson(para));

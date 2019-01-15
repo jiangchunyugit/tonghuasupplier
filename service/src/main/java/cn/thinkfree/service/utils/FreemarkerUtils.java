@@ -5,7 +5,11 @@ import cn.thinkfree.core.utils.LogUtil;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.DeviceCmyk;
+import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -25,13 +29,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+import com.itextpdf.io.font.FontConstants;
 
 public class FreemarkerUtils {
 
-	 static  MyLogger logger = LogUtil.getLogger(FreemarkerUtils.class);
+	static  MyLogger logger = LogUtil.getLogger(FreemarkerUtils.class);
+
 
 	/**
-	 * 
+	 *
 	 * @param type
 	 *            业务合同类型
 	 * @param globalMap
@@ -53,7 +59,7 @@ public class FreemarkerUtils {
 		else if (type.equals("4")) {//经销商
 			fltName = "distributor.ftl";
 		}
-		//fltName = "template.ftl";
+		//fltName = "project.ftl";
 
 //		InputStream classpath = FreemarkerUtils.class.getClassLoader().getResourceAsStream("templates/"+fltName);
 ////		URL fileResource = FreemarkerUtils.class.getClassLoader().getResource("templates");
@@ -87,7 +93,7 @@ public class FreemarkerUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param flieName pdf url
 	 * @param type 合同模板类型
 	 * @param root 传入模板的数据
@@ -107,37 +113,36 @@ public class FreemarkerUtils {
 		return filePath;
 	}
 
-	public static void tohtmlPdf(String html, String DEST) throws FileNotFoundException, IOException {
 
+
+	public static void tohtmlPdf(String html, String DEST) throws IOException {
+		String fontPath ="/data/font/St.ttf@/data/font/SimSun.ttf";
 		// 装值
 		ByteArrayInputStream by = new ByteArrayInputStream(html.getBytes());
 		ConverterProperties props = new ConverterProperties();
 		DefaultFontProvider defaultFontProvider = new DefaultFontProvider(false, false, false);
-//		InputStream fileResource = FreemarkerUtils.class.getClassLoader().getResourceAsStream("templates/font/SimSun.ttf");
-//		URL fileResource = FreemarkerUtils.class.getClassLoader().getResource("/data/font/SimSun.ttf");
-//
-////		String  classpath=FreemarkerUtils.class.getClassLoader().getResource("/templates/font/SimSun.ttf").getPath();
-//        String url= fileResource.getPath();
-//		byte[] fontBytes = new byte[fileResource.available()];
-//		fileResource.read(fontBytes);
-		defaultFontProvider.addFont("/data/font/SimSun.ttf");
+    	//defaultFontProvider.addFont(fontPath);
+
+		for (String font : fontPath.split("@")) {
+			FontProgram fontProgram = FontProgramFactory.createFont(font);
+			defaultFontProvider.addFont(fontProgram);
+		}
+		//defaultFontProvider.addFont("d:/data/font/SimSun.ttf");
 		props.setFontProvider(defaultFontProvider);
 		PdfWriter writer = new PdfWriter(DEST);
 		PdfDocument pdf = new PdfDocument(writer);
-		// pdf.setDefaultPageSize(new PageSize(595, 14400));
-		// Document document = HtmlConverter.convertToDocument(new
-		// FileInputStream(html), pdf, props);
 		pdf.setDefaultPageSize(PageSize.A4);
+		PageXofY footer = new PageXofY(pdf);
+		String header = "北京居然设计家网络科技有限公司";
+		Header headerHandler = new Header(header,fontPath);
+		pdf.addEventHandler(PdfDocumentEvent.START_PAGE,headerHandler);
+		pdf.addEventHandler(PdfDocumentEvent.END_PAGE,footer);
 		Document document = HtmlConverter.convertToDocument(by, pdf, props);
-
-		// 将所有内容在一个页面显示
+		footer.writeTotal(pdf);
 		EndPosition endPosition = new EndPosition();
 		LineSeparator separator = new LineSeparator(endPosition);
 		document.add(separator);
 		document.getRenderer().close();
-		PdfPage page = pdf.getPage(1);
-		float y = endPosition.getY() - 36;
-		// page.setMediaBox(new Rectangle(0, y, 595, 14400 - y));
 		document.close();
 		pdf.close();
 	}
@@ -158,7 +163,7 @@ public class FreemarkerUtils {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#draw(com.itextpdf.
 		 * kernel.pdf. canvas.PdfCanvas, com.itextpdf.kernel.geom.Rectangle)
@@ -170,7 +175,7 @@ public class FreemarkerUtils {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#getColor()
 		 */
 		@Override
@@ -180,7 +185,7 @@ public class FreemarkerUtils {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#getLineWidth()
 		 */
 		@Override
@@ -190,7 +195,7 @@ public class FreemarkerUtils {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#setColor(com.itextpdf
 		 * .kernel. color.Color)
@@ -201,13 +206,17 @@ public class FreemarkerUtils {
 
 		/*
 		 * (non-Javadoc)
-		 * 
+		 *
 		 * @see
 		 * com.itextpdf.kernel.pdf.canvas.draw.ILineDrawer#setLineWidth(float)
 		 */
 		@Override
 		public void setLineWidth(float lineWidth) {
+			lineWidth = 5;
 		}
 
 	}
+
+
+
 }

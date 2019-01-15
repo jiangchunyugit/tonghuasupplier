@@ -15,9 +15,65 @@
                <result column="contract_status" jdbcType="VARCHAR" property="contractStatus" />
            
     </resultMap>
-    
-    
-  <!--合同列表分页查询-->
+
+
+    <!--运营合同列表分页查询-->
+    <select id="pageOperatingContractBySEO" parameterType="cn.thinkfree.database.vo.ContractSEO" resultMap="contractInfoVo" >
+        SELECT c.signed_time as signed_time,c.contract_number as contract_number,
+        c.company_id as company_id,p.company_name as company_name,p.deposit_money as deposit_money,
+        concat(pr.province_name,'>',ci.city_name,'>',ar.area_name) as companyLocation ,se.role_name as companyType,
+        c.id as id ,c.start_time as start_time,c.end_time as end_time,
+        c.contract_status as contract_status
+        from  pc_contract_info c  left join company_info p
+        on c.company_id = p.company_id
+        left join province pr on  p.province_code = pr.province_code
+        left join city ci on p.city_code = ci.city_code
+        left join area ar on p.area_code = ar.area_code
+        left join user_role_set se on p.role_id = se.role_code
+        <where>
+            and  (p.audit_status = '2' or p.audit_status = '3' or p.audit_status = '4' or p.audit_status = '5' or  p.audit_status = '6'  or  p.audit_status = '7' or  p.audit_status = '8' )
+            and c.contract_status !='0'
+
+            <if test="contractNumber != null and contractNumber !='' ">
+                and c.contract_number like CONCAT('%',#{contractNumber},'%')
+            </if>
+            <if test="companyType != null and companyType !='' ">
+                and p.role_id  = #{companyType}
+            </if>
+            <if test="contractStatus != null and contractStatus !='' ">
+                and c.contract_status  = #{contractStatus}
+            </if>
+
+            <if test="companyInfo != null and companyInfo !='' ">
+                and (p.company_name  like CONCAT('%',#{companyInfo},'%')  or   c.company_id  like CONCAT('%',#{companyInfo},'%')    )
+            </if>
+
+            <if test="province != null and province !='' ">
+                and p.province_code  = #{province}
+            </if>
+
+            <if test="city != null and city !='' ">
+                and p.city_code = #{city}
+            </if>
+
+            <if test="area != null and area !='' ">
+                and  p.area_code =#{area}
+            </if>
+
+            <if test="starTime != null and starTime !='' ">
+                and  c.start_time >= #{starTime}
+            </if>
+
+            <if test="endTime != null and endTime !='' ">
+                and  c.end_time &lt;=  #{endTime}
+            </if>
+
+
+        </where>
+        order by id desc
+    </select>
+
+    <!--财务合同列表分页查询-->
   <select id="selectContractPage" parameterType="cn.thinkfree.database.vo.ContractSEO" resultMap="contractInfoVo" >
     SELECT c.signed_time as signed_time,c.contract_number as contract_number,
 		c.company_id as company_id,p.company_name as company_name,p.deposit_money as deposit_money,
@@ -61,7 +117,7 @@
           </if>
           
            <if test="starTime != null and starTime !='' ">
-            and  c.star_time > = #{starTime}
+            and  c.start_time >= #{starTime}
           </if>
           
            <if test="endTime != null and endTime !='' ">

@@ -50,7 +50,7 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         boolean brandflag = getBrandList(dealerBrandInfo);
         if(brandflag){
              map.put("isSuccess", false);
-             map.put("msg", "此品牌审核已通过，请重新选择品牌");
+             map.put("msg", "此品牌品类审核已通过，请重新选择品牌品类");
              return map;
         }
         //品牌添加
@@ -328,6 +328,26 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         return false;
     }
 
+    @Override
+    public Map<String, Object> isSignChange(String companyId, String agencyCode, String brandNo) {
+        Map<String, Object> map = new HashMap<>();
+
+        DealerBrandInfoExample example = new DealerBrandInfoExample();
+        example.createCriteria().andCompanyIdEqualTo(companyId)
+                .andAgencyCodeEqualTo(agencyCode)
+                .andBrandNoEqualTo(brandNo)
+                .andAuditStatusEqualTo(BrandConstants.AuditStatus.UPDATEING.code);
+        List<DealerBrandInfo> dealerBrandInfos = dealerBrandInfoMapper.selectByExample(example);
+        if(dealerBrandInfos.size() > 0){
+            map.put("isSuccess", false);
+            map.put("msg","品牌变更中，不可变更");
+        }else{
+            map.put("isSuccess", true);
+            map.put("msg","没毛病");
+        }
+        return map;
+    }
+
 //    @Override
 //    public List<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO) {
 //        List<AuditBrandInfoVO> dealerBrandInfos = dealerBrandInfoMapper.applyBrandDetail(brandDetailVO);
@@ -357,8 +377,10 @@ public class DealerBrandServiceImpl implements DealerBrandService{
     public boolean getBrandList(DealerBrandInfo dealerBrandInfo){
         DealerBrandInfoExample example = new DealerBrandInfoExample();
         List<Integer> list = new ArrayList<>();
-        list.add(BrandConstants.AuditStatus.AUDITSUCCESS.code);
+        list.add(BrandConstants.AuditStatus.UPDATE_FAIL.code);
         list.add(BrandConstants.AuditStatus.DISCARD.code);
+
+//        list.add(BrandConstants.AuditStatus.DISCARD.code);
         example.createCriteria()
                 .andIsValidEqualTo(Integer.parseInt(SysConstants.YesOrNo.YES.val.toString()))
                 .andCompanyIdEqualTo(dealerBrandInfo.getCompanyId())
@@ -366,11 +388,16 @@ public class DealerBrandServiceImpl implements DealerBrandService{
                 .andBrandNoEqualTo(dealerBrandInfo.getBrandNo())
                 .andAuditStatusNotIn(list);
         List<DealerBrandInfo> dealerBrandInfos =  dealerBrandInfoMapper.selectByExample(example);
-        if(dealerBrandInfos.size() == 1){
-            return true;
-        }else {
-            return false;
+        String[] str = dealerBrandInfo.getCategoryCode().split(",");
+        for(DealerBrandInfo dealerBrandInfo1 : dealerBrandInfos){
+            for(int i = 0; i < str.length; i++){
+                if(dealerBrandInfo1.getCategoryCode().contains(str[i])){
+                    return true;
+                }
+            }
         }
+        return false;
+
     }
 
     public boolean updateBrandStatus(Integer status, String id){

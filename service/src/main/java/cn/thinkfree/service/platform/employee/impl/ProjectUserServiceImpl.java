@@ -130,4 +130,11 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         orderUser.setUpdateTime(new Date());
         orderUserMapper.insertSelective(orderUser);
     }
+
+    @Override
+    public long countByUserId(String userId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return orderUserMapper.countByExample(example);
+    }
 }

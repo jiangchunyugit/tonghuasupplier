@@ -75,4 +75,13 @@ public interface DealerBrandService {
      */
 //    List<AuditBrandInfoVO> applyBrandDetail(BrandDetailVO brandDetailVO);
 
+    /**
+     * 是否可以变更
+     * @param companyId
+     * @param agencyCode
+     * @param brandNo
+     * @return
+     */
+    Map<String,Object> isSignChange(String companyId, String agencyCode, String brandNo);
+
 }

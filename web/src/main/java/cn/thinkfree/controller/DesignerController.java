@@ -53,10 +53,13 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "registrationTimeStart", required = false, value = "注册时间") @RequestParam(name = "registrationTimeStart", required = false) String registrationTimeStart,
             @ApiParam(name = "registrationTimeEnd", required = false, value = "注册时间") @RequestParam(name = "registrationTimeEnd", required = false) String registrationTimeEnd,
             @ApiParam(name = "sort", required = false, value = "排期区域") @RequestParam(name = "sort", required = false) String sort,
+            @ApiParam(name = "branchCompanyCode", required = false, value = "分公司") @RequestParam(name = "branchCompanyCode", required = false) String branchCompanyCode,
+            @ApiParam(name = "cityBranchCode", required = false, value = "城市分站名称") @RequestParam(name = "cityBranchCode", required = false) String cityBranchCode,
+            @ApiParam(name = "storeCode", required = false, value = "门店名称") @RequestParam(name = "storeCode", required = false) String storeCode,
             @ApiParam(name = "pageSize", required = false, value = "每页条数") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         PageVo<List<DesignerMsgListVo>> pageVo = designerService.queryDesigners(designerName, designerRealName, phone, authState, province, city, area, level,
-                identity, cardNo, source, tag, registrationTimeStart, registrationTimeEnd, sort, pageSize, pageIndex);
+                identity, cardNo, source, tag, registrationTimeStart, registrationTimeEnd, sort, branchCompanyCode,cityBranchCode,storeCode, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, pageVo);
     }
 

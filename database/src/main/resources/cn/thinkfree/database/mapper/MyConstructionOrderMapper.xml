@@ -79,15 +79,17 @@
         po.sign_time AS signingTime,
         po.audit_type AS auditType,
         po.start_time AS startSign,
-        po.end_time AS endSign
+        po.end_time AS endSign,
+        ct.contract_value AS contractAmount
         FROM
         construction_order dor
         LEFT JOIN project p ON p.project_no = dor.project_no
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
         LEFT JOIN project_quotation_check pqc ON pqc.project_no=dor.project_no
+        LEFT JOIN pc_contract_terms ct ON ct.company_id = dor.company_id
         WHERE
-        dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status}
+        dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status} AND ct.contract_dict_code ='c21'
         AND pqc.result = 1
         <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
@@ -135,8 +137,9 @@
         LEFT JOIN pc_order_contract po ON po.order_number = dor.order_no
         LEFT JOIN province pr ON pr.province_code = p.province
         LEFT JOIN project_quotation_check pqc ON pqc.project_no=dor.project_no
+        LEFT JOIN pc_contract_terms ct ON ct.company_id = dor.company_id
         WHERE
-        dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status}
+        dor.company_id = #{constructionContractVO.companyId} AND dor.status = #{constructionContractVO.status} AND ct.contract_dict_code ='c21'
         AND pqc.result = 1
         <if test="constructionContractVO.contractNo!=null and constructionContractVO.contractNo!=''">
             and po.contract_number like CONCAT('%',#{constructionContractVO.contractNo},'%' )
