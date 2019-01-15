@@ -123,7 +123,7 @@
       sum( CASE WHEN audit_status = 5 THEN 1 ELSE 0 END ) AS audit_change_count
     FROM
     pc_dealer_brand_info
-    WHERE
+    WHERE 1=1
       <if test="companyId != null and companyId != ''">
       and company_id = #{companyId}
     </if>
