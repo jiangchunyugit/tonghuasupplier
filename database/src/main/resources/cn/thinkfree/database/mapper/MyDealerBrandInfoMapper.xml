@@ -93,8 +93,7 @@
       ON brand.company_id = audit.company_id
       AND audit.contract_number = brand.id
       WHERE
-      brand.is_valid = 1
-      AND info.audit_status = 8
+      info.audit_status = 8
       <if test="brandId!= null and brandId!= ''">
           and brand.id = #{brandId}
       </if>
@@ -125,7 +124,6 @@
     FROM
     pc_dealer_brand_info
     WHERE
-    is_valid = 1
       <if test="companyId != null and companyId != ''">
       and company_id = #{companyId}
     </if>
@@ -152,8 +150,8 @@
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
       WHERE
-      brand.id in (select max(id) from pc_dealer_brand_info where is_valid = 1
-      AND audit_status = 2 group by company_id, brand_no)
+      brand.id in (select max(id) from pc_dealer_brand_info where
+      audit_status in (2,4) group by company_id, brand_no)
       <if test="_parameter!= null and _parameter!= ''">
       and category.company_id  = #{companyId}
     </if>
