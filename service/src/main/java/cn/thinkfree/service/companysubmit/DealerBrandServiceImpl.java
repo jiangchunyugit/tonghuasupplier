@@ -171,10 +171,10 @@ public class DealerBrandServiceImpl implements DealerBrandService{
         SpringBeanUtil.copy(dealerBrandInfoVO, dealerBrandInfo);
 
         //判断添加的品牌品类是否是审批中，变更中，或者审核成功的
-        Map<String, Object> brandMap = getBrandList(dealerBrandInfo);
-        if(brandMap.get("isSuccess").toString().equals("false")){
-            return brandMap;
-        }
+//        Map<String, Object> brandMap = getBrandList(dealerBrandInfo);
+//        if(brandMap.get("isSuccess").toString().equals("false")){
+//            return brandMap;
+//        }
 
         //品牌添加
         boolean brandFlag = saveBrandInfo(dealerBrandInfo, SysConstants.YesOrNo.YES.shortVal(), BrandConstants.AuditStatus.UPDATEING.code);
