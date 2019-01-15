@@ -335,7 +335,11 @@ public class DesignerServiceImpl implements DesignerService {
         designerMsgVo.setDesignerStyles(styles);
         designerMsgVo.setDesignerStyleCodes(styleCodes);
         designerMsgVo.setAddress(getAddress(employeeMsg));
-        designerMsgVo.setEmployeeState(employeeMsg.getEmployeeState());
+        if(employeeMsg.getEmployeeState() == null){
+            designerMsgVo.setEmployeeState(0);
+        }else {
+            designerMsgVo.setEmployeeState(employeeMsg.getEmployeeState());
+        }
         return designerMsgVo;
     }
 
