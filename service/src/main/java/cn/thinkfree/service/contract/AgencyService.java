@@ -1,6 +1,7 @@
 package cn.thinkfree.service.contract;
 
 import cn.thinkfree.database.model.AgencyContract;
+import cn.thinkfree.database.model.PcAuditInfo;
 import cn.thinkfree.database.vo.agency.AgencySEO;
 import cn.thinkfree.database.vo.agency.ParamAgency;
 import cn.thinkfree.database.vo.agency.ParamAgencySEO;
@@ -94,4 +95,12 @@ public interface AgencyService {
      * @return
      */
      String createPdf(String contractNumber);
+
+    /**
+     * 返回审批原因
+     * @param contruct
+     * @param status
+     * @return
+     */
+     PcAuditInfo checkCase(String contruct, String status);
 }
