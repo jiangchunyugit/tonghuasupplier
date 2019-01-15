@@ -812,7 +812,9 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
         }
         List<String> userIds = new ArrayList<>();
         userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.OWNER_POWER));
-        userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER));
+        if (projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER)!=null){
+            userIds.add(projectUserService.queryUserIdOne(projectNo, RoleFunctionEnum.DESIGN_POWER));
+        }
         Map<String, UserMsgVo> msgVoMap = userService.queryUserMap(userIds);
         Map<String, CompanyInfo> companyInfoMap = getCompanyByIds(Arrays.asList(designerOrder.getCompanyId()));
         List<BasicsData> projectSourceList = basicsService.queryData(BasicsDataParentEnum.PROJECT_SOURCE.getCode());
