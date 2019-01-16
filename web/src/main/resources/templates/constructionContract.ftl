@@ -9,8 +9,13 @@
     <style>
         body {
             font-family: SimSun;
+            margin: 50px 70px;
         }
 
+        .div_h2 {
+            font-family: St;
+            font-size: 18px;
+        }
         .text-algin {
             text-align: center;
         }
@@ -109,93 +114,114 @@
 
 <body>
 <h1 class="text-algin">家庭居室装饰装修施工合同</h1>
-<div>
+<div style="line-height: 40px">
     <span style="float:left;display:inline-block;width:50%;">甲方：${c01}</span>
     <span style="float:left;display:inline-block;width:50%;">乙方：${c02}</span>
 </div>
-<div>
+<div style="line-height: 40px">
     <span style="float:left;display:inline-block;width:50%;">甲方电话：${c09}</span>
     <span style="float:left;display:inline-block;width:50%;">营业执照号：${c13}</span>
 </div>
-<div>
+<div style="line-height: 40px">
     <span style="float:left;display:inline-block;width:50%;">会员卡号：${c10}</span>
     <span style="float:left;display:inline-block;width:50%;">建筑资质等级证书号：${c14}</span>
 </div>
-<div>
+<div style="line-height: 40px">
     <span style="float:left;display:inline-block;width:50%;">电子邮箱：${c11}</span>
     <span style="float:left;display:inline-block;width:50%;">组织机构代码证：${c15}</span>
 </div>
-<div>
+<div style="line-height: 40px">
     <span style="float:left;display:inline-block;width:50%;" >装修地址：${c12}</span>
     <span style="float:left;display:inline-block;width:50%;" >法人代表：${c16}</span>
 </div>
 <section>
     <br/>
     <br/>
-
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <br/>
 </section>
 
 <div class="footer" >
-    <h4  style="float:left;display:inline-block;width:50%;">甲方(授权人)签字（盖章）：<p class="placeholder"></p></h4>
-    <h4 style="float:left;display:inline-block;width:50%;" >乙方(授权人)签字（盖章）：<p class="placeholder"></p></h4>
+    <div style="line-height: 40px;clear: both">
+        <span style="float:left;display:inline-block;width:50%;" >甲方(授权人)签字（盖章）：</span>
+        <span style="float:left;display:inline-block;width:50%;" >乙方(授权人)签字（盖章）</span>
+
+    </div>
+    <div style="line-height: 40px;clear: both">
+        <span style="float:left;display:inline-block;width:50%;" ><p class="placeholder" style="line-height: 40px"></p></span>
+        <span style="float:left;display:inline-block;width:50%;" ><p class="placeholder" style="line-height: 40px"></p></span>
+    </div>
+    <section>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+    </section>
+
+    <div style="line-height: 40px;margin-top:40px;clear: both">
+        <span style="float:left;display:inline-block;width:50%;" >居然设计家（盖章）： </span>
+    </div>
+
 </div>
 
-
-<p class="inline-block">居然设计家（盖章）： </p>
 
 <div class="page-break"/>
 <h4 style="text-align: center">目录</h4>
 <section class='indent1'>
-    <span style="width: 20%"><em>1</em>装修基本情况</span>
-    <p class="dashed" style="width: 69%"></p><span>3</span>
+    <span style="width: 22%"><em>1</em>装修基本情况</span>
+    <p class="dashed" style="width: 67%"></p><span>3</span>
 </section>
 <section class='indent1'>
-    <span style="width: 20%"><em>2</em>工期</span> <p class="dashed" style="width: 69%"></p><span>3</span>
+    <span style="width: 15%"><em>2</em>工期</span> <p class="dashed" style="width: 74%"></p><span>3</span>
 </section>
 <section class='indent1'>
-    <span style="width: 35%"><em>3</em>合同额、支付方式及先行赔付</span> <p class="dashed" style="width: 54%"></p><span>3</span>
+    <span style="width: 43%"><em>3</em>合同额、支付方式及先行赔付</span> <p class="dashed" style="width: 46%"></p><span>3</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>4</em>施工图纸</span> <p class="dashed"></p><span>4</span>
+    <span style="width: 16%"><em>4</em>施工图纸</span> <p class="dashed" style="width: 73%"></p><span>4</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>5</em>甲方责任</span> <p class="dashed"></p><span>4</span>
+    <span style="width: 16%"><em>5</em>甲方责任</span> <p class="dashed" style="width: 73%"></p><span>5</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>6</em>乙方责任</span><p class="dashed"></p><span>5</span>
+    <span style="width: 16%"><em>6</em>乙方责任</span><p class="dashed" style="width: 73%"></p><span>5</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>7</em>材料供应</span><p class="dashed"></p><span>6</span>
+    <span style="width: 16%"><em>7</em>材料供应</span><p class="dashed" style="width: 73%"></p><span>6</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>8</em>合同变更</span><p class="dashed"></p><span>6</span>
+    <span style="width: 16%"><em>8</em>合同变更</span><p class="dashed" style="width: 73%"></p><span>7</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>9</em>工期调整</span><p class="dashed"></p><span>6</span>
+    <span style="width: 16%"><em>9</em>工期调整</span><p class="dashed" style="width: 73%"></p><span>7</span>
 </section>
 <section class='indent1'>
-    <span style="width: 28%"><em>10</em>质量标准及验收交付 </span><p class="dashed" style="width: 61%"></p><span>7</span>
+    <span style="width: 33%"><em>10</em>质量标准及验收交付 </span><p class="dashed" style="width: 56%"></p><span>8</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"><em>11</em>关于环保</span><p class="dashed"></p><span>8</span>
+    <span style="width: 18%"><em>11</em>关于环保</span><p class="dashed" style="width: 71%"></p><span>9</span>
 </section>
 <section class='indent1'>
-    <span style="width: 28%"><em>12</em>关于家装“零增项”</span><p class="dashed" style="width: 61%"></p><span>8</span>
+    <span style="width: 33%"><em>12</em>关于家装“零增项”</span><p class="dashed" style="width: 56%"></p><span>10</span>
 </section>
 <section class='indent1'>
-    <span style="width: 35%"><em>13</em>关于保修</span><p class="dashed" style="width: 54%"></p><span>8</span>
+    <span style="width: 20%"><em>13</em>关于保修</span><p class="dashed" style="width: 69%"></p><span>10</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"> <em>14</em>违约责任</span><p class="dashed" style="width: 65%"></p><span>8</span>
+    <span style="width: 20%"> <em>14</em>违约责任</span><p class="dashed" style="width: 69%"></p><span>10</span>
 </section>
 <section class='indent1'>
-    <span style="width: 25%"> <em>15</em>争议解决方式</span><p class="dashed"></p><span>9</span>
+    <span style="width: 25%"> <em>15</em>争议解决方式</span><p class="dashed" style="width: 64%"></p><span>10</span>
 </section>
 <section class='indent1'>
-    <span style="width: 20%"> <em>16</em>附则 </span><p class="dashed" style="width: 69%"></p><span>9</span>
+    <span style="width: 16%"> <em>16</em>附则 </span><p class="dashed" style="width: 73%"></p><span>11</span>
 </section>
 <section class='indent1'>
-    <span style="width: 55%"> <em>16</em>附件：居然之家“先行赔付”实施办法</span><p class="dashed" style="width: 34%"></p><span>10</span>
+    <span style="width: 55%">附件：居然之家“先行赔付”实施办法</span><p class="dashed" style="width: 33%"></p><span>12</span>
 </section>
 <div class="page-break"/>
 
@@ -206,8 +232,8 @@
     甲方的家庭居室装饰装修工程（以下简称工程）有关事宜，达成如下协议：
 </h3>
 
-<section>1. 装修基本情况</section>
-<section>1.1 装修面积（套内建筑面积）：<p class="placeholderK">&nbsp;${c18}</p>。</section>
+<section class="div_h2">1. 装修基本情况</section>
+<section>1.1 装修面积（套内建筑面积）：<p class="placeholderK">&nbsp;${c18}</p>㎡。</section>
 <section>1.2 装修户型：<p class="placeholderK">&nbsp;</p>。</section>
 <section>1.3 装修承包方式：</section>
 <#if c03 == 2>
@@ -226,7 +252,7 @@
     </section>
 </#if>
 <section>1.4 装修内容及施工方法：详见《施工图纸》和《清单式报价书》。</section>
-<section>2. 工期</section>
+<section class="div_h2">2. 工期</section>
 <section>2.1 装修须在合同签订并交齐合同首期款及完成前期准备工作三日后开工。</section>
 <section>2.2 计划开工日期：<p class="placeholderT">&nbsp;${c19}</p></section>
 <section>
@@ -235,7 +261,7 @@
 <section>
     &nbsp;&nbsp;&nbsp;&nbsp;工期：<p class="placeholderT">&nbsp;${c04}</p> 日（自然日）
 </section>
-<section>
+<section class="div_h2">
     3. 合同额、支付方式及先行赔付
 </section>
 <section>
@@ -294,7 +320,7 @@
 <section>
     3.8 乙方应当自甲方支付尾款后三日内办理工程交接，并给甲方办理《家装工程保修单》。
 </section>
-<section>
+<section class="div_h2">
     4. 施工图纸
 </section>
 <section>
@@ -306,7 +332,7 @@
 <section>
     4.3 乙方不得将甲方提供的施工图纸、设计方案等资料复制或者转让给第三方，也不得用于本合同以外的项目。
 </section>
-<section>
+<section class="div_h2">
     5. 甲方责任
 </section>
 <section>
@@ -349,7 +375,7 @@
     5.8 施工中若必须涉及5.7项所列内容，则甲方必须向房屋管理部门提出申请，并由原设计单位或者具有相应资质等级的设计单位对改动方案的安全使用性进行审定并出具书面证明。
 </section>
 <section>
-    5.9 工程勘察设计 、交底时， 协助乙方进行房屋基础结构验收，以便确认房屋结构是否存在问题，向乙方提供原土建、水、电施工竣工图纸。
+    5.9 工程勘察设计、交底时，协助乙方进行房屋基础结构验收，以便确认房屋结构是否存在问题，向乙方提供原土建、水、电施工竣工图纸。
 </section>
 <section>
     5.10 对于旧房改造项目，施工期间甲方仍需部分使用该居室的，甲方应当负责配合乙方做好安全及消防的管理工作。
@@ -363,7 +389,7 @@
 <section>
     5.13 在施工期间，如因出差等原因不便联系，应委托代理人配合乙方施工，并须事先向乙方提供书面授权委托书。
 </section>
-<section>
+<section class="div_h2">
     6. 乙方责任
 </section>
 <section>
@@ -405,7 +431,7 @@
 <section>
     6.7 装修期间，保证施工安全和维护甲方财物，承担施工过程中因乙方原因造成的人员（包括但不限于甲方、乙方、第三方）人身伤害和财产损失。
 </section>
-<section>
+<section class="div_h2">
     7. 材料供应
 </section>
 <section>
@@ -427,7 +453,7 @@
     7.4 对“套餐家装”承包方式中涉及的乙方包配的材料，乙方除必须标明产品品牌、等级、型号之外，甲方可要求乙方提供产品的质检报告；包配的材料如遇市场货源不足，乙方可用质量不低于约定品牌的同类产品替代，但需甲方事先书面认可。
 </section>
 
-<section>
+<section class="div_h2">
     8. 合同变更
 </section>
 <section>
@@ -454,7 +480,7 @@
 <section>
     8.8 甲方不得与乙方设计师或施工人员私自确定工程变更内容，否则乙方有权拒绝承担相应责任。
 </section>
-<section>
+<section class="div_h2">
     9. 工期调整
 </section>
 <section>
@@ -484,7 +510,7 @@
 <section>
     9.3 工程完工后，乙方通知甲方验收，甲方未能及时验收造成工程延期交付的，乙方不承担工程延期交付责任；工程完工后，但未通过甲方验收的，由乙方对存在的问题进行返工，工期不顺延。
 </section>
-<section>
+<section class="div_h2">
     10. 质量标准及验收交付
 </section>
 <section>
@@ -541,7 +567,7 @@
 <section class='indent'>
     10.2.7 双方未办理竣工验收手续，甲方不得入住，如擅自入住视同验收合格。
 </section>
-<section>
+<section class="div_h2">
     11. 关于环保
 </section>
 <section>
@@ -580,7 +606,7 @@
 <section>
     11.7 室内空气质量不合格的原因除装修污染以外，还有建筑主体和自购家具等污染。对因这些方面原因造成的污染，乙方不承担任何责任。
 </section>
-<section>
+<section class="div_h2">
     12. 关于家装“零增项”
 </section>
 <section>
@@ -589,13 +615,13 @@
 <section>
     12.2 因乙方设计失误、有意丢漏项及其它非甲方意愿发生的工程增项，其费用由乙方承担。
 </section>
-<section>
+<section class="div_h2">
     13. 关于保修
 </section>
 <section>
     13.1 自验收合格双方签字之日起，在正常使用条件下室内装饰装修工程保修期限为三年，有防水要求的厨房、卫生间防渗漏工程保修期限为六年。
 </section>
-<section>
+<section class="div_h2">
     14. 违约责任
 </section>
 <section>
@@ -613,7 +639,7 @@
 <section>
     14.5 因乙方原因造成室内空气质量不合格，由乙方进行综合治理，因治理造成工程的延误视同工程延期，按14.3的标准支付违约金；在一个月内经治理仍不合格的，乙方须向甲方返还已支付的全部合同款，并向甲方支付施工合同款5%的违约金。
 </section>
-<section>
+<section class="div_h2">
     15. 争议解决方式
 </section>
 <section>
@@ -625,7 +651,7 @@
 <section>
     (2).向合同签约地仲裁委员会申请仲裁。
 </section>
-<section>
+<section class="div_h2">
     16. 附则
 </section>
 <section>
@@ -684,7 +710,6 @@
     <section>
         （三）对商户从事与商品销售完全无关的经营活动（如借贷）或违法行为（如非法传销、非法集资等）所产生的民事及刑事赔偿责任，居然之家不承担先行赔付责任；购买者以非消费者身份在卖场内购买的商品出现质量和服务问题（如知假买假等以获取高额赔偿进行牟利的行为），不属于居然之家“先行赔付”范围之内，由购买者通过司法等其它途径直接向商户追索。
     </section>
-    <div class="page-break"/>
     <h2>
         三、“先行赔付”的范围
     </h2>
@@ -700,33 +725,6 @@
     <section>
         “先行赔付”的方式包括免费修理、换货、退货以及对不能维修的实行现金补偿，具体方式按国家有关法律法规执行。
     </section>
-    <section>
-       <br/>
-        <br/> <br/> <br/> <br/> <br/>
-
-
-
-        <br/>
-        <br/> <br/>
-
-        <br/>
-        <br/>
-        <br/> <br/> <br/>
-        <br/> <br/>
-        <br/> <br/>
-
-
-
-
-
-
-
-
-
-
-
-
-</section>
 </body>
 
 </html>

@@ -5,7 +5,10 @@ import cn.thinkfree.core.utils.LogUtil;
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.html2pdf.resolver.font.DefaultFontProvider;
+import com.itextpdf.io.font.FontProgram;
+import com.itextpdf.io.font.FontProgramFactory;
 import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.DeviceCmyk;
 import com.itextpdf.kernel.events.PdfDocumentEvent;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.geom.Rectangle;
@@ -26,10 +29,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+import com.itextpdf.io.font.FontConstants;
 
 public class FreemarkerUtils {
 
 	static  MyLogger logger = LogUtil.getLogger(FreemarkerUtils.class);
+
 
 	/**
 	 *
@@ -54,7 +59,7 @@ public class FreemarkerUtils {
 		else if (type.equals("4")) {//经销商
 			fltName = "distributor.ftl";
 		}
-		//fltName = "template.ftl";
+		//fltName = "project.ftl";
 
 //		InputStream classpath = FreemarkerUtils.class.getClassLoader().getResourceAsStream("templates/"+fltName);
 ////		URL fileResource = FreemarkerUtils.class.getClassLoader().getResource("templates");
@@ -108,19 +113,29 @@ public class FreemarkerUtils {
 		return filePath;
 	}
 
-	public static void tohtmlPdf(String html, String DEST) throws FileNotFoundException, IOException {
+
+
+	public static void tohtmlPdf(String html, String DEST) throws IOException {
+		String fontPath ="/data/font/St.ttf@/data/font/SimSun.ttf";
 		// 装值
 		ByteArrayInputStream by = new ByteArrayInputStream(html.getBytes());
 		ConverterProperties props = new ConverterProperties();
 		DefaultFontProvider defaultFontProvider = new DefaultFontProvider(false, false, false);
-    	defaultFontProvider.addFont("/data/font/SimSun.ttf");
+    	//defaultFontProvider.addFont(fontPath);
+
+		for (String font : fontPath.split("@")) {
+			FontProgram fontProgram = FontProgramFactory.createFont(font);
+			defaultFontProvider.addFont(fontProgram);
+		}
 		//defaultFontProvider.addFont("d:/data/font/SimSun.ttf");
 		props.setFontProvider(defaultFontProvider);
 		PdfWriter writer = new PdfWriter(DEST);
 		PdfDocument pdf = new PdfDocument(writer);
 		pdf.setDefaultPageSize(PageSize.A4);
 		PageXofY footer = new PageXofY(pdf);
-		pdf.addEventHandler(PdfDocumentEvent.START_PAGE,new Header(""));
+		String header = "北京居然设计家网络科技有限公司";
+		Header headerHandler = new Header(header,fontPath);
+		pdf.addEventHandler(PdfDocumentEvent.START_PAGE,headerHandler);
 		pdf.addEventHandler(PdfDocumentEvent.END_PAGE,footer);
 		Document document = HtmlConverter.convertToDocument(by, pdf, props);
 		footer.writeTotal(pdf);
@@ -197,7 +212,11 @@ public class FreemarkerUtils {
 		 */
 		@Override
 		public void setLineWidth(float lineWidth) {
+			lineWidth = 5;
 		}
 
 	}
+
+
+
 }
