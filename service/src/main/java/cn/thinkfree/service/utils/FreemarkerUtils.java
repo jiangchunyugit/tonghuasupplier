@@ -120,7 +120,8 @@ public class FreemarkerUtils {
     	//defaultFontProvider.addFont(fontPath);
 		//添加多个字体
 		for (String font : fontPath.split("@")) {
-			InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/"+font);
+			InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("templates"+font);
+
 			FontProgram fontProgram = FontProgramFactory.createFont(input2byte(stream));
 			defaultFontProvider.addFont(fontProgram);
 		}
@@ -217,12 +218,17 @@ public class FreemarkerUtils {
 	}
 	public static final byte[] input2byte(InputStream inStream)
 			throws IOException {
+		if(inStream == null ){
+			System.out.println("无法加载文件");
+		}
 		ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
-		byte[] buff = new byte[100];
+		byte[] buff = new byte[1024];
 		int rc = 0;
-		while ((rc = inStream.read(buff, 0, 100)) > 0) {
+		while ((rc = inStream.read(buff, 0, 1024)) > 0) {
 			swapStream.write(buff, 0, rc);
 		}
+		swapStream.close();
+		inStream.close();
 		byte[] in2b = swapStream.toByteArray();
 		return in2b;
 	}
