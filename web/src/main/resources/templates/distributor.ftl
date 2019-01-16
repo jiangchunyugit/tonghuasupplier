@@ -194,8 +194,6 @@
     <br/>
     <br/>
     <br/>
-    <br/>
-    <br/>
 </section>
 </div>
 <section style="font-family: SimSun ">“居然设计家”平台经销商合作协议（2019版）附件</section>
