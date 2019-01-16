@@ -2285,7 +2285,10 @@ public class DesignDispatchServiceImpl implements DesignDispatchService {
                criteria.andUserIdEqualTo(userId);
                List<OrderUser> orderUsers = orderUserMapper.selectByExample(orderUserExample);
                if(orderUsers.isEmpty() || orderUsers.size() == 0){
-                   throw new RuntimeException("查询结果集为空");
+                   map.put("userId","0");
+                   map.put("end","0");
+                   map.put("ing","0");
+                   mapList.add(map);
                }
                for(OrderUser order :orderUsers){
                    //设计

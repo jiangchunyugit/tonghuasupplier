@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.EmployeeMsg;
+import cn.thinkfree.database.vo.DesignerCertificationVO;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.vo.DesignerMsgVo;
@@ -156,5 +157,13 @@ public class DesignerController extends AbsBaseController {
             return sendFailMessage(e.getMessage());
         }
         return sendSuccessMessage(null);
+    }
+    @ApiOperation("根据用户ID查询设计师实名认证 实名认证状态，1未认证，2已认证，3实名认证审核中，4审核不通过")
+    @MyRespBody
+    @RequestMapping(value = "queryDesignerCertificationByUserId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<DesignerCertificationVO> queryDesignerCertificationByUserId(
+            @ApiParam(name = "userId", required = false, value = "用户ID ") @RequestParam(name = "userId", required = false) String userId) {
+        DesignerCertificationVO designerCertificationVO = designerService.queryDesignerCertificationByUserId(userId);
+        return sendJsonData(ResultMessage.SUCCESS, designerCertificationVO);
     }
 }

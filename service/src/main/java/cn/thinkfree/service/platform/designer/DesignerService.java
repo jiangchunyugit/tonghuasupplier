@@ -1,6 +1,7 @@
 package cn.thinkfree.service.platform.designer;
 
 import cn.thinkfree.database.model.EmployeeMsg;
+import cn.thinkfree.database.vo.DesignerCertificationVO;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.vo.DesignerMsgVo;
 import cn.thinkfree.service.platform.vo.DesignerStyleConfigVo;
@@ -133,4 +134,6 @@ public interface DesignerService {
      * @param companyId    操作人所属公司
      */
     void importDesign(MultipartFile designerFile, String optionId, String companyId);
+
+    DesignerCertificationVO queryDesignerCertificationByUserId(String userId);
 }
