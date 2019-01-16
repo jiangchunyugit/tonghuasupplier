@@ -10,6 +10,8 @@
 
         body {
             font-family: SimSun;
+          /*  margin: 30px 18px;*/
+            margin: 50px 70px;
         }
 
         .text-algin {
@@ -48,7 +50,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 50px !important;
+            min-width: 26px !important;
             text-align: center;
             text-indent: 0;
         }
@@ -99,6 +101,9 @@
 
         section {
             line-height: 30px;
+        }
+        .page-break {
+            page-break-after:always;
         }
     </style>
 </head>
@@ -383,10 +388,6 @@
 <br/>
 <br/>
 <br/>
-<br/>
-<br/>
-<br/>
-
 <div class="footer" >
     <h4 style="float:left;display:inline-block;width:50%;" >甲方（盖章）：</h4>
     <h4 style="float:left;display:inline-block;width:50%;">乙方（盖章）：</h4>
@@ -400,9 +401,15 @@
     <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
 </div>
 <div class="footer" >
-    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
-    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+    <div style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</div>
+    <div style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</div>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <br/>
 <br/>
 <br/>
