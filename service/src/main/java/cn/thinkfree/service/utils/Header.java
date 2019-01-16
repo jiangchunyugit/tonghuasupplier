@@ -11,18 +11,9 @@ import com.itextpdf.kernel.pdf.PdfPage;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.layout.Canvas;
 import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.text.Chunk;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.pdf.BaseFont;
 import sun.misc.BASE64Decoder;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 
 
@@ -53,8 +44,11 @@ public class Header implements IEventHandler {
             defaultFontProvider.addFont(fontPath);
             canvas.setFontProvider(defaultFontProvider);
             try {
-                canvas.add(new Image(ImageDataFactory.create("/data/logo.png"), pageSize.getLeft()+50 ,pageSize.getTop()-50,500));
+                InputStream stream = getClass().getClassLoader() .getResourceAsStream("templates/image/logo.png");
+                canvas.add(new Image(ImageDataFactory.create(this.input2byte(stream)), pageSize.getLeft()+50 ,pageSize.getTop()-50,500));
             } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
            /* canvas.showTextAligned("                                     ",
@@ -68,37 +62,18 @@ public class Header implements IEventHandler {
 
 
 
-    /**
-     * @Description: 将base64编码字符串转换为图片
-     * @Author:
-     * @CreateTime:
-     * @param imgStr base64编码字符串
-     * @param path 图片路径-具体到文件
-     * @return
-     */
-    public static boolean generateImage(String imgStr, String path) {
-        if (imgStr == null){
-          return false;
+    public static final byte[] input2byte(InputStream inStream)
+            throws IOException {
+        ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+        byte[] buff = new byte[100];
+        int rc = 0;
+        while ((rc = inStream.read(buff, 0, 100)) > 0) {
+            swapStream.write(buff, 0, rc);
         }
-            BASE64Decoder decoder = new BASE64Decoder();
-            try {
-            // 解密
-            byte[] b = decoder.decodeBuffer(imgStr);
-            // 处理数据
-            for (int i = 0; i < b.length; ++i) {
-            if (b[i] < 0) {
-            b[i] += 256;
-            }
-            }
-            OutputStream out = new FileOutputStream(path);
-            out.write(b);
-            out.flush();
-            out.close();
-            return true;
-            } catch (Exception e) {
-            return false;
-         }
+        byte[] in2b = swapStream.toByteArray();
+        return in2b;
     }
 
 
-    }
+
+}

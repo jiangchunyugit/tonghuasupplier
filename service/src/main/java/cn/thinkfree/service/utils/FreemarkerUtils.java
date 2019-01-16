@@ -24,12 +24,8 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Map;
-import com.itextpdf.io.font.FontConstants;
 
 public class FreemarkerUtils {
 
@@ -116,15 +112,16 @@ public class FreemarkerUtils {
 
 
 	public static void tohtmlPdf(String html, String DEST) throws IOException {
-		String fontPath ="/data/font/St.ttf@/data/font/SimSun.ttf";
+		String fontPath ="/font/St.ttf@/font/SimSun.ttf";
 		// 装值
 		ByteArrayInputStream by = new ByteArrayInputStream(html.getBytes());
 		ConverterProperties props = new ConverterProperties();
 		DefaultFontProvider defaultFontProvider = new DefaultFontProvider(false, false, false);
     	//defaultFontProvider.addFont(fontPath);
-
+		//添加多个字体
 		for (String font : fontPath.split("@")) {
-			FontProgram fontProgram = FontProgramFactory.createFont(font);
+			InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream("templates/"+font);
+			FontProgram fontProgram = FontProgramFactory.createFont(input2byte(stream));
 			defaultFontProvider.addFont(fontProgram);
 		}
 		//defaultFontProvider.addFont("d:/data/font/SimSun.ttf");
@@ -146,6 +143,8 @@ public class FreemarkerUtils {
 		document.close();
 		pdf.close();
 	}
+
+
 
 	static class EndPosition implements ILineDrawer {
 
@@ -216,7 +215,17 @@ public class FreemarkerUtils {
 		}
 
 	}
-
+	public static final byte[] input2byte(InputStream inStream)
+			throws IOException {
+		ByteArrayOutputStream swapStream = new ByteArrayOutputStream();
+		byte[] buff = new byte[100];
+		int rc = 0;
+		while ((rc = inStream.read(buff, 0, 100)) > 0) {
+			swapStream.write(buff, 0, rc);
+		}
+		byte[] in2b = swapStream.toByteArray();
+		return in2b;
+	}
 
 
 }
