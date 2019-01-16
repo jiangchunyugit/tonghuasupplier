@@ -519,6 +519,30 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
         return false;
     }
 
+    @Override
+    public PcAuditInfo checkCase(String contruct, String status) {
+
+        PcAuditInfoExample pcAuditInfoExample= new PcAuditInfoExample();
+
+        pcAuditInfoExample.setOrderByClause("audit_time DESC");
+        PcAuditInfoExample.Criteria criteria = pcAuditInfoExample.createCriteria();
+        criteria.andContractNumberEqualTo(contruct).andAuditTypeEqualTo("7");
+
+        if (AgencyConstants.AgencyType.OPERATING_AUDIT_REFUSED.code.toString().equals(status)) {
+
+            criteria.andAuditLevelEqualTo("1");
+        } else {
+            criteria.andAuditLevelEqualTo("2");
+        }
+
+        List<PcAuditInfo> pcAuditInfos =pcAuditInfoMapper.selectByExample(pcAuditInfoExample);
+
+        if (pcAuditInfos.size() >0 ) {
+            return pcAuditInfos.get(0);
+        }
+        return null;
+    }
+
     @Autowired
     RedisTemplate<String, Object> redisTemplate;
 

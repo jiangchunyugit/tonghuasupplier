@@ -9,6 +9,7 @@
     <style>
         body {
             font-family: SimSun;
+            margin: 50px 70px;
         }
 
         .text-algin {
@@ -38,7 +39,7 @@
             text-indent: 0;
         }
         .defaultwidth{
-            width: 380px;
+            width: 320px;
             text-align: center;
             table-layout: fixed;
             text-indent: 0;
@@ -56,7 +57,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 50px !important;
+            min-width: 26px !important;
             text-align: center;
             table-layout: fixed;
             text-indent: 0;
@@ -103,6 +104,9 @@
 
         section {
             line-height: 30px;
+        }
+        .page-break {
+            page-break-after:always;
         }
     </style>
 </head>

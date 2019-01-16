@@ -10,6 +10,8 @@
 
         body {
             font-family: SimSun;
+          /*  margin: 30px 18px;*/
+            margin: 50px 70px;
         }
 
         .text-algin {
@@ -48,7 +50,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 50px !important;
+            min-width: 26px !important;
             text-align: center;
             text-indent: 0;
         }
@@ -99,6 +101,9 @@
 
         section {
             line-height: 30px;
+        }
+        .page-break {
+            page-break-after:always;
         }
     </style>
 </head>
@@ -280,7 +285,7 @@
     </#list>
 <#--    <div class="indent">3.1.1甲方在客户与商家签订正式订单并付款（全额或首期款）后向乙方支付材料推荐服务费总额 <div class="textput smalltextput">30</div> %的首款。</div>
     <div class="indent">3.1.2甲方在商家为客户配送产品完成且客户确认验收的60天后向乙方支付材料推荐服务费总额 <div class="textput smalltextput">30</div> %的尾款。</div>-->
-    <div class="">如甲方客户发生材料订单退款，则乙方应将该笔订单所得材料推荐服务费退还给甲方。如乙方未在5个工作日内予以退还，则甲方有权从下笔订单中扣除应退还的材料推荐服务费。</div>
+    <div class="">3.1.3如甲方客户发生材料订单退款，则乙方应将该笔订单所得材料推荐服务费退还给甲方。如乙方未在5个工作日内予以退还，则甲方有权从下笔订单中扣除应退还的材料推荐服务费。</div>
 </section>
 <section class="indent">
     4.施工服务费
@@ -383,10 +388,6 @@
 <br/>
 <br/>
 <br/>
-<br/>
-<br/>
-<br/>
-
 <div class="footer" >
     <h4 style="float:left;display:inline-block;width:50%;" >甲方（盖章）：</h4>
     <h4 style="float:left;display:inline-block;width:50%;">乙方（盖章）：</h4>
@@ -400,9 +401,15 @@
     <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
 </div>
 <div class="footer" >
-    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
-    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+    <div style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</div>
+    <div style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</div>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <br/>
 <br/>
 <br/>
