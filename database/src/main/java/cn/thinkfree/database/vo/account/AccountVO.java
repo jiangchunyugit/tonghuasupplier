@@ -1,15 +1,15 @@
 package cn.thinkfree.database.vo.account;
 
-import cn.thinkfree.database.model.BranchCompany;
-import cn.thinkfree.database.model.CityBranch;
-import cn.thinkfree.database.model.PcUserInfo;
-import cn.thinkfree.database.model.SystemRole;
+import cn.thinkfree.core.model.BaseModel;
+import cn.thinkfree.database.model.*;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
+import java.util.Set;
+
 @ApiModel("账号主题")
-public class AccountVO  {
+public class AccountVO  extends BaseModel {
     /**
      * 权限范围
      */
@@ -38,16 +38,10 @@ public class AccountVO  {
     private PcUserInfo pcUserInfo;
 
     /**
-     * 省分公司信息
+     * 分店集合
      */
-    @ApiModelProperty("分公司信息")
-    private BranchCompany branchCompany;
-
-    /**
-     * 市分公司信息
-     */
-    @ApiModelProperty("市分公司")
-    private CityBranch cityBranch;
+    @ApiModelProperty("分店集合")
+    private Set<SystemUserStore> storeList;
 
     public String getScope() {
         return scope;
@@ -89,19 +83,11 @@ public class AccountVO  {
         this.pcUserInfo = pcUserInfo;
     }
 
-    public BranchCompany getBranchCompany() {
-        return branchCompany;
+    public Set<SystemUserStore> getStoreList() {
+        return storeList;
     }
 
-    public void setBranchCompany(BranchCompany branchCompany) {
-        this.branchCompany = branchCompany;
-    }
-
-    public CityBranch getCityBranch() {
-        return cityBranch;
-    }
-
-    public void setCityBranch(CityBranch cityBranch) {
-        this.cityBranch = cityBranch;
+    public void setStoreList(Set<SystemUserStore> storeList) {
+        this.storeList = storeList;
     }
 }

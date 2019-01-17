@@ -3,15 +3,17 @@ package cn.thinkfree.service.account;
 import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.logger.AbsLogPrinter;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
+import cn.thinkfree.database.constants.RegionsRoleLevel;
 import cn.thinkfree.database.constants.RoleScope;
 import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.mapper.SystemRoleMapper;
 import cn.thinkfree.database.mapper.SystemRolePermissionMapper;
-import cn.thinkfree.database.model.SystemRole;
-import cn.thinkfree.database.model.SystemRoleExample;
-import cn.thinkfree.database.model.SystemRolePermission;
-import cn.thinkfree.database.model.SystemRolePermissionExample;
+import cn.thinkfree.database.mapper.SystemUserStoreMapper;
+import cn.thinkfree.database.mapper.SystemUserStoreRoleMapper;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.UserVO;
+import cn.thinkfree.database.vo.account.RegionsRoleVO;
 import cn.thinkfree.database.vo.account.SystemRoleSEO;
 import cn.thinkfree.database.vo.account.SystemRoleVO;
 import com.github.pagehelper.PageHelper;
@@ -22,9 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleService {
@@ -34,6 +39,12 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
 
     @Autowired
     SystemRolePermissionMapper systemRolePermissionMapper;
+
+    @Autowired
+    SystemUserStoreRoleMapper systemUserStoreRoleMapper;
+
+    @Autowired
+    SystemUserStoreMapper systemUserStoreMapper;
 
     /**
      * 新增角色
@@ -192,10 +203,103 @@ public class SystemRoleServiceImpl extends AbsLogPrinter implements SystemRoleSe
     @Override
     public List<SystemRole> listRoleByScope(Integer scope) {
         SystemRoleExample systemRoleExample = new SystemRoleExample();
-        systemRoleExample.createCriteria().andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal())
+        systemRoleExample.createCriteria()
+                .andIsDelEqualTo(SysConstants.YesOrNo.NO.shortVal())
                 .andIsEnableEqualTo(UserEnabled.Enabled_true.shortVal())
                 .andScopeIn(convertScope(scope));
         return systemRoleMapper.selectByExample(systemRoleExample);
+
+    }
+
+    /**
+     * 查询区域角色
+     *
+     * @param id    账号主键
+     * @param rid   区域主键
+     * @param level 区域级别
+     * @return
+     */
+    @Override
+    public List<SystemRole> listRoleByRegions(String id, String rid, String level) {
+        SystemUserStoreRoleExample condition = new SystemUserStoreRoleExample();
+        condition.createCriteria().andUserIdEqualTo(id).andUserStroeIdEqualTo(Integer.parseInt(rid));
+        List<SystemUserStoreRole> systemUserStoreRoles = systemUserStoreRoleMapper.selectByExample(condition);
+
+        if(systemUserStoreRoles.isEmpty()){
+            return listRoleByScope(Integer.parseInt(level));
+        }else{
+            List<SystemRole> systemRoles = listRoleByScope(Integer.parseInt(level));
+            systemUserStoreRoles.forEach(s->{
+                Optional<SystemRole> isHas = systemRoles.stream().filter(role -> role.getId().equals(s.getRoleId())).findFirst();
+                if(isHas.isPresent()){
+                    SystemRoleVO vo= (SystemRoleVO) isHas.get();
+                    vo.setIsGrant(SysConstants.YesOrNo.YES.val.toString());
+                }
+            });
+        }
+        return Collections.emptyList();
+    }
+
+    /**
+     * 授权区域角色
+     *
+     * @param regionsRoleVO 区域角色信息
+     * @return
+     */
+    @Transactional
+    @Override
+    public String authRegionsRole(RegionsRoleVO regionsRoleVO) {
+
+
+        printInfoMes("授权区域角色:{}",regionsRoleVO);
+        SystemUserStore systemUserStore = systemUserStoreMapper.selectByPrimaryKey(Integer.parseInt(regionsRoleVO.getUserStoreID()));
+
+        printInfoMes("授权区域角色,清理旧角色,{}",regionsRoleVO.getUserStoreID());
+        cleanUserStoreRole(regionsRoleVO,systemUserStore);
+
+        insertNewRegionsRole(regionsRoleVO);
+
+        return "操作成功!";
+    }
+
+    /**
+     * 插入新的区域权限
+     * @param regionsRoleVO
+     */
+    private void insertNewRegionsRole(RegionsRoleVO regionsRoleVO) {
+
+    }
+
+    /**
+     * 清理用户门店角色
+     * @param regionsRoleVO
+     * @param systemUserStore
+     */
+    private void cleanUserStoreRole(RegionsRoleVO regionsRoleVO, SystemUserStore systemUserStore) {
+
+        SystemUserStoreRoleExample condition = new SystemUserStoreRoleExample();
+        SystemUserStoreRoleExample.Criteria criteria = condition.createCriteria().andUserIdEqualTo(regionsRoleVO.getUserID());
+       if (RegionsRoleLevel.Store.code.equals(regionsRoleVO.getLevel())){
+            // 门店
+            criteria.andUserStroeIdEqualTo(Integer.parseInt(regionsRoleVO.getUserStoreID()));
+        }else {
+
+            SystemUserStoreExample preCondition = new SystemUserStoreExample();
+            SystemUserStoreExample.Criteria preCriteria = preCondition.createCriteria().andUserIdEqualTo(systemUserStore.getUserId());
+
+            if(RegionsRoleLevel.Branch.code.equals(regionsRoleVO.getLevel())){
+                preCriteria.andBranchCodeEqualTo(systemUserStore.getBranchCode());
+            }else if(RegionsRoleLevel.City.code.equals(regionsRoleVO.getLevel())){
+                preCondition.createCriteria().andUserIdEqualTo(systemUserStore.getUserId())
+                        .andCityBranchCodeEqualTo((systemUserStore.getCityBranchCode()));
+            }
+
+            List<SystemUserStore> ids = systemUserStoreMapper.selectByExample(preCondition);
+            if(ids != null && !ids.isEmpty()){
+                criteria.andUserStroeIdIn(ids.stream().map(SystemUserStore::getId).collect(Collectors.toList()));
+            }
+        }
+        systemUserStoreRoleMapper.deleteByExample(condition);
 
     }
 

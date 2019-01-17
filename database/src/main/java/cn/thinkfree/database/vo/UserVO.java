@@ -46,12 +46,12 @@ public class UserVO extends SecurityUser {
     /**
      * 分公司
      */
-    private BranchCompany branchCompany;
+    private  BranchCompany  branchCompany;
 
     /**
      * 市公司
      */
-    private CityBranch cityBranch;
+    private  CityBranch  cityBranch;
 
     /**
      * 企业账号
@@ -59,6 +59,11 @@ public class UserVO extends SecurityUser {
     private CompanyUser companyUser;
 
 
+
+    /**
+     * 辖区门店
+     */
+    private List<SystemUserStore> storeList;
     /**
      * 用户类型
      */
@@ -142,33 +147,19 @@ public class UserVO extends SecurityUser {
 
     @Override
     public boolean isEnabled() {
-         if(pcUserInfo == null || SysConstants.YesOrNo.NO.shortVal().equals(pcUserInfo.getEnabled())){
+         if(pcUserInfo == null || !pcUserInfo.getEnabled().equals(UserEnabled.Enabled_true.code.shortValue())){
              return false;
          }
-         if(UserLevel.Company_Province.shortVal().equals(pcUserInfo.getLevel())
-                 && (branchCompany == null ||
-                         !UserEnabled.Enabled_true.shortVal().equals(branchCompany.getIsEnable()))){
-             return false;
-         }
-         if(UserLevel.Company_City.shortVal().equals(pcUserInfo.getLevel())
-                 &&  (cityBranch == null ||
-                         !UserEnabled.Enabled_true.shortVal().equals(cityBranch.getIsEnable()))){
-             return false;
-         }
+
         return true;
     }
 
     public String getCompanyID(){
+        // TODO wait dy
         if(UserRegisterType.Enterprise.equals(type)){
             return companyInfo.getCompanyId();
         }else if (UserRegisterType.Platform.equals(type)){
-            if(cityBranch != null){
-                return cityBranch.getId().toString();
-            }else if(branchCompany != null ){
-                return branchCompany.getId().toString();
-            }else {
-                return companyInfo.getCompanyId();
-            }
+            return "";
         }
         return "";
     }
@@ -186,7 +177,6 @@ public class UserVO extends SecurityUser {
 
     @Override
     public String getPhone() {
-
         return userRegister.getPhone();
     }
 
@@ -206,19 +196,19 @@ public class UserVO extends SecurityUser {
     }
 
 
-    public BranchCompany getBranchCompany() {
+    public  BranchCompany  getBranchCompany() {
         return branchCompany;
     }
 
-    public void setBranchCompany(BranchCompany branchCompany) {
+    public void setBranchCompany( BranchCompany  branchCompany) {
         this.branchCompany = branchCompany;
     }
 
-    public CityBranch getCityBranch() {
+    public CityBranch  getCityBranch() {
         return cityBranch;
     }
 
-    public void setCityBranch(CityBranch cityBranch) {
+    public void setCityBranch( CityBranch  cityBranch) {
         this.cityBranch = cityBranch;
     }
 
@@ -233,5 +223,12 @@ public class UserVO extends SecurityUser {
     @Override
     public String getUserID() {
         return userRegister.getUserId();
+    }
+    public List<SystemUserStore> getStoreList() {
+        return storeList;
+    }
+
+    public void setStoreList(List<SystemUserStore> storeList) {
+        this.storeList = storeList;
     }
 }

@@ -2,6 +2,7 @@ package cn.thinkfree.core.security.filter;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
 import com.google.gson.Gson;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 
@@ -21,11 +22,15 @@ public class SecurityFailAuthHandler extends SimpleUrlAuthenticationFailureHandl
 //        response.setCharacterEncoding("UTF-8");
 //        response.setContentType("application/json;charset=utf-8");
         exception.printStackTrace();
-
         MyRespBundle<String> result = new MyRespBundle<>();
-        result.setData("登录失败!");
+        if(exception instanceof DisabledException){
+            result.setData("您的账号还未启用，请联系管理员启用账号后才可登录!");
+            result.setMsg("您的账号还未启用，请联系管理员启用账号后才可登录!");
+        }else{
+            result.setData("登录失败!");
+            result.setMsg("登录失败!");
+        }
         result.setCode(500);
-        result.setMsg("登录失败!");
         result.setTimestamp(Instant.now().toEpochMilli());
 
         response.setHeader("Access-Control-Allow-Origin","*");

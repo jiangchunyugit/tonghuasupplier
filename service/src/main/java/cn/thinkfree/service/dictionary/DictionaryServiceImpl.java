@@ -229,7 +229,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 //    public List<SystemResource> listResource() {
 //        SystemResourceExample systemResourceExample = new SystemResourceExample();
 //        systemResourceExample.setOrderByClause("  sort_num");
-//        systemResourceExample.createCriteria().andTypeEqualTo(MenuType.MENU.code+"");
+//        systemResourceExample.createCriteria().andTypeEqualTo(ResourceType.MENU.code+"");
 //
 //        return  systemResourceMapper.selectByExample(systemResourceExample);
 //    }

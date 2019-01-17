@@ -19,4 +19,12 @@ public interface SystemResourceService {
      * @return
      */
     List<SystemResource> listResourceByEnterPriseRoleID(Integer id);
+
+    /**
+     * 获取权限下资源详情
+     * @param id 权限ID
+     * @param rid 资源ID
+     * @return
+     */
+    List<SystemResource> listResourceDetails(Integer id, Integer rid);
 }

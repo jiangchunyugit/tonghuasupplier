@@ -12,14 +12,16 @@ public class StrategyFactory {
 
 
 
+//    @Autowired
+//    CompanyAdminRelationStrategy companyAdminStrategy;
+//    @Autowired
+//    CompanyProvinceRelationStrategy companyProvinceStrategy;
+//    @Autowired
+//    CompanyCityRelationStrategy companyCityStrategy;
+//    @Autowired
+//    CompanyAreaRelationStrategy companyAreaStrategy;
     @Autowired
-    CompanyAdminRelationStrategy companyAdminStrategy;
-    @Autowired
-    CompanyProvinceRelationStrategy companyProvinceStrategy;
-    @Autowired
-    CompanyCityRelationStrategy companyCityStrategy;
-    @Autowired
-    CompanyAreaRelationStrategy companyAreaStrategy;
+    StoreRelationStrategy storeRelationStrategy;
 
     @Autowired
     EnterpriseUserBuildStrategy enterpriseLoginStrategy;
@@ -35,18 +37,18 @@ public class StrategyFactory {
 
 
     public RelationStrategy getStrategy(Short level){
-        if(UserLevel.Company_Admin.shortVal().equals(level)){
-            return companyAdminStrategy;
-        }else if(UserLevel.Company_City.shortVal().equals(level)){
-            return companyCityStrategy;
-        }else if(UserLevel.Company_Area.shortVal().equals(level)){
-            return companyAreaStrategy;
-        }else if(UserLevel.Company_Province.shortVal().equals(level)){
-            return companyProvinceStrategy;
-        }else if(UserLevel.Creator.shortVal().equals(level)){
-            return null;
-        }
-        return null;
+//        if(UserLevel.Company_Admin.shortVal().equals(level)){
+//            return companyAdminStrategy;
+//        }else if(UserLevel.Company_City.shortVal().equals(level)){
+//            return companyCityStrategy;
+//        }else if(UserLevel.Company_Area.shortVal().equals(level)){
+//            return companyAreaStrategy;
+//        }else if(UserLevel.Company_Province.shortVal().equals(level)){
+//            return companyProvinceStrategy;
+//        }else if(UserLevel.Creator.shortVal().equals(level)){
+//            return null;
+//        }
+        return storeRelationStrategy;
     }
 
 

@@ -1,6 +1,7 @@
 package cn.thinkfree.service.account;
 
 import cn.thinkfree.database.model.SystemRole;
+import cn.thinkfree.database.vo.account.RegionsRoleVO;
 import cn.thinkfree.database.vo.account.SystemRoleSEO;
 import cn.thinkfree.database.vo.account.SystemRoleVO;
 import com.github.pagehelper.PageInfo;
@@ -65,4 +66,21 @@ public interface SystemRoleService {
      * @return
      */
     List<SystemRole> listRoleByScope(Integer scope);
+
+    /**
+     * 查询区域角色
+     *
+     * @param id  账号主键
+     * @param rid 区域主键
+     * @param level  区域级别
+     * @return
+     */
+    List<SystemRole> listRoleByRegions(String id, String rid, String level);
+
+    /**
+     * 授权区域角色
+     * @param regionsRoleVO  区域角色信息
+     * @return
+     */
+    String authRegionsRole(RegionsRoleVO regionsRoleVO);
 }

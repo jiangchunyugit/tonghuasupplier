@@ -17,7 +17,7 @@
       ${alias}.platform,
       ${alias}.request_method
   </sql>
-  <select id="selectResourceForAuthorize" parameterType="java.lang.Integer" resultMap="SystemResourceTreeVO">
+  <select id="selectResourceForAuthorize" parameterType="cn.thinkfree.database.vo.account.ResourceSEO" resultMap="SystemResourceTreeVO">
       SELECT
         decode(pc_system_permission_resource.id,null,0,1) as isAuth,
         <include refid="MyColumnList">
@@ -26,8 +26,12 @@
       FROM pc_system_resource pc_system_resource
       LEFT OUTER JOIN pc_system_permission_resource pc_system_permission_resource
       on  pc_system_resource.id = pc_system_permission_resource.resource_id
-      and pc_system_permission_resource.permission_id = #{id}
-      where pc_system_resource.platform = 1
+      and pc_system_permission_resource.permission_id = #{permissionID}
+      where pc_system_resource.platform = #{platform}
+      and pc_system_resource.type = #{type}
+      <if test="resourceID != null ">
+          and pc_system_resource.pid = #{resourceID}
+      </if>
   </select>
 
     <select id="selectEnterPriseResourceForAuthorize" parameterType="java.lang.Integer" resultMap="SystemResourceTreeVO">

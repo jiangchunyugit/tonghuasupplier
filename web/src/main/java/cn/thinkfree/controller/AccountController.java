@@ -7,8 +7,10 @@ import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.core.constants.SysLogAction;
 import cn.thinkfree.core.constants.SysLogModule;
+import cn.thinkfree.core.exception.MyException;
 import cn.thinkfree.core.security.filter.util.SessionUserDetailsUtil;
 import cn.thinkfree.database.constants.UserEnabled;
+import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.utils.BeanValidator;
 import cn.thinkfree.database.vo.UserVO;
@@ -19,10 +21,12 @@ import cn.thinkfree.service.pcUser.PcUserInfoService;
 import cn.thinkfree.service.user.UserService;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 账号相关
@@ -149,6 +153,23 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     public MyRespBundle< List<SystemResource>> resource(@PathVariable("id")Integer id){
         List<SystemResource> resources = systemResourceService.listResourceByPermissionID(id);
+        Collections.sort(resources, Comparator.comparingInt(SystemResource::getSortNum));
+        return sendJsonData(ResultMessage.SUCCESS,resources);
+    }
+
+    /**
+     * 资源下属详情
+     * @param id
+     * @return
+     */
+    @ApiResponses({
+            @ApiResponse(code = 200,message = "操作成功",response = SystemResourceTreeVO.class)
+    })
+    @ApiOperation(value="前端-运营平台-权限管理-功能分配-资源详情", notes="权限资源子集")
+    @GetMapping("/permission/{id}/resource/{rid}/details")
+    @MyRespBody
+    public MyRespBundle<List<SystemResource>> resourceDetails(@PathVariable("id")Integer id,@PathVariable("rid")Integer rid){
+        List<SystemResource> resources = systemResourceService.listResourceDetails(id,rid);
         Collections.sort(resources, Comparator.comparingInt(SystemResource::getSortNum));
         return sendJsonData(ResultMessage.SUCCESS,resources);
     }
@@ -391,6 +412,9 @@ public class AccountController extends AbsBaseController {
     @MyRespBody
     @MySysLog(action = SysLogAction.SAVE,module = SysLogModule.PC_PERMISSION,desc = "新建账号")
     public MyRespBundle<AccountVO> account(@RequestBody  AccountVO accountVO){
+        if(accountVO.getStoreList() == null || accountVO.getStoreList().isEmpty()){
+            throw  new MyException("无辖区");
+        }
         AccountVO result = pcUserInfoService.saveUserAccount(accountVO);
         return sendJsonData(ResultMessage.SUCCESS,result);
     }
@@ -484,6 +508,7 @@ public class AccountController extends AbsBaseController {
         pcUserInfoService.updateAccountState(id,UserEnabled.Disable.code);
         return sendSuccessMessage(SUCCESS.message);
     }
+
     /**
      * 初次登录初始化密码
      * @param id
@@ -496,6 +521,39 @@ public class AccountController extends AbsBaseController {
     public MyRespBundle<String> initPassWord(@PathVariable String id,@ApiParam("密码") String passWord){
         pcUserInfoService.updatePassWordForInit(id,passWord);
         return sendSuccessMessage(SUCCESS.message);
+    }
+
+    /**
+     * 查询区域与角色
+     * @param id
+     * @param rid
+     * @return
+     */
+    @ApiOperation(value = "系统管理-运营平台-区域与角色")
+    @GetMapping("/info/{id}/regions/{rid}/role")
+    @MyRespBody
+    public MyRespBundle<List<SystemRole>> regionsAndRoles(@PathVariable String id, @PathVariable String rid, String level){
+
+        if(StringUtils.isBlank(level)){
+            return sendFailMessage("选择相关省公司或门店");
+        }
+        return sendJsonData(ResultMessage.SUCCESS,systemRoleService.listRoleByRegions(id,rid,level));
+    }
+
+    /**
+     * 授权区域与角色
+     * @param id
+     * @param rid
+     * @param regionsRoleVO
+     * @return
+     */
+    @ApiOperation(value = "系统管理-运营平台-区域与角色")
+    @PostMapping("/info/{id}/regions/{rid}/role")
+    @MyRespBody
+    public MyRespBundle<String> authRegionsAndRoles(@PathVariable String id,@PathVariable String rid,RegionsRoleVO regionsRoleVO){
+
+        String mes = systemRoleService.authRegionsRole(regionsRoleVO);
+        return sendSuccessMessage(mes);
     }
 
 
@@ -617,9 +675,9 @@ public class AccountController extends AbsBaseController {
         result.put("first",userService.isFirstLogin());
         result.put("companyId", userVO.getCompanyID());
         if(userVO.getCityBranch() != null){
-            result.put("branchName",userVO.getCityBranch().getCityBranchName());
+            result.put("branchName","");
         }else if(userVO.getBranchCompany() != null){
-            result.put("branchName",userVO.getBranchCompany().getCompanyName());
+            result.put("branchName","");
         }else{
             result.put("branchName","");
         }
@@ -628,5 +686,17 @@ public class AccountController extends AbsBaseController {
             result.put("dealerCompanyId", userVO.getCompanyInfo().getDealerCompanyId());
         }
         return sendJsonData(ResultMessage.SUCCESS,result);
+    }
+
+    /**
+     * 获取所有资源
+     * @return
+     */
+    @ApiOperation(value="前端-运营平台-获取个人信息", notes="获取个人信息 first是否第一次登陆 companyName公司名称")
+    @GetMapping("/resources")
+    @MyRespBody
+    public MyRespBundle<Set<String>> resources(){
+        UserVO userVO  = (UserVO) SessionUserDetailsUtil.getUserDetails();
+        return sendJsonData(ResultMessage.SUCCESS,userVO.getResources().stream().map(SystemResource::getCode).collect(Collectors.toSet()));
     }
 }

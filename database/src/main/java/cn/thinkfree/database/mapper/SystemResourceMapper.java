@@ -4,6 +4,7 @@ import cn.thinkfree.database.model.SystemResource;
 import cn.thinkfree.database.model.SystemResourceExample;
 import java.util.List;
 
+import cn.thinkfree.database.vo.account.ResourceSEO;
 import cn.thinkfree.database.vo.account.SystemResourceTreeVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -87,10 +88,10 @@ public interface SystemResourceMapper {
 
     /**
      * 查询资源 -- 进行授权
-     * @param id
+     * @param resourceSEO
      * @return
      */
-    List<SystemResource> selectResourceForAuthorize(Integer id);
+    List<SystemResource> selectResourceForAuthorize(ResourceSEO resourceSEO);
     /**
      * 查询资源企业平台 -- 进行授权
      * @param id

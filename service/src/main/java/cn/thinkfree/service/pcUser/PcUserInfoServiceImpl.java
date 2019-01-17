@@ -23,6 +23,7 @@ import cn.thinkfree.service.event.EventService;
 import cn.thinkfree.service.utils.AccountHelper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PcUserInfoServiceImpl implements PcUserInfoService {
@@ -63,6 +65,12 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
     @Autowired
     EventService eventService;
+
+    @Autowired
+    SystemUserStoreMapper systemUserStoreMapper;
+
+    @Autowired
+    SystemUserStoreRoleMapper systemUserStoreRoleMapper;
 
     @Override
     public boolean isEnable(String name) {
@@ -129,13 +137,17 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         userInfo.setId(userCode);
         pcUserInfoMapper.insertSelective(userInfo);
 
+        makeUpOwnScope(userCode,accountVO,false);
+
         List<SystemRole> roles = accountVO.getRoles();
         saveUserRole(userCode,roles);
 
-        AccountCreate accountCreate = new AccountCreate(userCode,userInfo.getPhone(),password,userInfo.getName(),true);
-        eventService.publish(accountCreate);
+        //TODO Test
+//        AccountCreate accountCreate = new AccountCreate(userCode,userInfo.getPhone(),password,userInfo.getName(),true);
+//        eventService.publish(accountCreate);
         return accountVO;
     }
+
 
 
 
@@ -152,20 +164,9 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
 
         PcUserInfo pcUserInfo = pcUserInfoMapper.selectByPrimaryKey(id);
         accountVO.setPcUserInfo(pcUserInfo);
-
-        if(StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())){
-            BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
-            branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId());
-            List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
-            accountVO.setBranchCompany((branchCompanies!=null && branchCompanies.size() == 1) ?
-                                            branchCompanies.get(0) : new BranchCompany());
-        }
-        if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
-            CityBranchExample cityBranchExample = new CityBranchExample();
-            cityBranchExample.createCriteria().andCityBranchCodeEqualTo(pcUserInfo.getCityBranchCompanyId());
-            List<CityBranch> cityBranchs = cityBranchMapper.selectByExample(cityBranchExample);
-            accountVO.setCityBranch((cityBranchs!=null && cityBranchs.size() == 1)? cityBranchs.get(0) :new CityBranch());
-        }
+        SystemUserStoreExample userStoreExample = new SystemUserStoreExample();
+        userStoreExample.createCriteria().andUserIdEqualTo(id);
+        accountVO.setStoreList(Sets.newHashSet(systemUserStoreMapper.selectByExample(userStoreExample)));
 
         ThirdAccountVO thirdAccountVO = new ThirdAccountVO();
         if(StringUtils.isNotBlank(pcUserInfo.getThirdId())){
@@ -201,11 +202,10 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
             update.setMemo(accountVO.getPcUserInfo().getMemo());
         }
         logger.info("编辑账号,补充个人所属信息:{}",accountVO);
-        makeUpOwnScope(update,accountVO);
+        makeUpOwnScope(id,accountVO,true);
         pcUserInfoMapper.updateByPrimaryKey(update);
 
         refreshSystemRole(id,accountVO);
-
         return "操作成功!";
     }
 
@@ -354,8 +354,6 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
         userInfo.setCreator(userVO.getUsername());
         userInfo.setRootCompanyId(userVO.getPcUserInfo().getRootCompanyId());
 
-        makeUpOwnScope(userInfo,accountVO);
-
         // 处理设置信息
         if(accountVO.getPcUserInfo() != null){
             userInfo.setMemo(accountVO.getPcUserInfo().getMemo());
@@ -370,26 +368,22 @@ public class PcUserInfoServiceImpl implements PcUserInfoService {
     }
 
     /**
-     * 补全所属信息
-     * @param userInfo
+     * 辖区信息
+     * @param userCode
      * @param accountVO
      */
-    private void makeUpOwnScope(PcUserInfo userInfo, AccountVO accountVO) {
-        // 处理用户级别
-        if(accountVO.getBranchCompany() != null  && accountVO.getCityBranch() != null){
-            userInfo.setLevel(UserLevel.Company_City.shortVal());
-            userInfo.setCityBranchCompanyId(accountVO.getCityBranch().getCityBranchCode());
-            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getBranchCompanyCode());
-        }else if(accountVO.getBranchCompany() != null &&  accountVO.getCityBranch() == null){
-            userInfo.setBranchCompanyId(accountVO.getBranchCompany().getBranchCompanyCode());
-            userInfo.setLevel(UserLevel.Company_Province.shortVal());
-            userInfo.setCityBranchCompanyId(null);
-        }else if( accountVO.getBranchCompany() == null  && accountVO.getCityBranch() == null){
-            userInfo.setLevel(UserLevel.Company_Admin.shortVal());
-            userInfo.setCityBranchCompanyId(null);
-            userInfo.setBranchCompanyId(null);
+    private void makeUpOwnScope(String userCode, AccountVO accountVO,Boolean isClean) {
+
+        if(isClean){
+            SystemUserStoreExample del = new SystemUserStoreExample();
+            del.createCriteria().andUserIdEqualTo(userCode);
+            systemUserStoreMapper.deleteByExample(del);
         }
+        Set<SystemUserStore> stores = accountVO.getStoreList();
+        stores.forEach(s->s.setUserId(userCode));
+        systemUserStoreMapper.insertBatch(stores);
     }
+
 
     /**
      * 抽取账号信息

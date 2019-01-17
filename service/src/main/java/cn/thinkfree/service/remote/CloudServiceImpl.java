@@ -319,7 +319,7 @@ public class CloudServiceImpl extends AbsLogPrinter implements CloudService {
             result = invokeRemoteMethodForJson(syncOrderUrl, requestEntity);
         } catch (Exception e) {
             e.printStackTrace();
-            printInfoMes("生成订单调用接口发生错误",e.getStackTrace());
+            printInfoMes("生成订单调用接口发生错误",e.getMessage());
             return buildFailResult();
         }
         printInfoMes("生成订单接口返回结果为：result  {}",result);

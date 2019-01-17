@@ -1,24 +1,13 @@
 package cn.thinkfree.service.utils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.Map;
-
-import org.jodconverter.DocumentConverter;
-import org.jodconverter.office.OfficeException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
+
+import java.io.*;
+import java.util.Map;
 
 
 @Component

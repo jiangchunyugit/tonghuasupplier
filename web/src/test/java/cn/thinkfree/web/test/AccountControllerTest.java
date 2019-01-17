@@ -1,11 +1,12 @@
 package cn.thinkfree.web.test;
 
 import cn.thinkfree.core.bundle.MyRespBundle;
-import cn.thinkfree.database.model.SystemResource;
-import cn.thinkfree.database.model.SystemRole;
+import cn.thinkfree.database.model.*;
 import cn.thinkfree.database.vo.account.*;
 import com.github.pagehelper.PageInfo;
+import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import org.assertj.core.util.Lists;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +16,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -119,7 +122,20 @@ public class AccountControllerTest extends AbsControllerTest {
 
     @Test
     public void resource() throws Exception {
-        String rs = mvc.perform(get("/account/permission/5/resource")
+        String rs = mvc.perform(get("/account/permission/1/resource")
+                .with(user(userVO))
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<List<SystemResourceTreeVO>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<List<SystemResourceTreeVO>>>() {}.getType());
+        Assert.assertNotNull(rsb.getData());
+
+    }
+    @Test
+    public void resourceDetails() throws Exception {
+        String rs = mvc.perform(get("/account/permission/1/resource/12/details")
                 .with(user(userVO))
         )
                 .andExpect(status().isOk())
@@ -269,36 +285,150 @@ public class AccountControllerTest extends AbsControllerTest {
     @Test
     public void saveAccount() throws Exception {
         AccountVO save = new AccountVO();
+        PcUserInfo pcUserInfo = new PcUserInfo();
+        pcUserInfo.setMemo("神TM奇了");
+        save.setPcUserInfo(pcUserInfo);
+        ThirdAccountVO third = new ThirdAccountVO();
+        third.setAccount("3569812");
+        third.setWorkNumber("20182001");
+        third.setPhone("15865561492");
+        third.setId("4");
+        third.setEmail("email");
+        third.setName("名字");
+        third.setDept("部门");
+        third.setGroup("组");
+        save.setThirdAccount(third);
+        Set<SystemUserStore> stores = new HashSet<>();
 
+        SystemUserStore sus1= new SystemUserStore();
+        sus1.setBranchCode("b1");
+        sus1.setCityBranchCode("c1");
+        sus1.setStoreCode("s1");
+        stores.add(sus1);
+        SystemUserStore sus2= new SystemUserStore();
+        sus2.setBranchCode("b2");
+        sus2.setCityBranchCode("c2");
+        sus2.setStoreCode("s2");
+        stores.add(sus2);
+        SystemUserStore sus3= new SystemUserStore();
+        sus3.setBranchCode("b3");
+        sus3.setCityBranchCode("c3");
+        sus3.setStoreCode("s3");
+        stores.add(sus3);
+        SystemUserStore sus4= new SystemUserStore();
+        sus4.setBranchCode("b4");
+        sus4.setCityBranchCode("c4");
+        sus4.setStoreCode("s4");
+        stores.add(sus4);
+        SystemUserStore sus5= new SystemUserStore();
+        sus5.setBranchCode("b2");
+        sus5.setCityBranchCode("c2");
+        sus5.setStoreCode("s2");
+        stores.add(sus5);
+        save.setStoreList(stores);
 
 
         String rs = mvc.perform(post("/account/info")
-                .with(user(userVO))
-                .param("pcUserInfo.memo","")
-                .param("branchCompany.id",null)
-                .param("branchCompany.provinceCode",null)
-                .param("cityBranch.id",null)
-                .param("cityBranch.provinceCode",null)
-                .param("cityBranch.cityCode",null)
-                .param("roles[0].id","1")
-//                .param("roles[1].id","2")
-//                .param("roles[2].id","3")
-                .param("thirdAccount.dept","临时部门")
-                .param("thirdAccount.group","临时组")
-                .param("thirdAccount.name","临时姓名")
-                .param("thirdAccount.workNumber","20182001")
-                .param("thirdAccount.account","3569812")
-                .param("thirdAccount.phone","15565561616")
-                .param("thirdAccount.email","email")
-                .param("thirdAccount.id","4")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new Gson().toJson(save))
+                        .with(user(userVO))
+//                .param("pcUserInfo.memo","神TM奇")
+////                .param("branchCompany.id",null)
+////                .param("branchCompany.provinceCode",null)
+////                .param("cityBranch.id",null)
+////                .param("cityBranch.provinceCode",null)
+////                .param("cityBranch.cityCode",null)
+////                .param("roles[0].id","1")
+////                .param("roles[1].id","2")
+////                .param("roles[2].id","3")
+//                .param("thirdAccount.dept","临时部门")
+//                .param("thirdAccount.group","临时组")
+//                .param("thirdAccount.name","临时姓名")
+//                .param("thirdAccount.workNumber","20182001")
+//                .param("thirdAccount.account","3569812")
+//                .param("thirdAccount.phone","15865561492")
+//                .param("thirdAccount.email","email")
+//                .param("thirdAccount.id","4")
+//                .param("")
         )
                 .andExpect(status().isOk())
                 .andDo(print())         //打印出请求和相应的内容
                 .andReturn().getResponse().getContentAsString();
 
         MyRespBundle<AccountVO> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<AccountVO>>() {}.getType());
-        Assert.assertEquals(rsb.getData(),"操作成功!");
+        Assert.assertEquals(rsb.getData(),save);
     }
+
+
+    @Test
+    public void saveAccountException() throws Exception {
+        AccountVO save = new AccountVO();
+        PcUserInfo pcUserInfo = new PcUserInfo();
+        pcUserInfo.setMemo("神TM奇了");
+        save.setPcUserInfo(pcUserInfo);
+        ThirdAccountVO third = new ThirdAccountVO();
+        third.setAccount("3569812");
+        third.setWorkNumber("20182001");
+        third.setPhone("15865561492");
+        third.setId("4");
+        third.setEmail("email");
+        third.setName("名字");
+        third.setDept("部门");
+        third.setGroup("组");
+        save.setThirdAccount(third);
+        Set<SystemUserStore> stores = new HashSet<>();
+
+        SystemUserStore sus1= new SystemUserStore();
+        sus1.setBranchCode("b1");
+        sus1.setCityBranchCode("c1");
+        sus1.setStoreCode("s1");
+        stores.add(sus1);
+        SystemUserStore sus2= new SystemUserStore();
+        sus2.setBranchCode("b2");
+        sus2.setCityBranchCode("c2");
+        sus2.setStoreCode("s2");
+        stores.add(sus2);
+        SystemUserStore sus3= new SystemUserStore();
+        sus3.setBranchCode("b3");
+        sus3.setCityBranchCode("c3");
+        sus3.setStoreCode("s3");
+        stores.add(sus3);
+        SystemUserStore sus4= new SystemUserStore();
+//        sus4.setBranchCode("b4");
+//        sus4.setCityBranchCode("c4");
+        sus4.setStoreCode("s4");
+        stores.add(sus4);
+        SystemUserStore sus5= new SystemUserStore();
+        sus5.setBranchCode("b2");
+        sus5.setCityBranchCode("c2");
+        sus5.setStoreCode("s2");
+        stores.add(sus5);
+        save.setStoreList(stores);
+
+        SystemRole r1 = new SystemRole();
+        r1.setId(1);
+        SystemRole r2 = new SystemRole();
+        r2.setId(2);
+        SystemRole r3 = new SystemRole();
+        r3.setId(3);
+        save.setRoles(Lists.newArrayList(r1,r2,r3));
+
+        String str = new Gson().toJson(save);
+        System.out.println(str);
+        String rs = mvc.perform(post("/account/info")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(str)
+                        .with(user(userVO))
+
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<AccountVO> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<AccountVO>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"无辖区");
+    }
+
 
     @Test
     public void findAccount() throws Exception {
@@ -366,6 +496,7 @@ public class AccountControllerTest extends AbsControllerTest {
         Assert.assertEquals(rsb.getData(),"操作成功!");
     }
 
+
     @Test
     public void infoList() throws Exception {
 
@@ -379,6 +510,37 @@ public class AccountControllerTest extends AbsControllerTest {
 
         MyRespBundle<PageInfo<AccountListVO>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<PageInfo<AccountListVO>>>() {}.getType());
         Assert.assertEquals(rsb.getData(),"操作成功!");
+    }
+
+    @Test
+    public void regionsAndRole() throws Exception {
+        String rs = mvc.perform(get("/account/info/1/regions/2/role")
+                        .with(user(userVO))
+                .param("level","Creator")
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<PageInfo<AccountListVO>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<PageInfo<AccountListVO>>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"操作成功!");
+///info/{id}/regions/{rid}/role
+    }
+
+    @Test
+    public void saveRegionsAndRole() throws Exception {
+        String rs = mvc.perform(post("/account/info/1/regions/2/role")
+                .with(user(userVO))
+                .param("roles","")
+//                .param("roles","2")
+        )
+                .andExpect(status().isOk())
+                .andDo(print())         //打印出请求和相应的内容
+                .andReturn().getResponse().getContentAsString();
+
+        MyRespBundle<PageInfo<AccountListVO>> rsb = gson.fromJson(rs,  new TypeToken<MyRespBundle<PageInfo<AccountListVO>>>() {}.getType());
+        Assert.assertEquals(rsb.getData(),"操作成功!");
+///info/{id}/regions/{rid}/role
     }
 
 }

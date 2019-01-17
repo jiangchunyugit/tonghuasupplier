@@ -1,6 +1,6 @@
 package cn.thinkfree.web.test;
 
-import cn.thinkfree.database.constants.MenuType;
+import cn.thinkfree.database.constants.ResourceType;
 import cn.thinkfree.database.mapper.MenuMapper;
 import cn.thinkfree.database.mapper.SystemPermissionResourceMapper;
 import cn.thinkfree.database.mapper.SystemResourceMapper;
@@ -1115,7 +1115,7 @@ public class MenuInit extends AbsControllerTest{
     public void initResource(){
 
         List<Menu> menus = menuMapper.selectByExample(null);
-        List<Menu> root = menus.stream().filter(m -> MenuType.ROOT.code.equals(m.getPid())).collect(Collectors.toList());
+        List<Menu> root = menus.stream().filter(m -> ResourceType.ROOT.code.equals(m.getPid())).collect(Collectors.toList());
         List<IndexMenuVO> ms = root.stream().map(r -> new IndexMenuVO(r, menus)).collect(Collectors.toList());
         AtomicInteger id = new AtomicInteger(1);
 

@@ -48,7 +48,7 @@ public class MyCustomProvider extends AbsMyCustomProvider {
 
     @Override
     protected boolean isNeedChecks() {
-        return false;
+        return true;
     }
 
 

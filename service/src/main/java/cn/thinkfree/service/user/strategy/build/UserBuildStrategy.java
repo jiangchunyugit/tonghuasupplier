@@ -22,9 +22,6 @@ public interface UserBuildStrategy {
         SystemResource defaultDeleteRole = new SystemResource();
         defaultDeleteRole.setRequestMethod("DELETE");
         defaultDeleteRole.setCode("user");
-//        SystemResource defaultOptionRole = new SystemResource();
-//        defaultOptionRole.setRequestMethod("OPTION");
-//        defaultOptionRole.setCode("user");
         SystemResource defaultPutRole = new SystemResource();
         defaultPutRole.setRequestMethod("PUT");
         defaultPutRole.setCode("user");

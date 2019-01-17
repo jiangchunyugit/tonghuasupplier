@@ -68,20 +68,10 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
 
          completionUserRole(userVO,userID);
 
-         completionThirdUserInfo(userVO,userID);
-
          ThreadLocalHolder.clear();
          return userVO;
     }
 
-    /**
-     * 补全第三方用户信息
-     * @param userVO
-     * @param userID
-     */
-    private void completionThirdUserInfo(UserVO userVO, String userID) {
-        //TODO 处理埃森哲数据
-    }
 
     /**
      * 补全用户角色
@@ -142,27 +132,11 @@ public class PlatformUserBuildStrategy extends AbsLogPrinter implements UserBuil
         CompanyInfoExample companyInfoExample = new CompanyInfoExample();
         companyInfoExample.createCriteria().andCompanyIdEqualTo(userVO.getPcUserInfo().getRootCompanyId());
         List<CompanyInfo> companyInfos = companyInfoMapper.selectByExample(companyInfoExample);
-        if(companyInfos.isEmpty() || companyInfos.size() >1){
+        if(companyInfos.isEmpty() || companyInfos.size() > 1){
             throw  new UsernameNotFoundException("用户企业信息异常");
         }
         CompanyInfo companyInfo = companyInfos.get(0);
         userVO.setCompanyInfo(companyInfo);
-
-        if(StringUtils.isNotBlank(pcUserInfo.getBranchCompanyId())){
-            BranchCompanyExample branchCompanyExample = new BranchCompanyExample();
-            branchCompanyExample.createCriteria().andBranchCompanyCodeEqualTo(pcUserInfo.getBranchCompanyId())
-                                                    .andIsDelEqualTo(SysConstants.YesOrNoSp.NO.shortVal());
-            List<BranchCompany> branchCompanies = branchCompanyMapper.selectByExample(branchCompanyExample);
-            userVO.setBranchCompany(branchCompanies.size() == 1 ? branchCompanies.get(0) : null);
-        }
-        if(StringUtils.isNotBlank(pcUserInfo.getCityBranchCompanyId())){
-            CityBranchExample cityBranchExample = new CityBranchExample();
-            cityBranchExample.createCriteria().andCityBranchCodeEqualTo(pcUserInfo.getCityBranchCompanyId())
-                    .andIsDelEqualTo(SysConstants.YesOrNoSp.NO.shortVal());
-            List<CityBranch> cityBranches = cityBranchMapper.selectByExample(cityBranchExample);
-            userVO.setCityBranch(cityBranches.size() == 1 ? cityBranches.get(0) : null);
-        }
-
 
     }
 }

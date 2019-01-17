@@ -7,7 +7,7 @@ public enum  RoleScope {
     PROVINCE(2,"省级"),
     CITY(1,"市级");
 
-    public  Integer code;
+    public Integer code;
     public String desc;
     RoleScope(Integer code,String mes) {
         this.code = code;

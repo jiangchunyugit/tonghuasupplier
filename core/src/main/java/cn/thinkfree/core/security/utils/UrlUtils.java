@@ -14,7 +14,13 @@ public class UrlUtils {
      * @return
      */
     public static String getRealURL(FilterInvocation filterInvocation){
-       String url = filterInvocation.getRequestUrl().replaceAll("/\\d{1,}","/{id}");
+//       String url = filterInvocation.getRequestUrl().replaceAll("/\\d{1,}","/{id}");
+        // 该处将会受理
+        // 自增ID    65532
+        // 30位的编号  PC000001544006203618Af7Nt00000
+        // 2至4位的编号时间戳 SGHT20176657219
+        String url = filterInvocation.getRequestUrl().replaceAll("/\\d+|/[A-Za-z0-9]{30}|/[A-Za-z]{2,4}\\d+","/{id}");
+
         if(StringUtils.isNotBlank(url)&& url.indexOf("?") > 0){
             url = url.substring(0,url.indexOf("?"));
         }

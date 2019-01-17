@@ -103,6 +103,7 @@ public class PcUserInfo extends BaseModel {
      * This field corresponds to the database column pc_user_info.city_branch_company_id
 
      */
+    @Deprecated
     @ApiModelProperty("市分站主键")
     private String cityBranchCompanyId;
 
@@ -125,6 +126,7 @@ public class PcUserInfo extends BaseModel {
      * This field corresponds to the database column pc_user_info.branch_company_id
 
      */
+    @Deprecated
     @ApiModelProperty("省分站主键")
     private String branchCompanyId;
 
@@ -136,6 +138,7 @@ public class PcUserInfo extends BaseModel {
      * This field corresponds to the database column pc_user_info.level
 
      */
+    @Deprecated
     @ApiModelProperty("用户级别 0 创世 1公司根账号 2公司省账号 3 公司市账号")
     private Short level;
 
@@ -376,6 +379,7 @@ public class PcUserInfo extends BaseModel {
      * @return the value of pc_user_info.city_branch_company_id
 
      */
+    @Deprecated
     public String getCityBranchCompanyId() {
         return cityBranchCompanyId;
     }
@@ -387,6 +391,7 @@ public class PcUserInfo extends BaseModel {
      * @param cityBranchCompanyId the value for pc_user_info.city_branch_company_id
 
      */
+    @Deprecated
     public void setCityBranchCompanyId(String cityBranchCompanyId) {
         this.cityBranchCompanyId = cityBranchCompanyId == null ? null : cityBranchCompanyId.trim();
     }
@@ -420,6 +425,7 @@ public class PcUserInfo extends BaseModel {
      * @return the value of pc_user_info.branch_company_id
 
      */
+    @Deprecated
     public String getBranchCompanyId() {
         return branchCompanyId;
     }
@@ -431,6 +437,7 @@ public class PcUserInfo extends BaseModel {
      * @param branchCompanyId the value for pc_user_info.branch_company_id
 
      */
+    @Deprecated
     public void setBranchCompanyId(String branchCompanyId) {
         this.branchCompanyId = branchCompanyId == null ? null : branchCompanyId.trim();
     }
@@ -442,6 +449,7 @@ public class PcUserInfo extends BaseModel {
      * @return the value of pc_user_info.level
 
      */
+    @Deprecated
     public Short getLevel() {
         return level;
     }
@@ -453,6 +461,7 @@ public class PcUserInfo extends BaseModel {
      * @param level the value for pc_user_info.level
 
      */
+    @Deprecated
     public void setLevel(Short level) {
         this.level = level;
     }
