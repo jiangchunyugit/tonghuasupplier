@@ -11,7 +11,6 @@
     <result column="audit_account" jdbcType="VARCHAR" property="auditAccount" />
     <result column="company_name" jdbcType="VARCHAR" property="companyName" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
-    <result column="category_no" jdbcType="VARCHAR" property="categoryNo" />
 
   </resultMap>
   <resultMap id="BrandItemsVO" type="cn.thinkfree.database.vo.BrandItemsVO" extends="BaseResultMap">
@@ -49,7 +48,7 @@
 	brand.authorization_card_validity,
 	brand.is_valid,
 	brand.company_id,
-	brand.audit_status,
+	category.audit_status,
 	brand.brand_no,
 	brand.agency_code,
 	brand.create_time,
@@ -94,8 +93,7 @@
       ON brand.company_id = audit.company_id
       AND audit.contract_number = brand.id
       WHERE
-      brand.is_valid = 1
-      AND info.audit_status = 8
+      info.audit_status = 8
       <if test="brandId!= null and brandId!= ''">
           and brand.id = #{brandId}
       </if>
@@ -125,8 +123,7 @@
       sum( CASE WHEN audit_status = 5 THEN 1 ELSE 0 END ) AS audit_change_count
     FROM
     pc_dealer_brand_info
-    WHERE
-    is_valid = 1
+    WHERE 1=1
       <if test="companyId != null and companyId != ''">
       and company_id = #{companyId}
     </if>
@@ -145,16 +142,20 @@
       <include refid="Sign_Base_Column_List" />
       FROM
       pc_dealer_brand_info brand
-      inner JOIN ( SELECT company_id,dealer_company_id, brand_no, string_agg ( category_name, ', ' ) category_name, string_agg ( category_no, ', ' ) category_code FROM pc_agency_contract where status = 8 GROUP BY company_id, brand_no, dealer_company_id ) category
+      inner JOIN ( SELECT company_id,dealer_company_id, brand_no,
+      string_agg ( category_name, ',' ) category_name,
+      string_agg ( category_no, ', ' ) category_code, status audit_status
+      FROM pc_agency_contract where status in (8,9,10,11) GROUP BY company_id, brand_no, dealer_company_id,status ) category
       ON category.company_id = brand.company_id
       and brand.brand_no = category.brand_no
       and brand.agency_code = category.dealer_company_id
       WHERE
-      brand.is_valid = 1
-      AND brand.audit_status = 2
+      brand.id in (select max(id) from pc_dealer_brand_info where
+      audit_status in (2,4) group by company_id, brand_no)
       <if test="_parameter!= null and _parameter!= ''">
       and category.company_id  = #{companyId}
     </if>
+      order by category.audit_status asc
   </select>
 
   <select id="selectByContract" parameterType="java.lang.String" resultMap="BaseResultMap">

@@ -1,15 +1,12 @@
 package cn.thinkfree.database.vo;
 
-import cn.thinkfree.core.constants.SysConstants;
 import cn.thinkfree.core.security.model.SecurityUser;
 import cn.thinkfree.database.constants.UserEnabled;
-import cn.thinkfree.database.constants.UserLevel;
 import cn.thinkfree.database.constants.UserRegisterType;
 import cn.thinkfree.database.model.*;
 import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -17,8 +14,6 @@ import java.util.List;
 public class UserVO extends SecurityUser {
 
     private static Long serialVersionUID = 1L;
-
-
 
     /**
      * 用户注册信息
@@ -58,8 +53,6 @@ public class UserVO extends SecurityUser {
      */
     private CompanyUser companyUser;
 
-
-
     /**
      * 辖区门店
      */
@@ -72,8 +65,6 @@ public class UserVO extends SecurityUser {
     public void setType(UserRegisterType type) {
         this.type = type;
     }
-
-
 
     public List<String> getRelationMap() {
         return  type.equals(UserRegisterType.Platform) ? relationMap : Lists.newArrayList(getCompanyID());

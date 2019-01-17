@@ -9,8 +9,12 @@
     <style>
         body {
             font-family: SimSun;
+            margin: 50px 70px;
         }
-
+        .div_h2 {
+            font-family: St;
+            font-size: 18px;
+        }
         .text-algin {
             text-align: center;
         }
@@ -96,7 +100,7 @@
 <section class='indent'>
     根据《中华人民共和国合同法》，以及其他有关法律、法规规定的原则，结合室内装饰装修的特点，经甲、乙双方友好协商，现就甲方通过“居然设计家”平台（以下简称平台）委托乙方承担室内装饰设计（不含建筑设计、机电设计、园林设计）事宜达成如下协议。
 </section>
-<h4>第一条 设计项目概括</h4>
+<h4 class="div_h2">第一条 设计项目概括</h4>
 <div class="footer" style="clear:both;margin-left:0">
     <div style="float:left;display:inline-block;width:50%;" ><h4 class="inline-block">甲方姓名：</h4><span class="placeholdanerT">&nbsp;${c03}</span></div>
     <div style="float:left;display:inline-block;width:50%;" ><h4 class="inline-block">甲方电话：</h4><span class="placeholdanerT">&nbsp;${c04}</span></div>
@@ -113,7 +117,7 @@
         <span class="placeholderT">&nbsp;${c08}</span>省
         <span class="placeholderT">&nbsp;${c09}</span>市
         <span class="placeholderT">&nbsp;${c10}</span>区/县
-        <span class="placeholderT">&nbsp;${c11}</span>
+        <span class="placeholderT" style="margin-left: 89px">&nbsp;${c11}</span>
     </div>
 </div>
 <div class="footer" style="clear:both;margin-left:0">
@@ -123,10 +127,10 @@
     </div>
 </div>
 
-<h4>第二条 设计工作内容</h4>
+<h4 class="div_h2">第二条 设计工作内容</h4>
 甲方委托乙方进行的设计内容包括
 <section class='indent'>
-    1. 规划设计: 量房后乙方设计师根据甲方提供的需求信息开始平面规划设计，包括设计理念阐述、平面布置图、概念参考图等。甲方确认后，平面规划设计完成；
+    1. 规划设计: 量房后乙方设计师根据甲方提供的需求信息开始平面规划设计，包括设计理念阐述、平面布置图、概念参考图等，甲方确认后，平面规划设计完成。
 </section>
 <section class='indent'>
     2. 3D方案设计：平面规划设计确定后，乙方开始3D方案设计，乙方应提供给甲方由居然设计家3D云设计软件制作的
@@ -138,7 +142,7 @@
 <section class='indent'>
     4. 清单报价：乙方提供的清单报价包括但不限于：基础施工清单、主材清单、家居饰品清单、电器清单等。清单报价为参考报价，具体商品及报价金额以设计师材料推荐清单对应居然线上线下销售渠道的实际金额为准，所购买材料在运输、安装、使用中出现的相关问题由相应品牌商家负责。
 </section>
-<h4>第三条 设计费款项支付方式</h4>
+<h4 class="div_h2">第三条 设计费款项支付方式</h4>
 <table>
 
     <tr>
@@ -170,20 +174,22 @@
             <span class="placeholderK">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         </td>
     </tr>
+    <tr>
+        <td>
+            <h4 class="inline-block">预计设计周期为：<p class="placeholderT">&nbsp;${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）</h4>
+        </td>
+    </tr>
 </table>
 
-<section class='indent'>
-    预计设计周期为：<p class="placeholderT">&nbsp;${c17}</p>自然日（设计周期自甲方支付全款/首期款之日起计算）
-</section>
 <section class='indent'>
     1. 采取以下方式付款：
 </section>
  <#if c18 ==0>
 <section class='indent'>
-    <input type="checkbox" checked="checked">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;${c19}</p>元。
+    <input type="checkbox" checked="checked" style="margin-top: 5px;">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;${c19}</p>元。
 </section>
  <section class='indent'>
-     <input type="checkbox" >分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款，
+     <input type="checkbox" style="margin-top: 5px;" >分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款，
      即在签订本合同并确认平面方案设计后，支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费首期款，即<p class="placeholderK">&nbsp;</p>元；
      甲方确认3D方案设计后支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费中期款，即<p class="placeholderK">&nbsp;</p>元；
      甲方确认施工图设计后支付设计费总额<p class="placeholderK">&nbsp;</p>%作为设计费尾期款，即<p class="placeholderK">&nbsp;</p>元。
@@ -191,10 +197,10 @@
  </#if>
  <#if c18 ==1>
  <section class='indent'>
-     <input type="checkbox" >一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;</p>元。
+     <input type="checkbox" style="margin-top: 5px;">一次性付款：甲方在签订本合同时选择一次性付清全部设计费总额 <p class="placeholderK">&nbsp;</p>元。
  </section>
 <section class='indent'>
-    <input type="checkbox" checked="checked">分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
+    <input type="checkbox" checked="checked" style="margin-top: 5px;">分期付款：若甲方在签订本合同时选择分期付款，则甲方可以分三期付款
  <#list c100 as c>
  <#if c.sortNumber ==1>
     ${c.name}，支付设计费总额 <p class="placeholderK">${c.ratio}</p>%作为设计费首期款，即 <p class="placeholderK">${c.costValue}</p>元；
@@ -214,7 +220,7 @@
 <section class='indent'>
     2. 不论甲方采取何种付款方式，甲方必须将设计费全款交至平台，否则平台将本合同视同甲方与乙方的场外交易，不对甲方承担“先行赔付”等任何售后服务责任。
 </section>
-<h4>第四条 甲方责任</h4>
+<h4 class="div_h2">第四条 甲方责任</h4>
 <section class='indent'>
     1. 甲方应按乙方要求及时、准确且完整的提供设计所需原始户型图等项目建筑基本图纸等资料或现场具备量房需要的条件，如延期提供，乙方有权顺延设计期限；
 </section>
@@ -236,7 +242,7 @@
 <section class='indent'>
     7. 非乙方原因未进行现场实地测量，乙方以甲方提供的原始测量图数据为依据，为甲方出具装饰施工图和3D全屋漫游图，相关设计图纸应标明尺寸、材质、用料、颜色 、图标以及设计说明等内容，如因甲方提供原始测量图数据原因产生任何后果，由甲方承担。
 </section>
-<h4>第五条 乙方责任</h4>
+<h4 class="div_h2">第五条 乙方责任</h4>
 <section class='indent'>
     1. 如乙方进行现场实地测量，在收取设计费后，根据实际测量与设计方案需要，向甲方提供装饰施工图和3D全屋漫游图，相关设计图纸应标明尺寸、材质、用料、颜色 、图标以及设计说明等内容；
 </section>
@@ -268,7 +274,7 @@
 <section class='indent'>
     5. 由于不可抗力因素致使合同无法履行时，双方及时协商解决。
 </section>
-<h4>第七条 其他事项</h4>
+<h4 class="div_h2">第七条 其他事项</h4>
 <section class='indent'>
     1. 本合同在履行过程中发生纠纷，甲乙方应及时协商解决。协商不成时，应首先向居然设计家平台进行投诉，双方对平台的处理方案不满意的，可向被告住所地有管辖权的法院提起诉讼；
 </section>

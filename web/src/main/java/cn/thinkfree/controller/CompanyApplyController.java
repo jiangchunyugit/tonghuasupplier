@@ -41,9 +41,9 @@ public class CompanyApplyController extends AbsBaseController {
     @RequestMapping(value = "/sendMessage", method = RequestMethod.GET)
     @MyRespBody
     @ApiOperation(value="前端--设计/装饰公司申请--发送邮件验证码--李阳")
-    public MyRespBundle<String> sendMessage(@ApiParam("邮箱") @RequestParam String email){
-        String mes = companyApplyService.sendMessage(email);
-        return sendSuccessMessage(mes);
+    public MyRespBundle<Map<String, Object>> sendMessage(@ApiParam("邮箱") @RequestParam String email){
+        Map<String, Object> mes = companyApplyService.sendMessage(email);
+        return sendJsonData(ResultMessage.SUCCESS, mes);
     }
 
     /**

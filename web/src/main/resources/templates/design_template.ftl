@@ -10,6 +10,8 @@
 
         body {
             font-family: SimSun;
+          /*  margin: 30px 18px;*/
+            margin: 50px 70px;
         }
 
         .text-algin {
@@ -48,7 +50,7 @@
             text-indent: 0;
         }
         .smalltextput{
-            min-width: 50px !important;
+            min-width: 26px !important;
             text-align: center;
             text-indent: 0;
         }
@@ -100,6 +102,9 @@
         section {
             line-height: 30px;
         }
+        .page-break {
+            page-break-after:always;
+        }
     </style>
 </head>
 
@@ -124,7 +129,7 @@
 </section>
 <h4>一、合作约定</h4>
 <section class="indent">
-    甲方向乙方（<input type="checkbox" name="designStudio">设计工作室<input type="checkbox">设计师） 提供线上设计云平台、材料采购平台和施工管理平台资源。 并对乙方进行宣传和推广。乙方可使用3D云设计（Homestyler）软件进行方案制作， 向甲方客户提供家居全案设计、产品推荐购买服务和施工服务。甲方按本合同约定向乙方返设计费、收取平台服务管理费，并向乙方支付材料推荐服务费和施工服务费。
+    甲方向乙方（<input type="checkbox" name="designStudio" style="margin-top: 5px;">设计工作室<input type="checkbox" style="margin-top: 5px;">设计师） 提供线上设计云平台、材料采购平台和施工管理平台资源，并对乙方进行宣传和推广。乙方可使用3D云设计（Homestyler）软件进行方案制作， 向甲方客户提供家居全案设计、产品推荐购买服务和施工服务。甲方按本合同约定向乙方返设计费、收取平台服务管理费，并向乙方支付材料推荐服务费和施工服务费。
 </section>
 <section class="indent">
     合作期限自<div class="textput smalltextput">${startTime?string('yyyy')}</div>年<div class="textput smalltextput">${startTime?string('MM')}</div>月<div class="textput smalltextput">${startTime?string('dd')}</div>日
@@ -200,11 +205,11 @@
     1.1资质审核通过后，一次性缴纳     元入驻保证金；
     1.2剩余部分从接到的每一个平台项目里扣除项目总金额的  20   %充作保证金，直到剩余保证金补足为止。-->
 
-    1.乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金<div class="textput smalltextput">${c15}</div>元，保证金缴纳遵循如下约定
+    1.乙方登录平台提交资质，并在审核通过后5日内，向甲方支付平台入驻保证金<div class="textput smalltextput">${c15}</div>元，保证金缴纳遵循如下约定：
 <#list code13 as c>
     <#if (code13?size = 1)>
-    <div class="indent">
-        1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>元的入驻保证金；
+    <div class="">
+    1.1资质审核通过后，一次性缴纳<div class="textput smalltextput">${c.costValue}</div>元的入驻保证金；
     </div>
     </#if>
 </#list>
@@ -265,9 +270,9 @@
 <section class="indent">
     3.材料推荐服务费
     <#--<div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>--><#--<div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的<div class="textput smalltextput">${c23}</div>%作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准），甲方分两次与乙方结算材料推荐服务费。</div>-->
-    <div class="indent">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的百分比作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准）。甲方分两次与乙方结算材料推荐服务费</div>
+    <div class="">3.1甲方根据市场需求签约品牌经销商，并按照乙方推荐客户签约的《销售合同》实收金额的百分比作为材料推荐服务费（不同品类的材料推荐服务费不同，具体以网站公布为准）。甲方分两次与乙方结算材料推荐服务费。</div>
     <#list code09 as c>
-              <div class="indent"> 3.1.${c_index+1} ${(c.costName?split("@")[0])}
+              <div class=""> 3.1.${c_index+1} ${(c.costName?split("@")[0])}
         <#if c.costValue !='' >
             <div class="textput smalltextput">${c.costValue}</div>
         <#if c.cType == 1 >
@@ -280,15 +285,15 @@
     </#list>
 <#--    <div class="indent">3.1.1甲方在客户与商家签订正式订单并付款（全额或首期款）后向乙方支付材料推荐服务费总额 <div class="textput smalltextput">30</div> %的首款。</div>
     <div class="indent">3.1.2甲方在商家为客户配送产品完成且客户确认验收的60天后向乙方支付材料推荐服务费总额 <div class="textput smalltextput">30</div> %的尾款。</div>-->
-    <div class="indent">如甲方客户发生材料订单退款，则乙方应将该笔订单所得材料推荐服务费退还给甲方。如乙方未在5个工作日内予以退还，则甲方有权从下笔订单中扣除应退还的材料推荐服务费。</div>
+    <div class="">3.1.3如甲方客户发生材料订单退款，则乙方应将该笔订单所得材料推荐服务费退还给甲方。如乙方未在5个工作日内予以退还，则甲方有权从下笔订单中扣除应退还的材料推荐服务费。</div>
 </section>
 <section class="indent">
     4.施工服务费
-    <div class="indent">
+    <div class="">
         4.1甲方依据市场需求提供施工服务，并按照乙方推荐客户签约的《施工合同》实收金额的<div class="textput smalltextput">${c12}</div>%作为施工服务费。
     </div>
     <#list code10 as c>
-                <div class="indent">  4.1.${c_index+1} ${(c.costName?split("@")[0])}
+                <div class="">  4.1.${c_index+1} ${(c.costName?split("@")[0])}
         <#if c.costValue !='' >
                <div class="textput smalltextput">${c.costValue}</div>
                 <#if c.cType == 1 >
@@ -383,10 +388,6 @@
 <br/>
 <br/>
 <br/>
-<br/>
-<br/>
-<br/>
-
 <div class="footer" >
     <h4 style="float:left;display:inline-block;width:50%;" >甲方（盖章）：</h4>
     <h4 style="float:left;display:inline-block;width:50%;">乙方（盖章）：</h4>
@@ -400,9 +401,15 @@
     <h4 style="float:left;display:inline-block;width:50%;" >联系电话：</h4>
 </div>
 <div class="footer" >
-    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</h4>
-    <h4 style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</h4>
+    <div style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div> 年<div class="textput smalltextput"></div> 月<div class="textput smalltextput"></div> 日</div>
+    <div style="float:left;display:inline-block;width:50%;" >日期：<div class="textput smalltextput"></div>年<div class="textput smalltextput"></div>月<div class="textput smalltextput"></div>日</div>
 </div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
 <br/>
 <br/>
 <br/>

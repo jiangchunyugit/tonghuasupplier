@@ -102,7 +102,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
                 if(StringUtils.isEmpty(paramAgencySEO.getContractNumber())){
                     printErrorMes("新增合同:{},处理合同编号",debugFlag);
                     //生成合同编号
-                    String contractNumber =  this.getOrderContract(paramAgencySEO.getDealerCompanyId(), paramAgencySEO.getBrandNo());
+                    String contractNumber =  this.getOrderContract(paramAgencySEO.getBrandNo(),paramAgencySEO.getDealerCompanyId());
                     // 校验经销商合同编号
                     AgencyContractExample agencyContractExample = new AgencyContractExample();
                     agencyContractExample.createCriteria().andContractNumberEqualTo(contractNumber);
@@ -151,7 +151,7 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
 
             // 合同信息变更插入
             String oldContractNumber = paramAgencySEO.getContractNumber();
-            String contractNumber =  this.getOrderContract(paramAgencySEO.getDealerCompanyId(), paramAgencySEO.getBrandNo());
+            String contractNumber =  this.getOrderContract(paramAgencySEO.getBrandNo(),paramAgencySEO.getDealerCompanyId());
             paramAgencySEO.setContractNumber(contractNumber);
             paramAgencySEO.setStatus(AgencyConstants.AgencyType.NOT_SUBMITTED.code.toString());
             paramAgencySEO.setCreateTime(new Date());
@@ -517,6 +517,30 @@ public class AgencyServiceImpl extends AbsLogPrinter implements AgencyService {
             }
         }
         return false;
+    }
+
+    @Override
+    public PcAuditInfo checkCase(String contruct, String status) {
+
+        PcAuditInfoExample pcAuditInfoExample= new PcAuditInfoExample();
+
+        pcAuditInfoExample.setOrderByClause("audit_time DESC");
+        PcAuditInfoExample.Criteria criteria = pcAuditInfoExample.createCriteria();
+        criteria.andContractNumberEqualTo(contruct).andAuditTypeEqualTo("7");
+
+        if (AgencyConstants.AgencyType.OPERATING_AUDIT_REFUSED.code.toString().equals(status)) {
+
+            criteria.andAuditLevelEqualTo("1");
+        } else {
+            criteria.andAuditLevelEqualTo("2");
+        }
+
+        List<PcAuditInfo> pcAuditInfos =pcAuditInfoMapper.selectByExample(pcAuditInfoExample);
+
+        if (pcAuditInfos.size() >0 ) {
+            return pcAuditInfos.get(0);
+        }
+        return null;
     }
 
     @Autowired

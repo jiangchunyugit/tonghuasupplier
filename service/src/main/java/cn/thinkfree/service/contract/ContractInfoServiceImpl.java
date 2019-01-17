@@ -1435,15 +1435,15 @@ public class ContractInfoServiceImpl extends AbsLogPrinter implements ContractSe
 			result.setProvince(provinceMapper.convertCodeToName(companyInfo.getProvinceCode()));
 			result.setCity(cityMapper.convertCodeToName(companyInfo.getCityCode()));
 			result.setFddm(companyInfo.getSiteCompanyId());
-//			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
-//			if(StringUtils.isNotBlank(code)){
-//				try{
-//					result.setGsdm( Integer.valueOf(code));
-//				}catch (Exception e){
-//					printErrorMes(e.getMessage());
-//				}
-//			}
-			result.setGsdm(ebsID);
+			String code = businessEntityService.getBusinessEbsIdByCompanyId(companyInfo.getCompanyId());
+			if(StringUtils.isNotBlank(code)){
+				try{
+					result.setGsdm( Integer.valueOf(code));
+				}catch (Exception e){
+					printErrorMes(e.getMessage());
+				}
+			}
+			result.setGsdm(Integer.valueOf(code));
 		}
 		// 10 有效 20无效
 		result.setStatus("10");

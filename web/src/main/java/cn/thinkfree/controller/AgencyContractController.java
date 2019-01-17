@@ -189,4 +189,16 @@ public class AgencyContractController extends AbsBaseController {
         return sendJsonData(ResultMessage.FAIL,"操作失败");
     }
 
+    @ApiOperation(value="前端-运营平台-根据合同编号查询合同信息", notes="根据合同编号查询合同信息")
+    @GetMapping("/getCheckCause")
+    @MyRespBody
+    public MyRespBundle<PcAuditInfo> getCheckCause(@ApiParam("合同编号")@RequestParam String contractNumber,@ApiParam("合同状态")@RequestParam String status){
+
+        if (StringUtils.isNotBlank(contractNumber) && StringUtils.isNotBlank(status)  ) {
+            PcAuditInfo  pcAuditInfo = agencyService.checkCase(contractNumber,status);
+            return sendJsonData(ResultMessage.SUCCESS,pcAuditInfo);
+        }
+        return sendJsonData(ResultMessage.FAIL,"操作失败");
+    }
+
 }

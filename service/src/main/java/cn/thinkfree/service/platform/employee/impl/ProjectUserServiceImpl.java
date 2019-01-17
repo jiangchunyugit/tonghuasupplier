@@ -43,6 +43,9 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         OrderUserExample userExample = new OrderUserExample();
         userExample.createCriteria().andProjectNoEqualTo(projectNo).andRoleCodeIn(roleCodes);
         List<OrderUser> orderUsers = orderUserMapper.selectByExample(userExample);
+        if(orderUsers.isEmpty()){
+            return new ArrayList<OrderUser>();
+        }
         return orderUsers;
     }
 
@@ -129,5 +132,12 @@ public class ProjectUserServiceImpl implements ProjectUserService {
         orderUser.setOrderNo(orderNo);
         orderUser.setUpdateTime(new Date());
         orderUserMapper.insertSelective(orderUser);
+    }
+
+    @Override
+    public long countByUserId(String userId) {
+        OrderUserExample example = new OrderUserExample();
+        example.createCriteria().andUserIdEqualTo(userId);
+        return orderUserMapper.countByExample(example);
     }
 }

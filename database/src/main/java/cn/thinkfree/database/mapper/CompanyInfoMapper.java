@@ -153,4 +153,14 @@ public interface CompanyInfoMapper {
      */
     List<CompanyListVo> agencyList(CompanyListSEO companyListSEO);
 
+    /**
+     * @Author jiang
+     * @Description 根据公司id查询分公司城市门店
+     * @Date
+     * @Param
+     * @return
+     **/
+    List<CompanyCitySiteVO> selectCompanyCitySiteByCompanyId(@Param("companyIds") List<String> companyIds, @Param("branchCompanyCode") String branchCompanyCode, @Param("cityBranchCode") String cityBranchCode, @Param("storeCode") String storeCode);
+
+
 }

@@ -155,19 +155,27 @@ public class CompanyApplyServiceImpl implements CompanyApplyService {
     }
 
     @Override
-    public String sendMessage(String email) {
+    public Map<String, Object> sendMessage(String email) {
+        Map<String, Object> map = new HashMap<String, Object>();
+
         boolean pcflag = pcUserInfoService.isEnable(email);
         if( StringUtils.isNotBlank(email)){
             boolean emailFlag = companyApplyService.checkEmail(email);
             if(emailFlag || pcflag){
-                return "邮箱已被注册!";
+                map.put("isSuccess", false);
+                map.put("msg", "邮箱已被注册");
+                return map;
             }
         }else{
-            return "邮箱不能为空!";
+            map.put("isSuccess", false);
+            map.put("msg", "邮箱不能为空");
+            return map;
         }
 
         redisService.saveVerificationCode(email);
-        return "验证码已发送至邮箱";
+        map.put("isSuccess", true);
+        map.put("msg", "验证码已发送至邮箱");
+        return map;
     }
 
     /**

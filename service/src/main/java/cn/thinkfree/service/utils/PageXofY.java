@@ -38,8 +38,15 @@ public class PageXofY implements IEventHandler {
             pdfCanvas.release();
         }
         public void writeTotal(PdfDocument pdf) {
-            Canvas canvas = new Canvas(placeholder, pdf);
-            canvas.showTextAligned(String.valueOf(pdf.getNumberOfPages()),
-                    0, descent, TextAlignment.LEFT);
+            if(pdf.getNumberOfPages() > 10 ){
+                Canvas canvas = new Canvas(placeholder, pdf);
+                canvas.showTextAligned(String.valueOf(pdf.getNumberOfPages()+1),
+                        0, descent, TextAlignment.LEFT);
+            }else{
+                Canvas canvas = new Canvas(placeholder, pdf);
+                canvas.showTextAligned(String.valueOf(pdf.getNumberOfPages()),
+                        0, descent, TextAlignment.LEFT);
+            }
+
         }
     }

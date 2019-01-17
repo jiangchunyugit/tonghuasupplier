@@ -5,6 +5,7 @@ import cn.thinkfree.core.base.AbsBaseController;
 import cn.thinkfree.core.bundle.MyRespBundle;
 import cn.thinkfree.core.constants.ResultMessage;
 import cn.thinkfree.database.model.EmployeeMsg;
+import cn.thinkfree.database.vo.DesignerCertificationVO;
 import cn.thinkfree.service.platform.designer.DesignerService;
 import cn.thinkfree.service.platform.vo.DesignerMsgListVo;
 import cn.thinkfree.service.platform.vo.DesignerMsgVo;
@@ -53,10 +54,13 @@ public class DesignerController extends AbsBaseController {
             @ApiParam(name = "registrationTimeStart", required = false, value = "注册时间") @RequestParam(name = "registrationTimeStart", required = false) String registrationTimeStart,
             @ApiParam(name = "registrationTimeEnd", required = false, value = "注册时间") @RequestParam(name = "registrationTimeEnd", required = false) String registrationTimeEnd,
             @ApiParam(name = "sort", required = false, value = "排期区域") @RequestParam(name = "sort", required = false) String sort,
+            @ApiParam(name = "branchCompanyCode", required = false, value = "分公司") @RequestParam(name = "branchCompanyCode", required = false) String branchCompanyCode,
+            @ApiParam(name = "cityBranchCode", required = false, value = "城市分站名称") @RequestParam(name = "cityBranchCode", required = false) String cityBranchCode,
+            @ApiParam(name = "storeCode", required = false, value = "门店名称") @RequestParam(name = "storeCode", required = false) String storeCode,
             @ApiParam(name = "pageSize", required = false, value = "每页条数") @RequestParam(name = "pageSize", required = false, defaultValue = "10") int pageSize,
             @ApiParam(name = "pageIndex", required = false, value = "第几页") @RequestParam(name = "pageIndex", required = false, defaultValue = "1") int pageIndex) {
         PageVo<List<DesignerMsgListVo>> pageVo = designerService.queryDesigners(designerName, designerRealName, phone, authState, province, city, area, level,
-                identity, cardNo, source, tag, registrationTimeStart, registrationTimeEnd, sort, pageSize, pageIndex);
+                identity, cardNo, source, tag, registrationTimeStart, registrationTimeEnd, sort, branchCompanyCode,cityBranchCode,storeCode, pageSize, pageIndex);
         return sendJsonData(ResultMessage.SUCCESS, pageVo);
     }
 
@@ -153,5 +157,13 @@ public class DesignerController extends AbsBaseController {
             return sendFailMessage(e.getMessage());
         }
         return sendSuccessMessage(null);
+    }
+    @ApiOperation("根据用户ID查询设计师实名认证 实名认证状态，1未认证，2已认证，3实名认证审核中，4审核不通过")
+    @MyRespBody
+    @RequestMapping(value = "queryDesignerCertificationByUserId", method = {RequestMethod.POST, RequestMethod.GET})
+    public MyRespBundle<DesignerCertificationVO> queryDesignerCertificationByUserId(
+            @ApiParam(name = "userId", required = false, value = "用户ID ") @RequestParam(name = "userId", required = false) String userId) {
+        DesignerCertificationVO designerCertificationVO = designerService.queryDesignerCertificationByUserId(userId);
+        return sendJsonData(ResultMessage.SUCCESS, designerCertificationVO);
     }
 }
