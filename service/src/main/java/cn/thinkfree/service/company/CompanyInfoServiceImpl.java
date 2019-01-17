@@ -159,14 +159,14 @@ public class CompanyInfoServiceImpl implements CompanyInfoService {
         sync.setGssh(companyInfo.getTaxCode());
 
 
-//        String code = businessEntityService.getBusinessEbsIdByCompanyId(companyID);
-//        if(StringUtils.isNotBlank(code)){
-//            try{
-                sync.setCwgsdm(ebsID);
-//            }catch (Exception e){
-//                logger.error(e.getMessage());
-//            }
-//        }
+        String code = businessEntityService.getBusinessEbsIdByCompanyId(companyID);
+        if(StringUtils.isNotBlank(code)){
+           try{
+                sync.setCwgsdm(Integer.valueOf(code));
+           }catch (Exception e){
+               logger.error(e.getMessage());
+            }
+        }
 
         return Optional.ofNullable(sync);
     }
