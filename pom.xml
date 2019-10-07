@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>cn.thinkfree</groupId>
-    <artifactId>designer_pc</artifactId>
+    <groupId>cn.tonghua</groupId>
+    <artifactId>tonghua_control</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>思无界-居然之家-PC端-base</name>
+    <name>同华-control-base</name>
     <description>
         PC管理平台
         约束pom
@@ -83,7 +83,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.41</version>
+                <version>8.0.13</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -97,23 +97,6 @@
                 <version>2.0.2.RELEASE</version>
                 <scope>test</scope>
             </dependency>
-
-            <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>slf4j-api</artifactId>-->
-            <!--<version>${slf4j.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>jcl-over-slf4j</artifactId>-->
-            <!--<version>${slf4j.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>ch.qos.logback</groupId>-->
-            <!--<artifactId>logback-classic</artifactId>-->
-            <!--<version>1.3.0-alpha4</version>-->
-            <!--</dependency>-->
-
 
             <!--分页插件 -->
             <dependency>

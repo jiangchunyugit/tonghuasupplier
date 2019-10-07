@@ -3,8 +3,8 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>designer_pc</artifactId>
-        <groupId>cn.thinkfree</groupId>
+        <artifactId>tonghua_control</artifactId>
+        <groupId>cn.tonghua</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -18,7 +18,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>cn.thinkfree</groupId>
+            <groupId>cn.tonghua</groupId>
             <artifactId>service</artifactId>
             <version>1.0-SNAPSHOT</version>
             <exclusions>
@@ -26,7 +26,6 @@
                     <artifactId>poi-ooxml</artifactId>
                     <groupId>org.apache.poi</groupId>
                 </exclusion>
-
             </exclusions>
         </dependency>
         <dependency>
@@ -151,10 +150,10 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-devtools</artifactId>-->
-            <!--<optional>true</optional>-->
-            <!--<scope>true</scope>-->
+        <!--<groupId>org.springframework.boot</groupId>-->
+        <!--<artifactId>spring-boot-devtools</artifactId>-->
+        <!--<optional>true</optional>-->
+        <!--<scope>true</scope>-->
         <!--</dependency>-->
     </dependencies>
     <build>
@@ -164,7 +163,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>cn.thinkfree.ApplicationBoot</mainClass>
+                    <mainClass>cn.tonghua.ApplicationBoot</mainClass>
                     <fork>true</fork>
                 </configuration>
                 <executions>
