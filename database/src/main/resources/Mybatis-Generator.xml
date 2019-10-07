@@ -4,56 +4,57 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
     <classPathEntry
-            location="src/main/resources/edb-jdbc16.jar"/>
+            location="src/main/resources/mysql-connector-java-8.0.16.jar"/>
     <context id="context1">
-        <plugin type="cn.thinkfree.database.plugins.MyExamplePlugin"/>
-        <!--<plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">-->
-            <!--<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>-->
-            <!--<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>-->
-        <!--</plugin>-->
+        <plugin type="cn.tonghua.database.plugins.MyExamplePlugin"/>
+        <plugin type="mybatis.generator.plugins.GeneratorSwagger2Doc">
+            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
+            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
+        </plugin>
         <!-- 该死的注释 -->
-        <commentGenerator>
+          <commentGenerator>
             <property name="addRemarkComments" value="true"/>
             <property name="suppressDate" value="true"/>
         </commentGenerator>
 
-        <jdbcConnection driverClass="com.edb.Driver"
-                        connectionURL="jdbc:edb://rm-2zea5t7it298uz8786o.ppas.rds.aliyuncs.com:3432/tools"
-                        userId="think"
-                        password="Rexrobin@519"/>
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/jiang_test"
+                        userId="root"
+                        password="123456"/>
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
 
         <!-- Model-->
-        <javaModelGenerator targetPackage="cn.thinkfree.database.model"
+        <javaModelGenerator targetPackage="cn.tonghua.database.model"
                             targetProject="src/main/java/">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
             <property name="useActualColumnNames" value="false"/>
-            <property name="rootClass" value="cn.thinkfree.core.model.BaseModel"/>
-            <property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>
-            <property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>
+            <property name="rootClass" value="cn.tonghua.core.model.BaseModel"/>
+            <!--<property name="apiModelAnnotationPackage" value="io.swagger.annotations.ApiModel"/>-->
+            <!--<property name="apiModelPropertyAnnotationPackage" value="io.swagger.annotations.ApiModelProperty"/>-->
 
         </javaModelGenerator>
         <!-- XML-->
-        <sqlMapGenerator targetPackage="cn.thinkfree.database.mapper"
+        <sqlMapGenerator targetPackage="cn.tonghua.database.mapper"
                          targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
         <!-- 客户端-->
-        <!--<javaClientGenerator-->
-                <!--targetPackage="cn.thinkfree.database.mapper"-->
-                <!--targetProject="src/main/java/"-->
-                <!--type="XMLMAPPER">-->
-            <!--<property name="enableSubPackages" value="false"/>-->
-        <!--</javaClientGenerator>-->
+        <javaClientGenerator
+                targetPackage="cn.tonghua.database.mapper"
+                targetProject="src/main/java/"
+                type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
         <!-- 表-->
-        <!--<table tableName="pc_audit_temporary_info" domainObjectName="PcAuditTemporaryInfo" />-->
-        <!--<table tableName="pc_dealer_brand_info" domainObjectName="DealerBrandInfo" />-->
-        <!--<table tableName="pc_dealer_category" domainObjectName="DealerCategory" />-->
-        <!--<table tableName="city" domainObjectName="City"/>-->
+        <table tableName="equipment" domainObjectName="Equipment" />
+        <!--<table tableName="file_resource_case_info" domainObjectName="FileResourceCaseInfo" />-->
+        <!--<table tableName="file_resource_case_list" domainObjectName="FileResourceCaseList" />-->
+        <!--<table tableName="file_resource_staff" domainObjectName="FileResourceStaff"/>-->
+        <!--<table tableName="file_resource_dictionary" domainObjectName="FileResourceDictionary"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
         <!--<table tableName="pc_branch_company" domainObjectName="PcBranchCompany"/>-->
         <!--<table tableName="company_user_set" domainObjectName="CompanyUserSet" />-->
@@ -170,7 +171,7 @@
         <!--<table tableName="complaint_record_log" domainObjectName="ComplaintRecordLog"/>-->
         <!--<table tableName="app_update_log" domainObjectName="AppUpdateLog"/>-->
         <!--<table tableName="pc_system_user_store" domainObjectName="SystemUserStore" />-->
-        <table tableName="pc_system_user_store_role" domainObjectName="SystemUserStoreRole" />
+        <!--<table tableName="pc_system_user_store_role" domainObjectName="SystemUserStoreRole" />-->
 
     </context>
 </generatorConfiguration>
