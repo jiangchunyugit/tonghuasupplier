@@ -15,7 +15,7 @@
 	</springProfile>
 	<springProfile name="test">
 
-		<property name="dir" value="/home/thinkfree/pcAdmin/tomcat"/>
+		<property name="dir" value="/home/tonghua/pcAdmin/tomcat"/>
 		<property name="fileName" value="designer"/>
 		<property name="level" value="DEBUG"/>
 	</springProfile>
@@ -53,7 +53,7 @@
 	<logger name="org.mybatis" level="DEBUG"/>
 	<logger name="org.springframework.jms" level="trace" additivity="false"/>
 	<logger name="org.apache.activemq" level="trace" additivity="false" />
-	<logger name="cn.thinkfree" level="DEBUG"/>
+	<logger name="cn.tonghua" level="DEBUG"/>
 
 	<root level="${level}">
 		<appender-ref ref="Console" />
