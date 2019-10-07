@@ -2,6 +2,7 @@ package cn.tonghua.service.config;
 
 import cn.tonghua.core.config.GsonSerializer;
 import cn.tonghua.core.security.model.SecurityUser;
+import cn.tonghua.service.utils.RedisUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -52,6 +53,21 @@ public class RedisConfig {
         template.afterPropertiesSet();
 
         return template;
+    }
+
+    /**
+     * 注入封装RedisTemplate
+     * @Title: redisUtils
+     * @return RedisUtils
+     * @autor lpl
+     * @date 2017年12月21日
+     * @throws
+     */
+    @Bean(name = "redisUtils")
+    public RedisUtils redisUtil(RedisTemplate<String, Object> redisTemplate) {
+        RedisUtils redisUtil = new RedisUtils();
+        redisUtil.setRedisTemplate(redisTemplate);
+        return redisUtil;
     }
 
 

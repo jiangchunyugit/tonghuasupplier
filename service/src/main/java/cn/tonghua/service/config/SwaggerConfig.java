@@ -62,8 +62,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("居然之家运营后台")
-                .description("居然之家运营后台接口文档")
+                .title("运营后台")
+                .description("运营后台接口文档")
                 .contact(new Contact("x","x","x"))
                 .version("X")
                 .build();
