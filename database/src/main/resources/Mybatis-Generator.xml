@@ -50,9 +50,9 @@
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
         <!-- 表-->
-        <table tableName="equipment" domainObjectName="Equipment" />
-        <!--<table tableName="file_resource_case_info" domainObjectName="FileResourceCaseInfo" />-->
-        <!--<table tableName="file_resource_case_list" domainObjectName="FileResourceCaseList" />-->
+        <table tableName="question_answer" domainObjectName="QuestionAnswer" />
+        <!--<table tableName="site_question" domainObjectName="SiteQuestion" />-->
+        <!--<table tableName="user_answer" domainObjectName="UserAnswer" />-->
         <!--<table tableName="file_resource_staff" domainObjectName="FileResourceStaff"/>-->
         <!--<table tableName="file_resource_dictionary" domainObjectName="FileResourceDictionary"/>-->
         <!--<table tableName="area" domainObjectName="Area" />-->
