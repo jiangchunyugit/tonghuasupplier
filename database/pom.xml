@@ -111,7 +111,7 @@
     <!--<artifactId>database</artifactId>-->
     <!--<version>1.0-SNAPSHOT</version>-->
     <!--<scope>system</scope>-->
-    <!--<systemPath>D:/tonghua_control/database/target/database-1.0-SNAPSHOT.jar</systemPath>-->
+    <!--<systemPath>D:/project_materials/tonghuacontrol_github/database/target/database-1.0-SNAPSHOT.jar</systemPath>-->
     <!--</dependency>-->
     <!--</dependencies>-->
     <!--</plugin>-->

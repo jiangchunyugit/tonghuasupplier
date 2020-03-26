@@ -52,11 +52,11 @@ public class ProgramServiceImpl extends AbsBaseService implements ProgramService
                     remoteResult = killProgram(equipment);
                 }
 
-                if (remoteResult != null && remoteResult.isComplete()) {
-                    equipment.setIsEnable(type);
-                    equipmentMapper.updateByExampleSelective(equipment,equipmentExample);
-                    return sendSuccessMessage("操作成功");
-                }
+//                if (remoteResult != null && remoteResult.isComplete()) {
+//                    equipment.setIsEnable(type);
+//                    equipmentMapper.updateByExampleSelective(equipment,equipmentExample);
+//                    return sendSuccessMessage("操作成功");
+//                }
             }
         }
         return sendFailMessage("操作失败");
